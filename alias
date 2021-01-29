@@ -1,0 +1,16 @@
+RED='\033[0;31m'
+ORANGE='\033[0;33m'
+GREEN='\033[0;32m'
+NC='\033[0m'
+
+echo -e "${ORANGE}FLN${NC}"
+
+alias ahome='cd /Users/jshao/github/fln'
+alias bs='ahome; npm run bs'
+alias fs='ahome; npm run fs'
+
+export AWS_PROFILE=fln
+
+ssh-add -K ~/.ssh/superopengl_id_rsa
+
+ahome

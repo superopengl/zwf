@@ -1,0 +1,20 @@
+{
+  "name": "fln",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "bs": "cd ./*app; yarn dev",
+    "fs": "cd ./*web; yarn start",
+    "docker:build": "docker build -t fln-portal -f ./devops/Dockerfile --build-arg NODE_ENV=prod --build-arg REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) .",
+    "docker:run": "docker run -p 80:80 --env-file ./devops/.env.prod fln-portal",
+    "docker:push": "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 621711101331.dkr.ecr.ap-southeast-2.amazonaws.com; docker tag fln-portal:latest 621711101331.dkr.ecr.ap-southeast-2.amazonaws.com/fln-portal:latest; docker push 621711101331.dkr.ecr.ap-southeast-2.amazonaws.com/fln-portal:latest",
+    "ecs:update": "aws ecs update-service --cluster fln-website --service fln-website --force-new-deployment",
+    "release": "npm run docker:build && npm run docker:push && npm run ecs:update"
+  },
+  "author": "mr.shaojun@gmail.com",
+  "license": "MIT"
+}
