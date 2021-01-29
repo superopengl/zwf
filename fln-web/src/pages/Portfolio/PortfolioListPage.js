@@ -41,7 +41,7 @@ const PortfolioListPage = props => {
         <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>Portfolios</Title>
         </StyledTitleRow>
-        <Paragraph>Client register as user in our platform to authorise AU Accounting Office to be the accountant and tax agent to deal with all the task set up in each portfolio which is under the user’s name. The task can be set up either by client itself or AU Accounting Office according to engagement letter.</Paragraph>
+        <Paragraph>Client register as user in our platform to authorise Filedin to be the accountant and tax agent to deal with all the task set up in each portfolio which is under the user’s name. The task can be set up either by client itself or Filedin according to engagement letter.</Paragraph>
         <Paragraph>One user can authorise multiple portfolios and the user may be different from each portfolio’s person or director/public officer of an entity. All the correspondents between each user and us regarding all portfolios are confirmed by email which is register at the same time as the user.</Paragraph>
         <Paragraph>Please refer to our <Link target="_blank" href="/terms_and_conditions">term and conditions</Link> for further more details to use our platform.</Paragraph>
 

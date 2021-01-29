@@ -55,7 +55,7 @@ class HomeContactArea extends React.Component {
           <Title style={{ color: "#ffffff" }}>Contact</Title>
           <Row style={{ maxWidth: 480, margin: '1rem auto' }} gutter={16}>
             <Col {...span}>
-              <MailOutlined style={{ marginRight: 8 }} /><a href="mailto:info@filedin.io">techseeding2020@gmail.com</a>
+              <MailOutlined style={{ marginRight: 8 }} /><a href="mailto:techseeding2020@gmail.com">techseeding2020@gmail.com</a>
             </Col>
             <Col {...span}>
               <MailOutlined style={{ marginRight: 8 }} /><a href="mailto:jzhou@filedin.io">mr.shaojun@gmail.com</a>
