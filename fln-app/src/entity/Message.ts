@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn } from 'typeorm';
 
 @Entity()
 export class Message {
@@ -6,8 +6,14 @@ export class Message {
   id?: string;
 
   @CreateDateColumn()
-  @Index()
   createdAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
+  @Column('uuid')
+  @Index()
+  orgId: string;
 
   @Column('uuid')
   @Index()

@@ -4,11 +4,12 @@ import { getNow } from './getNow';
 import * as moment from 'moment';
 import { UserRole } from 'aws-sdk/clients/workmail';
 import { assert } from './assert';
+import { User } from '../entity/User';
 
 const cookieName = 'jwt';
 const isProd = process.env.NODE_ENV === 'prod';
 
-export function attachJwtCookie(user, res) {
+export function attachJwtCookie(user: User, res) {
   assert(user.id, 500, `User has no id`);
   const payload = {
     id: user.id,
@@ -17,6 +18,10 @@ export function attachJwtCookie(user, res) {
     surname: user.surname,
     role: user.role,
     loginType: user.loginType,
+    org: {
+      name: user.org.name,
+      id: user.org.id,
+    },
     expires: moment(getNow()).add(24, 'hours').toDate()
   };
   const token = jwt.sign(payload, JwtSecret);

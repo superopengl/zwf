@@ -14,6 +14,7 @@ import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { Org } from '../entity/Org';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   const { user } = (req as any);
@@ -23,14 +24,16 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
 async function getLoginUser(email) {
   const repo = getRepository(User);
   const user: User = await repo
-    .createQueryBuilder()
+    .createQueryBuilder('x')
     .where(
       'LOWER(email) = LOWER(:email) AND status != :status',
       {
         email,
         status: UserStatus.Disabled
       })
+    .leftJoinAndSelect('x.org', 'org')
     .getOne();
+
   return user;
 }
 
@@ -85,30 +88,59 @@ function createUserEntity(email, password, role): User {
 }
 
 
-async function createNewLocalUser(payload): Promise<User> {
-  const { email, password, role } = payload;
+async function createNewLocalUser(email: string, password: string, role: string, org: Org = null): Promise<User> {
   const user = createUserEntity(email, password, role);
+  user.org = org;
 
-  const repo = getRepository(User);
-  await repo.save(user);
+  return await getRepository(User).save(user);
+}
 
-  return user;
+async function createOrg(orgName): Promise<Org> {
+  const org = new Org();
+  org.name = orgName;
+
+  return await getRepository(Org).save(org);
 }
 
 
 export const signin = handlerWrapper(async (req, res) => {
-  const payload = req.body;
+  const { email, password, role } = req.body;
+  const result = await createNewLocalUser(email, password, Role.Client);
 
-  const result = await createNewLocalUser(payload);
-
-  const { id, email } = result;
+  const { id } = result;
 
   // Non-blocking sending email
   sendEmail({
-    template: 'welcome',
+    template: 'welcome-client',
     to: email,
     vars: {
-      email
+      email,
+    },
+    bcc: [SYSTEM_EMAIL_SENDER]
+  });
+
+  const info = {
+    id,
+    email
+  };
+
+  res.json(info);
+});
+
+export const signOnOrg = handlerWrapper(async (req, res) => {
+  const { org, email, password } = req.body;
+  const orgEntity = await createOrg(org);
+  const result = await createNewLocalUser(email, password, Role.Admin, orgEntity);
+
+  const { id } = result;
+
+  // Non-blocking sending email
+  sendEmail({
+    template: 'welcome-org',
+    to: email,
+    vars: {
+      email,
+      org,
     },
     bcc: [SYSTEM_EMAIL_SENDER]
   });
@@ -246,13 +278,13 @@ async function decodeEmailFromGoogleToken(token) {
   const decoded = jwt.decode(token, secret);
   const { email, given_name: givenName, family_name: surname } = decoded;
   assert(email, 400, 'Invalid Google token');
-  return {email, givenName, surname};
+  return { email, givenName, surname };
 }
 
 export const ssoGoogle = handlerWrapper(async (req, res) => {
   const { token } = req.body;
 
-  const {email, givenName, surname} = await decodeEmailFromGoogleToken(token);
+  const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
   const repo = getRepository(User);
   let user = await repo
@@ -260,6 +292,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     .where(
       'LOWER(email) = LOWER(:email)',
       { email })
+    .leftJoinAndSelect('x.org', 'org')
     .getOne();
 
 

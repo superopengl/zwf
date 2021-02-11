@@ -35,12 +35,12 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const SignInPage = (props) => {
+const SignOnPage = (props) => {
 
   const [sending, setSending] = React.useState(false);
 
 
-  const handleSignIn = async (values) => {
+  const handleSignOn = async (values) => {
     if (sending) {
       return;
     }
@@ -97,18 +97,20 @@ const SignInPage = (props) => {
             <ContainerStyled>
               <LogoContainer><Logo /></LogoContainer>
               <Title level={3}>Sign On</Title>
-
               <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
-              <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'client' }}>
+              <Form layout="vertical" onFinish={handleSignOn} style={{ textAlign: 'left', marginTop: 10 }} initialValues={{ role: 'client' }}>
+                <Form.Item label="Orgnazation Name" name="org" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
+                  <Input placeholder="orgnazation Name" autoComplete="organization" allowClear={true} maxLength="100" autoFocus={true} />
+                </Form.Item>
                 <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
                   <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
                 </Form.Item>
                 <Form.Item label="Password (at least 8 letters)" name="password" rules={[{ required: true, min: 8, message: ' ' }]}>
                   <Input.Password placeholder="Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
                 </Form.Item>
-                <Form.Item label="Confirm Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
+                {/* <Form.Item label="Confirm Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
                   <Input.Password placeholder="Password" maxLength="50" autoComplete="new-password" disabled={sending} visibilityToggle={false} />
-                </Form.Item>
+                </Form.Item> */}
                 <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
                   validator: (_, value) =>
                     value ? Promise.resolve() : Promise.reject('You have to agree to continue.'),
@@ -148,8 +150,8 @@ const SignInPage = (props) => {
   );
 }
 
-SignInPage.propTypes = {};
+SignOnPage.propTypes = {};
 
-SignInPage.defaultProps = {};
+SignOnPage.defaultProps = {};
 
-export default withRouter(SignInPage);
+export default withRouter(SignOnPage);

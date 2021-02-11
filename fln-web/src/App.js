@@ -8,7 +8,7 @@ import ResetPasswordPage from 'pages/ResetPasswordPage';
 import { GlobalContext } from './contexts/GlobalContext';
 import ForgotPasswordPage from 'pages/ForgotPasswordPage';
 import ChangePasswordPage from 'pages/ChangePasswordPage';
-import SignInPage from 'pages/SignInPage';
+import SignOnPage from 'pages/SignOnPage';
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import Error404 from 'pages/Error404';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
@@ -34,6 +34,7 @@ import AdminBoardPage from 'pages/AdminBoard/AdminBoardPage';
 import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
+import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
 
 
 class App extends React.Component {
@@ -89,7 +90,7 @@ class App extends React.Component {
             <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
-            <RoleRoute visible={isGuest} loading={loading} exact path="/signon" component={SignInPage} />
+            <RoleRoute visible={isGuest} loading={loading} exact path="/signon" component={SignOnPage} />
             <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
             <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/stats" component={AdminStatsPage} />
             <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/board" component={AdminBoardPage} />
@@ -114,6 +115,7 @@ class App extends React.Component {
             <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
             <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
             <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} />
+            <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
             {/* <Redirect to="/" /> */}
             <RoleRoute loading={loading} component={Error404} />
 

@@ -19,7 +19,7 @@ export const authMiddleware = async (req, res, next) => {
       }
       repo.update(id, { lastNudgedAt: getNow() }).catch(() => { });
       req.user = Object.freeze(user);
-      attachJwtCookie(user, res);
+      attachJwtCookie(user as User, res);
     } else {
       // Guest user (hasn't logged in)
     }
