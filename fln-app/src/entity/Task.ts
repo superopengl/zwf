@@ -1,6 +1,7 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
+import { Org } from './Org';
 
 @Entity()
 export class Task {
@@ -61,5 +62,12 @@ export class Task {
   @Column({nullable: true})
   @Index()
   dueDate: Date;
+
+  @ManyToOne(() => Org, org => org.users, {nullable: true})
+  @JoinColumn({name: 'orgId', referencedColumnName: 'id'})
+  org: Org;
+
+  @Column('uuid')
+  orgId: string;
 }
 

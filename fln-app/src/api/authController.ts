@@ -288,7 +288,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
   const repo = getRepository(User);
   let user = await repo
-    .createQueryBuilder()
+    .createQueryBuilder('x')
     .where(
       'LOWER(email) = LOWER(:email)',
       { email })

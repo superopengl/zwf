@@ -13,6 +13,8 @@ import { TaskStatus } from '../types/TaskStatus';
 import { Task } from '../entity/Task';
 import { handleInviteUser } from './authController';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { getReqUser as getReqUser } from '../utils/getReqUser';
+import { Role } from '../types/Role';
 
 export const getProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -76,9 +78,17 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 export const listAllUsers = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
 
+  const {role, org} = getReqUser(req);
+  const whereCond = role === Role.System ? {} : {orgId: org.id};
+
   const list = await getRepository(User).find({
-    where: { status: Not(UserStatus.Disabled) },
-    order: { role: 'ASC', email: 'ASC' }
+    where: { 
+      ...whereCond
+    },
+    order: { 
+      role: 'ASC', 
+      email: 'ASC' 
+    }
   });
 
   res.json(list);

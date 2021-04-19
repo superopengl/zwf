@@ -15,7 +15,7 @@ export class CreateAdminUser1596415746494 implements MigrationInterface {
         'Admin',
         'bf1d03be616a88a42b0af835f5f0bf69f51d879534e1b33af91765fd6a935cd3',
         '00000000-f200-485b-ad4f-90b530bdd4a4',
-        'admin',
+        'system',
         'enabled',
         '04fcb563-9228-42fe-a993-466dd387f36d'
         )`);
