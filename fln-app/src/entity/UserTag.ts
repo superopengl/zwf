@@ -2,13 +2,16 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, Unique, CreateDateColumn
 
 
 @Entity()
-@Unique('idx_user_tag_name', ['name'])
+@Unique('idx_user_tag_name', ['orgId', 'name'])
 export class UserTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @CreateDateColumn()
   createdAt?: Date;
+
+  @Column('uuid', {nullable: true})
+  orgId: string;
 
   @Column()
   @Index()

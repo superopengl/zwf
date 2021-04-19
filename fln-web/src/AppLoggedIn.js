@@ -48,6 +48,12 @@ const StyledLayout = styled(ProLayout)`
   margin-right: 16px;
 }
 
+.ant-pro-sider-footer {
+  .ant-typography {
+    color: rgba(255,255,255,0.45);
+  }
+}
+
 `;
 
 const StyledMenu = styled(Menu)`
@@ -68,24 +74,6 @@ const ROUTES = [
     name: <FormattedMessage id="menu.watchlist" />,
     icon: <StarOutlined />,
     roles: ['member']
-  },
-  {
-    path: '/stock',
-    name: <FormattedMessage id="menu.stockRadar" />,
-    icon: <Icon component={() => <GiRadarSweep />} />,
-    roles: ['admin', 'agent', 'member', 'free']
-  },
-  {
-    path: '/earnings_calendar',
-    name: <FormattedMessage id="menu.earningsCalendar" />,
-    icon: <Icon component={() => <BsCalendar />} />,
-    roles: ['admin', 'agent', 'member', 'free']
-  },
-  {
-    path: '/unsual_options_activity',
-    name: <FormattedMessage id="menu.unsualOptionsActivity" />,
-    icon: <AlertOutlined />,
-    roles: ['admin', 'agent', 'member']
   },
   {
     path: '/user',
@@ -112,12 +100,6 @@ const ROUTES = [
     roles: ['admin', 'agent']
   },
   {
-    path: '/comission',
-    name: <FormattedMessage id="menu.commissionWithdrawal" />,
-    icon: <Icon component={() => <FaMoneyBillWave />} />,
-    roles: ['admin', 'agent']
-  },
-  {
     path: '/settings',
     name: <FormattedMessage id="menu.settings" />,
     icon: <SettingOutlined />,
@@ -134,14 +116,6 @@ const ROUTES = [
       {
         path: '/email_template',
         name: <FormattedMessage id="menu.emailTemplate" />,
-      },
-      // {
-      //   path: '/translation',
-      //   name: 'Translations',
-      // },
-      {
-        path: '/referral_policy',
-        name: <FormattedMessage id="menu.globalReferralPolicy" />,
       },
     ]
   },
@@ -274,7 +248,7 @@ const AppLoggedIn = props => {
     )}
     menuFooterRender={props => (
       props?.collapsed ?
-        <QuestionOutlined style={{ color: 'rgba(255,255,255,0.65' }} onClick={() => setCollapsed(!collapsed)} /> :
+        <QuestionOutlined style={{ color: 'rgba(255,255,255,0.95' }} onClick={() => setCollapsed(!collapsed)} /> :
         <Space direction="vertical" style={{ width: 188 }}>
           <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
           <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>

@@ -11,12 +11,11 @@ export type StockUserParams = {
   size: number;
   orderField: string;
   orderDirection: 'ASC' | 'DESC';
-  subscription: string[];
   tags: string[];
 };
 
 export async function searchUser(queryInfo: StockUserParams) {
-  const { text, page, size, orderField, orderDirection, subscription, tags } = queryInfo;
+  const { text, page, size, orderField, orderDirection, tags } = queryInfo;
 
   const pageNo = page || 1;
   const pageSize = size || 50;
@@ -29,10 +28,6 @@ export async function searchUser(queryInfo: StockUserParams) {
 
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
-  }
-  query = query.leftJoin(q => q.from(Subscription, 's').where('status = :status', { status: SubscriptionStatus.Alive }), 's', 's."userId" = u.id');
-  if (subscription?.length) {
-    query = query.andWhere('(s.type IN (:...subscription))', { subscription });
   }
   query = query.leftJoin(q => q
     .from('user_tags_user_tag', 'tg')
@@ -49,20 +44,19 @@ export async function searchUser(queryInfo: StockUserParams) {
 
   const count = await query.getCount();
 
+
   query = query.orderBy(orderField, orderDirection)
     .addOrderBy('p.email', 'ASC')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .select([
       'p.*',
-      's.*',
       'u.id as id',
       'u."loginType"',
       'u.role as role',
       'tg.tags as tags',
       'u."lastLoggedInAt"',
-      'u."createdAt" as "createdAt"',
-      's.type as "subscriptionType"'
+      'u."createdAt" as "createdAt"'
     ]);
 
   const data = await query.execute();

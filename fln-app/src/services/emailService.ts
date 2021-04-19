@@ -17,6 +17,7 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 import { User } from '../entity/User';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { EmailSentOutTask } from '../entity/EmailSentOutTask';
+import 'colors';
 
 let emailTransporter = null;
 

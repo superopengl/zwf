@@ -12,3 +12,4 @@ export * from './statsController';
 export * from './blogController';
 export * from './emailTemplateController';
 export * from './configController';
+export * from './userTagController';

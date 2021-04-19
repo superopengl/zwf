@@ -84,7 +84,6 @@ export const searchUserList = handlerWrapper(async (req, res) => {
   const orderField = req.body.orderBy || 'email';
   const orderDirection = req.body.orderDirection || 'ASC';
   const text = req.body.text?.trim();
-  const subscription = (req.body.subscription || []);
   const tags = (req.body.tags || []);
 
   const list = await searchUser({
@@ -93,7 +92,6 @@ export const searchUserList = handlerWrapper(async (req, res) => {
     size,
     orderField,
     orderDirection,
-    subscription,
     tags
   });
 

@@ -6,11 +6,9 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { Portfolio } from '../entity/Portfolio';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getNow } from '../utils/getNow';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
-import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/cronService';
-import { CronLock } from '../entity/CronLock';
+import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/recurringService';
 import * as moment from 'moment-timezone';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
 
@@ -99,25 +97,4 @@ export const runRecurring = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
-export const healthCheckRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-
-  const expected = process.env.GIT_HASH;
-  const lock = await getRepository(CronLock).findOne({ key: 'cron-singleton-lock' });
-  const actual = lock?.gitHash;
-  const healthy = process.env.NODE_ENV === 'dev' || actual === expected;
-
-  let nextCronRun = moment(CRON_EXECUTE_TIME, 'HH:mm');
-  if(nextCronRun.isBefore()) {
-    nextCronRun = nextCronRun.add(1, 'day');
-  }
-
-  const result = {
-    error: healthy ? null : `Expecting ${expected} but got ${actual}`,
-    lock,
-    nextRunAt: nextCronRun.toDate()
-  };
-
-  res.json(result);
-});
 

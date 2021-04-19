@@ -165,6 +165,14 @@ paths:
       responses:
         200:
           description: OK
+  /user/search:
+    post:
+      operationId: searchUserList
+      # security:
+      #   - authAdminOrAgent: []
+      responses:
+        200:
+          description: OK          
   /user/:id:
     delete:
       operationId: deleteUser
@@ -246,6 +254,41 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/tags:
+    post:
+      operationId: setUserTags
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
+  /usertag:
+    get:
+      operationId: listUserTags
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveUserTag
+      responses:
+        200:
+          description: OK
+  /usertag/:id:
+    delete:
+      operationId: deleteUserTag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /task_template:
     post:
       operationId: saveTaskTemplate

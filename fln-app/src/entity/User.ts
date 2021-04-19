@@ -52,7 +52,7 @@ export class User {
   @JoinColumn({ name: 'orgId', referencedColumnName: 'id' })
   org: Org;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   orgId: string;
 
   @DeleteDateColumn()
@@ -63,12 +63,11 @@ export class User {
   @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })
   profile: UserProfile;
 
-  @Column()
+  @Column('uuid')
   profileId: string;
 
   @ManyToMany(type => UserTag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: UserTag[];
-
 }
 
