@@ -8,16 +8,16 @@ const darkTheme = getThemeVariables({
 
 const modifyVars = {
   ...darkTheme,
-  '@primary-color': '#22075e', // rgb(34,7,94)
+  '@primary-color': '#4c1bb3', // rgb(76,27,179)
   '@info-color': '#18b0d7',
   '@link-color': '#22075e',
   '@font-size-base': '14px',
-  '@layout-header-background': '#00293d',
+  '@layout-header-background': '#05001a',
   // '@height-base': '32px',
   // '@height-lg': '40px',
   // '@height-sm': '24px',
   '@border-radius-base': '6px',
-  '@font-family': "'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+  // '@font-family': "'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
   // '@table-padding-vertical': '4px',
   // '@table-padding-horizontal': '4px',
   '@heading-1-size': 'ceil(@font-size-base * 2.0)',

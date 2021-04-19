@@ -14,7 +14,7 @@ text-align: center;
 }
 
 .ant-drawer-header, .ant-drawer-wrapper-body {
-  background-color: #00293d;
+  background-color: #05001a;
 }
 
 .ant-divider {
@@ -30,7 +30,7 @@ const AboutDrawer = (props) => {
 
   return (
     <StyledDrawer
-      title="About EasyValueCheck"
+      title="About Filedin"
       height="80vh"
       placement="bottom"
       destroyOnClose={false}
@@ -38,10 +38,10 @@ const AboutDrawer = (props) => {
       {...other}
     >
       <Paragraph>
-        About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck About EasyValueCheck
+        About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin About Filedin
       </Paragraph>
       <Divider />
-      <Paragraph>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</Paragraph>
+      <Paragraph>©{new Date().getFullYear()} Filedin PTY LTD. All right reserved.</Paragraph>
       <Paragraph>Version {gitVersion}</Paragraph>
       <Paragraph><a href="/terms_and_conditions" target="_blank">Terms & Conditions</a> | <a href="/privacy_policy" target="_blank">Privacy Policy</a> </Paragraph>
       <Divider />
