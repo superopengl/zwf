@@ -100,14 +100,14 @@ const LogInPage = props => {
           </Form.Item>
 
           {/* <Form.Item>
-            <Link to="/signon"><Button ghost block type="primary">Sign On</Button></Link>
+            <Link to="/signup"><Button ghost block type="primary">Sign Up</Button></Link>
           </Form.Item> */}
           <Form.Item>
             <Link to="/forgot_password">
               <Button block type="link">Forgot password? Click here to reset</Button>
             </Link>
             {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-        <Link to="/signon"><Button size="small" block type="link">Not a user? Click to sign on</Button></Link>
+        <Link to="/signup"><Button size="small" block type="link">Not a user? Click to sign on</Button></Link>
           </Form.Item>
         </Form>
       </ContainerStyled>

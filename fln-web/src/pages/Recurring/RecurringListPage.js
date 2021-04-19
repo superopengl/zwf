@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Alert } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import * as moment from 'moment';
 import Text from 'antd/lib/typography/Text';
 import {
@@ -239,7 +239,7 @@ const RecurringListPage = (props) => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>

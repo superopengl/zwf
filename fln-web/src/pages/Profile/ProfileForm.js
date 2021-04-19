@@ -11,6 +11,7 @@ import PropTypes from 'prop-types';
 import { Alert } from 'antd';
 import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
+import { LocaleSelector } from 'components/LocaleSelector';
 const { Title } = Typography;
 
 
@@ -64,7 +65,7 @@ const ProfileForm = (props) => {
     }
   }
 
-  const isBuiltinAdmin = user.email === 'admin@filedin.io';
+  const isBuiltinAdmin = user.profile.email === 'admin@filedin.io';
 
   return (
     <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user}>
@@ -83,6 +84,12 @@ const ProfileForm = (props) => {
       </Form.Item>
       <Form.Item label="Phone" name="phone" rules={[{ required: false, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Phone number" autoComplete="tel" allowClear={true} maxLength="100" />
+      </Form.Item>
+      <Form.Item label="Language" name="locale"
+        rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}
+        help="Requires refreshing page to pick up the change."
+      >
+        <LocaleSelector />
       </Form.Item>
       <Form.Item style={{ marginTop: '1rem' }}>
         <Button block type="primary" htmlType="submit" disabled={sending}>Save</Button>

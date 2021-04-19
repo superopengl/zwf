@@ -35,7 +35,7 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
-const SignOnPage = (props) => {
+const SignUpPage = (props) => {
 
   const [sending, setSending] = React.useState(false);
 
@@ -96,7 +96,7 @@ const SignOnPage = (props) => {
           <PageContainer>
             <ContainerStyled>
               <LogoContainer><Logo /></LogoContainer>
-              <Title level={3}>Sign On</Title>
+              <Title level={3}>Sign Up</Title>
               <Link to="/login"><Button size="small" block type="link">Already a user? Click to log in</Button></Link>
               <Form layout="vertical" onFinish={handleSignOn} style={{ textAlign: 'left', marginTop: 10 }} initialValues={{ role: 'client' }}>
                 <Form.Item label="Orgnazation Name" name="org" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
@@ -118,7 +118,7 @@ const SignOnPage = (props) => {
                   <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
                 </Form.Item>
                 <Form.Item style={{ marginTop: '1rem' }}>
-                  <Button block type="primary" htmlType="submit" disabled={sending}>Sign On</Button>
+                  <Button block type="primary" htmlType="submit" disabled={sending}>Sign Up</Button>
                 </Form.Item>
                 {/* <Form.Item>
                   <Button block type="link" onClick={() => goBack()}>Cancel</Button>
@@ -150,8 +150,8 @@ const SignOnPage = (props) => {
   );
 }
 
-SignOnPage.propTypes = {};
+SignUpPage.propTypes = {};
 
-SignOnPage.defaultProps = {};
+SignUpPage.defaultProps = {};
 
-export default withRouter(SignOnPage);
+export default withRouter(SignUpPage);

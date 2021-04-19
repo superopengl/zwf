@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import { withRouter } from 'react-router-dom';
 import * as queryString from 'query-string';
 import PortfolioList from './PortfolioList';
@@ -36,7 +36,7 @@ const PortfolioListPage = props => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <StyledTitleRow>
           <Title level={2} style={{ margin: 'auto' }}>Portfolios</Title>

@@ -13,7 +13,7 @@ const ImpersonatePage = () => {
   const load = async () => {
     setLoading(true);
     const list = await listAllUsers();
-    const options = list.filter(x => x.email !== context.user.email).map(x => ({ value: x.email }));
+    const options = list.filter(x => x.email !== context.user.profile.email).map(x => ({ value: x.email }));
     setUserOptions(options);
     setLoading(false);
   }

@@ -2,7 +2,7 @@ import {
   DeleteOutlined, EditOutlined, PlusOutlined
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import { TimeAgo } from 'components/TimeAgo';
 import TaskTemplateForm from 'pages/TaskTemplate/TaskTemplateForm';
 import React from 'react';
@@ -149,7 +149,7 @@ export const TaskTemplatePage = props => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
         <StyledTitleRow>

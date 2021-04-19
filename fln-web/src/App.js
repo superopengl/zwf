@@ -1,131 +1,127 @@
 import React from 'react';
-// import 'antd/dist/antd.less';
-import 'react-image-lightbox/style.css';
+import 'antd/dist/antd.less';
 import { BrowserRouter, Switch } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
-import LogInPage from 'pages/LogInPage';
-import ResetPasswordPage from 'pages/ResetPasswordPage';
 import { GlobalContext } from './contexts/GlobalContext';
-import ForgotPasswordPage from 'pages/ForgotPasswordPage';
-import ChangePasswordPage from 'pages/ChangePasswordPage';
-import SignOnPage from 'pages/SignOnPage';
-import TermAndConditionPage from 'pages/TermAndConditionPage';
-import Error404 from 'pages/Error404';
-import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import MyTaskListPage from 'pages/MyTask/MyTaskListPage';
-import TaskTemplatePage from 'pages/TaskTemplate/TaskTemplatePage';
-import DocTemplatePage from 'pages/DocTemplate/DocTemplatePage';
-import PortfolioListPage from 'pages/Portfolio/PortfolioListPage';
-import AdminTaskListPage from 'pages/AdminTask/AdminTaskListPage';
-import ProceedTaskPage from 'pages/AdminTask/ProceedTaskPage';
 import { getAuthUser } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import MyTaskPage from 'pages/MyTask/MyTaskPage';
-import RecurringListPage from 'pages/Recurring/RecurringListPage';
-import MessagePage from 'pages/Message/MessagePage';
-import UserListPage from 'pages/User/UserListPage';
-import ImpersonatePage from 'pages/Impersonate/ImpersonatePage';
-import { countUnreadMessage } from 'services/messageService';
-import PortfolioFormPage from 'pages/Portfolio/PortfolioFormPage';
-import DeclarationPage from 'pages/DeclarationPage';
-import ClientDashboardPage from 'pages/ClientDashboard/ClientDashboardPage';
-import AdminStatsPage from 'pages/AdminStats/AdminStatsPage';
-import AdminBoardPage from 'pages/AdminBoard/AdminBoardPage';
-import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
-import BlogsPage from 'pages/BlogsPage';
-import ProfilePage from 'pages/Profile/ProfilePage';
-import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
+import { ContactWidget } from 'components/ContactWidget';
+import { Subject } from 'rxjs';
+import ReactDOM from 'react-dom';
+import { ConfigProvider } from 'antd';
+import loadable from '@loadable/component'
+import { IntlProvider } from "react-intl";
+import antdLocaleEN from 'antd/lib/locale/en_US';
+import antdLocaleZH from 'antd/lib/locale/zh_CN';
+import intlMessagesEN from "./translations/en-US.json";
+import intlMessagesZH from "./translations/zh-CN.json";
+import { getDefaultLocale } from './util/getDefaultLocale';
+import { reactLocalStorage } from 'reactjs-localstorage';
 
-class App extends React.Component {
-  constructor(props) {
-    super(props);
+const SignUpPage = loadable(() => import('pages/SignUpPage'));
+const Error404 = loadable(() => import('pages/Error404'));
+const LogInPage = loadable(() => import('pages/LogInPage'));
+const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
+const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
+const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
+const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
+const BlogsPage = loadable(() => import('pages/BlogsPage'));
+const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 
-    this.state = {
-      user: null,
-      role: 'guest',
-      loading: true,
-      setUser: this.setUser,
-      setLoading: this.setLoading,
-      notifyCount: 0,
-      setNotifyCount: this.setNotifyCount
-    };
+const localeDic = {
+  'en-US': {
+    antdLocale: antdLocaleEN,
+    intlLocale: 'en',
+    intlMessages: intlMessagesEN,
+  },
+  'zh-CN': {
+    antdLocale: antdLocaleZH,
+    intlLocale: 'zh',
+    intlMessages: intlMessagesZH
   }
+}
 
-  async componentDidMount() {
-    this.setLoading(true);
-    const user = await getAuthUser();
-    if (user) {
-      this.setUser(user);
-      if (user.role !== 'system') {
-        const count = await countUnreadMessage();
-        this.setNotifyCount(count);
-      }
+const DEFAULT_LOCALE = getDefaultLocale();
+
+const App = () => {
+  const [loading, setLoading] = React.useState(true);
+  const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
+  const [user, setUser] = React.useState(null);
+
+  const event$ = new Subject();
+
+
+  const globalContextValue = {
+    event$,
+    user: null,
+    role: 'guest',
+    setUser,
+    setLoading,
+    setLocale: locale => {
+      reactLocalStorage.set('locale', locale);
+      setLocale(locale);
     }
-    this.setLoading(false);
   }
 
-  setUser = (user) => {
-    this.setState({ user, role: user ? user.role : 'guest' });
+  const [contextValue, setContextValue] = React.useState(globalContextValue);
+
+  const Initalize = async () => {
+    const user = await getAuthUser();
+    ReactDOM.unstable_batchedUpdates(() => {
+      setUser(user);
+      setLoading(false);
+    })
   }
 
-  setLoading = (value) => {
-    this.setState({ loading: !!value });
-  }
+  React.useEffect(() => {
+    Initalize();
+  }, []);
 
-  setNotifyCount = (value) => {
-    this.setState({ notifyCount: value });
-  }
+  React.useEffect(() => {
+    if (user !== contextValue.user) {
 
-  render() {
-    const { role, loading } = this.state;
-    const isSystem = role === 'system';
-    const isAdmin = role === 'admin';
-    const isGuest = role === 'guest';
-    const isClient = role === 'client';
-    const isAgent = role === 'agent';
+      setContextValue({
+        ...contextValue,
+        user,
+        role: user?.role || 'guest',
+      });
 
-    return (
-      <GlobalContext.Provider value={this.state}>
-        <BrowserRouter basename="/">
-          <Switch>
-            <RoleRoute loading={loading} path="/" exact component={HomePage} />
-            <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/blogs/admin" component={AdminBlogPage} />
-            <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
-            <RoleRoute visible={isGuest} loading={loading} exact path="/signon" component={SignOnPage} />
-            <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-            <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/stats" component={AdminStatsPage} />
-            <RoleRoute visible={isAdmin || isAgent} loading={loading} exact path="/board" component={AdminBoardPage} />
-            <RoleRoute visible={isClient} loading={loading} exact path="/landing" component={ClientDashboardPage} />
-            <RoleRoute visible={isClient} loading={loading} exact path="/portfolios" component={PortfolioListPage} />
-            <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/:id" component={PortfolioFormPage} />
-            <RoleRoute visible={!isGuest} loading={loading} exact path="/portfolios/new/:type" component={PortfolioFormPage} />
-            <RoleRoute loading={loading} path="/reset_password" exact component={ResetPasswordPage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template" component={TaskTemplatePage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template/:id" component={TaskTemplatePage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/doc_template" component={DocTemplatePage} />
-            <RoleRoute visible={isAdmin || isSystem} loading={loading} exact path="/user" component={UserListPage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/impersonate" component={ImpersonatePage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/tasks/new" exact component={MyTaskPage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/tasks/:id" exact component={MyTaskPage} />
-            <RoleRoute visible={isAdmin || isAgent || isClient} loading={loading} path="/tasks" exact component={isClient ? MyTaskListPage : AdminTaskListPage} />
-            <RoleRoute visible={isAdmin || isAgent} loading={loading} path="/tasks/:id/proceed" exact component={ProceedTaskPage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/profile" exact component={ProfilePage} />
-            <RoleRoute visible={!isGuest} loading={loading} path="/change_password" exact component={ChangePasswordPage} />
-            <RoleRoute loading={loading} path="/terms_and_conditions" exact component={TermAndConditionPage} />
-            <RoleRoute loading={loading} path="/privacy_policy" exact component={PrivacyPolicyPage} />
-            <RoleRoute loading={loading} path="/declaration" exact component={DeclarationPage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/email_template" component={EmailTemplateListPage} />
-            {/* <Redirect to="/" /> */}
-            <RoleRoute loading={loading} component={Error404} />
+      contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
+    }
+  }, [user]);
 
-          </Switch>
-        </BrowserRouter>
-      </GlobalContext.Provider>
-    );
-  }
+
+  const role = contextValue.role;
+  const isGuest = !role || role === 'guest';
+
+  const isLoggedIn = !isGuest;
+
+  const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
+
+  return (
+    <GlobalContext.Provider value={contextValue}>
+      <ConfigProvider locale={antdLocale}>
+        <IntlProvider locale={intlLocale} messages={intlMessages}>
+          <BrowserRouter basename="/">
+            <Switch>
+              <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
+              <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
+              <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
+              <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
+              <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
+              <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
+              <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
+              {isGuest && <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />}
+              {isLoggedIn && <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />}
+              {/* <Redirect to="/" /> */}
+              <RoleRoute loading={loading} component={Error404} />
+            </Switch>
+          </BrowserRouter>
+          {isGuest && <ContactWidget />}
+        </IntlProvider>
+      </ConfigProvider>
+    </GlobalContext.Provider>
+  );
 }
 
 export default App;

@@ -1,6 +1,5 @@
 // import 'App.css';
 import { Layout, Typography } from 'antd';
-import HomeHeader from 'components/HomeHeader';
 import { Loading } from 'components/Loading';
 import React from 'react';
 import { listBlog } from 'services/blogService';
@@ -47,7 +46,6 @@ const BlogsPage = () => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
       {/* <BarStyled></BarStyled> */}
       <ContainerStyled>
         <Title level={2} style={{ textAlign: 'center' }}>Blog Posts</Title>

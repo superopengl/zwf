@@ -1,10 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, ManyToOne, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
+import { UserProfile } from './UserProfile';
+import { UserTag } from './UserTag';
 
 @Entity()
-@Index('user_email_unique', { synchronize: false })
+@Index('user_email_hash_unique', { synchronize: false })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -18,19 +20,7 @@ export class User {
    * as TypeOrm doesn't support case insensitive index.
    */
   @Column()
-  email!: string;
-
-  @Column({ nullable: true })
-  @Index()
-  givenName: string;
-
-  @Column({ nullable: true })
-  @Index()
-  surname: string;
-
-  @Column({ nullable: true })
-  @Index()
-  phone: string;
+  emailHash!: string;
 
   @Column({ default: 'local' })
   loginType: string;
@@ -58,11 +48,27 @@ export class User {
   @Column({ type: 'uuid', nullable: true })
   resetPasswordToken?: string;
 
-  @ManyToOne(() => Org, org => org.users, {nullable: true})
-  @JoinColumn({name: 'orgId', referencedColumnName: 'id'})
+  @ManyToOne(() => Org, org => org.users, { nullable: true })
+  @JoinColumn({ name: 'orgId', referencedColumnName: 'id' })
   org: Org;
 
   @Column('uuid')
   orgId: string;
+
+  @DeleteDateColumn()
+  @Index()
+  deletedAt: Date;
+
+  @OneToOne(() => UserProfile)
+  @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })
+  profile: UserProfile;
+
+  @Column()
+  profileId: string;
+
+  @ManyToMany(type => UserTag, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: UserTag[];
+
 }
 

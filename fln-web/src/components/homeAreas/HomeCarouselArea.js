@@ -32,7 +32,7 @@ background-repeat: no-repeat;
 background-size: cover;
 background-position: center;
 // background-image: radial-gradient(rgba(0,0,0,0.8), rgba(0, 0, 0, 0.1)),url("images/poster.jpg");
-background-image: linear-gradient(150deg, #f9f0ff, #f9f0ff 25%, #d3adf7 25%, #d3adf7 50%, #531dab 50%, #531dab 75%, #22075e 75%, #22075e 100%);
+background-image: linear-gradient(135deg, #f9f0ff, #f9f0ff 25%, #d3adf7 25%, #d3adf7 50%, #531dab 50%, #531dab 75%, #22075e 75%, #22075e 100%);
 width: 100%;
 min-height: 200px;
 display: flex;
@@ -74,7 +74,7 @@ const HomeCarouselAreaRaw = props => {
       44;
 
   const handleSignIn = () => {
-    props.history.push('/signon')
+    props.history.push('/signup')
   }
 
   return (
@@ -90,7 +90,7 @@ const HomeCarouselAreaRaw = props => {
               <Col {...span}>
                 <SignInButton block type="primary" 
                   size="large"
-                  onClick={() => handleSignIn()}>Sign On with Email</SignInButton>
+                  onClick={() => handleSignIn()}>Sign Up with Email</SignInButton>
               </Col>
               <Col {...span}>
                 <GoogleSsoButton

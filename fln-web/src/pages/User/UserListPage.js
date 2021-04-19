@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Table, Input, Modal, Form, Tooltip, Tag } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   IdcardOutlined,
@@ -102,7 +102,7 @@ const UserListPage = () => {
               <Button type="link" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Impersonate">
-              <Button type="link" onClick={e => handleImpersonante(e, user)} disabled={context.user.email === user.email}>
+              <Button type="link" onClick={e => handleImpersonante(e, user)} disabled={context.user.profile.email === user.profile.email}>
                 <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
               </Button>
             </Tooltip>
@@ -112,7 +112,7 @@ const UserListPage = () => {
               </Button>
             </Tooltip>
             <Tooltip placement="bottom" title="Delete user">
-              <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@filedin.io'} />
+              <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.profile.email === 'admin@filedin.io'} />
             </Tooltip>
           </Space>
         )
@@ -208,7 +208,7 @@ const UserListPage = () => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>

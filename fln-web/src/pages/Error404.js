@@ -2,15 +2,15 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { Result, Button } from 'antd';
 const Error404 = props => {
-  const handleGoBack = () => {
-    props.history.goBack();
+  const handleGoHome = () => {
+    props.history.push('/');
   };
 
   return <Result
     status="error"
     title="404 Page Not Found"
     subTitle="Oops! The page you visited does not exist."
-    extra={<Button type="link" onClick={handleGoBack}>Go Back</Button>}
+    extra={<Button type="link" onClick={handleGoHome}>Go Home</Button>}
   />
 };
 

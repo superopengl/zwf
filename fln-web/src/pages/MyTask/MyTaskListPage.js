@@ -1,5 +1,5 @@
 import { Badge, Button, Layout, Modal, Space, Tabs, Typography } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { listTask } from 'services/taskService';
@@ -89,7 +89,7 @@ const MyTaskListPage = (props) => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space size="large" direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
