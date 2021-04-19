@@ -93,14 +93,15 @@ export const applyDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 async function mdToPdfBuffer(md) {
-  const pdf = await mdToPdf({
-    content: md
-  }, {
-    launch_options: {
-      args: ['--no-sandbox']
-    }
-  });
-  return pdf.content;
+  // const pdf = await mdToPdf({
+  //   content: md
+  // }, {
+  //   launch_options: {
+  //     args: ['--no-sandbox']
+  //   }
+  // });
+  // return pdf.content;
+  return null;
 }
 
 export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
