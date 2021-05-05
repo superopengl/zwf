@@ -145,7 +145,9 @@ const HomePage = (props) => {
     rightContentRender={props => {
 
       if(isLoggedIn) {
-        return <Link to="/dashboard"><Button type="primary" ghost >Dashboard</Button></Link>
+        return <Link to="/dashboard"><Button type="primary" ghost >
+          <FormattedMessage id="menu.dashboard" />
+          </Button></Link>
       }
 
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
