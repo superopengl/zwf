@@ -264,7 +264,7 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminBoardPage} />
+      <RoleRoute exact path="/dashboard" component={AdminBoardPage} />
 
 
 
@@ -277,7 +277,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
       <RoleRoute visible={isClient} path="/account" exact component={MyAccountPage} />
-      <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />
+      <Redirect to={(isSystem || isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>
 
     <ChangePasswordModal

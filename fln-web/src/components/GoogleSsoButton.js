@@ -26,9 +26,7 @@ const GoogleSsoButton = props => {
       const count = await countUnreadMessage();
       setNotifyCount(count);
       
-      const isClient = user.role === 'client';
-
-      props.history.push(isClient ? '/landing' : '/tasks');
+      props.history.push('/dashboard');
     } else {
       notify.error('Failed to log in with Google');
     }
