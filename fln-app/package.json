@@ -17,6 +17,8 @@
     "link-web": "rm -rf www && ln -sfn \"$(pwd)/../fln-web/build\" www",
     "sync:schema": "TZ=utc ts-node endpoints/sync-db-schema.ts",
     "sync:schema:prod": "TZ=utc node endpoints/sync-db-schema",
+    "email": "TZ=utc ts-node endpoints/index-email.ts",
+    "email:prod": "TZ=utc node endpoints/index-email",
     "migrate:up": "npm run typeorm migration:run",
     "migrate:down": "npm run typeorm migration:revert",
     "migrate:new": "npm run typeorm migration:create -- -n",

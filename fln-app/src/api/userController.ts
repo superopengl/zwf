@@ -118,7 +118,7 @@ export const listAllUsers = handlerWrapper(async (req, res) => {
 });
 
 export const deleteUser = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system', 'admin');
   const { id } = req.params;
 
   const repo = getRepository(User);
@@ -135,15 +135,15 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await repo.softDelete(id);
     await getRepository(UserProfile).delete(profileId);
 
-    await enqueueEmail({
-      to: user.profile.email,
-      template: EmailTemplateType.DeleteUser,
-      vars: {
-        toWhom: getEmailRecipientName(user.profile),
-        email: user.profile.email,
-      },
-      shouldBcc: false
-    });
+    // await enqueueEmail({
+    //   to: user.profile.email,
+    //   template: EmailTemplateType.DeleteUser,
+    //   vars: {
+    //     toWhom: getEmailRecipientName(user.profile),
+    //     email: user.profile.email,
+    //   },
+    //   shouldBcc: false
+    // });
   }
 
   res.json();
@@ -170,7 +170,7 @@ export const setUserTags = handlerWrapper(async (req, res) => {
 });
 
 export const setUserPassword = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system');
   const { id } = req.params;
   const { password } = req.body;
   assert(password, 404, 'Invalid password');

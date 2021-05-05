@@ -5,7 +5,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, QuestionOutlined, AlertOutlined
+  DashboardOutlined, QuestionOutlined, AlertOutlined, HomeOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout } from 'services/authService';
@@ -63,6 +63,12 @@ const StyledMenu = styled(Menu)`
 `;
 
 const ROUTES = [
+  {
+    path: '/',
+    name: <FormattedMessage id="menu.home" />,
+    icon: <HomeOutlined />,
+    roles: ['admin', 'agent', 'client']
+  },
   {
     path: '/dashboard',
     name: <FormattedMessage id="menu.dashboard" />,

@@ -27,7 +27,7 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
         await connection?.close();
       } catch {
       }
-      process.exit();
+      process.exit(error ? 1 : 0);
     }
   }
 };

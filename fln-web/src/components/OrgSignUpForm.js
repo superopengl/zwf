@@ -32,7 +32,6 @@ const OrgSignUpForm = (props) => {
 
   const intl = useIntl();
   const [sending, setSending] = React.useState(false);
-  const { code: referralCode } = queryString.parse(props.location.search);
 
   const handleSignIn = async (values) => {
     if (sending) {
@@ -42,15 +41,18 @@ const OrgSignUpForm = (props) => {
     try {
       setSending(true);
 
-      Object.assign(values, { role: 'admin' });
+      const { email } = values;
 
-      await signUp(values);
+      await signUp({
+        email,
+        role: 'admin'
+      });
 
       onOk();
       // Guest
       notify.success(
         '🎉 Successfully signed up!',
-        <>Congratulations and thank you very much for signing up Filedin. The invitation email has been sent out to <Text strong>{values.email}</Text>.</>
+        <>Congratulations and thank you very much for signing up Filedin. The invitation email has been sent out to <Text strong>{email}</Text>.</>
       );
     } catch {
       // Ignore error which will be handled by the http service.

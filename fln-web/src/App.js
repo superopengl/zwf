@@ -113,8 +113,8 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-              {isGuest && <RoleRoute visible={isGuest} loading={loading} path="/" exact component={HomePage} />}
-              {isLoggedIn && <RoleRoute visible={isLoggedIn} loading={loading} path="/" component={AppLoggedIn} />}
+              <RoleRoute loading={loading} path="/" exact component={HomePage} />
+              <RoleRoute loading={loading} path="/" component={isLoggedIn ? AppLoggedIn : HomePage} />
               {/* <Redirect to="/" /> */}
               <RoleRoute loading={loading} component={Error404} />
             </Switch>

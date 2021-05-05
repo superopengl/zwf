@@ -137,12 +137,12 @@ paths:
           description: OK
   /auth/signup:
     post:
-      operationId: signup
+      operationId: signUp
       # security:
       #   - authAnyRole: []
       responses:
         200:
-          description: OK
+          description: OK       
   /auth/user:
     get:
       operationId: getAuthUser
