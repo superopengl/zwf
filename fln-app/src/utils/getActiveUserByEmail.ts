@@ -9,6 +9,6 @@ export async function getActiveUserByEmail(email) {
   const emailHash = computeEmailHash(email);
   const user = await getRepository(User).findOne({
     emailHash
-  }, { relations: ['profile', 'org'] });
+  }, { relations: ['profile'] });
   return user;
 }

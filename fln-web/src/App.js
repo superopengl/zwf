@@ -27,6 +27,7 @@ const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
+const OrgSignUpPage = loadable(() => import('pages/OrgSignUpPage'));
 
 const localeDic = {
   'en-US': {
@@ -106,6 +107,7 @@ const App = () => {
             <Switch>
               <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
+              <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />

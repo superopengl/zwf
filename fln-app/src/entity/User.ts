@@ -48,10 +48,6 @@ export class User {
   @Column({ type: 'uuid', nullable: true })
   resetPasswordToken?: string;
 
-  @ManyToOne(() => Org, org => org.users, { nullable: true })
-  @JoinColumn({ name: 'orgId', referencedColumnName: 'id' })
-  org: Org;
-
   @Column('uuid', { nullable: true })
   orgId: string;
 

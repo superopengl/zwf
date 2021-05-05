@@ -41,6 +41,10 @@ export class Task {
   @Index()
   userId: string;
 
+  @Column('uuid')
+  @Index()
+  orgId: string;
+
   @Column({ type: 'json' })
   fields: any;
 
@@ -63,11 +67,6 @@ export class Task {
   @Index()
   dueDate: Date;
 
-  @ManyToOne(() => Org, org => org.users, {nullable: true})
-  @JoinColumn({name: 'orgId', referencedColumnName: 'id'})
-  org: Org;
 
-  @Column('uuid')
-  orgId: string;
 }
 

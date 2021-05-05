@@ -6,7 +6,7 @@ export async function login(name, password) {
   return httpPost(`auth/login`, data);
 }
 
-export async function signIn(user) {
+export async function signUp(user) {
   return httpPost(`auth/signup`, user);
 }
 
