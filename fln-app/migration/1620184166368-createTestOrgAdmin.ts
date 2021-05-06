@@ -7,10 +7,11 @@ export class createTestOrgAdmin1620184166368 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         const orgMetadata = getRepository(Org).metadata;
-        await queryRunner.query(`INSERT INTO "${orgMetadata.schema}"."${orgMetadata.tableName}" (id, name, "businessName")
+        await queryRunner.query(`INSERT INTO "${orgMetadata.schema}"."${orgMetadata.tableName}" (id, name, domain, "businessName")
         VALUES (
         'ea3c49ed-b647-4844-bccd-c3ca003f6796',
         'Techseeding',
+        'filedin.io',
         'Techseeding Inc Pty'
         )`);
 

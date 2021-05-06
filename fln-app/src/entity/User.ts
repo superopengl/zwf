@@ -6,7 +6,7 @@ import { UserProfile } from './UserProfile';
 import { UserTag } from './UserTag';
 
 @Entity()
-@Index('user_email_hash_unique', { synchronize: false })
+@Index('user_unique_email', { synchronize: false })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
