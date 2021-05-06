@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
-import OrgSignUpForm from 'components/OrgSignUpForm';
+import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 
 const PageContainer = styled.div`
   width: 100%;

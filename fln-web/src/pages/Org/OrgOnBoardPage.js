@@ -5,7 +5,7 @@ import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import SignUpForm from 'components/SignUpForm';
-import OrgSignUpForm from 'components/OrgSignUpForm';
+import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 
 const Container = styled.div`
   width: 100%;
