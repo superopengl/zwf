@@ -21,6 +21,9 @@ export class Org {
   @Column()
   businessName: string;
 
+  @Column()
+  country: string;
+
   @Column({ nullable: true })
   address: string;
 

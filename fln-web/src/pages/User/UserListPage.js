@@ -67,7 +67,7 @@ const UserListPage = () => {
       render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
-      title: 'Client Name',
+      title: 'User Name',
       dataIndex: 'givenName',
       render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
     },
@@ -76,11 +76,11 @@ const UserListPage = () => {
       dataIndex: 'role',
       render: (text) => text
     },
-    {
-      title: 'Login Type',
-      dataIndex: 'loginType',
-      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    },
+    // {
+    //   title: 'Login Type',
+    //   dataIndex: 'loginType',
+    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    // },
     {
       title: 'Tags',
       dataIndex: 'tags',
@@ -106,7 +106,7 @@ const UserListPage = () => {
               <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
             </Tooltip>
             {isSystem && <Tooltip placement="bottom" title="Impersonate">
-              <Button shape="circle" onClick={e => handleImpersonante(e, user)} disabled={context.user.profile.email === user.email}>
+              <Button shape="circle" onClick={e => handleImpersonante(e, user)}>
                 <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
               </Button>
             </Tooltip>}
@@ -276,7 +276,7 @@ const UserListPage = () => {
           />
           <Space>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}></Button>
+            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite User</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
@@ -358,8 +358,8 @@ const UserListPage = () => {
           <Form.Item label="Role" name="role">
             <Radio.Group defaultValue="client" disabled={loading} optionType="button" buttonStyle="solid">
               <Radio.Button value="client">Client</Radio.Button>
-              <Radio.Button value="agent">Agent</Radio.Button>
-              <Radio.Button value="admin">Admin</Radio.Button>
+              <Radio.Button value="agent">Org Member</Radio.Button>
+              {/* <Radio.Button value="admin">Admin</Radio.Button> */}
             </Radio.Group>
           </Form.Item>
           <Form.Item label="Tags" name="tags">

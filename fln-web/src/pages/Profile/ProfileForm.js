@@ -9,10 +9,6 @@ import { LocaleSelector } from 'components/LocaleSelector';
 const { Title } = Typography;
 
 
-
-
-
-
 const ProfileForm = (props) => {
   const { user, initial, onOk } = props;
   const [sending, setSending] = React.useState(false);
@@ -37,7 +33,7 @@ const ProfileForm = (props) => {
     }
   }
 
-  const isBuiltinAdmin = user.profile.email === 'admin@filedin.io';
+  const isBuiltinAdmin = (user.email || user.profile?.email) === 'admin@filedin.io';
 
   return (
     <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user}>

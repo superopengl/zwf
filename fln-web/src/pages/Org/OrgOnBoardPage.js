@@ -7,6 +7,8 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import SignUpForm from 'components/SignUpForm';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 import OrgOnBoardWizard from './OrgOnBoardWizard';
+import OrgOnBoardForm from './OrgProfileForm';
+import { getAuthUser$ } from 'services/authService';
 
 const { Title } = Typography;
 
@@ -28,14 +30,23 @@ const InnerContainer = styled.div`
 `;
 
 
+
 const OrgOnBoardPage = (props) => {
+
+  const handleCreatedOrg = () => {
+    getAuthUser$().subscribe(() => {
+      props.history.push('/dashboard');
+    });
+  }
+
+
   return <Container>
     <InnerContainer>
       <Logo />
-      <Title level={2} style={{margin: '2rem auto'}}>
-        Organisation On Board
+      <Title level={2} style={{ margin: '2rem auto' }}>
+        Organisation Profile
       </Title>
-      <OrgOnBoardWizard />
+      <OrgOnBoardForm onOk={handleCreatedOrg} />
     </InnerContainer>
   </Container>
 }

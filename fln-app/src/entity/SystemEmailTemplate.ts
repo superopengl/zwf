@@ -1,13 +1,17 @@
-import { Entity, Column, Index, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, Index, PrimaryColumn, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { Locale } from '../types/Locale';
 
 
 @Entity()
+@Unique('idx_sys_email_template_key_locale_unique', ['key', 'locale'])
 export class SystemEmailTemplate {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
   key: string;
 
-  @PrimaryColumn({ default: Locale.Engish })
+  @Column({ default: Locale.Engish })
   locale: string;
 
   @Column({ nullable: true })
