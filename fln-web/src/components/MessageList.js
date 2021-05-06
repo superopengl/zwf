@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Typography, List, Space, Spin } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
-import { countUnreadMessage } from 'services/messageService';
+import { countUnreadMessage$ } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import InfiniteScroll from 'react-infinite-scroller';
 import { withRouter } from 'react-router-dom';
@@ -52,7 +52,7 @@ const MessageList = (props) => {
   const initloadList = async () => {
     setLoading(true);
     await handleFetchNextPageData(size);
-    const count = await countUnreadMessage();
+    const count = await countUnreadMessage$();
     context.setNotifyCount(count);
     setLoading(false);
   }

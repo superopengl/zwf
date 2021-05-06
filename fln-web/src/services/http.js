@@ -89,7 +89,7 @@ export function request$(method, path, queryParams, body, responseType = 'json')
         window.location = '/';
         return;
       }
-      const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+      const errorMessage = responseType === 'blob' ? e.message : e.response || _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
       notify.error('Error', errorMessage);
       console.error(e.response);
       return of(null)
