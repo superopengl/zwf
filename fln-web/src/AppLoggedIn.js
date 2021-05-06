@@ -8,7 +8,7 @@ import Icon, {
   DashboardOutlined, QuestionOutlined, AlertOutlined, HomeOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
-import { logout } from 'services/authService';
+import { logout$ } from 'services/authService';
 import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
@@ -160,10 +160,11 @@ const AppLoggedIn = props => {
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
 
   const handleLogout = async () => {
-    await logout();
-    // reactLocalStorage.clear();
-    setUser(null);
-    history.push('/');
+    logout$().subscribe(() => {
+      // reactLocalStorage.clear();
+      setUser(null);
+      history.push('/');
+    });
   }
 
   const avatarMenu = <StyledMenu>

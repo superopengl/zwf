@@ -10,7 +10,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
 import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
-import { inviteUser, impersonate } from 'services/authService';
+import { inviteUser$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -205,10 +205,12 @@ const UserListPage = () => {
       content: <>To impersonate user <Text code>{item.email}</Text></>,
       okText: 'Yes, impersonate',
       maskClosable: true,
-      onOk: async () => {
-        await impersonate(item.email);
-        reactLocalStorage.clear();
-        window.location = '/';
+      onOk: () => {
+        impersonate$(item.email)
+          .subscribe(() => {
+            reactLocalStorage.clear();
+            window.location = '/';
+          });
       }
     })
   }
@@ -240,9 +242,10 @@ const UserListPage = () => {
 
   const handleInviteUser = async values => {
     const { email, role } = values;
-    await inviteUser(email, role);
-    setInviteVisible(false);
-    loadList();
+    inviteUser$(email, role).subscribe(() => {
+      setInviteVisible(false);
+      loadList();
+    });
   }
 
   const handleTagFilterChange = (tags) => {
@@ -288,7 +291,7 @@ const UserListPage = () => {
           rowKey="id"
           loading={loading}
           pagination={queryInfo}
-          style={{marginTop: 20}}
+          style={{ marginTop: 20 }}
         // pagination={queryInfo}
         // onChange={handleTableChange}
         // onRow={(record, index) => ({
