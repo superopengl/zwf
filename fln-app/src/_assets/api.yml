@@ -142,7 +142,7 @@ paths:
       #   - authAnyRole: []
       responses:
         200:
-          description: OK       
+          description: OK
   /auth/user:
     get:
       operationId: getAuthUser
@@ -263,6 +263,12 @@ paths:
           type: string
           format: uuid
           required: true
+      responses:
+        200:
+          description: OK
+  /org:
+    get:
+      operationId: getMyOrgProfile
       responses:
         200:
           description: OK

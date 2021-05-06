@@ -28,6 +28,7 @@ const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage')
 const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const OrgSignUpPage = loadable(() => import('pages/OrgSignUpPage'));
+const OrgOnBoardPage = loadable(() => import('pages/OrgOnBoardPage'));
 
 const localeDic = {
   'en-US': {
@@ -104,6 +105,7 @@ const App = () => {
 
   const role = contextValue.role;
   const isGuest = !role || role === 'guest';
+  const isAdmin = role === 'admin';
 
   const isLoggedIn = !isGuest;
 
@@ -119,6 +121,7 @@ const App = () => {
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
+              <RoleRoute visible={isAdmin} loading={loading} exact path="/onboard" component={OrgOnBoardPage} />
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
