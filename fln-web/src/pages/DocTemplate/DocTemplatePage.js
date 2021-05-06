@@ -62,7 +62,7 @@ export const DocTemplatePage = () => {
     {
       title: <>Auto matched fields</>,
       dataIndex: 'variables',
-    render: (value) => <>{(value || []).map(x => <Text style={{display: 'inline-block'}} key={x} code>{`{{${x}}}`}</Text>)}</>
+      render: (value) => <>{(value || []).map(x => <Text style={{ display: 'inline-block' }} key={x} code>{`{{${x}}}`}</Text>)}</>
     },
     {
       title: 'Created At',
@@ -142,32 +142,26 @@ export const DocTemplatePage = () => {
   }
 
 
-  return (
-    <LayoutStyled>
-      
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Doc Template Management</Title>
-          </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
-          </Space>
-          <Table columns={columnDef}
-            size="small"
-            dataSource={list}
-            rowKey="id"
-            loading={loading}
-            pagination={false}
-            // onChange={handleTableChange}
-            onRow={(record) => ({
-              onDoubleClick: () => {
-                setCurrentId(record.id);
-                setDrawerVisible(true);
-              }
-            })}
-          />
-        </Space>
+  return (<>
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+        <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+      </Space>
+      <LayoutStyled>
+        <Table columns={columnDef}
+          size="small"
+          dataSource={list}
+          rowKey="id"
+          loading={loading}
+          pagination={false}
+          // onChange={handleTableChange}
+          onRow={(record) => ({
+            onDoubleClick: () => {
+              setCurrentId(record.id);
+              setDrawerVisible(true);
+            }
+          })}
+        />
         <StyledDrawer
           title={!currentId ? 'New Doc Template' : 'Edit Doc Template'}
           placement="right"
@@ -180,8 +174,9 @@ export const DocTemplatePage = () => {
         >
           <DocTemplateForm id={currentId} onClose={() => handleDrawerClose()} onOk={() => { handleDrawerClose(); loadList() }}></DocTemplateForm>
         </StyledDrawer>
-      </ContainerStyled>
-    </LayoutStyled >
+      </LayoutStyled >
+    </Space>
+  </>
   );
 };
 

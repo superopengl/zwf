@@ -16,6 +16,9 @@ import { IoLanguage } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
+import smoothscroll from 'smoothscroll-polyfill';
+
+smoothscroll.polyfill();
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
@@ -79,6 +82,7 @@ const scrollToElement = (selector) => {
 
 
 const HomePage = (props) => {
+  const [collapsed, setCollapsed] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const intl = useIntl();
 
@@ -126,6 +130,7 @@ const HomePage = (props) => {
     const isAnchor = path.includes('#');
     if (isAnchor) {
       scrollToElement(path.replace(/\//, ''))
+      setCollapsed(true);
     } else {
       props.history.push(path);
     }
@@ -135,6 +140,8 @@ const HomePage = (props) => {
     logo="/favicon-32x32.png"
     title={null}
     // logo="/images/logo-transparent.png"
+    collapsed={collapsed}
+    onCollapse={setCollapsed}
     siderWidth={270}
     layout="top"
     navTheme="dark"
