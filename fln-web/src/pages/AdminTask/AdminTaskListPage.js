@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Space, Row, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
+import { Button, Input, Card, Modal, Select, Space, Row, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 
 import { TaskStatus } from 'components/TaskStatus';
@@ -46,9 +46,9 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const LayoutStyled = styled(Layout)`
+const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   height: 100%;
 `;
 
@@ -344,7 +344,7 @@ const AdminTaskListPage = (props) => {
   }
 
   const handleCreateTask = () => {
-    props.history.push('/tasks/new');
+    props.history.push('/task/new');
   }
 
   React.useEffect(() => {
@@ -361,13 +361,10 @@ const AdminTaskListPage = (props) => {
 
   return (
     <LayoutStyled>
-      
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Task Management</Title>
-          </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+
+      <Space direction="vertical" style={{ width: '100%' }} size="large">
+        <Card>
+          <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
             <Space>
               <Label>Search</Label>
               <Input.Search
@@ -456,30 +453,30 @@ const AdminTaskListPage = (props) => {
           </Row>
 
 
+        </Card>
 
-          <Table columns={columnDef}
-            dataSource={taskList}
-            // scroll={{x: 1000}}
-            // style={{marginTop: 30}}
-            rowKey="id"
-            size="small"
-            loading={loading}
-            pagination={false}
-            onChange={handleTableChange}
-            rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
-            onRow={(record) => ({
-              onDoubleClick: () => {
-                props.history.push(`/tasks/${record.id}/proceed?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
-              }
-            })}
-          ></Table>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Pagination size="small" onChange={handlePaginationChange}
-              total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
-          </Space>
+        <Table columns={columnDef}
+          dataSource={taskList}
+          // scroll={{x: 1000}}
+          // style={{marginTop: 30}}
+          rowKey="id"
+          size="small"
+          loading={loading}
+          pagination={false}
+          onChange={handleTableChange}
+          rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
+          onRow={(record) => ({
+            onDoubleClick: () => {
+              props.history.push(`/tasks/${record.id}/proceed?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
+            }
+          })}
+        ></Table>
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Pagination size="small" onChange={handlePaginationChange}
+            total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
+      </Space>
 
-      </ContainerStyled>
     </LayoutStyled >
   );
 };

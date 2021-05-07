@@ -22,9 +22,6 @@ export class Task {
   @Column()
   name: string;
 
-  @Column()
-  forWhom: string;
-
   @Column({ default: TaskStatus.TODO })
   @Index()
   status: TaskStatus;

@@ -9,7 +9,7 @@ import { getUserEmailAddress } from './getUserEmailAddress';
 
 export async function sendSignedEmail(task: Task) {
   const user = await getRepository(User).findOne(task.userId);
-  const { id: taskId, docs: taskDocs, name: taskName, forWhom } = task;
+  const { id: taskId, docs: taskDocs, name: taskName } = task;
   const fileIds = (taskDocs || []).filter(d => d.signedAt).map(d => d.fileId).filter(x => x);
   const attachments = fileIds.length ?
     await getRepository(File)
@@ -25,7 +25,6 @@ export async function sendSignedEmail(task: Task) {
     template: 'taskSigned',
     vars: {
       toWhom: getEmailRecipientName(user),
-      forWhom,
       taskId,
       taskName,
     },

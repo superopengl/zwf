@@ -32,7 +32,7 @@ height: 100%;
 `;
 
 
-const LayoutStyled = styled(Layout)`
+const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
   height: 100%;
@@ -77,8 +77,6 @@ const MyTaskPage = (props) => {
 
   return (<>
     <LayoutStyled>
-      <HomeHeader />
-      <ContainerStyled>
         {loading ? <Loading /> : <Layout style={{ backgroundColor: '#ffffff', height: '100%', justifyContent: 'center' }}>
           <Layout.Content style={{ padding: 0, maxWidth: 500, margin: '0 auto', width: '100%' }}>
             {!isNew && <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
@@ -93,7 +91,6 @@ const MyTaskPage = (props) => {
             <TaskChatPanel taskId={task.id} />
           </Layout.Sider>}
         </Layout>}
-      </ContainerStyled>
     </LayoutStyled>
   </>
   );

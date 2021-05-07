@@ -1,7 +1,6 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Layout, Row, Col, Space, Spin, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
-
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { saveTask, searchTask } from '../../services/taskService';
@@ -29,7 +28,7 @@ const StyledRow = styled(Row)`
 
 const StyledColumn = styled(Space)`
 border-radius: 4px;
-background-color: rgb(255,255,255);
+background-color: rgb(250,250,250);
 height: 100%;
 width: 100%;
 padding: 8px;
@@ -39,25 +38,25 @@ const COLUMN_DEFS = [
   {
     status: 'todo',
     label: 'To Do',
-    bgColor: '#ffffff',
+    bgColor: '#f5f5f5',
     hoverColor: '#bfbfbf',
   },
   {
     status: 'to_sign',
     label: 'To Sign',
-    bgColor: '#ffffff',
+    bgColor: '#f5f5f5',
     hoverColor: '#ff4d4f',
   },
   {
     status: 'signed',
     label: 'Signed',
-    bgColor: '#ffffff',
+    bgColor: '#f5f5f5',
     hoverColor: '#1890ff',
   },
   {
     status: 'complete',
     label: 'Completed',
-    bgColor: '#ffffff',
+    bgColor: '#f5f5f5',
     hoverColor: '#73d13d',
   },
 ]
@@ -67,7 +66,7 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 200,
   total: 0,
-  status: ['todo', 'to_sign', 'signed', 'complete'],
+  status: ['todo', 'review', 'held', 'to_sign', 'signed', 'complete'],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
@@ -104,41 +103,41 @@ const AdminBoardPage = props => {
   }
 
   const handleCreateTask = () => {
-    props.history.push('/tasks/new');
+    props.history.push('/task/new');
   }
   return (
     <LayoutStyled>
-        <Space style={{ width: '100%', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-          <Link to="/tasks"><Button type="link">All Tasks</Button></Link>
-          <Button type="primary" onClick={() => handleCreateTask()} icon={<PlusOutlined />}>New Task</Button>
-        </Space>
-        <DragDropContext onDragEnd={onDragEnd}>
-          <Loading loading={loading}>
-            <StyledRow gutter={10}>
-              {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
-                {(provided, snapshot) => (
-                  <Col span={6}
-                    ref={provided.innerRef}>
-                    <StyledColumn direction="vertical" style={{ backgroundColor: s.bgColor, border: `2px dashed ${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}` }}>
-                      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                        <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }} type="secondary">{s.label}</Title>
-                        <Text strong>{taskList.filter(j => j.status === s.status).length}</Text>
-                      </Space>
-                      {taskList.filter(j => j.status === s.status).map((task, index) => {
-                        // if (task.statusId === status.id)
-                        return (
-                          <TaskCard key={task.id} index={index} task={task} onChange={() => loadList()} />
-                        );
-                      })
-                      }
-                      {provided.placeholder}
-                    </StyledColumn>
-                  </Col>
-                )}
-              </Droppable>)}
-            </StyledRow>
-          </Loading>
-        </DragDropContext>
+      <Space style={{ width: '100%', justifyContent: 'flex-end', marginBottom: '1rem' }}>
+        <Link to="/task"><Button type="link">All Tasks</Button></Link>
+        <Button type="primary" onClick={() => handleCreateTask()} icon={<PlusOutlined />}>New Task</Button>
+      </Space>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Loading loading={loading}>
+          <StyledRow gutter={10}>
+            {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
+              {(provided, snapshot) => (
+                <Col span={6}
+                  ref={provided.innerRef}>
+                  <StyledColumn direction="vertical" style={{ backgroundColor: s.bgColor, border: `2px dashed ${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}` }}>
+                    <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+                      <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }} type="secondary">{s.label}</Title>
+                      <Text strong>{taskList.filter(j => j.status === s.status).length}</Text>
+                    </Space>
+                    {taskList.filter(j => j.status === s.status).map((task, index) => {
+                      // if (task.statusId === status.id)
+                      return (
+                        <TaskCard key={task.id} index={index} task={task} onChange={() => loadList()} />
+                      );
+                    })
+                    }
+                    {provided.placeholder}
+                  </StyledColumn>
+                </Col>
+              )}
+            </Droppable>)}
+          </StyledRow>
+        </Loading>
+      </DragDropContext>
     </LayoutStyled>
   )
 }

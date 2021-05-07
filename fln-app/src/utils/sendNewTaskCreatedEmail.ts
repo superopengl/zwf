@@ -7,7 +7,7 @@ import { getEmailRecipientName } from './getEmailRecipientName';
 
 export async function sendNewTaskCreatedEmail(task: Task) {
   const user = await getRepository(User).findOne(task.userId);
-  const { id: taskId, name: taskName, forWhom } = task;
+  const { id: taskId, name: taskName } = task;
 
   await sendEmail({
     to: user.profile.email,
@@ -15,7 +15,6 @@ export async function sendNewTaskCreatedEmail(task: Task) {
     template: 'taskCreated',
     vars: {
       toWhom: getEmailRecipientName(user),
-      forWhom,
       taskId,
       taskName,
     },

@@ -40,7 +40,7 @@ function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[]): TaskDoc[] {
 
 export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, portfolioId, genName: (task: TaskTemplate, porto: Portfolio) => string) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
-  assert(portfolioId, 400, 'taskTemplateId is not specified');
+  assert(portfolioId, 400, 'portfolioId is not specified');
 
   const taskTemplateRepo = getRepository(TaskTemplate);
   const taskTemplate = await taskTemplateRepo.findOne(taskTemplateId);
@@ -60,7 +60,6 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
 
   // task.id = uuidv4();
   task.name = genName(taskTemplate, portfolio);
-  task.forWhom = guessDisplayNameFromFields(portfolio.fields);
   task.userId = portfolio.userId;
   task.taskTemplateId = taskTemplateId;
   task.portfolioId = portfolioId;

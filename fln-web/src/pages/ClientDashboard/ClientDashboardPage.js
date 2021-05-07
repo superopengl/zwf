@@ -87,7 +87,7 @@ const ClientDashboardPage = (props) => {
   const createNewTask = (e, portfolioId) => {
     e.stopPropagation();
     if (portfolioList.length) {
-      props.history.push(`/tasks/new?${portfolioId ? `portfolioId=${portfolioId}` : ''}`);
+      props.history.push(`/task/new?${portfolioId ? `portfolioId=${portfolioId}` : ''}`);
     } else {
       showNoPortfolioWarn();
     }

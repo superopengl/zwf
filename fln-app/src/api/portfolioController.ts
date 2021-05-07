@@ -8,6 +8,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getNow } from '../utils/getNow';
 import { guessDisplayNameFromFields } from '../utils/guessDisplayNameFromFields';
 import { sendNewPortfolioEmail } from '../utils/sendNewPortfolioEmail';
+import { UserProfile } from '../entity/UserProfile';
 
 export const savePortfolio = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -46,11 +47,12 @@ async function listAdminPortfolio() {
     .from(Portfolio, 'x')
     .where({ deleted: false })
     .innerJoin(q => q.from(User, 'u').where(`u.role = 'client'`), 'u', 'u.id = x."userId"')
+    .innerJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .orderBy('x.name', 'ASC')
     .select([
       'x.id as id',
       'x.name as name',
-      'u.email as email'
+      'p.email as email'
     ])
     .execute();
   return list;

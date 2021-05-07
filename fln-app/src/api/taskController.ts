@@ -93,7 +93,6 @@ export const saveTask = handlerWrapper(async (req, res) => {
   }
 
   task.name = name;
-  task.forWhom = guessDisplayNameFromFields(portfolio.fields);
   task.fields = fields;
   task.docs = docs;
   task.status = status;

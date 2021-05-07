@@ -73,7 +73,7 @@ const MyTaskListPage = (props) => {
       });
       return;
     }
-    props.history.push(`/tasks/new`);
+    props.history.push(`/task/new`);
   }
 
   const handleItemClick = task => {
