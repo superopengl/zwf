@@ -1,9 +1,16 @@
-import { Column, PrimaryColumn, Entity, UpdateDateColumn, CreateDateColumn, Index } from 'typeorm';
+import { Column, PrimaryColumn, Entity, UpdateDateColumn, CreateDateColumn, Index, Unique } from 'typeorm';
 
 @Entity()
+@Unique('idx_recurring_org_name_unique', ['orgId', 'nameTemplate'])
 export class Recurring {
   @PrimaryColumn('uuid')
   id: string;
+
+  @Column('uuid')
+  orgId: string;
+
+  @Column()
+  nameTemplate: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -11,9 +18,6 @@ export class Recurring {
   @UpdateDateColumn()
   @Index()
   lastUpdatedAt: Date;
-
-  @Column()
-  nameTemplate: string;
 
   @Column('uuid')
   @Index()

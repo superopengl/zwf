@@ -13,22 +13,15 @@ export class Message {
 
   @Column('uuid')
   @Index()
-  orgId: string;
-
-  @Column('uuid')
-  @Index()
   taskId: string;
 
   @Column('uuid')
-  sender: string;
+  @Index()
+  senderId: string;
 
   @Column('uuid')
   @Index()
-  clientUserId: string;
-
-  @Column('uuid', {nullable: true})
-  @Index()
-  agentUserId: string;
+  recipientId: string;
 
   @Column()
   content: string;

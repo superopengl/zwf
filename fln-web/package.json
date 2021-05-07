@@ -56,6 +56,8 @@
     "rxjs": "^6.6.3",
     "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.2.1",
+    "suneditor": "^2.38.8",
+    "suneditor-react": "^2.16.4",
     "tfn": "^1.0.0",
     "uniqolor": "^1.0.1",
     "uuid": "^8.3.2",

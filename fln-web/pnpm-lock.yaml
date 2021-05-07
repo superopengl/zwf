@@ -52,6 +52,8 @@ dependencies:
   rxjs: 6.6.3
   smoothscroll-polyfill: 0.4.4
   styled-components: 5.2.3_84d21352b10017addcdab28b8d95ead5
+  suneditor: 2.38.8
+  suneditor-react: 2.16.4_react-dom@17.0.2+react@17.0.2
   tfn: 1.0.0
   uniqolor: 1.0.1
   uuid: 8.3.2
@@ -14224,6 +14226,21 @@ packages:
     dev: false
     resolution:
       integrity: sha512-m3k+dk7QeJw660eIKRRn3xPF6uuvHs/FFzjX3HQ5ove0qYsiygoAhwn5a3IYKaZPo5LrYD0rfVmtv1gNY1uYwg==
+  /suneditor-react/2.16.4_react-dom@17.0.2+react@17.0.2:
+    dependencies:
+      prop-types: 15.7.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
+    peerDependencies:
+      react: ^16.9.0 || ^17
+      react-dom: ^16.9.0 || ^17
+    resolution:
+      integrity: sha512-AKUU8sXh4METYW11x0iiGtANlRUOat7AuarmfxNdoJzzBf+wAx357CI9babJJ+fdHwvLDe6BMklH8fwU+4OAOw==
+  /suneditor/2.38.8:
+    dev: false
+    resolution:
+      integrity: sha512-Ew5InvvDBb9Bjy3ghK3kYxDLVz3yNk+k/gXiy/V3KzfQDPM0K4/SmdBpu3dEC7EinXA+ZcIimxd/I6dVMJV+nA==
   /supports-color/5.5.0:
     dependencies:
       has-flag: 3.0.0
@@ -15788,6 +15805,8 @@ specifiers:
   rxjs: ^6.6.3
   smoothscroll-polyfill: ^0.4.4
   styled-components: ^5.2.1
+  suneditor: ^2.38.8
+  suneditor-react: ^2.16.4
   tfn: ^1.0.0
   uniqolor: ^1.0.1
   uuid: ^8.3.2

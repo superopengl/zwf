@@ -8,6 +8,10 @@ export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
+  @Column('uuid')
+  @Index()
+  orgId: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -41,10 +45,6 @@ export class Task {
   @Index()
   userId: string;
 
-  @Column('uuid')
-  @Index()
-  orgId: string;
-
   @Column({ type: 'json' })
   fields: any;
 
@@ -66,7 +66,5 @@ export class Task {
   @Column({nullable: true})
   @Index()
   dueDate: Date;
-
-
 }
 

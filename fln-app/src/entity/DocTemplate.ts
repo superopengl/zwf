@@ -1,13 +1,16 @@
-import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
 
 
 @Entity()
+@Unique('idx_doc_template_org_name_unique', ['orgId', 'name'])
 export class DocTemplate {
   @PrimaryColumn('uuid')
   id: string;
 
+  @Column('uuid')
+  orgId: string;
+
   @Column()
-  @Index({ unique: true })
   name: string;
 
   @Column({default: ''})
@@ -20,7 +23,7 @@ export class DocTemplate {
   lastUpdatedAt: Date;
 
   @Column({ type: 'text' })
-  md: string;
+  html: string;
 
   @Column({ type: 'varchar', array: true, default: '{}' })
   variables: string[];

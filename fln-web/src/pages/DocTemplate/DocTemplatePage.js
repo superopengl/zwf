@@ -1,5 +1,5 @@
 import {
-  DeleteOutlined, EditOutlined, PlusOutlined
+  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography } from 'antd';
 
@@ -21,6 +21,7 @@ const StyledDrawer = styled(Drawer)`
 
 .ant-drawer-content-wrapper {
   max-width: 90vw;
+  min-width: 350px;
 }
 
 .rce-mbox {
@@ -50,19 +51,19 @@ const LayoutStyled = styled(Layout)`
 export const DocTemplatePage = () => {
   const columnDef = [
     {
-      title: 'Doc Template Name',
+      title: 'Name',
       dataIndex: 'name',
       render: (text) => text
     },
     {
-      title: 'Description & Help',
+      title: 'Description',
       dataIndex: 'description',
       render: (text) => text
     },
     {
-      title: <>Auto matched fields</>,
+      title: <>Variables</>,
       dataIndex: 'variables',
-      render: (value) => <>{(value || []).map(x => <Text style={{ display: 'inline-block' }} key={x} code>{`{{${x}}}`}</Text>)}</>
+      render: (value) => <>{(value || []).map(x => <Text style={{ display: 'inline-block' }} key={x} code>{x}</Text>)}</>
     },
     {
       title: 'Created At',
@@ -76,8 +77,13 @@ export const DocTemplatePage = () => {
     },
     {
       // title: 'Action',
+      align: 'right',
+      width: 100,
       render: (text, record) => (
         <Space size="small">
+          <Tooltip placement="bottom" title="Test doc template">
+            <Button type="link" icon={<EyeOutlined />} onClick={e => handleTestDocTemplate(e, record)} />
+          </Tooltip>
           <Tooltip placement="bottom" title="Edit doc template">
             <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
           </Tooltip>
@@ -121,6 +127,11 @@ export const DocTemplatePage = () => {
     });
   }
 
+  const handleTestDocTemplate = (e, item) => {
+    e.stopPropagation();
+
+  }
+
   const loadList = async () => {
     setLoading(true);
     const list = await listDocTemplate();
@@ -143,9 +154,9 @@ export const DocTemplatePage = () => {
 
 
   return (<>
-    <Space direction="vertical" style={{ width: '100%' }}>
+    <Space direction="vertical" style={{ width: '100%' }} size="large">
       <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-        <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
       </Space>
       <LayoutStyled>
         <Table columns={columnDef}
@@ -169,7 +180,7 @@ export const DocTemplatePage = () => {
           visible={drawerVisible}
           onClose={() => handleDrawerClose()}
           destroyOnClose={true}
-          width={9999}
+          width="calc(100vw - 280px)"
           footer={null}
         >
           <DocTemplateForm id={currentId} onClose={() => handleDrawerClose()} onOk={() => { handleDrawerClose(); loadList() }}></DocTemplateForm>
