@@ -4,9 +4,6 @@ import {
 import { Button, Tooltip, List, Typography, Space, Divider } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import MdEditor from 'react-markdown-editor-lite'
-import MarkdownIt from 'markdown-it'
-import 'react-markdown-editor-lite/lib/index.css';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card } from 'antd';
@@ -25,7 +22,6 @@ const StyledList = styled(List)`
 `;
 
 
-const mdParser = new MarkdownIt({ html: true, linkify: true });
 
 const previewConfig = {
   view: {
@@ -85,13 +81,13 @@ export const BlogList = props => {
             </Space>
           </Space>}
           >
-            <MdEditor
+            {/* <MdEditor
               value={item.md}
               readOnly={true}
               config={previewConfig}
               // style={{ height: "500px" }}
               renderHTML={(text) => mdParser.render(text)}
-            />
+            /> */}
           </Card>
         </List.Item>
       )}

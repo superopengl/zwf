@@ -7,7 +7,6 @@ import BlogForm from './BlogForm';
 import React from 'react';
 import styled from 'styled-components';
 import { deleteBlog, listBlog } from 'services/blogService';
-import 'react-markdown-editor-lite/lib/index.css';
 import BlogList from '../../components/BlogList';
 import { Loading } from 'components/Loading';
 
