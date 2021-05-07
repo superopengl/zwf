@@ -12,12 +12,6 @@ import styled from 'styled-components';
 
 const { Title, Link } = Typography;
 
-const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
-  // height: 100%;
-  // height: calc(100vh + 64px);
-`;
-
 const StyledDrawer = styled(Drawer)`
 
 .ant-drawer-content-wrapper {
@@ -39,9 +33,9 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const LayoutStyled = styled(Layout)`
+const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
 `;
@@ -62,7 +56,7 @@ export const TaskTemplatePage = props => {
 
   const columnDef = [
     {
-      title: 'Task Template Name',
+      title: 'Name',
       dataIndex: 'name',
       render: (text, record) => <Link onClick={e => handleClickTemplate(e, record.id)}>{text}</Link>
     },
@@ -78,6 +72,7 @@ export const TaskTemplatePage = props => {
     },
     {
       // title: 'Action',
+      align: 'right',
       render: (text, record) => (
         <Space size="small">
           <Tooltip placement="bottom" title="Edit task template">
@@ -150,13 +145,9 @@ export const TaskTemplatePage = props => {
   return (
     <LayoutStyled>
       
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-        <StyledTitleRow>
-          <Title level={2} style={{ margin: 'auto' }}>Task Template Management</Title>
-        </StyledTitleRow>
+        <Space direction="vertical" style={{ width: '100%' }} size="large">
           <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
           </Space>
           <Table columns={columnDef}
             size="small"
@@ -182,7 +173,6 @@ export const TaskTemplatePage = props => {
         >
           <TaskTemplateForm id={currentId} onClose={() => handleDrawerClose()} onOk={() => {handleDrawerClose(); loadList()}}></TaskTemplateForm>
         </StyledDrawer>
-      </ContainerStyled>
     </LayoutStyled >
   );
 };

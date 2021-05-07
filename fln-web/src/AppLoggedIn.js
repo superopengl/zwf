@@ -36,6 +36,7 @@ const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
+const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
 
 const { Link: LinkText } = Typography;
 
@@ -311,6 +312,7 @@ const AppLoggedIn = props => {
 
       {/* <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} /> */}
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
+      <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
