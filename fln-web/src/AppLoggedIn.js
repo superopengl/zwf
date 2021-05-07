@@ -13,7 +13,7 @@ import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
-import AboutDrawer from 'pages/About/AboutDrawer';
+import AboutModal from 'pages/About/AboutModal';
 import { Switch } from 'react-router-dom';
 import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
 import { BsCalendar } from 'react-icons/bs';
@@ -352,7 +352,7 @@ const AppLoggedIn = props => {
     >
       <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
-    <AboutDrawer
+    <AboutModal
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />

@@ -12,9 +12,9 @@ import { Loading } from 'components/Loading';
 
 const { Title } = Typography;
 
-const LayoutStyled = styled(Layout)`
+const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   height: 100%;
 `;
 
@@ -29,7 +29,7 @@ const StyledRow = styled(Row)`
 
 const StyledColumn = styled(Space)`
 border-radius: 4px;
-background-color: rgb(250,250,250);
+background-color: rgb(255,255,255);
 height: 100%;
 width: 100%;
 padding: 8px;
@@ -39,25 +39,25 @@ const COLUMN_DEFS = [
   {
     status: 'todo',
     label: 'To Do',
-    bgColor: '#f5f5f5',
+    bgColor: '#ffffff',
     hoverColor: '#bfbfbf',
   },
   {
     status: 'to_sign',
     label: 'To Sign',
-    bgColor: '#f5f5f5',
+    bgColor: '#ffffff',
     hoverColor: '#ff4d4f',
   },
   {
     status: 'signed',
     label: 'Signed',
-    bgColor: '#f5f5f5',
+    bgColor: '#ffffff',
     hoverColor: '#1890ff',
   },
   {
     status: 'complete',
     label: 'Completed',
-    bgColor: '#f5f5f5',
+    bgColor: '#ffffff',
     hoverColor: '#73d13d',
   },
 ]
@@ -108,8 +108,6 @@ const AdminBoardPage = props => {
   }
   return (
     <LayoutStyled>
-      
-      <ContainerStyled>
         <Space style={{ width: '100%', justifyContent: 'flex-end', marginBottom: '1rem' }}>
           <Link to="/tasks"><Button type="link">All Tasks</Button></Link>
           <Button type="primary" onClick={() => handleCreateTask()} icon={<PlusOutlined />}>New Task</Button>
@@ -141,7 +139,6 @@ const AdminBoardPage = props => {
             </StyledRow>
           </Loading>
         </DragDropContext>
-      </ContainerStyled>
     </LayoutStyled>
   )
 }
