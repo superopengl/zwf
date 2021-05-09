@@ -46,8 +46,8 @@ RUN npm install -g pnpm
 EXPOSE 80
 # Install dependencies
 WORKDIR /usr/portal
-COPY ./fln-web/package.json /usr/portal/web/
-COPY ./fln-app/package.json /usr/portal/app/
+COPY ./zdn-web/package.json /usr/portal/web/
+COPY ./zdn-app/package.json /usr/portal/app/
 
 WORKDIR /usr/portal/web
 RUN pnpm install
@@ -62,19 +62,19 @@ ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
-ENV REACT_APP_FLN_API_ENDPOINT=/api/v1
-ENV REACT_APP_FLN_GOOGLE_SSO_CLIENT_ID=561759632332-dqs7s6u1dqma6kqh32paq192d7qocg9k.apps.googleusercontent.com
+ENV REACT_APP_ZDN_API_ENDPOINT=/api/v1
+ENV REACT_APP_ZDN_GOOGLE_SSO_CLIENT_ID=561759632332-dqs7s6u1dqma6kqh32paq192d7qocg9k.apps.googleusercontent.com
 ENV REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY=pk_test_51Hp56jEBt7ChgqJqBRoTJ8V2IPcwYDAMdJhp9XbNTPDHoyOhpOt3HBPIv8iV39mHoUMUQ9NN7gKxZIVDVzJhGWWx00MK1EEkKD
 
 # Build app
-COPY ./fln-app /usr/portal/app
+COPY ./zdn-app /usr/portal/app
 RUN pnpm run build:prod
 RUN pnpm prune --production
 # RUN /usr/local/bin/node-prune
 
 # Build web
 WORKDIR /usr/portal/web
-COPY ./fln-web /usr/portal/web
+COPY ./zdn-web /usr/portal/web
 RUN pnpm run compile:prod
 
 # Copy web to app/www
