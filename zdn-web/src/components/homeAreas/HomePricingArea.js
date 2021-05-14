@@ -53,7 +53,7 @@ export const HomePricingArea = props => {
       <InnerContainer>
         <Title>Choose the plan that's right for you</Title>
         <Paragraph type="secondary">
-        Membership plans start at USD $29.00 / month
+        Subscription plans start at $19.00 / month per person
         </Paragraph>
         <StyledRow gutter={[40, 40]}>
           {subscriptionDef.map(s => <StyledCol key={s.key} {...span}>

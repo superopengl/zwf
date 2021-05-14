@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn, OneToMany, JoinColumn, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn, OneToMany, JoinColumn, OneToOne, Unique } from 'typeorm';
 
 @Entity()
 export class Org {
@@ -39,7 +39,7 @@ export class Org {
   @Column({ nullable: true })
   stripePaymentMethodId?: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   isProfileComplete: boolean;
 }
 

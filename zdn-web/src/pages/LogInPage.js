@@ -70,7 +70,7 @@ const LogInPage = props => {
           if (user) {
             setUser(user);
             setNotifyCount(count);
-            
+
             if (user.role === 'admin' && !org) {
               props.history.push('/onboard')
             } else {
@@ -78,9 +78,8 @@ const LogInPage = props => {
             }
           }
         },
-        err => { },
+      ).add(
         () => {
-          debugger;
           setLoading(false);
         });
   }

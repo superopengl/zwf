@@ -285,12 +285,58 @@ paths:
       responses:
         200:
           description: OK
+    post:
+      operationId: saveMyOrgProfile
+      responses:
+        200:
+          description: OK          
   /org/list:
     get:
       operationId: listOrg
       responses:
         200:
           description: OK
+  /org/payment_method:
+    get:
+      operationId: listOrgPaymentMethods
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveOrgPaymentMethod
+      responses:
+        200:
+          description: OK
+  /org/payment_method/secret:
+    get:
+      operationId: getOrgStripeClientSecret
+      responses:
+        200:
+          description: OK
+  /org/payment_method/:id:
+    delete:
+      operationId: deleteOrgPaymentMethod
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /org/payment_method/:id/primary:
+    post:
+      operationId: setOrgPrimaryPaymentMethod
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /usertag:
     get:
       operationId: listUserTags
