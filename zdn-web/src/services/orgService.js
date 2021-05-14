@@ -7,3 +7,7 @@ export function getMyOrgProfile$() {
 export function saveMyOrgProfile$(org) {
   return httpPost$(`/org`, org);
 }
+
+export function listOrgs$() {
+  return httpGet$(`/org/list`);
+}

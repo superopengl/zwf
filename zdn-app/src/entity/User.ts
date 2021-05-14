@@ -68,5 +68,8 @@ export class User {
 
   @Column({default: false})
   isProfileComplete: boolean;
+
+  @Column({default: false})
+  orgOwner: boolean;
 }
 

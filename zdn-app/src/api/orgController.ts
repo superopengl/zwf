@@ -19,6 +19,13 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   res.json(org);
 });
 
+export const listOrg = handlerWrapper(async (req, res) => {
+  assertRole(req, 'system');
+  const { user: { id } } = req as any;
+  const list = await getRepository(Org).find({});
+  res.json(list);
+});
+
 export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { user: { id } } = req as any;
@@ -44,7 +51,7 @@ export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
   }
 
   await getManager().transaction(async m => {
-    
+
     // Copy email templates to org
     const systemEmailTemplates = await m.getRepository(SystemEmailTemplate).find({});
     const orgEmailTemplates = systemEmailTemplates.map(x => {
@@ -64,7 +71,7 @@ export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
       entity.orgId = org.id;
       return entity;
     })
-    
+
     await m.save([...entities, ...orgEmailTemplates, ...orgEmailSignatures]);
   })
 

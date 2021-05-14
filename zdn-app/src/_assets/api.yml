@@ -120,7 +120,7 @@ paths:
       #   - authAnyRole: []
       responses:
         200:
-          description: OK          
+          description: OK
   /auth/reset_password:
     post:
       operationId: resetPassword
@@ -284,7 +284,13 @@ paths:
       operationId: saveMyOrgProfile
       responses:
         200:
-          description: OK          
+          description: OK
+  /org/list:
+    get:
+      operationId: listOrg
+      responses:
+        200:
+          description: OK
   /usertag:
     get:
       operationId: listUserTags

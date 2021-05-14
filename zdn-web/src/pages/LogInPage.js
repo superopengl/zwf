@@ -80,6 +80,7 @@ const LogInPage = props => {
         },
         err => { },
         () => {
+          debugger;
           setLoading(false);
         });
   }

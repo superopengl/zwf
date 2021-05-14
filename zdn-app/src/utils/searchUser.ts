@@ -5,6 +5,7 @@ import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { Role } from '../types/Role';
+import { Org } from '../entity/Org';
 
 export type StockUserParams = {
   text?: string;
@@ -28,9 +29,13 @@ export async function searchUser(orgId: string, queryInfo: StockUserParams) {
     .where('1 = 1');
 
   if (orgId) {
+    // For the requests from org admins
     query = query
       .andWhere('"orgId" = :orgId', { orgId })
       .andWhere('role IN (:...roles)', { roles: [Role.Admin, Role.Agent] });
+  } else {
+    // For the requests from system
+    query = query.leftJoin(Org, 'o', `u."orgId" = o.id`)
   }
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
@@ -65,6 +70,11 @@ export async function searchUser(orgId: string, queryInfo: StockUserParams) {
       'u."createdAt" as "createdAt"'
     ]);
 
+  if(!orgId) {
+    query = query
+    .addSelect(`o.id as "orgId"`)
+    .addSelect(`o.name as "orgName"`);
+  }
   const data = await query.execute();
 
   return {
