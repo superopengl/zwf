@@ -69,9 +69,10 @@ export async function request(method, path, queryParams, body, responseType = 'j
 }
 
 export function request$(method, path, queryParams, body, responseType = 'json') {
+  const qs = queryString.stringify(queryParams);
   return ajax({
     method,
-    url: `${API_BASE_URL}/${trimSlash(path)}?${queryString.stringify(queryParams)}`,
+    url: `${API_BASE_URL}/${trimSlash(path)}${qs ? `?${qs}` : ''}`,
     headers: getHeaders(responseType),
     body,
     crossDomain: true,

@@ -24,7 +24,7 @@ const { Text } = Typography;
 
 export const subscriptionDef = [
   {
-    key: 'free',
+    key: 'trial',
     title: <FormattedMessage id="text.proMemberFree" />,
     unit: <FormattedMessage id="text.proMemberFreePriceUnit" />,
     price: 0,
@@ -40,7 +40,7 @@ export const subscriptionDef = [
       </DescriptionContainer>,
   },
   {
-    key: 'unlimited_monthly',
+    key: 'monthly',
     title: <FormattedMessage id="text.proMemberMonthly" />,
     unit: <FormattedMessage id="text.proMemberMonthlyPriceUnit" />,
     price: 19,
@@ -54,7 +54,7 @@ export const subscriptionDef = [
     </DescriptionContainer>,
   },
   {
-    key: 'unlimited_yearly',
+    key: 'yearly',
     title: <FormattedMessage id="text.proMemberAnnually" />,
     unit: <FormattedMessage id="text.proMemberAnnuallyPriceUnit" />,
     price: 209,

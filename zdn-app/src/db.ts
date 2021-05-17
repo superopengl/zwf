@@ -2,6 +2,8 @@ import { Connection, createConnection, getConnectionManager, getManager, getRepo
 import { initializeConfig } from './utils/initializeConfig';
 import { initializeEmailTemplates } from './utils/initializeEmailTemplates';
 import { redisCache } from './services/redisCache';
+import { OrgCurrentSubscription } from './entity/views/OrgCurrentSubscription';
+import { OrgBasicInformation } from './entity/views/OrgBasicInformation';
 
 const views = [
    // StockLatestPaidInformation,
@@ -15,6 +17,8 @@ const views = [
    // ReceiptInformation,
    // RevertableCreditTransactionInformation,
    // RevenueChartInformation
+   OrgBasicInformation,
+   OrgCurrentSubscription,
  ];
  const mviews = [
    // StockDataInformation,

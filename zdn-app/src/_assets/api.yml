@@ -105,17 +105,17 @@ paths:
       responses:
         200:
           description: OK
-  /auth/invite/client:
+  /auth/invite:
     post:
-      operationId: inviteClient
+      operationId: inviteOrgMember
       # security:
       #   - authAnyRole: []
       responses:
         200:
-          description: OK
-  /auth/invite/agent:
+          description: OK          
+  /auth/invite/client:
     post:
-      operationId: inviteAgent
+      operationId: inviteClient
       # security:
       #   - authAnyRole: []
       responses:
@@ -837,3 +837,68 @@ paths:
       responses:
         200:
           description: OK
+  /account:
+    get:
+      operationId: getMyAccount
+      responses:
+        200:
+          description: OK          
+  /subscription:
+    get:
+      operationId: getMyCurrnetSubscription
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: provisionSubscription
+      responses:
+        200:
+          description: OK
+  /subscription/preview:
+    post:
+      operationId: previewSubscriptionPayment
+      responses:
+        200:
+          description: OK
+  /subscription/history:
+    get:
+      operationId: listMySubscriptionHistory
+      responses:
+        200:
+          description: OK
+  /subscription/payment/:id/confirm:
+    post:
+      operationId: confirmSubscriptionPayment
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
+  /subscription/recurring/off:
+    post:
+      operationId: turnOffSubscriptionRecurring
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /subscription/:id/receipt:
+    get:
+      operationId: downloadPaymentReceipt
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                    

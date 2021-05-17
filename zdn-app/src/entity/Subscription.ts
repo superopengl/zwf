@@ -20,11 +20,17 @@ export class Subscription {
   @Column('uuid')
   orgId: string;
 
+  @Column()
+  type: SubscriptionType;
+
   @Column({ nullable: true })
   promotionCode: string;
 
   @Column('int')
   seats: number;
+
+  @Column({ default: true })
+  recurring: boolean;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
   totalPrice: number;

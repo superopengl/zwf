@@ -40,7 +40,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_KEY = 'user_query';
 
-const UserListPage = () => {
+const AgentUserListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
@@ -350,10 +350,10 @@ const UserListPage = () => {
           <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
             <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
           </Form.Item>
-          <Form.Item label="Role" name="role">
+          <Form.Item label="Role" name="role" help="Admin can define task template, doc template, and see subscription, payment and agent metrics information.">
             <Radio.Group defaultValue="agent" disabled={loading} optionType="button" buttonStyle="solid">
-              <Radio.Button value="client">Client</Radio.Button>
-              <Radio.Button value="agent">Org Member</Radio.Button>
+              <Radio.Button value="admin">Admin</Radio.Button>
+              <Radio.Button value="agent">Agent</Radio.Button>
               {/* <Radio.Button value="admin">Admin</Radio.Button> */}
             </Radio.Group>
           </Form.Item>
@@ -383,8 +383,8 @@ const UserListPage = () => {
   );
 };
 
-UserListPage.propTypes = {};
+AgentUserListPage.propTypes = {};
 
-UserListPage.defaultProps = {};
+AgentUserListPage.defaultProps = {};
 
-export default withRouter(UserListPage);
+export default withRouter(AgentUserListPage);

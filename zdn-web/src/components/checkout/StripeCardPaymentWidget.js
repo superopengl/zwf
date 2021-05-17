@@ -112,7 +112,7 @@ const StripeCardPaymentForm = (props) => {
       <Button type="primary" size="large" htmlType="submit"
         icon={<CreditCardOutlined />}
         block 
-        disabled={loading || !isInfoComplete} loading={loading} style={{ fontWeight: 800, fontStyle: 'italic' }}>
+        disabled={loading || !isInfoComplete} loading={loading}>
         Pay by Card
         </Button>
     </form>

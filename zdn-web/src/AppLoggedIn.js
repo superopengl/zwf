@@ -33,7 +33,8 @@ const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'))
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
-const UserListPage = loadable(() => import('pages/User/UserListPage'));
+const AgentUserListPage = loadable(() => import('pages/User/AgentUserListPage'));
+const ClientUserListPage = loadable(() => import('pages/User/ClientUserListPage'));
 const OrgSubscriptionPage = loadable(() => import('pages/MyAccount/OrgSubscriptionPage'));
 const OrgPaymentMethodPage = loadable(() => import('pages/MyAccount/OrgPaymentMethodPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
@@ -345,8 +346,8 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/account/subscription" component={OrgSubscriptionPage} />
       <RoleRoute visible={isAdmin} exact path="/account/payment_methods" component={OrgPaymentMethodPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={UserListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/user/client" component={UserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={AgentUserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/user/client" component={ClientUserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
