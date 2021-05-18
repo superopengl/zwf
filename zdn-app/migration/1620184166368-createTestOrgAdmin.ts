@@ -11,7 +11,7 @@ export class createTestOrgAdmin1620184166368 implements MigrationInterface {
         VALUES (
         'ea3c49ed-b647-4844-bccd-c3ca003f6796',
         'Techseeding',
-        'ziledin.com',
+        'techseeding.com.au',
         'Techseeding Inc Pty',
         'AU'
         )`);
@@ -27,14 +27,15 @@ export class createTestOrgAdmin1620184166368 implements MigrationInterface {
         )`);
 
         const userMetadata = getRepository(User).metadata;
-        await queryRunner.query(`INSERT INTO "${userMetadata.schema}"."${userMetadata.tableName}" ("emailHash", secret, salt, role, "profileId", "orgId")
+        await queryRunner.query(`INSERT INTO "${userMetadata.schema}"."${userMetadata.tableName}" ("emailHash", secret, salt, role, "profileId", "orgId", "orgOwner")
         VALUES (
         '2578947b-c183-5a08-acb2-7b07e4714363',
         'bf1d03be616a88a42b0af835f5f0bf69f51d879534e1b33af91765fd6a935cd3',
         '00000000-f200-485b-ad4f-90b530bdd4a4',
         'admin',
         '580b9120-6d4f-402a-9149-13cea625084e',
-        'ea3c49ed-b647-4844-bccd-c3ca003f6796'
+        'ea3c49ed-b647-4844-bccd-c3ca003f6796',
+        true
         )`);
     }
 

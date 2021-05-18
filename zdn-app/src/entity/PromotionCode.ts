@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
@@ -10,14 +10,14 @@ export class PromotionCode {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @Column('uuid')
-  orgId: string;
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
-  @Column('int', { default: 1 })
-  repeatingTimes: number;
+  @Column('date')
+  end: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  unitPrice: number;
+  percentage: number;
 
   @Column('uuid')
   createdBy: string;

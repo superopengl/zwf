@@ -17,3 +17,4 @@ export * from './orgController';
 export * from './orgPaymentMethodController';
 export * from './accountController';
 export * from './subscriptionController';
+export * from './promotionController';

@@ -27,7 +27,7 @@ const ContainerStyled = styled.div`
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
-  // background-color: rgba(76,27,179,0.1);
+  // background-color: rgba(19,194,194,0.1);
   height: 100%;
 `;
 

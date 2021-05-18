@@ -10,6 +10,7 @@ import { SystemEmailTemplate } from '../entity/SystemEmailTemplate';
 import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
 import { SystemEmailSignature } from '../entity/SystemEmailSignature';
 import { OrgEmailSignature } from '../entity/OrgEmailSignature';
+import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -22,7 +23,7 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
 export const listOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { user: { id } } = req as any;
-  const list = await getRepository(Org).find({});
+  const list = await getRepository(OrgBasicInformation).find({});
   res.json(list);
 });
 

@@ -9,14 +9,14 @@ import Icon, {
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout$ } from 'services/authService';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal } from 'antd';
+import { Avatar, Space, Dropdown, Menu, Typography, Modal, Image } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
 import AboutModal from 'pages/About/AboutModal';
 import { Switch } from 'react-router-dom';
 import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
-import { BsCalendar } from 'react-icons/bs';
+import { AiOutlineBarcode } from 'react-icons/ai';
 import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import loadable from '@loadable/component'
@@ -44,6 +44,7 @@ const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateP
 const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
 const MyTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
+const PromotionListPage = loadable(() => import('pages/Promotion/PromotionListPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -158,10 +159,10 @@ const ROUTES = [
     ]
   },
   {
-    path: '/data',
-    name: <FormattedMessage id="menu.dataManagement" />,
-    icon: <Icon component={() => <GoDatabase />} />,
-    roles: ['agent']
+    path: '/promotion',
+    name: <FormattedMessage id="menu.promotion" />,
+    icon: <Icon component={() => <AiOutlineBarcode />} />,
+    roles: ['system']
   },
   {
     path: '/revenue',
@@ -257,13 +258,13 @@ const AppLoggedIn = props => {
   </StyledMenu>
 
   return <StyledLayout
-    title="Ziledin"
-    logo="/favicon-32x32.png"
+    title={<Image src="/images/brand.svg" preview={false} width={120} />}
+    logo="/images/logo.svg"
     // logo="/header-logo.png"
     route={{ routes }}
     location={{ pathname }}
     navTheme="dark"
-    siderWidth={240}
+    siderWidth={200}
     fixSiderbar={true}
     fixedHeader={true}
     headerRender={true}
@@ -304,7 +305,7 @@ const AppLoggedIn = props => {
               left: '-24px',
               cursor: 'pointer',
               // fontSize: '16px',
-              backgroundColor: '#05001a',
+              backgroundColor: '#002329',
               width: '20px',
               color: 'white'
             }}
@@ -319,7 +320,7 @@ const AppLoggedIn = props => {
           <a onClick={e => e.preventDefault()}>
             <Avatar size={40}
               icon={<UserOutlined style={{ fontSize: 20 }} />}
-              style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#05001a' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+              style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
             />
           </a>
         </Dropdown>
@@ -346,6 +347,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/account/subscription" component={OrgSubscriptionPage} />
       <RoleRoute visible={isAdmin} exact path="/account/payment_methods" component={OrgPaymentMethodPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
+      <RoleRoute visible={isSystem} exact path="/promotion" component={PromotionListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={AgentUserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user/client" component={ClientUserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />

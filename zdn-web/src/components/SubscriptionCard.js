@@ -21,14 +21,14 @@ max-width: 400px;
 
 &.subscription-active {
 // box-shadow: 0 5px 3px rgba(255,197,61,0.8);
-border: 2px solid #57BB60;
-background-color: rgba(76,27,179, 0.1);
+border: 2px solid #13c2c2;
+background-color: rgba(19,194,194, 0.1);
 transform: scale(1.05);
 }
 
 &.interactive:hover {
 // background-color: #ffe7ba;
-border: 2px solid #57BB60;
+border: 2px solid #13c2c2;
 transform: scale(1.05);
 }
 `;
@@ -60,7 +60,7 @@ export const SubscriptionCard = props => {
       {active && <Text strong type="success" style={{ position: 'absolute', right: 8, bottom: 4 }}>Current plan</Text>}
       <Card.Meta
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
-          {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#57BB60' }}><sup><small>$</small></sup> {price}</Text> */}
+          {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#13c2c2' }}><sup><small>$</small></sup> {price}</Text> */}
           <div>
             <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }}  value={price} />
             </div>

@@ -15,24 +15,26 @@ export async function getNewSubscriptionPaymentInfo(
   assert(seats > 0, 400, `Invalid seats value ${seats}`);
   let unitPrice = getSubscriptionPrice(subscriptionType);
   const creditBalance = await getCreditBalance(m, orgId);
-  const promotion = await m.getRepository(PromotionCode).findOne(promotionCode);
-  if(promotion) {
-    unitPrice = promotion.unitPrice;
-    if(unitPrice < 0) {
-      unitPrice = 0;
-    }
+  
+  let promotionPercentage = 1;
+  if (promotionCode) {
+    const promotion = await m.getRepository(PromotionCode).findOne(promotionCode);
+    promotionPercentage = promotion.percentage;
+  }
+  const price = promotionPercentage * unitPrice * seats;
+
+  let payable = price - creditBalance;
+  if (payable < 0) {
+    payable = 0;
   }
 
-  const price =  unitPrice * seats;
-  const payable = price - creditBalance;
-  
   const result = {
     unitPrice,
+    seats,
+    promotionPercentage,
     price,
     creditBalance,
-    seats,
     payable,
-    promotion
   };
   return result;
 }
