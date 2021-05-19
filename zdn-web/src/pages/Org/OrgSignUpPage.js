@@ -11,8 +11,8 @@ const PageContainer = styled.div`
   height: 100%;
   padding: 0;
   margin: 0;
-  color: rgba(255,255,255,0.85);
-  background-color: #0e0040;
+  color: rgba(255,255,255,0.95);
+  background-color: #002329;
 `;
 
 const ContainerStyled = styled.div`

@@ -17,11 +17,11 @@ const ContainerStyled = styled.div`
   width: 100%;
 
   .ant-typography {
-    color: rgba(255,255,255,0.7);
+    color: rgba(255,255,255,0.8);
 
-    a {
-      color: rgba(255,255,255,0.4);
-    }
+    // a {
+    //   color: rgba(255,255,255,0.6);
+    // }
   }
 
 `;
