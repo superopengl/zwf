@@ -16,6 +16,7 @@ import { FormattedMessage } from 'react-intl';
 import * as moment from 'moment-timezone';
 import OrgSubscriptionHistoryPanel from './OrgSubscriptionHistoryPanel';
 import { from } from 'rxjs';
+import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('./CreditHistoryListDrawer'));
@@ -51,7 +52,7 @@ const StyledCol = styled(Col)`
   margin-bottom: 20px;
 `;
 
-const OrgSubscriptionPage = (props) => {
+const OrgAccountPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
@@ -209,7 +210,7 @@ const OrgSubscriptionPage = (props) => {
               </Button>
             </Space>
           </Card>
-
+          <OrgPaymentMethodPanel />
         </Space>
       </Loading>
       <Modal
@@ -238,8 +239,8 @@ const OrgSubscriptionPage = (props) => {
   );
 };
 
-OrgSubscriptionPage.propTypes = {};
+OrgAccountPage.propTypes = {};
 
-OrgSubscriptionPage.defaultProps = {};
+OrgAccountPage.defaultProps = {};
 
-export default withRouter(OrgSubscriptionPage);
+export default withRouter(OrgAccountPage);

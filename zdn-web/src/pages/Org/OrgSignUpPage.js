@@ -12,7 +12,19 @@ const PageContainer = styled.div`
   padding: 0;
   margin: 0;
   color: rgba(255,255,255,0.95);
-  background-color: #002329;
+  background-color: #00474f;
+
+  .poster-patterns {
+    background-image: url("images/logo.svg");
+      background-repeat: repeat;
+      background-size: 120px;
+      opacity: 0.05;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      position: absolute;
+    }
 `;
 
 const ContainerStyled = styled.div`
@@ -39,6 +51,7 @@ const OrgSignUpPage = (props) => {
 
         return <LayoutStyled>
           <PageContainer>
+            <div className="poster-patterns" />
             <ContainerStyled>
               <Logo />
               <OrgSignUpForm onOk={() => props.history.push('/')} />

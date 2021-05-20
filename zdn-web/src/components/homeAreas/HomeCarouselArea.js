@@ -6,6 +6,7 @@ import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { Logo } from 'components/Logo';
 
 const { Title } = Typography;
 
@@ -28,11 +29,16 @@ border: 2px solid white;
 
 
 const PosterContainer = styled.div`
-background-repeat: no-repeat;
-background-size: cover;
-background-position: center;
-// background-image: radial-gradient(rgba(0,0,0,0.8), rgba(0, 0, 0, 0.1)),url("images/poster.jpg");
-background-image: linear-gradient(135deg, #13c2c2, #13c2c2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
+// background-repeat: no-repeat;
+// background-size: cover;
+position: relative;
+// background-position: center;
+// background-image: url("images/logo.svg");
+// background-repeat: repeat;
+background-color: #00474f;
+// background-size: 120px;
+// opacity: 0.75;
+// background-image: linear-gradient(135deg, #13c2c2, #13c2c2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
 width: 100%;
 min-height: 200px;
 display: flex;
@@ -41,11 +47,26 @@ justify-content: center;
 align-items: center;
 padding: 1rem;
 // padding-top: 40px;
+// display: block;
 
 .ant-typography {
-  color: rgba(255,255,255,0.9) !important;
+  color: rgba(255,255,255,1);
   text-align: center;
 }
+
+.poster-patterns {
+background-image: url("images/logo.svg");
+  background-repeat: repeat;
+  background-size: 120px;
+  opacity: 0.1;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+}
+
+
 
 `;
 
@@ -80,15 +101,19 @@ const HomeCarouselAreaRaw = props => {
   return (
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
       <PosterContainer style={{ height: posterHeight, position: 'relative' }}>
+        <div className="poster-patterns" />
         <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
-          <Title style={{ fontSize: catchPhraseSize }}>Ziledin</Title>
+          <Space size="large">
+            <Logo />
+            <Title style={{ fontSize: catchPhraseSize, color: '#5cdbd3' }} >ZILEDIN</Title>
+          </Space>
           <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
             All in one system for file, doc, job, task and workflow management. Come on, join us today!!
               </Title>
           {isGuest &&
-            <Row style={{maxWidth: 500, margin: '0 auto'}} gutter={30}>
+            <Row style={{ maxWidth: 500, margin: '0 auto' }} gutter={30}>
               <Col {...span}>
-                <SignInButton block type="primary" 
+                <SignInButton block type="primary"
                   size="large"
                   onClick={() => handleSignIn()}>Sign Up with Email</SignInButton>
               </Col>
@@ -103,7 +128,7 @@ const HomeCarouselAreaRaw = props => {
                         icon={<GoogleLogoSvg />}
                         onClick={renderProps.onClick}
                         disabled={renderProps.disabled}
-                        style={{paddingTop: 6}}
+                        style={{ paddingTop: 6 }}
                       >Continue with Google</SignInButton>
                     )}
                 />
