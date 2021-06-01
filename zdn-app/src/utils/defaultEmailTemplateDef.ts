@@ -12,13 +12,17 @@ Your user name is <strong>{{email}}</strong>
 `,
   },
   [EmailTemplateType.WelcomeOrg]: {
-    vars: ['website', 'toWhom', 'email', 'url', 'org'],
+    vars: ['website', 'toWhom', 'email', 'url'],
     subject: '[Ziledin] Welcome to join Ziledin',
     body: `Dear {{toWhom}}
     <br/>
 Thank you very much for joining Ziledin.
 <br/>
-Your user name is <strong>{{email}}</strong> and you are the administrator user of your organisation <strong>{{org}}</strong>.
+Your user name is <strong>{{email}}</strong> and you are the administrator user.
+<br/>
+Please use below link to complete creating your organisation.
+<br/>
+{{url}}
 `,
   },
   [EmailTemplateType.InviteOrgMember]: {
