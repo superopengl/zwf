@@ -103,7 +103,7 @@ const SignUpForm = (props) => {
           )}
       />
       <Divider><Text type="secondary"><small>or</small></Text></Divider>
-      <Link to="/signup/org"><Button block>Create Organisation</Button></Link>
+      <Link to="/signup/org"><Button type="primary" block>Create Organisation</Button></Link>
     </ContainerStyled>
   );
 }
