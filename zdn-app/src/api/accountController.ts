@@ -5,13 +5,13 @@ import { User } from '../entity/User';
 import { assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { CreditTransaction } from '../entity/CreditTransaction';
-import { OrgCurrentSubscription } from '../entity/views/OrgCurrentSubscription';
+import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 
 const getAccountForOrg = async (orgId) => {
 
-  const subscription = await getRepository(OrgCurrentSubscription).findOne({ orgId })
+  const subscription = await getRepository(OrgAliveSubscription).findOne({ orgId })
 
   const credit = await getRepository(CreditTransaction)
     .createQueryBuilder()

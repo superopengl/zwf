@@ -10,7 +10,7 @@ import { getNewSubscriptionPaymentInfo } from './getNewSubscriptionPaymentInfo';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { assert } from './assert';
-import { OrgCurrentSubscription } from '../entity/views/OrgCurrentSubscription';
+import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getRequestGeoInfo } from './getIpGeoLocation';
 
 export type ProvisionSubscriptionRequest = {
@@ -19,15 +19,14 @@ export type ProvisionSubscriptionRequest = {
   seats: number;
 };
 
-async function getSubscriptionPeriod(q: QueryRunner, orgId: string, newSubscriptionType: SubscriptionType): Promise<{ start: Date, end: Date }> {
-  const aliveSubscription = await q.manager.getRepository(OrgCurrentSubscription)
+async function getSubscriptionPeriod(q: QueryRunner, orgId: string): Promise<{ start: Date, end: Date }> {
+  const aliveSubscription = await q.manager.getRepository(OrgAliveSubscription)
     .findOne({
       orgId
     });
 
   const start = aliveSubscription ? moment(aliveSubscription.end).add(1, 'day').toDate() : getUtcNow();
-  const unit = newSubscriptionType === SubscriptionType.Yearly ? 'year' : 'month';
-  const end = moment(start).add(1, unit).add(-1, 'day').toDate();
+  const end = moment(start).add(1, 'month').add(-1, 'day').toDate();
   return { start, end };
 }
 
@@ -39,7 +38,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
   try {
     tran.startTransaction();
 
-    const { start, end } = await getSubscriptionPeriod(tran, orgId, subscriptionType);
+    const { start, end } = await getSubscriptionPeriod(tran, orgId);
 
     const { creditBalance, price } = await getNewSubscriptionPaymentInfo(tran.manager, orgId, subscriptionType, seats);
 

@@ -13,7 +13,7 @@ import * as _ from 'lodash';
 import { getStripeClientSecretForOrg, chargeStripeForCardPayment } from '../services/stripeService';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
-import { OrgCurrentSubscription } from '../entity/views/OrgCurrentSubscription';
+import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 async function getUserSubscriptionHistory(orgId) {
@@ -91,7 +91,7 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
 
-  const subscription = await getRepository(OrgCurrentSubscription).findOne(
+  const subscription = await getRepository(OrgAliveSubscription).findOne(
     {
       orgId
     }

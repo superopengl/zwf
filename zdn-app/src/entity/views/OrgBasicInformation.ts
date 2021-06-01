@@ -3,7 +3,7 @@ import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
 import { UserProfile } from '../UserProfile';
-import { OrgCurrentSubscription } from './OrgCurrentSubscription';
+import { OrgAliveSubscription } from './OrgAliveSubscription';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
@@ -11,7 +11,7 @@ import { OrgCurrentSubscription } from './OrgCurrentSubscription';
     .from(Org, 'o')
     .leftJoin(User, 'u', `u."orgId" = o.id AND u.role = '${Role.Admin}' AND u."orgOwner" IS TRUE`)
     .leftJoin(UserProfile, 'p', `u."profileId" = p.id`)
-    .leftJoin(OrgCurrentSubscription, 's', 'o.id = s."orgId"')
+    .leftJoin(OrgAliveSubscription, 's', 'o.id = s."orgId"')
     .select([
       'o.id as id',
       'o.name as name',
