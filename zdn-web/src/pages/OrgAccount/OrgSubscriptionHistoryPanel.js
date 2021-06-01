@@ -75,9 +75,13 @@ const OrgSubscriptionHistoryPanel = (props) => {
           bordered={true}
           rowKey="id"
           showHeader={false}
-          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'desc')}
+          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
+          style={{margin: 0}}
+          locale={{
+            emptyText: '14 day trial'
+          }}
           // style={{ width: '100%', minWidth: 370 }}
         />
       }

@@ -124,6 +124,12 @@ const PaymentStepperWidget = (props) => {
     },
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Button block type="primary">Use card XXXX</Button>
+        <Button block type="link">Add new payment method</Button>
+      </Space>
+    },
+    {
+      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.payable} /> : '-'}

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Tooltip, Dropdown, Drawer, Radio } from 'antd';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -22,6 +22,7 @@ import TagSelect from 'components/TagSelect';
 import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
+import DropdownMenu from 'components/DropdownMenu';
 
 
 const { Text, Paragraph } = Typography;
@@ -49,6 +50,7 @@ const AgentUserListPage = () => {
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
+  const [emptySeats, setEmptySeats] = React.useState(0);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
@@ -101,25 +103,47 @@ const AgentUserListPage = () => {
       // title: 'Action',
       // fixed: 'right',
       // width: 200,
+      align: 'right',
       fixed: 'right',
       render: (text, user) => {
         return (
-          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip placement="bottom" title="Update profile">
-              <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
-            </Tooltip>
-            <Tooltip placement="bottom" title="Set password">
-              <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
-            </Tooltip>
-            {isSystem && <Tooltip placement="bottom" title="Impersonate">
-              <Button shape="circle" onClick={e => handleImpersonante(e, user)}>
-                <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
-              </Button>
-            </Tooltip>}
-            {isSystem && <Tooltip placement="bottom" title="Delete user">
-              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
-            </Tooltip>}
-          </Space>
+          <DropdownMenu
+            config={[
+              {
+                menu: 'Update profile',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Set password',
+                onClick: () => openSetPasswordModal(user)
+              },
+              isSystem ? {
+                menu: 'Impersonate',
+                onClick: () => handleImpersonante(user)
+              } : null,
+              isSystem ? {
+                menu: 'Delete user',
+                onClick: () => handleDelete(user),
+                disabled: user.orgOwner
+              } : null,
+            ].filter(x => !!x)}
+          />
+          // <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
+          //   <Tooltip placement="bottom" title="Update profile">
+          //     <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
+          //   </Tooltip>
+          //   <Tooltip placement="bottom" title="Set password">
+          //     <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
+          //   </Tooltip>
+          //   {isSystem && <Tooltip placement="bottom" title="Impersonate">
+          //     <Button shape="circle" onClick={e => handleImpersonante(e, user)}>
+          //       <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
+          //     </Button>
+          //   </Tooltip>}
+          //   {isSystem && <Tooltip placement="bottom" title="Delete user">
+          //     <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
+          //   </Tooltip>}
+          // </Space>
         )
       },
     },
@@ -182,8 +206,7 @@ const AgentUserListPage = () => {
     }
   }
 
-  const handleDelete = async (e, item) => {
-    e.stopPropagation();
+  const handleDelete = async (item) => {
     const { id, email } = item;
     Modal.confirm({
       title: <>Delete user</>,
@@ -201,8 +224,7 @@ const AgentUserListPage = () => {
     });
   }
 
-  const handleImpersonante = async (e, item) => {
-    e.stopPropagation();
+  const handleImpersonante = async (item) => {
     // setSetPasswordVisible(true);
     // setCurrentUser(item);
     Modal.confirm({
@@ -222,14 +244,13 @@ const AgentUserListPage = () => {
   }
 
 
-  const openSetPasswordModal = async (e, user) => {
-    e.stopPropagation();
+  const openSetPasswordModal = async (user) => {
     setSetPasswordVisible(true);
+    debugger;
     setCurrentUser(user);
   }
 
-  const openProfileModal = async (e, user) => {
-    e.stopPropagation();
+  const openProfileModal = async (user) => {
     setProfileModalVisible(true);
     setCurrentUser(user);
   }
@@ -281,6 +302,7 @@ const AgentUserListPage = () => {
             allowClear
           />
           <Space>
+            <div>{emptySeats} licenses left - <Button type="link" onClick={() => handleNewUser()} style={{ paddingLeft: 0 }}>Buy more</Button></div>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
             <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite Member</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
