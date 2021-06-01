@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Typography, Button, Form, Input } from 'antd';
-import { signUp$ } from 'services/authService';
+import { signUpOrg$ } from 'services/authService';
 import { notify } from 'util/notify';
 import * as queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
@@ -42,10 +42,7 @@ const OrgSignUpForm = (props) => {
 
     const { email } = values;
 
-    signUp$({
-      email,
-      role: 'admin'
-    }).subscribe(
+    signUpOrg$(email).subscribe(
       () => {
         onOk();
         // Guest
@@ -53,10 +50,10 @@ const OrgSignUpForm = (props) => {
           '🎉 Successfully signed up!',
           <>Congratulations and thank you very much for signing up Ziledin. The invitation email has been sent out to <Text strong>{email}</Text>.</>
         );
-      },
-      err => { },
-      () => setLoading(false)
-    );
+      }
+    ).add(() => {
+      setLoading(false)
+    });
   }
 
   return (
