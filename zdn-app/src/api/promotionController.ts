@@ -7,7 +7,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import * as moment from 'moment';
-import { PromotionCode } from '../entity/PromotionCode';
+import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import * as voucherCodes from 'voucher-code-generator';
 import { Subscription } from '../entity/Subscription';
 import { Org } from '../entity/Org';
@@ -23,7 +23,7 @@ function generatePromotionCode() {
 
 export const listPromotionCode = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const list = await getRepository(PromotionCode)
+  const list = await getRepository(OrgPromotionCode)
     .createQueryBuilder('p')
     .leftJoin(Subscription, 's', 'p.code = s."promotionCode"')
     .leftJoin(Org, 'o', 's."orgId" = o.id')
@@ -41,12 +41,13 @@ export const listPromotionCode = handlerWrapper(async (req, res) => {
 
 export const savePromotion = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const { code, percentage, end } = req.body;
+  const { code, percentage, end, orgId } = req.body;
   assert(0 < percentage && percentage < 1, 400, `percentage must be between 0 and 1`);
   assert(moment(end).isAfter(), 400, 'end must be a future date');
 
-  const promotion = new PromotionCode();
+  const promotion = new OrgPromotionCode();
   promotion.code = code;
+  promotion.orgId = orgId;
   promotion.percentage = percentage;
   promotion.end = end;
   promotion.createdBy = (req as any).user.id;
@@ -63,7 +64,7 @@ export const newPromotionCode = handlerWrapper(async (req, res) => {
   let existing;
   do {
     code = generatePromotionCode();
-    existing = await getRepository(PromotionCode).findOne(code);
+    existing = await getRepository(OrgPromotionCode).findOne(code);
   } while (existing);
 
   res.json(code);

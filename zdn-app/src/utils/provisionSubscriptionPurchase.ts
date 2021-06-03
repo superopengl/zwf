@@ -15,8 +15,8 @@ import { getRequestGeoInfo } from './getIpGeoLocation';
 
 export type ProvisionSubscriptionRequest = {
   orgId: string;
-  subscriptionType: SubscriptionType;
   seats: number;
+  promotionCode: string;
 };
 
 async function getSubscriptionPeriod(q: QueryRunner, orgId: string): Promise<{ start: Date, end: Date }> {
@@ -31,7 +31,7 @@ async function getSubscriptionPeriod(q: QueryRunner, orgId: string): Promise<{ s
 }
 
 export async function provisionSubscriptionPurchase(request: ProvisionSubscriptionRequest, expressReq: any): Promise<Payment> {
-  const { orgId, subscriptionType, seats } = request;
+  const { orgId, seats, promotionCode } = request;
   let payment: Payment = null;
 
   const tran = getConnection().createQueryRunner();
@@ -40,12 +40,12 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     const { start, end } = await getSubscriptionPeriod(tran, orgId);
 
-    const { creditBalance, price } = await getNewSubscriptionPaymentInfo(tran.manager, orgId, subscriptionType, seats);
+    const { creditBalance, price } = await getNewSubscriptionPaymentInfo(tran.manager, orgId, seats, promotionCode);
 
     const subscription = new Subscription();
     subscription.id = uuidv4();
     subscription.orgId = orgId;
-    subscription.type = subscriptionType;
+    subscription.type = SubscriptionType.Montly;
     subscription.start = start;
     subscription.end = end;
     subscription.recurring = true;

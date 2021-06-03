@@ -3,23 +3,24 @@ import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { getCreditBalance } from './getCreditBalance';
 import { EntityManager } from 'typeorm';
 import { assert } from './assert';
-import { PromotionCode } from '../entity/PromotionCode';
+import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 
 export async function getNewSubscriptionPaymentInfo(
   m: EntityManager,
   orgId: string,
-  subscriptionType: SubscriptionType,
   seats: number,
-  promotionCode?: string,
+  promotionCode: string,
 ) {
   assert(seats > 0, 400, `Invalid seats value ${seats}`);
-  let unitPrice = getSubscriptionPrice(subscriptionType);
+  const unitPrice = getSubscriptionPrice();
   const creditBalance = await getCreditBalance(m, orgId);
-  
+
   let promotionPercentage = 1;
   if (promotionCode) {
-    const promotion = await m.getRepository(PromotionCode).findOne(promotionCode);
-    promotionPercentage = promotion.percentage;
+    const promotion = await m.getRepository(OrgPromotionCode).findOne(promotionCode);
+    if (promotion) {
+      promotionPercentage = promotion.percentage;
+    }
   }
   const price = promotionPercentage * unitPrice * seats;
 

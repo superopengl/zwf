@@ -1,11 +1,15 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, Index } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-export class PromotionCode {
+export class OrgPromotionCode {
   @PrimaryColumn()
   code: string;
+
+  @Column('uuid')
+  @Index()
+  orgId: string;
 
   @CreateDateColumn()
   createdAt?: Date;

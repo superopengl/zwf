@@ -80,7 +80,7 @@ const OrgSubscriptionHistoryPanel = (props) => {
           scroll={false}
           style={{margin: 0}}
           locale={{
-            emptyText: '14 day trial'
+            emptyText: '1 license 14 day trial'
           }}
           // style={{ width: '100%', minWidth: 370 }}
         />

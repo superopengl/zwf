@@ -25,37 +25,26 @@ import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
 import { DatePicker } from 'antd';
-
+import PropTypes from 'prop-types';
+import ClickToCopyTooltip from 'components/ClickToCopyTooltip';
+import { compareDates } from 'util/compareDates';
 
 const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 `;
 
-const DEFAULT_QUERY_INFO = {
-  text: '',
-  tags: [],
-  page: 1,
-  size: 50,
-  orderField: 'createdAt',
-  orderDirection: 'DESC'
-};
 
-const LOCAL_STORAGE_KEY = 'user_query';
 
-const PromotionListPage = () => {
 
-  const [profileModalVisible, setProfileModalVisible] = React.useState(false);
-  const [total, setTotal] = React.useState(0);
+const PromotionListPanel = (props) => {
+
+  const { org, onOk } = props;
+
   const [loading, setLoading] = React.useState(true);
-  const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
-  const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
-  const [tags, setTags] = React.useState([]);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [newCode, setNewCode] = React.useState();
-  const context = React.useContext(GlobalContext);
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
 
   const columnDef = [
@@ -63,32 +52,33 @@ const PromotionListPage = () => {
       title: 'Code',
       dataIndex: 'code',
       fixed: 'left',
-      render: (value) => value,
+      render: (value) => <ClickToCopyTooltip>
+        <Text strong type="success" style={{ fontSize: 18 }}>{value}</Text>
+      </ClickToCopyTooltip>
     },
     {
       title: '%',
       dataIndex: 'percentage',
+      sorter: {
+        compare: (a, b) => a.percentage - b.percentage
+      },
       render: (value) => <>{value * 100} %</>,
     },
     {
       title: 'End',
       dataIndex: 'end',
+      sorter: {
+        compare: (a, b) => compareDates(a.end, b.end)
+      },
       render: (value) => <TimeAgo value={value} />
     },
     {
-      title: 'Org',
-      dataIndex: 'orgName',
-      render: (value) => value
-    },
-    {
-      title: 'Seats',
-      dataIndex: 'seats',
-      render: (value) => value
-    },
-    {
-      title: 'Subscription',
-      dataIndex: 'type',
-      render: (value, item) => value
+      title: 'Created at',
+      dataIndex: 'createdAt',
+      sorter: {
+        compare: (a, b) => compareDates(a.createdAt, b.createdAt)
+      },
+      render: (value) => <TimeAgo value={value} />
     },
   ];
 
@@ -109,31 +99,6 @@ const PromotionListPage = () => {
     }
   }, []);
 
-  const updateQueryInfo = (queryInfo) => {
-    reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    setQueryInfo(queryInfo);
-  }
-
-  const handleSearchTextChange = text => {
-    const newQueryInfo = {
-      ...queryInfo,
-      text
-    }
-    updateQueryInfo(newQueryInfo);
-    // await loadTaskWithQuery(newQueryInfo);
-  }
-
-  const handleSearch = async (value) => {
-    const text = value?.trim();
-
-    const newQueryInfo = {
-      ...queryInfo,
-      text
-    }
-
-    await loadList(newQueryInfo);
-  }
-
   const handleNewPromotionCode = () => {
     newPromotionCode$().subscribe(code => {
       setNewCode(code);
@@ -142,7 +107,11 @@ const PromotionListPage = () => {
   }
 
   const handleSavePromotion = async values => {
-    savePromotion$(values).subscribe(() => {
+    const payload = {
+      ...values,
+      orgId: org.id
+    };
+    savePromotion$(payload).subscribe(() => {
       setModalVisible(false);
       loadList();
     });
@@ -153,7 +122,6 @@ const PromotionListPage = () => {
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Button type="primary" onClick={() => handleNewPromotionCode()} icon={<PlusOutlined />}>New Promotion Code</Button>
-          <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
         </Space>
         <Table columns={columnDef}
           dataSource={list}
@@ -161,22 +129,23 @@ const PromotionListPage = () => {
           scroll={{
             x: 'max-content'
           }}
-          rowKey="id"
+          rowKey="code"
           loading={loading}
           style={{ marginTop: 20 }}
+          pagination={false}
         />
       </Space>
-      <Modal
+      <Drawer
         visible={modalVisible}
         destroyOnClose={true}
-        maskClosable={false}
-        onOk={() => setModalVisible(false)}
-        onCancel={() => setModalVisible(false)}
+        maskClosable={true}
+        onClose={() => setModalVisible(false)}
         title={<>New Promotion Code</>}
         footer={null}
         width={300}
       >
-        <Form layout="horizontal" onFinish={handleSavePromotion}
+        <Form layout="horizontal"
+          onFinish={handleSavePromotion}
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
           initialValues={{ code: newCode, percentage: 0.9 }}>
@@ -195,31 +164,21 @@ const PromotionListPage = () => {
           <Form.Item label="End" name="end" rules={[{ required: true, type: 'date', whitespace: true, message: ' ' }]}>
             <DatePicker type="date" />
           </Form.Item>
-          <Form.Item wrapperCol={{span: 24}}>
+          <Form.Item wrapperCol={{ span: 24 }}>
             <Button block type="primary" htmlType="submit" disabled={loading}>Create</Button>
           </Form.Item>
         </Form>
-      </Modal>
-      <Drawer
-        visible={profileModalVisible}
-        destroyOnClose={true}
-        maskClosable={true}
-        title="Update Profile"
-        onClose={() => setProfileModalVisible(false)}
-        footer={null}
-        width={400}
-      >
-        {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
-
-        {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
     </ContainerStyled>
 
   );
 };
 
-PromotionListPage.propTypes = {};
+PromotionListPanel.propTypes = {
+  org: PropTypes.object.isRequired,
+  onOk: PropTypes.func.isRequired,
+};
 
-PromotionListPage.defaultProps = {};
+PromotionListPanel.defaultProps = {};
 
-export default withRouter(PromotionListPage);
+export default withRouter(PromotionListPanel);

@@ -52,20 +52,5 @@ export const subscriptionDef = [
       <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneMonth" /></Space>
     </FeatureList>
     </DescriptionContainer>,
-  },
-  {
-    key: 'yearly',
-    title: <FormattedMessage id="text.proMemberAnnually" />,
-    unit: <FormattedMessage id="text.proMemberAnnuallyPriceUnit" />,
-    price: 209,
-    icon: <GiPirateCannon />,
-    description: 
-    <DescriptionContainer>
-    <FeatureList>
-      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionCoreData" /></Space>
-      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneYear" /></Space>
-      <Space align="start"><Text type="success"><CheckOutlined /></Text><FormattedMessage id="text.pricingDescriptionOneYearSave" /></Space>
-    </FeatureList>
-      </DescriptionContainer>,
-    }
+  }
 ];
