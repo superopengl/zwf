@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Switch, Divider, Input, Card } from 'antd';
+import { Typography, Button, Alert, Divider, Input, Card } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { Space } from 'antd';
@@ -83,7 +83,7 @@ const PaymentStepperWidget = (props) => {
 
   const stepDef = [
     {
-      component: <Space direction="vertical" style={{ width: '100%' }} size="large">
+      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Seats:</Text>
           <Space>
@@ -95,14 +95,28 @@ const PaymentStepperWidget = (props) => {
           <Text>Total price:</Text>
           {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
         </Space>
+        <Divider/>
         {paymentDetail?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Deduction (from previous unfinished subscription):</Text>
           <MoneyAmount value={paymentDetail.creditBalance * -1} />
         </Space>}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion code</Text>
-          <Input value={promotionCode} onChange={e => setPromotionCode(e.target.value)} />
+          <div>
+            <Input value={promotionCode} onChange={e => setPromotionCode(e.target.value)} style={{ textAlign: 'right' }} />
+          </div>
         </Space>
+        {paymentDetail?.promotionPercentage === null && <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Text type="danger">Invalid promotion code</Text>
+        </Space>}
+        {paymentDetail?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text>Promotion discount %</Text>
+          <Text>{Math.round((1 - paymentDetail?.promotionPercentage) * 100)} %</Text>
+        </Space>}
+        {paymentDetail?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text>Promotion discount amount</Text>
+          <MoneyAmount value={paymentDetail.payable - paymentDetail.price} />
+        </Space>}
         <Divider />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>

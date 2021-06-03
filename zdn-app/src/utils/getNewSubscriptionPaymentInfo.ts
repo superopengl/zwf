@@ -15,16 +15,16 @@ export async function getNewSubscriptionPaymentInfo(
   const unitPrice = getSubscriptionPrice();
   const creditBalance = await getCreditBalance(m, orgId);
 
-  let promotionPercentage = 1;
+  let promotionPercentage = null;
   if (promotionCode) {
     const promotion = await m.getRepository(OrgPromotionCode).findOne(promotionCode);
     if (promotion) {
       promotionPercentage = promotion.percentage;
     }
   }
-  const price = promotionPercentage * unitPrice * seats;
+  const price = unitPrice * seats;
 
-  let payable = price - creditBalance;
+  let payable = (promotionPercentage || 1) * price - creditBalance;
   if (payable < 0) {
     payable = 0;
   }
