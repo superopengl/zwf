@@ -8,13 +8,16 @@ const DropdownMenu = (props) => {
   const { config } = props;
 
   const handleMenuClick = (e) => {
-    const {key} = e;
+    const { key } = e;
     const item = config[key];
     item?.onClick();
   }
 
-  const menu = <Menu onClick={handleMenuClick}>
-    {config.map((x, i) => <Menu.Item key={i} icon={x.icon}>
+  const menu = <Menu
+    mode="vertical"
+    theme="dark"
+    onClick={handleMenuClick}>
+    {config.map((x, i) => <Menu.Item key={i} icon={x.icon} disabled={x.disabled}>
       {x.menu}
     </Menu.Item>)}
   </Menu>
@@ -23,7 +26,7 @@ const DropdownMenu = (props) => {
     <Dropdown
       overlay={menu}
     >
-      <Button icon={<SettingOutlined />} style={{paddingLeft: 8, paddingRight: 8}}>
+      <Button icon={<SettingOutlined />} style={{ paddingLeft: 8, paddingRight: 8 }}>
         <CaretDownOutlined />
       </Button>
     </Dropdown>

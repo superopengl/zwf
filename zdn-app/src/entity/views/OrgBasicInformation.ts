@@ -20,6 +20,7 @@ import { OrgAliveSubscription } from './OrgAliveSubscription';
       'o.tel as tel',
       'u.id as "adminUserId"',
       'p.email as "adminUserEmail"',
+      `CASE WHEN s."currentType" = 'trial' THEN TRUE ELSE FALSE END as "isTrial"`,
       's.start as "subscriptionStart"',
       's.end as "subscriptionEnd"',
       's."lastRecurring" as "recurring"',
@@ -47,6 +48,9 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   adminUserEmail: string;
+
+  @ViewColumn()
+  isTrial: boolean;
 
   @ViewColumn()
   subscriptionStart: string;

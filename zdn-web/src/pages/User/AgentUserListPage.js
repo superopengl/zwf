@@ -304,7 +304,7 @@ const AgentUserListPage = () => {
           <Space>
             <div>{emptySeats} licenses left - <Button type="link" onClick={() => handleNewUser()} style={{ paddingLeft: 0 }}>Buy more</Button></div>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite Member</Button>
+            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Add Member</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>

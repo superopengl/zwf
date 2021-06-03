@@ -20,7 +20,7 @@ const { Title, Text } = Typography;
 
 const PaymentStepperWidget = (props) => {
 
-  const { planType, onComplete, onLoading } = props;
+  const { onComplete, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
   const [seats, setSeats] = React.useState(5);
   const [paymentDetail, setPaymentDetail] = React.useState();
@@ -29,10 +29,10 @@ const PaymentStepperWidget = (props) => {
   const context = React.useContext(GlobalContext);
 
 
-  const fetchPaymentDetail = async (planType, seats, promotionCode) => {
+  const fetchPaymentDetail = async (seats, promotionCode) => {
     try {
       setLoading(true)
-      const detail = await calculatePaymentDetail(planType, seats, promotionCode);
+      const detail = await calculatePaymentDetail(seats, promotionCode);
       ReactDOM.unstable_batchedUpdates(() => {
         setPaymentDetail(detail);
         setLoading(false)
@@ -51,19 +51,12 @@ const PaymentStepperWidget = (props) => {
   // }, []);
 
   React.useEffect(() => {
-    fetchPaymentDetail(planType, seats, promotionCode);
-  }, [planType, seats, promotionCode]);
+    fetchPaymentDetail(seats, promotionCode);
+  }, [seats, promotionCode]);
 
-  if (!planType) return null;
 
-  const newPlanDef = subscriptionDef.find(s => s.key === planType);
-
-  const handleProvisionSubscription = async (method) => {
-    const provisionData = await provisionSubscription({
-      plan: planType,
-      promotionCode,
-      method
-    });
+  const handleProvisionSubscription = async () => {
+    const provisionData = await provisionSubscription(seats, promotionCode);
     return provisionData;
   }
 
@@ -81,7 +74,7 @@ const PaymentStepperWidget = (props) => {
 
   const handlePromotionCodeChange = code => {
     setPromotionCode(code);
-    
+
   }
 
   const handleStepChange = current => {
@@ -148,13 +141,13 @@ const PaymentStepperWidget = (props) => {
     <Loading loading={loading} message={'In progress. Please do not close the window.'}>
       <Space direction="vertical" size="large" style={{ width: '100%' }} >
         <Card>
-          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
             <div><Text strong type="success"><big>$ {newPlanDef.price}</big></Text> {newPlanDef.unit}</div>
           </Space>
           <div style={{ display: 'flex' }}>
             {newPlanDef.description}
-          </div>
+          </div> */}
         </Card>
         <div style={{ width: '100%', marginTop: 16, marginBottom: 30 }}>
           {stepDef[currentStep].component}
@@ -165,7 +158,6 @@ const PaymentStepperWidget = (props) => {
 }
 
 PaymentStepperWidget.propTypes = {
-  planType: PropTypes.string.isRequired,
   onComplete: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
 };

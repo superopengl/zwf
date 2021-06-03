@@ -21,16 +21,16 @@ export async function listUserSubscriptionHistory(userId) {
   return httpGet(`/user/${userId}/subscription`);
 }
 
-export async function provisionSubscription(payload) {
-  return httpPost(`subscription`, payload);
+export async function provisionSubscription(seats, promotionCode) {
+  return httpPost(`subscription`, { seats, promotionCode });
 }
 
 export async function confirmSubscriptionPayment(paymentId, payload) {
   return httpPost(`subscription/payment/${paymentId}/confirm`, payload);
 }
 
-export async function calculatePaymentDetail(type, seats, promotionCode) {
-  return httpPost(`subscription/preview`, { type, seats, promotionCode });
+export async function calculatePaymentDetail(seats, promotionCode) {
+  return httpPost(`subscription/preview`, { seats, promotionCode });
 }
 
 export async function fetchStripeCheckoutSession() {
