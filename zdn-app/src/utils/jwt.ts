@@ -29,7 +29,7 @@ export function attachJwtCookie(user, res) {
   });
 }
 
-export const JwtSecret = 'techseeding.evc';
+export const JwtSecret = 'ziledin.com';
 
 export function verifyJwtFromCookie(req) {
   const token = req.cookies[cookieName];
