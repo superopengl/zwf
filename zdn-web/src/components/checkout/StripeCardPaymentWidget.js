@@ -8,7 +8,7 @@ import { stripePromise } from 'services/stripeService';
 
 const StripeCardPaymentForm = (props) => {
 
-  const { onProvision, onCommit, onLoading } = props;
+  const { onProvision, onCommit, onLoading, buttonText } = props;
   const [loading, setLoading] = React.useState(false);
   const [cardNumberComplete, setCardNumberComplete] = React.useState(false);
   const [cardExpiryComplete, setCardExpiryComplete] = React.useState(false);
@@ -73,8 +73,8 @@ const StripeCardPaymentForm = (props) => {
   const options = {
     style: {
       base: {
-        fontSize: '16px',
-        color: '#3e9448',
+        fontSize: '14px',
+        // color: '#3e9448',
         textAlign: 'center',
         '::placeholder': {
           color: 'rgba(0,0,0,0.2)',
@@ -89,8 +89,8 @@ const StripeCardPaymentForm = (props) => {
     <form onSubmit={handleSubmit}>
       {/* <Text>Please input card information</Text> */}
       {/* <label>Card Number <CardNumberElement /></label> */}
-      <Row gutter={[10, 10]} style={{marginBottom: 10}}>
-        <Col {...{ xs: 24, sm: 16, md: 15, lg: 15, xl: 15, xxl: 15 }}>
+      <Row gutter={[10, 10]} style={{ marginBottom: 10 }}>
+        <Col {...{ xs: 24, sm: 16, md: 14, lg: 14, xl: 14, xxl: 14 }}>
           <CardNumberElement
             onChange={handleCardNumberChange}
             options={{
@@ -99,7 +99,7 @@ const StripeCardPaymentForm = (props) => {
             }}
           />
         </Col>
-        <Col {...{ xs: 12, sm: 4, md: 5, lg: 5, xl: 5, xxl: 5 }}>
+        <Col {...{ xs: 12, sm: 4, md: 6, lg: 6, xl: 6, xxl: 6 }}>
           <CardExpiryElement
             onChange={handleCardExpiryChange}
             options={{
@@ -120,16 +120,16 @@ const StripeCardPaymentForm = (props) => {
       </Row>
       <Button type="primary" size="large" htmlType="submit"
         icon={<CreditCardOutlined />}
-        block 
+        block
         disabled={loading || !isInfoComplete} loading={loading}>
-        Checkout
+        {buttonText}
         </Button>
     </form>
   )
 }
 
 const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading}/>
+  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading} buttonText={props.buttonText} />
 </Elements>)
 
 
@@ -137,9 +137,11 @@ StripeCardPaymentWidget.propTypes = {
   onProvision: PropTypes.func.isRequired,
   onCommit: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
+  buttonText: PropTypes.string,
 };
 
 StripeCardPaymentWidget.defaultProps = {
+  buttonText: 'Checkout'
 };
 
 export default StripeCardPaymentWidget;

@@ -5,6 +5,7 @@ import { Loading } from 'components/Loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
+import { getPaymentMethodSecret$, saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
 
 const { Text } = Typography;
 
@@ -32,7 +33,9 @@ const OrgPaymentMethodPanel = () => {
     }
   }, []);
 
-  const handlePaymentOk = async () => {
+  const handleSavePayment = async (paymentId, payload) => {
+    const { stripePaymentMethodId } = payload;
+    savePaymentMethod(stripePaymentMethodId);
     setModalVisible(false);
     load();
   }
@@ -45,10 +48,19 @@ const OrgPaymentMethodPanel = () => {
     setModalVisible(true);
   }
 
+  const getClientSecret = async () => {
+    const result = await getPaymentMethodSecret$().toPromise();
+    return result.clientSecret;
+  }
+
+  const savePaymentMethod = async (paymentMethodId) => {
+    await saveOrgPaymentMethod$(paymentMethodId).toPromise();
+  }
+
   const handleDelete = (item) => {
     Modal.confirm({
       title: 'Remove payment method',
-      content: `Delete card XXXX-XXXX-XXXX-${item.cardLast4}?`,
+      content: <>Delete card <Text code>{item.cardLast4}</Text>?</>,
       closable: true,
       maskClosable: true,
       onOk: () => {
@@ -66,7 +78,7 @@ const OrgPaymentMethodPanel = () => {
   const handleSetPrimary = (item) => {
     Modal.confirm({
       title: 'Set primary payment method',
-      content: `Use card XXXX-XXXX-XXXX-${item.cardLast4} from next payment?`,
+      content: <>Set card <Text code>{item.cardLast4}</Text> as primary payment method for future payment?</>,
       closable: true,
       maskClosable: true,
       onOk: () => {
@@ -81,6 +93,10 @@ const OrgPaymentMethodPanel = () => {
     })
   }
 
+  const handleGetClientSecret = async () => {
+    const clientSecret = await getClientSecret();
+    return { clientSecret };
+  }
 
   return (
     <Loading loading={loading} style={{ width: '100%' }}>
@@ -89,7 +105,7 @@ const OrgPaymentMethodPanel = () => {
         title="Payment Methods"
         style={{ width: '100%' }}
         extra={
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
+          <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
         }
       >
         <List
@@ -102,13 +118,13 @@ const OrgPaymentMethodPanel = () => {
             </>
           }}
           renderItem={item => <List.Item
-            actions={item.primary ? null : [
+            actions={item.primary || list.length <= 1 ? null : [
               <Button key="primary" type="primary" ghost onClick={() => handleSetPrimary(item)}>Set Primary</Button>,
               <Button key="delete" ghost type="danger" onClick={() => handleDelete(item)}>Remove</Button>
             ]}
           >
             <Space size="large">
-              <Text>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
+              <Text code>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
               <Text>{item.cardExpiry}</Text>
               {item.primary && <Tag key="tag" color="#13c2c2">primary</Tag>}
             </Space>
@@ -119,7 +135,7 @@ const OrgPaymentMethodPanel = () => {
         visible={modalVisible}
         closable={!paymentLoading}
         maskClosable={false}
-        title="Payment Method"
+        title="Add Payment Method"
         destroyOnClose
         footer={null}
         width={460}
@@ -128,8 +144,10 @@ const OrgPaymentMethodPanel = () => {
       >
         <Loading loading={paymentLoading}>
           <StripeCardPaymentWidget
-            onComplete={handlePaymentOk}
+            onProvision={handleGetClientSecret}
+            onCommit={handleSavePayment}
             onLoading={loading => setPaymentLoading(loading)}
+            buttonText="Add this card"
           />
 
         </Loading>

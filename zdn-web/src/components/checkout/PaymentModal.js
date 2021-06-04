@@ -103,7 +103,7 @@ const PaymentModal = (props) => {
         title="Buy licenses"
         destroyOnClose
         footer={null}
-        width={400}
+        width={300}
         onOk={onClose}
         onCancel={onClose}
       >

@@ -25,7 +25,12 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
   entity.cardExpiry = moment(`${paymentMethod.card.exp_month}/${paymentMethod.card.exp_year}`, 'M/YYYY').format('MM/YY');
   entity.cardLast4 = paymentMethod.card.last4;
 
-  await getRepository(OrgPaymentMethod).save(entity);
+  await getManager().transaction(async m => {
+    const existing = await m.getRepository(OrgPaymentMethod).findOne({ orgId });
+    entity.primary = !existing;
+    await m.save(entity);
+  })
+
   res.json();
 });
 
