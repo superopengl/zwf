@@ -12,7 +12,6 @@ import { isValidABN, isValidACN } from "abnacn-validator";
 import * as tfn from 'tfn';
 import { getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
 import { Loading } from 'components/Loading';
-import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import PropTypes from 'prop-types';
 import { CountrySelector } from 'components/CountrySelector';
 

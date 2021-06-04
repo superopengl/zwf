@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { Loading } from 'components/Loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
-import StripeCardPaymentWidget from './StripeCardPaymentWidget';
+import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 
 const { Text } = Typography;
 
