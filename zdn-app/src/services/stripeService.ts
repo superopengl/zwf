@@ -52,8 +52,9 @@ const DUMMY_STRIPE_RESPONSE = {
 };
 
 export async function chargeStripeForCardPayment(payment: Payment, onSessionPayment: boolean) {
-  const { amount, stripeCustomerId, stripePaymentMethodId } = payment;
+  const { amount, orgId, stripePaymentMethodId } = payment;
 
+  const stripeCustomerId = await getOrgStripeCustomerId(orgId);
   assert(stripeCustomerId, 400, 'Stripe customer ID is missing');
   assert(stripePaymentMethodId, 400, 'Stripe payment method ID is missing');
 

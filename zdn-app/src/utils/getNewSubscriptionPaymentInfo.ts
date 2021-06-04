@@ -4,6 +4,7 @@ import { getCreditBalance } from './getCreditBalance';
 import { EntityManager } from 'typeorm';
 import { assert } from './assert';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
+import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 
 export async function getNewSubscriptionPaymentInfo(
   m: EntityManager,
@@ -17,7 +18,9 @@ export async function getNewSubscriptionPaymentInfo(
 
   let promotionPercentage = null;
   if (promotionCode) {
-    const promotion = await m.getRepository(OrgPromotionCode).findOne(promotionCode);
+    const promotion = await m.getRepository(OrgPromotionCode).findOne({
+      code: promotionCode
+    });
     if (promotion) {
       promotionPercentage = promotion.percentage;
     }
@@ -29,6 +32,8 @@ export async function getNewSubscriptionPaymentInfo(
     payable = 0;
   }
 
+  const primaryPaymentMethod = await m.getRepository(OrgPaymentMethod).findOne({ orgId, primary: true });
+
   const result = {
     unitPrice,
     seats,
@@ -36,6 +41,7 @@ export async function getNewSubscriptionPaymentInfo(
     price,
     creditBalance,
     payable,
+    paymentMethodId: primaryPaymentMethod?.id
   };
   return result;
 }
