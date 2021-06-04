@@ -240,7 +240,8 @@ const AppLoggedIn = props => {
   </StyledMenu>
 
   return <StyledLayout
-    title={<Image src="/images/brand.svg" preview={false} width={120} />}
+    // title={<Image src="/images/brand.svg" preview={false} width={120} />}
+    title={null}
     logo="/images/logo.svg"
     // logo="/header-logo.png"
     route={{ routes }}
