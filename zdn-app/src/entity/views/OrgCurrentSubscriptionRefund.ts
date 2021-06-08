@@ -23,8 +23,8 @@ import { Payment } from '../Payment';
         'p.start as start',
         'p.end as end',
         'p.amount as "paidAmount"',
-        '(p.end::date - p.start::date) as "periodDays"',
-        'CASE WHEN (CURRENT_DATE::date - p.start::date) <= 0 THEN 1 ELSE CURRENT_DATE::date - p.start::date END as "usedDays"'
+        '(p.end::date - p.start::date + 1) as "periodDays"',
+        '(CURRENT_DATE::date - p.start::date + 1) as "usedDays"'
       ]), 'x')
     .select([
       '"orgId"',
