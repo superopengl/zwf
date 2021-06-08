@@ -6,7 +6,7 @@ import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { getStripeClientSecretForOrg, retrievePaymentMethod } from '../services/stripeService';
+import { getStripeClientSecretForOrg, retrieveStripePaymentMethod as retrieveStripePaymentMethod } from '../services/stripeService';
 import * as moment from 'moment';
 
 export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
@@ -17,7 +17,7 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
 
   assert(paymentMethodId, 400, 'paymentMethodId is empty');
 
-  const paymentMethod = await retrievePaymentMethod(paymentMethodId);
+  const paymentMethod = await retrieveStripePaymentMethod(paymentMethodId);
 
   entity.orgId = orgId;
   entity.stripePaymentMethodId = paymentMethodId;

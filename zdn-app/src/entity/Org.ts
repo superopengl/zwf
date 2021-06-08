@@ -36,9 +36,6 @@ export class Org {
   @Column({ nullable: true })
   stripeCustomerId?: string;
 
-  @Column({ nullable: true })
-  stripePaymentMethodId?: string;
-
   @Column({ default: false })
   isProfileComplete: boolean;
 }

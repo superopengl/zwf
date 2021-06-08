@@ -35,8 +35,8 @@ const OrgSubscriptionHistoryPanel = (props) => {
           <ArrowRightOutlined />
           {/* <DoubleRightOutlined /> */}
           <TimeAgo value={item.end} showAgo={false} accurate={true} showTime={false}/>
-          {item.recurring && <Tag>auto renew</Tag>}
-          {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag color="#13c2c2">current</Tag>}
+          {/* {item.recurring && <Tag>auto renew</Tag>} */}
+          {moment().isAfter(moment(item.start).startOf('day')) && moment().isBefore(moment(item.end).endOf('day')) && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>

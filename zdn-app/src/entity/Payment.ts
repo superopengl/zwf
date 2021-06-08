@@ -26,8 +26,8 @@ export class Payment {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
 
-  @Column({ nullable: true })
-  stripePaymentMethodId?: string;
+  @Column('uuid', { nullable: true })
+  orgPaymentMethodId: string;
 
   @Column('json', { nullable: true })
   rawResponse: object;

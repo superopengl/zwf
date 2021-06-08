@@ -8,15 +8,17 @@ import { Payment } from '../Payment';
 import { CreditTransaction } from '../CreditTransaction';
 import { PaymentStatus } from '../../types/PaymentStatus';
 import { UserProfile } from '../UserProfile';
+import { OrgBasicInformation } from '../views/OrgBasicInformation';
+import { OrgPaymentMethod } from '../OrgPaymentMethod';
 
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(Payment, 'p')
+    .innerJoin(OrgPaymentMethod, 'm', 'p."orgPaymentMethodId" = m.id')
     .innerJoin(Subscription, 's', 'p."subscriptionId" = s.id')
-    .innerJoin(User, 'u', 'p."orgId" = u.id')
-    .innerJoin(UserProfile, 'f', 'f.id = u."profileId"')
+    .innerJoin(OrgBasicInformation, 'org', 'p."orgId" = org.id')
     .leftJoin(CreditTransaction, 'c', 'p."creditTransactionId" = c.id')
     .where(`p.status = '${PaymentStatus.Paid}'`)
     .orderBy('p."paidAt"', 'DESC')
@@ -28,14 +30,15 @@ import { UserProfile } from '../UserProfile';
       's.type as "subscriptionType"',
       's.status as "subscriptionStatus"',
       'p."orgId" as "orgId"',
-      'f.email as email',
+      'org."ownerEmail" as email',
       `to_char(p."paidAt", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
       'p."paidAt" as "paidAt"',
       'p.start as start',
       'p.end as end',
       'coalesce(p.amount, 0) - coalesce(c.amount, 0) as price',
       'coalesce(p.amount, 0) as payable',
-      'coalesce(-c.amount, 0) as deduction'
+      'coalesce(-c.amount, 0) as deduction',
+      'm."cardLast4" as "cardLast4"'
     ])
 })
 export class ReceiptInformation {
@@ -84,4 +87,7 @@ export class ReceiptInformation {
 
   @ViewColumn()
   deduction: number;
+
+  @ViewColumn()
+  cardLast4: string;
 }
