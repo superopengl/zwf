@@ -37,7 +37,7 @@ export class Subscription {
   @Column('date')
   start: Date;
 
-  @Column('date')
+  @Column('date', {nullable: true})
   end: Date;
 
   @Column({ default: SubscriptionStatus.Provisioning })

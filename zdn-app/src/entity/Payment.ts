@@ -40,10 +40,10 @@ export class Payment {
   @Index()
   paidAt?: Date;
 
-  @Column()
+  @Column('date')
   start: Date;
 
-  @Column()
+  @Column('date')
   end: Date;
 
   @Column({ default: false })

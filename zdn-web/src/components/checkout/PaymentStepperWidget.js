@@ -106,9 +106,11 @@ const PaymentStepperWidget = (props) => {
           {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
         </Space>
         <Divider />
-        {paymentDetail?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {paymentDetail?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }} align="start">
           <Text>Deduction (from previous unfinished subscription):</Text>
-          <MoneyAmount value={paymentDetail.creditBalance * -1} />
+          <div style={{ minWidth: 100, textAlign: 'right' }}>
+            <MoneyAmount value={paymentDetail.creditBalance * -1} />
+          </div>
         </Space>}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion code</Text>

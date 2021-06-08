@@ -1,5 +1,5 @@
 
-import { getManager, getRepository, In } from 'typeorm';
+import { getManager, getRepository, Not } from 'typeorm';
 import { assert, assertRole } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { Subscription } from '../entity/Subscription';
@@ -21,7 +21,7 @@ async function getUserSubscriptionHistory(orgId) {
   const list = await getRepository(Subscription).find({
     where: {
       orgId,
-      status: In([SubscriptionStatus.Expired, SubscriptionStatus.Alive])
+      status: Not(SubscriptionStatus.Provisioning)
     },
     order: {
       start: 'ASC',

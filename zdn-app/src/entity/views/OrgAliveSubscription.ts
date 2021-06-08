@@ -3,7 +3,6 @@ import { PaymentStatus } from '../../types/PaymentStatus';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { Subscription } from '../Subscription';
-import { Payment } from '../Payment';
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()

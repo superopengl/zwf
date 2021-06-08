@@ -5,6 +5,11 @@ import { EntityManager } from 'typeorm';
 import { assert } from './assert';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
+import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import { Subscription } from '../entity/Subscription';
+import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { Payment } from '../entity/Payment';
+import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscriptionRefund';
 
 export async function getNewSubscriptionPaymentInfo(
   m: EntityManager,
@@ -14,7 +19,9 @@ export async function getNewSubscriptionPaymentInfo(
 ) {
   assert(seats > 0, 400, `Invalid seats value ${seats}`);
   const unitPrice = getSubscriptionPrice();
-  const creditBalance = await getCreditBalance(m, orgId);
+  const currentCreditBalance = await getCreditBalance(m, orgId);
+  const refundable = await getRefundableCredits(m, orgId);
+  const creditBalance = currentCreditBalance + refundable;
 
   let promotionPercentage = null;
   if (promotionCode) {
@@ -44,4 +51,9 @@ export async function getNewSubscriptionPaymentInfo(
     paymentMethodId: primaryPaymentMethod?.id
   };
   return result;
+}
+
+export async function getRefundableCredits(m: EntityManager, orgId: string) {
+  const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { orgId });
+  return refundable?.refundableAmount || 0;
 }
