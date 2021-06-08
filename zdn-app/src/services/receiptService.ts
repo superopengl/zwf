@@ -28,7 +28,7 @@ function getPaymentMethodName(cardLast4: string) {
 function getSubscriptionDescription(receipt: ReceiptInformation) {
   const type = receipt.subscriptionType;
 
-  const subscriptionName = type === SubscriptionType.Montly ? 'Pro Member Monthly' :      null;
+  const subscriptionName = type === SubscriptionType.Monthly ? 'Pro Member Monthly' :      null;
   assert(subscriptionName, 400, `Unsupported subscription type for receipt ${type}`);
 
   const start = moment(receipt.start).format('D MMM YYYY');

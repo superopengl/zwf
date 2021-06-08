@@ -13,14 +13,14 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const entity = new OrgPaymentMethod();
-  const { paymentMethodId } = req.body;
+  const { stripePaymentMethodId } = req.body;
 
-  assert(paymentMethodId, 400, 'paymentMethodId is empty');
+  assert(stripePaymentMethodId, 400, 'paymentMethodId is empty');
 
-  const paymentMethod = await retrieveStripePaymentMethod(paymentMethodId);
+  const paymentMethod = await retrieveStripePaymentMethod(stripePaymentMethodId);
 
   entity.orgId = orgId;
-  entity.stripePaymentMethodId = paymentMethodId;
+  entity.stripePaymentMethodId = stripePaymentMethodId;
   entity.cardBrand = paymentMethod.card.brand;
   entity.cardExpiry = moment(`${paymentMethod.card.exp_month}/${paymentMethod.card.exp_year}`, 'M/YYYY').format('MM/YY');
   entity.cardLast4 = paymentMethod.card.last4;
@@ -69,7 +69,7 @@ export const deleteOrgPaymentMethod = handlerWrapper(async (req, res) => {
 export const getOrgStripeClientSecret = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const clientSecret = await getStripeClientSecretForOrg(orgId);
+  const clientSecret = await getStripeClientSecretForOrg(getManager(), orgId);
   const result = { clientSecret };
   res.json(result);
 });

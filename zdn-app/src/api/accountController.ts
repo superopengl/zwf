@@ -17,8 +17,7 @@ const getAccountForOrg = async (orgId) => {
     .createQueryBuilder()
     .where({ orgId })
     .select('SUM(amount) AS amount')
-    .getRawOne();
-
+    .getOne();
 
   const result = {
     subscription,

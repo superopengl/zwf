@@ -19,6 +19,7 @@ export class OrgPaymentMethod {
   primary: boolean;
 
   @Column()
+  @Index()
   stripePaymentMethodId: string;
 
   @Column()

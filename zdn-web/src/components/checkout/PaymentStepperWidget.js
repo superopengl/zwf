@@ -8,15 +8,14 @@ import Icon, { LeftOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
-import { calculatePaymentDetail$, confirmSubscriptionPayment, provisionSubscription } from 'services/subscriptionService';
+import { calculatePaymentDetail$, purchaseNewSubscription } from 'services/subscriptionService';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
 import { InputNumber } from 'antd';
-import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
-import { forkJoin } from 'rxjs';
+import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -25,8 +24,8 @@ const PaymentStepperWidget = (props) => {
   const { onComplete, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
   const [seats, setSeats] = React.useState(5);
-  const [paymentDetail, setPaymentDetail] = React.useState();
   const [promotionCode, setPromotionCode] = React.useState();
+  const [paymentInfo, setPaymentInfo] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
   const context = React.useContext(GlobalContext);
 
@@ -35,7 +34,7 @@ const PaymentStepperWidget = (props) => {
 
     return calculatePaymentDetail$(seats, promotionCode)
       .subscribe(paymentDetail => {
-        setPaymentDetail(paymentDetail);
+        setPaymentInfo(paymentDetail);
       })
       .add(() => setLoading(false));
   }
@@ -51,41 +50,34 @@ const PaymentStepperWidget = (props) => {
   }, [seats, promotionCode]);
 
 
-  const handleProvisionSubscription = async () => {
-    const provisionData = await provisionSubscription(seats, promotionCode);
-    return provisionData;
-  }
-
-  const handleSuccessfulPayment = async (paymentId, payload) => {
-    try {
-      setLoading(true);
-      await confirmSubscriptionPayment(paymentId, payload);
-      // Needs to refresh auth user because the role may have changed based on subscription change.
-      context.setUser(await getAuthUser());
-    } finally {
-      setLoading(false);
-    }
-    onComplete();
-  }
-
-  const handleBuyWithPrimaryPaymentMethod = async () => {
+  const handlePurchase = async () => {
     setLoading(true);
     try {
-      const provisionData = await provisionSubscription(seats, promotionCode);
-      await confirmSubscriptionPayment(provisionData.paymentId, { paymentMethodId: paymentDetail.paymentMethodId });
+      await purchaseNewSubscription(seats, promotionCode);
     } finally {
       setLoading(false);
     }
     onComplete();
   }
 
-  const handlePayByNewCard = () => {
-
+  const handlePayByNewCard = async (stripePaymentMethodId) => {
+    setLoading(true);
+    try {
+      await saveOrgPaymentMethod(stripePaymentMethodId);
+      await handlePurchase();
+    } finally {
+      setLoading(false);
+    }
   }
 
-  const handleCheckout = () => {
-    if (paymentDetail.paymentMethodId) {
-      handleBuyWithPrimaryPaymentMethod();
+  const handleCheckout = async () => {
+    if (paymentInfo.paymentMethodId) {
+      setLoading(true);
+      try {
+        await handlePurchase();
+      } finally {
+        setLoading(false);
+      }
     } else {
       setCurrentStep(1);
     }
@@ -97,19 +89,19 @@ const PaymentStepperWidget = (props) => {
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Seats:</Text>
           <Space>
-            <Text><MoneyAmount value={paymentDetail?.unitPrice} /> × </Text>
+            <Text><MoneyAmount value={paymentInfo?.unitPrice} /> × </Text>
             <InputNumber placeholder="seats" value={seats} onChange={num => setSeats(num)} min={1} step={1} />
           </Space>
         </Space>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Total price:</Text>
-          {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
+          {paymentInfo ? <MoneyAmount value={paymentInfo.price} /> : '-'}
         </Space>
         <Divider />
-        {paymentDetail?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }} align="start">
+        {paymentInfo?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }} align="start">
           <Text>Deduction (from previous unfinished subscription):</Text>
           <div style={{ minWidth: 100, textAlign: 'right' }}>
-            <MoneyAmount value={paymentDetail.creditBalance * -1} />
+            <MoneyAmount value={paymentInfo.creditBalance * -1} />
           </div>
         </Space>}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
@@ -118,21 +110,21 @@ const PaymentStepperWidget = (props) => {
             <Input value={promotionCode} placeholder="Promotion code" onChange={e => setPromotionCode(e.target.value)} style={{ textAlign: 'right' }} />
           </div>
         </Space>
-        {paymentDetail?.promotionPercentage === null && <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+        {paymentInfo?.promotionPercentage === null && <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Text type="danger">Invalid promotion code</Text>
         </Space>}
-        {paymentDetail?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {paymentInfo?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion discount %</Text>
-          <Text>{Math.round((1 - paymentDetail?.promotionPercentage) * 100)} %</Text>
+          <Text>{Math.round((1 - paymentInfo?.promotionPercentage) * 100)} %</Text>
         </Space>}
-        {paymentDetail?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {paymentInfo?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion discount amount</Text>
-          <MoneyAmount value={paymentDetail.payable - paymentDetail.price} />
+          <MoneyAmount value={paymentInfo.payable - paymentInfo.price} />
         </Space>}
         <Divider />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>
-          {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.payable} /> : '-'}
+          {paymentInfo ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentInfo.payable} /> : '-'}
         </Space>
         <Button type="primary" block
           size="large"
@@ -145,13 +137,13 @@ const PaymentStepperWidget = (props) => {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>
-          {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.payable} /> : '-'}
+          {paymentInfo ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentInfo.payable} /> : '-'}
         </Space>
         <Paragraph type="secondary">
           This card will be added to the payment methods for future auto renew payment automatically.
           </Paragraph>
         <StripeCardPaymentWidget
-          onComplete={handlePayByNewCard}
+          onOk={handlePayByNewCard}
           onLoading={loading => setLoading(loading)}
         />
       </Space>
