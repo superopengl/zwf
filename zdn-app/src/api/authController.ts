@@ -1,7 +1,8 @@
 
 import { getRepository, getConnection, getManager } from 'typeorm';
 import { User } from '../entity/User';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';

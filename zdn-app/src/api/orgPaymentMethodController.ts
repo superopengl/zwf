@@ -2,7 +2,8 @@
 import { getRepository, getManager, Not } from 'typeorm';
 import { Blog } from '../entity/Blog';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';

@@ -1,6 +1,6 @@
 
 import { getRepository, getManager } from 'typeorm';
-import { assertRole } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Org } from '../entity/Org';
 import { User } from '../entity/User';

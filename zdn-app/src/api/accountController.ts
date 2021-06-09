@@ -2,7 +2,7 @@
 import { getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
-import { assertRole } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
