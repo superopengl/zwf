@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, Index } from 'typeorm';
 
 @Entity()
 export class UserProfile {
@@ -6,6 +6,7 @@ export class UserProfile {
   id?: string;
 
   @Column()
+  @Index()
   email!: string;
 
   @Column({ nullable: true })
