@@ -4,13 +4,16 @@ import { notify } from 'util/notify';
 import * as FormData from 'form-data';
 import { ajax } from 'rxjs/ajax';
 import { catchError, map, tap } from 'rxjs/operators';
-
+import { Modal } from 'antd';
+import { v4 as uuidv4 } from 'uuid';
+import { reactLocalStorage } from 'reactjs-localstorage';
 import * as queryString from 'query-string';
 import { of } from 'rxjs';
 
 axios.defaults.withCredentials = true;
 
 let isSessionTimeoutModalOn = false;
+const DEVICE_ID_KEY = 'deviceId';
 
 function trimSlash(str) {
   return str ? str.replace(/^\/+/, '').replace(/\/+$/, '') : str;
@@ -31,12 +34,19 @@ function getFullBaseUrl() {
   }
 }
 
+function getDeviceId() {
+  const deviceId = reactLocalStorage.get(DEVICE_ID_KEY, uuidv4());
+  reactLocalStorage.set(DEVICE_ID_KEY, deviceId);
+  return deviceId;
+}
+
 export const API_BASE_URL = getFullBaseUrl();
 export const WEBSOCKET_URL = API_BASE_URL.replace(/^(http)(s?:\/\/[^/]+)(.*)/i, 'ws$2');
 console.log('Backend API URL', API_BASE_URL, WEBSOCKET_URL);
 
 function getHeaders(responseType) {
   const headers = {
+    'x-zdn-device-id': getDeviceId(),
     'Content-Type': responseType === 'json' ? 'application/json; charset=utf-8' : 'text/plain; charset=utf-8',
   };
 
