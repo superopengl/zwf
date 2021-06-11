@@ -32,7 +32,6 @@ export const listPromotionCode = handlerWrapper(async (req, res) => {
       'p.*',
       `s.type as type`,
       `s.seats as seats`,
-      `s."totalPrice" as "totalPrice"`,
       `o.id as "orgId"`,
       `o.name as "orgName"`
     ])
