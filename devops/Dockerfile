@@ -8,9 +8,12 @@ RUN apt-get update \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
+    && apt-get install -y bzip2 google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 build-essential chrpath libssl-dev libxft-dev\
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get install libfreetype6 libfreetype6-dev
+RUN apt-get install libfontconfig1 libfontconfig1-dev
 
 # If running Docker >= 1.13.0 use docker run's --init arg to reap zombie processes, otherwise
 # uncomment the following lines to have `dumb-init` as PID 1
@@ -54,6 +57,8 @@ RUN pnpm install
 
 WORKDIR /usr/portal/app
 RUN pnpm install
+RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
+RUN npm link phantomjs-prebuilt
 
 # Env vars in build time
 ARG NODE_ENV
@@ -64,7 +69,7 @@ ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
 ENV REACT_APP_ZDN_API_ENDPOINT=/api/v1
 ENV REACT_APP_ZDN_GOOGLE_SSO_CLIENT_ID=561759632332-dqs7s6u1dqma6kqh32paq192d7qocg9k.apps.googleusercontent.com
-ENV REACT_APP_EVC_STRIPE_PUBLISHABLE_KEY=pk_test_51Hp56jEBt7ChgqJqBRoTJ8V2IPcwYDAMdJhp9XbNTPDHoyOhpOt3HBPIv8iV39mHoUMUQ9NN7gKxZIVDVzJhGWWx00MK1EEkKD
+ENV REACT_APP_ZDN_STRIPE_PUBLISHABLE_KEY=pk_test_51Hp56jEBt7ChgqJqBRoTJ8V2IPcwYDAMdJhp9XbNTPDHoyOhpOt3HBPIv8iV39mHoUMUQ9NN7gKxZIVDVzJhGWWx00MK1EEkKD
 
 # Build app
 COPY ./zdn-app /usr/portal/app
@@ -81,10 +86,10 @@ RUN pnpm run compile:prod
 RUN cp -rf /usr/portal/web/build /usr/portal/app/www
 RUN rm -rf /usr/portal/web
 
-RUN npm uninstall -g pnpm
+# RUN npm uninstall -g pnpm
 
 # Start the portal website
 WORKDIR /usr/portal/app
 # CMD node index.js
-ENTRYPOINT node index.js
+CMD node index.js
 
