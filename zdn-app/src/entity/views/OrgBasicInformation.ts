@@ -20,10 +20,9 @@ import { OrgAliveSubscription } from './OrgAliveSubscription';
       'o.tel as tel',
       'u.id as "adminUserId"',
       'p.email as "ownerEmail"',
-      `CASE WHEN s."currentType" = 'trial' THEN TRUE ELSE FALSE END as "isTrial"`,
+      `CASE WHEN s."type" = 'trial' THEN TRUE ELSE FALSE END as "isTrial"`,
       's.start as "subscriptionStart"',
       's.end as "subscriptionEnd"',
-      's."lastRecurring" as "recurring"',
       's.seats as seats',
     ])
 })
@@ -57,9 +56,6 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   subscriptionEnd: string;
-
-  @ViewColumn()
-  recurring: boolean;
 
   @ViewColumn()
   seats: number;
