@@ -6,19 +6,22 @@ import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscriptionRefund';
 import { OrgSeats } from '../entity/OrgSeats';
+import { User } from '../entity/User';
+import { Role } from '../types/Role';
 
-async function getMinSeats(m: EntityManager, orgId: string) {
+async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
   const result = await m.createQueryBuilder()
-    .from(OrgSeats, 'x')
+    .from(User, 'u')
     .where('"orgId" = :orgId', { orgId })
-    .andWhere('"userId" IS NOT NULL')
+    .andWhere('role = ANY(:...roles)', [Role.Admin, Role.Agent])
+    .andWhere('"deletedAt" IS NULL')
     .select('COUNT(1) as count')
     .getRawOne();
 
   return +(result?.count) || 0;
 }
 
-export async function getNewSubscriptionPaymentInfo(
+export async function calcNewSubscriptionPaymentInfo(
   m: EntityManager,
   orgId: string,
   seats: number,
@@ -28,7 +31,7 @@ export async function getNewSubscriptionPaymentInfo(
   const unitPrice = getSubscriptionPrice();
   const currentCreditBalance = await getCreditBalance(m, orgId);
   const refundable = await getRefundableCredits(m, orgId);
-  const minSeats = await getMinSeats(m, orgId);
+  const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
   const creditBalance = currentCreditBalance + refundable;
 
   let promotionPercentage = null;

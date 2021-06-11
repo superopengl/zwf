@@ -5,7 +5,7 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { getNewSubscriptionPaymentInfo } from '../utils/getNewSubscriptionPaymentInfo';
+import { calcNewSubscriptionPaymentInfo } from '../utils/calcNewSubscriptionPaymentInfo';
 import * as _ from 'lodash';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
@@ -117,7 +117,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
-  const result = await getNewSubscriptionPaymentInfo(getManager(), orgId, seats, promotionCode);
+  const result = await calcNewSubscriptionPaymentInfo(getManager(), orgId, seats, promotionCode);
   res.json(result);
 });
 

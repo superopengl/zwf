@@ -4,7 +4,6 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { v4 as uuidv4 } from 'uuid';
-import { OrgSeats } from '../entity/OrgSeats';
 
 export async function createOrgTrialSubscription(m: EntityManager, orgId: string, orgOwnerUserId: string) {
   const now = moment();
@@ -18,12 +17,6 @@ export async function createOrgTrialSubscription(m: EntityManager, orgId: string
   subscription.recurring = false;
   subscription.status = SubscriptionStatus.Alive;
 
-  // Set 1 seat for the owner
-  const seatEntity = new OrgSeats();
-  seatEntity.id = uuidv4();
-  seatEntity.orgId = orgId;
-  seatEntity.userId = orgOwnerUserId;
-
-  m.save([subscription, seatEntity]);
+  m.insert(Subscription, subscription);
 }
 
