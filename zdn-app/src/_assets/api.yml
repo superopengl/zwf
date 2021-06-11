@@ -273,7 +273,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: saveMyOrgProfile
+      operationId: createMyOrg
       responses:
         200:
           description: OK
