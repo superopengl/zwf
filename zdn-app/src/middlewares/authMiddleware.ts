@@ -6,6 +6,7 @@ import { getUtcNow } from '../utils/getUtcNow';
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
+import { nudgeUser } from '../utils/nudgeUser';
 
 export const authMiddleware = async (req, res, next) => {
 
@@ -28,7 +29,8 @@ export const authMiddleware = async (req, res, next) => {
 
         user = existingUser;
       }
-      getRepository(User).update({ id: user.id }, { lastNudgedAt: getUtcNow() }).catch(() => { });
+
+      nudgeUser(user.id);
       req.user = Object.freeze(user);
       attachJwtCookie(user, res);
     } else {
