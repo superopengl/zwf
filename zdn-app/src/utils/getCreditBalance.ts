@@ -5,8 +5,8 @@ export async function getCreditBalance(m: EntityManager, orgId: string) {
   const result = await m.getRepository(CreditTransaction)
     .createQueryBuilder()
     .where({ orgId })
-    .select('SUM(amount) as total')
-    .execute();
+    .select('SUM(amount)::NUMERIC(2) as total')
+    .getRawOne();
 
-  return +(result[0]?.total) || 0;
+  return +(result?.total) || 0;
 }

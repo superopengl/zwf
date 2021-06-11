@@ -1,10 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToOne, JoinColumn, OneToMany, CreateDateColumn, Unique } from 'typeorm';
-import { PaymentMethod } from '../types/PaymentMethod';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, CreateDateColumn } from 'typeorm';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { Payment } from './Payment';
-import { PromotinCodeStatus } from '../types/PromotinCodeStatus';
-import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
 @Index('idx_subscription_end', ['end'])

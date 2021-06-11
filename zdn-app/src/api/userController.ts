@@ -7,18 +7,12 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
-import { enqueueEmail } from '../services/emailService';
 import { handleInviteUser } from './authController';
-import { getEmailRecipientName } from '../utils/getEmailRecipientName';
-import { Subscription } from '../entity/Subscription';
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
-import { Payment } from '../entity/Payment';
-import { EmailTemplateType } from '../types/EmailTemplateType';
 import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
-import { existsQuery } from '../utils/existsQuery';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 export const changePassword = handlerWrapper(async (req, res) => {

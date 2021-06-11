@@ -1,6 +1,5 @@
-import { getConnection, QueryRunner } from 'typeorm';
+import { getConnection } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { getUtcNow } from './getUtcNow';
 import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
@@ -10,7 +9,6 @@ import { getNewSubscriptionPaymentInfo } from './getNewSubscriptionPaymentInfo';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { assert } from './assert';
-import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getRequestGeoInfo } from './getIpGeoLocation';
 
 export type ProvisionSubscriptionRequest = {
