@@ -14,7 +14,7 @@ function bulkUpdateUser() {
     const { schema, tableName } = getRepository(User).metadata;
     const list = Array.from(map.entries())
       .map(([userId, time]) => {
-        const sql = `('${userId}', '${time.format()}')`;
+        const sql = `('${userId}', '${time.format('YYYY/MM/DD HH:mm:ss.SSS')}')`;
         map.delete(userId);
         return sql;
       });
@@ -25,7 +25,7 @@ function bulkUpdateUser() {
       getManager()
         .query(`
 update "${schema}"."${tableName}" as u
-set "createdAt" = v.time::date
+set "lastNudgedAt" = TO_TIMESTAMP(v.time, 'YYYY/MM/DD HH24:MI:SS.MS')
 from (values ${param}
 ) as v (id, "time")
 where u.id = v.id::uuid;`)
