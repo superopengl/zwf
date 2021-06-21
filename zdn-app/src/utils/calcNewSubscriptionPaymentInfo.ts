@@ -41,24 +41,26 @@ export async function calcNewSubscriptionPaymentInfo(
   const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
   const seatsBefore = await getCurrentSubscriptionLicenseCount(m, orgId);
 
-  assert(seatsAfter !== seatsBefore, 400, `${minSeats} are being used in your organization. There is no need to adjust.`);
-  assert(minSeats <= seatsAfter, 400, `${minSeats} are being used in your organization. Please remove members before reducing license count.`);
+  // assert(seatsAfter !== seatsBefore, 400, `${minSeats} is the minimum licenses required in your organization. There is no need to adjust.`);
+  assert(minSeats <= seatsAfter, 400, `${minSeats} is the minimum licenses required in your organization. Please remove members before reducing license count.`);
 
   // const currentSubscriptionSeats = await getCurrentSubscriptionLicenseCount(m, orgId);
   // assert(seats !== currentSubscriptionSeats, 400, `Current subscription already has ${seats} licenses. No need to adjust.`);
 
   const unitPrice = getSubscriptionPrice();
-  const newSubscriptionFullPrice = unitPrice * seatsAfter;
+  const fullPriceBeforeDiscount = unitPrice * seatsAfter;
 
   // Get promotion data
+  let isValidPromotionCode = false;
   let promotionDiscountPercentage = 0;
   if (promotionCode) {
     const promotion = await m.findOne(OrgPromotionCode, { code: promotionCode });
     if (promotion) {
       promotionDiscountPercentage = promotion.percentage;
+      isValidPromotionCode = true;
     }
   }
-  const fullPayableAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * newSubscriptionFullPrice, 2);
+  const fullPriceAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * fullPriceBeforeDiscount, 2);
   
   const creditBalance = await getCreditBalance(m, orgId);
   const refundable = await getRefundableCredits(m, orgId);
@@ -66,11 +68,11 @@ export async function calcNewSubscriptionPaymentInfo(
   
   let payable = 0;
   let deduction = 0;
-  if (creditBalanceBefore >= fullPayableAfterDiscount) {
+  if (creditBalanceBefore >= fullPriceAfterDiscount) {
     payable = 0
-    deduction = -1 * fullPayableAfterDiscount;
+    deduction = -1 * fullPriceAfterDiscount;
   } else {
-    payable = fullPayableAfterDiscount - creditBalanceBefore;
+    payable = _.round(fullPriceAfterDiscount - creditBalanceBefore, 2);
     deduction = -1 * creditBalanceBefore;
   }
 
@@ -81,9 +83,11 @@ export async function calcNewSubscriptionPaymentInfo(
   const result = {
     unitPrice,
     minSeats,
-    fullPrice: newSubscriptionFullPrice,
+    fullPriceBeforeDiscount,
+    fullPriceAfterDiscount,
     seatsAfter,
     seatsBefore,
+    isValidPromotionCode,
     promotionDiscountPercentage,
     creditBalance,
     refundable,

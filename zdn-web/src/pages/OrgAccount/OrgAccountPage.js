@@ -147,7 +147,7 @@ const OrgAccountPage = (props) => {
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Your subscription will expire on <Text underline strong>{moment.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
                   You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
-                  The new plan will take effect right after all your alive subscriptions end.
+                  The new plan will take effect right after all your alive subscription ends.
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={
                 <FormattedMessage id="text.freeToPaidSuggestion" />
