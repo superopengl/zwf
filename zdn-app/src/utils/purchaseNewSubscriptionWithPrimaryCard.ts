@@ -29,7 +29,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const end = now.add(1, 'month').add(-1, 'day').toDate();
 
   await getManager().transaction(async m => {
-    const { creditBalance, price, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
+    const { creditBalance, deduction, unitPrice, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
@@ -51,6 +51,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     subscription.type = SubscriptionType.Monthly;
     subscription.start = start;
     subscription.seats = seats;
+    subscription.unitPrice = unitPrice;
     subscription.recurring = true;
     subscription.status = SubscriptionStatus.Alive;
     await m.save(subscription);
@@ -59,19 +60,19 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     if (refundable > 0) {
       const refundCreditTransaction = new CreditTransaction();
       refundCreditTransaction.orgId = orgId;
-      refundCreditTransaction.amount = refundable;
+      refundCreditTransaction.amount = Math.abs(refundable);
       refundCreditTransaction.type = 'refund';
       await m.save(refundCreditTransaction);
     }
 
     // Pay with credit as possible
-    let creditTransaction = null;
+    let deductCreditTransaction = null;
     if (creditBalance > 0) {
-      creditTransaction = new CreditTransaction();
-      creditTransaction.orgId = orgId;
-      creditTransaction.amount = -1 * (price - payable);
-      creditTransaction.type = 'deduct';
-      await m.save(creditTransaction);
+      deductCreditTransaction = new CreditTransaction();
+      deductCreditTransaction.orgId = orgId;
+      deductCreditTransaction.amount = Math.abs(deduction) * -1;
+      deductCreditTransaction.type = 'deduct';
+      await m.save(deductCreditTransaction);
     }
 
     // Create payment entity
@@ -87,7 +88,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.auto = false;
     payment.geo = await getRequestGeoInfo(expressReq);
     payment.orgPaymentMethodId = paymentMethodId;
-    payment.creditTransaction = creditTransaction;
+    payment.creditTransaction = deductCreditTransaction;
     payment.subscription = subscription;
 
     await m.save(payment);

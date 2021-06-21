@@ -153,9 +153,9 @@ const OrgAccountPage = (props) => {
                 <FormattedMessage id="text.freeToPaidSuggestion" />
               } />}
               <Space direction="vertical" align="center">
-                <Title><TextLink underline onClick={handleBuyLicense}>Adjust licenses</TextLink></Title>
+                <Title><TextLink underline onClick={handleBuyLicense}>Change subscription</TextLink></Title>
                 <Paragraph type="secondary">
-                  You can buy more or reduce licenses by purchasing a new subscription. The ongoing subscription will be returned to your credits, which will be applied to your new subscription's payment. The new subscription will start right away.
+                  You can buy more or reduce licenses by purchasing a new subscription. The ongoing subscription will be terminated and the remaining licenses will be returned as credits, which will be applied to your new subscription's payment automatically. The new subscription will start right away.
                 </Paragraph>
               </Space>
             </Space>

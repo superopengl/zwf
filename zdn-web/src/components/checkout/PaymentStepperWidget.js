@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Divider, Input, Card } from 'antd';
+import { Typography, Button, Divider, Input, Card, Tooltip } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { Space } from 'antd';
@@ -8,7 +8,7 @@ import Icon, { LeftOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
-import { calculatePaymentDetail$, purchaseNewSubscription } from 'services/subscriptionService';
+import { calculatePaymentDetail, purchaseNewSubscription } from 'services/subscriptionService';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -23,30 +23,27 @@ const PaymentStepperWidget = (props) => {
 
   const { onComplete, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
-  const [seats, setSeats] = React.useState(5);
+  const [seats, setSeats] = React.useState(1);
   const [promotionCode, setPromotionCode] = React.useState();
   const [paymentInfo, setPaymentInfo] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
   const context = React.useContext(GlobalContext);
 
-  const fetchPaymentDetail = (seats, promotionCode) => {
-    setLoading(true)
-
-    return calculatePaymentDetail$(seats, promotionCode)
-      .subscribe(paymentDetail => {
-        setPaymentInfo(paymentDetail);
-      })
-      .add(() => setLoading(false));
+  const fetchPaymentDetail = async () => {
+    try {
+      const paymentDetail = await calculatePaymentDetail(seats, promotionCode)
+      setPaymentInfo(paymentDetail);
+    } finally {
+      setLoading(false)
+    }
   }
   // React.useEffect(() => {
   //   fetchPaymentDetail(willUseCredit);
   // }, []);
 
   React.useEffect(() => {
-    const sub$ = fetchPaymentDetail(seats, promotionCode);
-    return () => {
-      sub$?.unsubscribe();
-    }
+    // setLoading(true)
+    fetchPaymentDetail();
   }, [seats, promotionCode]);
 
 
@@ -83,25 +80,42 @@ const PaymentStepperWidget = (props) => {
     }
   }
 
+  const handleGoToChangeReview = () => {
+    setCurrentStep(1);
+
+  }
+
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        <Text>Add or reduce licenses</Text>
+          {paymentInfo && <InputNumber placeholder="± seats"
+            size="large"
+            value={seats}
+            onChange={num => setSeats(num)}
+            min={paymentInfo?.currentOccupied}
+            step={1} />}
+      </Space>
+      <Button type="primary" block
+        size="large"
+        style={{ marginTop: 20 }} onClick={handleGoToChangeReview}>
+        Next
+      </Button>
+    </Space>
+    },
+    {
+      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Seats:</Text>
+          <Text>Licenses for new subscription:</Text>
           <Space>
             <Text><MoneyAmount value={paymentInfo?.unitPrice} /> × </Text>
-            <InputNumber placeholder="seats" 
-            defaultValue={paymentInfo?.currentOccupied + 1} 
-            value={seats}
-            onChange={num => setSeats(num)} 
-            min={paymentInfo?.currentOccupied + 1} 
-            step={1} />
           </Space>
         </Space>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Total price:</Text>
           {paymentInfo ? <MoneyAmount value={paymentInfo.price} /> : '-'}
-        </Space>
+        </Space> */}
         <Divider />
         {paymentInfo?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }} align="start">
           <Text>Deduction (from previous unfinished subscription):</Text>
@@ -110,19 +124,21 @@ const PaymentStepperWidget = (props) => {
           </div>
         </Space>}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Promotion code</Text>
-          <div>
+          <Text>Promotion code {!!(promotionCode && paymentInfo?.promotionDiscountPercentage === null)} x</Text>
+          <Tooltip
+            visible={!!(promotionCode && paymentInfo?.promotionDiscountPercentage === null)}
+            placement="bottom"
+            color="#ffffff"
+            title={<Text type="danger">Invalid promotion code</Text>}
+          >
             <Input value={promotionCode} placeholder="Promotion code" onChange={e => setPromotionCode(e.target.value)} style={{ textAlign: 'right' }} />
-          </div>
+          </Tooltip>
         </Space>
-        {paymentInfo?.promotionPercentage === null && <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <Text type="danger">Invalid promotion code</Text>
-        </Space>}
-        {paymentInfo?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {paymentInfo?.promotionDiscountPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion discount %</Text>
-          <Text>{Math.round((1 - paymentInfo?.promotionPercentage) * 100)} %</Text>
+          <Text>{Math.round((1 - paymentInfo?.promotionDiscountPercentage) * 100)} %</Text>
         </Space>}
-        {paymentInfo?.promotionPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {paymentInfo?.promotionDiscountPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion discount amount</Text>
           <MoneyAmount value={paymentInfo.payable - paymentInfo.price} />
         </Space>}
