@@ -170,7 +170,7 @@ const OrgAccountPage = (props) => {
           >
             <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: "flex-start" }}>
               <Paragraph type="secondary">
-                Credits can be granted by Zildedin for promotion purpose, or refund from previous unfinished subsccription when you choose to adjust licenses (adding or reducing seats).
+                Credits are by refund from previous unfinished subsccription when you choose to change subscription.
               </Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
