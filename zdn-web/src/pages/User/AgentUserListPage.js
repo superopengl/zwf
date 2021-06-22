@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tooltip, Dropdown, Drawer, Select } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Select } from 'antd';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -71,15 +71,12 @@ const AgentUserListPage = () => {
 
   const columnDef = [
     {
-      title: 'Email',
+      title: 'Org member',
       dataIndex: 'email',
       fixed: 'left',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
-    },
-    {
-      title: 'User Name',
-      dataIndex: 'givenName',
-      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
+      render: (text, item) => <Space>
+      <HighlightingText search={queryInfo.text} value={text} /> <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />
+      </Space>,
     },
     isSystem ? {
       title: 'Org',
@@ -87,7 +84,7 @@ const AgentUserListPage = () => {
       render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     } : null,
     {
-      title: 'Role',
+      // title: 'Role',
       dataIndex: 'role',
       render: (value, item) => <Select bordered={false}
         disabled={item.orgOwner}
@@ -102,11 +99,11 @@ const AgentUserListPage = () => {
           { label: 'admin', value: 'admin' },
         ]} />
     },
-    // {
-    //   title: 'Login Type',
-    //   dataIndex: 'loginType',
-    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    // },
+    {
+      title: 'Login Type',
+      dataIndex: 'loginType',
+      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    },
     {
       title: 'Tags',
       dataIndex: 'tags',
@@ -135,33 +132,21 @@ const AgentUserListPage = () => {
                 menu: 'Set password',
                 onClick: () => openSetPasswordModal(user)
               },
-              isSystem ? {
-                menu: 'Impersonate',
-                onClick: () => handleImpersonante(user)
-              } : null,
-              isSystem ? {
-                menu: 'Delete user',
+              {
+                menu: 'Tags',
+                onClick: () => openSetPasswordModal(user)
+              },
+              {
+                menu: 'Resend invite',
+                onClick: () => openSetPasswordModal(user)
+              },
+              {
+                menu: <Text type="danger">Delete user</Text>,
                 onClick: () => handleDelete(user),
                 disabled: user.orgOwner
-              } : null,
+              },
             ].filter(x => !!x)}
           />
-          // <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-          //   <Tooltip placement="bottom" title="Update profile">
-          //     <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
-          //   </Tooltip>
-          //   <Tooltip placement="bottom" title="Set password">
-          //     <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
-          //   </Tooltip>
-          //   {isSystem && <Tooltip placement="bottom" title="Impersonate">
-          //     <Button shape="circle" onClick={e => handleImpersonante(e, user)}>
-          //       <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
-          //     </Button>
-          //   </Tooltip>}
-          //   {isSystem && <Tooltip placement="bottom" title="Delete user">
-          //     <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
-          //   </Tooltip>}
-          // </Space>
         )
       },
     },
