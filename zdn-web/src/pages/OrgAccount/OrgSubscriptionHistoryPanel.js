@@ -1,4 +1,4 @@
-import { Tag, Space, Table, Button } from 'antd';
+import { Tag, Space, Table, Button, Typography } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { TimeAgo } from 'components/TimeAgo';
@@ -10,9 +10,10 @@ import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
 
+const {Text} = Typography;
 
 const OrgSubscriptionHistoryPanel = (props) => {
-  const {data} = props;
+  const { data } = props;
   const [list, setList] = React.useState(data || []);
 
   React.useEffect(() => {
@@ -27,19 +28,31 @@ const OrgSubscriptionHistoryPanel = (props) => {
 
   const columnDef = [
     {
-      title: 'Subscription period',
+      title: 'Subscription from',
       align: 'left',
       render: (value, item) => {
         return <Space>
           <TimeAgo value={item.start} showAgo={false} accurate={false} />
-          {item.end && <ArrowRightOutlined />}
           {/* <DoubleRightOutlined /> */}
-          {item.end && <TimeAgo value={item.end} showAgo={false} accurate={false} />}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
           {item?.status === 'alive' && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
+      }
+    },
+    {
+      title: 'End',
+      align: 'left',
+      render: (value, item) => {
+        return item.end ? <TimeAgo value={item.end} showAgo={false} accurate={false} />: null;
+      }
+    },
+    {
+      title: 'Days',
+      align: 'center',
+      render: (value, item) => {
+        return item.end ? <Text>{moment(item.end).diff(moment(item.start), 'days') + 1}</Text>: null;
       }
     },
     {
@@ -86,11 +99,11 @@ const OrgSubscriptionHistoryPanel = (props) => {
           dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
-          style={{margin: 0}}
+          style={{ margin: 0 }}
           locale={{
             emptyText: '1 license 14 day trial'
           }}
-          // style={{ width: '100%', minWidth: 370 }}
+        // style={{ width: '100%', minWidth: 370 }}
         />
       }
     },

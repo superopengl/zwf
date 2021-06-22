@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tooltip, Dropdown, Drawer, Radio } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Tooltip, Dropdown, Drawer, Select } from 'antd';
 import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
   UserOutlined,
-  ClearOutlined
+  ClearOutlined,
+  CaretDownOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
-import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
+import { searchUsers, deleteUser, setPasswordForUser, setUserTags, setUserRole } from 'services/userService';
 import { inviteUser$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
@@ -23,7 +24,10 @@ import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
+import loadable from '@loadable/component'
+import { getMyCurrentSubscription } from 'services/subscriptionService';
 
+const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
 const { Text, Paragraph } = Typography;
 
@@ -46,11 +50,14 @@ const AgentUserListPage = () => {
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
+  const [subscription, setSubscription] = React.useState();
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
   const [emptySeats, setEmptySeats] = React.useState(0);
+  const [modalVisible, setModalVisible] = React.useState(false);
+  const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
@@ -82,7 +89,18 @@ const AgentUserListPage = () => {
     {
       title: 'Role',
       dataIndex: 'role',
-      render: (text) => text
+      render: (value, item) => <Select bordered={false}
+        disabled={item.orgOwner}
+        // suffixIcon={<CaretDownOutlined/>}
+        value={value}
+        onChange={role => handleUserRoleChange(item, role)}
+        style={{ width: 100 }}
+        options={item.orgOwner ? [
+          { label: 'owner', value: 'admin' },
+        ] : [
+          { label: 'member', value: 'agent' },
+          { label: 'admin', value: 'admin' },
+        ]} />
     },
     // {
     //   title: 'Login Type',
@@ -193,11 +211,13 @@ const AgentUserListPage = () => {
     try {
       setLoading(true);
       const resp = await searchUsers(queryInfo);
+      const subscription = await getMyCurrentSubscription();
       const { count, page, data } = resp;
       ReactDOM.unstable_batchedUpdates(() => {
         setTotal(count);
         setList(data);
         setQueryInfo({ ...queryInfo, page });
+        setSubscription(subscription);
         setLoading(false);
       });
       reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
@@ -267,8 +287,8 @@ const AgentUserListPage = () => {
   }
 
   const handleInviteUser = async values => {
-    const { email, role } = values;
-    inviteUser$(email, role).subscribe(() => {
+    const { email } = values;
+    inviteUser$(email).subscribe(() => {
       setInviteVisible(false);
       loadList();
     });
@@ -286,6 +306,26 @@ const AgentUserListPage = () => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
+  const handleBuyLicense = () => {
+    setModalVisible(true);
+  }
+
+  const handlePaymentOk = async () => {
+    setModalVisible(false);
+    await loadList();
+  }
+
+  const handleCancelPayment = () => {
+    setModalVisible(false);
+  }
+
+  const handleUserRoleChange = async (item, role) => {
+    if(role && role !== item.role) {
+      await setUserRole(item.id, role);
+      loadList();
+    }
+  }
+
   return (
     <ContainerStyled>
       <Space direction="vertical" style={{ width: '100%' }}>
@@ -301,9 +341,9 @@ const AgentUserListPage = () => {
             allowClear
           />
           <Space>
-            <div>{emptySeats} licenses left - <Button type="link" onClick={() => handleNewUser()} style={{ paddingLeft: 0 }}>Buy more</Button></div>
+            {subscription && <div>{subscription.seats - subscription.occupiedSeats} licenses left - <Button type="link" onClick={() => handleBuyLicense()} style={{ paddingLeft: 0 }}>Buy more</Button></div>}
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Add Member</Button>
+            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />} disabled={!subscription || subscription.occupiedSeats >= subscription.seats}>Add Member</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
@@ -371,16 +411,15 @@ const AgentUserListPage = () => {
           <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
             <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
           </Form.Item>
-          <Form.Item label="Role" name="role" help="Admin can define task template, doc template, and see subscription, payment and agent metrics information.">
-            <Radio.Group defaultValue="agent" disabled={loading} optionType="button" buttonStyle="solid">
+          {/* <Form.Item label="Role" name="role" help="Admin can define task template, doc template, and see subscription, payment and agent metrics information.">
+            <Radio.Group defaultValue="agent" disabled={loading} optionType="button" buttonStyle="solid">act
               <Radio.Button value="admin">Admin</Radio.Button>
               <Radio.Button value="agent">Agent</Radio.Button>
-              {/* <Radio.Button value="admin">Admin</Radio.Button> */}
             </Radio.Group>
           </Form.Item>
           <Form.Item label="Tags" name="tags">
             <TagSelect tags={tags} onSave={saveUserTag} />
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>
           </Form.Item>
@@ -399,6 +438,22 @@ const AgentUserListPage = () => {
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
+      <Modal
+        visible={modalVisible}
+        closable={!paymentLoading}
+        maskClosable={false}
+        title="Buy licenses"
+        destroyOnClose
+        footer={null}
+        width={420}
+        onOk={handleCancelPayment}
+        onCancel={handleCancelPayment}
+      >
+        <PaymentStepperWidget
+          onComplete={handlePaymentOk}
+          onLoading={loading => setPaymentLoading(loading)}
+        />
+      </Modal>
     </ContainerStyled>
 
   );

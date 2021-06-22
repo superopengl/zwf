@@ -65,6 +65,7 @@ export async function searchUser(orgId: string, queryInfo: StockUserParams) {
       'u.id as id',
       'u."loginType"',
       'u.role as role',
+      'u."orgOwner" as "orgOwner"',
       'tg.tags as tags',
       'u."lastLoggedInAt"',
       'u."createdAt" as "createdAt"'

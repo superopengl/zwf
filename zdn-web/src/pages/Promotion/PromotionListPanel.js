@@ -57,7 +57,7 @@ const PromotionListPanel = (props) => {
       </ClickToCopyTooltip>
     },
     {
-      title: '%',
+      title: '% off',
       dataIndex: 'percentage',
       sorter: {
         compare: (a, b) => a.percentage - b.percentage
@@ -148,11 +148,11 @@ const PromotionListPanel = (props) => {
           onFinish={handleSavePromotion}
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
-          initialValues={{ code: newCode, percentage: 0.9 }}>
+          initialValues={{ code: newCode, percentage: 0.1 }}>
           <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <Input readOnly={true} />
           </Form.Item>
-          <Form.Item label="Percentage" name="percentage" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, whitespace: true }]}>
+          <Form.Item label="% off" name="percentage" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, whitespace: true }]}>
             <InputNumber
               min={0.01}
               max={0.99}
