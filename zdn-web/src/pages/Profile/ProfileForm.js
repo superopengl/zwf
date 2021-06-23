@@ -49,7 +49,7 @@ const ProfileForm = (props) => {
         name="avatar"
         className="avatar-field"
       >
-        <UserAvatar size={120} editable={true}/>
+        <UserAvatar size={120} editable={true} userId={user.id} givenName={user.givenName} surname={user.surname}/>
       </Form.Item>
       {!initial && <Form.Item
         label="Email"

@@ -24,7 +24,7 @@ import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
-import {UserNameLabel} from 'components/UserNameLabel';
+import { UserNameLabel } from 'components/UserNameLabel';
 import loadable from '@loadable/component'
 import { getMyCurrentSubscription } from 'services/subscriptionService';
 
@@ -63,31 +63,12 @@ const AgentUserListPage = () => {
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
-  const handleTagChange = async (user, tags) => {
-    await setUserTags(user.id, tags);
-  }
-
-  const isSystem = context.role === 'system';
-  const isAdmin = context.role === 'admin';
-
   const columnDef = [
     {
+      // title: 'User',
       fixed: 'left',
-      render: (text, item) => <UserNameLabel avatar={item.avatarFileId} userId={item.id} email={item.email} givenName={item.givenName} surname={item.surname} role={item.role}  />,
+      render: (text, item) => <UserNameLabel userId={item.id} profile={item} />,
     },
-    {
-      title: 'Org member',
-      dataIndex: 'email',
-      fixed: 'left',
-      render: (text, item) => <Space>
-        <HighlightingText search={queryInfo.text} value={text} /> <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />
-      </Space>,
-    },
-    isSystem ? {
-      title: 'Org',
-      dataIndex: 'orgName',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
-    } : null,
     {
       // title: 'Role',
       dataIndex: 'role',
@@ -114,16 +95,16 @@ const AgentUserListPage = () => {
     //   dataIndex: 'tags',
     //   render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
     // },
-    // {
-    //   title: 'Last Logged In At',
-    //   dataIndex: 'lastLoggedInAt',
-    //   render: (text) => <TimeAgo value={text} />,
-    // },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      render: (text) => text,
+      title: 'Last Activity',
+      dataIndex: 'lastNudgedAt',
+      render: (text) => <TimeAgo value={text} showTime={false} />,
     },
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'status',
+    //   render: (text) => text,
+    // },
     {
       // title: 'Action',
       // fixed: 'right',
@@ -142,10 +123,10 @@ const AgentUserListPage = () => {
                 menu: 'Set password',
                 onClick: () => openSetPasswordModal(user)
               } : null,
-              // {
-              //   menu: 'Tags',
-              //   onClick: () => openSetPasswordModal(user)
-              // },
+              {
+                menu: 'Impersonate',
+                onClick: () => handleImpersonante(user)
+              },
               {
                 menu: 'Resend invite',
                 onClick: () => openSetPasswordModal(user)
@@ -225,7 +206,7 @@ const AgentUserListPage = () => {
     const { id, email } = item;
     Modal.confirm({
       title: <>Delete user</>,
-      content: <>Delete user <Text code>{email}</Text>?</>,
+      content: <UserNameLabel userId={item.id} profile={item} />,
       onOk: async () => {
         setLoading(true);
         await deleteUser(id);
@@ -245,7 +226,7 @@ const AgentUserListPage = () => {
     Modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
-      content: <>To impersonate user <Text code>{item.email}</Text></>,
+      content: <UserNameLabel userId={item.id} profile={item} />,
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
@@ -385,9 +366,9 @@ const AgentUserListPage = () => {
         width={400}
       >
         <Form layout="vertical" onFinish={values => handleSetPassword(currentUser?.id, values)}>
-          <Space style={{ justifyContent: 'center', width: '100%' }}>
-            <Paragraph code>{currentUser?.email}</Paragraph>
-          </Space>
+          <div style={{marginBottom: 20}}>
+            {currentUser && <UserNameLabel userId={currentUser.id} profile={currentUser} />}
+            </div>
           <Form.Item label="Password" name="password" rules={[{ required: true, message: ' ' }]}>
             <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
           </Form.Item>
