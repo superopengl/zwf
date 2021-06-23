@@ -24,6 +24,7 @@ import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
+import {UserNameLabel} from 'components/UserNameLabel';
 import loadable from '@loadable/component'
 import { getMyCurrentSubscription } from 'services/subscriptionService';
 
@@ -43,7 +44,7 @@ const DEFAULT_QUERY_INFO = {
   orderDirection: 'DESC'
 };
 
-const LOCAL_STORAGE_KEY = 'user_query';
+const LOCAL_STORAGE_KEY = 'agent_list_query';
 
 const AgentUserListPage = () => {
 
@@ -70,6 +71,10 @@ const AgentUserListPage = () => {
   const isAdmin = context.role === 'admin';
 
   const columnDef = [
+    {
+      fixed: 'left',
+      render: (text, item) => <UserNameLabel avatar={item.avatarFileId} userId={item.id} email={item.email} givenName={item.givenName} surname={item.surname} role={item.role}  />,
+    },
     {
       title: 'Org member',
       dataIndex: 'email',

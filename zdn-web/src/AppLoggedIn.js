@@ -255,11 +255,11 @@ const AppLoggedIn = props => {
     collapsed={collapsed}
     onCollapse={setCollapsed}
     menuItemRender={(item, dom) => {
-        return <Link to={item.path} onClick={() => {
-          setPathname(item.path);
-        }}>
-          {dom}
-        </Link>
+      return <Link to={item.path} onClick={() => {
+        setPathname(item.path);
+      }}>
+        {dom}
+      </Link>
     }}
     // collapsedButtonRender={false}
     // postMenuData={menuData => {
@@ -299,10 +299,10 @@ const AppLoggedIn = props => {
               icon={<UserOutlined style={{ fontSize: 20 }} />}
               style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
             /> */}
-            <UserAvatar 
-            size={40} 
-            value={user.profile.avatarFileId}
-            style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+            <UserAvatar
+              size={40}
+              value={user.profile.avatarFileId}
+              style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
             />
           </a>
         </Dropdown>

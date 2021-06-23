@@ -12,6 +12,8 @@ import { Popover } from 'antd';
 import { TimeAgo } from './TimeAgo';
 import { Typography, Button, Form, Input, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
+import * as abbreviate from 'abbreviate';
+import uniqolor from 'uniqolor';
 
 const { Dragger } = Upload;
 const { Text } = Typography;
@@ -44,16 +46,24 @@ padding: 8px;
 }
 `;
 
-
+function getLabel(givenName, surname) {
+  const maxLength = 6;
+  const words = [givenName, surname].filter(x => !!x);
+  if (words.length === 1) {
+    return abbreviate(words[0], { length: maxLength }).toUpperCase();
+  }
+  const initials = words.map(w => w.charAt(0).toUpperCase()).join('');
+  return initials.substring(0, maxLength);
+}
 
 export const UserAvatar = (props) => {
-  const { editable, size, value, onChange, style } = props;
+  const { editable, size, value: avatarFileId, userId, givenName, surname, onChange, style } = props;
 
   const [fileList, setFileList] = React.useState([]);
 
   const load = async () => {
-    if (value) {
-      const mata = await getFileMeta(value);
+    if (avatarFileId) {
+      const mata = await getFileMeta(avatarFileId);
       const fileList = [{
         uid: mata.id,
         name: mata.fileName,
@@ -78,17 +88,30 @@ export const UserAvatar = (props) => {
     }
   };
 
-  const avatarProps = value ?
+  const avatarProps = avatarFileId ?
     {
-      src: <Image alt="avatar" preview={false} src={getPublicFileUrl(value)} />
+      src: <Image alt="avatar" preview={false} src={getPublicFileUrl(avatarFileId)} />
     } :
     {
       style,
       icon: <UserOutlined />
     };
+  let avatarComponent = null;
+  if (avatarFileId) {
+    avatarComponent = <Avatar size={size} src={<Image alt="avatar" preview={false} src={getPublicFileUrl(avatarFileId)} />} />
+  } else {
+    const { color: backgroundColor, isLight } = uniqolor(userId, { differencePoint: 160 });
+    const color = isLight ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.85)';
+    const name = getLabel(givenName, surname) || <UserOutlined />;
+    const fontSize = 28 * size / 64;
+    avatarComponent = <Avatar size={size} style={{ ...style, backgroundColor }}>
+      <Text style={{ fontSize, color }}>{name}</Text>
+    </Avatar>
+  }
 
   if (!editable) {
-    return <Avatar size={size} {...avatarProps} />
+
+    return <>{avatarComponent}</>
   }
 
   return (
@@ -102,7 +125,7 @@ export const UserAvatar = (props) => {
       onChange={handleChange}
     >
       <Container>
-        <Avatar size={size} {...avatarProps} />
+       {avatarComponent}
         <div className="edit-text">
           edit
         </div>
@@ -113,9 +136,12 @@ export const UserAvatar = (props) => {
 }
 
 UserAvatar.propTypes = {
+  userId: PropTypes.string,
+  value: PropTypes.string,
+  givenName: PropTypes.string,
+  surname: PropTypes.string,
   size: PropTypes.number,
   editable: PropTypes.bool,
-  value: PropTypes.string,
   onChange: PropTypes.func,
   style: PropTypes.any,
 };
