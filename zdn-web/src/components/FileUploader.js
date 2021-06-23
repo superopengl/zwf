@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Upload, Typography, Space } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
-import { getFile, searchFile } from 'services/fileService';
+import { getFileMeta, getFileMetaList } from 'services/fileService';
 import { FileIcon } from './FileIcon';
 import { saveAs } from 'file-saver';
 import { AiOutlineUpload } from 'react-icons/ai';
@@ -54,7 +54,7 @@ const FileIconWithOverlay = props => {
 
   const loadEntity = async () => {
     if (showsLastReadAt || showsSignedAt) {
-      const file = await getFile(id);
+      const file = await getFileMeta(id);
       setFile(file);
     }
   }
@@ -94,7 +94,7 @@ export const FileUploader = (props) => {
     const { value } = props;
     if (value && value.length) {
       setLoading(true);
-      const list = await searchFile(value);
+      const list = await getFileMetaList(value);
       const fileList = list.map(x => ({
         uid: x.id,
         name: x.fileName,

@@ -3,6 +3,7 @@ import { withRouter } from 'react-router-dom';
 import ProfileForm from '../Profile/ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Modal } from 'antd';
+import { getAuthUser } from 'services/authService';
 
 const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
@@ -10,7 +11,8 @@ const ProfileModal = props => {
 
   const { visible, onOk } = props;
 
-  const handlePostSave = (updatedUser) => {
+  const handlePostSave = async () => {
+    const updatedUser = await getAuthUser();
     setUser(updatedUser);
     onOk();
   }
@@ -23,10 +25,18 @@ const ProfileModal = props => {
       maskClosable={true}
       destroyOnClose={true}
       footer={null}
+      width={360}
       visible={visible}
       onOk={onOk}
       {...props}>
-      <ProfileForm user={user} onOk={updatedUser => handlePostSave(updatedUser)} />
+      <ProfileForm user={{
+        id: user.id,
+        avatar: user.profile.avatarFileId,
+        email: user.profile.email,
+        givenName: user.profile.givenName,
+        surname: user.profile.surname,
+        locale: user.profile.locale
+      }} onOk={handlePostSave} />
     </Modal>
   );
 };

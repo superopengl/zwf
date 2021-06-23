@@ -26,4 +26,7 @@ export class UserProfile {
 
   @Column({ default: 'en-US' })
   locale: string;
+
+  @Column('uuid', {nullable: true})
+  avatarFileId: string;
 }

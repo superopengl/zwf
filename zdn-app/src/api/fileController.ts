@@ -45,7 +45,25 @@ export const downloadFile = handlerWrapper(async (req, res) => {
   stream.pipe(res);
 });
 
-export const getFile = handlerWrapper(async (req, res) => {
+export const getPublicFileStream = handlerWrapper(async (req, res) => {
+  assertRole(req, 'system', 'admin', 'agent', 'client');
+  const { id } = req.params;
+  const { user: { id: userId, role } } = req as any;
+
+  const fileRepo = getRepository(File);
+  const file = await fileRepo.findOne({ id, public: true });
+  assert(file, 404);
+
+  const { fileName, mime } = file;
+
+  const stream = getS3ObjectStream(id, fileName);
+  res.setHeader('Content-type', mime);
+  res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
+
+  stream.pipe(res);
+});
+
+export const getFileMeta = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const repo = getRepository(File);
   const file = await repo.findOne(id);
@@ -53,7 +71,7 @@ export const getFile = handlerWrapper(async (req, res) => {
   res.json(file);
 });
 
-export const searchFileList = handlerWrapper(async (req, res) => {
+export const searchFileMetaList = handlerWrapper(async (req, res) => {
   const { ids } = req.body;
   const files = await getRepository(File)
     .createQueryBuilder()
@@ -78,6 +96,7 @@ export const uploadFile = handlerWrapper(async (req, res) => {
     mime: mimetype,
     location,
     md5,
+    public: !!req.query.public
   };
 
   const repo = getRepository(File);

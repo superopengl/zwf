@@ -104,7 +104,7 @@ export const TaskTemplatePage = props => {
     e.stopPropagation();
     const { id, name } = item;
     Modal.confirm({
-      title: <>Delete Jot Template <strong>{name}</strong>?</>,
+      title: <>Delete Doc Template <strong>{name}</strong>?</>,
       onOk: async () => {
         setLoading(true);
         await deleteTaskTemplate(id);
