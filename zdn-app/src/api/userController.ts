@@ -42,12 +42,24 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'agent', 'cient');
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
-  if (role !== Role.System) {
-    assert(id === loginUserId, 403);
-  }
-  const { email } = req.body;
   const repo = getRepository(User);
-  const user = await repo.findOne(id, { relations: ['profile'] });
+  const userQuery: any = { id };
+  switch (role) {
+    case Role.Agent:
+    case Role.Client:
+      assert(id === loginUserId, 403);
+      break;
+    case Role.Admin:
+      userQuery.orgId = getOrgIdFromReq(req);
+    default:
+      break;
+  }
+
+  const { email } = req.body;
+  const user = await repo.findOne({
+    where: userQuery,
+    relations: ['profile']
+  });
   assert(user, 404);
 
   user.profile.avatarFileId = req.body.avatar;
