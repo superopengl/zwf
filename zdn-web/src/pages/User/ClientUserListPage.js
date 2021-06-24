@@ -10,7 +10,7 @@ import {
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
 import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
-import { inviteUser$, impersonate$ } from 'services/authService';
+import { inviteUser$, impersonate$, inviteClient } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -23,6 +23,7 @@ import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
+import { notify } from 'util/notify';
 
 
 const { Text, Paragraph } = Typography;
@@ -53,6 +54,7 @@ const ClientUserListPage = () => {
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
+  const [inviteForm] = Form.useForm();
 
   const handleTagChange = async (user, tags) => {
     await setUserTags(user.id, tags);
@@ -247,11 +249,10 @@ const ClientUserListPage = () => {
   }
 
   const handleInviteUser = async values => {
-    const { email, role } = values;
-    inviteUser$(email, role).subscribe(() => {
-      setInviteVisible(false);
-      loadList();
-    });
+    const { email } = values;
+    await inviteClient(email);
+    notify.success(<>Successfully sent out the invite to user <strong>{email}</strong></>);
+    inviteForm.current.resetFields();
   }
 
   const handleTagFilterChange = (tags) => {
@@ -346,7 +347,7 @@ const ClientUserListPage = () => {
         width={500}
       >
         <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
-        <Form layout="vertical" onFinish={handleInviteUser}>
+        <Form ref={inviteForm} layout="vertical" onFinish={handleInviteUser}>
           <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
             <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
           </Form.Item>
