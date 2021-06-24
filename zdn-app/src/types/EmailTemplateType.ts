@@ -8,6 +8,9 @@ export enum EmailTemplateType {
   ResetPassword = 'reset_password',
   CreatedPortfolio = 'created_portfolio',
 
+  // Authorize
+  RequireClientAuthorizing = 'require_client_auth',
+
   // Recurring
   RecurringDone = 'recurring_done',
   RecurringFailed = 'recurring_failed',

@@ -6,7 +6,7 @@ import { getEmailRecipientName } from './getEmailRecipientName';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 
-export async function inviteUserWithSendingEmail(m: EntityManager, user, profile) {
+export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user, profile) {
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;

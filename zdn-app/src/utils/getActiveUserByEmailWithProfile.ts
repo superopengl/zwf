@@ -4,7 +4,7 @@ import { assert } from './assert';
 import { computeEmailHash } from './computeEmailHash';
 
 
-export async function getActiveUserByEmail(email) {
+export async function getActiveUserByEmailWithProfile(email) {
   assert(email, 400, 'Invalid email');
   const emailHash = computeEmailHash(email);
   const user = await getRepository(User).findOne({

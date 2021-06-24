@@ -10,7 +10,7 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
-import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
+import { searchOrgMemberUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
@@ -186,7 +186,7 @@ const OrgListPage = () => {
   const searchByQueryInfo = async (queryInfo) => {
     try {
       setLoading(true);
-      const resp = await searchUsers(queryInfo);
+      const resp = await searchOrgMemberUsers(queryInfo);
       const { count, page, data } = resp;
       ReactDOM.unstable_batchedUpdates(() => {
         setTotal(count);

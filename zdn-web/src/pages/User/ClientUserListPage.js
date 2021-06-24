@@ -9,7 +9,7 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
-import { searchUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
+import { searchOrgClientUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
 import { inviteUser$, impersonate$, inviteClient } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { FaTheaterMasks } from 'react-icons/fa';
@@ -24,6 +24,7 @@ import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
 import { notify } from 'util/notify';
+import { UserNameLabel } from 'components/UserNameLabel';
 
 
 const { Text, Paragraph } = Typography;
@@ -65,25 +66,9 @@ const ClientUserListPage = () => {
 
   const columnDef = [
     {
-      title: 'Email',
-      dataIndex: 'email',
+      // title: 'User',
       fixed: 'left',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
-    },
-    {
-      title: 'User Name',
-      dataIndex: 'givenName',
-      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
-    },
-    isSystem ? {
-      title: 'Org',
-      dataIndex: 'orgName',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
-    } : null,
-    {
-      title: 'Role',
-      dataIndex: 'role',
-      render: (text) => text
+      render: (text, item) => <UserNameLabel userId={item.id} profile={item} />,
     },
     // {
     //   title: 'Login Type',
@@ -96,11 +81,6 @@ const ClientUserListPage = () => {
       render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
     },
     {
-      title: 'Last Logged In At',
-      dataIndex: 'lastLoggedInAt',
-      render: (text) => <TimeAgo value={text} />,
-    },
-    {
       // title: 'Action',
       // fixed: 'right',
       // width: 200,
@@ -111,21 +91,9 @@ const ClientUserListPage = () => {
           <DropdownMenu
             config={[
               {
-                menu: 'Update profile',
+                menu: 'Action dasDasd1',
                 onClick: () => openProfileModal(user)
               },
-              {
-                menu: 'Set password',
-                onClick: () => openSetPasswordModal(user)
-              },
-              {
-                menu: 'Impersonate',
-                onClick: () => handleImpersonante(user)
-              },
-              {
-                menu: 'Delete user',
-                onClick: () => handleDelete(user),
-              }
             ]}
           />
         )
@@ -176,7 +144,7 @@ const ClientUserListPage = () => {
   const searchByQueryInfo = async (queryInfo) => {
     try {
       setLoading(true);
-      const resp = await searchUsers(queryInfo);
+      const resp = await searchOrgClientUsers(queryInfo);
       const { count, page, data } = resp;
       ReactDOM.unstable_batchedUpdates(() => {
         setTotal(count);
