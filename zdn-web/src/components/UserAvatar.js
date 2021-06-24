@@ -3,19 +3,12 @@ import PropTypes from 'prop-types';
 import { Upload, Image } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
-import { getFileMeta, getFileMetaList, getPublicFileUrl } from 'services/fileService';
-import { FileIcon } from './FileIcon';
-import { saveAs } from 'file-saver';
-import { AiOutlineUpload } from 'react-icons/ai';
-import { Badge } from 'antd';
-import { Popover } from 'antd';
-import { TimeAgo } from './TimeAgo';
-import { Typography, Button, Form, Input, Avatar } from 'antd';
+import { getFileMeta, getPublicFileUrl } from 'services/fileService';
+import { Typography, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import * as abbreviate from 'abbreviate';
 import uniqolor from 'uniqolor';
 
-const { Dragger } = Upload;
 const { Text } = Typography;
 
 const Container = styled.div`
@@ -41,7 +34,7 @@ padding: 8px;
 &:hover {
   .edit-text {
     background-color: rgba(0,0,0,0.1);
-    color: rgba(0,0,0,0.45);
+    color: white;
   }
 }
 `;
@@ -88,14 +81,6 @@ export const UserAvatar = (props) => {
     }
   };
 
-  const avatarProps = avatarFileId ?
-    {
-      src: <Image alt="avatar" preview={false} src={getPublicFileUrl(avatarFileId)} />
-    } :
-    {
-      style,
-      icon: <UserOutlined />
-    };
   let avatarComponent = null;
   if (avatarFileId) {
     avatarComponent = <Avatar size={size} src={<Image alt="avatar" preview={false} src={getPublicFileUrl(avatarFileId)} />} />
