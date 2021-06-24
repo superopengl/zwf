@@ -243,11 +243,16 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 });
 
 export const impersonate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req, 'system', 'admin');
   const { email } = req.body;
   assert(email, 400, 'Invalid email');
+  const { user: { role } } = req as any;
 
   const user = await getActiveUserByEmail(email);
+  if (role === Role.Admin) {
+    const orgId = getOrgIdFromReq(req);
+    assert(user.orgId === orgId, 404, 'User not found');
+  }
 
   assert(user, 404, 'User not found');
 
@@ -288,9 +293,9 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   });
 
   await getManager().transaction(async m => {
-    const subscription = await m.findOne(OrgAliveSubscription, {orgId});
+    const subscription = await m.findOne(OrgAliveSubscription, { orgId });
     assert(subscription, 400, 'No active subscription');
-    const {seats, occupiedSeats} = subscription;
+    const { seats, occupiedSeats } = subscription;
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
     await inviteUserWithSendingEmail(m, user, profile);
   })
