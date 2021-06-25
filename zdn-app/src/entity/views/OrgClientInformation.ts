@@ -31,6 +31,7 @@ import { UserAuthOrg } from '../UserAuthOrg';
       'p.email as "email"',
       'p."givenName" as "givenName"',
       'p."surname" as "surname"',
+      'p."avatarFileId" as "avatarFileId"',
       'a.status as status',
       'tg.tags as tags',
     ])
@@ -52,6 +53,9 @@ import { UserAuthOrg } from '../UserAuthOrg';
 
   @ViewColumn()
   surname: string;
+
+  @ViewColumn()
+  avatarFileId: string;
 
   @ViewColumn()
   status: string;
