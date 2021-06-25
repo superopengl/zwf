@@ -29,6 +29,7 @@ const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
+const AuthorizePage = loadable(() => import('pages/UserAuthOrgPage'));
 
 const localeDic = {
   'en-US': {
@@ -123,6 +124,7 @@ const App = () => {
               <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
               <RoleRoute visible={isAdmin} loading={loading} exact path="/onboard" component={OrgOnBoardPage} />
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
+              <RoleRoute loading={loading} exact path="/auth/org/:authId" component={AuthorizePage} />
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
