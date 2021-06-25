@@ -1,56 +1,95 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import loadable from '@loadable/component'
-import 'suneditor/dist/css/suneditor.min.css';
+import { API_BASE_URL } from 'services/http';
+import { extend } from 'wangeditor-for-react';
+import i18next from 'i18next';
 
-const SunEditor = loadable(() => import('suneditor-react'));
+const ReactWEditor = extend({ i18next });
 
 const DEFAULT_SAMPLE = ``;
 
-const RickTextInput = (props) => {
+const RichTextInput = (props) => {
 
-  const {ref, value, disabled, onChange} = props;
+  const { value, disabled, onChange } = props;
+  let editorRef = React.useRef(null);
 
-  return (
-    <SunEditor ref={ref}
-      showToolbar={true}
-      enableToolbar={true}
-      setDefaultStyle="font-size: 14px;"
-      setOptions={{
-        // https://github.com/JiHong88/SunEditor/blob/master/README.md#options
-        minHeight: '300px',
-        buttonList: [
-          ['undo', 'redo'],
-          ['font', 'fontSize', 'formatBlock'],
-          ['bold', 'underline', 'italic', 'strike', 'blockquote', 'subscript', 'superscript'],
-          ['fontColor', 'hiliteColor'],
-          ['removeFormat'],
-          ['list', 'outdent', 'indent'],
-          ['align'],
-          ['horizontalRule', 'table', 'link', 'image'], // You must add the 'katex' library at options to use the 'math' plugin.
-          // ['imageGallery'], // You must add the "imageGalleryUrl".
-          // ['fullScreen']
-        ],
-        showPathLabel: false,
-      }}
-      onChange={onChange}
-      setContents={value}
-      disable={disabled}
-    />
-  );
+  React.useEffect(() => {
+    return () => {
+      editorRef?.current?.destroy();
+    }
+  }, [])
+
+  const handleCustomImageInsert = (insertImgFn, result) => {
+    const { id, fileName } = result;
+    const url = `${API_BASE_URL}/file/${id}/data`;
+    insertImgFn(url, fileName, url);
+  }
+
+  return <ReactWEditor
+    ref={editorRef}
+    defaultValue={value}
+    onChange={onChange}
+    disabled={disabled}
+    config={{
+      lang: 'en',
+      fontSizes: {
+        'x-small': { name: '10px', value: '1' },
+        small: { name: '12px', value: '2' },
+        normal: { name: '14px', value: '3' },
+        large: { name: '16px', value: '4' },
+        'x-large': { name: '20px', value: '5' },
+        'xx-large': { name: '24px', value: '6' },
+        'xxx-large': { name: '32px', value: '7' },
+      },
+      uploadImgServer: `${API_BASE_URL}/file`,
+      uploadImgMaxLength: 1,
+      withCredentials: true,
+      uploadFileName: 'file',
+      uploadImgTimeout: 20 * 1000, // 20 seconds
+      uploadImgHooks: {
+        customInsert: handleCustomImageInsert
+      },
+      menus: [
+        'head',
+        'bold',
+        'fontSize',
+        'fontName',
+        'italic',
+        'underline',
+        'strikeThrough',
+        'indent',
+        'lineHeight',
+        'foreColor',
+        'backColor',
+        'link',
+        'list',
+        'todo',
+        'justify',
+        'quote',
+        // 'emoticon',
+        'image',
+        // 'video',
+        'table',
+        'code',
+        'splitLine',
+        // 'undo',
+        // 'redo',
+      ]
+    }}
+  />
 };
 
-RickTextInput.propTypes = {
+RichTextInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
 };
 
-RickTextInput.defaultProps = {
+RichTextInput.defaultProps = {
   value: DEFAULT_SAMPLE,
   onChange: () => { },
   disabled: false,
 };
 
-export default withRouter(RickTextInput);
+export default withRouter(RichTextInput);
