@@ -31,7 +31,7 @@ const PaymentStepperWidget = (props) => {
 
   const { onComplete, onLoading } = props;
   const [loading, setLoading] = React.useState(false);
-  const [seats, setSeats] = React.useState(1);
+  const [seats, setSeats] = React.useState();
   const [promotionCode, setPromotionCode] = React.useState();
   const [paymentInfo, setPaymentInfo] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
@@ -41,6 +41,9 @@ const PaymentStepperWidget = (props) => {
     try {
       const paymentDetail = await calculatePaymentDetail(seats, promotionCode)
       setPaymentInfo(paymentDetail);
+      if(seats === undefined) {
+        setSeats(paymentDetail.seatsAfter + 1);
+      }
     } finally {
       setLoading(false)
     }
@@ -103,22 +106,25 @@ const PaymentStepperWidget = (props) => {
         <Paragraph>Your current subscription has <strong>{paymentInfo?.seatsBefore}</strong> licenses ({paymentInfo?.minSeats} being used).</Paragraph>
         <Space style={{ width: '100%', justifyContent: 'center' }}>
           <Button type="primary" size="large" icon={<MinusOutlined />}
-            style={{ width: 60 }}
+            // style={{ width: 60 }}
+            shape="circle"
+            ghost
             onClick={() => setSeats(seats - 1)} disabled={seats <= paymentInfo?.minSeats} />
           {paymentInfo && <Input placeholder="New licenses"
             size="large"
             value={seats}
-            onChange={e => setSeats(+e.targetValue)}
-            style={{ textAlign: 'center' }}
+            onChange={e => setSeats(+e.target.value)}
+            style={{ textAlign: 'center', width: 80 }}
           />}
           <Button type="primary" size="large" icon={<PlusOutlined />}
-            style={{ width: 60 }}
+            // style={{ width: 60 }}
+            shape="circle"
             onClick={() => setSeats(seats + 1)} />
 
         </Space>
         <Button type="primary" block
           size="large"
-          style={{ marginTop: 20 }} onClick={handleGoToPromotionCode}>
+            style={{ marginTop: 20 }} onClick={handleGoToPromotionCode}>
           Next
         </Button>
       </Space>
