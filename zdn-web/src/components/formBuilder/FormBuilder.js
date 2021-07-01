@@ -23,11 +23,11 @@ import { CSS } from '@dnd-kit/utilities';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 // Import style
-import SortableCard from './SortableCard';
+import FieldDefEditorCard from './FieldDefEditorCard';
 import { PlusOutlined } from '@ant-design/icons';
 
 const SortableItem = ({ index, value, onDelete, onChange }) => (
-  <SortableCard
+  <FieldDefEditorCard
     onDelete={onDelete}
     onChange={onChange}
     index={index}
@@ -85,7 +85,7 @@ const getListStyle = isDraggingOver => ({
   width: '100%'
 });
 
-const SortableSchema = (props) => {
+const SchemaEditor = (props) => {
 
   const { items, header, onChange } = props;
 
@@ -125,7 +125,7 @@ const SortableSchema = (props) => {
                       provided.draggableProps.style
                     )}
                   >
-                    <SortableCard
+                    <FieldDefEditorCard
                       value={item}
                     />
                   </div>
@@ -226,7 +226,7 @@ const SchemaList = (props) => {
   return (
     <>
         <Row style={{ background: '#ECECEC' }}>
-          <SortableSchema
+          <SchemaEditor
             items={value}
             onChange={handleChange}
             header={header}

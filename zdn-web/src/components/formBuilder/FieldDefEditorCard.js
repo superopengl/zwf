@@ -1,7 +1,7 @@
 import React from 'react';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
 import { Card, Switch, Row, Input, Form, Col, Select } from 'antd';
-import Icon from '@ant-design/icons'
+import Icon, { UploadOutlined } from '@ant-design/icons'
 import { find } from 'lodash';
 import {
   FaTextWidth,
@@ -28,8 +28,8 @@ const getRule = rules => {
   return required;
 };
 
-const SortableCard = (props) => {
-  const { value: { index, items, ...value }, onDelete, onChange} = props;
+const FieldDefEditorCard = (props) => {
+  const { value: { index, items, ...value }, onDelete, onChange } = props;
   // Bubble up changes to parent.
   const handleChange = (field = '', change) => {
     // Updated schema with changes.
@@ -84,11 +84,11 @@ const SortableCard = (props) => {
         ]}
       >
         <Row gutter={16}>
-          <Col span={18}>
-            <Form.Item required label="Question">
+          <Col span={12}>
+            <Form.Item required label="Field">
               {value && value.type === 'textarea' ? (
                 <Input.TextArea
-                  placeholder="Add Question Here"
+                  placeholder="Add field"
                   value={value.label || ''}
                   autosize={{ minRows: 2, maxRows: 6 }}
                   onChange={e => {
@@ -110,12 +110,12 @@ const SortableCard = (props) => {
               <RenderOptions value={value} onChange={handleOptionChange} />
             </Form.Item>
           </Col>
-          <Col span={6}>
-            {/* <Row>
+          <Col span={12}>
+            <Row>
               <Form.Item required label="Type">
                 <Select
                   value={value.type || ''}
-                  style={{ width: '100%' }}
+                  style={{ width: 250 }}
                   onSelect={selected => {
                     // On change, reset.
                     const newField = {
@@ -138,40 +138,49 @@ const SortableCard = (props) => {
                   }}
                 >
                   <Select.Option key="input" value="input">
-                    <FaTextWidth />
-                    <span style={{ marginLeft: 10 }}>Short answer</span>
+                    <Icon component={() => <FaTextWidth />} />
+                    <span style={{ marginLeft: 10 }}>Text</span>
                   </Select.Option>
                   <Select.Option key="textarea" value="textarea">
-                    <FaAlignLeft />
-                    <span style={{ marginLeft: 10 }}>Paragraph</span>
+                    <Icon component={() => <FaAlignLeft />} />
+                    <span style={{ marginLeft: 10 }}>Paragraph (multiple lines)</span>
+                  </Select.Option>
+                  <Select.Option key="upload" value="upload">
+                    <UploadOutlined />
+                    <span style={{ marginLeft: 10 }}>Upload</span>
                   </Select.Option>
                   <Select.Option key="radio" value="radio">
-                    <FaDotCircle />
+                    <Icon component={() => <FaDotCircle />} />
                     <span style={{ marginLeft: 10 }}>Multiple choice</span>
                   </Select.Option>
                   <Select.Option key="checkbox" value="checkbox">
-                    <FaCheckSquare />
+                    <Icon component={() => <FaCheckSquare />} />
                     <span style={{ marginLeft: 10 }}>Checkboxes</span>
                   </Select.Option>
                   <Select.Option key="select" value="select">
-                    <FaChevronCircleDown />
+                    <Icon component={() => <FaChevronCircleDown />} />
                     <span style={{ marginLeft: 10 }}>Dropdown</span>
                   </Select.Option>
                   <Select.Option key="date" value="date">
-                    <FaCalendarAlt />
+                    <Icon component={() => <FaCalendarAlt />} />
                     <span style={{ marginLeft: 10 }}>Date</span>
                   </Select.Option>
-                  <Select.Option key="time" value="time">
-                    <FaClock />
-                    <span style={{ marginLeft: 10 }}>Time</span>
+                  <Select.Option key="month" value="month">
+                    <Icon component={() => <FaCalendarAlt />} />
+                    <span style={{ marginLeft: 10 }}>Month</span>
                   </Select.Option>
-                  <Select.Option key="confirm" value="confirm">
-                    <FaCheck />
-                    <span style={{ marginLeft: 10 }}>Confirm</span>
+                  <Select.Option key="quarter" value="quarter">
+                    <Icon component={() => <FaCalendarAlt />} />
+                    <span style={{ marginLeft: 10 }}>Quarter</span>
                   </Select.Option>
+                  <Select.Option key="year" value="year">
+                    <Icon component={() => <FaCalendarAlt />} />
+                    <span style={{ marginLeft: 10 }}>Year</span>
+                  </Select.Option>
+
                 </Select>
               </Form.Item>
-            </Row> */}
+            </Row>
           </Col>
         </Row>
       </Card>
@@ -179,4 +188,4 @@ const SortableCard = (props) => {
   );
 };
 
-export default SortableCard;
+export default FieldDefEditorCard;
