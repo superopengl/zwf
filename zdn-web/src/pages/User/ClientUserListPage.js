@@ -91,7 +91,19 @@ const ClientUserListPage = () => {
           <DropdownMenu
             config={[
               {
-                menu: 'Action dasDasd1',
+                menu: 'Active tasks',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Resend invite',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Portfolios',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Tags',
                 onClick: () => openProfileModal(user)
               },
             ]}
@@ -251,7 +263,7 @@ const ClientUserListPage = () => {
           />
           <Space>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite Client</Button>
+            <Button type="primary" onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Add Portfolio</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>

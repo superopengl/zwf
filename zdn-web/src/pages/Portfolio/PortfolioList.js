@@ -9,7 +9,7 @@ import { withRouter } from 'react-router-dom';
 import ChoosePortfolioType from 'components/ChoosePortfolioType';
 import PropTypes from 'prop-types';
 import { GlobalContext } from 'contexts/GlobalContext';
-import PortfolioForm from '../../components/PortfolioForm';
+import IndividualPortfolioForm from './IndividualPortfolioForm';
 
 
 
@@ -127,7 +127,7 @@ const PortfolioList = props => {
       onCancel={() => setFormVisible(false)}
     >
 
-      <PortfolioForm
+      <IndividualPortfolioForm
         loading={loading}
         id={portfolioId}
         type={newType}

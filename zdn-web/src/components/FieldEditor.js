@@ -6,6 +6,7 @@ import { UpOutlined, DownOutlined, DeleteOutlined, PlusOutlined } from '@ant-des
 import { BuiltInFieldLabelValuePairs, BuiltInFieldType, getBuiltInFieldByLabelName, getBuiltInFieldByVarName } from 'components/FieldDef';
 import { varNameToLabelName } from 'util/varNameToLabelName';
 import { labelNameToVarName } from 'util/labelNameToVarName';
+import { v4 as uuidv4 } from 'uuid';
 
 const { Text } = Typography;
 
@@ -23,7 +24,7 @@ const FieldEditor = (props) => {
   const [fields, setFields] = React.useState(value);
 
   React.useEffect(() => {
-    if(value === fields) return;
+    if (value === fields) return;
     setFields(value);
   }, [value]);
 
@@ -59,7 +60,10 @@ const FieldEditor = (props) => {
   }
 
   const addNewRow = () => {
-    fields.push({ ...EMPTY_ROW });
+    fields.push({ 
+      id: uuidv4(),
+      ...EMPTY_ROW
+     });
     setFields([...fields]);
     handleSave();
   }
@@ -114,7 +118,8 @@ const FieldEditor = (props) => {
           // defaultValue={getDisplayNameFromVarName(text)}
           style={{ width: 200 }}
           autoComplete="off"
-          onBlur={(e) => changeValue(index, 'name', e.target.value)}
+          onSearch={v => changeValue(index, 'name', v)}
+          onBlur={e => changeValue(index, 'name', e.target.value)}
           disabled={record.value}
         />
       }
@@ -126,9 +131,11 @@ const FieldEditor = (props) => {
         const fieldName = record.name;
         const builtInField = getBuiltInFieldByLabelName(fieldName);
         const inputType = builtInField?.inputType || (record.value ? value : null);
-        return !fieldName ? null : inputType ? <Text disabled>{varNameToLabelName(inputType)}</Text> : <Select value={value} style={{ width: '200px' }} onChange={(v) => changeValue(index, 'type', v)}>
-          {BuiltInFieldType.map((f, i) => <Select.Option key={i} value={f}>{varNameToLabelName(f)}</Select.Option>)}
-        </Select>
+        return !fieldName ? null :
+          inputType ? <Text disabled>{varNameToLabelName(inputType)}</Text> :
+            <Select value={value} style={{ width: '200px' }} onChange={(v) => changeValue(index, 'type', v)}>
+              {BuiltInFieldType.map((f, i) => <Select.Option key={i} value={f}>{varNameToLabelName(f)}</Select.Option>)}
+            </Select>
       }
     },
     {
@@ -161,7 +168,7 @@ const FieldEditor = (props) => {
     },
   ];
 
-  const canAddNewField = fields.every(f => !!f.name);
+  const canAddNewField = true || fields.every(f => !!f.name);
 
   return (
     <Space direction="vertical" size="large" style={{ width: '100%' }}>
@@ -172,7 +179,7 @@ const FieldEditor = (props) => {
         dataSource={fields}
         pagination={false}
         loading={loading}
-        rowKey={record => record.name}
+        rowKey={record => record.name || record.id}
         footer={null}
       />
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>

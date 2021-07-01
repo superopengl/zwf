@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 import { Space, Typography, Layout } from 'antd';
 
 import { getPortfolio, savePortfolio } from 'services/portfolioService';
-import PortfolioForm from '../../components/PortfolioForm';
+import IndividualPortfolioForm from './IndividualPortfolioForm';
 
 const { Title } = Typography;
 
@@ -37,36 +37,6 @@ const PortfolioFormPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   // const [name, setName] = React.useState('New Portfolio');
   // const [fields, setFields] = React.useState([]);
-  const [, setInitialValues] = React.useState();
-
-  const loadEntity = async () => {
-    if (!isNew) {
-      const entity = await getPortfolio(id);
-      const initialValues = getFormInitialValues(entity);
-      setInitialValues(initialValues);
-    }
-    setLoading(false);
-  }
-
-  React.useEffect(() => {
-    loadEntity()
-  }, [id]);
-
-  const getFormInitialValues = (portfolio) => {
-    if (!portfolio) return undefined;
-    const name = portfolio.name || '';
-    const fields = portfolio.fields || [];
-    const formInitValues = {
-      id,
-      name,
-    };
-    for (const f of fields) {
-      formInitValues[f.name] = f.value;
-    }
-
-
-    return formInitValues;
-  }
 
   const handleSubmit = async payload => {
     setLoading(true);
@@ -83,13 +53,12 @@ const PortfolioFormPage = (props) => {
 
   return (<>
     <LayoutStyled>
-      
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>{`${isNew ? 'New' : 'Edit'} Portfolio`}</Title>
           </StyledTitleRow>
-          <PortfolioForm
+          <IndividualPortfolioForm
             loading={loading}
             id={id}
             type={newType}

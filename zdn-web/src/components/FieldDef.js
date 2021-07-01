@@ -3,7 +3,6 @@ import { varNameToLabelName } from 'util/varNameToLabelName';
 import { labelNameToVarName } from 'util/labelNameToVarName';
 import {isValidABN, isValidACN} from "abnacn-validator";
 import * as tfn from 'tfn';
-import { FaTruckMonster } from 'react-icons/fa';
 
 const isValidTfn = (text) => tfn(text).valid;
 
