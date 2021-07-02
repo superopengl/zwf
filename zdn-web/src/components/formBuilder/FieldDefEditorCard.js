@@ -84,7 +84,7 @@ const FieldDefEditorCard = (props) => {
             />
           </Form.Item>
           <Form.Item>
-            <RenderOptions value={value} onChange={handleOptionChange} />
+            <RenderOptions type={value.type} options={value.options} onChange={handleOptionChange} />
           </Form.Item>
         </Col>
         <Col span={12}>
