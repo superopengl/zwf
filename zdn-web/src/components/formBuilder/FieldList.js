@@ -52,8 +52,9 @@ export const FieldList = (props) => {
 
 FieldList.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.array.isRequired
+  value: PropTypes.array.isRequired,
 };
 
 FieldList.defaultProps = {
+  value: [],
 };
