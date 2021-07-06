@@ -1,26 +1,10 @@
 import React from 'react';
-import { SortableElement, sortableHandle } from 'react-sortable-hoc';
-import { Card, Switch, Row, Input, Form, Col, Select, Space } from 'antd';
-import Icon, { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
-import { find } from 'lodash';
-import {
-  FaTextWidth,
-  FaAlignLeft,
-  FaCheckSquare,
-  FaChevronCircleDown,
-  FaDotCircle,
-  FaCheck,
-  FaCalendarAlt,
-  FaClock,
-} from 'react-icons/fa';
+import { Card, Switch, Row, Input, Form, Col, Select, Space, Typography, Button } from 'antd';
+import Icon, { DeleteFilled, DeleteOutlined } from '@ant-design/icons'
 import RenderOptions from './RenderOptions';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 
-const DragHandle = sortableHandle(() => (
-  <Row className="drag-handle" type="flex" align="middle" justify="center">
-    <span>:::</span>
-  </Row>
-));
+const {Text} = Typography;
 
 const FieldDefEditorCard = (props) => {
   const { value, index, items, onDelete, onChange } = props;
@@ -46,15 +30,12 @@ const FieldDefEditorCard = (props) => {
   return (
     <Card
       size="small"
-      title={<DragHandle />}
+      title={<Row className="drag-handle" type="flex" align="middle" justify="center">
+      <Text type="secondary">:::</Text>
+    </Row>}
+      type="inner"
       style={{ width: '100%' }}
-      extra={<Space>
-        <DeleteOutlined
-          onClick={() => {
-            if (onDelete) onDelete(value);
-          }}
-        />
-      </Space>}
+      extra={<Button size="small" icon={<DeleteFilled/>} danger type="link" onClick={() => onDelete(value)}></Button>}
     >
       <Row gutter={16}>
         <Col span={12}>
@@ -71,7 +52,6 @@ const FieldDefEditorCard = (props) => {
               autosize={{ minRows: 2, maxRows: 6 }}
             />
           </Form.Item>
-
         </Col>
         <Col span={12}>
           <Form.Item label="Type"
@@ -92,14 +72,12 @@ const FieldDefEditorCard = (props) => {
               </Select.Option>)}
             </Select>
           </Form.Item>
-          <Form.Item label="Required" name={['fields', index, 'required']} >
+          <Form.Item label="Required" valuePropName="checked" name={['fields', index, 'required']} >
             <Switch />
           </Form.Item>
         </Col>
         <Col span={24}>
-          <Form.Item>
             <RenderOptions type={value.type} options={value.options} onChange={handleOptionChange} />
-          </Form.Item>
         </Col>
       </Row>
     </Card>

@@ -1,0 +1,51 @@
+import React from 'react';
+import { Row, Button } from 'antd';
+import { camelCase } from 'lodash';
+import { arrayMove } from '@dnd-kit/sortable';
+import { PlusOutlined } from '@ant-design/icons';
+import { FieldListEditor } from './FieldListEditor';
+import { createEmptyField } from './TaskTemplateBuilder';
+
+export const FieldList = (props) => {
+  const { value, onChange, header } = props;
+  // const bottomRef = useRef(null);
+  const handleChange = change => {
+    onChange(change);
+  };
+  return (
+    <>
+      <Row style={{ background: '#ECECEC' }}>
+        <FieldListEditor
+          items={value}
+          onChange={handleChange}
+          header={header}
+          onSortEnd={({ oldIndex, newIndex }) => {
+            // Re-assigned avoid mutation.
+            let updatedSchema = value;
+            updatedSchema = arrayMove(updatedSchema, oldIndex, newIndex);
+            updatedSchema.forEach((e, index) => {
+              e.field = camelCase(`Question ${index + 1}`);
+            });
+            handleChange(updatedSchema);
+          }} />
+      </Row>
+      <Row>
+        <Button
+          style={{ marginTop: 10 }}
+          type="primary"
+          icon={<PlusOutlined />}
+          // block
+          onClick={() => {
+            const updatedList = [
+              ...value,
+              createEmptyField(),
+            ];
+            handleChange(updatedList);
+          }}
+        >
+          Add field
+        </Button>
+      </Row>
+    </>
+  );
+}
