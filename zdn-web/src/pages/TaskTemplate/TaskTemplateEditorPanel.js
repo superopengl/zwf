@@ -7,9 +7,10 @@ import PropTypes from 'prop-types';
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
+  // padding: 10px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
-  height: 100%;
+  // height: 100%;
 `;
 
 export const TaskTemplateEditorPanel = props => {

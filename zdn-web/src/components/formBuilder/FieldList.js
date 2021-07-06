@@ -15,7 +15,7 @@ export const FieldList = (props) => {
   };
   return (
     <>
-      <Row style={{ background: '#ECECEC' }}>
+      {/* <Row style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 4 }}> */}
         <DroppableFieldList
           items={value}
           onChange={handleChange}
@@ -28,8 +28,8 @@ export const FieldList = (props) => {
             });
             handleChange(updatedSchema);
           }} />
-      </Row>
-      <Row>
+      {/* </Row> */}
+      <Row justify="end">
         <Button
           style={{ marginTop: 10 }}
           type="primary"

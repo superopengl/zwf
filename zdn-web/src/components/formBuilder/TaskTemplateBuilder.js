@@ -1,28 +1,13 @@
 import React from 'react';
-import { Form, Button, Input } from 'antd';
+import { Form, Typography, Input } from 'antd';
 import { isEmpty } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
+import { FieldList } from './FieldList';
 // import arrayMove from 'array-move';
 
+const {Paragraph} = Typography;
 // Import style
-import { FieldList } from './FieldList';
-
-export const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-const grid = 8;
-
-export const getListStyle = isDraggingOver => ({
-  background: isDraggingOver ? "#13c2c222" : "rgba(255,255,255,0)",
-  padding: grid,
-  width: '100%'
-});
 
 export const createEmptyField = () => {
   return {
@@ -70,6 +55,11 @@ export const TaskTemplateBuilder = (props) => {
   };
 
   const handleValueChange = (changedValues, allValues) => {
+    allValues.fields.forEach(f => {
+      if(!['radio', 'checkbox', 'select'].includes(f.type)) {
+        delete f.options;
+      }
+    })
     onChange(allValues);
   };
 
@@ -101,6 +91,9 @@ export const TaskTemplateBuilder = (props) => {
           autosize={{ minRows: 2, maxRows: 6 }}
         />
       </Form.Item>
+      <Paragraph type="secondary">
+        Drag and drop field cards to adjust the order.
+      </Paragraph>
       <Form.Item name="fields" noStyle rules={[
         {
           required: true,
@@ -120,9 +113,9 @@ export const TaskTemplateBuilder = (props) => {
       ]}>
         <FieldList />
       </Form.Item>
-      <Form.Item>
+      {/* <Form.Item>
         <Button htmlType="submit">Save</Button>
-      </Form.Item>
+      </Form.Item> */}
     </Form>
   </>
 }

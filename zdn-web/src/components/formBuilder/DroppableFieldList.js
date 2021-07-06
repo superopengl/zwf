@@ -2,9 +2,22 @@ import React from 'react';
 import { Row, Col } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import FieldEditCard from './FieldEditCard';
-import { reorder, getListStyle } from './TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 
+
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
+const getListStyle = isDraggingOver => ({
+  background: isDraggingOver ? "#13c2c222" : "none",
+  padding: 0,
+  // width: '100%'
+});
 
 export const DroppableFieldList = (props) => {
 
