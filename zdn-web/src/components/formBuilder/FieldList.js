@@ -3,11 +3,12 @@ import { Row, Button } from 'antd';
 import { camelCase } from 'lodash';
 import { arrayMove } from '@dnd-kit/sortable';
 import { PlusOutlined } from '@ant-design/icons';
-import { FieldListEditor } from './FieldListEditor';
+import { DroppableFieldList } from './DroppableFieldList';
 import { createEmptyField } from './TaskTemplateBuilder';
+import PropTypes from 'prop-types';
 
 export const FieldList = (props) => {
-  const { value, onChange, header } = props;
+  const { value, onChange } = props;
   // const bottomRef = useRef(null);
   const handleChange = change => {
     onChange(change);
@@ -15,10 +16,9 @@ export const FieldList = (props) => {
   return (
     <>
       <Row style={{ background: '#ECECEC' }}>
-        <FieldListEditor
+        <DroppableFieldList
           items={value}
           onChange={handleChange}
-          header={header}
           onSortEnd={({ oldIndex, newIndex }) => {
             // Re-assigned avoid mutation.
             let updatedSchema = value;
@@ -49,3 +49,11 @@ export const FieldList = (props) => {
     </>
   );
 }
+
+FieldList.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.object.isRequired
+};
+
+FieldList.defaultProps = {
+};

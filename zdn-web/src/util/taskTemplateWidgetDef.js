@@ -4,11 +4,10 @@ import {
   FaCheckSquare,
   FaChevronCircleDown,
   FaDotCircle,
-  FaCheck,
   FaCalendarAlt,
-  FaClock,
 } from 'react-icons/fa';
-import Icon, { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
+import { UploadOutlined } from '@ant-design/icons'
+import { FileUploader } from 'components/FileUploader';
 
 export const TaskTemplateWidgetDef = Object.freeze([
   {
@@ -29,7 +28,8 @@ export const TaskTemplateWidgetDef = Object.freeze([
     type: 'upload',
     label: 'File upload',
     icon: <UploadOutlined />,
-    widget: 'upload',
+    forwardRef: true,
+    widget: FileUploader,
     widgetPorps: null,
   },
   {

@@ -2,6 +2,7 @@ import React from 'react';
 import { Form, Button, Input } from 'antd';
 import { isEmpty } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
+import PropTypes from 'prop-types';
 // import arrayMove from 'array-move';
 
 // Import style
@@ -60,12 +61,12 @@ const checkOptions = items => {
 };
 
 export const TaskTemplateBuilder = (props) => {
-  const { formStructure, onChange, onError } = props;
+  const { value: template, onChange } = props;
 
   const initialValues = {
-    name: formStructure?.name || '',
-    description: formStructure?.description || '',
-    fields: isEmpty(formStructure?.fields) ? [createEmptyField()] : formStructure.fields
+    name: template?.name || '',
+    description: template?.description || '',
+    fields: isEmpty(template?.fields) ? [createEmptyField()] : template.fields
   };
 
   const handleValueChange = (changedValues, allValues) => {
@@ -87,10 +88,14 @@ export const TaskTemplateBuilder = (props) => {
       initialValues={initialValues}
     // id={formId}
     >
-      <Form.Item label="Task template name" name="name" rules={[{ required: true, message: ' ' }]}>
+      <Form.Item
+        name="name"
+        rules={[{ required: true, message: ' ' }]}>
         <Input placeholder="Task template name" />
       </Form.Item>
-      <Form.Item label="Description" name="description" rules={[{ required: true, message: ' ' }]}>
+      <Form.Item
+        name="description"
+        rules={[{ required: false, message: ' ' }]}>
         <Input.TextArea
           placeholder="Task template description"
           autosize={{ minRows: 2, maxRows: 6 }}
@@ -122,4 +127,10 @@ export const TaskTemplateBuilder = (props) => {
   </>
 }
 
+TaskTemplateBuilder.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.object.isRequired
+};
 
+TaskTemplateBuilder.defaultProps = {
+};
