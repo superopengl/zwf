@@ -31,7 +31,7 @@ export const FieldList = (props) => {
       {/* </Row> */}
       <Row justify="end">
         <Button
-          style={{ marginTop: 10 }}
+          style={{ marginTop: 16 }}
           type="primary"
           icon={<PlusOutlined />}
           // block
@@ -52,7 +52,7 @@ export const FieldList = (props) => {
 
 FieldList.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.object.isRequired
+  value: PropTypes.array.isRequired
 };
 
 FieldList.defaultProps = {

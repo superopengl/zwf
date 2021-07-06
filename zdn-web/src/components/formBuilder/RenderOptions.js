@@ -30,7 +30,7 @@ const RenderOptions = (props) => {
     <Container>
       {options.map((option, index) => {
         return (
-          <Row key={index} justify="start" align="top" style={{ marginBottom: 10 }}>
+          <Row key={index} justify="start" align="top" style={{ marginBottom: 16 }}>
             <Col flex="24px">
               <div style={{ position: 'relative', top: 4 }}>
                 {type === 'radio' && <Radio disabled></Radio>}

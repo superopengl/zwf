@@ -38,7 +38,7 @@ const FieldEditCard = (props) => {
       style={{ width: '100%' }}
       extra={<Button size="small" icon={<CloseOutlined />} danger type="link" onClick={() => onDelete(value)}></Button>}
     >
-      <Row gutter={16}>
+      <Row gutter={32}>
         <Col span={14}>
           <Form.Item label="Field name"
             name={['fields', index, 'name']}
