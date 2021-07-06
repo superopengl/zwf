@@ -53,6 +53,12 @@ const FieldEditCard = (props) => {
               autosize={{ minRows: 2, maxRows: 6 }}
             />
           </Form.Item>
+          <Form.Item label="Required" valuePropName="checked" name={['fields', index, 'required']} >
+            <Switch />
+          </Form.Item>
+          <Form.Item label="Official only" valuePropName="official" name={['fields', index, 'official']} >
+            <Switch />
+          </Form.Item>
         </Col>
         <Col span={10}>
           <Form.Item label="Type"
@@ -65,9 +71,7 @@ const FieldEditCard = (props) => {
               </Select.Option>)}
             </Select>
           </Form.Item>
-          <Form.Item label="Required" valuePropName="checked" name={['fields', index, 'required']} >
-            <Switch />
-          </Form.Item>
+
           {['radio', 'checkbox', 'select'].includes(value.type) &&
             <RenderOptions type={value.type} fieldIndex={index} options={value.options} onChange={handleOptionChange} />
           }

@@ -35,6 +35,11 @@ const EmptyTaskTamplateSchema = {
       name: 'Fiscal year',
       type: 'year',
       required: true,
+    },
+    {
+      name: 'Comment',
+      type: 'textarea',
+      official: true,
     }
   ]
 };
@@ -57,7 +62,7 @@ export const TaskTemplateEditorPage = props => {
   }, []);
 
   const handleSave = () => {
-    
+
   }
 
   if (loading) {
@@ -79,7 +84,7 @@ export const TaskTemplateEditorPage = props => {
           onChange={schema => {
             setSchema(schema);
           }}
-          debug={true}
+          debug={false}
         />
       </PageHeader>
 
@@ -95,7 +100,8 @@ export const TaskTemplateEditorPage = props => {
 
         <TaskTemplatePreviewPanel
           value={schema}
-          debug={true}
+          debug={false}
+          type="agent"
         />
       </Modal>
     </LayoutStyled >
