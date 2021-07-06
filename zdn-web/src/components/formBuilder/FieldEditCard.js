@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Switch, Row, Input, Form, Col, Select, Space, Typography, Button } from 'antd';
-import Icon, { DeleteFilled, DeleteOutlined } from '@ant-design/icons'
+import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined } from '@ant-design/icons'
 import RenderOptions from './RenderOptions';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
@@ -36,7 +36,7 @@ const FieldEditCard = (props) => {
       </Row>}
       type="inner"
       style={{ width: '100%' }}
-      extra={<Button size="small" icon={<DeleteFilled />} danger type="link" onClick={() => onDelete(value)}></Button>}
+      extra={<Button size="small" icon={<CloseOutlined />} danger type="link" onClick={() => onDelete(value)}></Button>}
     >
       <Row gutter={16}>
         <Col span={14}>
