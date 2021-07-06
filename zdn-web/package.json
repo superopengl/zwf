@@ -16,6 +16,7 @@
     "abbreviate": "^0.0.3",
     "abnacn-validator": "^0.0.5",
     "antd": "^4.15.2",
+    "antd-form-builder": "^2.1.3",
     "array-move": "^3.0.1",
     "axios": "^0.21.1",
     "bizcharts": "^4.0.14",

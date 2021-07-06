@@ -85,7 +85,7 @@ const getListStyle = isDraggingOver => ({
   width: '100%'
 });
 
-const FieldEditor = (props) => {
+const FieldListEditor = (props) => {
 
   const { items, header, onChange } = props;
 
@@ -156,27 +156,23 @@ const FieldEditor = (props) => {
 const createEmptyField = () => {
   return {
     id: uuidv4(),
-    type: 'input',
+    widget: 'input',
     label: '',
-    description: '',
+    extra: '',
   }
 }
 
 const checkLabels = items => {
-  const notValid = items.filter(
-    item => item.label === '' || item.label === undefined || item.label === null
-  );
-
-  return notValid.length === 0;
+  return items.every(x => x.label && x.widget);
 };
 
 const checkOptions = items => {
   for (let i = 0; i < items.length; i += 1) {
     const currQuestion = items[i];
     if (
-      currQuestion.type === 'radio' ||
-      currQuestion.type === 'checkbox' ||
-      currQuestion.type === 'select'
+      currQuestion.widget === 'radio' ||
+      currQuestion.widget === 'checkbox' ||
+      currQuestion.widget === 'select'
     ) {
       const currOptions = currQuestion.options;
       if (currOptions.length === 0) {
@@ -202,7 +198,7 @@ const FieldList = (props) => {
   return (
     <>
       <Row style={{ background: '#ECECEC' }}>
-        <FieldEditor
+        <FieldListEditor
           items={value}
           onChange={handleChange}
           header={header}
@@ -234,23 +230,21 @@ const FieldList = (props) => {
           Add field
         </Button>
       </Row>
-      <pre>{JSON.stringify(value, null, 2)}</pre>
-
     </>
   );
 };
 
-export const FormBuilder = (props) => {
-  const { formStructure, onSave, onError } = props;
+export const TaskTemplateBuilder = (props) => {
+  const { formStructure, onChange, onError } = props;
 
   const initialValues = {
     name: formStructure?.name || '',
     description: formStructure?.description || '',
-    schema: isEmpty(formStructure.schema) ? [createEmptyField()] : formStructure.schema
+    fields: isEmpty(formStructure?.fields) ? [createEmptyField()] : formStructure.fields
   };
 
-  const handleSubmit = formData => {
-    if (onSave) onSave(formData);
+  const handleValueChange = (changedValues, allValues) => {
+    onChange(allValues);
   };
 
   return <>
@@ -263,7 +257,7 @@ export const FormBuilder = (props) => {
         return true;
       }}
       colon={false}
-      onFinish={handleSubmit}
+      onValuesChange={handleValueChange}
       noValidate
       initialValues={initialValues}
     // id={formId}
@@ -277,13 +271,13 @@ export const FormBuilder = (props) => {
           autosize={{ minRows: 2, maxRows: 6 }}
         />
       </Form.Item>
-      <Form.Item name="schema" rules={[
+      <Form.Item name="fields" noStyle rules={[
         {
           required: true,
           validator: async (rule, value, callback) => {
             if (!checkLabels(value)) {
               throw new Error(
-                'Please provide questions. All questions are required.'
+                'All fields are required.'
               );
             }
             if (!checkOptions(value)) {

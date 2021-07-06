@@ -131,6 +131,8 @@ export const TaskTemplatePage = props => {
   }, [])
 
   const handleCreateNew = () => {
+    props.history.push('/task_template/new');
+    return;
     setCurrentId(undefined);
     setDrawerVisible(true);
   }
@@ -163,12 +165,13 @@ export const TaskTemplatePage = props => {
       </Space>
       <StyledDrawer
         title={!currentId ? 'New Task Template' : 'Edit Task Template'}
-        placement="right"
+        placement="bottom"
         closable={true}
         visible={drawerVisible}
         onClose={() => handleDrawerClose()}
         destroyOnClose={true}
-        width={900}
+        // getContainer={false}
+        // height="calc(100% - 100px)"
         footer={null}
       >
         <TaskTemplateForm id={currentId}
