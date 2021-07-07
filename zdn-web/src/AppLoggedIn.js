@@ -4,24 +4,21 @@ import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
-  ClockCircleOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, AlertOutlined, HomeOutlined, FileOutlined
+  ClockCircleOutlined, StarOutlined, SettingOutlined, TeamOutlined,
+  BankOutlined, QuestionOutlined, FileOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout$ } from 'services/authService';
-import { Avatar, Space, Dropdown, Menu, Typography, Modal, Image } from 'antd';
+import { Space, Dropdown, Menu, Typography, Modal } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
 import AboutModal from 'pages/About/AboutModal';
 import { Switch } from 'react-router-dom';
-import { GiReceiveMoney, GiRadarSweep } from 'react-icons/gi';
-import { AiOutlineBarcode } from 'react-icons/ai';
-import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
-import { GoDatabase, GoTools } from 'react-icons/go';
+import { GoTools } from 'react-icons/go';
 import { FaTasks } from 'react-icons/fa';
 import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
 import { HiOutlineViewBoards } from 'react-icons/hi';
