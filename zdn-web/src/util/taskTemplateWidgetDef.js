@@ -15,14 +15,21 @@ export const TaskTemplateWidgetDef = Object.freeze([
     label: 'Text',
     icon: <FaTextWidth />,
     widget: 'input',
-    widgetPorps: null,
+    widgetPorps: {
+      allowClear: true,
+      maxLength: 150,
+    },
   },
   {
     type: 'textarea',
     label: 'Paragraph (multiple lines)',
     icon: <FaAlignLeft />,
     widget: 'textarea',
-    widgetPorps: null,
+    widgetPorps: {
+      allowClear: true,
+      showCount: true,
+      maxLength: 1000,
+    },
   },
   {
     type: 'upload',

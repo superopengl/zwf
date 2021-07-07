@@ -13,6 +13,7 @@ const LayoutStyled = styled.div`
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
+  max-width: 900px;
 `;
 
 const EmptyTaskTamplateSchema = {
