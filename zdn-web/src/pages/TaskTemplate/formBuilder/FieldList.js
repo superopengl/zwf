@@ -56,5 +56,6 @@ FieldList.propTypes = {
 };
 
 FieldList.defaultProps = {
+  onChange: () => {},
   value: [],
 };

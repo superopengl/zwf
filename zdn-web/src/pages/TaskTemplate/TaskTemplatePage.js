@@ -10,28 +10,8 @@ import { withRouter, Link } from 'react-router-dom';
 import { deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
 
-const { Title, Paragraph, Link: TextLink } = Typography;
+const { Paragraph, Link: TextLink } = Typography;
 
-const StyledDrawer = styled(Drawer)`
-
-.ant-drawer-content-wrapper {
-  max-width: 90vw;
-}
-
-.rce-mbox {
-  padding-bottom: 2rem;
-
-  .rce-mbox-time {
-    bottom: -1.5rem;
-  }
-}
-`;
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -45,8 +25,7 @@ const LayoutStyled = styled.div`
 export const TaskTemplatePage = props => {
 
   const handleEditOne = (id) => {
-    setCurrentId(id);
-    setDrawerVisible(true);
+    props.history.push(`/task_template/${id}`);
   }
 
   const handleClickTemplate = (e, id) => {
@@ -91,13 +70,11 @@ export const TaskTemplatePage = props => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [drawerVisible, setDrawerVisible] = React.useState(!!taskTemplateId);
   const [currentId, setCurrentId] = React.useState(taskTemplateId);
 
   const handleEdit = (e, item) => {
     e.stopPropagation();
     setCurrentId(item.id);
-    setDrawerVisible(true);
   }
 
   const handleDelete = async (e, item) => {
@@ -132,17 +109,7 @@ export const TaskTemplatePage = props => {
 
   const handleCreateNew = () => {
     props.history.push('/task_template/new');
-    return;
-    setCurrentId(undefined);
-    setDrawerVisible(true);
   }
-
-  const handleDrawerClose = () => {
-    setDrawerVisible(false);
-  }
-
-
-
 
   return (
     <LayoutStyled>
@@ -171,21 +138,6 @@ export const TaskTemplatePage = props => {
           }}
         />
       </Space>
-      <StyledDrawer
-        title={!currentId ? 'New Task Template' : 'Edit Task Template'}
-        placement="bottom"
-        closable={true}
-        visible={drawerVisible}
-        onClose={() => handleDrawerClose()}
-        destroyOnClose={true}
-        // getContainer={false}
-        // height="calc(100% - 100px)"
-        footer={null}
-      >
-        <TaskTemplateForm id={currentId}
-          onClose={() => handleDrawerClose()}
-          onOk={() => { handleDrawerClose(); loadList() }} />
-      </StyledDrawer>
     </LayoutStyled >
   );
 };

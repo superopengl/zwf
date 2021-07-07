@@ -73,7 +73,7 @@ const FieldEditCard = (props) => {
             </Form.Item>
           }
         </Col>
-        <Col flex="0 0 380px">
+        <Col flex="auto">
           <Form.Item label="Type"
             {...formItemLayoutProps}
             name={['fields', index, 'type']}
@@ -92,7 +92,6 @@ const FieldEditCard = (props) => {
           </Form.Item>
           <Form.Item label="Official only"
             {...formItemLayoutProps}
-            help="Official only fields are only visible to organasation members."
             valuePropName="checked" name={['fields', index, 'official']} >
             <Switch />
           </Form.Item>
