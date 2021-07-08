@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { Input, Button, Form, Typography } from 'antd';
 import { saveDocTemplate, getDocTemplate } from 'services/docTemplateService';
 import { notify } from 'util/notify';
-import { SampleMarkdown } from './SampleMarkdown';
 import { BuiltInFieldDef } from 'components/FieldDef';
 import { Loading } from 'components/Loading';
 import RickTextInput from 'components/RichTextInput';
@@ -13,7 +12,6 @@ const { Paragraph, Text } = Typography;
 
 const EMPTY_TEMPLATE = {
   name: '',
-  md: SampleMarkdown
 }
 
 const DocTemplateForm = (props) => {

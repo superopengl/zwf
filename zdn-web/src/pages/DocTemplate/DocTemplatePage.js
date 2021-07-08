@@ -37,49 +37,6 @@ const LayoutStyled = styled(Layout)`
 
 
 export const DocTemplatePage = () => {
-  const columnDef = [
-    {
-      render: (text, item) => <Text>
-        <big>{item.name}</big>
-        <br/>
-        <Text type="secondary">{item.description}</Text>
-      </Text>
-    },
-    {
-      title: <>Variables</>,
-      dataIndex: 'variables',
-      render: (value) => <>{(value || []).map(x => <Text style={{ display: 'inline-block' }} key={x} code>{x}</Text>)}</>
-    },
-    {
-      title: 'Created At',
-      dataIndex: 'createdAt',
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      title: 'Updated At',
-      dataIndex: 'lastUpdatedAt',
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      // title: 'Action',
-      align: 'right',
-      width: 100,
-      render: (text, record) => (
-        <Space size="small">
-          <Tooltip placement="bottom" title="Test doc template">
-            <Button type="link" icon={<EyeOutlined />} onClick={e => handleTestDocTemplate(e, record)} />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Edit doc template">
-            <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Delete doc template">
-            <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
-
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -140,41 +97,11 @@ export const DocTemplatePage = () => {
 
   return (<>
     <Space direction="vertical" style={{ width: '100%' }} size="large">
-      <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
-      </Space>
-      <LayoutStyled>
-        <Table columns={columnDef}
-          size="small"
-          dataSource={list}
-          rowKey="id"
-          loading={loading}
-          pagination={false}
-          // onChange={handleTableChange}
-          onRow={(record) => ({
-            onDoubleClick: () => {
-              setCurrentId(record.id);
-              setDrawerVisible(true);
-            }
-          })}
-        />
-        <StyledDrawer
-          title={!currentId ? 'New Doc Template' : 'Edit Doc Template'}
-          placement="right"
-          closable={true}
-          visible={drawerVisible}
-          onClose={() => handleDrawerClose()}
-          destroyOnClose={true}
-          width="calc(100vw - 280px)"
-          footer={null}
-        >
           <DocTemplateForm
             id={currentId}
             onClose={() => handleDrawerClose()}
             onOk={() => { handleDrawerClose(); loadList() }}
           />
-        </StyledDrawer>
-      </LayoutStyled >
     </Space>
   </>
   );
