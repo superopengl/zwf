@@ -1,7 +1,7 @@
 import {
   DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input , Card} from 'antd';
+import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import DocTemplateForm from './DocTemplateForm';
@@ -49,7 +49,7 @@ export const DocTemplateListPage = props => {
     {
       render: (text, item) => <Text>
         <big>{item.name}</big>
-        <br/>
+        <br />
         <Text type="secondary">{item.description}</Text>
       </Text>
     },
@@ -154,13 +154,13 @@ export const DocTemplateListPage = props => {
   return (<>
     <LayoutStyled>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-      <Row justify="space-between">
+        <Row justify="space-between">
           <Input placeholder="Filter task name"
             onChange={e => handleSearchFilter(e.target.value)}
             allowClear
             prefix={<Text type="secondary"><SearchOutlined /></Text>}
             style={{ width: 240 }} />
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
         </Row>
 
         {/* <Table columns={columnDef}
@@ -178,7 +178,7 @@ export const DocTemplateListPage = props => {
           })}
         /> */}
 
-<List
+        <List
           size="small"
           grid={{
             gutter: [24, 24],
