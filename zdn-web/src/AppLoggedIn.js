@@ -38,7 +38,7 @@ const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'))
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
-const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
+const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplateBuilderPage = loadable(() => import('pages/TaskTemplate/TaskTemplateEditorPage'));
 const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
 const MyTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));

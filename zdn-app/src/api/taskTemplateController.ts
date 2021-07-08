@@ -1,5 +1,5 @@
 
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';
@@ -10,6 +10,8 @@ import { TaskTemplate } from '../entity/TaskTemplate';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Role } from '../types/Role';
 import { isRole } from '../utils/isRole';
+import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
+import { TaskTemplateInformation } from '../entity/views/TaskTemplateInformation';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -24,11 +26,25 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   taskTemplate.orgId = orgId;
   taskTemplate.name = name;
   taskTemplate.description = description;
-  taskTemplate.docTemplateIds = docTemplateIds;
   taskTemplate.fields = fields;
 
-  const repo = getRepository(TaskTemplate);
-  await repo.save(taskTemplate);
+  await getManager().transaction(async m => {
+    await m.save(taskTemplate);
+    if (docTemplateIds?.length) {
+      const entities = docTemplateIds.map(docTemplateId => {
+        const entity = new TaskTemplateDocTemplate();
+        entity.taskTemplateId = taskTemplate.id;
+        entity.docTemplateId = docTemplateId;
+        return entity;
+      });
+      await m.createQueryBuilder()
+        .insert()
+        .into(TaskTemplateDocTemplate)
+        .values(entities)
+        .orIgnore()
+        .execute();
+    }
+  });
 
   res.json();
 });
@@ -36,23 +52,14 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
 export const listTaskTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
-  const list = await getRepository(TaskTemplate)
+  const list = await getRepository(TaskTemplateInformation)
     .find({
       where: {
         orgId
       },
       order: {
         name: 'ASC'
-      },
-      select: [
-        'id',
-        'name',
-        'description',
-        'fields',
-        'createdAt',
-        'lastUpdatedAt',
-        'docTemplateIds'
-      ]
+      }
     })
 
   res.json(list);
@@ -62,7 +69,7 @@ export const getTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) }
-  const taskTemplate = await getRepository(TaskTemplate).findOne(query);
+  const taskTemplate = await getRepository(TaskTemplateInformation).findOne(query);
   assert(taskTemplate, 404);
 
   res.json(taskTemplate);

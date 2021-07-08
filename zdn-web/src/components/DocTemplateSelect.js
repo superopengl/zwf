@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Select, Row, Tag } from 'antd';
+import { Typography, Select, Row, Alert } from 'antd';
 import { Loading } from './Loading';
 import * as _ from 'lodash';
 import { listDocTemplate } from 'services/docTemplateService';
@@ -77,10 +77,13 @@ const DocTemplateSelect = props => {
         {x.name}
       </Select.Option>))}
     </StyledSelect>
-    {showVariables && <Paragraph style={{marginTop: 10}}>
-      Required fields are{' '}
-      {allVars.map(v => <VarTag key={v}>{v}</VarTag>)}
-      </Paragraph>}
+    {showVariables && allVars.length > 0 && <Alert 
+    showIcon
+    type="warning"
+    style={{marginTop: 10}}
+    message="Doc templates requires variables"
+    description={<>Please specify these variables {allVars.map(v => <VarTag key={v}>{v}</VarTag>)}to fields</>}
+      />}
   </Loading>
 }
 

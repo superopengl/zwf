@@ -1,4 +1,5 @@
-import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable } from 'typeorm';
+import { DocTemplate } from './DocTemplate';
 
 @Entity()
 @Unique('idx_task_template_org_name_version_unique', ['orgId', 'name', 'version'])
@@ -24,9 +25,8 @@ export class TaskTemplate {
   @UpdateDateColumn()
   lastUpdatedAt: Date;
 
-  @Column({ type: 'varchar', array: true, default: '{}' })
-  docTemplateIds: string[];
-
   @Column({ type: 'json' })
   fields: any;
 }
+
+
