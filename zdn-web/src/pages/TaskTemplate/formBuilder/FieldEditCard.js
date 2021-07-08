@@ -4,11 +4,15 @@ import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined } from '@ant-design/i
 import RenderOptions from './RenderOptions';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
+import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
+import { VarTag } from 'components/VarTag';
 
 const { Text } = Typography;
 
 const FieldEditCard = (props) => {
   const { value, index, items, onDelete, onChange } = props;
+
+  const editorContext = React.useContext(TaskTemplateEditorContext);
 
   // Bubble up changes to parent.
   const handleChange = (field = '', change) => {
@@ -37,11 +41,11 @@ const FieldEditCard = (props) => {
     <Card
       size="small"
       title={<Row type="flex" align="middle" justify="space-between">
-        <Text type="secondary">{index + 1}</Text>
+        <Text style={{ color: '#DCDCDC' }}>{index + 1}</Text>
         <Text type="secondary"><big>:::</big></Text>
         <Tooltip title="Delete field" placement="topRight">
           <Button size="small" icon={<DeleteFilled />} danger type="link" onClick={() => onDelete(value)}></Button>
-          </Tooltip>
+        </Tooltip>
       </Row>}
       type="inner"
       style={{ width: '100%' }}
@@ -52,8 +56,9 @@ const FieldEditCard = (props) => {
             {...formItemLayoutProps}
             name={['fields', index, 'name']}
             rules={[{ required: true, whitespace: true, message: ' ', max: 50 }]}>
-            <Input placeholder="" allowClear maxLength={100}/>
+            <Input placeholder="" allowClear maxLength={100} />
           </Form.Item>
+
           <Form.Item label="Description"
             {...formItemLayoutProps}
             name={['fields', index, 'description']}
@@ -84,17 +89,30 @@ const FieldEditCard = (props) => {
                 <span style={{ marginLeft: 10 }}>{d.label}</span>
               </Select.Option>)}
             </Select>
-          </Form.Item>
+          </Form.Item>     
+          <Form.Item label="Variable"
+            {...formItemLayoutProps}
+            name={['fields', index, 'var']}
+            rules={[{ required: false }]}>
+            <Select
+              allowClear
+              bordered={true}
+              options={editorContext.vars.map(v => ({
+                label: <VarTag>{v}</VarTag>,
+                value: v
+              }))} />
+          </Form.Item>             
           <Form.Item label="Required"
             {...formItemLayoutProps}
             valuePropName="checked" name={['fields', index, 'required']} >
             <Switch />
-          </Form.Item>
+          </Form.Item>      
           <Form.Item label="Official only"
             {...formItemLayoutProps}
             valuePropName="checked" name={['fields', index, 'official']} >
             <Switch />
           </Form.Item>
+              
         </Col>
       </Row>
     </Card>

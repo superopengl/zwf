@@ -4,6 +4,7 @@ import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { FieldList } from './FieldList';
 import DocTemplateSelect from 'components/DocTemplateSelect';
+import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
 // import arrayMove from 'array-move';
 
 const { Text, Paragraph } = Typography;
@@ -47,6 +48,8 @@ const checkOptions = items => {
 export const TaskTemplateBuilder = (props) => {
   const { value: template, onChange } = props;
 
+  const [allVars, setAllVars] = React.useState([]);
+
   const initialValues = {
     name: template?.name || '',
     description: template?.description || '',
@@ -69,7 +72,11 @@ export const TaskTemplateBuilder = (props) => {
     labelAlign: 'left'
   }
 
-  return <>
+  const hanldeVariableChange = (vars) => {
+    setAllVars(vars);
+  }
+
+  return <TaskTemplateEditorContext.Provider value={{ vars: allVars }}>
     <Form
       onKeyPress={e => {
         if (e.key === 'Enter') {
@@ -110,9 +117,9 @@ export const TaskTemplateBuilder = (props) => {
         name="docTemplateIds"
         {...formItemLayoutProps}
       >
-        <DocTemplateSelect showVariables={true}/>
+        <DocTemplateSelect showVariables={true} onVariableChange={hanldeVariableChange} />
       </Form.Item>
-      <Form.Item 
+      <Form.Item
         label="Fields"
         name="fields"
         {...formItemLayoutProps}
@@ -139,7 +146,7 @@ export const TaskTemplateBuilder = (props) => {
         <Button htmlType="submit">Save</Button>
       </Form.Item> */}
     </Form>
-  </>
+  </TaskTemplateEditorContext.Provider>
 }
 
 TaskTemplateBuilder.propTypes = {
