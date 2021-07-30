@@ -49,6 +49,11 @@ const LayoutStyled = styled(Layout)`
   height: 100%;
 `;
 
+const EMPTY_DOC_TEMPLATE = {
+  name: 'New doc template',
+  description: '',
+  html: ''
+};
 
 
 export const DocTemplatePage = (props) => {
@@ -57,77 +62,25 @@ export const DocTemplatePage = (props) => {
   const docTemplateId = routeParamId || uuidv4();
   const isNew = !routeParamId;
 
-  const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [drawerVisible, setDrawerVisible] = React.useState(false);
-  const [currentId, setCurrentId] = React.useState();
-  const [docTemplate, setDocTemplate] = React.useState(null);
+  const [docTemplate, setDocTemplate] = React.useState({...EMPTY_DOC_TEMPLATE});
   const [preview, setPreview] = React.useState(false);
   const [previewSider, setPreviewSider] = React.useState(false);
   const debugMode = false;
 
-  const handleEdit = (e, item) => {
-    e.stopPropagation();
-    setCurrentId(item.id);
-    setDrawerVisible(true);
-  }
-
-  const handleDelete = async (e, item) => {
-    e.stopPropagation();
-    const { id, name } = item;
-    Modal.confirm({
-      title: <>Delete Dot Template <strong>{name}</strong>?</>,
-      onOk: async () => {
-        setLoading(true);
-        await deleteDocTemplate(id);
-        await loadList();
-        setLoading(false);
-      },
-      maskClosable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete it!'
-    });
-  }
-
-  const handleTestDocTemplate = (e) => {
-    e.stopPropagation();
-
-  }
-
-  const loadList = async () => {
-    setLoading(true);
-    const list = await listDocTemplate();
-    setList(list);
-    setLoading(false);
-  }
-
   React.useEffect(() => {
-    setLoading(true);
-    let subscription$ = of();
-    if (docTemplateId) {
-      subscription$ = getDocTemplate$(docTemplateId)
-        .pipe(
-          finalize(() => setLoading(false))
-        )
-        .subscribe(d => setDocTemplate(d));
-    }
+    const obs$ = isNew ? of({ ...EMPTY_DOC_TEMPLATE }) : getDocTemplate$(docTemplateId);
+    const subscription$ = obs$
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(d => setDocTemplate(d));
     return () => subscription$.unsubscribe();
   }, [])
 
   const goBack = () => {
     props.history.push('/doc_template')
   };
-
-  const handleCreateNew = () => {
-    setCurrentId(undefined);
-    setDrawerVisible(true);
-  }
-
-  const handleDrawerClose = () => {
-    setDrawerVisible(false);
-  }
 
   const handleSave = async () => {
     const entity = {
@@ -153,11 +106,11 @@ export const DocTemplatePage = (props) => {
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >
-            {docTemplate && <DocTemplateEditorPanel
+            <DocTemplateEditorPanel
               value={docTemplate}
               onChange={d => setDocTemplate(d)}
               debug={debugMode}
-            />}
+            />
           </PageHeader>
         </Layout.Content>
         <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
@@ -192,17 +145,6 @@ export const DocTemplatePage = (props) => {
       </Modal>
     </Loading>
   </LayoutStyled >
-
-  return (<>
-    <Space direction="vertical" style={{ width: '100%' }} size="large">
-      <DocTemplateForm
-        id={currentId}
-        onClose={() => handleDrawerClose()}
-        onOk={() => { handleDrawerClose(); loadList() }}
-      />
-    </Space>
-  </>
-  );
 };
 
 DocTemplatePage.propTypes = {};
