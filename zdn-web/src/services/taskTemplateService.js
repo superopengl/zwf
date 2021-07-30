@@ -1,7 +1,11 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet, httpGet$, httpPost, httpDelete } from './http';
 
 export async function getTaskTemplate(id) {
   return httpGet(`task_template/${id}`);
+}
+
+export function getTaskTemplate$(id) {
+  return httpGet$(`task_template/${id}`);
 }
 
 export async function saveTaskTemplate(taskTemplate) {

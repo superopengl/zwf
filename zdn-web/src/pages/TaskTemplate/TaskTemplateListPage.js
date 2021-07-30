@@ -163,10 +163,10 @@ export const TaskTemplateListPage = props => {
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
                   },
-                  {
-                    menu: 'Preview',
-                    onClick: () => handlePreview(item)
-                  },
+                  // {
+                  //   menu: 'Preview',
+                  //   onClick: () => handlePreview(item)
+                  // },
                   {
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(item)

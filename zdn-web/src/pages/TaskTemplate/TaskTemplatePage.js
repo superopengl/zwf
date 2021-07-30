@@ -8,11 +8,13 @@ import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import Icon, { SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
-import { getTaskTemplate, saveTaskTemplate } from 'services/taskTemplateService';
+import { getTaskTemplate$, saveTaskTemplate } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
 import ReactDOM from 'react-dom';
 import { notify } from 'util/notify';
 import ProLayout, { PageContainer } from '@ant-design/pro-layout';
+import { of } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 const { Title, Text } = Typography;
 
@@ -70,24 +72,21 @@ export const TaskTemplatePage = props => {
 
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
 
-  const load = async () => {
+  React.useEffect(() => {
+    let subscription$ = of();
     if (!isNew) {
       // Load
-      try {
-        setLoading(true);
-        const taskTemplate = await getTaskTemplate(taskTemplateId);
-        ReactDOM.unstable_batchedUpdates(() => {
+      setLoading(true);
+      subscription$ = getTaskTemplate$(taskTemplateId)
+        .pipe(
+          finalize(() => setLoading(false))
+        )
+        .subscribe(taskTemplate => {
           setTaskTemplate(taskTemplate)
           setLoading(false);
-        })
-      } catch {
-        setLoading(false);
-      }
+        });
     }
-  }
-
-  React.useEffect(() => {
-    load();
+    return () => subscription$.unsubscribe();
   }, []);
 
   const goBack = () => {
@@ -112,8 +111,8 @@ export const TaskTemplatePage = props => {
 
     <LayoutStyled>
       <Loading loading={loading}>
-        <Layout style={{height: 'calc(100vh - 48px - 48px)', overflow: 'hidden'}}>
-          <Layout.Content style={{overflowY: 'auto'}}>
+        <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
+          <Layout.Content style={{ overflowY: 'auto' }}>
             <PageHeader
               style={{ maxWidth: 900, margin: '0 auto' }}
               title={isNew ? 'New Task Template' : 'Edit Task Template'}
@@ -133,7 +132,7 @@ export const TaskTemplatePage = props => {
               />}
             </PageHeader>
           </Layout.Content>
-          <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{overflowY: 'auto', marginLeft: 30}}>
+          <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
             <div style={{ padding: 16 }}>
               <Row justify="center" style={{ marginBottom: 40 }}>
                 <Text type="warning">Preview</Text>
@@ -157,7 +156,6 @@ export const TaskTemplatePage = props => {
           maskClosable
           footer={null}
         >
-
           <TaskTemplatePreviewPanel
             value={taskTemplate}
             debug={debugMode}

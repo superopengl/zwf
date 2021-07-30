@@ -1,7 +1,11 @@
-import { httpGet, httpPost, httpDelete, httpGet$ } from './http';
+import { httpGet, httpGet$, httpPost, httpDelete} from './http';
 
 export async function getDocTemplate(id) {
   return httpGet(`doc_template/${id}`);
+}
+
+export function getDocTemplate$(id) {
+  return httpGet$(`doc_template/${id}`);
 }
 
 export async function saveDocTemplate(docTemplate) {
