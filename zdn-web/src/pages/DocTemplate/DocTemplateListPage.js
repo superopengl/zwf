@@ -6,12 +6,13 @@ import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List,
 import { TimeAgo } from 'components/TimeAgo';
 import DocTemplateForm from './DocTemplateForm';
 import React from 'react';
-import { deleteDocTemplate, listDocTemplate } from 'services/docTemplateService';
+import { deleteDocTemplate, listDocTemplate, listDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import HighlightingText from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { withRouter, Link } from 'react-router-dom';
+import { finalize } from 'rxjs/operators';
 
 const { Text, Paragraph } = Typography;
 
@@ -134,12 +135,22 @@ export const DocTemplateListPage = props => {
   }
 
   React.useEffect(() => {
-    loadList();
-  }, [])
+    setLoading(true);
+    const subscription$ = listDocTemplate$()
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(list => {
+        setList(list);
+      });
+
+    return () => subscription$.unsubscribe();
+  }, []);
 
   const handleDrawerClose = () => {
     setDrawerVisible(false);
   }
+
   const handleCreateNew = () => {
     props.history.push('/doc_template/new');
   }
