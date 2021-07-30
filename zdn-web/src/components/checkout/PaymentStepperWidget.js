@@ -87,7 +87,7 @@ const PaymentStepperWidget = (props) => {
         setLoading(false);
       }
     } else {
-      setCurrentStep(1);
+      setCurrentStep(3);
     }
   }
 
