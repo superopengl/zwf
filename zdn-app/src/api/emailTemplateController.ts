@@ -12,7 +12,7 @@ import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
 import { Locale } from '../types/Locale';
 
 export const listEmailTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system', 'admin');
   const orgId = getOrgIdFromReq(req);
 
   const whereClause = orgId ? { where: { orgId } } : null;
