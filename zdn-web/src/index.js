@@ -24,3 +24,16 @@ Notification.requestPermission().then((result) => {
     console.log('Notification and Push are granted');
   }
 });
+
+function randomNotification() {
+  const notifTitle = 'Ziledin';
+  const notifBody = `Welcome to Ziledin`;
+  const notifImg = `/images/logo-tile.png`;
+  const options = {
+    body: notifBody,
+    icon: notifImg,
+    requireInteraction: true,
+  };
+  new Notification(notifTitle, options);
+}
+randomNotification();
