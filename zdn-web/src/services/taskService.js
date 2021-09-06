@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet, httpPost, httpDelete, httpPut$ } from './http';
 
 export async function getTask(id) {
   return httpGet(`task/${id}`);
@@ -6,6 +6,10 @@ export async function getTask(id) {
 
 export async function saveTask(item) {
   return httpPost('task', item);
+}
+
+export function createNewTask(taskTemplateId, clientEmail) {
+  return httpPut$('task', { taskTemplateId, clientEmail });
 }
 
 export async function deleteTask(id) {
@@ -52,6 +56,6 @@ export async function listTaskComments(taskId) {
 }
 
 export async function addTaskComment(taskId, content) {
-  return httpPost(`task/${taskId}/comment`, {content});
+  return httpPost(`task/${taskId}/comment`, { content });
 }
 

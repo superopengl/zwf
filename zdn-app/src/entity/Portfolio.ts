@@ -17,13 +17,7 @@ export class Portfolio {
   lastUpdatedAt: Date;
 
   @Column()
-  type: string;
-
-  @Column()
   name: string;
-
-  @Column({default: false})
-  deleted: boolean;
 
   @Column({type: 'json'})
   fields: any;

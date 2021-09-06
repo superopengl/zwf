@@ -11,6 +11,9 @@ import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import HighlightingText from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
+import TaskClientSelectModal from 'components/TaskClientSelectModal';
+import { createNewTask } from 'services/taskService';
+import { notify } from 'util/notify';
 
 const { Text, Paragraph } = Typography;
 
@@ -34,6 +37,8 @@ export const TaskTemplateListPage = props => {
   const [searchText, setSearchText] = React.useState('');
   const [filteredList, setFilteredList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [selectClientVisible, setSelectClientVisible] = React.useState(false);
+  const [currentTemplateId, setCurrentTemplateId] = React.useState();
 
   const loadList = async () => {
     setLoading(true);
@@ -83,6 +88,22 @@ export const TaskTemplateListPage = props => {
     props.history.push('/task_template/new');
   }
 
+  const handleCreateTask = async clientEmail => {
+    const templateId = currentTemplateId;
+
+    createNewTask(templateId, clientEmail)
+      .subscribe(task => {
+        console.log(task);
+        handleCancelCreateTask();
+        notify.success('Created task', <>Successfully created task {task.name}</>, 20);
+      })
+
+  }
+  const handleCancelCreateTask = () => {
+    setSelectClientVisible(false);
+    setCurrentTemplateId(null);
+  }
+
   const span = {
     xs: 24,
     sm: 24,
@@ -95,6 +116,7 @@ export const TaskTemplateListPage = props => {
   const handleSearchFilter = (text) => {
     setSearchText(text);
   }
+
 
   return (
     <LayoutStyled>
@@ -171,6 +193,13 @@ export const TaskTemplateListPage = props => {
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(item)
                   },
+                  {
+                    menu: 'Create task',
+                    onClick: () => {
+                      setSelectClientVisible(true);
+                      setCurrentTemplateId(item.id)
+                    }
+                  },
                 ].filter(x => !!x)}
               />}
               bodyStyle={{ paddingTop: 16 }}
@@ -190,6 +219,11 @@ export const TaskTemplateListPage = props => {
           </List.Item>}
         />
       </Space>
+      <TaskClientSelectModal
+        visible={selectClientVisible}
+        onOk={handleCreateTask}
+        onCancel={handleCancelCreateTask}
+      />
     </LayoutStyled >
   );
 };

@@ -17,12 +17,11 @@ export const savePortfolio = handlerWrapper(async (req, res) => {
 
   const { user: { id: userId, role } } = req as any;
 
-  const { id, fields, type } = req.body;
+  const { id, fields } = req.body;
   portfolio.id = id || uuidv4();
   portfolio.userId = role === 'client' ? userId : req.params.id;
   portfolio.name = guessDisplayNameFromFields(fields);
   portfolio.fields = fields;
-  portfolio.type = type;
 
   const repo = getRepository(Portfolio);
   await repo.save(portfolio);
@@ -81,7 +80,7 @@ export const getPortfolio = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
   const { id } = req.params;
   const repo = getRepository(Portfolio);
-  const portfolio = await repo.findOne({ id, deleted: false });
+  const portfolio = await repo.findOne(id);
   assert(portfolio, 404);
 
   res.json(portfolio);
@@ -91,7 +90,7 @@ export const deletePortfolio = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
   const { id } = req.params;
   const repo = getRepository(Portfolio);
-  await repo.update({ id }, { deleted: true });
+  await repo.delete(id);
 
   res.json();
 });

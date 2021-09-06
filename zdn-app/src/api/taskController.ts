@@ -11,7 +11,7 @@ import { sendEmail } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
+import { createTaskByTaskTemplateAndEmail, generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
 import { getNow } from '../utils/getNow';
 import { guessDisplayNameFromFields } from '../utils/guessDisplayNameFromFields';
 import { Portfolio } from '../entity/Portfolio';
@@ -34,6 +34,15 @@ export const generateTask = handlerWrapper(async (req, res) => {
     portfolioId,
     (j, p) => `${p.name} ${j.name}`
   );
+
+  res.json(Task);
+});
+
+export const createNewTask = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'client');
+  const { taskTemplateId, clientEmail } = req.body;
+
+  const Task = await createTaskByTaskTemplateAndEmail(taskTemplateId, clientEmail);
 
   res.json(Task);
 });
@@ -162,24 +171,24 @@ export const searchTask = handlerWrapper(async (req, res) => {
   }
   query = query.innerJoin(q => q.from(TaskTemplate, 'j').select('*'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(User, 'u').select('*'), 'u', 'x."userId" = u.id')
-    .leftJoin(q => q.from(Message, 'm')
-      .andWhere(`"readAt" IS NULL`)
-      .orderBy('"taskId"')
-      .addOrderBy('"createdAt"', 'DESC')
-      .distinctOn(['"taskId"'])
-      , 'm', `x.id = m."taskId" AND m."clientUserId" = u.id`)
+    // .leftJoin(q => q.from(Message, 'm')
+    //   .andWhere(`"readAt" IS NULL`)
+    //   .orderBy('"taskId"')
+    //   .addOrderBy('"createdAt"', 'DESC')
+    //   .distinctOn(['"taskId"'])
+    //   , 'm', `x.id = m."taskId" AND m."clientUserId" = u.id`)
     .select([
       `x.id as id`,
       `x.name as name`,
-      `x."forWhom" as "forWhom"`,
-      `x."portfolioId" as "portfolioId"`,
-      `u.email as email`,
+      // `x."forWhom" as "forWhom"`,
+      // `x."portfolioId" as "portfolioId"`,
+      // `u.email as email`,
       `x."createdAt" as "createdAt"`,
       `j.name as "taskTemplateName"`,
       `x.agentId as "agentId"`,
       `x.status as status`,
       `x."lastUpdatedAt" as "lastUpdatedAt"`,
-      `m."createdAt" as "lastUnreadMessageAt"`,
+      // `m."createdAt" as "lastUnreadMessageAt"`,
       `x."dueDate" as "dueDate"`,
       // `x."signedAt" as "signedAt"`,
     ]);

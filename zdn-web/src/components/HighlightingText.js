@@ -18,11 +18,12 @@ const HighlightingText = (props) => {
 
 HighlightingText.propTypes = {
   // value: PropTypes.string.isRequired,
-  search: PropTypes.string.isRequired,
+  search: PropTypes.string,
   value: PropTypes.string
 };
 
 HighlightingText.defaultProps = {
+  search: '',
 };
 
 export default HighlightingText;

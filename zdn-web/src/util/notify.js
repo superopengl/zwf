@@ -1,4 +1,20 @@
 import { notification } from 'antd';
+import innerText from 'react-innertext';
+
+// function createBrowserNotification(title, content) {
+//   try {
+//     const message = content || title;
+//     const notifTitle = content ? `[Ziledin] ${title}` : `Ziledin`;
+//     const options = {
+//       body: message,
+//       icon: `/images/logo-tile.png`,
+//       requireInteraction: true,
+//     };
+//     new Notification(notifTitle, options);
+//   } catch {
+//     // Swallow error because browser notification may be disabled by user.
+//   }
+// }
 
 function request(level, title, content, duration) {
   const key = `${title}`;
@@ -10,6 +26,8 @@ function request(level, title, content, duration) {
     placement: 'topLeft',
     style: { width: '85vw', maxWidth: '380px' }
   });
+
+  // createBrowserNotification(innerText(title), content ? innerText(content) : null);
 
   return {
     close: () => {

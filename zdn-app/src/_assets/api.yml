@@ -252,14 +252,6 @@ paths:
       responses:
         200:
           description: OK
-  /user/client:
-    get:
-      operationId: listClients
-      # security:
-      #   - authAdminOrAgent: []
-      responses:
-        200:
-          description: OK
   /user/agent:
     get:
       operationId: listAgents
@@ -584,6 +576,13 @@ paths:
         200:
           description: OK
   /task:
+    put:
+      operationId: createNewTask
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK        
     post:
       operationId: saveTask
       # security:
@@ -613,7 +612,7 @@ paths:
       #   - authClient: []
       responses:
         200:
-          description: OK
+          description: OK      
   /task/{id}:
     get:
       operationId: getTask

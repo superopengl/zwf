@@ -16,7 +16,6 @@ import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
-import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmailWithProfile } from '../utils/getActiveUserByEmailWithProfile';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
@@ -26,6 +25,7 @@ import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSen
 import { UserAuthOrg } from '../entity/UserAuthOrg';
 import { inviteNewClientWithSendingEmail } from '../utils/inviteNewClientWithSendingEmail';
 import { inviteExistingClientWithSendingEmail } from '../utils/inviteExistingClientWithSendingEmail';
+import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -66,35 +66,6 @@ export const logout = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-
-function createUserAndProfileEntity(payload): { user: User; profile: UserProfile } {
-  const { email, password, role, orgId, orgOwner, ...other } = payload;
-  const thePassword = password || uuidv4();
-  validatePasswordStrength(thePassword);
-  assert([Role.Client, Role.Agent, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
-
-  const profileId = uuidv4();
-  const userId = uuidv4();
-  const salt = uuidv4();
-
-  const profile = new UserProfile();
-  profile.id = profileId;
-  profile.email = email.trim().toLowerCase();
-  Object.assign(profile, other);
-
-  const user = new User();
-  user.id = userId;
-  user.emailHash = computeEmailHash(email);
-  user.secret = computeUserSecret(thePassword, salt);
-  user.salt = salt;
-  user.role = role;
-  user.orgId = role === Role.Client ? null : orgId;
-  user.status = UserStatus.Enabled;
-  user.profileId = profileId;
-  user.orgOwner = !!orgOwner;
-
-  return { user, profile };
-}
 
 async function createNewLocalUser(payload): Promise<{ user: User; profile: UserProfile }> {
   const { user, profile } = createUserAndProfileEntity(payload);
