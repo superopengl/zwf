@@ -11,7 +11,17 @@ import { guessDisplayNameFromFields } from './guessDisplayNameFromFields';
 import { DocTemplate } from '../entity/DocTemplate';
 import { TaskDoc } from '../types/TaskDoc';
 import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
+import { v4 as uuidv4 } from 'uuid';
+import * as voucherCodes from 'voucher-code-generator';
 
+function generateDeepLinkId() {
+  const result = voucherCodes.generate({
+    length: 64,
+    count: 1,
+    charset: voucherCodes.charset("alphanumeric")
+  });
+  return result[0];
+}
 
 function prefillFieldsWithProtofolio(taskTemplateFields, portfolioFields) {
   if (!portfolioFields) return taskTemplateFields;
@@ -86,7 +96,8 @@ export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email) =>
   
     const fields = prefillFieldsWithProtofolio(taskTemplate.fields, null);
   
-    // task.id = uuidv4();
+    task.id = uuidv4();
+    task.deepLinkId = generateDeepLinkId();
     task.name = taskTemplate.name;
     task.userId = user.id;
     task.taskTemplateId = taskTemplateId;

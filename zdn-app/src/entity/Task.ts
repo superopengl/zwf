@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToOne } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
 import { Org } from './Org';
@@ -7,6 +7,10 @@ import { Org } from './Org';
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
+
+  @Column()
+  @Index({ unique: true })
+  deepLinkId: string;
 
   @Column('uuid')
   @Index()

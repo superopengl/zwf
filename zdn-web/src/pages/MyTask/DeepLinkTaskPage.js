@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Layout, Space, Button } from 'antd';
 
-import { getTask } from 'services/taskService';
+import { getDeepLinkedTask$, getTask } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
 import TaskFormWizard from './TaskFormWizard';
 import MyTaskReadView from './MyTaskReadView';
@@ -13,6 +13,7 @@ import { MessageFilled } from '@ant-design/icons';
 import TaskChatPanel from 'pages/AdminTask/TaskChatPanel';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
+import { catchError } from 'rxjs/operators';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 4rem auto 0 auto;
@@ -38,7 +39,7 @@ const LayoutStyled = styled.div`
   height: 100%;
 `;
 
-const GuestTaskPage = (props) => {
+const DeepLinkTaskPage = (props) => {
   const id = props.match.params.id;
 
   const { chat, portfolioId } = queryString.parse(props.location.search);
@@ -46,15 +47,18 @@ const GuestTaskPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
 
-  const loadEntity = async () => {
-    setLoading(true);
-    const task = await getTask(id);
-    setTask(task);
-    setLoading(false);
-  }
-
   React.useEffect(() => {
-    loadEntity();
+    const subscription$ = getDeepLinkedTask$(id)
+      .pipe(
+        catchError(() => setLoading(false))
+      )
+      .subscribe(task => {
+        setTask(task);
+        setLoading(false);
+      });
+    return () => {
+      subscription$.unsubscribe();
+    }
   }, [])
 
   const onOk = () => {
@@ -70,8 +74,12 @@ const GuestTaskPage = (props) => {
 
   const showsSign = task?.status === 'to_sign';
 
+  if(loading) {
+    return <Loading loading={loading} />
+  }
+
   return (<>
-    Guest task page
+    Deep link task page
     {/* <LayoutStyled>
         {loading ? <Loading /> : <Layout style={{ backgroundColor: '#ffffff', height: '100%', justifyContent: 'center' }}>
           <Layout.Content style={{ padding: 0, maxWidth: 500, margin: '0 auto', width: '100%' }}>
@@ -92,12 +100,12 @@ const GuestTaskPage = (props) => {
   );
 };
 
-GuestTaskPage.propTypes = {
+DeepLinkTaskPage.propTypes = {
   // id: PropTypes.string.isRequired
 };
 
-GuestTaskPage.defaultProps = {
+DeepLinkTaskPage.defaultProps = {
   // taskId: 'new'
 };
 
-export default withRouter(GuestTaskPage);
+export default withRouter(DeepLinkTaskPage);

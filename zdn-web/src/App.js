@@ -30,7 +30,7 @@ const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const AuthorizePage = loadable(() => import('pages/UserAuthOrgPage'));
-const GuestTaskPage = loadable(() => import('pages/MyTask/GuestTaskPage'))
+const GuestTaskPage = loadable(() => import('pages/MyTask/DeepLinkTaskPage'))
 
 const localeDic = {
   'en-US': {
@@ -123,7 +123,7 @@ const App = () => {
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-              <RoleRoute visible={isGuest} exact path="/direct/task/:id" component={GuestTaskPage} />
+              <RoleRoute visible={isGuest} exact path="/task/deep/:id" component={GuestTaskPage} />
               <RoleRoute visible={isAdmin} loading={loading} exact path="/onboard" component={OrgOnBoardPage} />
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/auth/org/:authId" component={AuthorizePage} />

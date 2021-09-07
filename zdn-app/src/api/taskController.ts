@@ -251,15 +251,12 @@ export const listTask = handlerWrapper(async (req, res) => {
 });
 
 export const getTask = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const role = getRoleFromReq(req);
   const repo = getRepository(TaskInformation);
   let task: TaskInformation;
   switch (role) {
-    case Role.Guest:
-      task = await repo.findOne({ id, role: Role.Guest });
-      break;
     case Role.Admin:
     case Role.Agent:
       task = await repo.findOne({ id, orgId: getOrgIdFromReq(req) });
@@ -270,6 +267,18 @@ export const getTask = handlerWrapper(async (req, res) => {
     default:
       break;
   }
+
+  assert(task, 404);
+
+  res.json(task);
+});
+
+export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
+  const role = getRoleFromReq(req);
+  assert(role === Role.Guest, 404);
+  const { deepLinkId } = req.params;
+
+  const task = await getRepository(Task).findOne({ deepLinkId });
 
   assert(task, 404);
 
