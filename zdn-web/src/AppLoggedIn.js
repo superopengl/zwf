@@ -43,9 +43,11 @@ const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
 const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
-const MyTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
+const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const PromotionListPage = loadable(() => import('pages/Promotion/PromotionListPanel'));
+const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
+const OfficialTaskPage = loadable(() => import('pages/MyTask/OfficialTaskPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -319,7 +321,8 @@ const AppLoggedIn = props => {
       <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage :
         isAdmin || isAgent ? AdminBoardPage : ClientBoardPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
-      <RoleRoute visible={isAdmin} exact path="/task/new" component={MyTaskPage} />
+      <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
+      <RoleRoute visible={!isSystem}  path="/task/:id" component={isClient ? ClientTaskPage : OfficialTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template/:id" component={DocTemplatePage} />

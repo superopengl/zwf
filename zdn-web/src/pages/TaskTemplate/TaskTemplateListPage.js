@@ -15,7 +15,7 @@ import TaskClientSelectModal from 'components/TaskClientSelectModal';
 import { createNewTask } from 'services/taskService';
 import { notify } from 'util/notify';
 
-const { Text, Paragraph } = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 
 
 const LayoutStyled = styled.div`
@@ -93,9 +93,9 @@ export const TaskTemplateListPage = props => {
 
     createNewTask(templateId, clientEmail)
       .subscribe(task => {
-        console.log(task);
+        // console.log(task);
         handleCancelCreateTask();
-        notify.success('Created task', <>Successfully created task {task.name}</>, 20);
+        notify.success('Created task', <>Successfully created task <TextLink target="_blank" href={`/task/${task.id}`}>{task.name}</TextLink></>, 20);
       })
 
   }
