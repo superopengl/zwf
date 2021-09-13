@@ -463,6 +463,20 @@ paths:
       responses:
         200:
           description: OK
+  /task_template/{id}/clone:
+    put:
+      operationId: cloneTaskTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /doc_template:
     post:
       operationId: saveDocTemplate
@@ -610,6 +624,18 @@ paths:
       responses:
         200:
           description: OK          
+    post:
+      operationId: saveDeepLinkedTask
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: deepLinkId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK              
   /task/search:
     post:
       operationId: searchTask
@@ -652,7 +678,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: OK        
   /task/{id}/sign:
     post:
       operationId: signTaskDoc

@@ -1,3 +1,4 @@
+import { getUtcNow } from './../utils/getUtcNow';
 
 import { getRepository, getManager } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -83,4 +84,25 @@ export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
   await repo.delete({ id, orgId });
 
   res.json();
+});
+
+export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  let taskTemplate: TaskTemplate;
+  await getManager().transaction(async m => {
+    taskTemplate = await m.findOne(TaskTemplate, { id, orgId });
+    assert(taskTemplate, 404);
+
+    taskTemplate.id = uuidv4();
+    taskTemplate.createdAt = getUtcNow();
+    taskTemplate.lastUpdatedAt = getUtcNow();
+    taskTemplate.name = `Copy of ${taskTemplate.name}`;
+    taskTemplate.version = 1;
+
+    await m.insert(TaskTemplate, taskTemplate);
+  })
+
+  res.json(taskTemplate);
 });

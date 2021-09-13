@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete, httpPut$, httpGet$ } from './http';
+import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$ } from './http';
 
 export async function getTask(id) {
   return httpGet(`task/${id}`);
@@ -12,11 +12,15 @@ export function getDeepLinkedTask$(deepLinkId) {
   return httpGet$(`task/deep/${deepLinkId}`);
 }
 
+export function saveDeepLinkedTask$(deepLinkId, payload) {
+  return httpPost$(`task/deep/${deepLinkId}`, payload);
+}
+
 export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function createNewTask(taskTemplateId, clientEmail) {
+export function createNewTask$(taskTemplateId, clientEmail) {
   return httpPut$('task', { taskTemplateId, clientEmail });
 }
 

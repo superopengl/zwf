@@ -99,6 +99,7 @@ export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email) =>
     task.id = uuidv4();
     task.deepLinkId = generateDeepLinkId();
     task.name = taskTemplate.name;
+    task.description = taskTemplate.description;
     task.userId = user.id;
     task.taskTemplateId = taskTemplateId;
     task.portfolioId = null;
