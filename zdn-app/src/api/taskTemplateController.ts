@@ -1,6 +1,6 @@
 import { getUtcNow } from './../utils/getUtcNow';
 
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';
@@ -86,6 +86,19 @@ export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+async function getUniqueCopyName(m: EntityManager, sourceTaskTemplate: TaskTemplate) {
+  let round = 1;
+  const { orgId, name } = sourceTaskTemplate;
+  while (true) {
+    const tryName = round === 1 ? `Copy of ${name}` : `Copy ${round} of ${name}`;
+    const existing = await m.findOne(TaskTemplate, { name: tryName, orgId });
+    if(!existing) {
+      return tryName;
+    }
+    round++;
+  }
+}
+
 export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
@@ -95,13 +108,22 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
     taskTemplate = await m.findOne(TaskTemplate, { id, orgId });
     assert(taskTemplate, 404);
 
-    taskTemplate.id = uuidv4();
+    const sourceTaskTemplateId = taskTemplate.id;
+    const newTaskTemplateId = uuidv4();
+    taskTemplate.id = newTaskTemplateId;
     taskTemplate.createdAt = getUtcNow();
     taskTemplate.lastUpdatedAt = getUtcNow();
-    taskTemplate.name = `Copy of ${taskTemplate.name}`;
+    taskTemplate.name = await getUniqueCopyName(m, taskTemplate);
     taskTemplate.version = 1;
 
-    await m.insert(TaskTemplate, taskTemplate);
+    const taskTemplateDocTemplateList = await m.find(TaskTemplateDocTemplate, { taskTemplateId: sourceTaskTemplateId });
+    taskTemplateDocTemplateList.forEach(x => {
+      x.taskTemplateId = newTaskTemplateId;
+    })
+
+    const entities = [taskTemplate, ...taskTemplateDocTemplateList];
+
+    await m.save(entities);
   })
 
   res.json(taskTemplate);
