@@ -24,9 +24,13 @@ const DropdownMenu = (props) => {
     mode="vertical"
     // theme="dark"
     onClick={handleMenuClick}>
-    {config.map((x, i) => <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
+    {config.map((x, i) => {
+      if(x.menu === '-') {
+        return <Menu.Divider />
+      }
+    return <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
       {x.menu}
-    </Menu.Item>)}
+    </Menu.Item>})}
   </Menu>
 
   return (

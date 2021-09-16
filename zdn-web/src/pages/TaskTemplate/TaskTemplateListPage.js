@@ -1,4 +1,8 @@
 import {
+  CopyOutlined,
+  DeleteOutlined,
+  EditOutlined,
+  EyeOutlined,
   PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
 import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip } from 'antd';
@@ -15,7 +19,7 @@ import { createNewTask$ } from 'services/taskService';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
+const { Title, Text, Paragraph, Link: TextLink } = Typography;
 
 
 const LayoutStyled = styled.div`
@@ -91,11 +95,11 @@ export const TaskTemplateListPage = props => {
 
   const handleClone = item => {
     cloneTaskTemplate$(item.id)
-    .subscribe(cloned => {
-      // console.log(task);
-      notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/task_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
-      loadList();
-    })
+      .subscribe(cloned => {
+        // console.log(task);
+        notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/task_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
+        loadList();
+      })
   }
 
   const handleCreateTask = async clientEmail => {
@@ -185,42 +189,61 @@ export const TaskTemplateListPage = props => {
               bordered={true}
               hoverable
               // type="inner"
-              title={<Tooltip title={item.name}><Text><TaskTemplateIcon /><HighlightingText search={searchText} value={item.name} /></Text></Tooltip>}
-              extra={<DropdownMenu
-                config={[
-                  {
-                    menu: 'Preview',
-                    onClick: () => {
-                      setPreviewTaskTemplate(item);
-                    }
-                  },
-                  {
-                    menu: 'Edit',
-                    onClick: () => handleEdit(item)
-                  },
-                  {
-                    menu: 'Clone',
-                    onClick: () => handleClone(item)
-                  },
-                  // {
-                  //   menu: 'Preview',
-                  //   onClick: () => handlePreview(item)
-                  // },
-                  {
-                    menu: <Text type="danger">Delete</Text>,
-                    onClick: () => handleDelete(item)
-                  },
-                  {
-                    menu: 'Create task',
-                    onClick: () => {
-                      setSelectClientVisible(true);
-                      setCurrentTemplateId(item.id)
-                    }
-                  },
-                ].filter(x => !!x)}
-              />}
+              title={<>
+                <TaskTemplateIcon />
+                <Text>{item.name}</Text>
+                {/* <Input bordered={false} value={item.name} /> */}
+                {/* <HighlightingText search={searchText} value={item.name} /> */}
+              </>}
+              extra={<Space size="small">
+                {/* <Button icon={<PlusOutlined />} shape="circle" type="primary" onClick={(e) => {
+                e.stopPropagation();
+                                      setSelectClientVisible(true);
+                                      setCurrentTemplateId(item.id)
+              }}></Button> */}
+                <DropdownMenu
+                  config={[
+                    {
+                      icon: <PlusOutlined />,
+                      menu: 'Create task',
+                      onClick: () => {
+                        setSelectClientVisible(true);
+                        setCurrentTemplateId(item.id)
+                      }
+                    },
+                    {
+                      menu: '-'
+                    },
+                    {
+                      icon: <EyeOutlined />,
+                      menu: 'Preview',
+                      onClick: () => {
+                        setPreviewTaskTemplate(item);
+                      }
+                    },
+                    {
+                      icon: <CopyOutlined />,
+                      menu: 'Clone',
+                      onClick: () => handleClone(item)
+                    },
+                    {
+                      icon: <EditOutlined />,
+                      menu: 'Edit',
+                      onClick: () => handleEdit(item)
+                    },
+                    {
+                      menu: '-'
+                    },
+                    {
+                      icon: <Text type="danger"><DeleteOutlined /></Text>,
+                      menu: <Text type="danger">Delete</Text>,
+                      onClick: () => handleDelete(item)
+                    },
+
+                  ].filter(x => !!x)}
+                /></Space>}
               bodyStyle={{ paddingTop: 16 }}
-              onClick={() => handleEdit(item)}
+            // onClick={() => handleEdit(item)}
             >
               <Paragraph>{item.description}</Paragraph>
               <Space size="large">
@@ -243,19 +266,19 @@ export const TaskTemplateListPage = props => {
         onCancel={handleCancelCreateTask}
       />
       <Modal
-          visible={!!previewTaskTemplate}
-          onOk={() => setPreviewTaskTemplate(null)}
-          onCancel={() => setPreviewTaskTemplate(null)}
-          closable
-          destroyOnClose
-          maskClosable
-          footer={null}
-        >
-          <TaskTemplatePreviewPanel
-            value={previewTaskTemplate}
-            type="agent"
-          />
-        </Modal>
+        visible={!!previewTaskTemplate}
+        onOk={() => setPreviewTaskTemplate(null)}
+        onCancel={() => setPreviewTaskTemplate(null)}
+        closable
+        destroyOnClose
+        maskClosable
+        footer={null}
+      >
+        <TaskTemplatePreviewPanel
+          value={previewTaskTemplate}
+          type="agent"
+        />
+      </Modal>
     </LayoutStyled >
   );
 };
