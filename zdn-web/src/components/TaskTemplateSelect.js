@@ -1,33 +1,45 @@
-import { Select } from 'antd';
+import { AutoComplete, Select } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { listTaskTemplate } from 'services/taskTemplateService';
 import ReactDOM from 'react-dom';
+import { TaskTemplateIcon } from './entityIcon';
 
 
 const TaskTemplateSelect = (props) => {
   const { value, onChange, ...other } = props;
 
-  const [, setLoading] = React.useState(true);
-  const [taskTemplateList, setTaskTemplateList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const [options, setOptions] = React.useState([]);
 
   const loadEntity = async () => {
     const taskTemplateList = await listTaskTemplate();
     ReactDOM.unstable_batchedUpdates(() => {
-      setTaskTemplateList(taskTemplateList);
-      setLoading(false);
+      // setTaskTemplateList(taskTemplateList);
+      setOptions(convertToOptions(taskTemplateList));
     });
   }
 
+  
   React.useEffect(() => {
     loadEntity();
   }, []);
+  
+  const convertToOptions = (taskTemplateList) => {
+    return taskTemplateList.map(x => ({
+       label: <><TaskTemplateIcon/> {x.name}</>,
+       value: x.id,
+       key: x.id
+    }))
+  }
 
-  return (<Select allowClear value={value} onChange={onChange} {...other}>
-    {taskTemplateList.map((t, i) => (<Select.Option key={i} value={t.id}>
-      {t.name}
-    </Select.Option>))}
-  </Select>
+  return (<Select 
+    options={options} 
+    placeholder={<><TaskTemplateIcon/>Select a task template</>}
+    allowClear 
+    value={value} 
+    onChange={onChange} 
+    {...other} />
   )
 };
 

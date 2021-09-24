@@ -17,6 +17,8 @@ import { catchError } from 'rxjs/operators';
 import { TaskFormPanel } from './TaskFormPanel';
 import { Logo } from 'components/Logo';
 import Icon from '@ant-design/icons';
+import { PageContainer } from '@ant-design/pro-layout';
+import PropTypes from 'prop-types';
 
 
 const LayoutStyled = styled(Layout)`
@@ -41,6 +43,7 @@ const GuestTaskPage = (props) => {
   const [chatVisible, setChatVisible] = React.useState(Boolean(chat));
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
+  const formRef = React.createRef();
 
   React.useEffect(() => {
     const subscription$ = getDeepLinkedTask$(id)
@@ -63,11 +66,6 @@ const GuestTaskPage = (props) => {
     props.history.goBack();
   }
 
-  const toggleChatPanel = () => {
-    setChatVisible(!chatVisible);
-  }
-
-
   const handleSave = values => {
     getDeepLinkedTask$(id)
       .pipe(
@@ -77,6 +75,14 @@ const GuestTaskPage = (props) => {
         saveDeepLinkedTask$(task);
         setLoading(false);
       });
+  }
+
+  const handleSubmit = () => {
+    formRef.current.submit();
+  }
+
+  const handleReset = () => {
+    formRef.current.resetFields();
   }
 
   return (<LayoutStyled>
@@ -90,7 +96,23 @@ const GuestTaskPage = (props) => {
       action={<Button type="primary">Log in</Button>}
     />
     <ContainerStyled>
-      <TaskFormPanel loading={loading} value={task} type="client" onSave={handleSave} />
+    <PageContainer
+        loading={loading}
+        header={{
+          title: task?.name || 'Loading'
+        }}
+        // content={<Paragraph type="secondary">{value.description}</Paragraph>}
+        extra={[
+          <Button key="reset" onClick={handleReset}>Reset</Button>,
+          <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
+        ]}
+        footer={[
+          <Button key="reset" onClick={handleReset}>Reset</Button>,
+          <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
+        ]}
+      >
+      <TaskFormPanel ref={formRef} value={task} type="client" onSave={handleSave} />
+      </PageContainer>
     </ContainerStyled>
   </LayoutStyled>
   );
@@ -98,9 +120,11 @@ const GuestTaskPage = (props) => {
 
 GuestTaskPage.propTypes = {
   // id: PropTypes.string.isRequired
+  loading: PropTypes.bool.isRequired,
 };
 
 GuestTaskPage.defaultProps = {
+  loading: true,
   // taskId: 'new'
 };
 

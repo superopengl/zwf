@@ -26,7 +26,7 @@ const DropdownMenu = (props) => {
     onClick={handleMenuClick}>
     {config.map((x, i) => {
       if(x.menu === '-') {
-        return <Menu.Divider />
+        return <Menu.Divider key={i} />
       }
     return <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
       {x.menu}

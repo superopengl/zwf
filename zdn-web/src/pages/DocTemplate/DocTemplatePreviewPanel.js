@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import RawHtmlDisplay from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
-import {isEmpty} from 'lodash';
+import { isEmpty } from 'lodash';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -24,9 +24,20 @@ const Container = styled.div`
 const StyledCard = styled(Card)`
 // box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 .ant-card-body, .ant-card-head {
-  background-color: rgba(0,0,0,0.05);
+  // background-color: rgba(0,0,0,0.05);
   // padding: 16px;
 }
+`;
+
+const PreviewDocContainer = styled.div`
+background-color: rgba(0,0,0,0.05);
+padding: 2rem;
+`;
+
+const PreviewDocPage = styled.div`
+background-color: rgba(255,255,255);
+padding: 1rem;
+box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 `;
 
 const getInitState = (html, initVarBag) => {
@@ -108,7 +119,7 @@ export const DocTemplatePreviewPanel = props => {
     <Container style={props.style}>
       {!isEmpty(state.varBag) && <StyledCard title="Test by setting variables" style={{ marginBottom: 30 }}
         extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
-        // size="small"
+      // size="small"
       >
         <Form
           ref={form}
@@ -117,14 +128,17 @@ export const DocTemplatePreviewPanel = props => {
           onValuesChange={handleVarValueChange}
         >
           {Object.entries(state.varBag || {}).map(([k, v]) => <Form.Item key={k} label={k} name={k}>
-            <Input placeholder="var value"/>
+            <Input placeholder="var value" />
           </Form.Item>)}
         </Form>
       </StyledCard>}
-      <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
-      <Paragraph type="secondary" style={{ textAlign: 'center' }}>{docTemplate?.description}</Paragraph>
-      <Divider style={{ marginTop: 4 }} />
-      <RawHtmlDisplay value={state.rendered} />
+      <PreviewDocContainer>
+        <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
+        <Paragraph type="secondary" style={{ textAlign: 'center' }}>{docTemplate?.description}</Paragraph>
+        <PreviewDocPage>
+          <RawHtmlDisplay value={state.rendered} />
+        </PreviewDocPage>
+      </PreviewDocContainer>
       {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}
     </Container >
   );

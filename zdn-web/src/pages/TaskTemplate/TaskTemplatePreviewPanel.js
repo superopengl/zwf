@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import FormBuilder from 'antd-form-builder'
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
+import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertTaskTemplateFieldsToFormFieldsSchema';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -17,28 +18,6 @@ const Container = styled.div`
   // height: 100%;
 `;
 
-
-const convertTaskTemplateFieldsToFormFieldsSchema = (ttFields, official) => {
-  return ttFields
-    .map((t, i) => {
-      if(!!t.official !== official) return null;
-      const widgetDef = TaskTemplateWidgetDef.find(x => x.type === t.type);
-      const name = t.name || `Unnamed (field ${i + 1})`;
-      return {
-        key: name,
-        label: name,
-        name: name,
-        required: t.required,
-        extra: t.description,
-        options: t.options,
-        forwardRef: t.forwardRef,
-        widget: widgetDef.widget,
-        widgetProps: widgetDef.widgetPorps
-      }
-    })
-    .filter(t => t);
-
-}
 
 export const TaskTemplatePreviewPanel = props => {
 

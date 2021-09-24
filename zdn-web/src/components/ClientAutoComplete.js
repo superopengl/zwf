@@ -36,7 +36,6 @@ const getDisplayName = (client) => {
 const ClientAutoComplete = (props) => {
   const { value, onChange, ...other } = props;
 
-  const [clientList, setClientList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
   const [options, setOptions] = React.useState([]);
 

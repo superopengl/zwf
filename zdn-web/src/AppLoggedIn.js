@@ -26,6 +26,7 @@ import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
 import { UserAvatar } from 'components/UserAvatar';
 import {HiOutlineUserGroup} from 'react-icons/hi';
+import { ImInsertTemplate } from 'react-icons/im';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
@@ -108,7 +109,7 @@ const ROUTES = [
   {
     path: '/task_template',
     name: <FormattedMessage id="menu.taskTemplate" />,
-    icon: <Icon component={() => <FaTasks />} />,
+    icon: <Icon component={() => <ImInsertTemplate />} />,
     roles: ['admin']
   },
   {
