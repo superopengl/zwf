@@ -113,7 +113,7 @@ const OrgPaymentMethodPanel = () => {
               <Text code>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
               <Text>{item.cardBrand}</Text>
               <Text>{item.cardExpiry}</Text>
-              {item.primary && <Tag key="tag" color="#13c2c2">primary</Tag>}
+              {item.primary && <Tag key="tag" color="#8abcd1">primary</Tag>}
             </Space>
           </List.Item>}
         />

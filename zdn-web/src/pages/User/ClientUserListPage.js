@@ -128,18 +128,11 @@ const ClientUserListPage = () => {
     loadList();
   }, []);
 
-  const updateQueryInfo = (queryInfo) => {
-    reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    setQueryInfo(queryInfo);
-  }
-
   const handleSearchTextChange = text => {
-    const newQueryInfo = {
+    setQueryInfo(queryInfo => ({
       ...queryInfo,
       text
-    }
-    updateQueryInfo(newQueryInfo);
-    // await loadTaskWithQuery(newQueryInfo);
+    }));
   }
 
   const handleSearch = async (value) => {
@@ -150,7 +143,7 @@ const ClientUserListPage = () => {
       text
     }
 
-    await loadList(newQueryInfo);
+    await searchByQueryInfo(newQueryInfo);
   }
 
   const searchByQueryInfo = async (queryInfo) => {
