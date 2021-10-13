@@ -25,7 +25,7 @@ import { HiOutlineViewBoards } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
 import { UserAvatar } from 'components/UserAvatar';
-import {HiOutlineUserGroup} from 'react-icons/hi';
+import { HiOutlineUserGroup } from 'react-icons/hi';
 import { ImInsertTemplate } from 'react-icons/im';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
@@ -48,7 +48,7 @@ const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const PromotionListPage = loadable(() => import('pages/Promotion/PromotionListPanel'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
-const OfficialTaskPage = loadable(() => import('pages/MyTask/OfficialTaskPage'));
+const AdminTaskPage = loadable(() => import('pages/MyTask/AdminTaskPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -139,7 +139,7 @@ const ROUTES = [
   {
     path: '/team',
     name: <FormattedMessage id="menu.team" />,
-    icon: <Icon component={() => <HiOutlineUserGroup/>} />,
+    icon: <Icon component={() => <HiOutlineUserGroup />} />,
     roles: ['admin'],
   },
   {
@@ -319,11 +319,10 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage :
-        isAdmin || isAgent ? AdminBoardPage : ClientBoardPage} />
+      <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientBoardPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
-      <RoleRoute visible={!isSystem}  path="/task/:id" component={isClient ? ClientTaskPage : OfficialTaskPage} />
+      <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : AdminTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template/:id" component={DocTemplatePage} />

@@ -38,7 +38,7 @@ const LayoutStyled = styled.div`
   height: 100%;
 `;
 
-const OfficialTaskPage = (props) => {
+const AdminTaskPage = (props) => {
   const id = props.match.params.id;
   const isNew = !id || id === 'new';
 
@@ -97,12 +97,12 @@ const OfficialTaskPage = (props) => {
   );
 };
 
-OfficialTaskPage.propTypes = {
+AdminTaskPage.propTypes = {
   // id: PropTypes.string.isRequired
 };
 
-OfficialTaskPage.defaultProps = {
+AdminTaskPage.defaultProps = {
   // taskId: 'new'
 };
 
-export default withRouter(OfficialTaskPage);
+export default withRouter(AdminTaskPage);
