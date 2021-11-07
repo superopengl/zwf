@@ -15,7 +15,7 @@ import { SyncOutlined, MessageOutlined } from '@ant-design/icons';
 import { notify } from 'util/notify';
 import { merge } from 'lodash';
 import { TaskDocEditor } from './TaskDocEditor';
-import TaskChatPanel from './TaskChatPanel';
+import {TaskChatPanel} from './TaskChatPanel';
 import { TaskStatus } from 'components/TaskStatus';
 import * as queryString from 'query-string';
 import { Loading } from 'components/Loading';

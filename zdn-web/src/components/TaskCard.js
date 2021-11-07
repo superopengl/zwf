@@ -9,10 +9,10 @@ import PropTypes from 'prop-types';
 import { MailOutlined, MessageOutlined } from '@ant-design/icons';
 import { UnreadMessageIcon } from './UnreadMessageIcon';
 import { TaskIcon } from './entityIcon';
-import AdminTaskModal from 'pages/MyTask/AdminTaskModal';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
-import TaskDetailModal from 'pages/MyTask/TaskPanel';
+import { showTaskModal } from 'components/showTaskModal';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Link: TextLink } = Typography;
 
@@ -34,7 +34,9 @@ const TaskCard = (props) => {
   const { task, index } = props;
   const { id, name, forWhom, email, lastUnreadMessageAt, taskTemplateName } = task;
 
-  const [currentTask, setCurrentTask] = React.useState();
+  const context = React.useContext(GlobalContext);
+
+  const myUserId = context.user.id;
 
   const getItemStyle = (isDragging, draggableStyle) => ({
     // background: isDragging ? "#C0C0C0" : "",
@@ -59,7 +61,7 @@ const TaskCard = (props) => {
             extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
             size="small"
             hoverable
-            onClick={() => setCurrentTask({taskId: id, name})}
+            onClick={() => showTaskModal(id, name, myUserId)}
             className={lastUnreadMessageAt ? 'unread' : ''}
           >
             {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
@@ -84,12 +86,6 @@ const TaskCard = (props) => {
               </Tooltip>
             </div> */}
           </StyledCard>
-          <TaskDetailModal
-            taskId={currentTask?.taskId}
-            name={currentTask?.name}
-            visible={!!currentTask}
-            onClose={() => setCurrentTask(null)}
-          />
         </div>
       )
     }

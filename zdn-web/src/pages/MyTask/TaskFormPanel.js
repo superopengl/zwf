@@ -72,4 +72,3 @@ TaskFormPanel.defaultProps = {
   onSave: () => { debugger; }
 };
 
-export default TaskFormPanel;
