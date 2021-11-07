@@ -5,6 +5,7 @@ export * from './portfolioController';
 export * from './taskTemplateController';
 export * from './docTemplateController';
 export * from './taskController';
+export * from './taskMessageController';
 export * from './recurringController';
 export * from './messageController';
 export * from './contactController';
