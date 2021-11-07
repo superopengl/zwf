@@ -4,8 +4,8 @@ import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn } from 
 @Entity()
 @Index('idx_task_message_org_task_createdAt', ['orgId', 'taskId', 'createdAt'])
 export class TaskMessage {
-  @PrimaryGeneratedColumn()
-  id?: number;
+  @PrimaryGeneratedColumn('uuid')
+  id?: string;
 
   @Column('uuid')
   orgId: string;

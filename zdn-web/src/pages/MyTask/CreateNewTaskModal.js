@@ -67,7 +67,6 @@ export const CreateNewTaskModal = props => {
   }
 
   const saveTask = async values => {
-    debugger;
   }
 
   const handlCreateTask = async () => {

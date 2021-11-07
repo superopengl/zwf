@@ -76,8 +76,8 @@ export function listTaskMessages(taskId) {
   return httpGet$(`task/${taskId}/message`);
 }
 
-export function sendTaskMessage(taskId, message) {
-  return httpPost$(`task/${taskId}/message`, { message });
+export function sendTaskMessage$(taskId, id, message) {
+  return httpPost$(`task/${taskId}/message`, { id, message });
 }
 
 export function subscribeTaskMessage(taskId) {
