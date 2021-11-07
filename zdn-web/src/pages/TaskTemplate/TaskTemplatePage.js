@@ -13,7 +13,7 @@ import { v4 as uuidv4 } from 'uuid';
 import ReactDOM from 'react-dom';
 import { notify } from 'util/notify';
 import ProLayout, { PageContainer } from '@ant-design/pro-layout';
-import { of } from 'rxjs';
+import { of, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
 const { Title, Text } = Typography;
@@ -73,7 +73,7 @@ export const TaskTemplatePage = props => {
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
 
   React.useEffect(() => {
-    let subscription$ = of();
+    let subscription$ = Subscription.EMPTY;
     if (!isNew) {
       // Load
       setLoading(true);
@@ -86,7 +86,9 @@ export const TaskTemplatePage = props => {
           setLoading(false);
         });
     }
-    return () => subscription$.unsubscribe();
+    return () => {
+      subscription$.unsubscribe();
+    }
   }, []);
 
   const goBack = () => {
