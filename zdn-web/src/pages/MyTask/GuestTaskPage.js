@@ -10,7 +10,6 @@ import TaskFormWizard from './TaskFormWizard';
 import MyTaskReadView from './MyTaskReadView';
 import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
-import TaskChatPanel from 'pages/AdminTask/TaskChatPanel';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
 import { catchError } from 'rxjs/operators';

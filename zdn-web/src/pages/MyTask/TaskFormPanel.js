@@ -9,7 +9,7 @@ import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertT
 const { Title, Paragraph, Text } = Typography;
 
 
-export const TaskFormPanel = props => {
+export const TaskFormPanel = React.memo(props => {
 
   const { value, type, debug } = props;
 
@@ -53,7 +53,7 @@ export const TaskFormPanel = props => {
       {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}
     </>
   );
-};
+});
 
 TaskFormPanel.propTypes = {
   value: PropTypes.shape({
@@ -72,4 +72,4 @@ TaskFormPanel.defaultProps = {
   onSave: () => { debugger; }
 };
 
-export default React.forwardRef(TaskFormPanel);
+export default TaskFormPanel;

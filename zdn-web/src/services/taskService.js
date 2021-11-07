@@ -1,4 +1,5 @@
 import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$ } from './http';
+import { API_BASE_URL } from 'services/http';
 
 export function getTask(id) {
   return httpGet(`task/${id}`);
@@ -71,3 +72,16 @@ export async function addTaskComment(taskId, content) {
   return httpPost(`task/${taskId}/comment`, { content });
 }
 
+export function listTaskMessages(taskId) {
+  return httpGet$(`task/${taskId}/message`);
+}
+
+export function sendTaskMessage(taskId, message) {
+  return httpPost$(`task/${taskId}/message`, { message });
+}
+
+export function subscribeTaskMessage(taskId) {
+  const url = `${API_BASE_URL}/task/${taskId}/message/subscribe`;
+  const es = new EventSource(url, { withCredentials: true });
+  return es;
+}

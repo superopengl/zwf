@@ -16,7 +16,7 @@ function getLabel(name) {
   return initials.substring(0, maxLength);
 }
 
-export const PortfolioAvatar = props => {
+export const PortfolioAvatar = React.memo(props => {
   const { value, id, size, style, ...other } = props;
 
   if (!value) return null;
@@ -32,10 +32,10 @@ export const PortfolioAvatar = props => {
   >
     <Text style={{ fontSize, color }}>{name}</Text>
   </Avatar></div>
-}
+});
 
 PortfolioAvatar.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   id: PropTypes.string,
   size: PropTypes.number,
 };

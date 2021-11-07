@@ -26,7 +26,8 @@ import { UserStatus } from '../../types/UserStatus';
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'o.name as "orgName"',
-      'u."orgOwner" as "orgOwner"'
+      'u."orgOwner" as "orgOwner"',
+      'p."avatarFileId" as "avatarFileId"',
     ])
 })
 export class UserInformation {
@@ -60,4 +61,7 @@ export class UserInformation {
 
   @ViewColumn()
   orgOwner: boolean;
+
+  @ViewColumn()
+  avatarFileId:string;
 }
