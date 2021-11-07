@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Upload, Space } from 'antd';
-import * as _ from 'lodash';
+import {isEqual} from 'lodash';
 import styled from 'styled-components';
 import { getFileMeta, getFileMetaList, getPublicFileUrl } from 'services/fileService';
 import { FileIcon } from './FileIcon';
@@ -47,7 +47,7 @@ padding: 8px;
 
 
 
-export const UserNameLabel = (props) => {
+export const UserNameLabel = React.memo((props) => {
   const {userId, profile} = props;
   const { avatarFileId, email, givenName, surname, role } = profile;
 
@@ -62,8 +62,10 @@ export const UserNameLabel = (props) => {
       </div>
     </Space>
   );
-
-}
+}, (prevProps, nextProps) => {
+  const same = isEqual(prevProps, nextProps);
+  return same;
+});
 
 UserNameLabel.propTypes = {
   userId: PropTypes.string.isRequired,
