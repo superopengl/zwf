@@ -12,7 +12,7 @@ const { Title, Paragraph, Text } = Typography;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
-  max-width: 600px;
+  // max-width: 600px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   // height: 100%;

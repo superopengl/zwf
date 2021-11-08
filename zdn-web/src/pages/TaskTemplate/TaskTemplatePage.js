@@ -32,6 +32,7 @@ const LayoutStyled = styled.div`
   }
 
   .resize-handler {
+    width: 5px !important;
     &:hover {
       background-color: rgba(0,0,0,0.1);
     }
@@ -122,9 +123,9 @@ export const TaskTemplatePage = props => {
       <Loading loading={loading}>
         <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
           <Layout.Content style={{ overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
-            <div style={{ overflowY: 'auto' }}>
+            <div style={{ overflowY: 'auto', flexGrow: 1 }}>
               <PageHeader
-                style={{ maxWidth: 900, margin: '0 auto' }}
+                style={{ margin: '0 auto' }}
                 title={isNew ? 'New Task Template' : 'Edit Task Template'}
                 onBack={goBack}
                 extra={[
@@ -142,30 +143,30 @@ export const TaskTemplatePage = props => {
                 />}
               </PageHeader>
             </div>
-            {previewSider && <div style={{ overflowY: 'auto' }}>
-              <Resizable
+            {previewSider && <Resizable
                 style={{}}
                 size={{ width: previewWidth, height: '100%' }}
                 minWidth={300}
-                maxWidth={700}
+                maxWidth={600}
                 enable={{ top: false, right: false, bottom: false, left: true }}
                 handleClasses={{ left: 'resize-handler' }}
                 onResizeStop={(e, direction, ref, d) => {
                   setPreviewWidth(w => Math.max(w + d.width, 300));
                 }}
               >
-                <div style={{ padding: 16 }}>
+                <div style={{ padding: 16, height: '100%', width: '100%'}}>
                   <Row justify="center" style={{ marginBottom: 40 }}>
                     <Text type="warning">Preview</Text>
                   </Row>
+                  <Row justify="center">
                   <TaskTemplatePreviewPanel
                     value={taskTemplate}
                     debug={debugMode}
                     type="agent"
                   />
+                  </Row>
                 </div>
-              </Resizable>
-            </div>}
+              </Resizable>}
           </Layout.Content>
           {/* <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
 
