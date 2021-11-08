@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Typography, Modal, PageHeader, Button, Layout, Divider } from 'antd';
+import { Row, Col, Typography, Modal, PageHeader, Button, Layout, Alert } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
@@ -20,10 +20,10 @@ import { Resizable } from "re-resizable";
 const { Title, Text } = Typography;
 
 const LayoutStyled = styled.div`
-  margin: 0 auto;
+  // margin: 0 auto;
   // background-color: #ffff00;
   // height: calc(100vh - 64px);
-  height: calc(100vh - 48px - 48px);
+  // height: calc(100vh - 48px - 48px);
   overflow: hidden;
   // max-width: 900px;
 
@@ -120,76 +120,84 @@ export const TaskTemplatePage = props => {
     // <PageContainer>
 
     <LayoutStyled>
-      <Loading loading={loading}>
-        <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
-          <Layout.Content style={{ overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
-            <div style={{ overflowY: 'auto', flexGrow: 1 }}>
-              <PageHeader
-                style={{ margin: '0 auto' }}
-                title={isNew ? 'New Task Template' : 'Edit Task Template'}
-                onBack={goBack}
-                extra={[
-                  <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-                  <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
-                  <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
-                ]}
-              >
-                {taskTemplate && <TaskTemplateEditorPanel
+      <PageContainer
+        style={{ margin: 0, overflow: 'hidden' }}
+        fixedHeader
+        loading={loading}
+        ghost={true}
+        header={{
+          title: isNew ? 'New Task Template' : 'Edit Task Template',
+          onBack: goBack,
+          extra: [
+            <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
+            <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
+            <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+          ]
+        }}
+      >
+        <Alert
+          description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
+          showIcon
+          closable
+          type="info"
+          style={{ marginBottom: 20 }}
+        />
+        <div style={{ height: 'calc(100vh - 48px - 72px - 30px)', overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
+          <div style={{ overflowY: 'auto', flexGrow: 1 }}>
+            {taskTemplate && <TaskTemplateEditorPanel
+              value={taskTemplate}
+              onChange={schema => {
+                setTaskTemplate(schema);
+              }}
+              debug={debugMode}
+            />}
+          </div>
+          {previewSider && <Resizable
+            style={{ marginLeft: 30 }}
+            size={{ width: previewWidth, height: '100%' }}
+            minWidth={300}
+            maxWidth={600}
+            enable={{ top: false, right: false, bottom: false, left: true }}
+            handleClasses={{ left: 'resize-handler' }}
+            onResizeStop={(e, direction, ref, d) => {
+              setPreviewWidth(w => Math.max(w + d.width, 300));
+            }}
+          >
+            <div style={{ padding: 16, height: '100%', width: '100%' }}>
+              <Row justify="center" style={{ marginBottom: 40 }}>
+                <Text type="warning">Preview</Text>
+              </Row>
+              <Row justify="center">
+                <TaskTemplatePreviewPanel
                   value={taskTemplate}
-                  onChange={schema => {
-                    setTaskTemplate(schema);
-                  }}
                   debug={debugMode}
-                />}
-              </PageHeader>
+                  type="agent"
+                />
+              </Row>
             </div>
-            {previewSider && <Resizable
-                style={{}}
-                size={{ width: previewWidth, height: '100%' }}
-                minWidth={300}
-                maxWidth={600}
-                enable={{ top: false, right: false, bottom: false, left: true }}
-                handleClasses={{ left: 'resize-handler' }}
-                onResizeStop={(e, direction, ref, d) => {
-                  setPreviewWidth(w => Math.max(w + d.width, 300));
-                }}
-              >
-                <div style={{ padding: 16, height: '100%', width: '100%'}}>
-                  <Row justify="center" style={{ marginBottom: 40 }}>
-                    <Text type="warning">Preview</Text>
-                  </Row>
-                  <Row justify="center">
-                  <TaskTemplatePreviewPanel
-                    value={taskTemplate}
-                    debug={debugMode}
-                    type="agent"
-                  />
-                  </Row>
-                </div>
-              </Resizable>}
-          </Layout.Content>
-          {/* <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
+          </Resizable>}
+        </div>
+        {/* <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
 
           </Layout.Sider> */}
-        </Layout>
+      </PageContainer>
 
 
-        <Modal
-          visible={preview}
-          onOk={() => setPreview(false)}
-          onCancel={() => setPreview(false)}
-          closable={false}
-          destroyOnClose
-          maskClosable
-          footer={null}
-        >
-          <TaskTemplatePreviewPanel
-            value={taskTemplate}
-            debug={debugMode}
-            type="agent"
-          />
-        </Modal>
-      </Loading>
+      <Modal
+        visible={preview}
+        onOk={() => setPreview(false)}
+        onCancel={() => setPreview(false)}
+        closable={false}
+        destroyOnClose
+        maskClosable
+        footer={null}
+      >
+        <TaskTemplatePreviewPanel
+          value={taskTemplate}
+          debug={debugMode}
+          type="agent"
+        />
+      </Modal>
     </LayoutStyled >
     // </PageContainer>
 
