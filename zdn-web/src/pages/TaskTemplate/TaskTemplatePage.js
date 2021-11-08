@@ -15,6 +15,7 @@ import { notify } from 'util/notify';
 import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 import { of, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { Resizable } from "re-resizable";
 
 const { Title, Text } = Typography;
 
@@ -28,6 +29,12 @@ const LayoutStyled = styled.div`
 
   .ant-page-header-content {
     padding-top: 30px;
+  }
+
+  .resize-handler {
+    &:hover {
+      background-color: rgba(0,0,0,0.1);
+    }
   }
 `;
 
@@ -69,6 +76,7 @@ export const TaskTemplatePage = props => {
   const [loading, setLoading] = React.useState(!isNew);
   const [preview, setPreview] = React.useState(false);
   const [previewSider, setPreviewSider] = React.useState(false);
+  const [previewWidth, setPreviewWidth] = React.useState(300);
 
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
 
@@ -113,38 +121,55 @@ export const TaskTemplatePage = props => {
     <LayoutStyled>
       <Loading loading={loading}>
         <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
-          <Layout.Content style={{ overflowY: 'auto' }}>
-            <PageHeader
-              style={{ maxWidth: 900, margin: '0 auto' }}
-              title={isNew ? 'New Task Template' : 'Edit Task Template'}
-              onBack={goBack}
-              extra={[
-                <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-                <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
-                <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
-              ]}
-            >
-              {taskTemplate && <TaskTemplateEditorPanel
-                value={taskTemplate}
-                onChange={schema => {
-                  setTaskTemplate(schema);
-                }}
-                debug={debugMode}
-              />}
-            </PageHeader>
-          </Layout.Content>
-          <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
-            <div style={{ padding: 16 }}>
-              <Row justify="center" style={{ marginBottom: 40 }}>
-                <Text type="warning">Preview</Text>
-              </Row>
-              <TaskTemplatePreviewPanel
-                value={taskTemplate}
-                debug={debugMode}
-                type="agent"
-              />
+          <Layout.Content style={{ overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
+            <div style={{ overflowY: 'auto' }}>
+              <PageHeader
+                style={{ maxWidth: 900, margin: '0 auto' }}
+                title={isNew ? 'New Task Template' : 'Edit Task Template'}
+                onBack={goBack}
+                extra={[
+                  <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
+                  <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
+                  <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+                ]}
+              >
+                {taskTemplate && <TaskTemplateEditorPanel
+                  value={taskTemplate}
+                  onChange={schema => {
+                    setTaskTemplate(schema);
+                  }}
+                  debug={debugMode}
+                />}
+              </PageHeader>
             </div>
-          </Layout.Sider>
+            {previewSider && <div style={{ overflowY: 'auto' }}>
+              <Resizable
+                style={{}}
+                size={{ width: previewWidth, height: '100%' }}
+                minWidth={300}
+                maxWidth={700}
+                enable={{ top: false, right: false, bottom: false, left: true }}
+                handleClasses={{ left: 'resize-handler' }}
+                onResizeStop={(e, direction, ref, d) => {
+                  setPreviewWidth(w => Math.max(w + d.width, 300));
+                }}
+              >
+                <div style={{ padding: 16 }}>
+                  <Row justify="center" style={{ marginBottom: 40 }}>
+                    <Text type="warning">Preview</Text>
+                  </Row>
+                  <TaskTemplatePreviewPanel
+                    value={taskTemplate}
+                    debug={debugMode}
+                    type="agent"
+                  />
+                </div>
+              </Resizable>
+            </div>}
+          </Layout.Content>
+          {/* <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
+
+          </Layout.Sider> */}
         </Layout>
 
 
