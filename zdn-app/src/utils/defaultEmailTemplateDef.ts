@@ -1,6 +1,6 @@
 import { EmailTemplateType } from "../types/EmailTemplateType";
 
-const defaultEmailTemplateDef = {
+export const defaultEmailTemplateDef = {
   [EmailTemplateType.WelcomeClient]: {
     vars: ['website', 'toWhom', 'email', 'url'],
     subject: '[Ziledin] Welcome to join Ziledin',
@@ -75,6 +75,16 @@ Organization <strong>{{orgName}}</strong> is asking to access your portfolios.
 Clicking to {{url}} to approve or reject.
 `,
   },
-}
+  [EmailTemplateType.TaskCreated]: {
+    vars: ['website', 'toWhom', 'taskName', 'directUrl', 'orgName'],
+    subject: '[Ziledin] Task Created',
+    body: `Dear {{toWhom}}
+<p>
+    Organization <strong>{{orgName}}</strong> created a task {{taskName}} for you. Please use below link to access the task.
+</p>
+    <br/>
+{{directUrl}}
 
-export default defaultEmailTemplateDef;
+`,
+  },
+}

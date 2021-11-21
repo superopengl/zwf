@@ -1,3 +1,4 @@
+import { OrgEmailTemplateInformation } from './../entity/views/OrgEmailTemplateInformation';
 import * as aws from 'aws-sdk';
 import { awsConfig } from '../utils/awsConfig';
 import { assert } from '../utils/assert';
@@ -34,12 +35,12 @@ function getEmailer() {
   return emailTransporter;
 }
 
-async function getEmailTemplate(orgId: string, templateName: string, locale: Locale): Promise<SystemEmailTemplate> {
+async function getEmailTemplate(orgId: string, templateName: string, locale: Locale): Promise<SystemEmailTemplate | OrgEmailTemplateInformation> {
   if (!locale) {
     locale = Locale.Engish;
   }
 
-  const template = orgId ? await getRepository(OrgEmailTemplate).findOne({
+  const template = orgId ? await getRepository(OrgEmailTemplateInformation).findOne({
     orgId,
     key: templateName,
     locale
