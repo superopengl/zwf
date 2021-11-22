@@ -95,8 +95,8 @@ const ROUTES = [
     roles: ['client']
   },
   {
-    path: '/portfolio',
-    name: <FormattedMessage id="menu.portfolio" />,
+    path: '/client',
+    name: <FormattedMessage id="menu.client" />,
     icon: <TeamOutlined />,
     roles: ['admin', 'agent'],
   },
@@ -333,7 +333,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/team" component={AgentUserListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/portfolio" component={ClientUserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/client" component={ClientUserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
