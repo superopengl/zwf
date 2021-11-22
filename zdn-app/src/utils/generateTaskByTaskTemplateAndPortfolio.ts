@@ -124,7 +124,7 @@ export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, taskName,
       toWhom: getEmailRecipientName(user),
       orgName: org.name,
       taskName: task.name,
-      directUrl: `${process.env.ZDN_WEB_DOMAIN_NAME}/task/direct/${task.deepLinkId}`
+      directUrl: `${process.env.ZDN_API_DOMAIN_NAME}/t/${task.deepLinkId}`
     },
   });
 
