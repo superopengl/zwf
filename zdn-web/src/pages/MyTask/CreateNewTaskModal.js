@@ -6,7 +6,7 @@ import FormBuilder from 'antd-form-builder'
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
 import { PageContainer } from '@ant-design/pro-layout';
-import { TaskFormPanel } from './TaskFormPanel';
+import { TaskFormPanel } from '../../components/TaskFormPanel';
 import { createNewTask$, getTask$, notifyTask, saveTask } from 'services/taskService';
 import { catchError } from 'rxjs/operators';
 import { getTaskTemplate$ } from 'services/taskTemplateService';

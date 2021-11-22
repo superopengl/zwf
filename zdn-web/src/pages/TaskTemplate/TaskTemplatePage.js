@@ -30,13 +30,6 @@ const LayoutStyled = styled.div`
   .ant-page-header-content {
     padding-top: 30px;
   }
-
-  .resize-handler {
-    width: 5px !important;
-    &:hover {
-      background-color: rgba(0,0,0,0.1);
-    }
-  }
 `;
 
 const EmptyTaskTamplateSchema = {

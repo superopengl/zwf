@@ -13,15 +13,17 @@ import { MessageFilled } from '@ant-design/icons';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
 import { catchError } from 'rxjs/operators';
-import { TaskFormPanel } from './TaskFormPanel';
 import { Logo } from 'components/Logo';
 import Icon from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import PropTypes from 'prop-types';
+import { TaskChatPanel } from 'components/TaskChatPanel';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { TaskWorkPanel } from 'components/TaskWorkPanel';
 
 
 const LayoutStyled = styled(Layout)`
-margin: 0 auto 0 auto;
+// margin: 0 auto 0 auto;
 background-color: #ffffff;
 height: 100%;
 `;
@@ -30,13 +32,13 @@ const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 1000px;
+  // max-width: 1000px;
   background-color: #ffffff;
   height: 100%;
 `;
 
 const TaskDirectPage = (props) => {
-  const id = props.match.params.id;
+  const { token } = props.match.params;
 
   const { chat, portfolioId } = queryString.parse(props.location.search);
   const [chatVisible, setChatVisible] = React.useState(Boolean(chat));
@@ -45,7 +47,7 @@ const TaskDirectPage = (props) => {
   const formRef = React.createRef();
 
   React.useEffect(() => {
-    const subscription$ = getDeepLinkedTask$(id)
+    const subscription$ = getDeepLinkedTask$(token)
       .pipe(
         catchError(() => setLoading(false))
       )
@@ -66,7 +68,7 @@ const TaskDirectPage = (props) => {
   }
 
   const handleSave = values => {
-    getDeepLinkedTask$(id)
+    getDeepLinkedTask$(token)
       .pipe(
         catchError(() => setLoading(false))
       )
@@ -85,17 +87,19 @@ const TaskDirectPage = (props) => {
   }
 
   return (<LayoutStyled>
-    <Alert banner
-      closable={false}
-      type="info"
-      showIcon
-      icon={<Icon component={() => <Logo size={48} />} />}
-      message={<>Welcome to Ziledin</>}
-      description={<>Log in or sign up to have better experience</>}
-      action={<Button type="primary">Log in</Button>}
-    />
+    <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%', padding: 0 }}>
+      <Alert banner
+        closable={false}
+        type="info"
+        showIcon
+        icon={<Icon component={() => <Logo size={48} />} />}
+        message={<>Welcome to Ziledin</>}
+        description={<>Log in or sign up to have better experience</>}
+        action={<Button type="primary">Log in</Button>}
+      />
+    </Layout.Header>
     <ContainerStyled>
-    <PageContainer
+      {task && <PageContainer
         loading={loading}
         header={{
           title: task?.name || 'Loading'
@@ -110,8 +114,8 @@ const TaskDirectPage = (props) => {
           <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
         ]}
       >
-      <TaskFormPanel ref={formRef} value={task} type="client" onSave={handleSave} />
-      </PageContainer>
+        <TaskWorkPanel ref={formRef} task={task} type="client" />
+      </PageContainer>}
     </ContainerStyled>
   </LayoutStyled>
   );

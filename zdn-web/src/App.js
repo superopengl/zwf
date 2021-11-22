@@ -126,7 +126,7 @@ const App = () => {
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-              <RoleRoute visible={isGuest} exact path="/task/direct/:id" component={TaskDirectPage} />
+              <RoleRoute visible={isGuest} exact path="/task/direct/:token" component={TaskDirectPage} />
               <RoleRoute visible={isAdmin} loading={loading} exact path="/onboard" component={OrgOnBoardPage} />
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/auth/org/:authId" component={AuthorizePage} />
