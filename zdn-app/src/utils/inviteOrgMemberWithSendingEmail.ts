@@ -21,7 +21,7 @@ export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user, pr
     to: email,
     template: EmailTemplateType.InviteOrgMember,
     vars: {
-      toWhom: getEmailRecipientName(user.profile),
+      toWhom: getEmailRecipientName(user),
       email,
       url
     },

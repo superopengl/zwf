@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmail, enqueueEmail } from '../services/emailService';
+import { sendEmailImmediately, enqueueEmail } from '../services/emailService';
 import { getUtcNow } from '../utils/getUtcNow';
 import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
@@ -94,7 +94,7 @@ export const signUp = handlerWrapper(async (req, res) => {
   const { email } = profile;
 
   const url = `${process.env.ZDN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmail({
+  await sendEmailImmediately({
     template: role === Role.Admin ? EmailTemplateType.WelcomeOrg : EmailTemplateType.WelcomeClient,
     to: email,
     vars: {
@@ -127,7 +127,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
   const { id, resetPasswordToken } = user;
 
   const url = `${process.env.ZDN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmail({
+  await sendEmailImmediately({
     template: EmailTemplateType.WelcomeOrg,
     to: email,
     vars: {
@@ -156,7 +156,7 @@ async function setUserToResetPasswordStatus(user: User) {
     to: user.profile.email,
     template: EmailTemplateType.ResetPassword,
     vars: {
-      toWhom: getEmailRecipientName(user.profile),
+      toWhom: getEmailRecipientName(user),
       url
     },
     shouldBcc: false
@@ -323,7 +323,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
       to: user.profile.email,
       template: EmailTemplateType.WelcomeClient,
       vars: {
-        toWhom: getEmailRecipientName(user.profile),
+        toWhom: getEmailRecipientName(user),
       },
       shouldBcc: false
     });

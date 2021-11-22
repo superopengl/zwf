@@ -12,7 +12,7 @@ import { Task } from '../entity/Task';
 import { Message } from '../entity/Message';
 import { User } from '../entity/User';
 import { TaskStatus } from '../types/TaskStatus';
-import { sendEmail } from '../services/emailService';
+import { sendEmailImmediately } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';

@@ -1,3 +1,4 @@
+import { EmailTemplateType } from './../types/EmailTemplateType';
 
 import { getRepository, In, getManager } from 'typeorm';
 import { assert } from './assert';
@@ -13,6 +14,10 @@ import { TaskDoc } from '../types/TaskDoc';
 import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 import { v4 as uuidv4 } from 'uuid';
 import * as voucherCodes from 'voucher-code-generator';
+import { User } from '../entity/User';
+import { enqueueEmail, sendEmailImmediately } from '../services/emailService';
+import { getEmailRecipientName } from './getEmailRecipientName';
+import { Org } from '../entity/Org';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -86,12 +91,13 @@ export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, taskName,
   assert(email, 400, 'email is not specified');
 
   let task: Task;
+  let user: User;
   await getManager().transaction(async m => {
     const taskTemplate = await m.findOne(TaskTemplate, taskTemplateId);
     assert(taskTemplate, 404, 'taskTemplate is not found');
     const fields = prefillTaskTemplateFields(taskTemplate.fields, fieldValues);
 
-    const user = await ensureClientOrGuestUser(m, email);
+    user = await ensureClientOrGuestUser(m, email);
     
     task = new Task();
     task.id = uuidv4();
@@ -107,6 +113,19 @@ export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, taskName,
     task.status = TaskStatus.TODO;
 
     await m.insert(Task, task);
+  });
+
+  const org = await getRepository(Org).findOne(task.orgId);
+
+  enqueueEmail({
+    template: EmailTemplateType.TaskCreated,
+    to: email,
+    vars: {
+      toWhom: getEmailRecipientName(user),
+      orgName: org.name,
+      taskName: task.name,
+      directUrl: `${process.env.ZDN_WEB_DOMAIN_NAME}/task/direct/${task.deepLinkId}`
+    },
   });
 
   return task;

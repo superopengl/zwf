@@ -2,14 +2,14 @@
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmail } from '../services/emailService';
+import { sendEmailImmediately } from '../services/emailService';
 import * as delay from 'delay';
 
 export const saveContact = handlerWrapper(async (req, res) => {
   const { name, company, contact, message } = req.body;
   assert(name && contact && message, 404, `Invalid contact information`);
 
-  await sendEmail({
+  await sendEmailImmediately({
     template: 'contact',
     to: 'techseeding2020@gmail.com',
     vars: {
