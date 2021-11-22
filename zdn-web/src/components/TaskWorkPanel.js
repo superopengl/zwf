@@ -27,7 +27,7 @@ export const TaskWorkPanel = React.forwardRef((props, ref) => {
       <TaskFormPanel ref={ref} value={task} type={type} />
     </Col>
     <Resizable
-      // style={{ marginLeft: 30, marginRight: 30 }}
+      style={{ marginLeft: 16, paddingLeft: 16 }}
       size={{ width: chatPanelWidth, height: '100%' }}
       minWidth={300}
       maxWidth={600}
@@ -37,7 +37,7 @@ export const TaskWorkPanel = React.forwardRef((props, ref) => {
         setChatPanelWidth(w => Math.max(w + d.width, 300));
       }}
     >
-      <Col style={{ marginLeft: 30, overflowY: 'auto', flexGrow: 1, height: '100%' }}>
+      <Col style={{ overflowY: 'auto', height: '100%' }}>
         <TaskChatPanel taskId={task.id} currentUserId={currentUserId} />
       </Col>
     </Resizable>
