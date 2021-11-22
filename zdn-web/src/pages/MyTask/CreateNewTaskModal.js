@@ -42,7 +42,7 @@ export const CreateNewTaskModal = props => {
       .subscribe(taskTemplate => {
         setTask(taskTemplate);
         const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, false);
-        clientFields.forEach(f => {
+        clientFields.fields.forEach(f => {
           f.required = false;
         });
         setClientFieldSchema(clientFields);

@@ -16,7 +16,7 @@ import { sendEmailImmediately } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskByTaskTemplateAndEmail, generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
+import { createTaskByTaskTemplateAndUserEmail, generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
 import { getNow } from '../utils/getNow';
 import { guessDisplayNameFromFields } from '../utils/guessDisplayNameFromFields';
 import { Portfolio } from '../entity/Portfolio';

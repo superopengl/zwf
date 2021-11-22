@@ -4,7 +4,6 @@ import { User } from '../User';
 import { Role } from '../../types/Role';
 import { UserProfile } from '../UserProfile';
 
-
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()

@@ -1,24 +1,21 @@
 import { Role } from './../../types/Role';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { Org } from '../Org';
-import { User } from '../User';
-import { UserProfile } from '../UserProfile';
-import { UserAuthOrg } from '../UserAuthOrg';
-import { TaskTemplateDocTemplate } from '../TaskTemplateDocTemplate';
 import { TaskTemplate } from '../TaskTemplate';
-import { DocTemplate } from '../DocTemplate';
 import { Task } from '../Task';
 import { TaskDoc } from '../../types/TaskDoc';
 import { TaskStatus } from '../../types/TaskStatus';
-
+import { Org } from '../Org';
+import { User } from '../User';
+import { UserProfile } from '../UserProfile';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Task, 't')
+    .innerJoin(Org, 'o', 't."orgId" = o.id')
     .innerJoin(TaskTemplate, 'l', `t."taskTemplateId" = l.id`)
-    .innerJoin(User, 'u', `t."userId" = u.id`)
-    .innerJoin(UserProfile, 'p', `u."profileId" = p.id`)
+    .innerJoin(User, 'u', `u.id = t."userId"`)
+    .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([
       't.id as id',
       't."deepLinkId" as "deepLinkId"',
@@ -29,18 +26,19 @@ import { TaskStatus } from '../../types/TaskStatus';
       't.status as status',
       't."userId" as "userId"',
       't."orgId" as "orgId"',
+      'o."name" as "orgName"',
       'p.email as email',
+      'p."avatarFileId" as "avatarFileId"',
       't."taskTemplateId" as "taskTemplateId"',
+      't."name" as "taskTemplateName"',
       'u.role as role',
+      't."authorizedAt" as "authorizedAt"',
       't."agentId" as "agentId"',
       't."createdAt" as "createdAt"',
     ])
 }) export class TaskInformation {
   @ViewColumn()
   id: string;
-
-  @ViewColumn()
-  orgId: string;
 
   @ViewColumn()
   deepLinkId: string;
@@ -50,9 +48,6 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   description: string;
-
-  @ViewColumn()
-  taskTemplateId: string;
 
   @ViewColumn()
   fields: any;
@@ -67,11 +62,32 @@ import { TaskStatus } from '../../types/TaskStatus';
   userId: string;
 
   @ViewColumn()
+  orgId: string;
+
+  @ViewColumn()
+  orgName: string;
+
+  @ViewColumn()
   email: string;
+
+  @ViewColumn()
+  avatarFileId: string;
+
+  @ViewColumn()
+  taskTemplateId: string;
+
+  @ViewColumn()
+  taskTemplateName: string;
 
   @ViewColumn()
   role: Role;
 
   @ViewColumn()
+  authorizedAt: Date;
+
+  @ViewColumn()
   agentId: string;
+
+  @ViewColumn()
+  createdAt: Date;
 }

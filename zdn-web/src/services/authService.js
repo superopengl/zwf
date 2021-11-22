@@ -42,10 +42,6 @@ export function inviteUser$(email, role) {
   return httpPost$(`auth/invite`, { email, role });
 }
 
-export async function inviteClient(email) {
-  return httpPost(`auth/invite/client`, { email });
-}
-
 export function ssoGoogle$(token) {
   return httpPost$(`auth/sso/google`, { token });
 }

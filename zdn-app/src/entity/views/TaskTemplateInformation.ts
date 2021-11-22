@@ -3,7 +3,6 @@ import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
 import { UserProfile } from '../UserProfile';
-import { UserAuthOrg } from '../UserAuthOrg';
 import { TaskTemplateDocTemplate } from '../TaskTemplateDocTemplate';
 import { TaskTemplate } from '../TaskTemplate';
 import { DocTemplate } from '../DocTemplate';
