@@ -38,7 +38,7 @@ const LayoutStyled = styled.div`
   height: 100%;
 `;
 
-const GuestTaskPage = (props) => {
+const ClientTaskPage = (props) => {
   const id = props.match.params.id;
   const isNew = !id || id === 'new';
 
@@ -97,12 +97,12 @@ const GuestTaskPage = (props) => {
   );
 };
 
-GuestTaskPage.propTypes = {
+ClientTaskPage.propTypes = {
   // id: PropTypes.string.isRequired
 };
 
-GuestTaskPage.defaultProps = {
+ClientTaskPage.defaultProps = {
   // taskId: 'new'
 };
 
-export default withRouter(GuestTaskPage);
+export default withRouter(ClientTaskPage);
