@@ -13,7 +13,7 @@ import { createUserAndProfileEntity } from './createUserAndProfileEntity';
 export async function ensureClientOrGuestUser(m: EntityManager, email: string): Promise<User> {
   let user: User;
   const emailHash = computeEmailHash(email);
-  user = await m.findOne(User, { emailHash, role: Role.Client });
+  user = await m.findOne(User, { emailHash });
   if (!user) {
     const { user: guestUser, profile } = createUserAndProfileEntity({ email, role: Role.Guest });
     await m.save([guestUser, profile]);
