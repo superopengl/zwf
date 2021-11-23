@@ -150,12 +150,13 @@ export const searchTask = handlerWrapper(async (req, res) => {
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
+  const isClient = role === Role.Client;
 
   let query = getManager()
     .createQueryBuilder()
-    .from(Task, 'x')
+    .from(TaskInformation, 'x')
     .where(`1 = 1`);
-  if (role === 'client') {
+  if (isClient) {
     query = query.andWhere(`x."userId" = :id`, { id });
   } else {
     const orgId = getOrgIdFromReq(req);
@@ -176,36 +177,18 @@ export const searchTask = handlerWrapper(async (req, res) => {
   if (clientId) {
     query = query.andWhere(`x."userId" = :clientId`, { clientId });
   }
-  query = query.innerJoin(q => q.from(TaskTemplate, 'j').select('*'), 'j', 'j.id = x."taskTemplateId"')
-    .innerJoin(q => q.from(User, 'u').select('*'), 'u', 'x."userId" = u.id')
-    // .leftJoin(q => q.from(Message, 'm')
-    //   .andWhere(`"readAt" IS NULL`)
-    //   .orderBy('"taskId"')
-    //   .addOrderBy('"createdAt"', 'DESC')
-    //   .distinctOn(['"taskId"'])
-    //   , 'm', `x.id = m."taskId" AND m."clientUserId" = u.id`)
-    .select([
-      `x.id as id`,
-      `x.name as name`,
-      // `x."forWhom" as "forWhom"`,
-      // `x."portfolioId" as "portfolioId"`,
-      // `u.email as email`,
-      `x."createdAt" as "createdAt"`,
-      `j.name as "taskTemplateName"`,
-      `x.agentId as "agentId"`,
-      `x.status as status`,
-      `x."lastUpdatedAt" as "lastUpdatedAt"`,
-      // `m."createdAt" as "lastUnreadMessageAt"`,
-      `x."dueDate" as "dueDate"`,
-      // `x."signedAt" as "signedAt"`,
-    ]);
+
   if (text) {
-    query = query.andWhere('(x.name ILIKE :text OR x."forWhom" ILIKE :text OR j.name ILIKE :text OR u.email ILIKE :text)', { text: `%${text}%` });
+    if(isClient) {
+      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.description ILIKE :text)', { text: `%${text}%` });
+    } else {
+      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.description ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
+    }
   }
-  if (dueDateRange?.length === 2) {
-    query = query.andWhere(`x."dueDate" >= :start`, { start: moment(dueDateRange[0], 'DD/MM/YYYY').startOf('day').toDate() })
-      .andWhere(`x."dueDate" <= :end`, { end: moment(dueDateRange[1], 'DD/MM/YYYY').endOf('day').toDate() })
-  }
+  // if (dueDateRange?.length === 2) {
+  //   query = query.andWhere(`x."dueDate" >= :start`, { start: moment(dueDateRange[0], 'DD/MM/YYYY').startOf('day').toDate() })
+  //     .andWhere(`x."dueDate" <= :end`, { end: moment(dueDateRange[1], 'DD/MM/YYYY').endOf('day').toDate() })
+  // }
 
   const total = await query.getCount();
   const list = await query

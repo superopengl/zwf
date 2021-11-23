@@ -28,6 +28,8 @@ import { UserProfile } from '../UserProfile';
       't."orgId" as "orgId"',
       'o."name" as "orgName"',
       'p.email as email',
+      'p."givenName" as "givenName"',
+      'p.surname as surname',
       'p."avatarFileId" as "avatarFileId"',
       't."taskTemplateId" as "taskTemplateId"',
       't."name" as "taskTemplateName"',
@@ -35,6 +37,7 @@ import { UserProfile } from '../UserProfile';
       't."authorizedAt" as "authorizedAt"',
       't."agentId" as "agentId"',
       't."createdAt" as "createdAt"',
+      't."lastUpdatedAt" as "lastUpdatedAt"'
     ])
 }) export class TaskInformation {
   @ViewColumn()
@@ -71,6 +74,12 @@ import { UserProfile } from '../UserProfile';
   email: string;
 
   @ViewColumn()
+  givenName: string;
+
+  @ViewColumn()
+  surname: string;
+
+  @ViewColumn()
   avatarFileId: string;
 
   @ViewColumn()
@@ -90,4 +99,7 @@ import { UserProfile } from '../UserProfile';
 
   @ViewColumn()
   createdAt: Date;
+
+  @ViewColumn()
+  lastUpdatedAt: Date;
 }
