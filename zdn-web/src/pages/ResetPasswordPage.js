@@ -66,7 +66,7 @@ const ResetPasswordPage = props => {
   return <LayoutStyled>
     <ContainerStyled>
       <LogoContainer><Logo /></LogoContainer>
-      <Title level={2}>Reset Password</Title>
+      <Title level={2}>Set Password</Title>
       <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
         <Form.Item label="Password (at least 8 letters)" name="password" rules={[{ required: true, min: 8, message: ' ' }]}>
           <Input.Password placeholder="Password" maxLength="50" autoComplete="new-password" disabled={loading} visibilityToggle={false} autoFocus={true} />
@@ -75,7 +75,7 @@ const ResetPasswordPage = props => {
           <Input.Password placeholder="Password" maxLength="50" autoComplete="new-password" disabled={loading} visibilityToggle={false} />
         </Form.Item>
         <Form.Item style={{ marginTop: '2rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={loading}>Reset Password</Button>
+          <Button block type="primary" htmlType="submit" disabled={loading}>Set Password</Button>
         </Form.Item>
         <Form.Item>
           <Button block type="link" onClick={() => goBack()}>Cancel</Button>

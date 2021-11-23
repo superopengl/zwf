@@ -11,14 +11,9 @@ import PropTypes from 'prop-types';
 
 
 const { Title } = Typography;
-export const ForgotPasswordPanel = withRouter(props => {
-  const { email } = props;
+export const ForgotPasswordPanel = props => {
+  const { email, onFinish } = props;
   const [loading, setLoading] = React.useState(false);
-
-
-  const goBack = () => {
-    props.history.goBack();
-  }
 
   const handleSubmit = async values => {
     if (loading) {
@@ -33,9 +28,9 @@ export const ForgotPasswordPanel = withRouter(props => {
       () => {
         notify.success(
           'Successfully sent out email',
-          <>An email with the reset password link was sent out to your registration email <strong>{email}</strong></>
+          <>An email with the set password link was sent out to <strong>{email}</strong>. Please check your email to continue set password process.</>
         );
-        props.history.push('/')
+        onFinish();
       },
       () => setLoading(false)
     );
@@ -49,11 +44,14 @@ export const ForgotPasswordPanel = withRouter(props => {
       <Button block type="primary" htmlType="submit" disabled={loading}>Send link to email</Button>
     </Form.Item>
   </Form>
-});
+};
 
 ForgotPasswordPanel.propTypes = {
   email: PropTypes.string,
+  onFinish: PropTypes.func
 };
 
-ForgotPasswordPanel.defaultProps = {};
+ForgotPasswordPanel.defaultProps = {
+  onFinish: () => {}
+};
 
