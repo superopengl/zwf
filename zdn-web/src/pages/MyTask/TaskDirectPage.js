@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Modal, Button, Alert, Typography } from 'antd';
+import { Layout, Modal, Button, Alert, Typography , Space} from 'antd';
 
 import { getDeepLinkedTask$, getTask, saveDeepLinkedTask$ } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
@@ -21,6 +21,7 @@ import { TaskChatPanel } from 'components/TaskChatPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskWorkPanel } from 'components/TaskWorkPanel';
 import { LogInPanel } from 'pages/LogInPanel';
+import { ForgotPasswordPanel } from 'pages/ForgotPasswordPanel';
 
 const { Paragraph } = Typography
 
@@ -48,7 +49,6 @@ const TaskDirectPage = (props) => {
   const [task, setTask] = React.useState();
   const [userInfo, setUserInfo] = React.useState();
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
-  const [passwordModalVisible, setPasswordModalVisible] = React.useState(false);
   const formRef = React.createRef();
 
   React.useEffect(() => {
@@ -57,14 +57,15 @@ const TaskDirectPage = (props) => {
         catchError(() => setLoading(false))
       )
       .subscribe(taskInfo => {
-        const { email, role, userId, ...task } = taskInfo;
+        const { email, role, userId, orgId, orgName, ...task } = taskInfo;
         setUserInfo({
           email,
           role,
-          userId
+          userId,
+          orgId,
+          orgName,
         })
-        setLoginModalVisible(role === 'client');
-        setPasswordModalVisible(role === 'guest');
+        setLoginModalVisible(true);
         setTask(task);
         setLoading(false);
       });
@@ -89,6 +90,8 @@ const TaskDirectPage = (props) => {
     //   // Login
     // }
   }
+
+  const isClientUser = userInfo?.role === 'client';
 
   return (<LayoutStyled>
     <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%', padding: 0 }}>
@@ -125,15 +128,25 @@ const TaskDirectPage = (props) => {
       closable={false}
       maskClosable
       destroyOnClose
-      title="Log In"
+      title={<Space align="center"><Logo size={28}/> {isClientUser ? "Sign Up" : "Log In"}</Space>}
       visible={loginModalVisible}
       onOk={() => setLoginModalVisible(false)}
       onCancel={() => setLoginModalVisible(false)}
       footer={null}
       width={400}
     >
-      <Paragraph>It appears this task belongs to an existing user. Please login and continue to have better experience.</Paragraph>
-      <LogInPanel email={userInfo?.email} />
+      {isClientUser ?
+        <>
+          <Paragraph>Organazation <strong>{userInfo?.orgName}</strong> invite you to join Ziledin to complete this task. Please click below button to set a password and sign up to Ziledin.</Paragraph>
+          <ForgotPasswordPanel email={userInfo?.email} />
+        </>
+        :
+        <>
+          <Paragraph>It appears this task belongs to an existing user. Please login and continue to have better experience.</Paragraph>
+          <LogInPanel email={userInfo?.email} />
+        </>
+      }
+      <Button block type="link" onClick={() => setLoginModalVisible(false)}>Continue as anonymous user</Button>
     </Modal>
   </LayoutStyled>
   );
