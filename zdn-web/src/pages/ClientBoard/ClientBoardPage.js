@@ -3,11 +3,12 @@ import { Button, Layout, Row, Col, Space, Spin, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { saveTask, searchTask } from '../../services/taskService';
+import { saveTask, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import TaskCard from '../../components/TaskCard';
+import {TaskDraggableCard} from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
+import { TaskCard } from 'components/TaskCard';
 
 const { Title } = Typography;
 
@@ -73,71 +74,30 @@ const DEFAULT_QUERY_INFO = {
 
 const AdminBoardPage = props => {
   const [loading, setLoading] = React.useState(true);
-  const [taskList, setTaskList] = React.useState([]);
+  const [list, setList] = React.useState([]);
   const [queryInfo] = React.useState(DEFAULT_QUERY_INFO)
+  const loadSignalRef = React.useRef(0);
 
-  const loadList = async () => {
-    setLoading(true);
-    const { data } = await searchTask(queryInfo);
-    setTaskList(data);
-    setLoading(false);
-  }
 
   React.useEffect(() => {
-    loadList();
-  }, []);
-
-  const onDragEnd = async result => {
-    const { draggableId: taskId, destination: { droppableId: status } } = result;
-    const task = taskList.find(j => j.id === taskId);
-    if (task.status !== status) {
-      task.status = status;
-      setLoading(true);
-      try {
-        await saveTask(task);
-      } finally {
-        await loadList();
+    const sub$ = searchTask$(queryInfo)
+      .subscribe(resp => {
+        const { data } = resp;
+        setList(data);
         setLoading(false);
-      }
-    }
-  }
+      });
 
-  const handleCreateTask = () => {
-    props.history.push('/task/new');
-  }
+    return () => {
+      sub$.unsubscribe();
+    }
+  }, [loadSignalRef]);
+
   return (
     <LayoutStyled>
-      <Space style={{ width: '100%', justifyContent: 'flex-end', marginBottom: '1rem' }}>
-        <Link to="/task"><Button type="link">All Tasks</Button></Link>
-        <Button type="primary" onClick={() => handleCreateTask()} icon={<PlusOutlined />}>New Task</Button>
-      </Space>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Loading loading={loading}>
-          <StyledRow gutter={10}>
-            {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
-              {(provided, snapshot) => (
-                <Col span={6}
-                  ref={provided.innerRef}>
-                  <StyledColumn direction="vertical" style={{ backgroundColor: s.bgColor, border: `2px dashed ${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}` }}>
-                    <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                      <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }} type="secondary">{s.label}</Title>
-                      <Text strong>{taskList.filter(j => j.status === s.status).length}</Text>
-                    </Space>
-                    {taskList.filter(j => j.status === s.status).map((task, index) => {
-                      // if (task.statusId === status.id)
-                      return (
-                        <TaskCard key={task.id} index={index} task={task} onChange={() => loadList()} />
-                      );
-                    })
-                    }
-                    {provided.placeholder}
-                  </StyledColumn>
-                </Col>
-              )}
-            </Droppable>)}
-          </StyledRow>
-        </Loading>
-      </DragDropContext>
+      <Loading loading={loading}>
+        {/* {list?.map((task, index) => <TaskCard key={task.id} index={index} task={task} onChange={() => loadSignalRef.current++} />)} */}
+        {list?.map((task, index) => <TaskCard task={task} />)}
+      </Loading>
     </LayoutStyled>
   )
 }

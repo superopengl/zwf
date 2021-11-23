@@ -6,7 +6,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { saveTask, searchTask } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import TaskCard from '../../components/TaskCard';
+import {TaskDraggableCard} from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
 
 const { Title } = Typography;
@@ -126,7 +126,7 @@ const AdminBoardPage = props => {
                     {taskList.filter(j => j.status === s.status).map((task, index) => {
                       // if (task.statusId === status.id)
                       return (
-                        <TaskCard key={task.id} index={index} task={task} onChange={() => loadList()} />
+                        <TaskDraggableCard key={task.id} index={index} task={task} onChange={() => loadList()} />
                       );
                     })
                     }

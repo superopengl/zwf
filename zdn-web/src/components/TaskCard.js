@@ -29,73 +29,46 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 `;
 
-const TaskCard = (props) => {
+export const TaskCard = withRouter((props) => {
 
-  const { task, index } = props;
+  const { task } = props;
   const { id, name, forWhom, email, lastUnreadMessageAt, taskTemplateName } = task;
 
   const context = React.useContext(GlobalContext);
 
   const myUserId = context.user.id;
 
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    // background: isDragging ? "#C0C0C0" : "",
-    ...draggableStyle
-  });
-
-
   const goToTask = (e, id) => {
     e.stopPropagation();
     props.history.push(`/task/${id}`);
   }
 
-  return <Draggable draggableId={id} index={index}>
-    {
-      (provided, snapshot) => (
-        <div ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}>
-          <StyledCard
-            title={<><TaskIcon /> {name}</>}
-            extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
-            size="small"
-            hoverable
-            onClick={() => showTaskModal(id, name, myUserId)}
-            className={lastUnreadMessageAt ? 'unread' : ''}
-          >
-            {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
-            <Space direction="vertical" style={{ width: '100%' }}>
-              <Text type="secondary"><small>{taskTemplateName}</small></Text>
-              <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                <Space style={{ lineHeight: '0.5rem', padding: 0 }}>
-                  <PortfolioAvatar value={forWhom} id={task.portfolioId} size={32} />
-                  <Space direction="vertical">
-                    <small>{forWhom}</small>
-                    <small>{email}</small>
-                  </Space>
-                </Space>
-              </Space>
-            </Space>
-            {/* <div style={{ display: 'flex', position: 'absolute', right: 0, bottom: 0 }}>
-              <Tooltip placement="bottom" title="Proceed task">
-                <Link to={`/tasks/${id}/proceed`}><Button type="link" icon={<EditOutlined />}></Button></Link>
-              </Tooltip>
-              <Tooltip placement="bottom" title="Delete task">
-                <Button type="link" danger onClick={handleDelete} icon={<DeleteOutlined />}></Button>
-              </Tooltip>
-            </div> */}
-          </StyledCard>
-        </div>
-      )
-    }
-  </Draggable>
-}
+  return <StyledCard
+    title={<><TaskIcon /> {name}</>}
+    extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
+    size="small"
+    hoverable
+    onClick={() => showTaskModal(id, name, myUserId)}
+    className={lastUnreadMessageAt ? 'unread' : ''}
+  >
+    {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
+    <Space direction="vertical" style={{ width: '100%' }}>
+      <Text type="secondary"><small>{taskTemplateName}</small></Text>
+      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        <Space style={{ lineHeight: '0.5rem', padding: 0 }}>
+          <PortfolioAvatar value={forWhom} id={task.portfolioId} size={32} />
+          <Space direction="vertical">
+            <small>{forWhom}</small>
+            <small>{email}</small>
+          </Space>
+        </Space>
+      </Space>
+    </Space>
+  </StyledCard>
+});
 
 TaskCard.propTypes = {
   task: PropTypes.any.isRequired
 };
 
 TaskCard.defaultProps = {};
-
-export default withRouter(TaskCard);
