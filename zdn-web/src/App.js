@@ -107,8 +107,9 @@ const App = () => {
     }
   }, [user]);
 
-  const role = contextValue.role;
-  const isGuest = !role || role === 'guest';
+  const role = contextValue.role || 'guest';
+  const isGuest = role === 'guest';
+  const isClient = role === 'client';
   const isAdmin = role === 'admin';
 
   const isLoggedIn = !isGuest;
