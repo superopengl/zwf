@@ -17,6 +17,8 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
+import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
+import {AppClient} from 'AppClient';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const Error404 = loadable(() => import('pages/Error404'));
@@ -133,7 +135,7 @@ const App = () => {
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
               <RoleRoute loading={loading} path="/" exact component={HomePage} />
-              <RoleRoute loading={loading} path="/" component={isLoggedIn ? AppLoggedIn : HomePage} />
+              <RoleRoute loading={loading} path="/" component={isLoggedIn ? (isClient ? AppClient : AppLoggedIn) : HomePage} />
               {/* <Redirect to="/" /> */}
               <RoleRoute loading={loading} component={Error404} />
             </Switch>
