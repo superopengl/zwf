@@ -39,6 +39,10 @@ padding: 8px;
 }
 `;
 
+const StyledAvatar = styled(Avatar)`
+  border: 1px solid rgba(0,0,0,0.2);
+`;
+
 function getLabel(givenName, surname) {
   const maxLength = 6;
   const words = [givenName, surname].filter(x => !!x);
@@ -83,7 +87,7 @@ export const UserAvatar = React.memo((props) => {
 
   let avatarComponent = null;
   if (avatarFileId) {
-    avatarComponent = <Avatar size={size} src={<Image
+    avatarComponent = <StyledAvatar size={size} src={<Image
       alt="avatar"
       preview={false}
       src={getPublicFileUrl(avatarFileId)}
@@ -94,9 +98,9 @@ export const UserAvatar = React.memo((props) => {
     const color = isLight ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.85)';
     const name = getLabel(givenName, surname) || <UserOutlined />;
     const fontSize = 28 * size / 64;
-    avatarComponent = <Avatar size={size} style={{ ...style, backgroundColor }}>
+    avatarComponent = <StyledAvatar size={size} style={{ ...style, backgroundColor }}>
       <Text style={{ fontSize, color }}>{name}</Text>
-    </Avatar>
+    </StyledAvatar>
   }
 
   if (!editable) {

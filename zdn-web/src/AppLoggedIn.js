@@ -9,7 +9,7 @@ import Icon, {
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout$ } from 'services/authService';
-import { Space, Dropdown, Menu, Typography, Modal } from 'antd';
+import { Space, Dropdown, Menu, Typography, Modal,Image } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
@@ -30,7 +30,7 @@ import { ImInsertTemplate } from 'react-icons/im';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
-const ClientBoardPage = loadable(() => import('pages/ClientBoard/ClientBoardPage'));
+const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
@@ -234,8 +234,8 @@ const AppLoggedIn = props => {
   </StyledMenu>
 
   return <StyledLayout
-    // title={<Image src="/images/brand.svg" preview={false} width={120} />}
-    title={null}
+    title={<Image src="/images/brand.svg" preview={false} width={110} />}
+    // title={null}
     logo="/images/logo.svg"
     // logo="/header-logo.png"
     route={{ routes }}
@@ -313,7 +313,7 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientBoardPage} />
+      <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : AdminTaskPage} />
