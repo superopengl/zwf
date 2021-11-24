@@ -158,7 +158,7 @@ const HomePage = (props) => {
     rightContentRender={props => {
 
       if(isLoggedIn) {
-        return <Link to={isSystem ? '/org' : '/dashboard'}><Button type="primary" ghost >
+        return <Link to={isSystem ? '/org' : '/app'}><Button type="primary" ghost >
           <FormattedMessage id="menu.dashboard" />
           </Button></Link>
       }

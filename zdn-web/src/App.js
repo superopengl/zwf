@@ -17,8 +17,8 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import {AppClient} from 'AppClient';
+import {AppLoggedIn} from 'AppLoggedIn';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const Error404 = loadable(() => import('pages/Error404'));
@@ -28,7 +28,6 @@ const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const BlogsPage = loadable(() => import('pages/BlogsPage'));
-const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const TaskDirectPage = loadable(() => import('pages/MyTask/TaskDirectPage'))

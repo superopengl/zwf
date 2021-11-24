@@ -4,12 +4,11 @@ import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
-  ClockCircleOutlined, StarOutlined, SettingOutlined, TeamOutlined,
+  ClockCircleOutlined, SettingOutlined, TeamOutlined,
   BankOutlined, QuestionOutlined, FileOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
-import { logout$ } from 'services/authService';
-import { Space, Dropdown, Menu, Typography, Modal,Image } from 'antd';
+import { Space, Menu, Typography, Modal } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
@@ -19,14 +18,13 @@ import { BiDollar } from 'react-icons/bi';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { GoTools } from 'react-icons/go';
-import { FaTasks } from 'react-icons/fa';
 import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
 import { HiOutlineViewBoards } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
-import { UserAvatar } from 'components/UserAvatar';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { ImInsertTemplate } from 'react-icons/im';
+import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
@@ -46,7 +44,6 @@ const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateP
 const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
 const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
-const PromotionListPage = loadable(() => import('pages/Promotion/PromotionListPanel'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 const AdminTaskPage = loadable(() => import('pages/MyTask/AdminTaskPage'));
 
@@ -75,11 +72,6 @@ const StyledLayout = styled(ProLayout)`
 
 `;
 
-const StyledMenu = styled(Menu)`
-.ant-dropdown-menu-item {
-  padding: 12px !important;
-}
-`;
 
 const ROUTES = [
   {
@@ -175,9 +167,8 @@ function getSanitizedPathName(pathname) {
   return match ? match[0] ?? pathname : pathname;
 }
 
-const AppLoggedIn = props => {
+export const AppLoggedIn = React.memo(props => {
 
-  const { history } = props;
 
   const context = React.useContext(GlobalContext);
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
@@ -188,7 +179,7 @@ const AppLoggedIn = props => {
   const [collapsed, setCollapsed] = React.useState(false);
   const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
 
-  const { user, role, setUser } = context;
+  const { user, role } = context;
   if (!user) {
     return null;
   }
@@ -200,38 +191,6 @@ const AppLoggedIn = props => {
 
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
-
-  const handleLogout = async () => {
-    logout$().subscribe(() => {
-      // reactLocalStorage.clear();
-      setUser(null);
-      history.push('/');
-    });
-  }
-
-  const avatarMenu = <StyledMenu>
-    <Menu.Item key="email" disabled={true}>
-      <pre style={{ fontSize: 14, margin: 0 }}>{user.profile.email}</pre>
-    </Menu.Item>
-    <Menu.Divider />
-    <Menu.Item key="home" onClick={() => props.history.push('/')}>
-      <FormattedMessage id="menu.home" />
-    </Menu.Item>
-    <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
-      <FormattedMessage id="menu.profile" />
-    </Menu.Item>
-    <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
-      <FormattedMessage id="menu.changePassword" />
-    </Menu.Item>
-    {isAdmin && <Menu.Divider />}
-    {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
-      Organisation Profile
-    </Menu.Item>}
-    <Menu.Divider />
-    <Menu.Item key="logout" danger onClick={handleLogout}>
-      <FormattedMessage id="menu.logout" />
-    </Menu.Item>
-  </StyledMenu>
 
   return <StyledLayout
     // title={<Image src="/images/brand.svg" preview={false} width={110} />}
@@ -286,19 +245,7 @@ const AppLoggedIn = props => {
     )}
     rightContentRender={() => (
       <div style={{ marginLeft: 16 }}>
-        <Dropdown overlay={avatarMenu} trigger={['click']}>
-          <a onClick={e => e.preventDefault()}>
-            {/* <Avatar size={40}
-              icon={<UserOutlined style={{ fontSize: 20 }} />}
-              style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
-            /> */}
-            <UserAvatar
-              size={40}
-              value={user.profile.avatarFileId}
-              style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
-            />
-          </a>
-        </Dropdown>
+        <AvatarDropdownMenu />
       </div>
     )}
     menuFooterRender={props => (
@@ -372,6 +319,5 @@ const AppLoggedIn = props => {
       onClose={() => setAboutVisible(false)}
     />
   </StyledLayout>
-}
+})
 
-export default withRouter(AppLoggedIn);
