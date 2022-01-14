@@ -4,7 +4,7 @@ export class TaskHistoryTrigger1599197181037 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-        CREATE OR REPLACE FUNCTION function_task_history()
+        CREATE OR REPLACE FUNCTION zwf.function_task_history()
         RETURNS trigger AS
         $BODY$
         BEGIN
@@ -17,7 +17,7 @@ export class TaskHistoryTrigger1599197181037 implements MigrationInterface {
         `);
         await queryRunner.query(`
         CREATE TRIGGER task_history_trigger AFTER INSERT OR UPDATE ON zwf.task
-        FOR EACH ROW EXECUTE PROCEDURE function_task_history();
+        FOR EACH ROW EXECUTE PROCEDURE zwf.function_task_history();
         `);
     }
 
