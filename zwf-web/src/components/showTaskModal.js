@@ -21,7 +21,7 @@ import { TaskWorkPanel } from './TaskWorkPanel';
 
 const { Text } = Typography;
 
-export function showTaskModal(taskId, taskName, currentUserId) {
+export function showTaskModal(taskId, taskName, currentUserId, currentUserRole) {
   const modalRef = Modal.info({
     title: <><TaskIcon /> {taskName}</>,
     content: <Skeleton active />,
@@ -42,8 +42,9 @@ export function showTaskModal(taskId, taskName, currentUserId) {
       })
     )
     .subscribe(task => {
+      const type = currentUserRole === 'admin' || currentUserRole === 'agent'  ? 'agent' : 'client';
       modalRef.update({
-        content: <TaskWorkPanel task={task} type='client' currentUserId={currentUserId} />,
+        content: <TaskWorkPanel task={task} type={type} currentUserId={currentUserId} />,
         afterClose: () => {
           subscription$.unsubscribe();
         }
