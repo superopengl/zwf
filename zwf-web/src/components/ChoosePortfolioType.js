@@ -5,7 +5,6 @@ import { UserOutlined, TeamOutlined } from '@ant-design/icons';
 import { listPortfolio, deletePortfolio } from 'services/portfolioService';
 import { Card } from 'antd';
 import { withRouter } from 'react-router-dom';
-import * as queryString from 'query-string';
 import PropTypes from 'prop-types';
 
 const { Title } = Typography;

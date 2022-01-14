@@ -22,6 +22,6 @@ export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
     // Redirect to a task deep page without login
     res.redirect(`${process.env.ZWF_WEB_DOMAIN_NAME}/task/direct/${token}`);
   } else {
-    httpAssert(false, 404);
+    httpAssert(false, 404, 'Task direct link is for anonymous user or client user. You need to logout logout before accessing it.');
   }
 });
