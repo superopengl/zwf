@@ -1,8 +1,9 @@
 
 export enum TaskStatus {
-  BACKLOG = 'backlog',
   TODO = 'todo',
-  TO_SIGN = 'to_sign',
+  IN_PROGRESS = 'in_progress',
+  PENDING_FIX = 'pending_fix',
+  PENDING_SIGN = 'pending_sign',
   SIGNED = 'signed',
   DONE = 'done',
   ARCHIVE = 'archive',
