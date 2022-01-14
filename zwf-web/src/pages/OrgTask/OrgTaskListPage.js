@@ -16,35 +16,12 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import * as ReactDom from 'react-dom';
 import * as moment from 'moment';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
-import PortfolioSelect from 'components/PortfolioSelect';
 import ClientSelect from 'components/ClientSelect';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 
 const { Title } = Typography;
 
-const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
 
-  .ant-table-row.unread {
-    font-weight: bold;
-    background-color: rgb(255,255,220);
-  }
-
-  .ant-table {
-    font-size: 12px !important;
-  }
-
-  .ant-select-selection-item {
-    font-size: 12px !important;
-  }
-`;
-
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -92,7 +69,6 @@ const OrgTaskListPage = (props) => {
             {lastUnreadMessageAt && <UnreadMessageIcon style={{ marginLeft: 4 }} />}
           </Link>
           <Space size="small" style={{ alignItems: 'center', width: '100%' }}>
-            <PortfolioAvatar value={forWhom} id={record.portfolioId} size={30} />
             <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={forWhom || ''} />
           </Space>
         </div>
@@ -113,15 +89,6 @@ const OrgTaskListPage = (props) => {
       render: (text) => <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} />,
       ellipsis: false
     },
-    // {
-    //   title: 'Portfolio',
-    //   dataIndex: 'forWhom',
-    //   sorter: () => 0,
-    //   render: (text, record) => <Space direction="vertical" style={{alignItems: 'center', width: '100%'}}>
-    //   <PortfolioAvatar value={text} id={record.portfolioId} size={40}/>
-    //   <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} />
-    //   </Space>
-    // },
     {
       title: 'User',
       dataIndex: 'email',
@@ -154,7 +121,7 @@ const OrgTaskListPage = (props) => {
       title: 'Due Date',
       dataIndex: 'dueDate',
       sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-      render: (value, record) => value && <TimeAgo value={value} />
+      render: (value) => value && <TimeAgo value={value} />
     },
     {
       title: 'Assignee',
@@ -324,15 +291,6 @@ const OrgTaskListPage = (props) => {
     await loadTaskWithQuery(newQueryInfo);
   }
 
-  const handlePortfolioIdChange = async (portfolioId) => {
-    const newQueryInfo = {
-      ...queryInfo,
-      portfolioId,
-      page: 1,
-    }
-    await loadTaskWithQuery(newQueryInfo);
-  }
-
   const handleClientIdChange = async (clientId) => {
     const newQueryInfo = {
       ...queryInfo,
@@ -433,14 +391,6 @@ const OrgTaskListPage = (props) => {
                   <Select.Option key={-1} value={null}>{' '}</Select.Option>
                   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
                 </Select>
-              </Space>
-            </Col>
-            <Col>
-              <Space>
-                <Label style={{ position: 'relative', top: -8 }}>Portfolio</Label>
-                <PortfolioSelect
-                  style={{ width: 280 }}
-                  value={queryInfo?.portfolioId} onChange={handlePortfolioIdChange} />
               </Space>
             </Col>
             <Col>
