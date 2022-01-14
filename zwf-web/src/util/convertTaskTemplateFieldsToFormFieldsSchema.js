@@ -22,7 +22,8 @@ export function convertTaskTemplateFieldsToFormFieldsSchema(fields, official) {
     .filter(t => t);
 
   return {
-    formItemLayout: [24,24],
+    // formItemLayout: [12,12],
+    columns: 1,
     fields: fieldList
   }
 }
