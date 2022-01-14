@@ -1,3 +1,4 @@
+import { TaskAssignment } from './../entity/TaskAssignment';
 import { TaskInformation } from './../entity/views/TaskInformation';
 
 import * as moment from 'moment';
@@ -72,7 +73,7 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
     assert(hasDocToSign, 400, 'Cannot change status because there is no document to sign.');
     // Require sign
     await sendRequireSignEmail(task);
-  } else if (status === TaskStatus.ARCHIVE) {
+  } else if (status === TaskStatus.ARCHIVED) {
     // Archived
     await sendArchiveEmail(task);
   }
@@ -103,16 +104,12 @@ export const saveTask = handlerWrapper(async (req, res) => {
     task.id = uuidv4();
     task.userId = portfolio.userId;
     task.taskTemplateId = taskTemplateId;
-    task.portfolioId = portfolioId;
   }
 
   task.name = name;
   task.fields = fields;
   task.docs = docs;
   task.status = status;
-
-  const dueDateFieldValue = fields.find(f => f.name === 'Due_Date')?.value;
-  task.dueDate = dueDateFieldValue ? moment(dueDateFieldValue, 'DD/MM/YYYY').toDate() : null;
 
   await handleTaskStatusChange(oldStatus, task);
   await repo.save(task);
@@ -179,7 +176,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   }
 
   if (text) {
-    if(isClient) {
+    if (isClient) {
       query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.description ILIKE :text)', { text: `%${text}%` });
     } else {
       query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.description ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
@@ -294,7 +291,7 @@ export const deleteTask = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const repo = getRepository(Task);
 
-  await repo.update(id, { status: TaskStatus.ARCHIVE });
+  await repo.update(id, { status: TaskStatus.ARCHIVED });
 
   res.json();
 });
@@ -304,7 +301,10 @@ export const assignTask = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { agentId } = req.body;
 
-  await getRepository(Task).update(id, { agentId });
+  await getRepository(TaskAssignment).insert({
+    taskId: id,
+    assigneeId: agentId
+  });
 
   res.json();
 });
