@@ -1,4 +1,4 @@
-import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$ } from './http';
+import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$, httpDelete$ } from './http';
 import { API_BASE_URL } from 'services/http';
 
 export function getTask(id) {
@@ -29,8 +29,8 @@ export function createNewTask$(payload) {
   return httpPut$('task', payload);
 }
 
-export async function deleteTask(id) {
-  return httpDelete(`task/${id}`);
+export function deleteTask$(id) {
+  return httpDelete$(`task/${id}`);
 }
 
 export function listTask$() {

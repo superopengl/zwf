@@ -8,7 +8,7 @@ import React from 'react';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { assignTask, changeTaskStatus$, deleteTask, searchTask$ } from '../../services/taskService';
+import { assignTask, changeTaskStatus$, deleteTask$, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
@@ -19,6 +19,7 @@ import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import ClientSelect from 'components/ClientSelect';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 import { TaskStatusButton } from 'components/TaskStatusButton';
+import DropdownMenu from 'components/DropdownMenu';
 
 const { Title } = Typography;
 
@@ -166,14 +167,18 @@ const OrgTaskListPage = (props) => {
       // fixed: 'right',
       // width: 200,
       render: (text, record) => (
-        <Space size="small">
-          <Tooltip placement="bottom" title="Proceed task">
-            <Link to={`/tasks/${record.id}/proceed`}><Button type="link" icon={<EditOutlined />}></Button></Link>
-          </Tooltip>
-          <Tooltip placement="bottom" title="Archive task">
-            <Button type="link" danger onClick={e => handleDelete(e, record)} icon={<DeleteOutlined />}></Button>
-          </Tooltip>
-        </Space>
+        <DropdownMenu 
+          config={[
+            {
+              menu: 'Edit',
+              onClick: () => props.history.push(`/tasks/${record.id}`)
+            },
+            {
+              menu: 'Archive',
+              onClick: () => handleDelete(record)
+            }
+          ]}
+        />
       ),
     },
   ];
@@ -218,15 +223,13 @@ const OrgTaskListPage = (props) => {
     return loadTaskWithQuery$(queryInfo);
   }
 
-  const handleDelete = async (e, item) => {
-    e.stopPropagation();
+  const handleDelete = async (item) => {
     const { id, name } = item;
     Modal.confirm({
       title: <>Archive task <Text strong>{name}</Text>?</>,
       okText: 'Yes, Archive it',
-      onOk: async () => {
-        await deleteTask(id);
-        loadList$();
+      onOk: () => {
+        deleteTask$(id).subscribe(() => loadList$());
       },
       maskClosable: true,
       okButtonProps: {
@@ -418,7 +421,7 @@ const OrgTaskListPage = (props) => {
           rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
           onRow={(record) => ({
             onDoubleClick: () => {
-              props.history.push(`/tasks/${record.id}/proceed?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
+              props.history.push(`/task/${record.id}?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
             }
           })}
         ></Table>
