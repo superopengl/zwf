@@ -16,7 +16,7 @@ const definitions = {
   },
   'pending_fix': {
     label: 'Pending Fix',
-    color: '#fadb14',
+    color: '#061178',
   },
   'pending_sign': {
     label: 'Pending Sign',
@@ -24,7 +24,7 @@ const definitions = {
   },
   'signed': {
     label: 'Signed',
-    color: '#003a8c',
+    color: '#5c0011',
   },
   'done': {
     label: 'Done',
@@ -53,7 +53,7 @@ export const TaskStatusButton = props => {
   </Menu>
 
   return <Dropdown overlay={menu}>
-    <Button ghost style={{backgroundColor: definitions[currentStatus]?.color}}>
+    <Button ghost style={{backgroundColor: definitions[currentStatus]?.color, width: 140}}>
       {definitions[currentStatus]?.label} <DownOutlined />
     </Button>
   </Dropdown>

@@ -42,8 +42,20 @@ const COLUMN_DEFS = [
     hoverColor: '#bfbfbf',
   },
   {
-    status: 'to_sign',
-    label: 'To Sign',
+    status: 'in_progress',
+    label: 'In Progress',
+    bgColor: '#f5f5f5',
+    hoverColor: '#bfbfbf',
+  },
+  {
+    status: 'pending_fix',
+    label: 'Await client reply',
+    bgColor: '#f5f5f5',
+    hoverColor: '#bfbfbf',
+  },
+  {
+    status: 'pending_sign',
+    label: 'Await client sign',
     bgColor: '#f5f5f5',
     hoverColor: '#ff4d4f',
   },
@@ -54,8 +66,8 @@ const COLUMN_DEFS = [
     hoverColor: '#1890ff',
   },
   {
-    status: 'complete',
-    label: 'Completed',
+    status: 'done',
+    label: 'Done',
     bgColor: '#f5f5f5',
     hoverColor: '#73d13d',
   },
@@ -66,7 +78,7 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 200,
   total: 0,
-  status: ['todo', 'review', 'held', 'to_sign', 'signed', 'complete'],
+  status: ['todo', 'in_progress', 'pending_fix', 'pending_sign', 'signed', 'done'],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };

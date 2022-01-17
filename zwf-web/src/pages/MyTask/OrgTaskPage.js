@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Layout, Space, Button, Skeleton } from 'antd';
 
-import { getTask, getTask$ } from 'services/taskService';
+import { changeTaskStatus$, getTask, getTask$ } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
 import TaskFormWizard from './TaskFormWizard';
 import MyTaskReadView from './MyTaskReadView';
@@ -102,8 +102,18 @@ const OrgTaskPage = (props) => {
   const showsSign = task?.status === 'to_sign';
   const showsChat = !isNew;
 
+  const handleStatusChange = newStatus => {
+    if (newStatus !== task.status) {
+      setLoading(true);
+      changeTaskStatus$(task.id, newStatus).subscribe(() => {
+        setTask({ ...task, status: newStatus });
+        setLoading(false);
+      })
+    }
+  }
+
   return (<>
- <ContainerStyled>
+    <ContainerStyled>
       {task && <PageContainer
         loading={loading}
         fixedHeader
@@ -114,12 +124,12 @@ const OrgTaskPage = (props) => {
         extra={[
           // <Button key="reset" onClick={handleReset}>Reset</Button>,
           // <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>,
-          <TaskStatusButton key="status"/>
+          <TaskStatusButton key="status" value={task.status} onChange={handleStatusChange} />
         ]}
-        // footer={[
-        //   <Button key="reset" onClick={handleReset}>Reset</Button>,
-        //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
-        // ]}
+      // footer={[
+      //   <Button key="reset" onClick={handleReset}>Reset</Button>,
+      //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
+      // ]}
       >
         <TaskWorkPanel ref={formRef} task={task} type="client" />
       </PageContainer>}

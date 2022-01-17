@@ -17,6 +17,10 @@ export function saveDeepLinkedTask$(deepLinkId, payload) {
   return httpPost$(`task/deep/${deepLinkId}`, payload);
 }
 
+export function changeTaskStatus$(id, status) {
+  return httpPost$(`task/${id}/status/${status}`);
+}
+
 export async function saveTask(item) {
   return httpPost('task', item);
 }
