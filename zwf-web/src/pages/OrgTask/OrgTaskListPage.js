@@ -64,7 +64,7 @@ const OrgTaskListPage = (props) => {
       render: (text, record) => {
         const { id, name, forWhom, lastUnreadMessageAt } = record;
         return <div>
-          <Link to={`/tasks/${id}/proceed?${lastUnreadMessageAt ? 'chat=1' : ''}`}>
+          <Link to={`/task/${id}?${lastUnreadMessageAt ? 'chat=1' : ''}`}>
             <Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={name || ''} />
             {lastUnreadMessageAt && <UnreadMessageIcon style={{ marginLeft: 4 }} />}
           </Link>

@@ -19,7 +19,7 @@ import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { GoTools } from 'react-icons/go';
 import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
-import { HiOutlineViewBoards } from 'react-icons/hi';
+import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
 import { HiOutlineUserGroup } from 'react-icons/hi';
@@ -45,7 +45,7 @@ const OrgTaskListPage = loadable(() => import('pages/OrgTask/OrgTaskListPage'));
 const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
-const AdminTaskPage = loadable(() => import('pages/MyTask/AdminTaskPage'));
+const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -78,6 +78,12 @@ const ROUTES = [
     path: '/app',
     name: <FormattedMessage id="menu.board" />,
     icon: <Icon component={() => <HiOutlineViewBoards />} />,
+    roles: ['admin', 'agent', 'client']
+  },
+  {
+    path: '/task',
+    name: <FormattedMessage id="menu.tasks" />,
+    icon: <Icon component={() => <HiOutlineViewList />} />,
     roles: ['admin', 'agent', 'client']
   },
   // {
@@ -263,7 +269,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute exact path="/app" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={OrgTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
-      <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : AdminTaskPage} />
+      <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template/:id" component={DocTemplatePage} />
@@ -279,7 +285,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      <Redirect to={(isSystem || isAdmin || isAgent) ? '/dashboard' : '/dashboard'} />
+      <Redirect to={(isSystem || isAdmin || isAgent) ? '/app' : '/app'} />
     </Switch>
 
     <ChangePasswordModal

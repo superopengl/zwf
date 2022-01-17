@@ -17,6 +17,7 @@ import { catchError } from 'rxjs/operators';
 import { TaskFormPanel } from './TaskFormPanel';
 import { TaskChatPanel } from 'components/TaskChatPanel';
 import { TaskWorkPanel } from './TaskWorkPanel';
+import { TaskStatusButton } from './TaskStatusButton';
 
 const { Text } = Typography;
 
@@ -25,7 +26,7 @@ export function showTaskModal(taskId, taskName, currentUserId, currentUserRole) 
     title: <><TaskIcon /> {taskName}</>,
     content: <Skeleton active />,
     icon: null,
-    closable: true,
+    closable: false,
     maskClosable: true,
     destroyOnClose: true,
     footer: null,
@@ -43,7 +44,10 @@ export function showTaskModal(taskId, taskName, currentUserId, currentUserRole) 
     .subscribe(task => {
       const type = currentUserRole === 'admin' || currentUserRole === 'agent'  ? 'agent' : 'client';
       modalRef.update({
-        title: <><TaskIcon /> {taskName}</>,
+        title: <Row justify="space-between">
+          <Col><TaskIcon /> {taskName}</Col>
+          <Col><TaskStatusButton /></Col>
+        </Row>,
         content: <TaskWorkPanel task={task} type={type} currentUserId={currentUserId} />,
         afterClose: () => {
           subscription$.unsubscribe();

@@ -35,6 +35,14 @@ export const TaskFormPanel = React.memo(props => {
     props.onSave(values);
   }
 
+  const handleValuesChange = (value, allValues) => {
+    debugger;
+  }
+
+  const handleFieldsChange = (changedField, allFields) => {
+    debugger;
+  }
+
   return (
     <>
       <Form
@@ -42,6 +50,8 @@ export const TaskFormPanel = React.memo(props => {
         layout="vertical"
         colon={false}
         onFinish={handleFormSave}
+        onValuesChange={handleValuesChange}
+        onFieldsChange={handleFieldsChange}
       >
         <FormBuilder meta={clientFieldSchema} form={previewFormRef} />
         {officialMode && <>
@@ -63,12 +73,14 @@ TaskFormPanel.propTypes = {
   type: PropTypes.oneOf(['client', 'agent']).isRequired,
   debug: PropTypes.bool.isRequired,
   onSave: PropTypes.func.isRequired,
+  onChangeLoading: PropTypes.func,
 };
 
 TaskFormPanel.defaultProps = {
   type: 'client',
   loading: true,
   debug: false,
-  onSave: () => { debugger; }
+  onSave: () => { debugger; },
+  onChangeLoading: () => {}
 };
 
