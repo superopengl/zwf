@@ -131,7 +131,7 @@ const OrgTaskPage = (props) => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <TaskWorkPanel ref={formRef} task={task} type="client" />
+        <TaskWorkPanel ref={formRef} task={task} type="agent" />
       </PageContainer>}
     </ContainerStyled>
   </>
