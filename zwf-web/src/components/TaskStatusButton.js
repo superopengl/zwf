@@ -39,7 +39,7 @@ const definitions = {
 
 
 export const TaskStatusButton = props => {
-  const { onChange, value } = props;
+  const { size, onChange, value } = props;
   const [currentStatus, setCurrentStatus] = React.useState(value);
 
   const handleSelectChange = (e) => {
@@ -48,12 +48,12 @@ export const TaskStatusButton = props => {
     onChange(newStatus);
   }
 
-  const menu = <Menu onClick={handleSelectChange}>
+  const menu = <Menu onClick={handleSelectChange} size={size}>
     {Object.keys(definitions).filter(k => k !== currentStatus).map(k => <Menu.Item key={k}>{definitions[k].label}</Menu.Item>)}
   </Menu>
 
-  return <Dropdown overlay={menu}>
-    <Button ghost style={{backgroundColor: definitions[currentStatus]?.color, width: 140}}>
+  return <Dropdown overlay={menu} size={size}>
+    <Button ghost style={{backgroundColor: definitions[currentStatus]?.color, width: size === 'small' ? 120 : 140}} size={size}>
       {definitions[currentStatus]?.label} <DownOutlined />
     </Button>
   </Dropdown>
