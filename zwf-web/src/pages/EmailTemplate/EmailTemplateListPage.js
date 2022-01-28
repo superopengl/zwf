@@ -93,7 +93,6 @@ const EmailTemplateListPage = () => {
               // type="inner"
               >
                 <RawHtmlDisplay value={item.body} />
-
               </Card>
             </Space>
           </Card>

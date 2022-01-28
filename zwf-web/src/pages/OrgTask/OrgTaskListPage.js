@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, SearchOutlined, SyncOutlined, PlusOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Card, Modal, Select, Space, Row, Table, Tooltip, Typography, DatePicker, Pagination, Col } from 'antd';
+import { Button, Input, Card, Modal, Select, Space, Row, Table, Tooltip, Typography, Tag, Pagination, Col } from 'antd';
 import Text from 'antd/lib/typography/Text';
 
 import { TaskStatus } from 'components/TaskStatus';
@@ -22,6 +22,7 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from 'components/UserAvatar';
+import { notify } from 'util/notify';
 
 const { Title } = Typography;
 
@@ -73,6 +74,9 @@ const OrgTaskListPage = (props) => {
     changeTaskStatus$(taskId, newStatus)
     .subscribe(() => {
       loadList$();
+      if(newStatus === 'archived' && !queryInfo.status.includes('archived')) {
+        notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
+      }
     })
   }
   const columnDef = [
@@ -294,15 +298,6 @@ const OrgTaskListPage = (props) => {
     loadTaskWithQuery$(newQueryInfo);
   }
 
-  const handleDueDateRangeChange = (dates, dateStrings) => {
-    const newQueryInfo = {
-      ...queryInfo,
-      page: 1,
-      dueDateRange: dateStrings && dateStrings[0] && dateStrings[1] ? dateStrings : null
-    }
-    loadTaskWithQuery$(newQueryInfo);
-  }
-
   const handlePaginationChange = async (page, size) => {
     const newQueryInfo = {
       ...queryInfo,
@@ -333,8 +328,6 @@ const OrgTaskListPage = (props) => {
   const handleCreateTask = () => {
     props.history.push('/task/new');
   }
-
-
 
   const StatusSelectOptions = [
     { label: 'To Do', value: 'todo' },
@@ -402,7 +395,6 @@ const OrgTaskListPage = (props) => {
                 <Label>Task Template</Label>
                 <TaskTemplateSelect
                   style={{ width: 280 }}
-
                   value={queryInfo?.taskTemplateId} onChange={handleTaskTemplateIdChange} />
               </Space>
             </Col>
