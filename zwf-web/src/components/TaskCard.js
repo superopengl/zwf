@@ -1,5 +1,4 @@
-import { Space, Card, Typography } from 'antd';
-import Text from 'antd/lib/typography/Text';
+import { Space, Card, Typography, Row, Col, Tooltip } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -11,8 +10,10 @@ import Icon from '@ant-design/icons';
 import { showTaskModal } from 'components/showTaskModal';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { UserAvatar } from './UserAvatar';
+import { UserDisplayName } from './UserDisplayName';
+import { getUserDisplayName } from 'util/getDisplayName';
 
-const { Link: TextLink } = Typography;
+const { Link: TextLink, Text, Paragraph } = Typography;
 
 const StyledCard = styled(Card)`
 position: relative;
@@ -30,7 +31,7 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 export const TaskCard = withRouter((props) => {
 
   const { task } = props;
-  const { id, name, forWhom, email, lastUnreadMessageAt, taskTemplateName } = task;
+  const { id, name, givenName, surname, email, lastUnreadMessageAt, taskTemplateName } = task;
 
   const context = React.useContext(GlobalContext);
 
@@ -43,7 +44,7 @@ export const TaskCard = withRouter((props) => {
   }
 
   return <StyledCard
-    title={<><TaskIcon /> {name}</>}
+    title={<Tooltip title={name}><TaskIcon /> {name}</Tooltip>}
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
@@ -51,18 +52,21 @@ export const TaskCard = withRouter((props) => {
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
-    <Space direction="vertical" style={{ width: '100%' }}>
-      <Text type="secondary"><small>{taskTemplateName}</small></Text>
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Space style={{ lineHeight: '0.5rem', padding: 0 }}>
-          <UserAvatar userId={task.userId} size={40}/>
-          <Space direction="vertical">
-            <small>{forWhom}</small>
-            <small>{email}</small>
-          </Space>
-        </Space>
-      </Space>
-    </Space>
+      <Paragraph type="secondary" style={{lineHeight: 0.8}}><small>{taskTemplateName}</small></Paragraph>
+      <Tooltip title={getUserDisplayName(email, givenName, surname)} placement='bottom'>
+        <Row gutter={10} wrap={false} style={{ width: '100%' }}>
+          <Col>
+            <UserAvatar userId={task.userId} size={40} />
+          </Col>
+          <Col flex='auto'>
+            <UserDisplayName
+              email={email}
+              surname={surname}
+              givenName={givenName}
+            />
+          </Col>
+        </Row>
+      </Tooltip>
     {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
   </StyledCard>
 });

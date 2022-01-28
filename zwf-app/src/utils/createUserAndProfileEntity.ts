@@ -7,6 +7,7 @@ import { computeUserSecret } from './computeUserSecret';
 import { Role } from '../types/Role';
 import { computeEmailHash } from './computeEmailHash';
 import { UserProfile } from '../entity/UserProfile';
+import { generateRandomAvatarColorHex } from './generateRandomAvatarColorHex';
 
 export function createUserAndProfileEntity(payload): { user: User; profile: UserProfile; } {
   const { email, password, role, orgId, orgOwner, ...other } = payload;
@@ -21,6 +22,7 @@ export function createUserAndProfileEntity(payload): { user: User; profile: User
   const profile = new UserProfile();
   profile.id = profileId;
   profile.email = email.trim().toLowerCase();
+  profile.avatarColorHex = generateRandomAvatarColorHex();
   Object.assign(profile, other);
 
   const user = new User();
@@ -36,3 +38,4 @@ export function createUserAndProfileEntity(payload): { user: User; profile: User
 
   return { user, profile };
 }
+

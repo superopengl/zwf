@@ -33,6 +33,7 @@ import { UserStatus } from '../../types/UserStatus';
       'u."givenName" as "givenName"',
       'u."surname" as "surname"',
       'u."avatarFileId" as "avatarFileId"',
+      'u."avatarColorHex" as "avatarColorHex"',
       'u.role as role',
       'u.status as status',
       'u.tags as tags',
@@ -62,6 +63,9 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   avatarFileId: string;
+
+  @ViewColumn()
+  avatarColorHex: string;
 
   @ViewColumn()
   role: Role;
