@@ -23,7 +23,7 @@ const TermAndConditionPage = () => <>
   <ContainerStyled>
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
     <Title style={{ textAlign: 'center' }}>Techseeding Pty Ltd - Terms and Conditions</Title>
-    <html><head></head><body><Title level={2}>1. Scope</Title>
+    <Title level={2}>1. Scope</Title>
       <p>These general terms apply to all professional relationships between ZeeWorkFlow and its Client, notwithstanding any Client’s general terms even if more recent, unless explicitly accepted, totally or partially, in writing by ZeeWorkFlow.</p>
       <p>In case of contradiction between the Engagement Letter and the General Terms, the Engagement Letter shall prevail.</p>
       <Title level={2}>2.Formation of the services contract</Title>
@@ -172,7 +172,6 @@ For the execution of the Services Contract, we may make use of computer software
       <p>ZeeWorkFlow is not bound to carry out its obligations mentioned under this Services Contract if its enforcement is hindered by an event of force majeure. Following circumstances shall be considered as force majeure, without being limitative: a state intervention, weather conditions, breakdowns and disruptions in telecommunication and internet connections, disruptions in (accountancy) software, delay or breach of ZeeWorkFlow’s subcontractors in the performance of their obligations or strikes or similar circumstances which results in the Services not being provided or being provided with delay and/or being provided partially. ZeeWorkFlow is under no obligation to prove that such circumstances were unforeseeable and unavoidable.</p>
       <Title level={2}>21. Applicable law and jurisdictions</Title>
       <p>The professional relationships between the Parties to which these General Terms apply will be governed exclusively by law. All disputes related thereto will be submitted exclusively to the courts within the judicial area in which ZeeWorkFlow has its registered office.</p>
-    </body></html>
   </ContainerStyled>
 </>;  
 
