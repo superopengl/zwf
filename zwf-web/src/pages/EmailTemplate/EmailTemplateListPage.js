@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row, Tag } from 'antd';
+import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row, Col, Tag, List } from 'antd';
 import {
   EditOutlined
 } from '@ant-design/icons';
@@ -64,43 +64,41 @@ const EmailTemplateListPage = () => {
 
   return (
     <ContainerStyled>
-      <Space direction="vertical" size="large" style={{ width: '100%' }}>
-        {/* <StyledTitleRow>
-          <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
-        </StyledTitleRow> */}
-        {/* <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" ghost onClick={() => handleCreateNew()} icon={<PlusOutlined />} />
-          </Space> */}
-        {/* <Table columns={columnDef}
-            dataSource={list}
-            size="small"
-            rowKey={item => `${item.key}.${item.locale}`}
-            loading={loading}
-            pagination={false}
-          /> */}
-        {list.map((item, i) => <Card
-          key={i}
-          title={item.key}
-          extra={<Tooltip key="edit" placement="bottom" title="Edit">
-          <Button type="link" icon={<EditOutlined />}
-            onClick={() => handleEdit(item)} ></Button>
-        </Tooltip>}
-        >
-          <Space direction="vertical" style={{ width: '100%' }} size="large">
-            {item.key !== 'signature' && <Row>
-              {item.vars?.map((v, i) => <Tag key={i} color="#4c1bb3">{v}</Tag>)}
-            </Row>}
-            <Card 
-              size="small"
-              title={<RawHtmlDisplay value={item.subject || 'Subject'}/>}
+      <List
+        grid={{
+          gutter: 32,
+          xs: 1,
+          sm: 1,
+          md: 2,
+          lg: 2,
+          xl: 2,
+          xxl: 3
+        }}
+        dataSource={list}
+        renderItem={item => <List.Item>
+          <Card
+            title={item.key}
+            extra={<Tooltip key="edit" placement="bottom" title="Edit">
+              <Button type="link" icon={<EditOutlined />}
+                onClick={() => handleEdit(item)} ></Button>
+            </Tooltip>}
+          >
+            <Space direction="vertical" style={{ width: '100%' }} size="large">
+              {item.key !== 'signature' && <Row gutter={[0, 4]}>
+                {item.vars?.map((v, i) => <Col key={i}><Tag color="#4c1bb3">{v}</Tag></Col>)}
+              </Row>}
+              <Card
+                size="small"
+                title={<RawHtmlDisplay value={item.subject || 'Subject'} />}
               // type="inner"
-            >
-            <RawHtmlDisplay value={item.body} />
+              >
+                <RawHtmlDisplay value={item.body} />
 
-            </Card>
-          </Space>
-        </Card>)}
-      </Space>
+              </Card>
+            </Space>
+          </Card>
+        </List.Item>}
+      />
       <Drawer
         // title=" "
         id="scrolling-container"
@@ -119,17 +117,17 @@ const EmailTemplateListPage = () => {
           <Form.Item label="Key" name="key" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <Input allowClear autoFocus disabled={true} />
           </Form.Item>
-          <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]} style={{display: 'none'}}>
+          <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]} style={{ display: 'none' }}>
             <LocaleSelector disabled={currentItem || loading} />
           </Form.Item>
           <Form.Item label="Should BCC" name="bcc" valuePropName="checked">
-            <Switch disabled={loading}/>
-          </Form.Item>          
+            <Switch disabled={loading} />
+          </Form.Item>
           <Form.Item label="Subject" name="subject" rules={[{ required: false, whitespace: true, message: ' ' }]}>
             <Input allowClear disabled={loading} />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
-            <RickTextInput disabled={loading}/>
+            <RickTextInput disabled={loading} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
