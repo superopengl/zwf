@@ -21,6 +21,7 @@ import { AssigneeSelect } from 'components/AssigneeSelect';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserDisplayName } from 'components/UserDisplayName';
+import { UserAvatar } from 'components/UserAvatar';
 
 const { Title } = Typography;
 
@@ -58,9 +59,7 @@ const OrgTaskListPage = (props) => {
   const myUserId = context.user.id;
 
   React.useEffect(() => {
-    const subscription = loadList$().pipe(
-      
-    );
+    const subscription = loadList$();
     return () => {
       subscription.unsubscribe();
     }
@@ -117,12 +116,15 @@ const OrgTaskListPage = (props) => {
       title: 'User',
       dataIndex: 'email',
       sorter: () => 0,
-      render: (text, item) => <UserDisplayName 
+      render: (text, item) => <Space direction='horizontal'>
+        <UserAvatar userId={item.userId} size={40}/>
+        <UserDisplayName 
       email={item.email} 
       surname={item.surname}
       givenName={item.givenName}
       searchText={queryInfo.text}
       />
+      </Space>
     },
     {
       title: 'Created At',
