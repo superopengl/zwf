@@ -214,27 +214,6 @@ paths:
       responses:
         200:
           description: OK
-  /user/:id/portfolio:
-    get:
-      operationId: listPortfolioForUser
-      # security:
-      #   - authAdminOrAgent: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: savePortfolio
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
   /user/:id/profile:
     post:
       operationId: saveProfile
@@ -507,48 +486,6 @@ paths:
       operationId: deleteDocTemplate
       # security:
       #   - authAdmin: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /portfolio:
-    post:
-      operationId: savePortfolio
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
-    get:
-      operationId: listPortfolio
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
-  /portfolio/{id}:
-    get:
-      operationId: getPortfolio
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-    delete:
-      operationId: deletePortfolio
-      # security:
-      #   - authClient: []
       parameters:
         - name: id
           in: path

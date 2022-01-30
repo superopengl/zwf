@@ -23,6 +23,7 @@ import DropdownMenu from 'components/DropdownMenu';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from 'components/UserAvatar';
 import { notify } from 'util/notify';
+import { showCreateTaskModal } from 'components/showCreateTaskModal';
 
 const { Title } = Typography;
 
@@ -326,7 +327,7 @@ const OrgTaskListPage = (props) => {
   }
 
   const handleCreateTask = () => {
-    props.history.push('/task/new');
+    showCreateTaskModal();
   }
 
   const StatusSelectOptions = [

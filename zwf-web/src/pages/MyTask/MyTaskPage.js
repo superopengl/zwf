@@ -6,7 +6,7 @@ import { Layout, Space, Button } from 'antd';
 
 import { getTask } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
-import TaskFormWizard from './TaskFormWizard';
+import {TaskFormWizard} from './TaskFormWizard';
 import MyTaskReadView from './MyTaskReadView';
 import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
