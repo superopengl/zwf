@@ -45,10 +45,6 @@ export async function signTaskDoc(id, fileIds) {
   return httpPost(`task/${id}/sign`, { files: fileIds });
 }
 
-export async function generateTask(taskTemplateId, portfolioId) {
-  return httpPost('task/generate', { taskTemplateId, portfolioId });
-}
-
 export async function assignTask(taskId, agentId) {
   return httpPost(`task/${taskId}/assign`, { agentId });
 }

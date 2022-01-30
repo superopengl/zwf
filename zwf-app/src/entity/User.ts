@@ -19,6 +19,7 @@ export class User {
    * as TypeOrm doesn't support case insensitive index.
    */
   @Column()
+  @Index()
   emailHash!: string;
 
   @Column({ default: 'local' })

@@ -44,6 +44,10 @@ const ClientSelect = (props) => {
     }
   }, []);
 
+  const handleChange = value => {
+    onChange(value);
+  }
+
   return (
     <StyledPortfolioSelect
       showSearch
@@ -51,7 +55,7 @@ const ClientSelect = (props) => {
       placeholder="Search by name or email"
       // optionFilterProp="searchText"
       value={value}
-      onChange={onChange}
+      onChange={handleChange}
       onSearch={val => setSearchText(val)}
       filterOption={(input, option) => {
         const { givanName, surname, email } = option.item;
@@ -59,7 +63,7 @@ const ClientSelect = (props) => {
       }}
       {...other}
     >
-      {clientList.map(c => (<Select.Option key={c.id} value={c.id} item={c}>
+      {clientList.map(c => (<Select.Option key={c.userId} value={c.email} item={c}>
        <UserDisplayName
         surname={c.surname}
         givenName={c.givenName}

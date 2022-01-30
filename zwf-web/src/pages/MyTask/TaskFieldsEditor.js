@@ -10,7 +10,7 @@ import StepButtonSet from './StepBottonSet';
 
 const { Text } = Typography;
 
-const TaskFieldsEditor = (props) => {
+export const TaskFieldsEditor = (props) => {
   const { task, onFinish, disabled, onBack, isActive } = props;
 
   const handleSubmit = async (values) => {
@@ -69,4 +69,3 @@ TaskFieldsEditor.defaultProps = {
   disabled: false
 };
 
-export default withRouter(TaskFieldsEditor);

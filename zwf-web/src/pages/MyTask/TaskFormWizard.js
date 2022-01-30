@@ -1,16 +1,16 @@
 import React from 'react';
-import { generateTask, saveTask } from 'services/taskService';
+import { saveTask, createNewTask$ } from 'services/taskService';
 import { TaskGenerator } from './TaskGenerator';
 import StepWizard from 'react-step-wizard';
-import TaskFieldsEditor from './TaskFieldsEditor';
+import {TaskFieldsEditor} from './TaskFieldsEditor';
 import GenDocFieldStep from './GenDocFieldStep';
 import { Spin, Progress, Space, Typography } from 'antd';
 import GenDocLinkStep from './GenDocLinkStep';
-import UploadDocStep from './UploadDocStep';
+import {UploadDocStep} from './UploadDocStep';
 import FinalReviewStep from './FinalReviewStep';
 import { withRouter } from 'react-router-dom';
 import { getPortfolio } from 'services/portfolioService';
-import TaskNameStep from './TaskNameStep';
+import {TaskNameStep} from './TaskNameStep';
 import { Loading } from 'components/Loading';
 
 const { Text } = Typography;
@@ -41,16 +41,16 @@ export const TaskFormWizard = props => {
 
   const handleGenerateTask = async (values) => {
     setLoading(true);
-    const { taskTemplateId, portfolioId: clientId } = values;
-    const task = await generateTask(taskTemplateId, clientId);
-    const portfolio = await getPortfolio(clientId);
+    createNewTask$(values).subscribe(task => {
+      setTask(task);
+      const fields = [];
+      setVariableContextDic(fields.reduce((pre, cur) => {
+        pre[cur.name] = cur.value
+        return pre;
+      }, {}));
+      setLoading(false);
+    });
 
-    setTask(task);
-    setVariableContextDic(portfolio.fields.reduce((pre, cur) => {
-      pre[cur.name] = cur.value
-      return pre;
-    }, {}));
-    setLoading(false);
   }
 
   const handleTaskFieldsChange = task => {

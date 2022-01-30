@@ -6,7 +6,7 @@ import StepButtonSet from './StepBottonSet';
 
 const { Title } = Typography;
 
-const TaskNameStep = (props) => {
+export const TaskNameStep = (props) => {
   const { task, onFinish, isActive } = props;
 
   const handleSubmit = async (values) => {
@@ -44,4 +44,3 @@ TaskNameStep.defaultProps = {
   disabled: false
 };
 
-export default withRouter(TaskNameStep);

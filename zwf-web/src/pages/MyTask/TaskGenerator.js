@@ -39,18 +39,20 @@ const StyledTitleRow = styled.div`
 `
 
 export const TaskGenerator = props => {
-  const [taskTemplateId, setTaskTemplateId] = React.useState();
+  const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
+  const [clientEmail, setClientEmail] = React.useState(null);
   const wizardRef = React.useRef(null);
 
-  const handleTaskTypeChange = taskTemplateId => {
-    wizardRef.current.nextStep();
-    setTaskTemplateId(taskTemplateId);
+  const handleTaskTypeChange = taskTemplateIdValue => {
+    // wizardRef.current.nextStep();
+    setTaskTemplateId(taskTemplateIdValue);
   }
 
-  const handlePortfolioChange = clientId => {
+  const handleClientChange = clientEmailValue => {
+    setClientEmail(clientEmailValue);
     const data = {
       taskTemplateId,
-      clientId
+      clientEmail
     };
     props.onChange(data);
   }
@@ -61,26 +63,33 @@ export const TaskGenerator = props => {
         <Steps.Step title="Choose task type" />
         <Steps.Step title="Choose portfolio" />
       </Steps> */}
-      <StepWizard ref={wizardRef}>
-        <div>
+      <>
+        {!taskTemplateId && <div>
           <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-            <Text type="secondary">Choose task type</Text>
+            <Text type="secondary">Choose a task template to begin with.</Text>
             <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTypeChange} />
           </Space>
-        </div>
-        <div>
+        </div>}
+        {taskTemplateId && <div>
           <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-            <Text type="secondary">Choose portfolio to fill the task automatically</Text>
-            <ClientSelect style={{ width: '100%' }} onChange={handlePortfolioChange} />
+            <Text type="secondary">Choose existing client or input client's email address.</Text>
+            <ClientSelect style={{ width: '100%' }} onChange={handleClientChange} />
           </Space>
-        </div>
-      </StepWizard>
+        </div>}
+        {taskTemplateId && clientEmail && <div>
+          <Space size="middle" direction="vertical" style={{ width: '100%' }}>
+            <Text type="secondary">Choose existing client or input client's email address.</Text>
+            <ClientSelect style={{ width: '100%' }} onChange={handleClientChange} />
+          </Space>
+        </div>}
+      </>
     </Container>
   );
 };
 
 
 TaskGenerator.propTypes = {
+  taskTemplateId: PropTypes.string,
   onChange: PropTypes.func
 };
 
