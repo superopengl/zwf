@@ -1,3 +1,4 @@
+import { UserInformation } from './../entity/views/UserInformation';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 import { getRepository, In, getManager } from 'typeorm';
@@ -52,37 +53,6 @@ function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[]): TaskDoc[] {
     return taskDoc;
   });
 }
-
-export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, portfolioId, genName: (task: TaskTemplate, porto: Portfolio) => string) => {
-  assert(taskTemplateId, 400, 'taskTemplateId is not specified');
-  assert(portfolioId, 400, 'portfolioId is not specified');
-
-  const taskTemplateRepo = getRepository(TaskTemplate);
-  const taskTemplate = await taskTemplateRepo.findOne(taskTemplateId);
-  assert(taskTemplate, 404, 'taskTemplate is not found');
-
-  const portfolioRepo = getRepository(Portfolio);
-  const portfolio = await portfolioRepo.findOne(portfolioId);
-  assert(portfolio, 404, 'portfolio is not found');
-
-  // const docTemplates = taskTemplate.docTemplateIds.length ?
-  //   await getRepository(DocTemplate).find({ where: { id: In(taskTemplate.docTemplateIds) } }) :
-  //   [];
-
-  const task = new Task();
-
-  const fields = prefillTaskTemplateFields(taskTemplate.fields, portfolio.fields);
-
-  // task.id = uuidv4();
-  task.name = genName(taskTemplate, portfolio);
-  task.userId = portfolio.userId;
-  task.taskTemplateId = taskTemplateId;
-  task.fields = fields;
-  // task.docs = mapDocTemplatesToGenDocs(docTemplates);
-  task.status = TaskStatus.TODO;
-
-  return task;
-};
 
 export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, fieldValues) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');

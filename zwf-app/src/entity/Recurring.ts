@@ -25,10 +25,7 @@ export class Recurring {
 
   @Column('uuid')
   @Index()
-  portfolioId: string;
-
-  @Column({nullable: true})
-  dueDay: number;
+  userId: string;
 
   @Column({nullable: true})
   startFrom?: Date;
