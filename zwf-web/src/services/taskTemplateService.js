@@ -23,3 +23,7 @@ export async function deleteTaskTemplate(id) {
 export async function listTaskTemplate() {
   return httpGet('task_template');
 }
+
+export function listTaskTemplate$() {
+  return httpGet$('task_template');
+}

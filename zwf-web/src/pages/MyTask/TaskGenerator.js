@@ -1,7 +1,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Radio, Space, Typography, Button, Steps, Form, Divider, Row, Col } from 'antd';
+import { Radio, Space, Typography, Button, Steps, Form, Divider, Row, Col, Input, Alert } from 'antd';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { listTaskTemplate } from 'services/taskTemplateService';
 import { listPortfolio } from 'services/portfolioService';
@@ -15,8 +15,11 @@ import { getTaskTemplate$ } from 'services/taskTemplateService';
 import FormBuilder from 'antd-form-builder'
 import { catchError } from 'rxjs/operators';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import FinalReviewStep from './FinalReviewStep';
+import { getUserDisplayName } from 'util/getDisplayName';
+import { createNewTask$ } from 'services/taskService';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const Container = styled.div`
 .ant-radio-button-wrapper:not(:first-child)::before {
@@ -45,12 +48,36 @@ const StyledTitleRow = styled.div`
 
 export const TaskGenerator = props => {
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
-  const [clientEmail, setClientEmail] = React.useState(null);
+  const [clientInfo, setClientInfo] = React.useState(null);
+  const [fields, setFields] = React.useState([]);
+  const [taskTemplate, setTaskTemplate] = React.useState();
+  const [taskName, setTaskName] = React.useState();
   const [current, setCurrent] = React.useState(0);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
   const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
   const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
   const formRef = React.createRef();
+
+  React.useEffect(() => {
+    if (clientInfo && taskTemplate) {
+      const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
+      const name = `${taskTemplate.name} for ${userName}`;
+      setTaskName(name);
+    }
+  }, [clientInfo, taskTemplate])
+
+  React.useEffect(() => {
+    if (taskTemplate) {
+      const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, false);
+      clientFields.fields.forEach(f => {
+        f.required = false;
+      });
+      setClientFieldSchema(clientFields);
+      const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, true);
+      setAgentFieldSchema(agentFields);
+    }
+
+  }, [taskTemplate])
 
   const handleTaskTemplateChange = taskTemplateIdValue => {
     // wizardRef.current.nextStep();
@@ -61,107 +88,143 @@ export const TaskGenerator = props => {
         catchError(() => setLoading(false))
       )
       .subscribe(taskTemplate => {
-        const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, false);
-        clientFields.fields.forEach(f => {
-          f.required = false;
-        });
-        setClientFieldSchema(clientFields);
-        const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, true);
-        setAgentFieldSchema(agentFields);
-        setCurrent(x => x + 1)
-        setLoading(false);
+        setTaskTemplate(taskTemplate)
+        setLoading(false)
       })
   }
 
-  const handleClientChange = clientEmailValue => {
-    setClientEmail(clientEmailValue);
-    if (clientEmailValue) {
-      setCurrent(x => x + 1);
-    }
+  const handleClientChange = client => {
+    setClientInfo(client);
   }
 
   const handleStepChange = step => {
     setCurrent(step);
   }
 
+  const handleFormValueChange = (changeValues, allValues) => {
+    setFields(allValues.fields);
+  }
+
+  const handleNameEnter = (e) => {
+    const name = e.target.value?.trim();
+    setTaskName(name);
+  }
+
+  const handleCreate = () => {
+    const payload = {
+      clientEmail: clientInfo.email,
+      taskTemplateId,
+      taskName,
+      fields,
+    };
+
+    setLoading(true);
+    createNewTask$(payload).subscribe(() => {
+      setLoading(false);
+      props.onCreated();
+    })
+  }
   const steps = [
     {
-      title: 'Client',
+      title: 'Setup',
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
         <Text type="secondary">Choose existing client or input client's email address.</Text>
-        <ClientSelect style={{ width: '100%' }} onChange={handleClientChange} value={clientEmail} />
-      </Space>
-    },
-    {
-      title: 'Task template',
-      disabled: !clientEmail,
-      content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
+        <ClientSelect style={{ width: '100%' }}
+          onChange={handleClientChange}
+          onLoadingChange={setLoading}
+          value={clientInfo?.email} />
         <Text type="secondary">Choose a task template to begin with.</Text>
         <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} value={taskTemplateId} />
+        <Text type="secondary">Input a meaningful task name. This name will appear in the emails to the client.</Text>
+        <Input style={{ height: 50 }}
+          placeholder="Task name"
+          onPressEnter={handleNameEnter}
+          value={taskName}
+          onChange={e => setTaskName(e.target.value)} />
       </Space>
     },
     {
       title: 'Fields',
-      disabled: !clientEmail || !taskTemplateId || !clientFieldSchema,
-      content: <Form
-        ref={formRef}
-        // onFinish={handleFormFinish}
-        layout="vertical"
-        colon={false}
-      // initialValues={{ name: taskTemplate.name }}
-      >
-        <FormBuilder meta={clientFieldSchema} form={formRef} />
-        {agentFieldSchema.length > 0 && <>
-          <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
+      disabled: !clientInfo || !taskTemplate || !taskName,
+      content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
+        <Form
+          ref={formRef}
+          onValuesChange={handleFormValueChange}
+          layout="horizontal"
+          colon={false}
+        // initialValues={{ name: taskTemplate.name }}
+        >
+          <Title level={5} type="secondary" style={{ marginTop: 20 }}>Client fields</Title>
+          <Paragraph type="secondary">
+            You can prefill some fileds on behalf of the client if you already have some of the information for this task.
+          </Paragraph>
           <Divider style={{ marginTop: 4 }} />
-          <FormBuilder meta={agentFieldSchema} form={formRef} />
-        </>}
-      </Form>
-    }
+          <FormBuilder meta={clientFieldSchema} form={formRef} />
+          {agentFieldSchema?.fields?.length > 0 && <>
+            <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
+            <Paragraph type="secondary">
+              These fields are not visible to clients.
+            </Paragraph>
+            <Divider style={{ marginTop: 4 }} />
+            <FormBuilder meta={agentFieldSchema} form={formRef} />
+          </>}
+        </Form>
+      </Space>
+    },
   ]
 
   return (
-    <Space direction='vertical' style={{ width: '100%' }} size="large">
-      <Steps
-        type="navigation"
-        size="small"
-        current={current}
-        onChange={handleStepChange}
-      >
-        {/* <Steps progressDot current={currentStep}>
+    <Loading loading={loading}>
+      <Space direction='vertical' style={{ width: '100%' }} size="large">
+        <Steps
+          type="navigation"
+          size="small"
+          current={current}
+          onChange={handleStepChange}
+        >
+          {/* <Steps progressDot current={currentStep}>
         <Steps.Step title="Choose task type" />
         <Steps.Step title="Choose portfolio" />
       </Steps> */}
-        <>
+          <>
 
-          {steps.map(item => (
-            <Steps.Step key={item.title} title={item.title} disabled={item.disabled} />
-          ))}
-        </>
-      </Steps>
-      <div>
-        {steps[current].content}
-      </div>
-      <Divider />
-      {/* <Button block icon={<LeftOutlined />} disabled={current === 0} onClick={() => setCurrent(x => x - 1)}></Button> */}
-      {/* <Button block icon={<RightOutlined />} disable={current === steps.length - 1} onClick={() => setCurrent(x => x + 1)}></Button> */}
-      <Row justify='space-between'>
-        <Button ghost type="text"><Text type="danger">Cancel</Text></Button>
-        <Space>
-          {current === steps.length - 1 && <Button type="primary" ghost disabled={current !== steps.length - 1}>Create Task & Another</Button>}
-          {current === steps.length - 1 && <Button type="primary" disabled={current !== steps.length - 1}>Create Task</Button>}
-        </Space>
-      </Row>
-    </Space>
+            {steps.map(item => (
+              <Steps.Step key={item.title} title={item.title} disabled={item.disabled} />
+            ))}
+          </>
+        </Steps>
+        <div>
+          {steps[current].content}
+        </div>
+        <Divider style={{ margin: '10px 0' }} />
+        {/* <Button block icon={<LeftOutlined />} disabled={current === 0} onClick={() => setCurrent(x => x - 1)}></Button> */}
+        {/* <Button block icon={<RightOutlined />} disable={current === steps.length - 1} onClick={() => setCurrent(x => x + 1)}></Button> */}
+        <Row justify='space-between'>
+          <Button type="text" danger onClick={props.onCancel}>Cancel</Button>
+          <Space>
+            {current === 0 && <Button type="primary" ghost
+              disabled={!clientInfo || !taskTemplate || !taskName}
+              onClick={() => setCurrent(x => x + 1)}>Next</Button>}
+            {/* {current === steps.length - 1 && <Button type="primary" ghost disabled={current !== steps.length - 1}>Create Task & Another</Button>} */}
+            {current === steps.length - 1 && <Button type="primary"
+              onClick={handleCreate}
+              disabled={current !== steps.length - 1}
+            >Create Task</Button>}
+          </Space>
+        </Row>
+      </Space>
+    </Loading>
   );
 };
 
 
 TaskGenerator.propTypes = {
   taskTemplateId: PropTypes.string,
-  onChange: PropTypes.func
+  onCancel: PropTypes.func,
+  onCreated: PropTypes.func,
 };
 
 TaskGenerator.defaultProps = {
-  onChange: () => { }
+  onCancel: () => { },
+  onCreated: () => { },
 };

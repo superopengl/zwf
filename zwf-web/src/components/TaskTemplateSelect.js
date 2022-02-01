@@ -1,44 +1,61 @@
 import { AutoComplete, Select } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { listTaskTemplate } from 'services/taskTemplateService';
+import { listTaskTemplate$ } from 'services/taskTemplateService';
 import ReactDOM from 'react-dom';
 import { TaskTemplateIcon } from './entityIcon';
+import styled from 'styled-components';
 
-
-const TaskTemplateSelect = (props) => {
-  const { value, onChange, ...other } = props;
-
-  const [loading, setLoading] = React.useState(true);
-  const [options, setOptions] = React.useState([]);
-
-  const loadEntity = async () => {
-    const taskTemplateList = await listTaskTemplate();
-    ReactDOM.unstable_batchedUpdates(() => {
-      // setTaskTemplateList(taskTemplateList);
-      setOptions(convertToOptions(taskTemplateList));
-    });
+const StyledSelect = styled(Select)`
+  .ant-select-selector {
+    height: 50px !important;
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+    // display: flex;
+    // align-items: center;
   }
 
-  
+  .ant-select-selection-search,.ant-select-selection-item {
+    display: flex;
+    align-items: center;
+  }
+
+  .ant-select-selection-placeholder {
+    margin-top: 6px;
+  }
+`;
+
+const TaskTemplateSelect = (props) => {
+  const { value, onChange, onLoadingChange, ...other } = props;
+
+  const [options, setOptions] = React.useState([]);
+
   React.useEffect(() => {
-    loadEntity();
+    onLoadingChange(true);
+    const subscription$ = listTaskTemplate$().subscribe(list => {
+      setOptions(convertToOptions(list));
+      onLoadingChange(false);
+    });
+
+    return () => {
+      subscription$.unsubscribe();
+    }
   }, []);
-  
+
   const convertToOptions = (taskTemplateList) => {
     return taskTemplateList.map(x => ({
-       label: <><TaskTemplateIcon/> {x.name}</>,
-       value: x.id,
-       key: x.id
+      label: <><TaskTemplateIcon /> {x.name}</>,
+      value: x.id,
+      key: x.id
     }))
   }
 
-  return (<Select 
-    options={options} 
-    placeholder={<><TaskTemplateIcon/>Select a task template</>}
-    allowClear 
-    value={value} 
-    onChange={onChange} 
+  return (<StyledSelect
+    options={options}
+    placeholder={<><TaskTemplateIcon />Select a task template</>}
+    allowClear
+    value={value}
+    onChange={onChange}
     {...other} />
   )
 };
@@ -46,9 +63,11 @@ const TaskTemplateSelect = (props) => {
 TaskTemplateSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  onLoadingChange: PropTypes.func,
 };
 
 TaskTemplateSelect.defaultProps = {
+  onLoadingChange: () => { }
 };
 
 export default TaskTemplateSelect;
