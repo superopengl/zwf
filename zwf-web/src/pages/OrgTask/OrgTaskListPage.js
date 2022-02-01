@@ -332,7 +332,9 @@ const OrgTaskListPage = (props) => {
   }
 
   const handleCreateTask = () => {
-    showCreateTaskModal();
+    showCreateTaskModal(null, () => {
+      loadList$();
+    });
   }
 
   const StatusSelectOptions = [

@@ -2,7 +2,7 @@ import { Typography } from 'antd';
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import Icon, { BorderOutlined, FileOutlined } from '@ant-design/icons';
+import Icon, { BorderOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
 import { FaTasks } from 'react-icons/fa';
 import { ImInsertTemplate } from 'react-icons/im';
 import PropTypes from 'prop-types';

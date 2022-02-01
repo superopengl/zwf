@@ -4,19 +4,34 @@ import { Modal } from 'antd';
 
 import { TaskIcon } from 'components/entityIcon';
 import { TaskFormWizard } from 'pages/MyTask/TaskFormWizard';
+import { TaskGenerator } from 'pages/MyTask/TaskGenerator';
 
 
 export function showCreateTaskModal(taskTemplateId, onFinish) {
   const modalRef = Modal.info({
     title: <><TaskIcon /> Create New Task</>,
-    content: <TaskFormWizard taskTemplateId={taskTemplateId} onFinish={onFinish} />,
+    content: <TaskGenerator
+      taskTemplateId={taskTemplateId}
+      onCancel={() => {
+        modalRef.destroy();
+      }}
+      onCreated={() => {
+        modalRef.destroy();
+        onFinish?.();
+      }} 
+      />,
     afterClose: () => {
     },
     icon: null,
-    closable: false,
-    maskClosable: true,
+    closable: true,
+    maskClosable: false,
     destroyOnClose: true,
     footer: null,
-    width: 800,
+    width: 600,
+    okButtonProps: {
+      style: {
+        display: 'none'
+      }
+    }
   });
 }

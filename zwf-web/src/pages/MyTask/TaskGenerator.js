@@ -14,7 +14,7 @@ import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertT
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import FormBuilder from 'antd-form-builder'
 import { catchError } from 'rxjs/operators';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DoubleRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import FinalReviewStep from './FinalReviewStep';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { createNewTask$ } from 'services/taskService';
@@ -110,7 +110,15 @@ export const TaskGenerator = props => {
     setTaskName(name);
   }
 
-  const handleCreate = () => {
+  const handleCreateEmptyTask = () => {
+    createTaskWithFields();
+  }
+
+  const handleCreateTask = () => {
+    createTaskWithFields(fields);
+  }
+
+  const createTaskWithFields = (fields = {}) => {
     const payload = {
       clientEmail: clientInfo.email,
       taskTemplateId,
@@ -134,7 +142,7 @@ export const TaskGenerator = props => {
           onLoadingChange={setLoading}
           value={clientInfo?.email} />
         <Text type="secondary">Choose a task template to begin with.</Text>
-        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} value={taskTemplateId} />
+        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={false} value={taskTemplateId} />
         <Text type="secondary">Input a meaningful task name. This name will appear in the emails to the client.</Text>
         <Input style={{ height: 50 }}
           placeholder="Task name"
@@ -144,7 +152,7 @@ export const TaskGenerator = props => {
       </Space>
     },
     {
-      title: 'Fields',
+      title: 'Prefill fields',
       disabled: !clientInfo || !taskTemplate || !taskName,
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
         <Form
@@ -175,7 +183,7 @@ export const TaskGenerator = props => {
 
   return (
     <Loading loading={loading}>
-      <Space direction='vertical' style={{ width: '100%' }} size="large">
+      <Space direction='vertical' style={{ width: '100%', marginTop: 20 }} size="large">
         <Steps
           type="navigation"
           size="small"
@@ -204,10 +212,15 @@ export const TaskGenerator = props => {
           <Space>
             {current === 0 && <Button type="primary" ghost
               disabled={!clientInfo || !taskTemplate || !taskName}
-              onClick={() => setCurrent(x => x + 1)}>Next</Button>}
+              onClick={() => setCurrent(x => x + 1)}
+              icon={<RightOutlined />}
+            >Prefill Fields</Button>}
+            {current === 0 && <Button type="primary"
+              disabled={!clientInfo || !taskTemplate || !taskName}
+              onClick={handleCreateEmptyTask}>Create Empty Task</Button>}
             {/* {current === steps.length - 1 && <Button type="primary" ghost disabled={current !== steps.length - 1}>Create Task & Another</Button>} */}
             {current === steps.length - 1 && <Button type="primary"
-              onClick={handleCreate}
+              onClick={handleCreateTask}
               disabled={current !== steps.length - 1}
             >Create Task</Button>}
           </Space>
