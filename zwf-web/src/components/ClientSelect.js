@@ -35,6 +35,7 @@ const ClientSelect = (props) => {
   const [clientList, setClientList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
   const [isValidEmail, setIsValidEmail] = React.useState(false);
+  const ref = React.useRef();
 
   React.useEffect(() => {
     onLoadingChange(true);
@@ -64,11 +65,13 @@ const ClientSelect = (props) => {
   const handleNewEmailInput = () => {
     onChange({
       email: searchText,
-    })
+    });
+    ref?.current?.blur();
   }
 
   return (
     <StyledSelect
+      ref={ref}
       showSearch
       allowClear
       placeholder={<>Search a client by name or email</>}
@@ -93,12 +96,12 @@ const ClientSelect = (props) => {
       {...other}
     >
       {clientList.map(c => (<Select.Option key={c.email} value={c.email} item={c}>
-          <UserDisplayName
-            surname={c.surname}
-            givenName={c.givenName}
-            email={c.email}
-            searchText={searchText}
-          />
+        <UserDisplayName
+          surname={c.surname}
+          givenName={c.givenName}
+          email={c.email}
+          searchText={searchText}
+        />
       </Select.Option>))}
     </StyledSelect>
   )
