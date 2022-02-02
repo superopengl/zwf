@@ -10,7 +10,10 @@ import innerText from 'react-innertext';
 import { EnterOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import Tag from './Tag';
 import { searchTask$ } from 'services/taskService';
+import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
 import { withRouter } from 'react-router-dom';
+import { UserDisplayName } from 'components/UserDisplayName';
+import { UserAvatar } from './UserAvatar';
 const { Text } = Typography;
 
 const StyledSelect = styled(AutoComplete)`
@@ -32,10 +35,49 @@ const StyledSelect = styled(AutoComplete)`
   }
 `;
 
-const getDisplayName = (client) => {
-  const { givenName, surname, email } = client;
-  const displayName = `${givenName ?? ''} ${surname ?? ''}`.trim();
-  return displayName || email;
+
+const DOMAIN_CONFIG = {
+  'task': {
+    searchHandler: smartSearchTask$,
+    pathHandler: id => `/task/${id}`,
+    renderHandler: (item, searchText) => <>
+      <TaskIcon />
+      <HighlightingText value={item.name} search={searchText} />
+    </>,
+    noFoundContent: <>No task is found.</>
+  },
+  'task_template': {
+    searchHandler: smartSearchTaskTemplate$,
+    pathHandler: id => `/task_template/${id}`,
+    renderHandler: (item, searchText) => <>
+      <TaskTemplateIcon />
+      <HighlightingText value={item.name} search={searchText} />
+    </>,
+    noFoundContent: <>No task template is found.</>
+  },
+  'doc_template': {
+    searchHandler: smartSearchDocTemplate$,
+    pathHandler: id => `/doc_template/${id}`,
+    renderHandler: (item, searchText) => <>
+      <DocTemplateIcon />
+      <HighlightingText value={item.name} search={searchText} />
+    </>,
+    noFoundContent: <>No doc template is found.</>
+  },
+  'client': {
+    searchHandler: smartSearchClient$,
+    pathHandler: id => `/client/${id}`,
+    renderHandler: (item, searchText) => <Space size="small">
+        <UserAvatar value={item.avatarFileId} color={item.avatarColorHex} size={32}/>
+        <UserDisplayName
+          email={item.email}
+          surname={item.surname}
+          givenName={item.givenName}
+          searchText={searchText}
+        />
+    </Space>,
+    noFoundContent: <>No client is found.</>
+  },
 }
 
 export const SmartSearch = withRouter((props) => {
@@ -45,19 +87,6 @@ export const SmartSearch = withRouter((props) => {
   const [optionsWithinDomain, setOptionsWithinDomain] = React.useState([]);
   const [domain, setDomain] = React.useState();
   const ref = React.useRef();
-
-  const handleSearchTask = (text) => {
-    searchTask$({ text }).subscribe(resp => {
-      const options = resp.data.map(task => ({
-        value: task.id,
-        label: <>
-          <TaskIcon /> <HighlightingText value={task.name} search={searchText} />
-        </>
-      }));
-
-      setOptionsWithinDomain(options);
-    })
-  }
 
   const getOptions = React.useCallback(() => {
     if (!searchText?.trim()) {
@@ -71,12 +100,12 @@ export const SmartSearch = withRouter((props) => {
         icon: <TaskIcon />
       },
       {
-        key: 'taskTemplate',
+        key: 'task_template',
         label: 'task templates',
         icon: <TaskTemplateIcon />
       },
       {
-        key: 'docTemplate',
+        key: 'doc_template',
         label: 'doc templates',
         icon: <DocTemplateIcon />
       },
@@ -103,24 +132,23 @@ export const SmartSearch = withRouter((props) => {
     setSearchText(text);
   }
 
-  const handleSelect = (value, option) => {
-    setDomain(value);
+  const handleDomainSelected = (domain) => {
+    setDomain(domain);
 
-    switch (value) {
-      case 'task':
-        handleSearchTask(searchText);
-        break;
-      case 'taskTemplate':
+    const config = DOMAIN_CONFIG[domain];
 
-        break;
-      case 'docTemplate':
-
-        break;
-      case 'client':
-        break;
-      default:
-        break;
+    if (!config) {
+      throw new Error(`Unsupported domain '${domain}'`)
     }
+
+    config.searchHandler(searchText).subscribe(list => {
+      const options = list.map(item => ({
+        value: item.id,
+        label: config.renderHandler(item, searchText)
+      }));
+
+      setOptionsWithinDomain(options);
+    })
   }
 
   const handleSearchWithinDomain = () => {
@@ -128,21 +156,13 @@ export const SmartSearch = withRouter((props) => {
   }
 
   const handleSelectWithinDomain = (id) => {
-    switch (domain) {
-      case 'task':
-        props.history.push(`/task/${id}`);
-        break;
-      case 'taskTemplate':
-
-        break;
-      case 'docTemplate':
-
-        break;
-      case 'client':
-        break;
-      default:
-        break;
+    const config = DOMAIN_CONFIG[domain];
+    if (!config) {
+      throw new Error(`Unsupported domain '${domain}'`)
     }
+
+    const path = config.pathHandler(id);
+    props.history.push(path);
 
     reset();
   }
@@ -150,6 +170,7 @@ export const SmartSearch = withRouter((props) => {
   const reset = () => {
     setDomain(null);
     setSearchText('');
+    setOptionsWithinDomain(null);
   }
 
   const handleValueChangeWithinDomain = value => {
@@ -170,6 +191,7 @@ export const SmartSearch = withRouter((props) => {
       onChange={handleValueChangeWithinDomain}
       onSearch={handleSearchWithinDomain}
       onSelect={handleSelectWithinDomain}
+      notFoundContent={DOMAIN_CONFIG[domain]?.noFoundContent}
     />
   }
 
@@ -186,7 +208,7 @@ export const SmartSearch = withRouter((props) => {
     // }
     // }
     onSearch={handleSearch}
-    onSelect={handleSelect}
+    onSelect={handleDomainSelected}
   />
 });
 

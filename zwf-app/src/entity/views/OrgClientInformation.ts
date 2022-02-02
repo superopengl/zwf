@@ -25,7 +25,7 @@ import { UserStatus } from '../../types/UserStatus';
       , 't', 't."orgId" = o.id')
     .innerJoin(UserInformation, 'u', 'u.id = t."userId"')
     .select([
-      'u.id as "userId"',
+      'u.id as "id"',
       'o.id as "orgId"',
       'o.name as "orgName"',
       'u."profileId" as "profileId"',
@@ -41,7 +41,7 @@ import { UserStatus } from '../../types/UserStatus';
 }) export class OrgClientInformation {
   @ViewColumn()
   @PrimaryColumn()
-  userId: string;
+  id: string;
 
   @ViewColumn()
   orgId: string;

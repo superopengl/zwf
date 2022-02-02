@@ -193,7 +193,7 @@ paths:
       operationId: publishEvent
       responses:
         200:
-          description: OK          
+          description: OK
   /user:
     get:
       operationId: listAllUsers
@@ -424,7 +424,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /doc_template:
     post:
       operationId: saveDocTemplate
@@ -502,7 +502,7 @@ paths:
       #   - authClient: []
       responses:
         200:
-          description: OK        
+          description: OK
     get:
       operationId: listTask
       # security:
@@ -522,7 +522,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
     post:
       operationId: saveDeepLinkedTask
       # security:
@@ -534,7 +534,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK              
+          description: OK
   /task/search:
     post:
       operationId: searchTask
@@ -567,7 +567,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
     delete:
       operationId: deleteTask
       # security:
@@ -580,7 +580,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK        
+          description: OK
   /task/{id}/status/{status}:
     post:
       operationId: changeTaskStatus
@@ -595,10 +595,10 @@ paths:
         - name: status
           in: path
           type: string
-          required: true          
+          required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /task/{id}/sign:
     post:
       operationId: signTaskDoc
@@ -658,7 +658,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK       
+          description: OK
   /task/{taskId}/message/subscribe:
     get:
       operationId: subscribeTaskMessage
@@ -670,7 +670,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK             
+          description: OK
   /task/{id}/assign:
     post:
       operationId: assignTask
@@ -971,6 +971,30 @@ paths:
           description: OK
     put:
       operationId: newPromotionCode
+      responses:
+        200:
+          description: OK
+  /smart_search/task:
+    post:
+      operationId: smartSearchTask
+      responses:
+        200:
+          description: OK
+  /smart_search/task_template:
+    post:
+      operationId: smartSearchTaskTemplate
+      responses:
+        200:
+          description: OK
+  /smart_search/doc_template:
+    post:
+      operationId: smartSearchDocTemplate
+      responses:
+        200:
+          description: OK
+  /smart_search/client:
+    post:
+      operationId: smartSearchClient
       responses:
         200:
           description: OK

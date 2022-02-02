@@ -126,8 +126,6 @@ export const UserAvatar = React.memo((props) => {
 UserAvatar.propTypes = {
   color: PropTypes.string,
   value: PropTypes.string, // avatarFileId
-  givenName: PropTypes.string,
-  surname: PropTypes.string,
   size: PropTypes.number,
   editable: PropTypes.bool,
   onChange: PropTypes.func,
