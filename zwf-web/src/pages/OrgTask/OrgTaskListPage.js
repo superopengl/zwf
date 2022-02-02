@@ -27,8 +27,6 @@ import { showCreateTaskModal } from 'components/showCreateTaskModal';
 
 const { Title } = Typography;
 
-
-
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
   // background-color: #ffffff;
