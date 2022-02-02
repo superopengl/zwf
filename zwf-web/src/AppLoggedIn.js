@@ -238,7 +238,7 @@ export const AppLoggedIn = React.memo(props => {
     //   ]
     // }}
     headerContentRender={() => (
-      <Row gutter={10} wrap={false} justify="center">
+      <Row gutter={10} wrap={false} justify="start">
         {/* <div
             onClick={() => setCollapsed(!collapsed)}
             style={{

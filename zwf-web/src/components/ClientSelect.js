@@ -96,12 +96,15 @@ const ClientSelect = (props) => {
       {...other}
     >
       {clientList.map(c => (<Select.Option key={c.email} value={c.email} item={c}>
-        <UserDisplayName
-          surname={c.surname}
-          givenName={c.givenName}
-          email={c.email}
-          searchText={searchText}
-        />
+        <Space size="small">
+          <UserAvatar value={c.avatarFileId} color={c.avatarColorHex} size={28} />
+          <UserDisplayName
+            surname={c.surname}
+            givenName={c.givenName}
+            email={c.email}
+            searchText={searchText}
+          />
+        </Space>
       </Select.Option>))}
     </StyledSelect>
   )
