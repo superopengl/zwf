@@ -1,7 +1,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Radio, Space, Typography, Button, Steps, Form, Divider, Row, Col, Input, Alert } from 'antd';
+import { Radio, Space, Typography, Button, Steps, Form, Divider, Row, Col, Input, Alert, List } from 'antd';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { listTaskTemplate } from 'services/taskTemplateService';
 import { listPortfolio } from 'services/portfolioService';
@@ -14,37 +14,30 @@ import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertT
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import FormBuilder from 'antd-form-builder'
 import { catchError } from 'rxjs/operators';
-import { DoubleRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { DoubleRightOutlined, EyeFilled, EyeOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import FinalReviewStep from './FinalReviewStep';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { createNewTask$ } from 'services/taskService';
+import { DocTemplateIcon } from 'components/entityIcon';
 
 const { Title, Text, Paragraph } = Typography;
 
-const Container = styled.div`
-.ant-radio-button-wrapper:not(:first-child)::before {
-  display: none;
-}
+const DocListItem = styled(List.Item)`
+padding-left: 12px;
+padding-right: 12px;
 
-.ant-radio-button-wrapper {
-  border-width: 1px;
-  display: block;
-  margin-bottom: 1rem;
-  border-radius: 6px;
+&:hover {
+  cursor: pointer;
+  background-color: #F5F5F5;
 
-  &.portfolio {
-    height: 60px;
-    padding-top: 10px;
+  &:after {
+    content: "click to view";
+    color: #8abcd1;
   }
 }
 `;
 
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
+const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
 export const TaskGenerator = props => {
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
@@ -132,18 +125,34 @@ export const TaskGenerator = props => {
       props.onCreated();
     })
   }
+
+  const handlePreviewDocTemplate = docId => {
+    alert(docId);
+  }
   const steps = [
     {
       title: 'Setup',
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-        <Text type="secondary">Choose existing client or input client's email address.</Text>
+        <StyledDescription value="Choose existing client or type in a new client's email address." />
         <ClientSelect style={{ width: '100%' }}
           onChange={handleClientChange}
           onLoadingChange={setLoading}
           value={clientInfo?.email} />
-        <Text type="secondary">Choose a task template to begin with.</Text>
+        <StyledDescription value="Choose a task template to begin with." />
         <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-        <Text type="secondary">Input a meaningful task name. This name will appear in the emails to the client.</Text>
+        {taskTemplate?.docs.length > 0 && <>
+          <StyledDescription value="Associated docs that will be auto-generated based on the form fields." />
+          <List
+            size="small"
+            bordered
+            rowKey="id"
+            dataSource={taskTemplate.docs}
+            renderItem={doc => <DocListItem onClick={() => handlePreviewDocTemplate(doc.id)}>
+              <div><DocTemplateIcon /><Text>{doc.name}</Text></div>
+            </DocListItem>}
+          />
+        </>}
+        <StyledDescription value="Input a meaningful task name. This name will appear in the emails to the client." />
         <Input style={{ height: 50 }}
           placeholder="Task name"
           onPressEnter={handleNameEnter}
