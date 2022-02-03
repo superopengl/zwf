@@ -68,13 +68,13 @@ const DOMAIN_CONFIG = {
     searchHandler: smartSearchClient$,
     pathHandler: id => `/client/${id}`,
     renderHandler: (item, searchText) => <Space size="small">
-        <UserAvatar value={item.avatarFileId} color={item.avatarColorHex} size={32}/>
-        <UserDisplayName
-          email={item.email}
-          surname={item.surname}
-          givenName={item.givenName}
-          searchText={searchText}
-        />
+      <UserAvatar value={item.avatarFileId} color={item.avatarColorHex} size={32} />
+      <UserDisplayName
+        email={item.email}
+        surname={item.surname}
+        givenName={item.givenName}
+        searchText={searchText}
+      />
     </Space>,
     noFoundContent: <>No client is found.</>
   },
@@ -86,6 +86,7 @@ export const SmartSearch = withRouter((props) => {
   const [searchText, setSearchText] = React.useState();
   const [optionsWithinDomain, setOptionsWithinDomain] = React.useState([]);
   const [domain, setDomain] = React.useState();
+  const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const ref = React.useRef();
 
   const getOptions = React.useCallback(() => {
@@ -117,8 +118,8 @@ export const SmartSearch = withRouter((props) => {
     ];
     const options = labels.map(item => ({
       value: item.key,
-      label: <Row justify="space-between" wrap={false}>
-        <Col><SearchOutlined /> {item.icon} <Text ellipsis>{searchText}</Text></Col>
+      label: <Row gutter={10} justify="space-between" wrap={false}>
+        <Col><SearchOutlined /> {item.icon}<Text ellipsis>{searchText}</Text></Col>
         <Col>
           <Tag>{item.label} <EnterOutlined /></Tag>
         </Col>
@@ -133,7 +134,7 @@ export const SmartSearch = withRouter((props) => {
   }
 
   React.useEffect(() => {
-    if(!domain || !searchText?.trim()) {
+    if (!domain || !searchText?.trim()) {
       setOptionsWithinDomain(null)
       return;
     }
@@ -151,6 +152,7 @@ export const SmartSearch = withRouter((props) => {
       }));
 
       setOptionsWithinDomain(options);
+      setDropdownOpen(true);
     })
   }, [domain, searchText])
 
@@ -191,10 +193,14 @@ export const SmartSearch = withRouter((props) => {
     return <AutoComplete
       ref={ref}
       showSearch
+      allowClear
       style={{ minWidth: 300, width: '100%' }}
       options={optionsWithinDomain}
       value={searchText}
-      open={true}
+      open={dropdownOpen}
+      dropdownMatchSelectWidth={false}
+      onFocus={() => setDropdownOpen(true)}
+      onBlur={() => setDropdownOpen(false)}
       onChange={handleValueChangeWithinDomain}
       onSearch={handleSearchWithinDomain}
       onSelect={handleSelectWithinDomain}
@@ -204,16 +210,11 @@ export const SmartSearch = withRouter((props) => {
 
   return <AutoComplete
     showSearch
+    allowClear
     placeholder="Search"
     style={{ minWidth: 300, width: '100%' }}
     options={getOptions()}
-    autoFocus
-    // open={searchText?.trim()}
-    // optionFilterProp="children"
-    // filterOption={(input, option) => {
-    //   return innerText(option.children).toLowerCase().includes(input.toLowerCase())
-    // }
-    // }
+    dropdownMatchSelectWidth={false}
     onSearch={handleSearch}
     onSelect={handleDomainSelected}
   />
