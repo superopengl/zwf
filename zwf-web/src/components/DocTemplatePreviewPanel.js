@@ -1,15 +1,13 @@
-import { Typography, Form, Divider, Input, Card, Button } from 'antd';
+import { Typography, Form, Input, Card, Button } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import FormBuilder from 'antd-form-builder'
 import PropTypes from 'prop-types';
 import {RawHtmlDisplay} from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
 
 const Container = styled.div`
@@ -62,13 +60,8 @@ const getInitState = (html, initVarBag) => {
 
 export const DocTemplatePreviewPanel = props => {
 
-  const { value: docTemplate, type, debug } = props;
+  const { value: docTemplate } = props;
 
-  const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
-  const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
-  const [html, setHtml] = React.useState('');
-  const [vars, setVars] = React.useState([]);
-  const [invalidVars, setInvalidVars] = React.useState([]);
   const form = React.createRef();
 
   const reducer = (state, action) => {
@@ -99,7 +92,6 @@ export const DocTemplatePreviewPanel = props => {
 
   const [state, dispatch] = React.useReducer(reducer, getInitState(docTemplate?.html));
 
-  const officialMode = type === 'agent';
 
   React.useEffect(() => {
     if (docTemplate) {
@@ -107,7 +99,7 @@ export const DocTemplatePreviewPanel = props => {
     }
   }, [docTemplate]);
 
-  const handleVarValueChange = (changedValue, allValues) => {
+  const handleVarValueChange = (changedValue) => {
     dispatch({ type: 'setValue', value: changedValue });
   }
 
@@ -126,7 +118,7 @@ export const DocTemplatePreviewPanel = props => {
           wrapperCol={{ span: 16 }}
           onValuesChange={handleVarValueChange}
         >
-          {Object.entries(state.varBag || {}).map(([k, v]) => <Form.Item key={k} label={k} name={k}>
+          {Object.entries(state.varBag || {}).map(([k]) => <Form.Item key={k} label={k} name={k}>
             <Input placeholder="var value" />
           </Form.Item>)}
         </Form>
@@ -138,19 +130,14 @@ export const DocTemplatePreviewPanel = props => {
           <RawHtmlDisplay value={state.rendered} />
         </PreviewDocPage>
       </PreviewDocContainer>
-      {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}
     </Container >
   );
 };
 
 DocTemplatePreviewPanel.propTypes = {
   value: PropTypes.object,
-  type: PropTypes.oneOf(['client', 'agent']).isRequired,
-  debug: PropTypes.bool.isRequired
 };
 
 DocTemplatePreviewPanel.defaultProps = {
-  type: 'client',
-  debug: false
 };
 
