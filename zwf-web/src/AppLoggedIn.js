@@ -25,8 +25,6 @@ import OrgListPage from 'pages/Org/OrgListPage';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { ImInsertTemplate } from 'react-icons/im';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
-import { notify } from 'util/notify';
-import { showCreateTaskModal } from 'components/showCreateTaskModal';
 import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 

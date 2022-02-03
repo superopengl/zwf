@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FormBuilder from 'antd-form-builder'
 import PropTypes from 'prop-types';
-import RawHtmlDisplay from 'components/RawHtmlDisplay';
+import {RawHtmlDisplay} from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
@@ -13,8 +13,8 @@ const { Title, Paragraph, Text } = Typography;
 
 
 const Container = styled.div`
-  margin: 0 auto 0 auto;
-  max-width: 600px;
+  margin: 0;
+  // max-width: 600px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   // height: 100%;
@@ -116,7 +116,7 @@ export const DocTemplatePreviewPanel = props => {
   }
   return (
     <Container style={props.style}>
-      {!isEmpty(state.varBag) && <StyledCard title="Test by setting variables" style={{ marginBottom: 30 }}
+      {!isEmpty(state.varBag) && <StyledCard title="Test by setting variables" size="small" style={{ marginBottom: 30 }}
         extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
       // size="small"
       >
@@ -154,4 +154,3 @@ DocTemplatePreviewPanel.defaultProps = {
   debug: false
 };
 
-export default withRouter(DocTemplatePreviewPanel);

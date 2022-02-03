@@ -19,6 +19,8 @@ import FinalReviewStep from './FinalReviewStep';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { createNewTask$ } from 'services/taskService';
 import { DocTemplateIcon } from 'components/entityIcon';
+import { getDocTemplate$ } from 'services/docTemplateService';
+import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -127,7 +129,9 @@ export const TaskGenerator = props => {
   }
 
   const handlePreviewDocTemplate = docId => {
-    alert(docId);
+    getDocTemplate$(docId).subscribe(docTemplate => {
+      showDocTemplatePreviewModal(docTemplate);
+    })
   }
   const steps = [
     {

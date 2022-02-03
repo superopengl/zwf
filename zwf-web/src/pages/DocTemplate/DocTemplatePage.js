@@ -11,7 +11,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import DocTemplateEditorPanel from './DocTemplateEditorPanel';
-import DocTemplatePreviewPanel from './DocTemplatePreviewPanel';
+import {DocTemplatePreviewPanel} from 'components/DocTemplatePreviewPanel';
 import Icon, { SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
