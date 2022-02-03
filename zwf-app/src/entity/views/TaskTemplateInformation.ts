@@ -18,14 +18,12 @@ import { DocTemplate } from '../DocTemplate';
       .groupBy('x."taskTemplateId"')
       .select([
         'x."taskTemplateId" as id',
-        'array_agg(d.id) as "docTemplateIds"',
-        'array_agg(d.name) as "docNames"',
+        `array_agg(json_build_object('id', d.id, 'name', d.name)) as docs`,
       ])
       , 'y', 't.id = y.id')
     .select([
       't.*',
-      'y."docTemplateIds" as "docTemplateIds"',
-      'y."docNames" as "docNames"',
+      `coalesce(y.docs, '{}'::json[]) as docs`,
     ])
 }) export class TaskTemplateInformation {
   @ViewColumn()
@@ -53,8 +51,5 @@ import { DocTemplate } from '../DocTemplate';
   fields: any;
 
   @ViewColumn()
-  docTemplateIds: string[];
-
-  @ViewColumn()
-  docNames: string[];
+  docs: Array<{id: string, name: string}>;
 }
