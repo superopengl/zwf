@@ -28,6 +28,7 @@ import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { notify } from 'util/notify';
 import { showCreateTaskModal } from 'components/showCreateTaskModal';
 import { SmartSearch } from 'components/SmartSearch';
+import { CreateNewButton } from 'components/CreateNewButton';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const OrgBoardPage = loadable(() => import('pages/OrgBoard/OrgBoardPage'));
@@ -199,12 +200,6 @@ export const AppLoggedIn = React.memo(props => {
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
 
-  const handleCreateTask = () => {
-    showCreateTaskModal(null, () => {
-      notify.info('Task created', <>blah</>);
-    });
-  }
-
   return <StyledLayout
     // title={<Image src="/images/brand.svg" preview={false} width={110} />}
     title={"ZEEWORKFLOW"}
@@ -258,7 +253,7 @@ export const AppLoggedIn = React.memo(props => {
           <SmartSearch />
         </Col>
         <Col>
-          <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>Create Task</Button>
+          <CreateNewButton />
         </Col>
       </Row>
     )}

@@ -95,11 +95,6 @@ const MyTaskListPage = (props) => {
           <StyledTitleRow>
             <Title level={2} style={{ margin: 'auto' }}>Tasks</Title>
           </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }} >
-            {/* <Button type="link" onClick={() => loadList()} icon={<SyncOutlined />}></Button> */}
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => createNewTask()}>New Task</Button>
-          </Space>
-
           <Tabs defaultActiveKey="todo" type="card" tabBarExtraContent={{ right: <Button type="link" onClick={() => loadList()} icon={<SyncOutlined />}></Button> }}>
             <TabPane tab={<>To Do <Badge count={taskList.filter(x => ['todo', 'signed'].includes(x.status) && !x.lastUnreadMessageAt).length} showZero={false} /></>} key="todo">
               {RenderListFilteredByStatus(['todo', 'signed'])}

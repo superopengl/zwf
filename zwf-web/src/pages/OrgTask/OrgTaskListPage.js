@@ -367,7 +367,6 @@ const OrgTaskListPage = (props) => {
             <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
               <Button danger ghost onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
               <Button onClick={() => loadList$()} icon={<SyncOutlined />}>Refresh</Button>
-              <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
             </Space>
           </Space>
           <Row gutter={[10, 10]}>
