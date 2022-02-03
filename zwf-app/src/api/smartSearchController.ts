@@ -1,6 +1,7 @@
+import { TaskStatus } from './../types/TaskStatus';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 
-import { getRepository, ILike } from 'typeorm';
+import { getRepository, ILike, Not } from 'typeorm';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
@@ -20,8 +21,14 @@ export const smartSearchTask = handlerWrapper(async (req, res) => {
   const list = await getRepository(Task).find({
     where: {
       orgId,
-      name: ILike(`%${text}%`)
+      name: ILike(`%${text}%`),
+      status: Not(TaskStatus.ARCHIVED)
     },
+    select: [
+      'id',
+      'name',
+      'status',
+    ],
     order: {
       lastUpdatedAt: 'DESC'
     },
@@ -46,6 +53,10 @@ export const smartSearchTaskTemplate = handlerWrapper(async (req, res) => {
     order: {
       lastUpdatedAt: 'DESC'
     },
+    select: [
+      'id',
+      'name',
+    ],
     take: size
   });
 
@@ -67,6 +78,10 @@ export const smartSearchDocTemplate = handlerWrapper(async (req, res) => {
     order: {
       lastUpdatedAt: 'DESC'
     },
+    select: [
+      'id',
+      'name',
+    ],
     take: size
   });
 
