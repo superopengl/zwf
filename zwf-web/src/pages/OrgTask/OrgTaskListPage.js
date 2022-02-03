@@ -320,19 +320,13 @@ const OrgTaskListPage = (props) => {
     await loadTaskWithQuery$(newQueryInfo);
   }
 
-  const handleClientIdChange = async (clientId) => {
+  const handleClientIdChange = async (client) => {
     const newQueryInfo = {
       ...queryInfo,
-      clientId,
+      clientId: client.id,
       page: 1,
     }
     await loadTaskWithQuery$(newQueryInfo);
-  }
-
-  const handleCreateTask = () => {
-    showCreateTaskModal(null, () => {
-      loadList$();
-    });
   }
 
   const StatusSelectOptions = [
@@ -415,8 +409,10 @@ const OrgTaskListPage = (props) => {
               <Space>
                 <Label style={{ position: 'relative', top: -8 }}>Client</Label>
                 <ClientSelect
+                  valueProp="id"
                   style={{ width: 280 }}
-                  value={queryInfo?.clientId} onChange={handleClientIdChange} />
+                  value={queryInfo?.clientId} 
+                  onChange={handleClientIdChange} />
               </Space>
             </Col>
           </Row>

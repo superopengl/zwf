@@ -147,6 +147,7 @@ export const TaskGenerator = props => {
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
         <StyledDescription value="Choose existing client or type in a new client's email address." />
         <ClientSelect style={{ width: '100%' }}
+          valueProp="email"
           onChange={handleClientChange}
           onLoadingChange={setLoading}
           value={clientInfo?.email} />
