@@ -24,6 +24,7 @@ import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from 'components/entityIcon';
+import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 
 const { Text } = Typography;
 
@@ -65,7 +66,6 @@ export const DocTemplatePage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [docTemplate, setDocTemplate] = React.useState({...EMPTY_DOC_TEMPLATE});
-  const [preview, setPreview] = React.useState(false);
   const [previewSider, setPreviewSider] = React.useState(false);
   const debugMode = false;
 
@@ -93,6 +93,10 @@ export const DocTemplatePage = (props) => {
     notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
   }
 
+  const handlePopPreview = () => {
+    showDocTemplatePreviewModal(docTemplate);
+  }
+
   return <LayoutStyled>
     <Loading loading={loading}>
       <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
@@ -103,7 +107,7 @@ export const DocTemplatePage = (props) => {
             onBack={goBack}
             extra={[
               <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-              <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
+              <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={handlePopPreview}>Preview</Button>,
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >
@@ -122,21 +126,6 @@ export const DocTemplatePage = (props) => {
             />
         </Layout.Sider>
       </Layout>
-      <Modal
-        visible={preview}
-        onOk={() => setPreview(false)}
-        onCancel={() => setPreview(false)}
-        closable={false}
-        destroyOnClose
-        maskClosable
-        footer={null}
-      >
-        <DocTemplatePreviewPanel
-          value={docTemplate}
-          debug={debugMode}
-          type="agent"
-        />
-      </Modal>
     </Loading>
   </LayoutStyled >
 };
