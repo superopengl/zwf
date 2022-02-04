@@ -39,92 +39,52 @@ padding: 2rem;
 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 `;
 
-const getInitState = (html, initVarBag) => {
+const getPendingVarBag = (html, seedVarBag) => {
   const { vars, invalidVars } = extractVarsFromDocTemplateBody(html);
-  const varBag = vars.reduce((pre, cur) => {
-    pre[cur] = '';
-    return pre;
+  const varBag = vars.reduce((bag, varName) => {
+    bag[varName] = seedVarBag?.[varName] ?? '';
+    return bag;
   }, {});
 
-  if (initVarBag) {
-    for (const k in varBag) {
-      varBag[k] = initVarBag[k];
-    }
-  }
-
-  return {
-    varBag,
-    invalidVars,
-    html,
-    rendered: renderDocTemplateBodyWithVarBag(html, varBag)
-  }
+  return varBag;
 }
 
 export const DocTemplatePreviewPanel = props => {
-
-  const { value: docTemplate } = props;
-
+  const { value: docTemplate, varBag: propVarBag } = props;
+  
+  const html = docTemplate?.html;
+  const [varBag, setVarBag] = React.useState(getPendingVarBag(html, propVarBag));
+  const [renderedHtml, setRenderedHtml] = React.useState();
   const form = React.createRef();
 
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case 'setValue':
-        const varBag = {
-          ...state.varBag,
-          ...action.value
-        };
-        return {
-          ...state,
-          varBag,
-          rendered: renderDocTemplateBodyWithVarBag(state.html, varBag)
-        }
-      case 'load':
-        const oldVarBag = state.varBag;
-        const html = action.value;
-        const newState = getInitState(html, oldVarBag);
-        return newState;
-      case 'reset': {
-        form.current?.resetFields();
-        return getInitState(state.html);
-      }
-      default:
-        return state;
-    }
-  }
-
-  const [state, dispatch] = React.useReducer(reducer, getInitState(docTemplate?.html));
-
-
   React.useEffect(() => {
-    if (docTemplate) {
-      dispatch({ type: 'load', value: docTemplate.html });
-    }
-  }, [docTemplate]);
+    const newVarBag = getPendingVarBag(html, varBag);
+    const renderedHtml = renderDocTemplateBodyWithVarBag(html, newVarBag);
 
-  const handleVarValueChange = (changedValue) => {
-    dispatch({ type: 'setValue', value: changedValue });
+    setRenderedHtml(renderedHtml);
+  }, [varBag]);
+
+  const handleVarValueChange = (changedValue, allValues) => {
+    setVarBag({ ...allValues });
   }
 
-  const handleResetVarBag = () => {
-    dispatch({ type: 'reset' });
-  }
   return (
     <Container style={props.style}>
-      {!isEmpty(state.varBag) && <Collapse bordered={false} expandIconPosition="right">
+      {!isEmpty(varBag) && <Collapse bordered={false} expandIconPosition="right">
         <Collapse.Panel key="1"
           header="Test variables"
-          style={{border: 'none'}}
-          // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
-          >
+          style={{ border: 'none' }}
+        // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
+        >
           <Form
-            style={{marginTop: 20}}
+            style={{ marginTop: 20 }}
             ref={form}
             labelCol={{ span: 8 }}
             wrapperCol={{ span: 16 }}
             onValuesChange={handleVarValueChange}
           >
-            {Object.entries(state.varBag || {}).map(([k]) => <Form.Item key={k} label={k} name={k}>
-              <Input placeholder="var value" />
+            {Object.entries(varBag).map(([k]) => <Form.Item key={k} label={k} name={k}>
+              <Input placeholder={`Value of ${k}`}/>
             </Form.Item>)}
           </Form>
         </Collapse.Panel>
@@ -134,16 +94,22 @@ export const DocTemplatePreviewPanel = props => {
           <Paragraph type="secondary">{docTemplate?.description}</Paragraph>
       </PreviewDocContainer> */}
       <PreviewDocContainer bordered>
-        <RawHtmlDisplay value={state.rendered} />
+        <RawHtmlDisplay value={renderedHtml} />
       </PreviewDocContainer>
     </Container >
   );
 };
 
 DocTemplatePreviewPanel.propTypes = {
-  value: PropTypes.object,
+  value: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    html: PropTypes.string.isRequired,
+    variables: PropTypes.arrayOf(PropTypes.string),
+  }),
+  varBag: PropTypes.object,
 };
 
 DocTemplatePreviewPanel.defaultProps = {
+  varBag: {},
 };
 
