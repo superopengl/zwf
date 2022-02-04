@@ -10,7 +10,7 @@ import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateServ
 import { LocaleSelector } from 'components/LocaleSelector';
 import { from } from 'rxjs';
 import { Switch } from 'antd';
-import {RickTextInput} from 'components/RichTextInput';
+import {RichTextInput} from 'components/RichTextInput';
 import {RawHtmlDisplay} from 'components/RawHtmlDisplay';
 
 const { Text } = Typography;
@@ -126,7 +126,7 @@ const EmailTemplateListPage = () => {
             <Input allowClear disabled={loading} />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
-            <RickTextInput disabled={loading} />
+            <RichTextInput disabled={loading} />
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
@@ -142,4 +142,4 @@ EmailTemplateListPage.propTypes = {};
 
 EmailTemplateListPage.defaultProps = {};
 
-export default withRouter(EmailTemplateListPage);
+export default EmailTemplateListPage;
