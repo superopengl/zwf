@@ -5,15 +5,17 @@ import styled from 'styled-components';
 import { TaskTemplateBuilder } from 'pages/TaskTemplate/formBuilder/TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
-import RickTextInput from 'components/RichTextInput';
+import {RickTextInput} from 'components/RichTextInput';
+import { EditTitleInput } from 'components/EditTitleInput';
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
-  // padding: 10px;
+  padding-top: 20px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   // height: 100%;
 `;
+
 
 export const DocTemplateEditorPanel = props => {
   const { value, debug, onChange } = props;
@@ -28,16 +30,17 @@ export const DocTemplateEditorPanel = props => {
     <Container>
       <Form
         // onFinish={handleSave} 
+        layout="vertical"
         onValuesChange={(changedValues, allValues) => onChange(allValues)}
         initialValues={entity}
         style={{ position: 'relative' }}>
         <Form.Item name="name" rules={[{ required: true, message: ' ', max: 100 }]}>
-          <Input placeholder="Doc Template Name" />
+          <EditTitleInput placeholder="Untitled Doc Template" />
         </Form.Item>
-        <Form.Item name="description" rules={[{ required: true, message: ' ' }]}>
+        <Form.Item name="description" label="Description" rules={[{ required: true, message: ' ' }]}>
           <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
         </Form.Item>
-        <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
+        <Form.Item name="html" label="Body" rules={[{ required: true, message: ' ' }]}>
           <RickTextInput />
         </Form.Item>
       </Form>

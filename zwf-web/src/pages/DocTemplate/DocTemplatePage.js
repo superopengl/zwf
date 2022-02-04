@@ -1,7 +1,7 @@
 import {
   DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, PageHeader, Row, Typography } from 'antd';
+import { Button, Drawer, Layout, Modal, Space, PageHeader, Row, Typography, Input } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import DocTemplateForm from './DocTemplateForm';
@@ -23,6 +23,7 @@ import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { DocTemplateIcon } from 'components/entityIcon';
 
 const { Text } = Typography;
 
@@ -76,7 +77,7 @@ export const DocTemplatePage = (props) => {
       )
       .subscribe(d => setDocTemplate(d));
     return () => subscription$.unsubscribe();
-  }, [])
+  }, []);
 
   const goBack = () => {
     props.history.push('/doc_template')
@@ -98,7 +99,7 @@ export const DocTemplatePage = (props) => {
         <Layout.Content style={{ overflowY: 'auto' }}>
           <PageHeader
             style={{ maxWidth: 900, margin: '0 auto' }}
-            title={isNew ? 'New Doc Template' : 'Edit Doc Template'}
+            title={<><DocTemplateIcon/>{isNew ? 'New Doc Template' : 'Edit Doc Template'}</>}
             onBack={goBack}
             extra={[
               <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
@@ -113,21 +114,14 @@ export const DocTemplatePage = (props) => {
             />}
           </PageHeader>
         </Layout.Content>
-        <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
-          <div style={{ padding: 16 }}>
-            <Row justify="center" style={{ marginBottom: 40 }}>
-              <Text type="warning">Preview</Text>
-            </Row>
+        <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30, backgroundColor: 'transparent' }}>
             <DocTemplatePreviewPanel
               value={docTemplate}
               debug={debugMode}
               type="agent"
             />
-          </div>
         </Layout.Sider>
       </Layout>
-
-
       <Modal
         visible={preview}
         onOk={() => setPreview(false)}

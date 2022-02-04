@@ -10,7 +10,7 @@ import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateServ
 import { LocaleSelector } from 'components/LocaleSelector';
 import { from } from 'rxjs';
 import { Switch } from 'antd';
-import RickTextInput from 'components/RichTextInput';
+import {RickTextInput} from 'components/RichTextInput';
 import {RawHtmlDisplay} from 'components/RawHtmlDisplay';
 
 const { Text } = Typography;

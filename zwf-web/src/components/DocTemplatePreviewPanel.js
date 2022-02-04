@@ -7,7 +7,7 @@ import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateB
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
 
-const { Title, Paragraph } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
 
 const Container = styled.div`
@@ -94,6 +94,7 @@ export const DocTemplatePreviewPanel = props => {
           </Form>
         </Collapse.Panel>
       </Collapse>}
+      <Paragraph type="warning" style={{textAlign: 'center', marginTop: 20}}>Preview</Paragraph>
       <PreviewDocContainer bordered>
         <RawHtmlDisplay value={renderedHtml} />
       </PreviewDocContainer>
