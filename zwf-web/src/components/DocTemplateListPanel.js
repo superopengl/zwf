@@ -24,7 +24,7 @@ padding-right: 12px !important;
 `;
 
 export const DocTemplateListPanel = (props) => {
-  const { value: docs } = props;
+  const { value: docs, ...otherProps } = props;
 
   const handlePreviewDocTemplate = docId => {
     getDocTemplate$(docId).subscribe(docTemplate => {
@@ -35,6 +35,7 @@ export const DocTemplateListPanel = (props) => {
   return docs?.length > 0 && <List
     size="small"
     bordered
+    {...otherProps}
     rowKey="id"
     dataSource={docs}
     renderItem={doc => <DocListItem onClick={() => handlePreviewDocTemplate(doc.id)}>

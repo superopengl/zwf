@@ -19,6 +19,7 @@ import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
 import { HiViewList } from 'react-icons/hi';
 import { showCreateTaskModal } from 'components/showCreateTaskModal';
+import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -225,11 +226,7 @@ export const TaskTemplateListPage = props => {
                 <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-              {item.docs?.length && <Row style={{ marginTop: 20 }} gutter={[20, 20]}>
-                {item.docs?.map((d, i) => <Col key={i}>
-                  <DocTemplateIcon style={{ fontSize: 10, position: 'relative', top: -3 }} />{d.name}
-                </Col>)}
-              </Row>}
+              <DocTemplateListPanel value={item.docs} style={{margin: '12px -12px 0'}} bordered={false} />
             </Card>
           </List.Item>}
         />
