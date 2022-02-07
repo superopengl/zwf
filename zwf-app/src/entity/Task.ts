@@ -1,7 +1,8 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToOne } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
 import { Org } from './Org';
+import { TaskTag } from './TaskTag';
 
 @Entity()
 @Index('idex_task_orgId_userId', ['orgId', 'userId'])
