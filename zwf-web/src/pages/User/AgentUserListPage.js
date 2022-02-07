@@ -20,7 +20,7 @@ import ProfileForm from 'pages/Profile/ProfileForm';
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import TagSelect from 'components/TagSelect';
-import { listUserTags, saveUserTag } from 'services/userTagService';
+import { listUserTags$, saveUserTag$ } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
@@ -148,7 +148,7 @@ const AgentUserListPage = () => {
     try {
       setLoading(true);
       await searchByQueryInfo(queryInfo)
-      const tags = await listUserTags();
+      const tags = await listUserTags$();
       setTags(tags);
     } catch {
       setLoading(false);

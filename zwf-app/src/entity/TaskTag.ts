@@ -2,8 +2,8 @@ import { Entity, Column, Index, PrimaryGeneratedColumn, Unique, CreateDateColumn
 
 
 @Entity()
-@Unique('idx_user_tag_orgId_name', ['orgId', 'name'])
-export class UserTag {
+@Unique('idx_task_tag_orgId_name', ['orgId', 'name'])
+export class TaskTag {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -16,4 +16,7 @@ export class UserTag {
   @Column()
   @Index()
   name: string;
+
+  @Column()
+  colorHex: string;
 }

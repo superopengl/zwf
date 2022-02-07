@@ -369,6 +369,29 @@ paths:
       responses:
         200:
           description: OK
+  /tasktag:
+    get:
+      operationId: listTaskTags
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveTaskTag
+      responses:
+        200:
+          description: OK
+  /tasktag/:id:
+    delete:
+      operationId: deleteTaskTag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /task_template:
     post:
       operationId: saveTaskTemplate

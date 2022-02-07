@@ -1,29 +1,23 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Drawer } from 'antd';
 import {
-  DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
+  SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  UserOutlined,
   ClearOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Pagination } from 'antd';
+import { Space } from 'antd';
 import { searchOrgClientUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
-import { inviteUser$, impersonate$, inviteClient } from 'services/authService';
-import { TimeAgo } from 'components/TimeAgo';
-import { FaTheaterMasks } from 'react-icons/fa';
+import { impersonate$ } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
-import HighlightingText from 'components/HighlightingText';
-import CheckboxButton from 'components/CheckboxButton';
 import TagSelect from 'components/TagSelect';
-import { listUserTags, saveUserTag } from 'services/userTagService';
+import { listUserTags$, saveUserTag$ } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
-import { notify } from 'util/notify';
 import { UserNameLabel } from 'components/UserNameLabel';
 
 
@@ -52,16 +46,11 @@ const ClientUserListPage = () => {
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
-  const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
-  const [inviteForm] = Form.useForm();
 
   const handleTagChange = async (user, tags) => {
     await setUserTags(user.id, tags);
   }
-
-  const isSystem = context.role === 'system';
-  const isAdmin = context.role === 'admin';
 
   const columnDef = [
     {
@@ -77,7 +66,7 @@ const ClientUserListPage = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
+      render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag$} value={value} onChange={tags => handleTagChange(item, tags)} />
     },
     {
       // title: 'Action',
@@ -116,8 +105,7 @@ const ClientUserListPage = () => {
     try {
       setLoading(true);
       await searchByQueryInfo(queryInfo)
-      const tags = await listUserTags();
-      setTags(tags);
+      listUserTags$().subscribe(tags => setTags(tags));
     } catch {
       setLoading(false);
     }

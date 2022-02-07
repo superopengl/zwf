@@ -1,13 +1,14 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet$, httpPost$, httpDelete$ } from './http';
 
-export async function listUserTags() {
-  return httpGet(`usertag`);
+export function listUserTags$() {
+  return httpGet$(`usertag`);
 }
 
-export async function deleteUserTag(id) {
-  return httpDelete(`usertag/${id}`);
+export function deleteUserTag$(id) {
+  return httpDelete$(`usertag/${id}`);
 }
 
-export async function saveUserTag(tag) {
-  return httpPost(`usertag`, tag);
+export function saveUserTag$(tag) {
+  const { id, name } = tag;
+  return httpPost$(`usertag`, { id, name });
 }
