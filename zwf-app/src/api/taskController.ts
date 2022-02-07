@@ -1,3 +1,4 @@
+import { TaskTaskTag } from './../entity/TaskTaskTag';
 import { TaskAssignment } from './../entity/TaskAssignment';
 import { TaskInformation } from './../entity/views/TaskInformation';
 
@@ -273,6 +274,26 @@ export const saveDeepLinkedTask = handlerWrapper(async (req, res) => {
     }
   });
 
+
+  res.json();
+});
+
+export const updateTaskTags = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+  const { tags } = req.body;
+
+  await getManager().transaction(async m => {
+    await m.delete(TaskTaskTag, { taskId: id });
+    if(tags?.length) {
+      const entities = tags.map(tagId => {
+        const entity =  new TaskTaskTag();
+        entity.taskId = id;
+        entity.tagId = tagId;
+      })
+      await m.save(entities);
+    }
+  });
 
   res.json();
 });
