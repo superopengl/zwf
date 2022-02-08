@@ -1,6 +1,6 @@
 import * as uniqolor from 'uniqolor';
 
-export function generateRandomAvatarColorHex(): string {
+export function generateRandomColorHex(): string {
   const { color } = uniqolor.random({
     format: 'hex',
     lightness: [0, 49],
