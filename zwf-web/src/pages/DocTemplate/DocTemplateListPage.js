@@ -4,7 +4,6 @@ import {
 import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
-import DocTemplateForm from './DocTemplateForm';
 import React from 'react';
 import { deleteDocTemplate, listDocTemplate, listDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
@@ -247,23 +246,6 @@ export const DocTemplateListPage = props => {
             </Card>
           </List.Item>}
         />
-
-        {/* <StyledDrawer
-          title={!currentId ? 'New Doc Template' : 'Edit Doc Template'}
-          placement="right"
-          closable={true}
-          visible={drawerVisible}
-          onClose={() => handleDrawerClose()}
-          destroyOnClose={true}
-          width="calc(100vw - 280px)"
-          footer={null}
-        >
-          <DocTemplateForm
-            id={currentId}
-            onClose={() => handleDrawerClose()}
-            onOk={() => { handleDrawerClose(); loadList() }}
-          />
-        </StyledDrawer> */}
       </Space>
 
     </LayoutStyled>
