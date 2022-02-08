@@ -5,7 +5,6 @@ import Tag from './Tag';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
-import chroma from 'chroma-js';
 import uniqolor from 'uniqolor';
 
 const Option = props => {
@@ -33,7 +32,7 @@ const colourStyles = {
   control: styles => ({
     ...styles,
     backgroundColor: 'white',
-    // boxShadow: 'none',
+    boxShadow: 'none',
     border: '1px solid rgb(217, 217, 217)',
     '&:hover': {
       border: '1px solid #b6d3de',
@@ -214,7 +213,7 @@ TagSelect.defaultProps = {
   value: [],
   readonly: false,
   onChange: (ids) => { },
-  onSave: (name) => { },
+  onSave: (tag) => { },
 };
 
 export default TagSelect;
