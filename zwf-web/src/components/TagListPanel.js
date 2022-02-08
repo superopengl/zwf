@@ -119,7 +119,7 @@ export const TagListPanel = React.memo((props) => {
 
   return (
     <Table columns={columnDef}
-    bordered={false}
+      bordered={false}
       showHeader={true}
       dataSource={list}
       rowKey="id"

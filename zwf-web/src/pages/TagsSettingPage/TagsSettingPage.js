@@ -5,6 +5,8 @@ import { TagListPanel } from 'components/TagListPanel';
 import styled from 'styled-components';
 import { deleteTaskTag$, listTaskTags$, saveTaskTag$ } from 'services/taskTagService';
 import { Card, Space } from 'antd';
+import { tap } from 'rxjs/operators';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const Container = styled.div`
   width: 100%;
@@ -24,6 +26,12 @@ const Container = styled.div`
 `;
 
 const TagsSettingPage = () => {
+  const context = React.useContext(GlobalContext);
+  const { updateContextTaskTags } = context;
+
+  const handleLoadTaskTags = () => listTaskTags$().pipe(
+    tap(updateContextTaskTags)
+  )
 
   return (
     <Container>
@@ -31,7 +39,7 @@ const TagsSettingPage = () => {
 
         <Card title="Task tags" bordered={false} style={{ width: '100%' }}>
           <TagListPanel
-            onLoadList={listTaskTags$}
+            onLoadList={handleLoadTaskTags}
             onSave={saveTaskTag$}
             onDelete={deleteTaskTag$}
             showColor={true}

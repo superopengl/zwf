@@ -1,55 +1,80 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag as AntdTag } from 'antd';
+import { Tag as AntdTag, Tooltip } from 'antd';
 import Tag from './Tag';
 import CreatableSelect from 'react-select/creatable';
+import { components } from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
-
+import chroma from 'chroma-js';
+import uniqolor from 'uniqolor';
 
 const Option = props => {
   const { data, innerProps } = props;
   return <div {...innerProps} style={{ padding: 6 }}>
-    {data.color2 ? <Tag color={data.color}>{data.label}</Tag> : data.label}
+    {data.color ? <AntdTag color={data.color}>{data.label}</AntdTag> : data.label}
   </div>;
 }
 
+const Input = (props) => {
+  if (props.isHidden) {
+    return <components.Input {...props} />;
+  }
+  return (
+    <div style={{ border: `1px dotted #030303` }}>
+      <Tooltip title={'Create new tag'}>
+        <components.Input {...props} />
+      </Tooltip>
+    </div>
+  );
+};
+
 
 const colourStyles = {
-  // control: styles => ({ ...styles, backgroundColor: 'white' }),
+  control: styles => ({
+    ...styles,
+    backgroundColor: 'white',
+    // boxShadow: 'none',
+    border: '1px solid rgb(217, 217, 217)',
+    '&:hover': {
+      border: '1px solid #b6d3de',
+      boxShadow: '0 0 0 2px rgb(138 188 209 / 20%)',
+      outline: 0,
+    },
+    '&:focus': {
+      border: '1px solid #b6d3de',
+      boxShadow: '0 0 0 2px rgb(138 188 209 / 20%)',
+      outline: 0,
+    }
+  }),
   // option: (styles, { data, isDisabled, isFocused, isSelected }) => {
   //   const color = chroma(data.color);
   //   return {
   //     ...styles,
   //     backgroundColor: isDisabled
-  //       ? null
+  //       ? undefined
   //       : isSelected
-  //         ? data.color
-  //         : isFocused
-  //           ? color.alpha(0.1).css()
-  //           : null,
+  //       ? data.color
+  //       : isFocused
+  //       ? color.alpha(0.1).css()
+  //       : undefined,
   //     color: isDisabled
   //       ? '#ccc'
   //       : isSelected
-  //         ? chroma.contrast(color, 'white') > 2
-  //           ? 'white'
-  //           : 'black'
-  //         : data.color,
+  //       ? chroma.contrast(color, 'white') > 2
+  //         ? 'white'
+  //         : 'black'
+  //       : data.color,
   //     cursor: isDisabled ? 'not-allowed' : 'default',
 
   //     ':active': {
   //       ...styles[':active'],
-  //       backgroundColor: !isDisabled && (isSelected ? data.color : color.alpha(0.3).css()),
+  //       backgroundColor: !isDisabled
+  //         ? isSelected
+  //           ? data.color
+  //           : color.alpha(0.3).css()
+  //         : undefined,
   //     },
   //   };
-  // },
-  // option: (styles) => {
-  //   return {
-  //     ...styles,
-  //     width: '100%',
-  //     margin: '6px 0',
-  //     padding: 20,
-  //     backgroundColor: 'red',
-  //   }
   // },
   container: (styles) => {
     return {
@@ -57,30 +82,28 @@ const colourStyles = {
       minWidth: '180px'
     }
   },
-  multiValue: (styles, { }) => {
+  multiValue: (styles, { data }) => {
     return {
       ...styles,
-      // width: '100%',
-      margin: '4px',
-      // backgroundColor: data.color,
-      // backgroundColor: data.color,
+      color: 'white',
+      backgroundColor: data.color,
     };
   },
-  multiValueLabel: (styles, { }) => ({
+  multiValueLabel: (styles, { data }) => ({
     ...styles,
     // width: '100%',
-    // color: getFontColor(data.color),
-    // backgroundColor: data.color,
+    color: 'white',
+    backgroundColor: data.color,
     borderRadius: '4px 0 0 4px',
   }),
-  multiValueRemove: (styles, { }) => {
+  multiValueRemove: (styles, { data }) => {
     return {
       ...styles,
-      // backgroundColor: data.color,
+      // color: data.color,
       borderRadius: '0 4px 4px 0',
       ':hover': {
-        // backgroundColor: data.color, //color.alpha(0.5).css(),
-        // color: 'white',
+        backgroundColor: data.color, //color.alpha(0.5).css(),
+        color: 'white',
       },
     }
   },
@@ -90,6 +113,7 @@ function convertTagToOption(tag) {
   return {
     label: tag.name,
     value: tag.id,
+    color: tag.colorHex,
   };
 }
 
@@ -97,7 +121,7 @@ function convertTagsToOptions(tags) {
   return (tags || []).map(convertTagToOption);
 }
 
-const TagSelect = (props) => {
+const TagSelect = React.memo((props) => {
 
   const { value: selectedTagIds, readonly, onChange, tags, onSave } = props;
   const allOptions = convertTagsToOptions(tags);
@@ -123,7 +147,7 @@ const TagSelect = (props) => {
     }
   }, [selectedTagIds]);
 
-  const handleChange = async (newValue, actionMeta) => {
+  const handleChange = (newValue, actionMeta) => {
     switch (actionMeta.action) {
       case 'select-option':
       case 'remove-value':
@@ -134,16 +158,17 @@ const TagSelect = (props) => {
     }
   }
 
-  const handleCreateNew = async (newTagName) => {
+  const handleCreateNew = (newTagName) => {
     const tagId = uuidv4();
     const newTag = {
       id: tagId,
       name: newTagName,
+      colorHex: uniqolor.random().color,
     };
     const newOption = convertTagToOption(newTag);
     try {
       setLoading(true);
-      await onSave(newTag);
+      onSave(newTag);
       setOptions([...options, newOption]);
       updateSelectedOptions([...selectedOptions, newOption]);
     } finally {
@@ -157,13 +182,13 @@ const TagSelect = (props) => {
   }
 
   if (readonly) {
-    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color="#00293d">{x.label}</AntdTag>)}</>
+    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color={x.color}>{x.label}</AntdTag>)}</>
   }
 
   return <CreatableSelect
     isMulti
     closeMenuOnSelect={false}
-    components={{ Option }}
+    components={{ Option, Input }}
     isClearable={false}
     isSearchable={true}
     isLoading={loading}
@@ -173,23 +198,7 @@ const TagSelect = (props) => {
     styles={colourStyles}
     options={options}
   />
-
-  // return (
-  //   <SelectStyled
-  //     mode="multiple"
-  //     allowClear={false}
-  //     style={{ minWidth: 200 }}
-  //     onChange={handleChange}
-  //     disabled={loading}
-  //     value={selectedTags}
-  //     labelInValue
-  //   >
-  //     {options.map((t, i) => <Select.Option key={t.id} value={t.id}>
-  //       <StockTag color={t.color}>{t.name}</StockTag>
-  //     </Select.Option>)}
-  //   </SelectStyled>
-  // );
-};
+});
 
 TagSelect.propTypes = {
   // value: PropTypes.string.isRequired,
@@ -201,10 +210,11 @@ TagSelect.propTypes = {
 };
 
 TagSelect.defaultProps = {
+  tags: [],
   value: [],
   readonly: false,
-  onChange: () => { },
-  onSave: () => { },
+  onChange: (ids) => { },
+  onSave: (name) => { },
 };
 
 export default TagSelect;
