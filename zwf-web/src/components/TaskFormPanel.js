@@ -9,13 +9,12 @@ import { convertTaskTemplateFieldsToFormFieldsSchema } from '../util/convertTask
 const { Title, Paragraph, Text } = Typography;
 
 
-export const TaskFormPanel = React.memo(props => {
+export const TaskFormPanel = React.memo(React.forwardRef((props, formRef) => {
 
   const { value, type, debug } = props;
 
   const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
   const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
-  const previewFormRef = React.createRef();
 
   const officialMode = type === 'agent';
 
@@ -44,24 +43,24 @@ export const TaskFormPanel = React.memo(props => {
   return (
     <>
       <Form
-        ref={previewFormRef}
+        ref={formRef}
         layout="vertical"
         colon={false}
         onFinish={handleFormSave}
         onValuesChange={handleValuesChange}
         onFieldsChange={handleFieldsChange}
       >
-        <FormBuilder meta={clientFieldSchema} form={previewFormRef} />
+        <FormBuilder meta={clientFieldSchema} form={formRef} />
         {officialMode && <>
           <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
           <Divider style={{ marginTop: 4 }} />
-          <FormBuilder meta={agentFieldSchema} form={previewFormRef} />
+          <FormBuilder meta={agentFieldSchema} form={formRef} />
         </>}
       </Form>
       {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}
     </>
   );
-});
+}));
 
 TaskFormPanel.propTypes = {
   value: PropTypes.shape({

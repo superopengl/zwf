@@ -8,12 +8,16 @@ import { Layout, Modal, Row, Col, Skeleton, Typography } from 'antd';
 import { Resizable } from "re-resizable";
 import { TaskChatPanel } from 'components/TaskChatPanel';
 import { TaskFormPanel } from 'components/TaskFormPanel';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 
 export const TaskWorkPanel = React.forwardRef((props, ref) => {
-  const { task, type, currentUserId, onChangeLoading } = props;
+  const { task, type, onChangeLoading } = props;
 
   const [chatPanelWidth, setChatPanelWidth] = React.useState(300);
+  const context = React.useContext(GlobalContext);
+
+  const currentUserId = context.user?.id;
 
   React.useEffect(() => {
   }, []);
@@ -47,8 +51,6 @@ export const TaskWorkPanel = React.forwardRef((props, ref) => {
 TaskWorkPanel.propTypes = {
   task: PropTypes.object,
   type: PropTypes.string,
-  currentUserId: PropTypes.string,
-  ref: PropTypes.ref,
   onChangeLoading: PropTypes.func,
 };
 
