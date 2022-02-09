@@ -29,6 +29,11 @@ export const listTaskTags = handlerWrapper(async (req, res) => {
       orgId,
       ...(names?.length ? { names: In(names) } : null),
     },
+    select: [
+      'id',
+      'name',
+      'colorHex',
+    ],
     order: { name: 'ASC' }
   });
   res.json(list);

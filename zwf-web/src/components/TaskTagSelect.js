@@ -19,7 +19,7 @@ text-transform: lowercase;
 
 export const TaskTagSelect = React.memo((props) => {
 
-  const { value: propValues, onChange, ...others } = props;
+  const { value: propValues, onChange,readonly, ...others } = props;
 
   const [tags, setTags] = React.useState();
   const [value, setValue] = React.useState(propValues);
@@ -45,6 +45,7 @@ export const TaskTagSelect = React.memo((props) => {
       <TagSelect 
         value={value}
         onChange={handleChange}
+        readonly={readonly}
         onSave={handleCreateNewTag}
         tags={tags}
       />
@@ -71,10 +72,12 @@ export const TaskTagSelect = React.memo((props) => {
 
 TaskTagSelect.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
+  readonly: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
 TaskTagSelect.defaultProps = {
+  readonly: false,
   onChange: () => { }
 };
 

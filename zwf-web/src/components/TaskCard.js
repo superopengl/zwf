@@ -12,6 +12,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 import { getUserDisplayName } from 'util/getDisplayName';
+import { TaskTagSelect } from './TaskTagSelect';
 
 const { Link: TextLink, Text, Paragraph } = Typography;
 
@@ -31,7 +32,7 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 export const TaskCard = withRouter((props) => {
 
   const { task } = props;
-  const { id, name, givenName, surname, email, lastUnreadMessageAt, taskTemplateName } = task;
+  const { id, name, givenName, surname, email, lastUnreadMessageAt, taskTemplateName, tags } = task;
 
   const context = React.useContext(GlobalContext);
 
@@ -43,6 +44,8 @@ export const TaskCard = withRouter((props) => {
     props.history.push(`/task/${id}`);
   }
 
+  const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
+
   return <StyledCard
     title={<Tooltip title={name}><TaskIcon /> {name}</Tooltip>}
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
@@ -51,7 +54,9 @@ export const TaskCard = withRouter((props) => {
     onClick={() => showTaskModal(id, name, myUserId, myRole)}
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
-    {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
+    <Space direction='vertical' size="middle" style={{width: '100%'}}>
+
+      {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
       {/* <Paragraph type="secondary" style={{lineHeight: 0.8}}><small>{taskTemplateName}</small></Paragraph> */}
       <Tooltip title={getUserDisplayName(email, givenName, surname)} placement='bottom'>
         <Row gutter={10} wrap={false} style={{ width: '100%' }}>
@@ -67,7 +72,10 @@ export const TaskCard = withRouter((props) => {
           </Col>
         </Row>
       </Tooltip>
-    {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
+      {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
+      {tagIds.length > 0 && <TaskTagSelect readonly={true} value={tagIds} />}
+    </Space>
+
   </StyledCard>
 });
 
