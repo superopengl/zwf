@@ -32,9 +32,10 @@ const TagsSettingPage = () => {
 
   return (
     <Container>
-      <Space direction="vertical" size="large" style={{ width: '100%', justifyContent: 'center', maxWidth: 600 }}>
+      <Space direction="vertical" style={{ width: '100%', justifyContent: 'center', maxWidth: 600 }}>
 
-        <Card title="Task tags" bordered={false} style={{ width: '100%' }}>
+        <Card  type="inner"
+        title="Task tags" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
           <TagListPanel
             onLoadList={handleLoadTaskTags}
             onSave={saveTaskTag$}
@@ -43,8 +44,7 @@ const TagsSettingPage = () => {
           />
         </Card>
 
-        <Card title="User tags" bordered={false} style={{ width: '100%' }}>
-
+        <Card type="inner" title="User tags" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
           <TagListPanel
             onLoadList={listUserTags$}
             onSave={saveUserTag$}
