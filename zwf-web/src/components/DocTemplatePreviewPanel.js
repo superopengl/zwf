@@ -1,4 +1,4 @@
-import { Row, Typography, Form, Input, Card, Button, Collapse } from 'antd';
+import { Row, Typography, Form, Input, Card, Space, Button, Collapse } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -6,12 +6,14 @@ import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
+import { CaretRightOutlined } from '@ant-design/icons';
 
 const { Text, Title, Paragraph } = Typography;
 
 
-const Container = styled.div`
+const Container = styled(Space)`
   margin: 0;
+  width: 100%;
   // max-width: 600px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
@@ -29,7 +31,7 @@ const StyledCard = styled(Card)`
 const PreviewDocContainer = styled(Card)`
 // background-color: rgba(0,0,0,0.05);
 // padding: 0;
-margin-top: 20px;
+// margin-top: 20px;
 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 `;
 
@@ -74,11 +76,16 @@ export const DocTemplatePreviewPanel = props => {
   }
 
   return (
-    <Container style={props.style}>
-      {!isEmpty(varBag) && <Collapse bordered={false} expandIconPosition="right">
+    <Container style={props.style} direction="vertical" size="large">
+      {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
+      <PreviewDocContainer bordered>
+        <RawHtmlDisplay value={renderedHtml} />
+      </PreviewDocContainer>
+
+      {!isEmpty(varBag) && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Collapse.Panel key="1"
           header="Test variables"
-          style={{ border: 'none' }}
+          // style={{ border: 'none' }}
         // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
         >
           <Form
@@ -94,10 +101,6 @@ export const DocTemplatePreviewPanel = props => {
           </Form>
         </Collapse.Panel>
       </Collapse>}
-      <Paragraph type="warning" style={{textAlign: 'center', marginTop: 20}}>Preview</Paragraph>
-      <PreviewDocContainer bordered>
-        <RawHtmlDisplay value={renderedHtml} />
-      </PreviewDocContainer>
     </Container >
   );
 };
