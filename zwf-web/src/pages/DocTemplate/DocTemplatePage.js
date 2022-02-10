@@ -93,7 +93,8 @@ export const DocTemplatePage = (props) => {
   }
 
   const handlePopPreview = () => {
-    showDocTemplatePreviewModal(docTemplate);
+    debugger;
+    showDocTemplatePreviewModal(docTemplate, {allowTest: true});
   }
 
   return <LayoutStyled>
@@ -122,6 +123,7 @@ export const DocTemplatePage = (props) => {
               value={docTemplate}
               debug={debugMode}
               type="agent"
+              allowTest={true}
             />
         </Layout.Sider>
       </Layout>

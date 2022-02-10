@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import FormBuilder from 'antd-form-builder'
 import PropTypes from 'prop-types';
 import { convertTaskTemplateFieldsToFormFieldsSchema } from '../util/convertTaskTemplateFieldsToFormFieldsSchema';
+import { DocTemplateListPanel } from './DocTemplateListPanel';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -14,7 +15,7 @@ export const TaskFormPanel = React.memo(React.forwardRef((props, formRef) => {
   const { value, type, debug } = props;
 
   const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
-  const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
+  const [officialFieldSchema, setAgentFieldSchema] = React.useState([]);
 
   const officialMode = type === 'agent';
 
@@ -51,10 +52,11 @@ export const TaskFormPanel = React.memo(React.forwardRef((props, formRef) => {
         onFieldsChange={handleFieldsChange}
       >
         <FormBuilder meta={clientFieldSchema} form={formRef} />
+        <DocTemplateListPanel value={value.docs}/>
         {officialMode && <>
           <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
           <Divider style={{ marginTop: 4 }} />
-          <FormBuilder meta={agentFieldSchema} form={formRef} />
+          <FormBuilder meta={officialFieldSchema} form={formRef} />
         </>}
       </Form>
       {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}

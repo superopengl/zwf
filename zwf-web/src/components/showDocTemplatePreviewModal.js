@@ -6,22 +6,25 @@ import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
 import { DocTemplateIcon } from './entityIcon';
 
 
-export function showDocTemplatePreviewModal(docTemplate, type = "agent", onClose = () => { }) {
+export function showDocTemplatePreviewModal(docTemplate, options = {}) {
   if (!docTemplate) {
     throw new Error('docTemplate is null');
   }
+  const { onClose, allowTest, varBag, type } = options;
   const modalRef = Modal.info({
     title: <><DocTemplateIcon />{docTemplate.name}</>,
     content: <>
       <DocTemplatePreviewPanel
-      style={{marginTop: 20}}
+        style={{ marginTop: 20 }}
         value={docTemplate}
         debug={false}
-        type={type}
+        type={type || 'agent'}
+        allowTest={allowTest}
+        varBag={varBag || {}}
       />
     </>,
     afterClose: () => {
-      onClose();
+      onClose?.();
     },
     icon: null,
     closable: true,

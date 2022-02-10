@@ -24,11 +24,11 @@ padding-right: 12px !important;
 `;
 
 export const DocTemplateListPanel = (props) => {
-  const { value: docs, ...otherProps } = props;
+  const { value: docs, allowTest, varBag, ...otherProps } = props;
 
   const handlePreviewDocTemplate = docId => {
     getDocTemplate$(docId).subscribe(docTemplate => {
-      showDocTemplatePreviewModal(docTemplate);
+      showDocTemplatePreviewModal(docTemplate, { allowTest, varBag });
     })
   }
 
@@ -45,10 +45,14 @@ export const DocTemplateListPanel = (props) => {
 };
 
 DocTemplateListPanel.propTypes = {
-  value: PropTypes.array
+  value: PropTypes.array,
+  allowTest: PropTypes.bool,
+  varBag: PropTypes.object,
 };
 
 DocTemplateListPanel.defaultProps = {
   value: null,
+  allowTest: false,
+  varBag: {},
 };
 

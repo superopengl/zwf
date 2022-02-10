@@ -52,7 +52,7 @@ const getPendingVarBag = (html, seedVarBag) => {
 }
 
 export const DocTemplatePreviewPanel = props => {
-  const { value: docTemplate, varBag: propVarBag } = props;
+  const { value: docTemplate, varBag: propVarBag, allowTest } = props;
 
   const [varBag, setVarBag] = React.useState(getPendingVarBag(docTemplate?.html, propVarBag));
   const [html, setHtml] = React.useState(docTemplate?.html);
@@ -75,6 +75,8 @@ export const DocTemplatePreviewPanel = props => {
     setVarBag({ ...allValues });
   }
 
+  const shouldShowTestPanel = allowTest && !isEmpty(varBag)
+
   return (
     <Container style={props.style} direction="vertical" size="large">
       {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
@@ -82,7 +84,7 @@ export const DocTemplatePreviewPanel = props => {
         <RawHtmlDisplay value={renderedHtml} />
       </PreviewDocContainer>
 
-      {!isEmpty(varBag) && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+      {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Collapse.Panel key="1"
           header="Test variables"
           // style={{ border: 'none' }}
@@ -111,9 +113,11 @@ DocTemplatePreviewPanel.propTypes = {
     variables: PropTypes.arrayOf(PropTypes.string),
   }),
   varBag: PropTypes.object,
+  allowTest: PropTypes.bool,
 };
 
 DocTemplatePreviewPanel.defaultProps = {
   varBag: {},
+  allowTest: false,
 };
 
