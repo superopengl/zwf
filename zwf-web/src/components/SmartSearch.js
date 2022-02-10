@@ -1,12 +1,10 @@
 import { AutoComplete, Typography, Space, Row, Col } from 'antd';
 import React from 'react';
-import styled from 'styled-components';
 import HighlightingText from './HighlightingText';
 import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
 import { EnterOutlined, SearchOutlined } from '@ant-design/icons';
 import Tag from './Tag';
 import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
-import { withRouter } from 'react-router-dom';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from './UserAvatar';
 import Hotkeys from 'react-hot-keys';
@@ -57,7 +55,7 @@ const DOMAIN_CONFIG = {
   },
 }
 
-export const SmartSearch = withRouter((props) => {
+export const SmartSearch = React.memo((props) => {
   const [searchText, setSearchText] = React.useState();
   const [optionsWithinDomain, setOptionsWithinDomain] = React.useState([]);
   const [domain, setDomain] = React.useState();
@@ -195,7 +193,7 @@ export const SmartSearch = withRouter((props) => {
       onFocus={() => setOuterDropdownOpen(true)}
       onBlur={() => setOuterDropdownOpen(false)}
       allowClear
-      placeholder="Search"
+      placeholder="Search ... (OPTION + F, ALT + F)"
       style={{ minWidth: 300, width: '100%' }}
       options={getOptions()}
       dropdownMatchSelectWidth={false}

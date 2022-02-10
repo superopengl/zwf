@@ -31,9 +31,9 @@ const TagsSettingPage = () => {
 
   return (
     <Container>
-      <Space direction="vertical" style={{ width: '100%', justifyContent: 'center', maxWidth: 600 }}>
+      <Space direction="vertical" style={{ width: '100%', justifyContent: 'center', maxWidth: 700 }}>
         <Card  type="inner"
-        title="Task tags" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
+        title="Tag Management" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
           <TagListPanel
             onLoadList={handleLoadTaskTags}
             onSave={saveTag$}

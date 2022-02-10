@@ -1,15 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Menu, Dropdown, Button } from 'antd';
-import { CaretDownOutlined, DownOutlined } from '@ant-design/icons';
-import { TaskIcon, TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
+import { Menu, Dropdown } from 'antd';
+import { CaretDownOutlined } from '@ant-design/icons';
+import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
 import { showCreateTaskModal } from 'components/showCreateTaskModal';
 import { notify } from 'util/notify';
-import { withRouter } from 'react-router-dom';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
-
-export const CreateNewButton = withRouter(props => {
+export const CreateNewButton = React.memo(props => {
   const { size } = props;
 
   const handleMenuSelected = (e) => {
