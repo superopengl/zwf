@@ -112,12 +112,7 @@ export const TaskTemplateListPage = props => {
   return (
     <LayoutStyled>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Row justify="space-between">
-          <Input placeholder="Filter task name"
-            onChange={e => handleSearchFilter(e.target.value)}
-            allowClear
-            prefix={<Text type="secondary"><SearchOutlined /></Text>}
-            style={{ width: 240 }} />
+        <Row justify="end">
           <Space>
             <Radio.Group
               optionType="button"

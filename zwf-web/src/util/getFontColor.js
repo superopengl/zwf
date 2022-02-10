@@ -1,5 +1,6 @@
 
 export function getFontColor(bgColorHex) {
+  if (!bgColorHex) return null;
 
   // If a leading # is provided, remove it
   if (bgColorHex.slice(0, 1) === '#') {

@@ -10,10 +10,13 @@ export class UserTag {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @Column('uuid', {nullable: true})
+  @Column('uuid')
   orgId: string;
 
   @Column()
   @Index()
   name: string;
+
+  @Column()
+  colorHex: string;
 }
