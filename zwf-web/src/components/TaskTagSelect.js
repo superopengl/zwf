@@ -1,25 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Select, Tag } from 'antd';
-import styled from 'styled-components';
-import isString from 'lodash/isString';
-import { forEach } from 'lodash';
-import { concat, EMPTY, of } from 'rxjs';
-import { switchMap, switchMapTo, tap } from 'rxjs/operators';
+import { switchMapTo } from 'rxjs/operators';
 import { listTaskTags$, saveTaskTag$, subscribeTaskTags } from 'services/taskTagService';
-import { v4 as uuidv4 } from 'uuid';
-import { GlobalContext } from 'contexts/GlobalContext';
 import TagSelect from './TagSelect';
 
-const StyledSelect = styled(Select)`
-font-size: 11px;
-border-radius: 999px;
-text-transform: lowercase;
-`;
 
 export const TaskTagSelect = React.memo((props) => {
 
-  const { value: propValues, onChange,readonly, ...others } = props;
+  const { value: propValues, onChange,readonly, allowCreate, ...others } = props;
 
   const [tags, setTags] = React.useState();
   const [value, setValue] = React.useState(propValues);
@@ -48,6 +36,7 @@ export const TaskTagSelect = React.memo((props) => {
         readonly={readonly}
         onSave={handleCreateNewTag}
         tags={tags}
+        allowCreate={allowCreate}
       />
     </div>
     // <StyledSelect
@@ -73,11 +62,13 @@ export const TaskTagSelect = React.memo((props) => {
 TaskTagSelect.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
+  allowCreate: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
 TaskTagSelect.defaultProps = {
   readonly: false,
+  allowCreate: true,
   onChange: () => { }
 };
 

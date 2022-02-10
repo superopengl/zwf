@@ -292,6 +292,7 @@ const ClientUserListPage = () => {
         onClose={() => setProfileModalVisible(false)}
         footer={null}
         width={400}
+        // bodyStyle={{width: "80vw", maxWidth: 600}}
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 

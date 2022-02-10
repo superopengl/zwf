@@ -60,7 +60,7 @@ export const LogInPanel = withRouter(props => {
             if (user.role === 'admin' && !org) {
               props.history.push('/onboard')
             } else {
-              props.history.push('/app');
+              props.history.push('/task');
             }
           }
         },

@@ -80,7 +80,7 @@ export const AppClient = React.memo(props => {
     </Layout.Header>
     <Layout.Content style={{ marginTop: 64, height: '100%', padding: 30 }}>
       <Switch>
-        <RoleRoute exact path="/app" component={ClientTaskListPage} />
+        <RoleRoute exact path="/task" component={ClientTaskListPage} />
         <RoleRoute exact path="/task/new" component={NewTaskPage} />
         <RoleRoute exact path="/task/:id" component={ClientTaskPage} />
       </Switch>
