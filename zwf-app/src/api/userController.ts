@@ -1,3 +1,4 @@
+import { Tag } from '../entity/Tag';
 
 import { getRepository, Not, getManager, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -12,7 +13,6 @@ import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { searchOrgMembers } from '../utils/searchOrgMembers';
-import { UserTag } from '../entity/UserTag';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Payment } from '../entity/Payment';
 import { Subscription } from '../entity/Subscription';
@@ -204,7 +204,7 @@ export const setUserTags = handlerWrapper(async (req, res) => {
   const repo = getRepository(User);
   const user = await repo.findOne(id);
   if (tags?.length) {
-    user.tags = await getRepository(UserTag).find({
+    user.tags = await getRepository(Tag).find({
       where: {
         id: In(tags)
       }

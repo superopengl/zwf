@@ -27,7 +27,7 @@ Please use below link to complete creating your organisation.
   },
   [EmailTemplateType.InviteOrgMember]: {
     vars: ['website', 'toWhom', 'email', 'url', 'org'],
-    subject: '[ZeeWorkFlow] Invitation to Join Organisation',
+    subject: '[ZeeWorkFlow] Invitation to Join Organization',
     body: `Dear {{toWhom}}
 <br/>
 You are invited to join <strong>{{org}}</strong> as a member in ZeeWorkFlow. Your user name is {{email}}.

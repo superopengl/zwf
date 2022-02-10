@@ -1,33 +1,25 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Select } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select } from 'antd';
 import {
-  DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
+  UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  UserOutlined,
-  ClearOutlined,
-  CaretDownOutlined
-} from '@ant-design/icons';
+  ClearOutlined} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Pagination } from 'antd';
-import { searchOrgMemberUsers, deleteUser, setPasswordForUser, setUserTags, setUserRole } from 'services/userService';
+import { Space } from 'antd';
+import { searchOrgMemberUsers, deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteUser$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
-import { FaTheaterMasks } from 'react-icons/fa';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
-import HighlightingText from 'components/HighlightingText';
-import CheckboxButton from 'components/CheckboxButton';
-import TagSelect from 'components/TagSelect';
-import { listUserTags$, saveUserTag$ } from 'services/userTagService';
 import ReactDOM from 'react-dom';
-import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameLabel } from 'components/UserNameLabel';
 import loadable from '@loadable/component'
 import { getMyCurrentSubscription } from 'services/subscriptionService';
 import useLocalStorageState from 'use-local-storage-state'
+import {TagSelect} from 'components/TagSelect';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -56,12 +48,9 @@ const AgentUserListPage = () => {
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
-  const [tags, setTags] = React.useState([]);
-  const [emptySeats, setEmptySeats] = React.useState(0);
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
-  const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = useLocalStorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
 
   const columnDef = [
@@ -148,8 +137,6 @@ const AgentUserListPage = () => {
     try {
       setLoading(true);
       await searchByQueryInfo(queryInfo)
-      const tags = await listUserTags$();
-      setTags(tags);
     } catch {
       setLoading(false);
     }
@@ -329,7 +316,8 @@ const AgentUserListPage = () => {
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
-        {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
+        <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false}/>
+
         <Table columns={columnDef}
           dataSource={list}
           size="small"

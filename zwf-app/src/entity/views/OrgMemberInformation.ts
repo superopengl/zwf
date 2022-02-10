@@ -11,11 +11,11 @@ import { UserProfile } from '../UserProfile';
     .innerJoin(User, 'u', 'o.id = u."orgId"')
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
     .leftJoin(q => q
-      .from('user_tags_user_tag', 'tg')
+      .from('user_tags_tag', 'tg')
       .groupBy('tg."userId"')
       .select([
         'tg."userId" as "userId"',
-        'array_agg(tg."userTagId") as tags'
+        'array_agg(tg."tagId") as tags'
       ]),
       'tg', 'tg."userId" = u.id')
     .where('u."deletedAt" IS NULL')

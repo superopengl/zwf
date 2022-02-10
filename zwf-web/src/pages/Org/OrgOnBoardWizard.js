@@ -85,7 +85,7 @@ const OrgOnBoardWizard = (props) => {
     {
       title: 'Basic Info',
       content: <Form layout="vertical" form={basicForm} onFinish={handleSubmitBasic} style={{ textAlign: 'left' }} initialValues={org}>
-        <Form.Item label="Organisation name"
+        <Form.Item label="Organization name"
           name="name"
           help={<>The name of your organisation in ZeeWorkFlow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
           rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>
@@ -124,7 +124,7 @@ const OrgOnBoardWizard = (props) => {
       title: 'Payment',
       content: <div>
         <Form layout="vertical" form={configForm} onFinish={handleSubmitConfig} style={{ textAlign: 'left' }} initialValues={org}>
-      <Form.Item label="Organisation name"
+      <Form.Item label="Organization name"
         name="name"
         help={<>The name of your organisation in ZeeWorkFlow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
         rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>

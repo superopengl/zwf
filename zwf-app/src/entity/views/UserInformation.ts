@@ -15,11 +15,11 @@ import { UserStatus } from '../../types/UserStatus';
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
     .leftJoin(q => q
-      .from('user_tags_user_tag', 'tg')
+      .from('user_tags_tag', 'tg')
       .groupBy('tg."userId"')
       .select([
         'tg."userId" as "userId"',
-        'array_agg(tg."userTagId") as tags'
+        'array_agg(tg."tagId") as tags'
       ]),
       'tg', 'tg."userId" = u.id')
     .where(`u."deletedAt" IS NULL`)

@@ -14,7 +14,7 @@ import DropdownMenu from 'components/DropdownMenu';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from 'components/UserAvatar';
 import { notify } from 'util/notify';
-import { TaskTagSelect } from 'components/TaskTagSelect';
+import { TagSelect } from 'components/TagSelect';
 import PropTypes from 'prop-types';
 
 
@@ -88,7 +88,7 @@ export const TaskListPanel = (props) => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      render: (tags) => <TaskTagSelect readonly={true} value={tags.map(t => t.id)} />
+      render: (tags) => <TagSelect readonly={true} value={tags.map(t => t.id)} />
     },
     {
       title: 'Created At',
