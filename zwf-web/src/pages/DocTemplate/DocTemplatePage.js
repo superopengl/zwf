@@ -93,7 +93,6 @@ export const DocTemplatePage = (props) => {
   }
 
   const handlePopPreview = () => {
-    debugger;
     showDocTemplatePreviewModal(docTemplate, {allowTest: true});
   }
 
