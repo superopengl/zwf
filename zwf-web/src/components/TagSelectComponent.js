@@ -9,7 +9,7 @@ import uniqolor from 'uniqolor';
 import { getFontColor } from 'util/getFontColor';
 import { DownOutlined } from '@ant-design/icons';
 
-const {Text} = Typography
+const { Text } = Typography
 
 const Option = props => {
   const { data, innerProps } = props;
@@ -93,13 +93,16 @@ const colourStyles = {
   multiValue: (styles, { data }) => {
     return {
       ...styles,
-      color: getFontColor(data.color),
+      fontSize: '12px',
+    borderRadius: '4px',
+    color: getFontColor(data.color),
       backgroundColor: data.color,
     };
   },
   multiValueLabel: (styles, { data }) => ({
     ...styles,
     // width: '100%',
+    fontSize: '12px',
     color: getFontColor(data.color),
     backgroundColor: data.color,
     borderRadius: '4px 0 0 4px',
@@ -108,6 +111,7 @@ const colourStyles = {
     return {
       ...styles,
       // color: data.color,
+      fontSize: '12px',
       borderRadius: '0 4px 4px 0',
       ':hover': {
         color: getFontColor(data.color),
@@ -199,7 +203,7 @@ export const TagSelectComponent = React.memo((props) => {
     isMulti
     placeholder={<Text type="secondary">Select tags</Text>}
     closeMenuOnSelect={false}
-    components={{ Option, Input, DropdownIndicator , IndicatorSeparator: () => null}}
+    components={{ Option, Input, DropdownIndicator, IndicatorSeparator: () => null }}
     isClearable={false}
     isSearchable={true}
     isLoading={loading}
