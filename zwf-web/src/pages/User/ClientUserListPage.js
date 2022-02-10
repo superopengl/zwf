@@ -13,7 +13,7 @@ import { impersonate$ } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
-import {TagSelect} from 'components/TagSelect';
+import { TagSelect } from 'components/TagSelect';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
@@ -217,22 +217,24 @@ const ClientUserListPage = () => {
     <ContainerStyled>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Input.Search
-            placeholder="Search name or email"
-            enterButton={<SearchOutlined />}
-            onSearch={value => handleSearch(value)}
-            onPressEnter={e => handleSearch(e.target.value)}
-            onChange={e => handleSearchTextChange(e.target.value)}
-            loading={loading}
-            value={queryInfo?.text}
-            allowClear
-          />
+          <Space>
+            <Input.Search
+              placeholder="Search name or email"
+              enterButton={<SearchOutlined />}
+              onSearch={value => handleSearch(value)}
+              onPressEnter={e => handleSearch(e.target.value)}
+              onChange={e => handleSearchTextChange(e.target.value)}
+              loading={loading}
+              value={queryInfo?.text}
+              allowClear
+            />
+            <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />
+          </Space>
           <Space>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
-        <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />
         <Table columns={columnDef}
           dataSource={list}
           size="small"
@@ -289,7 +291,7 @@ const ClientUserListPage = () => {
         onClose={() => setProfileModalVisible(false)}
         footer={null}
         width={400}
-        // bodyStyle={{width: "80vw", maxWidth: 600}}
+      // bodyStyle={{width: "80vw", maxWidth: 600}}
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
