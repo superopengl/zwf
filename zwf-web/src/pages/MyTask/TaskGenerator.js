@@ -80,7 +80,7 @@ export const TaskGenerator = props => {
   }
 
   const handleFormValueChange = (changeValues, allValues) => {
-    setFieldBag(allValues.fields);
+    setFieldBag({...allValues.fields});
   }
 
   const handleNameEnter = (e) => {
@@ -165,7 +165,7 @@ export const TaskGenerator = props => {
             Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
           </Paragraph>
           <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-            <DocTemplateListPanel value={taskTemplate?.docs} allowTest={false} varBag={varBag} />
+            <DocTemplateListPanel value={taskTemplate?.docs} allowTest={false} varBag={varBag} showWarning={true}/>
           </Form.Item>
           {agentFieldSchema?.fields?.length > 0 && <>
             <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>

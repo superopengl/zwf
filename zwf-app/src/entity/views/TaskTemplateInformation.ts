@@ -18,7 +18,7 @@ import { DocTemplate } from '../DocTemplate';
       .groupBy('x."taskTemplateId"')
       .select([
         'x."taskTemplateId" as id',
-        `array_agg(json_build_object('id', d.id, 'name', d.name)) as docs`,
+        `array_agg(json_build_object('id', d.id, 'name', d.name, 'variables', d.variables)) as docs`,
       ])
       , 'y', 't.id = y.id')
     .select([
@@ -51,5 +51,5 @@ import { DocTemplate } from '../DocTemplate';
   fields: any;
 
   @ViewColumn()
-  docs: Array<{id: string, name: string}>;
+  docs: Array<{id: string, name: string, variables: string[]}>;
 }
