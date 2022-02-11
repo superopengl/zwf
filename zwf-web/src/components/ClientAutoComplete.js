@@ -4,7 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { listOrgExistingClients } from 'services/orgService';
 import getInnerText from 'react-innertext';
-import HighlightingText from './HighlightingText';
+import {HighlightingText} from './HighlightingText';
 
 const { Text } = Typography;
 

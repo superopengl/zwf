@@ -1,6 +1,6 @@
 import { AutoComplete, Typography, Space, Row, Col } from 'antd';
 import React from 'react';
-import HighlightingText from './HighlightingText';
+import {HighlightingText} from './HighlightingText';
 import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
 import { EnterOutlined, SearchOutlined } from '@ant-design/icons';
 import Tag from './Tag';
