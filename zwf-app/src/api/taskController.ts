@@ -33,9 +33,9 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
-  const { taskTemplateId, clientEmail, taskName, fields } = req.body;
+  const { taskTemplateId, clientEmail, taskName, varBag } = req.body;
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, fields);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, varBag);
 
   res.json(task);
 });

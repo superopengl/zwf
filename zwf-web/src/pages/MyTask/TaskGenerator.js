@@ -5,9 +5,7 @@ import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import ClientSelect from 'components/ClientSelect';
-import { convertTaskTemplateFieldsToFormFieldsSchema } from 'util/convertTaskTemplateFieldsToFormFieldsSchema';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
-import FormBuilder from 'antd-form-builder'
 import { catchError } from 'rxjs/operators';
 import { RightOutlined } from '@ant-design/icons';
 import { getUserDisplayName } from 'util/getDisplayName';
@@ -22,19 +20,11 @@ const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text ty
 export const TaskGenerator = props => {
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(null);
-  const [fieldBag, setFieldBag] = React.useState({});
-  const [taskTemplate, setTaskTemplate] = React.useState();
   const [taskName, setTaskName] = React.useState();
+  const [taskTemplate, setTaskTemplate] = React.useState();
+  const [varBag, setVarBag] = React.useState({});
   const [current, setCurrent] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-
-  React.useEffect(() => {
-    if (clientInfo && taskTemplate) {
-      const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
-      const name = `${taskTemplate.name} for ${userName}`;
-      setTaskName(name);
-    }
-  }, [clientInfo, taskTemplate])
 
   React.useEffect(() => {
     if (taskTemplateId) {
@@ -50,6 +40,15 @@ export const TaskGenerator = props => {
       setTaskTemplate(null)
     }
   }, [taskTemplateId])
+  
+  React.useEffect(() => {
+    if (clientInfo && taskTemplate) {
+      const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
+      const name = `${taskTemplate.name} for ${userName}`;
+      setTaskName(name);
+    }
+    setVarBag({});
+  }, [clientInfo, taskTemplate])
 
   const handleTaskTemplateChange = taskTemplateIdValue => {
     // wizardRef.current.nextStep();
@@ -69,20 +68,25 @@ export const TaskGenerator = props => {
     setTaskName(name);
   }
 
+  const handleUpdateVarBag = (newVarBag) => {
+    setVarBag(newVarBag);
+  }
+
   const handleCreateEmptyTask = () => {
-    createTaskWithFields();
+    createTaskWithVarBag({});
   }
 
   const handleCreateTask = () => {
-    createTaskWithFields(fieldBag);
+    createTaskWithVarBag(varBag);
   }
 
-  const createTaskWithFields = (fields = {}) => {
+  const createTaskWithVarBag = (varBag = {}) => {
+    debugger;
     const payload = {
       clientEmail: clientInfo.email,
       taskTemplateId,
       taskName,
-      fields,
+      varBag,
     };
 
     setLoading(true);
@@ -121,7 +125,13 @@ export const TaskGenerator = props => {
       title: 'Prefill fields',
       disabled: !clientInfo || !taskTemplate || !taskName,
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-       {taskTemplate?.fields && <TaskFormWidget fields={taskTemplate.fields} docs={taskTemplate.docs} type="agent" />}
+        {taskTemplate?.fields && <TaskFormWidget
+          fields={taskTemplate.fields}
+          docs={taskTemplate.docs}
+          varBag={varBag}
+          type="agent"
+          onChange={handleUpdateVarBag}
+        />}
       </Space>
     },
   ]
