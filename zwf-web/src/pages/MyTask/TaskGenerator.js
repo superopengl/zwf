@@ -22,9 +22,9 @@ export const TaskGenerator = props => {
   const [clientInfo, setClientInfo] = React.useState(null);
   const [taskName, setTaskName] = React.useState();
   const [taskTemplate, setTaskTemplate] = React.useState();
-  const [varBag, setVarBag] = React.useState({});
   const [current, setCurrent] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
+  const [editingFields, setEditingFields] = React.useState([]);
 
   React.useEffect(() => {
     if (taskTemplateId) {
@@ -47,7 +47,7 @@ export const TaskGenerator = props => {
       const name = `${taskTemplate.name} for ${userName}`;
       setTaskName(name);
     }
-    setVarBag({});
+    setEditingFields(taskTemplate?.fields ?? []);
   }, [clientInfo, taskTemplate])
 
   const handleTaskTemplateChange = taskTemplateIdValue => {
@@ -68,8 +68,8 @@ export const TaskGenerator = props => {
     setTaskName(name);
   }
 
-  const handleUpdateVarBag = (newVarBag) => {
-    setVarBag(newVarBag);
+  const handleFieldsUpdate = (newFields) => {
+    setEditingFields(newFields);
   }
 
   const handleCreateEmptyTask = () => {
@@ -77,11 +77,14 @@ export const TaskGenerator = props => {
   }
 
   const handleCreateTask = () => {
+    const varBag = editingFields.reduce((bag, f) => {
+      bag[f.var] = f.value;
+      return bag;
+    }, {});
     createTaskWithVarBag(varBag);
   }
 
   const createTaskWithVarBag = (varBag = {}) => {
-    debugger;
     const payload = {
       clientEmail: clientInfo.email,
       taskTemplateId,
@@ -126,11 +129,10 @@ export const TaskGenerator = props => {
       disabled: !clientInfo || !taskTemplate || !taskName,
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
         {taskTemplate?.fields && <TaskFormWidget
-          fields={taskTemplate.fields}
+          fields={editingFields}
           docs={taskTemplate.docs}
-          varBag={varBag}
           type="agent"
-          onChange={handleUpdateVarBag}
+          onChange={handleFieldsUpdate}
         />}
       </Space>
     },

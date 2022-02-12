@@ -9,33 +9,38 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, docs, varBag, type, onChange } = props;
+  const { fields, docs, type, onChange } = props;
 
   const clientFieldSchema = React.useMemo(() => {
-    const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, false);
+    const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
     schema.fields.forEach(f => {
       f.required = false;
     });
     return schema;
-  }, [fields, varBag]);
+  }, [fields]);
 
   const agentFieldSchema = React.useMemo(() => {
-    return type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, true) : null;
-  }, [fields, varBag, type]);
+    return type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, true) : null;
+  }, [fields, type]);
 
   const showDocs = docs?.length > 0;
   const showOfficialFields = agentFieldSchema?.fields?.length > 0;
 
+  const varBag = React.useMemo(() => {
+    return fields.reduce((bag, f) => {
+      bag[f.var] = f.value;
+      return bag;
+    }, {});
+  }, [fields]);
+
   const handleFormValueChange = (changedValues, allValues) => {
-    Object.entries(changedValues).forEach(([name, value]) => {
-      const field = fields.find(f => f.name === name);
-      varBag[field.var] = value;
+    fields.forEach(f => {
+      f.value = allValues[f.name];
     })
 
-    onChange({ ...varBag });
+    onChange([...fields]);
   }
 
-  debugger;
   return (
     <Form
       ref={ref}
@@ -73,7 +78,6 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   docs: PropTypes.arrayOf(PropTypes.object),
-  varBag: PropTypes.object,
   readonly: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
@@ -81,8 +85,7 @@ TaskFormWidget.propTypes = {
 
 TaskFormWidget.defaultProps = {
   readonly: false,
-  varBag: {},
   type: 'agent',
-  onChange: (varBag) => { },
+  onChange: (fields) => { },
 };
 
