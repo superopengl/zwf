@@ -1,5 +1,6 @@
+import { getUtcNow } from './../utils/getUtcNow';
 
-import { getRepository } from 'typeorm';
+import { getRepository, getManager, EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';
@@ -14,6 +15,8 @@ import * as md5 from 'md5';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { isRole } from '../utils/isRole';
 import { Role } from '../types/Role';
+import { TaskTemplate } from '../entity/TaskTemplate';
+import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
 
 function extractVariables(html: string) {
   const pattern = /\{\{[a-zA-Z]+\}\}/ig;
@@ -160,3 +163,36 @@ export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
   res.json(file);
 });
 
+async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplate) {
+  let round = 1;
+  const { orgId, name } = sourceDocTemplate;
+  while (true) {
+    const tryName = round === 1 ? `Copy of ${name}` : `Copy ${round} of ${name}`;
+    const existing = await m.findOne(DocTemplate, { name: tryName, orgId });
+    if(!existing) {
+      return tryName;
+    }
+    round++;
+  }
+}
+
+export const cloneDocTemplate = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  let docTemplate: DocTemplate;
+  await getManager().transaction(async m => {
+    docTemplate = await m.findOne(DocTemplate, { id, orgId });
+    assert(docTemplate, 404);
+
+    const newTaskTemplateId = uuidv4();
+    docTemplate.id = newTaskTemplateId;
+    docTemplate.createdAt = getUtcNow();
+    docTemplate.lastUpdatedAt = getUtcNow();
+    docTemplate.name = await getUniqueCopyName(m, docTemplate);
+
+    await m.save(docTemplate);
+  })
+
+  res.json(docTemplate);
+});
