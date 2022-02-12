@@ -23,7 +23,7 @@ const Input = (props) => {
     return <components.Input {...props} />;
   }
   return (
-    <div style={{ border: `1px dotted #030303` }}>
+    <div style={{ border: `1px dotted #030303`, height: 28 }}>
       <Tooltip title={'Create new tag'}>
         <components.Input {...props} />
       </Tooltip>
@@ -58,6 +58,10 @@ const colourStyles = {
   valueContainer: styles => ({
     ...styles,
     padding: '1px 2px',
+  }),
+  menu: styles => ({
+    ...styles,
+    zIndex: 2000,
   }),
   // option: (styles, { data, isDisabled, isFocused, isSelected }) => {
   //   const color = chroma(data.color);
@@ -218,6 +222,7 @@ export const TagSelectComponent = React.memo((props) => {
     styles={colourStyles}
     options={options}
     isSearchable={allowCreate}
+    // menuPortalTarget={document.body}
   />
 });
 
