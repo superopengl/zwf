@@ -48,7 +48,7 @@ export const DocTemplateListPanel = (props) => {
     rowKey="id"
     dataSource={docs}
     renderItem={doc => {
-      const missingVarComps = (doc.variables ?? []).filter(v => varBag[v] === undefined || varBag[v] === '').map(v => renderVariable(v));
+      const missingVarComps = (doc.variables ?? []).filter(v => varBag[v] === undefined || varBag[v] === '').map(v => <span key={v}>{renderVariable(v)}</span>);
       return <DocListItem onClick={() => handlePreviewDocTemplate(doc.id)}>
         <Row justify="space-between" className="docItem">
           <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>

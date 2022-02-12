@@ -5,7 +5,7 @@ import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import ClientSelect from 'components/ClientSelect';
-import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertTaskTemplateFieldsToFormFieldsSchema';
+import { convertTaskTemplateFieldsToFormFieldsSchema } from 'util/convertTaskTemplateFieldsToFormFieldsSchema';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import FormBuilder from 'antd-form-builder'
 import { catchError } from 'rxjs/operators';
@@ -13,8 +13,9 @@ import { RightOutlined } from '@ant-design/icons';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { createNewTask$ } from 'services/taskService';
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
+import { TaskFormWidget } from 'components/TaskFormWidget';
 
-const { Title, Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
@@ -26,9 +27,6 @@ export const TaskGenerator = props => {
   const [taskName, setTaskName] = React.useState();
   const [current, setCurrent] = React.useState(0);
   const [loading, setLoading] = React.useState(false);
-  const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
-  const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
-  const formRef = React.createRef();
 
   React.useEffect(() => {
     if (clientInfo && taskTemplate) {
@@ -53,19 +51,6 @@ export const TaskGenerator = props => {
     }
   }, [taskTemplateId])
 
-  React.useEffect(() => {
-    if (taskTemplate) {
-      const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, false);
-      clientFields.fields.forEach(f => {
-        f.required = false;
-      });
-      setClientFieldSchema(clientFields);
-      const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, true);
-      setAgentFieldSchema(agentFields);
-    }
-
-  }, [taskTemplate])
-
   const handleTaskTemplateChange = taskTemplateIdValue => {
     // wizardRef.current.nextStep();
     setTaskTemplateId(taskTemplateIdValue);
@@ -77,10 +62,6 @@ export const TaskGenerator = props => {
 
   const handleStepChange = step => {
     setCurrent(step);
-  }
-
-  const handleFormValueChange = (changeValues, allValues) => {
-    setFieldBag({...allValues.fields});
   }
 
   const handleNameEnter = (e) => {
@@ -111,13 +92,6 @@ export const TaskGenerator = props => {
     })
   }
 
-  const varBag = React.useMemo(() => {
-    if (!fieldBag || !taskTemplate) return {};
-    return taskTemplate.fields.reduce((bag, f) => {
-      bag[f.var] = fieldBag[f.name]
-      return bag;
-    }, {});
-  }, [fieldBag, taskTemplate]);
 
   const steps = [
     {
@@ -147,35 +121,7 @@ export const TaskGenerator = props => {
       title: 'Prefill fields',
       disabled: !clientInfo || !taskTemplate || !taskName,
       content: <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-        <Form
-          ref={formRef}
-          onValuesChange={handleFormValueChange}
-          layout="horizontal"
-          colon={false}
-        // initialValues={{ name: taskTemplate.name }}
-        >
-          <Title level={5} type="secondary" style={{ marginTop: 20 }}>Client fields</Title>
-          <Paragraph type="secondary">
-            You can prefill some fileds on behalf of the client if you already have some of the information for this task.
-          </Paragraph>
-          <Divider style={{ marginTop: 4 }} />
-          <FormBuilder meta={clientFieldSchema} form={formRef} />
-          <Title level={5} type="secondary" style={{ marginTop: 20 }}>Docs</Title>
-          <Paragraph type="secondary">
-            Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
-          </Paragraph>
-          <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-            <DocTemplateListPanel value={taskTemplate?.docs} allowTest={false} varBag={varBag} showWarning={true}/>
-          </Form.Item>
-          {agentFieldSchema?.fields?.length > 0 && <>
-            <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
-            <Paragraph type="secondary">
-              These fields are not visible to clients.
-            </Paragraph>
-            <Divider style={{ marginTop: 4 }} />
-            <FormBuilder meta={agentFieldSchema} form={formRef} />
-          </>}
-        </Form>
+       {taskTemplate?.fields && <TaskFormWidget fields={taskTemplate.fields} docs={taskTemplate.docs} type="agent" />}
       </Space>
     },
   ]
