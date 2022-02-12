@@ -156,7 +156,7 @@ export const TaskTemplatePage = props => {
               setPreviewWidth(w => Math.max(w + d.width, 300));
             }}
           >
-            <div style={{ padding: 16, height: '100%', width: '100%' }}>
+            <div style={{ padding: 16, height: '100%', width: '100%', overflowY: 'auto' }}>
               <Row justify="center" style={{ marginBottom: 40 }}>
                 <Text type="warning">Preview</Text>
               </Row>
