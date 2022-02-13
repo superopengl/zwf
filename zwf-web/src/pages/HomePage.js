@@ -54,6 +54,12 @@ const StyledLayout = styled(ProLayout)`
   min-width: 0;
 }
 
+.ant-pro-top-nav-header-logo {
+  h1 {
+    display: none;
+  }
+}
+
 .ant-pro-top-nav-header-main {
   margin: auto;
   // max-width: 1200px;
@@ -96,7 +102,7 @@ const HomePage = (props) => {
     context.setLocale(locale);
   }
 
-  const {role} = context;
+  const { role } = context;
 
   const isLoggedIn = role !== 'guest';
   const isSystem = role === 'system';
@@ -143,12 +149,12 @@ const HomePage = (props) => {
   }
 
   return <StyledLayout
+    title={'ZeeWorkFlow'}
     logo="/images/logo.svg"
-    title={null}
     // logo="/images/logo-transparent.png"
     collapsed={collapsed}
     onCollapse={setCollapsed}
-    siderWidth={270}
+    // siderWidth={270}
     layout="top"
     navTheme="dark"
     route={{ routes: ROUTES }}
@@ -157,10 +163,10 @@ const HomePage = (props) => {
     menuItemRender={(item, dom) => item.visible ? <div onClick={() => handleMenuClick(item.path)}>{dom}</div> : null}
     rightContentRender={props => {
 
-      if(isLoggedIn) {
+      if (isLoggedIn) {
         return <Link to={isSystem ? '/org' : '/task'}><Button type="primary" ghost >
           <FormattedMessage id="menu.dashboard" />
-          </Button></Link>
+        </Button></Link>
       }
 
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
@@ -198,7 +204,7 @@ const HomePage = (props) => {
 
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.
-        </CookieConsent>
+    </CookieConsent>
   </StyledLayout>
 }
 
