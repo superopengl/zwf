@@ -1,6 +1,7 @@
+import { DocTemplate } from './../entity/DocTemplate';
 import { getUtcNow } from './../utils/getUtcNow';
 
-import { getRepository, getManager, EntityManager } from 'typeorm';
+import { getRepository, getManager, EntityManager, In } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';
@@ -12,39 +13,26 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Role } from '../types/Role';
 import { isRole } from '../utils/isRole';
 import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
-import { TaskTemplateInformation } from '../entity/views/TaskTemplateInformation';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const taskTemplate = new TaskTemplate();
   const orgId = getOrgIdFromReq(req);
 
   const { id, name, description, docTemplateIds, fields } = req.body;
   assert(name, 400, 'name is empty');
   assert(fields?.length || docTemplateIds?.length, 400, 'Neither fields nor doc templates is specified.');
 
-  taskTemplate.id = id || uuidv4();
-  taskTemplate.orgId = orgId;
-  taskTemplate.name = name;
-  taskTemplate.description = description;
-  taskTemplate.fields = fields;
 
   await getManager().transaction(async m => {
+    const taskTemplate = new TaskTemplate();
+    taskTemplate.id = id || uuidv4();
+    taskTemplate.orgId = orgId;
+    taskTemplate.name = name;
+    taskTemplate.description = description;
+    taskTemplate.fields = fields;
+    taskTemplate.docs = await m.find(DocTemplate, { where: { id: In(docTemplateIds) } });
+
     await m.save(taskTemplate);
-    if (docTemplateIds?.length) {
-      const entities = docTemplateIds.map(docTemplateId => {
-        const entity = new TaskTemplateDocTemplate();
-        entity.taskTemplateId = taskTemplate.id;
-        entity.docTemplateId = docTemplateId;
-        return entity;
-      });
-      await m.createQueryBuilder()
-        .insert()
-        .into(TaskTemplateDocTemplate)
-        .values(entities)
-        .orIgnore()
-        .execute();
-    }
   });
 
   res.json();
@@ -53,15 +41,18 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
 export const listTaskTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
-  const list = await getRepository(TaskTemplateInformation)
+  const list = await getRepository(TaskTemplate)
     .find({
       where: {
         orgId
       },
       order: {
         name: 'ASC'
-      }
-    })
+      },
+      relations: [
+        'docs'
+      ]
+    });
 
   res.json(list);
 });
@@ -70,7 +61,7 @@ export const getTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) }
-  const taskTemplate = await getRepository(TaskTemplateInformation).findOne(query);
+  const taskTemplate = await getRepository(TaskTemplate).findOne(query, {relations: ['docs']});
   assert(taskTemplate, 404);
 
   res.json(taskTemplate);
@@ -92,7 +83,7 @@ async function getUniqueCopyName(m: EntityManager, sourceTaskTemplate: TaskTempl
   while (true) {
     const tryName = round === 1 ? `Copy of ${name}` : `Copy ${round} of ${name}`;
     const existing = await m.findOne(TaskTemplate, { name: tryName, orgId });
-    if(!existing) {
+    if (!existing) {
       return tryName;
     }
     round++;
