@@ -33,8 +33,8 @@ Notification.requestPermission().then((result) => {
 });
 
 // function randomNotification() {
-//   const notifTitle = 'ZeeWorkFlow';
-//   const notifBody = `Welcome to ZeeWorkFlow`;
+//   const notifTitle = 'ZeeWorkflow';
+//   const notifBody = `Welcome to ZeeWorkflow`;
 //   const notifImg = `/images/logo-tile.png`;
 //   const options = {
 //     body: notifBody,

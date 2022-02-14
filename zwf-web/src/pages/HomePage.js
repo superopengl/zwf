@@ -149,7 +149,7 @@ const HomePage = (props) => {
   }
 
   return <StyledLayout
-    title={'ZeeWorkFlow'}
+    title={'ZeeWorkflow'}
     logo="/images/logo.svg"
     // logo="/images/logo-transparent.png"
     collapsed={collapsed}

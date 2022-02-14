@@ -3,20 +3,20 @@ import { EmailTemplateType } from "../types/EmailTemplateType";
 export const defaultEmailTemplateDef = {
   [EmailTemplateType.WelcomeClient]: {
     vars: ['website', 'toWhom', 'email', 'url'],
-    subject: '[ZeeWorkFlow] Welcome to join ZeeWorkFlow',
+    subject: '[ZeeWorkflow] Welcome to join ZeeWorkflow',
     body: `Dear {{toWhom}}
     <br/>
-Thank you very much for joining ZeeWorkFlow.
+Thank you very much for joining ZeeWorkflow.
 <br/>
 Your user name is <strong>{{email}}</strong>
 `,
   },
   [EmailTemplateType.WelcomeOrg]: {
     vars: ['website', 'toWhom', 'email', 'url'],
-    subject: '[ZeeWorkFlow] Welcome to join ZeeWorkFlow',
+    subject: '[ZeeWorkflow] Welcome to join ZeeWorkflow',
     body: `Dear {{toWhom}}
     <br/>
-Thank you very much for joining ZeeWorkFlow.
+Thank you very much for joining ZeeWorkflow.
 <br/>
 Your user name is <strong>{{email}}</strong> and you are the administrator user.
 <br/>
@@ -27,10 +27,10 @@ Please use below link to complete creating your organisation.
   },
   [EmailTemplateType.InviteOrgMember]: {
     vars: ['website', 'toWhom', 'email', 'url', 'org'],
-    subject: '[ZeeWorkFlow] Invitation to Join Organization',
+    subject: '[ZeeWorkflow] Invitation to Join Organization',
     body: `Dear {{toWhom}}
 <br/>
-You are invited to join <strong>{{org}}</strong> as a member in ZeeWorkFlow. Your user name is {{email}}.
+You are invited to join <strong>{{org}}</strong> as a member in ZeeWorkflow. Your user name is {{email}}.
 <br/>
 Please click below link to accept the invite.
 {{url}}
@@ -38,10 +38,10 @@ Please click below link to accept the invite.
   },
   [EmailTemplateType.InviteClientUser]: {
     vars: ['website', 'toWhom', 'email', 'url', 'org'],
-    subject: '[ZeeWorkFlow] Invitation',
+    subject: '[ZeeWorkflow] Invitation',
     body: `Dear {{toWhom}}
     <br/>
-You are invited to join in ZeeWorkFlow. Your user name is {{email}}.
+You are invited to join in ZeeWorkflow. Your user name is {{email}}.
 <br/>
 Please click below link to accept the invite.
 {{url}}
@@ -49,7 +49,7 @@ Please click below link to accept the invite.
   },
   [EmailTemplateType.ResetPassword]: {
     vars: ['website', 'toWhom', 'email', 'url',],
-    subject: '[ZeeWorkFlow] Set Password',
+    subject: '[ZeeWorkflow] Set Password',
     body: `Dear {{toWhom}}
     <br/>
 Please click below link to reset your password.
@@ -59,7 +59,7 @@ Please click below link to reset your password.
   },
   [EmailTemplateType.CreatedPortfolio]: {
     vars: ['website', 'toWhom', 'email', 'url', 'portfolioName'],
-    subject: '[ZeeWorkFlow] Created Portfolio',
+    subject: '[ZeeWorkflow] Created Portfolio',
     body: `Dear {{toWhom}}
     <br/>
 Congratulations! Your portfolio {{portfolioName}} was created.
@@ -67,7 +67,7 @@ Congratulations! Your portfolio {{portfolioName}} was created.
   },
   [EmailTemplateType.RequireClientAuthorizing]: {
     vars: ['website', 'toWhom', 'email', 'okUrl', 'ngUrl', 'orgName'],
-    subject: '[ZeeWorkFlow] Authorize Organization',
+    subject: '[ZeeWorkflow] Authorize Organization',
     body: `Dear {{toWhom}}
     <br/>
 Organization <strong>{{orgName}}</strong> is asking to access your portfolios.
@@ -77,7 +77,7 @@ Clicking to {{url}} to approve or reject.
   },
   [EmailTemplateType.TaskCreated]: {
     vars: ['website', 'toWhom', 'taskName', 'directUrl', 'orgName'],
-    subject: '[ZeeWorkFlow] Task Created',
+    subject: '[ZeeWorkflow] Task Created',
     body: `Dear {{toWhom}}
 <p>
     Organization <strong>{{orgName}}</strong> created a task {{taskName}} for you. Please use below link to access the task.

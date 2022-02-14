@@ -87,9 +87,9 @@ const OrgOnBoardWizard = (props) => {
       content: <Form layout="vertical" form={basicForm} onFinish={handleSubmitBasic} style={{ textAlign: 'left' }} initialValues={org}>
         <Form.Item label="Organization name"
           name="name"
-          help={<>The name of your organisation in ZeeWorkFlow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
+          help={<>The name of your organisation in ZeeWorkflow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
           rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>
-          <Input allowClear={true} placeholder="ZeeWorkFlow" autoComplete="organization" />
+          <Input allowClear={true} placeholder="ZeeWorkflow" autoComplete="organization" />
         </Form.Item>
         <Form.Item label="Domain name"
           name="domain"
@@ -101,7 +101,7 @@ const OrgOnBoardWizard = (props) => {
           name="businessName"
           help={<>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>}
           rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
-          <Input placeholder="ZeeWorkFlow Inc." allowClear={true} autoComplete="organization" />
+          <Input placeholder="ZeeWorkflow Inc." allowClear={true} autoComplete="organization" />
         </Form.Item>
         <Form.Item label="ABN"
           name="abn"
@@ -126,9 +126,9 @@ const OrgOnBoardWizard = (props) => {
         <Form layout="vertical" form={configForm} onFinish={handleSubmitConfig} style={{ textAlign: 'left' }} initialValues={org}>
       <Form.Item label="Organization name"
         name="name"
-        help={<>The name of your organisation in ZeeWorkFlow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
+        help={<>The name of your organisation in ZeeWorkflow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
         rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>
-        <Input allowClear={true} placeholder="ZeeWorkFlow" autoComplete="organization" />
+        <Input allowClear={true} placeholder="ZeeWorkflow" autoComplete="organization" />
       </Form.Item>
       <Form.Item label="Domain name"
         name="domain"
@@ -140,7 +140,7 @@ const OrgOnBoardWizard = (props) => {
         name="businessName"
         help={<>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>}
         rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
-        <Input placeholder="ZeeWorkFlow Inc." allowClear={true} autoComplete="organization" />
+        <Input placeholder="ZeeWorkflow Inc." allowClear={true} autoComplete="organization" />
       </Form.Item>
       <Form.Item label="ABN"
         name="abn"

@@ -92,7 +92,7 @@ const TaskDirectPage = (props) => {
         type="info"
         showIcon
         icon={<Icon component={() => <Logo size={48} />} />}
-        message={<>Welcome to ZeeWorkFlow</>}
+        message={<>Welcome to ZeeWorkflow</>}
         description={<>Log in or sign up to have better experience</>}
         action={<Button type="primary" onClick={handleLogin}>Log in</Button>}
       />
@@ -134,7 +134,7 @@ const TaskDirectPage = (props) => {
         </>
         :
         <>
-          <Paragraph>Organazation <strong>{userInfo?.orgName}</strong> invite you to join ZeeWorkFlow to complete this task. Please click below button to set a password and sign up to ZeeWorkFlow.</Paragraph>
+          <Paragraph>Organazation <strong>{userInfo?.orgName}</strong> invite you to join ZeeWorkflow to complete this task. Please click below button to set a password and sign up to ZeeWorkflow.</Paragraph>
           <ForgotPasswordPanel email={userInfo?.email} onFinish={() => setLoginModalVisible(false)} />
         </>
       }

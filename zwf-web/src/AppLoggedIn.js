@@ -194,7 +194,7 @@ export const AppLoggedIn = React.memo(props => {
 
   return <StyledLayout
     // title={<Image src="/images/brand.svg" preview={false} width={110} />}
-    title={"ZeeWorkFlow"}
+    title={"ZeeWorkflow"}
     logo="/images/logo.svg"
     // logo="/header-logo.png"
     route={{ routes }}

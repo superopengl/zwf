@@ -23,7 +23,7 @@ const AboutModal = (props) => {
       {...other}
     >
       <Paragraph>
-      About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. About ZeeWorkFlow. 
+      About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. About ZeeWorkflow. 
       </Paragraph>
       <Divider />
       <Paragraph style={{textAlign: 'center'}}>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</Paragraph>
