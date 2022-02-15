@@ -42,14 +42,15 @@ export const RichTextInput = (props) => {
         'xx-large': { name: '24px', value: '6' },
         'xxx-large': { name: '32px', value: '7' },
       },
-      uploadImgServer: `${API_BASE_URL}/file${shared ? '?public=1' : ''}`,
-      uploadImgMaxLength: 1,
-      withCredentials: true,
-      uploadFileName: 'file',
-      uploadImgTimeout: 30 * 1000, // 30 seconds
-      uploadImgHooks: {
-        customInsert: handleCustomImageInsert
-      },
+      // uploadImgServer: `${API_BASE_URL}/file${shared ? '?public=1' : ''}`,
+      // uploadImgMaxLength: 1,
+      uploadImgShowBase64: true,
+      // withCredentials: true,
+      // uploadFileName: 'file',
+      // uploadImgTimeout: 30 * 1000, // 30 seconds
+      // uploadImgHooks: {
+      //   customInsert: handleCustomImageInsert
+      // },
       showFullScreen: false,
       menus: [
         'head',
