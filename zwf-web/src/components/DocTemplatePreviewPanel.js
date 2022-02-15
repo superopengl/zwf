@@ -80,9 +80,7 @@ export const DocTemplatePreviewPanel = props => {
   return (
     <Container style={props.style} direction="vertical" size="large">
       {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
-      <PreviewDocContainer bordered>
-        <RawHtmlDisplay value={renderedHtml} />
-      </PreviewDocContainer>
+
 
       {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Collapse.Panel key="1"
@@ -103,6 +101,10 @@ export const DocTemplatePreviewPanel = props => {
           </Form>
         </Collapse.Panel>
       </Collapse>}
+
+      <PreviewDocContainer bordered>
+        <RawHtmlDisplay value={renderedHtml} />
+      </PreviewDocContainer>
     </Container >
   );
 };
