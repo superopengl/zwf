@@ -9,6 +9,6 @@ export class OrgConfig {
   @PrimaryColumn()
   key: string;
 
-  @Column('json')
+  @Column('jsonb')
   value: any;
 }

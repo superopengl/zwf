@@ -45,14 +45,14 @@ export class Task {
   @Column('uuid')
   userId: string;
 
-  @Column('json', { default: '[]' })
+  @Column('jsonb', { default: '[]' })
   fields: TaskField[];
 
   @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: Tag[];
 
-  @Column('json', {default: '[]'})
+  @Column('jsonb', {default: '[]'})
   docs: TaskDoc[];
 }
 

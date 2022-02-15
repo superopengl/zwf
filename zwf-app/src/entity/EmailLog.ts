@@ -15,9 +15,9 @@ export class EmailLog {
   @Column()
   templateKey: string;
 
-  @Column('json')
+  @Column('jsonb', {nullable: true})
   vars: any;
 
-  @Column('json', {nullable: true})
+  @Column('jsonb', {nullable: true})
   error: any;
 }

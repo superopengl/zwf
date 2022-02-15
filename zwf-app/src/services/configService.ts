@@ -1,5 +1,5 @@
 import { getRepository, IsNull } from 'typeorm';
-import { SystemConfig } from '../entity/Config';
+import { SystemConfig } from '../entity/SystemConfig';
 import { OrgConfig } from '../entity/OrgConfig';
 
 export async function getConfigValue(orgId, key) {

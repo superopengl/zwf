@@ -1,5 +1,5 @@
 import { getManager } from 'typeorm';
-import { SystemConfig } from '../entity/Config';
+import { SystemConfig } from '../entity/SystemConfig';
 
 export async function initializeConfig() {
   const noreply = new SystemConfig();

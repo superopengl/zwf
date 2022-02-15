@@ -29,7 +29,7 @@ export class Payment {
   @Column('uuid', { nullable: true })
   orgPaymentMethodId: string;
 
-  @Column('json', { nullable: true })
+  @Column('jsonb', { nullable: true })
   rawResponse: object;
 
   @Column()
@@ -52,7 +52,7 @@ export class Payment {
   @Column({ default: 1 })
   attempt: number;
 
-  @Column('json', { nullable: true })
+  @Column('jsonb', { nullable: true })
   geo: object;
 
   @ManyToOne(() => Subscription, subscription => subscription.payments, { onDelete: 'CASCADE' })

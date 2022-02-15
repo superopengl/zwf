@@ -27,7 +27,7 @@ export class TaskTemplate {
   @UpdateDateColumn()
   lastUpdatedAt: Date;
 
-  @Column('json', { default: '[]' })
+  @Column('jsonb', { default: '[]' })
   fields: TaskField[];
 
   @ManyToMany(type => DocTemplate, { onDelete: 'CASCADE' })
