@@ -28,7 +28,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
   const varBag = React.useMemo(() => {
     return fields.reduce((bag, f) => {
-      bag[f.var] = f.value;
+      bag[f.varName] = f.value;
       return bag;
     }, {});
   }, [fields]);

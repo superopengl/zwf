@@ -77,7 +77,7 @@ export const TaskGenerator = props => {
 
   const handleCreateTask = () => {
     const varBag = editingFields.reduce((bag, f) => {
-      bag[f.var] = f.value;
+      bag[f.varName] = f.value;
       return bag;
     }, {});
     createTaskWithVarBag(varBag);
