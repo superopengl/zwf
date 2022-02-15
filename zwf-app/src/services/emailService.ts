@@ -1,3 +1,4 @@
+import { SYSTEM_EMAIL_SENDER, SYSTEM_EMAIL_BCC } from './../utils/constant';
 import { OrgEmailTemplateInformation } from '../entity/views/OrgEmailTemplateInformation';
 import * as aws from 'aws-sdk';
 import { awsConfig } from '../utils/awsConfig';
@@ -22,6 +23,7 @@ import 'colors';
 import { SystemEmailSignature } from '../entity/SystemEmailSignature';
 import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
 import { OrgEmailSignature } from '../entity/OrgEmailSignature';
+import { constants } from 'buffer';
 
 let emailTransporter = null;
 
@@ -74,9 +76,9 @@ async function composeEmailOption(req: EmailRequest) {
   const { subject, text, html } = await compileEmailBody(req);
 
   return {
-    from: req.from || await getConfigValue(orgId, 'email.sender.noreply'),
+    from: req.from || SYSTEM_EMAIL_SENDER,
     to: req.to,
-    bcc: req.shouldBcc ? await getConfigValue(orgId, 'email.sender.bcc') : undefined,
+    bcc: req.shouldBcc ? SYSTEM_EMAIL_BCC : undefined,
     subject: subject,
     text: text,
     html: html,
@@ -137,7 +139,7 @@ export async function enqueueEmail(req: EmailRequest) {
   assert(template, 400, 'Email template is not specified');
 
   const task = new EmailSentOutTask();
-  task.from = req.from || await getConfigValue(orgId, 'email.sender.noreply');
+  task.from = req.from || SYSTEM_EMAIL_SENDER;
   task.to = req.to;
   task.template = req.template;
   task.vars = req.vars;

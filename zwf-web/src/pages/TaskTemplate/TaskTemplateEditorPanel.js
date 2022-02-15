@@ -8,6 +8,7 @@ import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Ra
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
+  max-width: 1000px;
   // padding: 10px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);

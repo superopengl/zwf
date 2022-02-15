@@ -1,5 +1,5 @@
 import { UserInformation } from './../entity/views/UserInformation';
-import { createTaskByTaskTemplateAndUserEmail } from './../utils/generateTaskByTaskTemplateAndPortfolio';
+import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { getRepository } from 'typeorm';
 import { Recurring } from '../entity/Recurring';
 import { assert } from '../utils/assert';
