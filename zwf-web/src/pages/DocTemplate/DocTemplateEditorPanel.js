@@ -6,7 +6,6 @@ import { TaskTemplateBuilder } from 'pages/TaskTemplate/formBuilder/TaskTemplate
 import PropTypes from 'prop-types';
 import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 import {RichTextInput} from 'components/RichTextInput';
-import { EditTitleInput } from 'components/EditTitleInput';
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
@@ -35,7 +34,7 @@ export const DocTemplateEditorPanel = props => {
         initialValues={entity}
         style={{ position: 'relative' }}>
         <Form.Item name="name" rules={[{ required: true, message: ' ', max: 100 }]}>
-          <EditTitleInput placeholder="Untitled Doc Template" />
+          <Input placeholder="Untitled Doc Template" className='edit-title-input'/>
         </Form.Item>
         <Form.Item name="description" label="Description" rules={[{ required: true, message: ' ' }]}>
           <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />

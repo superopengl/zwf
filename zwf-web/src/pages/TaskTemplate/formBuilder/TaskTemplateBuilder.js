@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { FieldList } from './FieldList';
 import DocTemplateSelect from 'components/DocTemplateSelect';
 import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
+// import { EditTitleInput } from 'components/EditTitleInput';
 // import arrayMove from 'array-move';
 
 const { Text, Paragraph } = Typography;
@@ -92,11 +93,11 @@ export const TaskTemplateBuilder = (props) => {
     // id={formId}
     >
       <Form.Item
-        label="Name"
+        // label="Name"
         name="name"
-        {...formItemLayoutProps}
+        // {...formItemLayoutProps}
         rules={[{ required: true, message: ' ' }]}>
-        <Input placeholder="Task template name" maxLength={200} allowClear autoFocus size="large" />
+        <Input placeholder="Task template name" maxLength={200} allowClear autoFocus className='edit-title-input'/>
       </Form.Item>
       <Form.Item
         label="Description"
@@ -119,6 +120,13 @@ export const TaskTemplateBuilder = (props) => {
       >
         <DocTemplateSelect showVariables={true} onVariableChange={hanldeVariableChange} />
       </Form.Item>
+      <Alert
+          description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
+          showIcon
+          closable
+          type="info"
+          style={{ marginBottom: 20 }}
+        />
       <Form.Item
         label="Fields"
         name="fields"
