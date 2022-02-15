@@ -17,7 +17,7 @@ import { enqueueEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
 import { DocTemplate } from '../entity/DocTemplate';
-import { TaskDoc } from '../types/TaskDoc';
+import { TaskDoc } from '../entity/TaskDoc';
 import { tryGenDocFile } from '../services/genDocService';
 
 function generateDeepLinkId() {
@@ -49,16 +49,16 @@ function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
   return `${taskTemplateName} - ${displayName}`;
 }
 
-async function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[], fields: TaskField[], userId: string): Promise<TaskDoc[]> {
+function generateTaskDocs(docTemplates: DocTemplate[], fields: TaskField[], userId: string): TaskDoc[] {
   const docs: TaskDoc[] = [];
-  for(const docTemplate of docTemplates) {
+  for (const docTemplate of docTemplates) {
     const taskDoc = new TaskDoc();
-    taskDoc.id = docTemplate.id;
-    taskDoc.type = 'doc-template';
+    taskDoc.docTemplateId = docTemplate.id;
+    taskDoc.createdBy = userId;
     taskDoc.name = docTemplate.name;
-    taskDoc.createdAt = getUtcNow();
-    const file = await tryGenDocFile(docTemplate, fields, userId);
-    taskDoc.fileId = file?.id;
+    taskDoc.status = 'pending';
+    // const file = await tryGenDocFile(docTemplate, fields, userId);
+    // taskDoc.fileId = file?.id;
     docs.push(taskDoc);
   }
   return docs;
@@ -86,9 +86,13 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     task.taskTemplateId = taskTemplateId;
     task.fields = fields;
     task.orgId = taskTemplate.orgId;
-    task.docs = await mapDocTemplatesToGenDocs(taskTemplate.docs, fields, user.id);
     task.status = TaskStatus.TODO;
-    await m.insert(Task, task);
+
+    const taskDocs = generateTaskDocs(taskTemplate.docs, fields, user.id);
+    await m.save(taskDocs);
+
+    task.docs = taskDocs;
+    await m.save(task);
   });
 
   const org = await getRepository(Org).findOne(task.orgId);

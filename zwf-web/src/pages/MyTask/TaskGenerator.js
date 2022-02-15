@@ -92,7 +92,9 @@ export const TaskGenerator = props => {
     };
 
     setLoading(true);
-    createNewTask$(payload).subscribe(() => {
+    createNewTask$(payload).pipe(
+      catchError(() => setLoading(false))
+    ).subscribe(() => {
       setLoading(false);
       props.onCreated();
     })
@@ -132,6 +134,7 @@ export const TaskGenerator = props => {
           docs={taskTemplate.docs}
           type="agent"
           onChange={handleFieldsUpdate}
+          mode="taskTemplate"
         />}
       </Space>
     },

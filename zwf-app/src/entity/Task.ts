@@ -1,6 +1,6 @@
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
-import { TaskDoc } from '../types/TaskDoc';
+import { TaskDoc } from './TaskDoc';
 import { Tag } from './Tag';
 import { TaskField } from '../types/TaskField';
 
@@ -48,11 +48,12 @@ export class Task {
   @Column('jsonb', { default: '[]' })
   fields: TaskField[];
 
-  @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
+  @ManyToMany(() => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: Tag[];
 
-  @Column('jsonb', {default: '[]'})
+  @ManyToMany(() => TaskDoc, { onDelete: 'CASCADE' })
+  @JoinTable()
   docs: TaskDoc[];
 }
 

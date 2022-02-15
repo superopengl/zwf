@@ -7,8 +7,9 @@ import { getDocTemplate$ } from 'services/docTemplateService';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
 import { ExclamationCircleFilled, ExclamationCircleOutlined } from '@ant-design/icons';
+import { getPublicFileUrl } from 'services/fileService';
 
-const { Text } = Typography;
+const { Text, Link: TextLink } = Typography;
 
 const DocListItem = styled(List.Item)`
 padding-left: 12px !important;
@@ -33,13 +34,15 @@ position: relative;
 `;
 
 export const DocTemplateListPanel = (props) => {
-  const { value: docs, allowTest, varBag, showWarning, renderVariable, ...otherProps } = props;
+  const { value: docs, allowTest, varBag, showWarning, renderVariable, type, ...otherProps } = props;
 
   const handlePreviewDocTemplate = docId => {
     getDocTemplate$(docId).subscribe(docTemplate => {
       showDocTemplatePreviewModal(docTemplate, { allowTest, varBag });
     })
   }
+
+  const isDocTemplateMode = type === 'taskTemplate'
 
   return docs?.length > 0 && <List
     size="small"
@@ -49,24 +52,30 @@ export const DocTemplateListPanel = (props) => {
     dataSource={docs}
     renderItem={doc => {
       const missingVarComps = (doc.variables ?? []).filter(v => varBag[v] === undefined || varBag[v] === '').map(v => <span key={v}>{renderVariable(v)}</span>);
-      return <DocListItem onClick={() => handlePreviewDocTemplate(doc.id)}>
-        <Row justify="space-between" className="docItem">
-          <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
-        </Row>
-        {showWarning && <Tooltip title={<>Fields {missingVarComps} are required to be input to generate the doc.</>} 
-        placement="topLeft" 
-        overlayStyle={{maxWidth: 398}}
-        arrowPointAtCenter>
-            <ExclamationCircleOutlined style={{
-              color: '#cf1322',
-              marginRight: 4,
-              fontSize: 18,
-              visibility: missingVarComps.length > 0 ? 'visible' : 'hidden',
-              position: 'absolute',
-              left: -30,
-            }}
-            />
-          </Tooltip>}
+      return <DocListItem onClick={isDocTemplateMode ? () => handlePreviewDocTemplate(doc.id) : null}>
+        {isDocTemplateMode
+          ? <Row justify="space-between" className="docItem">
+            <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
+          </Row>
+          : <TextLink href={getPublicFileUrl(doc.fileId)} target="_blank" style={{width: '100%'}}>
+            <Row justify="space-between" className="docItem">
+            <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
+          </Row>
+          </TextLink>}
+        {showWarning && <Tooltip title={<>Fields {missingVarComps} are required to be input to generate the doc.</>}
+          placement="topLeft"
+          overlayStyle={{ maxWidth: 398 }}
+          arrowPointAtCenter>
+          <ExclamationCircleOutlined style={{
+            color: '#cf1322',
+            marginRight: 4,
+            fontSize: 18,
+            visibility: missingVarComps.length > 0 ? 'visible' : 'hidden',
+            position: 'absolute',
+            left: -30,
+          }}
+          />
+        </Tooltip>}
         {/* {showWarning && missingVarComps.length > 0 && <Text style={{marginTop: 10, lineHeight: 0.8, fontSize: '0.8rem'}} type="danger">Fields {missingVarComps} are required for this doc.</Text>} */}
       </DocListItem>
     }}
@@ -79,6 +88,7 @@ DocTemplateListPanel.propTypes = {
   showWarning: PropTypes.bool,
   varBag: PropTypes.object,
   renderVariable: PropTypes.func,
+  mode: PropTypes.oneOf(['taskTemplate', 'task']),
 };
 
 DocTemplateListPanel.defaultProps = {
@@ -86,6 +96,7 @@ DocTemplateListPanel.defaultProps = {
   allowTest: false,
   showWarning: false,
   varBag: {},
-  renderVariable: (varName) => <VarTag>{varName}</VarTag>
+  renderVariable: (varName) => <VarTag>{varName}</VarTag>,
+  mode: 'taskTemplate',
 };
 

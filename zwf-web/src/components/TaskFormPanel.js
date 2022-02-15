@@ -20,6 +20,7 @@ export const TaskFormPanel = React.memo(React.forwardRef((props, formRef) => {
       fields={task.fields}
       docs={task.docs}
       type={type}
+      mode="task"
       />
     </>
   );
