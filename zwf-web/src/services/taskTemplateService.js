@@ -1,4 +1,4 @@
-import { httpGet, httpGet$, httpPost, httpDelete, httpPut$ } from './http';
+import { httpGet, httpGet$, httpPost$, httpPost, httpDelete, httpPut$ } from './http';
 
 export async function getTaskTemplate(id) {
   return httpGet(`task_template/${id}`);
@@ -26,4 +26,8 @@ export async function listTaskTemplate() {
 
 export function listTaskTemplate$() {
   return httpGet$('task_template');
+}
+
+export function renameTaskTemplate$(id, name) {
+  return httpPost$(`/task_template/${id}/rename`, {name});
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Typography, Modal, PageHeader, Button, Layout, Alert } from 'antd';
+import { Row, Col, Typography, Modal, PageHeader, Button, Layout, Input } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
@@ -8,7 +8,7 @@ import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import Icon, { SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
-import { getTaskTemplate$, saveTaskTemplate } from 'services/taskTemplateService';
+import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
 import ReactDOM from 'react-dom';
 import { notify } from 'util/notify';
@@ -16,6 +16,8 @@ import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 import { of, Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { Resizable } from "re-resizable";
+import { ClickToEditInput } from 'components/ClickToEditInput';
+import { TaskTemplateIcon } from 'components/entityIcon';
 
 const { Title, Text } = Typography;
 
@@ -29,6 +31,14 @@ const LayoutStyled = styled.div`
 
   .ant-page-header-content {
     padding-top: 30px;
+  }
+
+  .ant-page-header-heading-left {
+    flex: 1;
+
+    .ant-page-header-heading-title {
+      flex: 1;
+    }
   }
 `;
 
@@ -71,6 +81,7 @@ export const TaskTemplatePage = props => {
   const [preview, setPreview] = React.useState(false);
   const [previewSider, setPreviewSider] = React.useState(false);
   const [previewWidth, setPreviewWidth] = React.useState(300);
+  const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
 
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
 
@@ -85,6 +96,7 @@ export const TaskTemplatePage = props => {
         )
         .subscribe(taskTemplate => {
           setTaskTemplate(taskTemplate)
+          setTaskTemplateName(taskTemplate.name)
           setLoading(false);
         });
     }
@@ -101,6 +113,7 @@ export const TaskTemplatePage = props => {
     const entity = {
       ...taskTemplate,
       id: taskTemplateId,
+      name: taskTemplateName,
     };
 
     await saveTaskTemplate(entity);
@@ -108,6 +121,16 @@ export const TaskTemplatePage = props => {
   }
 
   const debugMode = false;
+
+  const handleRename = (newName) => {
+    if (newName !== taskTemplateName) {
+      setTaskTemplateName(newName);
+
+      if (!isNew) {
+        renameTaskTemplate$(taskTemplate.id, newName).subscribe();
+      }
+    }
+  }
 
   return (
     // <PageContainer>
@@ -119,7 +142,13 @@ export const TaskTemplatePage = props => {
         loading={loading}
         ghost={true}
         header={{
-          title: isNew ? 'New Task Template' : taskTemplate?.name,
+          backIcon: false,
+          title: <Row align="middle" wrap={false} style={{height: 46}}>
+            <Col><TaskTemplateIcon /></Col>
+            <Col flex={1}>
+              <ClickToEditInput placeholder={isNew ? 'New Task Template' : "Task template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />,
+            </Col>
+          </Row>,
           onBack: goBack,
           extra: [
             <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,

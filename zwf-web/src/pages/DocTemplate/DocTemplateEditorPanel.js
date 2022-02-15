@@ -33,9 +33,6 @@ export const DocTemplateEditorPanel = props => {
         onValuesChange={(changedValues, allValues) => onChange(allValues)}
         initialValues={entity}
         style={{ position: 'relative' }}>
-        <Form.Item name="name" rules={[{ required: true, message: ' ', max: 100 }]}>
-          <Input placeholder="Untitled Doc Template" className='edit-title-input'/>
-        </Form.Item>
         <Form.Item name="description" label="Description" rules={[{ required: true, message: ' ' }]}>
           <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
         </Form.Item>

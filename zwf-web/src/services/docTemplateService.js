@@ -1,4 +1,4 @@
-import { httpGet, httpGet$,httpPut$, httpPost, httpDelete} from './http';
+import { httpGet, httpGet$,httpPut$, httpPost$,httpPost, httpDelete} from './http';
 
 export async function getDocTemplate(id) {
   return httpGet(`doc_template/${id}`);
@@ -34,4 +34,8 @@ export async function applyDocTemplate(id, variables) {
 
 export async function genPdfFromDocTemplate(id, variables) {
   return httpPost(`doc_template/${id}/pdf`, {variables});
+}
+
+export function renameDocTemplate$(id, name) {
+  return httpPost$(`/doc_template/${id}/rename`, {name});
 }
