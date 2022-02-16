@@ -1,9 +1,7 @@
 import React from 'react';
-
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space } from 'antd';
-
+import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, saveTaskFields$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -139,14 +137,16 @@ const OrgTaskPage = React.memo((props) => {
       >
         <Row wrap={false} gutter={40}>
           <Col span={16}>
-            <TaskFormPanel ref={formRef} value={task} type="client" onChange={handleTaskFieldsChange} />
-            <Row justify="end">
-            <Button type="primary" icon={<SaveOutlined />} onClick={handleSaveTaskForm}>Save</Button>
+            <Card size="large">
+              <TaskFormPanel ref={formRef} value={task} type="client" onChange={handleTaskFieldsChange} />
+            </Card>
+            <Row justify="end" style={{ marginTop: 20 }}>
+              <Button type="primary" icon={<SaveOutlined />} onClick={handleSaveTaskForm}>Save</Button>
             </Row>
             {/* <em>{JSON.stringify(task.fields, null, 2)}</em> */}
           </Col>
-          <Col span={8} style={{minWidth: 300}}>
-            <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+          <Col span={8} style={{ minWidth: 300 }}>
+            <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'procedure', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
               <Collapse.Panel key="client" header="Client">
                 {task?.client && <Space size="small" style={{ paddingLeft: 12, paddingRight: 12 }}>
                   <UserAvatar value={task.client.avatarFileId} color={task.client.avatarColorHex} size={32} />
@@ -163,8 +163,14 @@ const OrgTaskPage = React.memo((props) => {
               <Collapse.Panel key="tags" header="Tags">
                 <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
               </Collapse.Panel>
+              <Collapse.Panel key="procedure" header="Procedures">
+                <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" size="small">
+                  <Button type="link" icon={<LinkOutlined />} block onClick={() => setMessageVisible(true)}>How to do it</Button>
+                  <Button type="link" icon={<LinkOutlined />} block onClick={() => setMessageVisible(true)}>Best practice</Button>
+                </Space>
+              </Collapse.Panel>
               <Collapse.Panel key="actions" header="Actions">
-                <Space style={{ width: '100%' }} direction="vertical" className="action-buttons">
+                <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setMessageVisible(true)}>Action history</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
