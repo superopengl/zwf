@@ -50,7 +50,7 @@ export const AssigneeSelect = React.memo(props => {
     placeholder={placeholder}
     showSearch
     showArrow
-    style={{ width: 140 }}
+    style={{ width: '100%', minWidth: 140 }}
     onSearch={handleSearch}
     onSelect={handleSelectChange}
     value={value}

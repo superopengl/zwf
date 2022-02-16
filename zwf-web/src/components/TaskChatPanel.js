@@ -18,7 +18,7 @@ const Container = styled.div`
 // border-left: 1px solid rgba(0, 0, 0, 0.06) ;
 // padding-left: 16px;
 
-min-width: 200px;
+// min-width: 400px;
 .message-list {
   display: flex;
   flex-direction: column-reverse;

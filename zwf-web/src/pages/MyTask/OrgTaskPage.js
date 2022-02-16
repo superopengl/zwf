@@ -2,25 +2,32 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Skeleton } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card, Divider } from 'antd';
 
 import { changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
-import { TaskWorkPanel } from 'components/TaskWorkPanel';
-import { catchError, switchMapTo } from 'rxjs/operators';
+import { catchError } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
-import { combineLatest } from 'rxjs';
-import { listTags$ } from 'services/taskTagService';
-import Tag from 'components/Tag';
-import {TagSelect} from 'components/TagSelect';
+import { TagSelect } from 'components/TagSelect';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { TaskIcon } from 'components/entityIcon';
+import { TaskChatPanel } from 'components/TaskChatPanel';
+import { TaskFormPanel } from 'components/TaskFormPanel';
+import { CheckOutlined, DeleteOutlined, FileAddOutlined, MessageFilled, MessageOutlined } from '@ant-design/icons';
+import Icon, { BorderOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
+import { AiOutlineHistory } from 'react-icons/ai';
+import { UserDisplayName } from 'components/UserDisplayName';
+import { UserAvatar } from 'components/UserAvatar';
+import { AssigneeSelect } from 'components/AssigneeSelect';
+import { FaSign, FaSignature } from 'react-icons/fa';
+import { MdReadMore } from 'react-icons/md';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
 padding: 0;
 // text-align: center;
-// max-width: 1000px;
+max-width: 1000px;
 width: 100%;
 height: 100%;
 
@@ -31,6 +38,13 @@ height: 100%;
   border: 1px solid rgb(217,217,217);
 border-radius:4px;
 }
+
+.action-buttons {
+  button {
+    text-align: left;
+    padding-left: 0;
+  }
+}
 `;
 
 
@@ -39,9 +53,12 @@ const OrgTaskPage = React.memo((props) => {
 
   const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
+  const [messageVisible, setMessageVisible] = React.useState(false);
   const [task, setTask] = React.useState();
+  const context = React.useContext(GlobalContext);
 
   const formRef = React.createRef();
+  const currentUserId = context.user?.id;
 
   React.useEffect(() => {
     const subscription$ = getTask$(id).pipe(
@@ -80,14 +97,16 @@ const OrgTaskPage = React.memo((props) => {
       {task && <PageContainer
         loading={loading}
         onBack={handleGoBack}
+        backIcon={false}
+        ghost={true}
         fixedHeader
         header={{
-          title: task?.name || <Skeleton paragraph={false} />
+          title: <><TaskIcon /> {task?.name || <Skeleton paragraph={false} />}</>
         }}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
           // <Button key="reset" onClick={handleReset}>Reset</Button>,
-          // <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>,
+          // <Button key="message" icon={<MessageOutlined />} onClick={() => setMessageVisible(true)}>Messages</Button>,
           <TaskStatusButton key="status" value={task.status} onChange={handleStatusChange} />
         ]}
       // footer={[
@@ -95,9 +114,56 @@ const OrgTaskPage = React.memo((props) => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
-        <TaskWorkPanel ref={formRef} task={task} type="agent" />
+        <Row wrap={false} gutter={40}>
+          <Col flex={1}>
+            <TaskFormPanel ref={formRef} value={task} type="client" onChangeLoading={setLoading} />
+          </Col>
+          <Col style={{ width: 400 }}>
+            <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost>
+              <Collapse.Panel key="client" header="Client">
+                {task?.client && <Space size="small">
+                  <UserAvatar value={task.client.avatarFileId} color={task.client.avatarColorHex} size={32} />
+                  <UserDisplayName
+                    email={task.client.email}
+                    surname={task.client.surname}
+                    givenName={task.client.givenName}
+                  />
+                </Space>}
+              </Collapse.Panel>
+              <Collapse.Panel key="assignee" header="Assignee">
+                <AssigneeSelect value={task.assigneeId} />
+              </Collapse.Panel>
+              <Collapse.Panel key="tags" header="Tags">
+                <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
+              </Collapse.Panel>
+              <Collapse.Panel key="actions" header="Actions">
+                <Space style={{ width: '100%' }} direction="vertical" class="action-buttons">
+                  <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
+                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setMessageVisible(true)}>Action history</Button>
+                  <hr/>
+                  <Button type="link"  icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for form info</Button>
+                  <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setMessageVisible(true)}>Request client for signature</Button>
+                  <Button type="link" icon={<CheckOutlined />} block onClick={() => setMessageVisible(true)}>Complete this task</Button>
+                  <hr/>
+                  <Button type="link" danger icon={<DeleteOutlined/>} block onClick={() => setMessageVisible(true)}>Archive this task</Button>
+                </Space>
+              </Collapse.Panel>
+
+
+            </Collapse>
+          </Col>
+        </Row>
       </PageContainer>}
+      {task && <Drawer
+        visible={messageVisible}
+        onClose={() => setMessageVisible(false)}
+        title="Message"
+        destroyOnClose
+        closable
+        maskClosable
+      >
+        <TaskChatPanel taskId={task.id} currentUserId={currentUserId} />
+      </Drawer>}
     </ContainerStyled>
   </>
   );

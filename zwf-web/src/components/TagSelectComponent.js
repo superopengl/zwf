@@ -39,7 +39,7 @@ const colourStyles = {
   control: styles => ({
     ...styles,
     width: '100%',
-    height: 32,
+    // height: 32,
     minHeight: 32,
     backgroundColor: 'white',
     boxShadow: 'none',

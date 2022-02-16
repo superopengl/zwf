@@ -1,3 +1,4 @@
+import { OrgClientInformation } from './views/OrgClientInformation';
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from './TaskDoc';

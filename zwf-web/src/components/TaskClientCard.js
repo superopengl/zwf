@@ -1,20 +1,9 @@
-import { Space, Card, Modal, Typography, Descriptions } from 'antd';
+import { Space, Card, Typography, Descriptions } from 'antd';
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { Draggable } from 'react-beautiful-dnd';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import PropTypes from 'prop-types';
-import { MailOutlined, MessageOutlined } from '@ant-design/icons';
-import { UnreadMessageIcon } from './UnreadMessageIcon';
-import { TaskIcon } from './entityIcon';
-import { MdOpenInNew } from 'react-icons/md';
-import Icon from '@ant-design/icons';
-import { showTaskModal } from 'components/showTaskModal';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { UserAvatar } from './UserAvatar';
 import { TimeAgo } from './TimeAgo';
-import { TaskStatus } from './TaskStatus';
 import { TaskStatusTag } from './TaskStatusTag';
 
 const { Link: TextLink, Paragraph, Text, Title } = Typography;

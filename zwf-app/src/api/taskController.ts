@@ -1,3 +1,4 @@
+import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskAssignment } from './../entity/TaskAssignment';
 import { TaskInformation } from './../entity/views/TaskInformation';
 
@@ -230,7 +231,11 @@ export const getTask = handlerWrapper(async (req, res) => {
       break;
   }
 
-  const task = await getRepository(Task).findOne(query, { relations: ['tags', 'docs'] });
+  const task = await getRepository(Task).createQueryBuilder('t')
+  .leftJoinAndSelect('t.tags', 'tags')
+  .leftJoinAndSelect('t.docs', 'docs')
+  .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
+  .getOne()
   assert(task, 404);
 
   res.json(task);
