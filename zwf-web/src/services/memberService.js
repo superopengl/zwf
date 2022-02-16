@@ -6,12 +6,18 @@ const memberSource$  = new BehaviorSubject(null);
 
 export function listOrgMembers$() {
   return httpGet$(`/org/member`).pipe(
-    tap(members => memberSource$.next(members))
+    tap(members => {
+      debugger;
+      memberSource$.next(members)
+    })
   );
 }
 
 export function subscribeMembers(func) {
   return memberSource$.pipe(
-    switchMap(members =>  members ? of(members) : listOrgMembers$()),
+    switchMap(members =>  {
+      debugger;
+      return members ? of(members) : listOrgMembers$()
+    }),
   ).subscribe(members => func(members));
 }
