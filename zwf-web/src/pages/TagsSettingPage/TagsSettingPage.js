@@ -2,7 +2,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { TagListPanel } from 'components/TagListPanel';
 import styled from 'styled-components';
-import { deleteTag$, listTags$, saveTag$ } from 'services/taskTagService';
+import { deleteTag$, listTags$, saveTag$ } from 'services/tagService';
 import { Card, Space } from 'antd';
 import { tap } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';

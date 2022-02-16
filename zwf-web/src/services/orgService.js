@@ -12,10 +12,7 @@ export function listOrgs$() {
   return httpGet$(`/org/list`);
 }
 
-export function listOrgExistingClients(query) {
+export function listOrgExistingClients$(query) {
   return httpPost$(`/org/client`, query);
 }
 
-export function listOrgMembers$() {
-  return httpGet$(`/org/member`);
-}

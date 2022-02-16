@@ -1,7 +1,17 @@
-import { request } from './http';
+import { httpGet$ } from './http';
+import { BehaviorSubject, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 
-export async function handleDownloadCsv() {
-  return request('GET', `member/csv`, null, null, 'blob')
+const memberSource$  = new BehaviorSubject(null);
+
+export function listOrgMembers$() {
+  return httpGet$(`/org/member`).pipe(
+    tap(members => memberSource$.next(members))
+  );
 }
 
-
+export function subscribeMembers(func) {
+  return memberSource$.pipe(
+    switchMap(members =>  members ? of(members) : listOrgMembers$()),
+  ).subscribe(members => func(members));
+}

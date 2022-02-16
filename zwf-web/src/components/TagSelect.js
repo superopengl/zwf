@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { switchMapTo } from 'rxjs/operators';
-import { listTags$, saveTag$, subscribeTags } from 'services/taskTagService';
+import { listTags$, saveTag$, subscribeTags } from 'services/tagService';
 import {TagSelectComponent} from './TagSelectComponent';
 
 
