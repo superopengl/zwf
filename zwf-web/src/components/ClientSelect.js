@@ -4,8 +4,7 @@ import { map } from 'rxjs/operators';
 import { listOrgExistingClients$ } from 'services/orgService';
 import { UserSelect } from './UserSelect';
 
-
-const ClientSelect = (props) => {
+export const ClientSelect = React.memo((props) => {
   const { value, valueProp, onChange, allowInput } = props;
   const [dataSource, setDataSource] = React.useState([]);
 
@@ -24,7 +23,7 @@ const ClientSelect = (props) => {
     onChange={onChange}
     placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
   />
-};
+});
 
 ClientSelect.propTypes = {
   value: PropTypes.string,
@@ -38,4 +37,3 @@ ClientSelect.defaultProps = {
   allowInput: true,
 };
 
-export default ClientSelect;
