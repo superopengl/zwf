@@ -10,14 +10,6 @@ import { UserProfile } from '../UserProfile';
     .from(Org, 'o')
     .innerJoin(User, 'u', 'o.id = u."orgId"')
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
-    .leftJoin(q => q
-      .from('user_tags_tag', 'tg')
-      .groupBy('tg."userId"')
-      .select([
-        'tg."userId" as "userId"',
-        'array_agg(tg."tagId") as tags'
-      ]),
-      'tg', 'tg."userId" = u.id')
     .where('u."deletedAt" IS NULL')
     .andWhere(`u.role IN ('${Role.Admin}', '${Role.Agent}')`)
     .select([
@@ -37,7 +29,6 @@ import { UserProfile } from '../UserProfile';
       'u."lastLoggedInAt"',
       'u."lastNudgedAt"',
       'u."createdAt" as "createdAt"',
-      'tg.tags as tags',
     ])
 }) export class OrgMemberInformation {
   @ViewColumn()
@@ -77,7 +68,7 @@ import { UserProfile } from '../UserProfile';
   status: string;
 
   @ViewColumn()
-  orgOwner: string;
+  orgOwner: boolean;
 
   @ViewColumn()
   lastLoggedInAt: string;
@@ -87,7 +78,4 @@ import { UserProfile } from '../UserProfile';
 
   @ViewColumn()
   createdAt: string;
-
-  @ViewColumn()
-  tags: string[];
 }

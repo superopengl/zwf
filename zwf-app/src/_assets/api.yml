@@ -288,8 +288,8 @@ paths:
         200:
           description: OK
   /org/member:
-    post:
-      operationId: searchOrgMemberUserList
+    get:
+      operationId: listOrgMembers
       responses:
         200:
           description: OK

@@ -49,8 +49,8 @@ export function updateTaskTags$(id, tags) {
   return httpPost$(`task/${id}/tags`, { tags });
 }
 
-export async function assignTask(taskId, agentId) {
-  return httpPost(`task/${taskId}/assign`, { agentId });
+export function assignTask$(taskId, agentId) {
+  return httpPost$(`task/${taskId}/assign`, { agentId });
 }
 
 export async function listTaskNotifies(taskId, from, size = 20) {

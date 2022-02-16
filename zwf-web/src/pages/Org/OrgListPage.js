@@ -7,7 +7,7 @@ import {
   ClearOutlined} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import { searchOrgMemberUsers, deleteUser, setUserTags } from 'services/userService';
+import { deleteUser, setUserTags } from 'services/userService';
 import { impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -176,20 +176,20 @@ const OrgListPage = () => {
   }
 
   const searchByQueryInfo = async (queryInfo) => {
-    try {
-      setLoading(true);
-      const resp = await searchOrgMemberUsers(queryInfo);
-      const { count, page, data } = resp;
-      ReactDOM.unstable_batchedUpdates(() => {
-        setTotal(count);
-        setList(data);
-        setQueryInfo({ ...queryInfo, page });
-        setLoading(false);
-      });
-      reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    } catch {
-      setLoading(false);
-    }
+    // try {
+    //   setLoading(true);
+    //   const resp = await searchOrgMemberUsers(queryInfo);
+    //   const { count, page, data } = resp;
+    //   ReactDOM.unstable_batchedUpdates(() => {
+    //     setTotal(count);
+    //     setList(data);
+    //     setQueryInfo({ ...queryInfo, page });
+    //     setLoading(false);
+    //   });
+    //   reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
+    // } catch {
+    //   setLoading(false);
+    // }
   }
 
   const handleDelete = async (e, item) => {

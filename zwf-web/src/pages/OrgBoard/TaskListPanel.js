@@ -6,7 +6,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
-import { assignTask, changeTaskStatus$, deleteTask$ } from '../../services/taskService';
+import { assignTask$, changeTaskStatus$, deleteTask$ } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -163,9 +163,10 @@ export const TaskListPanel = (props) => {
     },
   ];
 
-  const assignTaskToAgent = async (task, agentId) => {
-    await assignTask(task.id, agentId);
-    onChange();
+  const assignTaskToAgent = (task, agentId) => {
+    assignTask$(task.id, agentId).subscribe(() => {
+      onChange();
+    });
   }
 
   const handleDelete = async (item) => {

@@ -43,6 +43,9 @@ export class Task {
   @Index()
   taskTemplateId: string;
 
+  @Column('uuid', { nullable: true })
+  agentId: string;
+
   @Column('uuid')
   userId: string;
 

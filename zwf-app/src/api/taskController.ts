@@ -1,9 +1,9 @@
+import { TaskAction } from './../entity/TaskAction';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
-import { TaskAssignment } from './../entity/TaskAssignment';
 import { TaskInformation } from './../entity/views/TaskInformation';
 
 import * as moment from 'moment';
-import { getManager, getRepository, Not } from 'typeorm';
+import { EntityManager, getManager, getRepository, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
@@ -31,6 +31,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
+import { TaskActionType } from '../types/TaskActionType';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -232,10 +233,10 @@ export const getTask = handlerWrapper(async (req, res) => {
   }
 
   const task = await getRepository(Task).createQueryBuilder('t')
-  .leftJoinAndSelect('t.tags', 'tags')
-  .leftJoinAndSelect('t.docs', 'docs')
-  .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
-  .getOne()
+    .leftJoinAndSelect('t.tags', 'tags')
+    .leftJoinAndSelect('t.docs', 'docs')
+    .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
+    .getOne()
   assert(task, 404);
 
   res.json(task);
@@ -300,21 +301,34 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
 export const deleteTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
   const repo = getRepository(Task);
 
-  await repo.update(id, { status: TaskStatus.ARCHIVED });
+  await getManager().transaction(async m => {
+    await m.update(Task, { id, orgId }, { status: TaskStatus.ARCHIVED });
+    await logTaskAction(m, id, TaskActionType.Archive);
+  })
 
   res.json();
 });
+
+async function logTaskAction(m: EntityManager, taskId: string, action: TaskActionType, extra: any = null) {
+  const taskAction = new TaskAction();
+  taskAction.taskId = taskId;
+  taskAction.action = action;
+  taskAction.extra = extra;
+  await m.save(taskAction);
+}
 
 export const assignTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
   const { agentId } = req.body;
+  const orgId = getOrgIdFromReq(req);
 
-  await getRepository(TaskAssignment).insert({
-    taskId: id,
-    assigneeId: agentId
+  await getManager().transaction(async m => {
+    await m.update(Task, { id, orgId }, { agentId });
+    await logTaskAction(m, id, TaskActionType.Assign);
   });
 
   res.json();
