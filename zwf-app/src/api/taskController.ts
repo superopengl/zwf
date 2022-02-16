@@ -219,24 +219,27 @@ export const getTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const role = getRoleFromReq(req);
-  let query: any = { id };
-  switch (role) {
-    case Role.Admin:
-    case Role.Agent:
-      query = { id, orgId: getOrgIdFromReq(req) };
-      break;
-    case Role.Client:
-      query = { id, userId: getUserIdFromReq(req) };
-      break;
-    default:
-      break;
-  }
 
-  const task = await getRepository(Task).createQueryBuilder('t')
+  let query = getRepository(Task).createQueryBuilder('t')
     .leftJoinAndSelect('t.tags', 'tags')
     .leftJoinAndSelect('t.docs', 'docs')
     .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
-    .getOne()
+    .where(`t.id = :id`, { id });
+
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent:
+      query = query.andWhere(`t."orgId" = :orgId`, { orgId: getOrgIdFromReq(req) });
+      break;
+    case Role.Client:
+      query = query.andWhere(`t."userId" = :userId`, { userId: getUserIdFromReq(req) });
+      break;
+    default:
+      assert(false, 404);
+      break;
+  }
+
+  const task = await query.getOne()
   assert(task, 404);
 
   res.json(task);
