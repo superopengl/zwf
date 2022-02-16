@@ -71,8 +71,7 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
 
 export const updateTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const { name, userId, fields, status, docs } = req.body;
-  assert(name, 400, 'name is empty');
+  const { fields } = req.body;
   const { id } = req.params;
 
   let task: Task;
@@ -100,10 +99,7 @@ export const updateTask = handlerWrapper(async (req, res) => {
   assert(task, 404, 'Task is not found');
   const oldStatus = task.status;
 
-  task.name = name;
   task.fields = fields;
-  // task.docs = docs;
-  task.status = status;
 
   await repo.save(task);
   await handleTaskStatusChange(oldStatus, task);
