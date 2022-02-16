@@ -1,5 +1,5 @@
 import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$, httpDelete$ } from './http';
-import { API_BASE_URL } from 'services/http';
+import { API_BASE_URL, API_DOMAIN_NAME } from 'services/http';
 
 export function getTask(id) {
   return httpGet(`task/${id}`);
@@ -95,5 +95,5 @@ export function subscribeTaskMessage(taskId) {
 }
 
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
-  return `${API_BASE_URL}/task/deep/${taskDeepLinkId}/`;
+  return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
 }

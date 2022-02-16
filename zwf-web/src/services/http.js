@@ -41,6 +41,7 @@ function getDeviceId() {
 }
 
 export const API_BASE_URL = getFullBaseUrl();
+export const API_DOMAIN_NAME = trimTrailingSlash(process.env.REACT_APP_ZWF_API_DOMAIN_NAME)
 export const WEBSOCKET_URL = API_BASE_URL.replace(/^(http)(s?:\/\/[^/]+)(.*)/i, 'ws$2');
 console.log('Backend API URL', API_BASE_URL, WEBSOCKET_URL);
 
