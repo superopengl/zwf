@@ -88,12 +88,7 @@ const ROUTES = [
   //   icon: <Icon component={() => <RiBarChartFill />} />,
   //   roles: ['admin']
   // },
-  {
-    path: '/client',
-    name: <FormattedMessage id="menu.client" />,
-    icon: <TeamOutlined />,
-    roles: ['admin', 'agent'],
-  },
+
   {
     path: '/scheduler',
     name: <FormattedMessage id="menu.scheduler" />,
@@ -125,6 +120,12 @@ const ROUTES = [
     roles: ['system']
   },
   {
+    path: '/client',
+    name: <FormattedMessage id="menu.client" />,
+    icon: <TeamOutlined />,
+    roles: ['admin', 'agent'],
+  },
+  {
     path: '/team',
     name: <FormattedMessage id="menu.team" />,
     icon: <Icon component={() => <HiOutlineUserGroup />} />,
@@ -132,7 +133,7 @@ const ROUTES = [
   },
   {
     path: '/account',
-    name: <FormattedMessage id="menu.account" />,
+    name: 'Subscription & Billings',
     icon: <Icon component={() => <BiDollar />} />,
     roles: ['admin'],
   },
@@ -200,7 +201,7 @@ export const AppLoggedIn = React.memo(props => {
     route={{ routes }}
     location={{ pathname }}
     navTheme="dark"
-    siderWidth={200}
+    siderWidth={230}
     fixSiderbar={true}
     fixedHeader={true}
     headerRender={true}
