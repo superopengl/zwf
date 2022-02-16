@@ -18,7 +18,8 @@
       "env": {
         "TS_NODE_IGNORE": "false",
         "NODE_ENV": "dev",
-        "TZ": "utc"
+        "TZ": "utc",
+        "AWS_PROFILE": "zwf"
       },
       "runtimeArgs": [
         "--nolazy",
