@@ -253,11 +253,11 @@ export const DocTemplateListPage = props => {
               bodyStyle={{ paddingTop: 16 }}
               onClick={() => handleEdit(item)}
             >
+              <Paragraph>{item.description}</Paragraph>
               <Space size="large">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
                 <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
-              <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph>
             </Card>
           </List.Item>}
         />

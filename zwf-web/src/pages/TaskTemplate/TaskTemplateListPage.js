@@ -133,13 +133,13 @@ export const TaskTemplateListPage = props => {
         <List
           size="small"
           grid={viewMode === 'grid' ? {
-            gutter: [12, 12],
+            gutter: [24, 24],
             xs: 1,
             sm: 1,
             md: 1,
-            lg: 1,
-            xl: 2,
-            xxl: 3
+            lg: 2,
+            xl: 3,
+            xxl: 4
           } : {
             gutter: [12, 12],
             column: 1
@@ -216,11 +216,11 @@ export const TaskTemplateListPage = props => {
             // onClick={() => handleEdit(item)}
             >
               <Paragraph>{item.description}</Paragraph>
+              {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
               <Space size="large">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
                 <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
-              {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
               <DocTemplateListPanel value={item.docs} style={{margin: '12px -12px 0'}} bordered={false} />
             </Card>
           </List.Item>}

@@ -5,9 +5,9 @@ import React from 'react';
 import styled from 'styled-components';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import {ClientSelect} from 'components/ClientSelect';
-import { AssigneeSelect } from 'components/AssigneeSelect';
 import PropTypes from 'prop-types';
 import { TagSelect } from 'components/TagSelect';
+import { MemberSelect } from 'components/MemberSelect';
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -117,7 +117,7 @@ export const TaskSearchDrawer = props => {
             value={queryInfo.taskTemplateId} onChange={handleTaskTemplateIdChange} />
         </Descriptions.Item>
         <Descriptions.Item label="Assignee">
-          <AssigneeSelect
+          <MemberSelect
             placeholder="Filter assignee"
             onChange={handleAssigneeChange}
             value={queryInfo.agentId}

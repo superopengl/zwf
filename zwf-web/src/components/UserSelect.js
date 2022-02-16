@@ -29,7 +29,7 @@ width: 100%;
 `;
 
 export const UserSelect = React.memo((props) => {
-  const { value, valueProp, placeholder, onChange, allowInput, dataSource, ...other } = props;
+  const { value, valueProp, placeholder, onChange, allowInput, dataSource, bordered, ...other } = props;
 
   const [userList, setUserList] = React.useState(dataSource);
   const [searchText, setSearchText] = React.useState();
@@ -67,6 +67,7 @@ export const UserSelect = React.memo((props) => {
   return (
     <StyledSelect
       ref={ref}
+      bordered={bordered}
       showSearch={allowInput}
       allowClear
       placeholder={placeholder}
@@ -112,6 +113,7 @@ UserSelect.propTypes = {
   onChange: PropTypes.func,
   valueProp: PropTypes.oneOf(['id', 'email']),
   allowInput: PropTypes.bool,
+  bordered: PropTypes.bool,
   dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
@@ -119,5 +121,6 @@ UserSelect.defaultProps = {
   valueProp: 'id',
   loading: false,
   allowInput: true,
+  bordered: false,
 };
 

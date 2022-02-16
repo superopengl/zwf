@@ -149,7 +149,7 @@ const OrgTaskPage = React.memo((props) => {
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setMessageVisible(true)}>Action history</Button>
                   <hr/>
-                  <Button type="link"  icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for form info</Button>
+                  <Button type="link"  icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for more information</Button>
                   <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setMessageVisible(true)}>Request client for signature</Button>
                   <Button type="link" icon={<CheckOutlined />} block onClick={() => setMessageVisible(true)}>Complete this task</Button>
                   <hr/>
