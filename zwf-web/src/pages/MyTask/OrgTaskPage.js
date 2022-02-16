@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card, Divider } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space } from 'antd';
 
 import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
@@ -14,14 +14,12 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
 import { TaskChatPanel } from 'components/TaskChatPanel';
 import { TaskFormPanel } from 'components/TaskFormPanel';
-import { CheckOutlined, DeleteOutlined, FileAddOutlined, MessageFilled, MessageOutlined } from '@ant-design/icons';
-import Icon, { BorderOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, MessageOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from 'components/UserAvatar';
-import { AssigneeSelect } from 'components/AssigneeSelect';
-import { FaSign, FaSignature } from 'react-icons/fa';
-import { MdReadMore } from 'react-icons/md';
+import { FaSignature } from 'react-icons/fa';
 import { MemberSelect } from 'components/MemberSelect';
 
 const ContainerStyled = styled(Layout.Content)`
@@ -126,7 +124,7 @@ const OrgTaskPage = React.memo((props) => {
             <TaskFormPanel ref={formRef} value={task} type="client" onChangeLoading={setLoading} />
           </Col>
           <Col style={{ width: 400 }}>
-            <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost>
+            <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
               <Collapse.Panel key="client" header="Client">
                 {task?.client && <Space size="small">
                   <UserAvatar value={task.client.avatarFileId} color={task.client.avatarColorHex} size={32} />
