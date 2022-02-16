@@ -130,6 +130,7 @@ export const TaskSearchDrawer = props => {
             value={queryInfo.clientId}
             onChange={handleClientIdChange}
             allowInput={false}
+            bordered={true}
           />
         </Descriptions.Item>
         <Descriptions.Item>
