@@ -1,4 +1,4 @@
-import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography } from 'antd';
+import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography, PageHeader } from 'antd';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { searchTask$ } from '../../services/taskService';
@@ -13,7 +13,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { TaskSearchDrawer } from './TaskSearchPanel';
 
-const {Link: TextLink} = Typography;
+const { Link: TextLink } = Typography;
 
 const LayoutStyled = styled(Space)`
   margin: 0 auto 0 auto;
@@ -48,7 +48,7 @@ const TaskListPage = () => {
   React.useEffect(() => {
     reactLocalStorage.setObject('query', queryInfo);
 
-    if(queryInfo.status?.includes('archived') && viewMode === 'board') {
+    if (queryInfo.status?.includes('archived') && viewMode === 'board') {
       setMessage(<>The current filter contains status "Archived". Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see archived tasks.</>);
     } else {
       setMessage(null);
@@ -94,34 +94,37 @@ const TaskListPage = () => {
   }
 
   const handleFilterSearch = newQueryInfo => {
-    setQueryInfo({...newQueryInfo});
+    setQueryInfo({ ...newQueryInfo });
     reloadWithQueryInfo$(newQueryInfo);
   }
 
   return (
-    <Loading loading={loading} >
+    <PageHeader
+      loading={loading}
+      title={viewMode === 'board' ? 'Task Board' : 'Task List'}
+      extra={[
+        <Tooltip key="filter" title="Filter">
+          <Button icon={<FilterFilled />} onClick={() => setFilterVisible(true)} >Filter</Button>
+        </Tooltip>,
+        <Radio.Group key="view" buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
+          <Tooltip title="Board view">
+            <Radio.Button value="board">
+              <Icon component={() => <HiOutlineViewBoards />} />
+            </Radio.Button>
+          </Tooltip>
+          <Tooltip title="List view">
+            <Radio.Button value="list">
+              <Icon component={() => <HiOutlineViewList />} />
+            </Radio.Button>
+          </Tooltip>
+        </Radio.Group>,
+        <Tooltip key="refresh" title="Refresh">
+          <Button icon={<SyncOutlined />} onClick={handleReload} />
+        </Tooltip>
+      ]}
+    >
       <LayoutStyled direction="vertical" size="large">
-        <Space style={{ width: '100%', justifyContent: 'flex-start' }}>
-          <Tooltip title="Filter">
-            <Button icon={<FilterFilled />} onClick={() => setFilterVisible(true)} >Filter</Button>
-          </Tooltip>
-          <Radio.Group buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
-            <Tooltip title="Board view">
-              <Radio.Button value="board">
-                <Icon component={() => <HiOutlineViewBoards />} />
-              </Radio.Button>
-            </Tooltip>
-            <Tooltip title="List view">
-              <Radio.Button value="list">
-                <Icon component={() => <HiOutlineViewList />} />
-              </Radio.Button>
-            </Tooltip>
-          </Radio.Group>
-          <Tooltip title="Refresh">
-            <Button icon={<SyncOutlined />} onClick={handleReload} />
-          </Tooltip>
-        </Space>
-        {message && <Alert type="warning" showIcon closable message={message}/>}
+        {message && <Alert type="warning" showIcon closable message={message} />}
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
@@ -135,7 +138,7 @@ const TaskListPage = () => {
         visible={filterVisible}
         onClose={() => setFilterVisible(false)}
       />
-    </Loading>
+    </PageHeader>
   )
 }
 

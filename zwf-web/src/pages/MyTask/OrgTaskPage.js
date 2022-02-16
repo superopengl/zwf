@@ -94,7 +94,10 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleChangeAssignee = memberUser => {
-    assignTask$(task.id, memberUser.id).subscribe();
+    const newAssigneeId = memberUser.id;
+    assignTask$(task.id, newAssigneeId).subscribe(()=>{
+      setAssigneeId(newAssigneeId);
+    });
   }
 
   return (<>
@@ -126,7 +129,7 @@ const OrgTaskPage = React.memo((props) => {
           <Col style={{ width: 400 }}>
             <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
               <Collapse.Panel key="client" header="Client">
-                {task?.client && <Space size="small">
+                {task?.client && <Space size="small" style={{paddingLeft: 12, paddingRight: 12}}>
                   <UserAvatar value={task.client.avatarFileId} color={task.client.avatarColorHex} size={32} />
                   <UserDisplayName
                     email={task.client.email}
