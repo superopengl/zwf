@@ -25,10 +25,14 @@ const { Paragraph, Text, Title, Link: TextLink } = Typography;
 
 
 const ContainerStyled = styled.div`
+  margin: 0 auto;
   width: 100%;
+  max-width: 1200px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-contents: center;
+
 
   .ant-spin-nested-loading {
     width: 100%;
@@ -152,13 +156,13 @@ const OrgAccountPage = (props) => {
               {!currentSubscription && <Alert type="info" showIcon description={
                 <FormattedMessage id="text.freeToPaidSuggestion" />
               } />}
-              <Space direction="vertical" align="center">
+              <Space direction="vertical" align="center" style={{width: '100%'}}>
                 {/* <Title><TextLink underline onClick={handleBuyLicense}>Change subscription</TextLink></Title> */}
-                <Button size="large" onClick={handleBuyLicense} type="primary" style={{transform: 'scale(1.3)', marginBottom: 16}}>Change subscription</Button>
+                <Button size="large" onClick={handleBuyLicense} type="primary" style={{transform: 'scale(1.3)'}}>Change subscription</Button>
+              </Space>
                 <Paragraph type="secondary">
                   You can buy more or reduce licenses by purchasing a new subscription. The ongoing subscription will be terminated and the remaining licenses will be returned as credits, which will be applied to your new subscription's payment automatically. The new subscription will start right away.
                 </Paragraph>
-              </Space>
             </Space>
             <OrgSubscriptionHistoryPanel data={subscriptionHistory} />
           </Card>

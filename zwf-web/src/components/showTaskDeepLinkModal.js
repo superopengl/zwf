@@ -46,11 +46,12 @@ export function showTaskDeepLinkModal(taskDeepLinkId) {
     footer: null,
     width: 600,
     focusTriggerAfterClose: true,
-    okButtonProps: {
-      style: {
-        display: 'none'
-      }
-    }
+    okText: 'Done',
+    // okButtonProps: {
+    //   style: {
+    //     display: 'none'
+    //   }
+    // }
   });
 
   return modalRef;
