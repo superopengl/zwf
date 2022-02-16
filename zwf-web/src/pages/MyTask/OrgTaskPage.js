@@ -14,7 +14,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
 import { TaskChatPanel } from 'components/TaskChatPanel';
 import { TaskFormPanel } from 'components/TaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, MessageOutlined, SaveOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LinkOutlined, MessageOutlined, SaveOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { UserDisplayName } from 'components/UserDisplayName';
@@ -22,12 +22,13 @@ import { UserAvatar } from 'components/UserAvatar';
 import { FaSignature } from 'react-icons/fa';
 import { MemberSelect } from 'components/MemberSelect';
 import { notify } from 'util/notify';
+import { showTaskDeepLinkModal } from 'components/showTaskDeepLinkModal';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
 padding: 0;
 // text-align: center;
-max-width: 1000px;
+max-width: 1200px;
 width: 100%;
 height: 100%;
 
@@ -137,14 +138,14 @@ const OrgTaskPage = React.memo((props) => {
       // ]}
       >
         <Row wrap={false} gutter={40}>
-          <Col flex={1}>
+          <Col span={16}>
             <TaskFormPanel ref={formRef} value={task} type="client" onChange={handleTaskFieldsChange} />
             <Row justify="end">
             <Button type="primary" icon={<SaveOutlined />} onClick={handleSaveTaskForm}>Save</Button>
             </Row>
-            <em>{JSON.stringify(task.fields, null, 2)}</em>
+            {/* <em>{JSON.stringify(task.fields, null, 2)}</em> */}
           </Col>
-          <Col style={{ width: 400 }}>
+          <Col span={8} style={{minWidth: 300}}>
             <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
               <Collapse.Panel key="client" header="Client">
                 {task?.client && <Space size="small" style={{ paddingLeft: 12, paddingRight: 12 }}>
@@ -166,6 +167,7 @@ const OrgTaskPage = React.memo((props) => {
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons">
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setMessageVisible(true)}>Action history</Button>
+                  <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for more information</Button>
                   <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setMessageVisible(true)}>Request client for signature</Button>

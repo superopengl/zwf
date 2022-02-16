@@ -93,3 +93,7 @@ export function subscribeTaskMessage(taskId) {
   const es = new EventSource(url, { withCredentials: true });
   return es;
 }
+
+export function getTaskDeepLinkUrl(taskDeepLinkId) {
+  return `${API_BASE_URL}/task/deep/${taskDeepLinkId}/`;
+}
