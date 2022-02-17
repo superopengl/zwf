@@ -4,12 +4,12 @@ import { TaskActionType } from "../types/TaskActionType";
 
 
 @Entity()
+@Index(['taskId', 'createdAt'])
 export class TaskAction {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @Column('uuid')
-  @Index()
   taskId: string;
 
   @Column('uuid')
@@ -21,6 +21,6 @@ export class TaskAction {
   @Column()
   action: TaskActionType;
 
-  @Column('jsonb', {nullable: true})
+  @Column('jsonb', { nullable: true })
   extra: any;
 }
