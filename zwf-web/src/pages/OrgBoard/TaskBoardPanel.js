@@ -24,18 +24,21 @@ padding: 8px;
 
 const COLUMN_DEFS = [
   {
+    key: 'todo',
     status: ['todo'],
     label: 'To Do',
     bgColor: '#f5f5f5',
     hoverColor: '#bfbfbf',
   },
   {
+    key: 'in_progress',
     status: ['in_progress', 'signed'],
     label: 'In Progress',
     bgColor: '#1890ff11',
     hoverColor: '#1890ff',
   },
   {
+    key: 'in_progress_blocked',
     status: ['pending_fix', 'pending_sign'],
     label: 'Await client reply',
     bgColor: '#06117811',
@@ -54,6 +57,7 @@ const COLUMN_DEFS = [
   //   hoverColor: '#5c0011',
   // },
   {
+    key: 'done',
     status: ['done'],
     label: 'Done',
     bgColor: '#52c41a11',
@@ -77,7 +81,7 @@ export const TaskBoardPanel = props => {
 
   return <DragDropContext onDragEnd={onDragEnd}>
     <StyledRow gutter={10}>
-      {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
+      {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.key} key={i}>
         {(provided, snapshot) => {
           const tasksInCol = tasks.filter(j => s.status.includes(j.status));
           return (
