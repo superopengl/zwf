@@ -32,7 +32,7 @@ const Content = props => {
   </>
 }
 
-export function showTaskDeepLinkModal(taskDeepLinkId) {
+export function showShareTaskDeepLinkModal(taskDeepLinkId) {
   const url = getTaskDeepLinkUrl(taskDeepLinkId);
   const modalRef = Modal.info({
     title: <><Avatar icon={<ShareAltOutlined />} style={{ backgroundColor: '#8abcd1' }}/>  Share this task with client or other people</>,
@@ -47,6 +47,7 @@ export function showTaskDeepLinkModal(taskDeepLinkId) {
     width: 600,
     focusTriggerAfterClose: true,
     okText: 'Done',
+    autoFocusButton: null,
     // okButtonProps: {
     //   style: {
     //     display: 'none'

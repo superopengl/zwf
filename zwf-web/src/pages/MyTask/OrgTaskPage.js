@@ -20,7 +20,7 @@ import { UserAvatar } from 'components/UserAvatar';
 import { FaSignature } from 'react-icons/fa';
 import { MemberSelect } from 'components/MemberSelect';
 import { notify } from 'util/notify';
-import { showTaskDeepLinkModal } from 'components/showTaskDeepLinkModal';
+import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 
@@ -180,13 +180,15 @@ const OrgTaskPage = React.memo((props) => {
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Action history</Button>
-                  <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
+                  <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for more information</Button>
                   <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setMessageVisible(true)}>Request client for signature</Button>
-                  <Button type="link" icon={<CheckOutlined />} block onClick={() => setMessageVisible(true)}>Complete this task</Button>
-                  <hr />
-                  <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>
+                  {!['archived', 'done'].includes(task.status) && <Button type="link" icon={<CheckOutlined />} block onClick={() => setMessageVisible(true)}>Complete this task</Button>}
+                  {task.status !== 'archived' && <>
+                    <hr />
+                    <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>
+                  </>}
                 </Space>
               </Collapse.Panel>
             </Collapse>
