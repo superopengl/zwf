@@ -22,6 +22,7 @@ import { MemberSelect } from 'components/MemberSelect';
 import { notify } from 'util/notify';
 import { showTaskDeepLinkModal } from 'components/showTaskDeepLinkModal';
 import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
+import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -63,7 +64,14 @@ const OrgTaskPage = React.memo((props) => {
   const currentUserId = context.user?.id;
 
   React.useEffect(() => {
-    const subscription$ = getTask$(id).pipe(
+    const subscription$ = load$();
+    return () => {
+      subscription$.unsubscribe();
+    }
+  }, []);
+
+  const load$ = () => {
+    return getTask$(id).pipe(
       catchError(() => setLoading(false))
     )
       .subscribe((taskInfo) => {
@@ -72,10 +80,7 @@ const OrgTaskPage = React.memo((props) => {
         setAssigneeId(task.agentId);
         setLoading(false);
       });
-    return () => {
-      subscription$.unsubscribe();
-    }
-  }, []);
+  }
 
   const handleGoBack = () => {
     props.history.goBack();
@@ -167,8 +172,8 @@ const OrgTaskPage = React.memo((props) => {
               </Collapse.Panel>
               <Collapse.Panel key="procedure" header="Procedures">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" size="small">
-                  <Button type="link" icon={<LinkOutlined />} block onClick={() => setMessageVisible(true)}>How to do it</Button>
-                  <Button type="link" icon={<LinkOutlined />} block onClick={() => setMessageVisible(true)}>Best practice</Button>
+                  <Button type="link" icon={<LinkOutlined />} block >How to do it</Button>
+                  <Button type="link" icon={<LinkOutlined />} block >Best practice</Button>
                 </Space>
               </Collapse.Panel>
               <Collapse.Panel key="actions" header="Actions">
@@ -181,7 +186,7 @@ const OrgTaskPage = React.memo((props) => {
                   <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setMessageVisible(true)}>Request client for signature</Button>
                   <Button type="link" icon={<CheckOutlined />} block onClick={() => setMessageVisible(true)}>Complete this task</Button>
                   <hr />
-                  <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => setMessageVisible(true)}>Archive this task</Button>
+                  <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>
                 </Space>
               </Collapse.Panel>
             </Collapse>
