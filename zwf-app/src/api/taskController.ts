@@ -108,6 +108,35 @@ export const updateTask = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const saveTaskFields = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const fields = req.body ?? [];
+  const { id } = req.params;
+  const role = getRoleFromReq(req);
+
+  let query: any = { id };
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent:
+      query = {
+        ...query,
+        orgId: getOrgIdFromReq(req),
+      }
+      break;
+    case Role.Client:
+      query = {
+        ...query,
+        userId: getUserIdFromReq(req),
+      }
+    default:
+      assert(false, 404, 'Task is not found');
+  }
+
+  await getRepository(Task).update(query, {fields});
+
+  res.json();
+});
+
 interface ISearchTaskQuery {
   text?: string;
   page?: number;

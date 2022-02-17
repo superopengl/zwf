@@ -84,7 +84,7 @@ function reloadPage() {
 }
 
 function handleSessionTimeout() {
-  if(!isSessionTimeoutModalOn) {
+  if (!isSessionTimeoutModalOn) {
     isSessionTimeoutModalOn = true;
     Modal.warning({
       title: 'Session timeout',
@@ -121,7 +121,9 @@ export function request$(method, path, queryParams, body, responseType = 'json')
         return false;
       }
       const errorMessage = responseType === 'blob' ? e.message : e.response || _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
-      notify.error('Error', errorMessage);
+      const displayErrorMessage = errorMessage === 'ajax error' ? `Can't connect to the Internet. Please check your network connection.`
+        : errorMessage;
+      notify.error('Error', displayErrorMessage);
       console.error(e.response);
       throw e;
     })
