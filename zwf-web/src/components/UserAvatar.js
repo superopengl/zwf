@@ -44,7 +44,7 @@ const StyledAvatar = styled(Avatar)`
 border: 1px solid rgba(0,0,0,0.2);
 
 .ant-avatar-string {
-  line-height: ${28}px !important;
+  // line-height: ${28}px !important;
 }
 `
 

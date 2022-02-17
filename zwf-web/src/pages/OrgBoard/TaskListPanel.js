@@ -16,6 +16,7 @@ import { notify } from 'util/notify';
 import { TagSelect } from 'components/TagSelect';
 import PropTypes from 'prop-types';
 import { MemberSelect } from 'components/MemberSelect';
+import { UserNameCard } from 'components/UserNameCard';
 
 
 export const TaskListPanel = (props) => {
@@ -73,17 +74,8 @@ export const TaskListPanel = (props) => {
     },
     {
       title: 'User',
-      dataIndex: 'email',
-      sorter: () => 0,
-      render: (text, item) => <Space direction='horizontal'>
-        <UserAvatar value={item.avatarId} color={item.avatarColorHex} size={32} />
-        <UserDisplayName
-          email={item.email}
-          surname={item.surname}
-          givenName={item.givenName}
-          searchText={searchText}
-        />
-      </Space>
+      dataIndex: 'userId',
+      render: (value, item) => <UserNameCard userId={value} />
     },
     {
       title: 'Assignee',

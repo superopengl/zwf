@@ -38,8 +38,6 @@ import { Tag } from '../Tag';
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
-      'p."avatarFileId" as "avatarFileId"',
-      'p."avatarColorHex" as "avatarColorHex"',
       't."taskTemplateId" as "taskTemplateId"',
       't."name" as "taskTemplateName"',
       'u.role as role',
@@ -85,12 +83,6 @@ import { Tag } from '../Tag';
 
   @ViewColumn()
   surname: string;
-
-  @ViewColumn()
-  avatarFileId: string;
-
-  @ViewColumn()
-  avatarColorHex: string;
 
   @ViewColumn()
   taskTemplateId: string;

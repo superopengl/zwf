@@ -22,7 +22,6 @@ import { Task } from '../Task';
       'i."givenName" as "givenName"',
       'i."surname" as "surname"',
       'i."role" as "role"',
-      'i."avatarFileId" as "avatarFileId"',
       'm."message" as "message"',
     ])
 }) export class TaskThreadInformation {
@@ -55,9 +54,6 @@ import { Task } from '../Task';
 
   @ViewColumn()
   role: Role;
-
-  @ViewColumn()
-  avatarFileId: string;
 
   @ViewColumn()
   message: string;

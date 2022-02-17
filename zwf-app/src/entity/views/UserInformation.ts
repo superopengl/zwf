@@ -41,6 +41,10 @@ import { UserStatus } from '../../types/UserStatus';
 })
 export class UserInformation {
   @ViewColumn()
+  @PrimaryColumn()
+  id: string;
+
+  @ViewColumn()
   email: string;
 
   @ViewColumn()
@@ -54,10 +58,6 @@ export class UserInformation {
 
   @ViewColumn()
   role!: Role;
-
-  @ViewColumn()
-  @PrimaryColumn()
-  id: string;
 
   @ViewColumn()
   orgId: string;

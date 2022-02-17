@@ -249,7 +249,7 @@ export const getTask = handlerWrapper(async (req, res) => {
   let query = getRepository(Task).createQueryBuilder('t')
     .leftJoinAndSelect('t.tags', 'tags')
     .leftJoinAndSelect('t.docs', 'docs')
-    .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
+    // .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
     .where(`t.id = :id`, { id });
 
   switch (role) {

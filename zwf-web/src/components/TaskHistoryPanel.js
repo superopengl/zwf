@@ -5,14 +5,12 @@ import 'react-chat-elements/dist/main.css';
 import { getTaskHistory$ } from 'services/taskService';
 import styled from 'styled-components';
 import { finalize } from 'rxjs/operators';
-import { UserDisplayName } from 'components/UserDisplayName';
-import { UserAvatar } from 'components/UserAvatar';
 import { TimeAgo } from './TimeAgo';
+import { UserNameCard } from './UserNameCard';
 
 const Container = styled.div`
 
 `;
-
 
 export const TaskHistoryPanel = React.memo((props) => {
   const { taskId } = props;
@@ -27,7 +25,7 @@ export const TaskHistoryPanel = React.memo((props) => {
     return () => sub$.unsubscribe()
   }, [taskId]);
 
-  if(loading) {
+  if (loading) {
     return <Skeleton active />
   }
 
@@ -37,17 +35,10 @@ export const TaskHistoryPanel = React.memo((props) => {
         key={x.id}
         status="wait"
         title={<>
-          {x.action} <TimeAgo value={x.createdAt} direction="horizontal"/> 
+          {x.action} <TimeAgo value={x.createdAt} direction="horizontal" />
         </>
         }
-        description={<Space size="small">
-          <UserAvatar value={x.avatarFileId} color={x.avatarColorHex} size={32} />
-          <UserDisplayName
-            surname={x.surname}
-            givenName={x.givenName}
-            email={x.email}
-          />
-        </Space>}>
+        description={<UserNameCard userId={x.userId} />}>
       </Steps.Step>)}
     </Steps>
   </Container>

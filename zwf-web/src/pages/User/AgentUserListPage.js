@@ -2,28 +2,20 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select, PageHeader } from 'antd';
 import {
-  UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
-  SearchOutlined,
-  ClearOutlined
-} from '@ant-design/icons';
+  UserAddOutlined, GoogleOutlined, QuestionOutlined} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space } from 'antd';
 import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteUser$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
-import ReactDOM from 'react-dom';
 import DropdownMenu from 'components/DropdownMenu';
-import { UserNameLabel } from 'components/UserNameLabel';
 import loadable from '@loadable/component'
-import { getMyCurrentSubscription, getMyCurrentSubscription$ } from 'services/subscriptionService';
-import useLocalStorageState from 'use-local-storage-state'
-import { TagSelect } from 'components/TagSelect';
+import { getMyCurrentSubscription$ } from 'services/subscriptionService';
 import { listOrgMembers$ } from 'services/memberService';
 import { combineLatest } from 'rxjs';
 import { finalize } from 'rxjs/operators';
+import { UserNameCard } from 'components/UserNameCard';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -59,7 +51,7 @@ const AgentUserListPage = () => {
     {
       // title: 'User',
       fixed: 'left',
-      render: (text, item) => <UserNameLabel userId={item.id} profile={item} />,
+      render: (text, item) => <UserNameCard userId={item.id} />,
     },
     {
       // title: 'Role',
@@ -77,11 +69,11 @@ const AgentUserListPage = () => {
           { label: 'admin', value: 'admin' },
         ]} />
     },
-    {
-      title: 'Login Type',
-      dataIndex: 'loginType',
-      render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    },
+    // {
+    //   title: 'Login Type',
+    //   dataIndex: 'loginType',
+    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    // },
     // {
     //   title: 'Tags',
     //   dataIndex: 'tags',
@@ -155,7 +147,7 @@ const AgentUserListPage = () => {
     const { id } = item;
     Modal.confirm({
       title: <>Delete user</>,
-      content: <UserNameLabel userId={item.id} profile={item} />,
+      content: <UserNameCard userId={item.id} />,
       onOk: async () => {
         await deleteUser(id);
         loadList();
@@ -164,7 +156,11 @@ const AgentUserListPage = () => {
       okButtonProps: {
         danger: true
       },
-      okText: 'Yes, delete it!'
+      okText: 'Yes, delete it!',
+      cancelButtonProps: {
+        type: 'text'
+      },
+      autoFocusButton: 'cancel',
     });
   }
 
@@ -174,7 +170,7 @@ const AgentUserListPage = () => {
     Modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
-      content: <UserNameLabel userId={item.id} profile={item} />,
+      content: <UserNameCard userId={item.id}  />,
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
@@ -183,7 +179,10 @@ const AgentUserListPage = () => {
             reactLocalStorage.clear();
             window.location = '/';
           });
-      }
+      },
+      cancelButtonProps: {
+        type: 'text'
+      },
     })
   }
 
@@ -283,7 +282,7 @@ const AgentUserListPage = () => {
       >
         <Form layout="vertical" onFinish={values => handleSetPassword(currentUser?.id, values)}>
           <div style={{ marginBottom: 20 }}>
-            {currentUser && <UserNameLabel userId={currentUser.id} profile={currentUser} />}
+            {currentUser && <UserNameCard userId={currentUser.id} />}
           </div>
           <Form.Item label="Password" name="password" rules={[{ required: true, message: ' ' }]}>
             <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
