@@ -64,7 +64,7 @@ function generateTaskDocs(docTemplates: DocTemplate[], fields: TaskField[], user
   return docs;
 }
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: { [key: string]: any }) => {
+export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: { [key: string]: any }, id?) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
   assert(email, 400, 'email is not specified');
 
@@ -78,7 +78,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     user = await ensureClientOrGuestUser(m, email);
 
     task = new Task();
-    task.id = uuidv4();
+    task.id = id || uuidv4();
     task.deepLinkId = generateDeepLinkId();
     task.name = taskName || generateTaskDefaultName(taskTemplate.name, user.profile);
     task.description = taskTemplate.description;

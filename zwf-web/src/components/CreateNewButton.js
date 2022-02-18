@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Typography } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
 import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
 import { showCreateTaskModal } from 'components/showCreateTaskModal';
 import { notify } from 'util/notify';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
+
+const {Link: TextLink} = Typography;
 
 export const CreateNewButton = React.memo(withRouter(props => {
   const { size } = props;
@@ -24,9 +26,7 @@ export const CreateNewButton = React.memo(withRouter(props => {
   }
 
   const handleCreateTask = () => {
-    showCreateTaskModal(null, () => {
-      notify.info('Task created', <>blah</>);
-    });
+    showCreateTaskModal(null);
   }
 
   const menu = <Menu onClick={handleMenuSelected} size={size}>

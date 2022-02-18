@@ -4,7 +4,6 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from "../utils/assertRole";
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
-import { Portfolio } from '../entity/Portfolio';
 
 async function getUserStats() {
   const result = await getRepository(User)

@@ -4,14 +4,15 @@ import { Space, Typography, Button, Steps, Form, Divider, Row, Input } from 'ant
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
-import {ClientSelect} from 'components/ClientSelect';
+import { ClientSelect } from 'components/ClientSelect';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { RightOutlined } from '@ant-design/icons';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { createNewTask$ } from 'services/taskService';
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { TaskFormWidget } from 'components/TaskFormWidget';
+import { v4 as uuidv4 } from 'uuid';
 
 const { Text } = Typography;
 
@@ -40,7 +41,7 @@ export const TaskGenerator = props => {
       setTaskTemplate(null)
     }
   }, [taskTemplateId])
-  
+
   React.useEffect(() => {
     if (clientInfo && taskTemplate) {
       const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
@@ -84,7 +85,9 @@ export const TaskGenerator = props => {
   }
 
   const createTaskWithVarBag = (varBag = {}) => {
+    const id = uuidv4();
     const payload = {
+      id,
       clientEmail: clientInfo.email,
       taskTemplateId,
       taskName,
@@ -93,10 +96,9 @@ export const TaskGenerator = props => {
 
     setLoading(true);
     createNewTask$(payload).pipe(
-      catchError(() => setLoading(false))
+      finalize(() => setLoading(false))
     ).subscribe(() => {
-      setLoading(false);
-      props.onCreated();
+      props.onCreated({ id, name: taskName });
     })
   }
 
