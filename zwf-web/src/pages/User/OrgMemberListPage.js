@@ -35,7 +35,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_KEY = 'agent_list_query';
 
-const AgentUserListPage = () => {
+const OrgMemberListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
@@ -355,8 +355,8 @@ const AgentUserListPage = () => {
   );
 };
 
-AgentUserListPage.propTypes = {};
+OrgMemberListPage.propTypes = {};
 
-AgentUserListPage.defaultProps = {};
+OrgMemberListPage.defaultProps = {};
 
-export default withRouter(AgentUserListPage);
+export default withRouter(OrgMemberListPage);
