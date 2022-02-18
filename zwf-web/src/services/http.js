@@ -8,7 +8,6 @@ import { Modal } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import * as queryString from 'query-string';
-import { of } from 'rxjs';
 
 axios.defaults.withCredentials = true;
 
@@ -24,7 +23,7 @@ function trimTrailingSlash(str) {
 }
 
 function getFullBaseUrl() {
-  const url = trimTrailingSlash(process.env.REACT_APP_ZWF_API_ENDPOINT);
+  const url = trimTrailingSlash(process.env.REACT_APP_ZWF_API_DOMAIN_NAME + process.env.REACT_APP_ZWF_API_ENDPOINT);
   if (url.charAt(0) === '/') {
     // Relative address
     return window.location.origin + url;
