@@ -17,11 +17,14 @@ import { TagSelect } from 'components/TagSelect';
 import PropTypes from 'prop-types';
 import { MemberSelect } from 'components/MemberSelect';
 import { UserNameCard } from 'components/UserNameCard';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 
 export const TaskListPanel = (props) => {
   const { tasks, onChange, searchText } = props;
 
+  const context = React.useContext(GlobalContext);
+  const {role} = context;
   const postArchieveMessage = () => {
     notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
   }

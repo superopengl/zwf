@@ -15,8 +15,6 @@ import * as md5 from 'md5';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { isRole } from '../utils/isRole';
 import { Role } from '../types/Role';
-import { TaskTemplate } from '../entity/TaskTemplate';
-import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
 
 function extractVariables(html: string) {
   const pattern = /\{\{[a-zA-Z]+\}\}/ig;
@@ -26,7 +24,7 @@ function extractVariables(html: string) {
 }
 
 export const saveDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
 
   const { id, name, description, html } = req.body;
   assert(name, 400, 'name is empty');
@@ -46,7 +44,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const listDocTemplates = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
 
   const list = await getRepository(DocTemplate).find({
@@ -80,7 +78,7 @@ export const getDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const deleteDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   await getRepository(DocTemplate).softDelete({ id, orgId });
@@ -190,7 +188,7 @@ async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplat
 }
 
 export const cloneDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   let docTemplate: DocTemplate;
