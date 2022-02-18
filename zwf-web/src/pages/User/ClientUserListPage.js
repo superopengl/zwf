@@ -197,15 +197,11 @@ const ClientUserListPage = () => {
           <DropdownMenu
             config={[
               {
-                menu: 'Active tasks',
+                menu: `Tasks of client`,
                 onClick: () => openProfileModal(user)
               },
               {
                 menu: 'Resend invite',
-                onClick: () => openProfileModal(user)
-              },
-              {
-                menu: 'Portfolios',
                 onClick: () => openProfileModal(user)
               },
               {
