@@ -38,7 +38,7 @@ position: relative;
 background-color: #00474f;
 // background-size: 120px;
 // opacity: 0.75;
-// background-image: linear-gradient(135deg, #8abcd1, #8abcd1 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
+// background-image: linear-gradient(135deg, #13c2c2, #13c2c2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
 width: 100%;
 min-height: 200px;
 display: flex;
