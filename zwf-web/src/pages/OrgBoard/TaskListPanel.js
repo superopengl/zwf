@@ -64,7 +64,7 @@ export const TaskListPanel = (props) => {
       dataIndex: 'status',
       sorter: () => 0,
       render: (value, record) => <small>
-        <TaskStatusButton size="small" value={value} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />
+        <TaskStatusButton size="small" value={value} bordered={false} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />
       </small>,
       ellipsis: false
     },

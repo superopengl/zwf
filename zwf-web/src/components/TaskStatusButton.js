@@ -1,60 +1,57 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Menu, Dropdown, Button } from 'antd';
+import { Typography, Menu, Dropdown, Button, Badge, Select } from 'antd';
 import { DownOutlined } from '@ant-design/icons';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
-const definitions = {
-  'todo': {
+const definitions = [
+  {
     label: 'To Do',
-    color: '#13c2c2',
+    value: 'todo',
+    color: 'rgba(0,0,0,0.15)',
   },
-  'in_progress': {
+  {
     label: 'In Progress',
+    value: 'in_progress',
     color: '#1890ff',
   },
-  'pending_fix': {
+  {
     label: 'Pending Fix',
+    value: 'pending_fix',
     color: '#061178',
   },
-  'pending_sign': {
+  {
     label: 'Pending Sign',
+    value: 'pending_sign',
     color: '#f5222d',
   },
-  'signed': {
+  {
     label: 'Signed',
+    value: 'signed',
     color: '#5c0011',
   },
-  'done': {
+  {
     label: 'Done',
+    value: 'done',
     color: '#52c41a',
   },
-  'archived': {
+  {
     label: 'Archived',
+    value: 'archived',
     color: '#434343',
   },
-}
+]
 
-
+const options = definitions.map(d => ({
+  value: d.value,
+  label: <Badge color={d.color} text={d.label} />
+}))
 
 export const TaskStatusButton = props => {
-  const { size, onChange, value } = props;
+  const { onChange, value, style, ...others } = props;
 
-  const handleSelectChange = (e) => {
-    const newStatus = e.key;
-    onChange(newStatus);
-  }
-
-  const menu = <Menu onClick={handleSelectChange} size={size}>
-    {Object.keys(definitions).filter(k => k !== value).map(k => <Menu.Item key={k}>{definitions[k].label}</Menu.Item>)}
-  </Menu>
-
-  return <Dropdown overlay={menu} size={size}>
-    <Button ghost style={{backgroundColor: definitions[value]?.color, width: size === 'small' ? 120 : 140}} size={size}>
-      {definitions[value]?.label} <DownOutlined />
-    </Button>
-  </Dropdown>
+  return <Select style={{...style, width: 150}} {...others} options={options} value={value} onChange={onChange} />
 };
 
 TaskStatusButton.propTypes = {
@@ -63,7 +60,7 @@ TaskStatusButton.propTypes = {
 };
 
 TaskStatusButton.defaultProps = {
-  onChange: () => {},
+  onChange: () => { },
   value: 'todo'
 };
 
