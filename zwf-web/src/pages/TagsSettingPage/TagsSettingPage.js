@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom';
 import { TagListPanel } from 'components/TagListPanel';
 import styled from 'styled-components';
 import { deleteTag$, listTags$, saveTag$ } from 'services/tagService';
-import { Card, Space } from 'antd';
+import { Card, PageHeader, Space } from 'antd';
 import { tap } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
 
@@ -25,23 +25,23 @@ const Container = styled.div`
 `;
 
 const TagsSettingPage = () => {
-  const context = React.useContext(GlobalContext);
 
   const handleLoadTaskTags = () => listTags$()
 
   return (
     <Container>
-      <Space direction="vertical" style={{ width: '100%', justifyContent: 'center', maxWidth: 700 }}>
-        <Card  type="inner"
-        title="Tag Management" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
+      <PageHeader 
+      backIcon={false}
+      title="Tag Management"
+      >
+
           <TagListPanel
             onLoadList={handleLoadTaskTags}
             onSave={saveTag$}
             onDelete={deleteTag$}
             showColor={true}
-          />
-        </Card>
-      </Space>
+            />
+            </PageHeader>
     </Container>
   );
 };
