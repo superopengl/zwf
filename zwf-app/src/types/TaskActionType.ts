@@ -1,14 +1,15 @@
 
 export enum TaskActionType {
-    Create = 'create',
-    Assign = 'assign',
-    Rename = 'rename',
-    RequestClientForMoreInfo = 'request-more-info',
-    RequestClientForSign = 'request-sign',
-    ClientSave = 'client-save',
-    AgentSave = 'agent-save',
-    Complete = 'complete',
-    Archive = 'archive',
-    MoveToToDo = 'move-to-todo',
-    MoveToInProgress = 'move-to-in-progress'
+    Created = 'created',
+    Assigned = 'assigned',
+    Renamed = 'renamed',
+    RequestedClientForInfo = 'requested-info',
+    RequestedClientForSign = 'requested-sign',
+    ClientSubmitted = 'client-submitted',
+    ClientSigned = 'client-signed',
+    Completed = 'completed',
+    Archived = 'archived',
+    MovedToToDo = 'moved-to-todo',
+    MovedToInProgress = 'moved-to-in-progress',
+    Chat = 'chat',
 }

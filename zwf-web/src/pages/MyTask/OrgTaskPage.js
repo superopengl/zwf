@@ -24,6 +24,7 @@ import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModa
 import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
+import { TaskTrackingPanel } from 'components/TaskTrackingPanel';
 
 const { Text } = Typography;
 
@@ -125,7 +126,7 @@ const OrgTaskPage = React.memo((props) => {
         ghost={true}
         fixedHeader
         header={{
-          title: <Space style={{height: 34}}>
+          title: <Space style={{ height: 34 }}>
             <TaskIcon />
             {task?.name || <Skeleton paragraph={false} />}
             {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
@@ -169,7 +170,7 @@ const OrgTaskPage = React.memo((props) => {
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
-                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Action history</Button>
+                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Activity history</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for more information</Button>
@@ -204,12 +205,12 @@ const OrgTaskPage = React.memo((props) => {
           destroyOnClose
           closable
           maskClosable
-          width={400}
+          width={500}
           footer={
             <Button type="text" onClick={() => setHistoryVisible(false)}>Close</Button>
           }
         >
-          <TaskHistoryPanel taskId={task.id} />
+          <TaskTrackingPanel taskId={task.id} currentUserId={currentUserId} />
         </Drawer>
       </>}
     </ContainerStyled>

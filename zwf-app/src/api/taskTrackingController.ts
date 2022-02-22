@@ -1,8 +1,8 @@
+import { TaskTracking } from './../entity/TaskTracking';
 import { getEventChannel } from '../services/globalEventSubPubService';
-import { TaskThreadInformation } from '../entity/views/TaskThreadInformation';
 import { filter } from 'rxjs/operators';
 
-import { getRepository } from 'typeorm';
+import { getRepository, getManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
@@ -13,11 +13,11 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { publishEvent } from '../services/globalEventSubPubService';
-import { TaskMessage } from '../entity/TaskMessage';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
+import { logTaskChat } from '../services/taskTrackingService';
 
 
-export const listTaskMessages = handlerWrapper(async (req, res) => {
+export const listTaskTrackings = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   const { taskId } = req.params;
@@ -26,16 +26,15 @@ export const listTaskMessages = handlerWrapper(async (req, res) => {
   switch (role) {
     case Role.Admin:
     case Role.Agent:
-      const orgId = getOrgIdFromReq(req);
       query = {
-        orgId,
-        taskId
+        id: taskId,
+        orgId: getOrgIdFromReq(req)
       }
       break;
     case Role.Client:
       query = {
         taskId,
-        taskUserId: getUserIdFromReq(req)
+        user: getUserIdFromReq(req)
       }
       break;
     case Role.Guest:
@@ -47,19 +46,31 @@ export const listTaskMessages = handlerWrapper(async (req, res) => {
       assert(false, 404);
   }
 
-  const list = await getRepository(TaskThreadInformation).find({
-    where: query,
+  const task = await getRepository(Task).findOne(query);
+  assert(task, 404);
+
+  const list = await getRepository(TaskTracking).find({
+    where: {
+      taskId
+    },
     order: {
-      createdAt: 'DESC'
-    }
+      createdAt: 'ASC'
+    },
+    select: [
+      'id',
+      'createdAt',
+      'by',
+      'action',
+      'info'
+    ]
   });
 
   res.json(list);
 });
 
-const TASK_MESSAGE_EVENT_TYPE = 'zwf.task.message'
+const TASK_ACTIVITY_EVENT_TYPE = 'zwf.task.activity'
 
-export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
+export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
   // assertRole(req, 'admin', 'agent', 'client', 'guest');
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
@@ -85,7 +96,7 @@ export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
   // });
   // res.flushHeaders();
 
-  const channelSubscription$ = getEventChannel(TASK_MESSAGE_EVENT_TYPE)
+  const channelSubscription$ = getEventChannel(TASK_ACTIVITY_EVENT_TYPE)
     .pipe(
       filter(x => x?.taskId === taskId)
     )
@@ -101,29 +112,29 @@ export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
 });
 
 
-export const newTaskMessage = handlerWrapper(async (req, res) => {
+export const createNewTaskTracking = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
 
+  const { taskId } = req.params;
   const { id, message } = req.body;
   assert(message, 400, 'Empty message body');
-  const { taskId } = req.params;
+
   const taskRepo = getRepository(Task);
   const task = await taskRepo.findOne(taskId);
   assert(task, 404);
+
   const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
   const orgId = task.orgId;
 
-  const taskMessage = new TaskMessage();
-  taskMessage.id = id || uuidv4();
-  taskMessage.orgId = orgId;
-  taskMessage.senderId = senderId;
-  taskMessage.taskId = taskId;
-  taskMessage.message = message;
+  const m = getManager();
+  const entity = await logTaskChat(m, taskId, senderId, message, id);
+  const eventBody = {
+    ...entity,
+    orgId,
+  }
 
-  await getRepository(TaskMessage).insert(taskMessage);
-
-  publishEvent(TASK_MESSAGE_EVENT_TYPE, taskMessage);
+  publishEvent(TASK_ACTIVITY_EVENT_TYPE, eventBody);
 
   res.json();
 });

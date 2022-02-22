@@ -19,6 +19,7 @@ import { Org } from '../entity/Org';
 import { DocTemplate } from '../entity/DocTemplate';
 import { TaskDoc } from '../entity/TaskDoc';
 import { tryGenDocFile } from '../services/genDocService';
+import { logTaskCreated } from '../services/taskTrackingService';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -64,7 +65,7 @@ function generateTaskDocs(docTemplates: DocTemplate[], fields: TaskField[], user
   return docs;
 }
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: { [key: string]: any }, id?) => {
+export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: { [key: string]: any }, createrId: string, id?) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
   assert(email, 400, 'email is not specified');
 
@@ -93,6 +94,8 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
 
     task.docs = taskDocs;
     await m.save(task);
+
+    await logTaskCreated(m, task.id, createrId);
   });
 
   const org = await getRepository(Org).findOne(task.orgId);
