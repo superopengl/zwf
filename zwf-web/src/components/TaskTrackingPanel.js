@@ -6,6 +6,9 @@ import React from 'react';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
+import { getTask$, listTaskTrackings$, subscribeTaskTracking } from 'services/taskService';
+import { uniqBy, orderBy } from 'lodash';
+import * as moment from 'moment';
 import { css } from '@emotion/css'
 const containerCss = css({
   height: '100%',
@@ -20,7 +23,8 @@ const { Text , Paragraph} = Typography
 const ChatMessage = props => {
   const { userId, message } = props;
   const context = React.useContext(GlobalContext);
-  const isMe = userId === context.user.id;
+  const currentUserId = context.user.id;
+  const isMe = userId === currentUserId;
 
   return  <Space style={{flexDirection: isMe ? 'row-reverse' : 'row', alignItems: 'flex-start', width: '100%' }}>
     <strong><UserNameCard userId={userId} showName={false} showEmail={false} showTooltip={true} /></strong>
@@ -42,8 +46,9 @@ const ChatMessage = props => {
 }
 
 export const TaskTrackingPanel = React.memo((props) => {
-  const { dataSource } = props;
+  const { taskId } = props;
 
+  const [list, setList] = React.useState([]);
   const context = React.useContext(GlobalContext);
   const currentUserId = context.user.id;
 
@@ -51,9 +56,33 @@ export const TaskTrackingPanel = React.memo((props) => {
   //   scrollToBottom();
   // }, [dataSource]);
 
+  React.useEffect(() => {
+    const sub$ = listTaskTrackings$(taskId).subscribe(allData => {
+      allData.forEach(x => {
+        x.createdAt = moment.utc(x.createdAt).local().toDate()
+      });
+      setList(allData);
+    });
+
+    const eventSource = subscribeTaskTracking(taskId);
+    eventSource.onmessage = (message) => {
+      const event = JSON.parse(message.data);
+      event.createdAt = moment.utc(event.createdAt).local().toDate();
+      setList(list => {
+        list.push(event);
+        return orderBy(uniqBy(list, x => x.id), ['createdAt'], ['asc']);
+      });
+    }
+
+    return () => {
+      sub$?.unsubscribe();
+      eventSource?.close();
+    }
+  }, []);
+
   return <ScrollToBottom className={containerCss}>
     <Timeline mode="left" style={{ padding: 16, paddingLeft: 20 }}>
-      {(dataSource ?? []).map(item => <Timeline.Item
+      {(list ?? []).map(item => <Timeline.Item
         key={item.id}
         color={item.action === 'chat' ? (item.by === currentUserId ? 'blue' : 'gray') : 'blue'}
         // position={item.action === 'chat' && item.by === currentUserId ? 'left' : 'right'}
@@ -71,10 +100,9 @@ export const TaskTrackingPanel = React.memo((props) => {
 });
 
 TaskTrackingPanel.propTypes = {
-  dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
+  taskId: PropTypes.string.isRequired,
 };
 
 TaskTrackingPanel.defaultProps = {
-  dataSource: []
 };
 
