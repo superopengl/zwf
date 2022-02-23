@@ -43,7 +43,6 @@ const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
 const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
-const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
@@ -76,7 +75,7 @@ const StyledLayout = styled(ProLayout)`
 
 const ROUTES = [
   {
-    path: '/task',
+    path: '/',
     name: <FormattedMessage id="menu.tasks" />,
     icon: <Icon component={() => <HiOutlineViewList />} />,
     roles: ['admin', 'agent', 'client']
@@ -226,8 +225,11 @@ export const AppLoggedIn = React.memo(props => {
     //     ...menuData
     //   ]
     // }}
-    headerContentRender={() => (
-      <Row gutter={10} wrap={false} justify="start">
+    headerContentRender={() => {
+      if(isSystem || isClient) {
+        return null;
+      }
+      return <Row gutter={10} wrap={false} justify="start">
         {/* <div
             onClick={() => setCollapsed(!collapsed)}
             style={{
@@ -250,7 +252,7 @@ export const AppLoggedIn = React.memo(props => {
           <CreateNewButton />
         </Col>
       </Row>
-    )}
+    }}
     rightContentRender={() => (
       <div style={{ marginLeft: 16 }}>
         <AvatarDropdownMenu />
@@ -268,8 +270,7 @@ export const AppLoggedIn = React.memo(props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/task" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgTaskListPage : ClientTaskListPage} />
-      <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
+      <RoleRoute exact path="/" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgTaskListPage : ClientTaskListPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
@@ -286,7 +287,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      <Redirect to={(isSystem || isAdmin || isAgent) ? '/task' : '/task'} />
+      {/* <Redirect to={(isSystem || isAdmin || isAgent) ? '/task' : '/task'} /> */}
     </Switch>
 
     <ChangePasswordModal

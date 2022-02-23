@@ -3,9 +3,10 @@ import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import {
-  QuestionOutlined} from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
-import { Dropdown, Menu, Modal, Layout, Button } from 'antd';
+  QuestionOutlined
+} from '@ant-design/icons';
+import { withRouter, Redirect } from 'react-router-dom';
+import { Dropdown, Menu, Modal, Layout, Button, Space, Typography } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
@@ -15,12 +16,13 @@ import loadable from '@loadable/component'
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
+import { Logo } from 'components/Logo';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
-const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 
+const { Title } = Typography;
 
 const StyledLayout = styled(Layout)`
 .ant-layout-footer {
@@ -46,9 +48,6 @@ export const AppClient = React.memo(props => {
   const [ppVisible, setPpVisible] = React.useState(false);
 
   const { user, setUser } = context;
-  if (!user) {
-    return null;
-  }
 
   const helpMenu = <StyledMenu>
     <Menu.Item key="contact" onClick={() => setContactVisible(true)}>
@@ -59,29 +58,32 @@ export const AppClient = React.memo(props => {
       About Us
     </Menu.Item>
     <Menu.Item key="tc" onClick={() => setTcVisible(true)}>
-    Terms and Conditions
+      Terms and Conditions
     </Menu.Item>
     <Menu.Item key="pp" onClick={() => setPpVisible(true)}>
-    Privacy Policy
+      Privacy Policy
     </Menu.Item>
   </StyledMenu>
 
 
   return <StyledLayout>
-    <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%', display: 'flex', justifyContent: 'end' }}>
-      <div style={{ marginLeft: 16 }}>
+    <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%', display: 'flex', justifyContent: 'space-between', padding: '0 24px' }}>
+      <Space>
+        <Logo size={36} />
+        <Title style={{ color: 'white' }}>ZeeWorkflow</Title>
+      </Space>
+      <Space size="large">
         <Dropdown overlay={helpMenu} trigger={['click']}>
-          <Button shape="circle" size="large" type="primary" icon={<QuestionOutlined />} ghost style={{borderWidth: 2}} />
+          <Button shape="circle" size="large" type="primary" icon={<QuestionOutlined />} ghost style={{ borderWidth: 2 }} />
         </Dropdown>
-      </div>
-      <div style={{ marginLeft: 16 }}>
         <AvatarDropdownMenu />
-      </div>
+      </Space>
     </Layout.Header>
     <Layout.Content style={{ marginTop: 64, height: '100%', padding: 30 }}>
       <Switch>
         <RoleRoute exact path="/task" component={ClientTaskListPage} />
         <RoleRoute exact path="/task/:id" component={ClientTaskPage} />
+        <Redirect to="/" />
       </Switch>
     </Layout.Content>
     <ChangePasswordModal
@@ -119,7 +121,7 @@ export const AppClient = React.memo(props => {
       maskClosable={false}
       width={600}
     >
-      <TermAndConditionPage/>
+      <TermAndConditionPage />
     </Modal>
     <Modal
       visible={ppVisible}

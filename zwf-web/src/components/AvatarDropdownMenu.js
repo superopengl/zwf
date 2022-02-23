@@ -76,9 +76,6 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key="home" onClick={handleGoHome}>
-      <FormattedMessage id="menu.home" />
-    </Menu.Item>
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>

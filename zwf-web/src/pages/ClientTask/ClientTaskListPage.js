@@ -39,6 +39,7 @@ const ClientTaskListPage = () => {
 
   return (
     <LayoutStyled>
+      client list page
       <List
         loading={loading}
         dataSource={list}
@@ -52,7 +53,7 @@ const ClientTaskListPage = () => {
           xxl: 3,
         }}
         renderItem={item => <List.Item>
-          <TaskClientCard task={item} />
+          {/* <TaskClientCard task={item} /> */}
           </List.Item>}
       />
     </LayoutStyled>
