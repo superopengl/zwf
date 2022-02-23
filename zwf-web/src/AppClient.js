@@ -17,9 +17,9 @@ import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { Logo } from 'components/Logo';
+import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
-const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 
 const { Title } = Typography;
@@ -81,7 +81,7 @@ export const AppClient = React.memo(props => {
     </Layout.Header>
     <Layout.Content style={{ marginTop: 64, height: '100%', padding: 30 }}>
       <Switch>
-        <RoleRoute exact path="/task" component={ClientTaskListPage} />
+        <RoleRoute exact path="/" component={ClientTaskListPage} />
         <RoleRoute exact path="/task/:id" component={ClientTaskPage} />
         <Redirect to="/" />
       </Switch>

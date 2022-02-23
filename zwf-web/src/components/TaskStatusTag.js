@@ -29,7 +29,7 @@ const statusDefs = {
 export const TaskStatusTag = React.memo(props => {
   const { status } = props;
   const def = statusDefs[status];
-  return <Tag color={def.color}>{def.label}</Tag>
+  return <Tag color={def?.color}>{def?.label || status}</Tag>
 });
 
 TaskStatusTag.propTypes = {

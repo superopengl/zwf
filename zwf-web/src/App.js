@@ -20,7 +20,6 @@ import { AppClient } from 'AppClient';
 import { AppLoggedIn } from 'AppLoggedIn';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
-const Error404 = loadable(() => import('pages/Error404'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
 const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
@@ -119,8 +118,7 @@ export const App = React.memo(() => {
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-              <RoleRoute loading={loading} path="/" exact component={isLoggedIn ? (isClient ? AppClient : AppLoggedIn) : HomePage} />
-              <RoleRoute loading={loading} path="/" component={isLoggedIn ? (isClient ? AppClient : AppLoggedIn) : HomePage} />
+              <RoleRoute loading={loading} path="/" component={!isLoggedIn ? HomePage : isClient ? AppClient : AppLoggedIn} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>

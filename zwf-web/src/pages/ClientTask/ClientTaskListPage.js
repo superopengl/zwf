@@ -19,11 +19,9 @@ const LayoutStyled = styled.div`
 `;
 
 
-const ClientTaskListPage = () => {
+export const ClientTaskListPage = withRouter(() => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
-  const loadSignalRef = React.useRef(0);
-
 
   React.useEffect(() => {
     const sub$ = listTask$()
@@ -32,14 +30,11 @@ const ClientTaskListPage = () => {
         setLoading(false);
       });
 
-    return () => {
-      sub$.unsubscribe();
-    }
-  }, [loadSignalRef]);
+    return () => sub$.unsubscribe()
+  }, []);
 
   return (
     <LayoutStyled>
-      client list page
       <List
         loading={loading}
         dataSource={list}
@@ -53,15 +48,13 @@ const ClientTaskListPage = () => {
           xxl: 3,
         }}
         renderItem={item => <List.Item>
-          {/* <TaskClientCard task={item} /> */}
-          </List.Item>}
+          <TaskClientCard task={item} />
+        </List.Item>}
       />
     </LayoutStyled>
   )
-}
+})
 
 ClientTaskListPage.propTypes = {};
 
 ClientTaskListPage.defaultProps = {};
-
-export default withRouter(ClientTaskListPage);

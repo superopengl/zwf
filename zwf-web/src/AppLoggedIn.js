@@ -5,10 +5,10 @@ import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, FileOutlined, PlusOutlined, TagsOutlined
+  BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined
 } from '@ant-design/icons';
-import { Link, withRouter, Redirect } from 'react-router-dom';
-import { Space, Menu, Typography, Modal, Button, AutoComplete, Row, Col } from 'antd';
+import { Link } from 'react-router-dom';
+import { Space, Typography, Modal, Row, Col } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
@@ -18,8 +18,8 @@ import { BiDollar } from 'react-icons/bi';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { GoTools } from 'react-icons/go';
-import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
-import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
+import { RiCoinsLine } from 'react-icons/ri';
+import { HiOutlineViewList } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
 import { HiOutlineUserGroup } from 'react-icons/hi';
@@ -29,7 +29,6 @@ import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
-const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
@@ -44,7 +43,6 @@ const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTempl
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
 const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
-const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 
 const { Link: LinkText } = Typography;
@@ -78,7 +76,7 @@ const ROUTES = [
     path: '/',
     name: <FormattedMessage id="menu.tasks" />,
     icon: <Icon component={() => <HiOutlineViewList />} />,
-    roles: ['admin', 'agent', 'client']
+    roles: ['admin', 'agent']
   },
   // {
   //   path: '/metrics',
@@ -190,6 +188,9 @@ export const AppLoggedIn = React.memo(props => {
   const isAgent = role === 'agent';
   const isClient = role === 'client';
 
+  if(isClient) {
+    throw new Error('This component is not for client role');
+  }
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
 
@@ -270,8 +271,8 @@ export const AppLoggedIn = React.memo(props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgTaskListPage : ClientTaskListPage} />
-      <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
+      <RoleRoute exact path="/" component={isSystem ? SystemBoardPage :  OrgTaskListPage} />
+      <RoleRoute visible={isAdmin || isAgent} path="/task/:id" component={OrgTaskPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/:id" component={DocTemplatePage} />
@@ -279,13 +280,13 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/new" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/:id" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/scheduler" component={RecurringListPage} />
-      <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
-      <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isAdmin} exact path="/team" component={OrgMemberListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/client" component={ClientUserListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/tags" component={TagsSettingPage} />
+      <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
+      <RoleRoute visible={isAdmin} exact path="/team" component={OrgMemberListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
+      <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
       {/* <Redirect to={(isSystem || isAdmin || isAgent) ? '/task' : '/task'} /> */}
     </Switch>
