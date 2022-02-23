@@ -12,7 +12,7 @@ import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
-import {TaskChatPanel} from 'components/TaskChatPanel';
+import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 4rem auto 0 auto;
@@ -89,7 +89,7 @@ const ClientTaskPage = (props) => {
                 <MyTaskReadView value={task} />}
           </Layout.Content>
           {showsChat && <Layout.Sider collapsed={!chatVisible} reverseArrow={true} collapsedWidth={0} width={400} collapsible={false} theme="light" style={{ paddingLeft: 30, height: '100%' }}>
-            <TaskChatPanel taskId={task.id} />
+            <TaskTrackingDrawer taskId={task.id} />
           </Layout.Sider>}
         </Layout>}
     </LayoutStyled>
