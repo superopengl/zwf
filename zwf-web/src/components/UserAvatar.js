@@ -56,13 +56,11 @@ export const UserAvatar = React.memo((props) => {
   const [fileList, setFileList] = React.useState([]);
 
   React.useEffect(() => {
-    if(!editable) {
+    if (!editable) {
       return;
     }
-    const subscription = load$();
-    return () => {
-      subscription.unsubscribe();
-    }
+    const sub$ = load$();
+    return () => sub$.unsubscribe()
   }, []);
 
 
