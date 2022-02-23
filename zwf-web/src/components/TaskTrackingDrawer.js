@@ -9,6 +9,8 @@ import { uniqBy, orderBy } from 'lodash';
 import { TaskTrackingPanel } from './TaskTrackingPanel';
 import { switchMapTo } from 'rxjs/operators';
 
+
+
 export const TaskTrackingDrawer = React.memo((props) => {
   const { taskId, visible, onClose, width } = props;
 
@@ -42,6 +44,13 @@ export const TaskTrackingDrawer = React.memo((props) => {
     }
   }, []);
 
+  React.useEffect(() => {
+    if (!loading) {
+      textareaRef.current?.focus();
+    }
+  }, [loading]);
+
+
   const handleSendMessage = (values) => {
     const { message } = values;
     if (!message?.trim()) {
@@ -65,9 +74,10 @@ export const TaskTrackingDrawer = React.memo((props) => {
     title="Activity History"
     destroyOnClose
     closable
+    autoFocus
     maskClosable
     width={width}
-    bodyStyle={{ padding: 16 }}
+    bodyStyle={{ padding: 0 }}
     footer={
       <>
         <Form onFinish={handleSendMessage}

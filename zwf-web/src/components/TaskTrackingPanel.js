@@ -10,6 +10,9 @@ import { css } from '@emotion/css'
 const containerCss = css({
   height: '100%',
   width: '100%',
+  '& button': {
+    display: 'none',
+  }
 });
 
 const { Text } = Typography
@@ -25,7 +28,7 @@ const ChatMessage = props => {
     bordered={true}
     style={{
       marginBottom: 4,
-      backgroundColor: isMe ? '#66c18c' : 'rgb(245,245,245)',
+      backgroundColor: isMe ? '#13c2c2' : 'rgb(245,245,245)',
     }}>
     <Space style={{ width: '100%', flexDirection: isMe ? 'row-reverse' : 'row', alignItems: 'flex-start' }}>
       <UserNameCard userId={userId} showName={false} showTooltip={true} />
@@ -42,18 +45,18 @@ export const TaskTrackingPanel = React.memo((props) => {
   const context = React.useContext(GlobalContext);
   const currentUserId = context.user.id;
 
-  React.useEffect(() => {
-    scrollToBottom();
-  }, [dataSource]);
+  // React.useEffect(() => {
+  //   scrollToBottom();
+  // }, [dataSource]);
 
   return <ScrollToBottom className={containerCss}>
-    <Timeline mode="left" style={{paddingLeft: 4}}>
+    <Timeline mode="left" style={{ padding: 16, paddingLeft: 20 }}>
       {(dataSource ?? []).map(item => <Timeline.Item
         key={item.id}
-        color={item.action === 'chat' ? (item.by === currentUserId ? 'green' : 'blue') : 'gray'}
+        color={item.action === 'chat' ? (item.by === currentUserId ? 'blue' : 'gray') : 'blue'}
         // position={item.action === 'chat' && item.by === currentUserId ? 'left' : 'right'}
         dot={item.action === 'chat' ? <MessageFilled /> : null}
-      // label={<TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />}
+        // label={screens.md ? <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" /> : null}
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text>{item.action ?? item.info}</Text>}
