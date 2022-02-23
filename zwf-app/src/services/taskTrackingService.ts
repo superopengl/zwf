@@ -4,10 +4,9 @@ import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { Task } from '../entity/Task';
 
-async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType, taskId: string, by: string, info?: any, id?: string) {
+async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType, taskId: string, by: string, info?: any) {
   assert(taskId, 500);
   const entity = new TaskTracking();
-  entity.id = id;
   entity.action = action;
   entity.taskId = taskId;
   entity.by = by;
@@ -63,6 +62,6 @@ export async function logTaskMovedToInProgress(m: EntityManager, taskId: string,
   return await insertNewTrackingEntity(m, TaskActionType.MovedToInProgress, taskId, by);
 }
 
-export async function logTaskChat(m: EntityManager, taskId: string, by: string, message: string, id: string) {
-  return await insertNewTrackingEntity(m, TaskActionType.Chat, taskId, by, message, id);
+export async function logTaskChat(m: EntityManager, taskId: string, by: string, message: string) {
+  return await insertNewTrackingEntity(m, TaskActionType.Chat, taskId, by, message);
 }

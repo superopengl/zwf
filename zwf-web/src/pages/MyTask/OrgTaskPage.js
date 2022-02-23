@@ -25,6 +25,7 @@ import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskTrackingPanel } from 'components/TaskTrackingPanel';
+import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
 
 const { Text } = Typography;
 
@@ -197,21 +198,7 @@ const OrgTaskPage = React.memo((props) => {
         >
           <TaskChatPanel taskId={task.id} currentUserId={currentUserId} />
         </Drawer>
-
-        <Drawer
-          visible={historyVisible}
-          onClose={() => setHistoryVisible(false)}
-          title="Task Action History"
-          destroyOnClose
-          closable
-          maskClosable
-          width={500}
-          footer={
-            <Button type="text" onClick={() => setHistoryVisible(false)}>Close</Button>
-          }
-        >
-          <TaskTrackingPanel taskId={task.id} currentUserId={currentUserId} />
-        </Drawer>
+        {task && <TaskTrackingDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       </>}
     </ContainerStyled>
   </>

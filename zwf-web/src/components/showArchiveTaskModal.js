@@ -39,6 +39,9 @@ export function showArchiveTaskModal(taskId, onFinish) {
     onOk: () => {
       changeTaskStatus$(taskId, 'archived').subscribe(() => onFinish?.());
     },
+    cancelButtonProps: {
+      type: 'text'
+    }
   });
 
   return modalRef;

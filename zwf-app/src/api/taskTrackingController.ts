@@ -117,7 +117,7 @@ export const createNewTaskTracking = handlerWrapper(async (req, res) => {
   assert(role !== Role.System, 404);
 
   const { taskId } = req.params;
-  const { id, message } = req.body;
+  const { message } = req.body;
   assert(message, 400, 'Empty message body');
 
   const taskRepo = getRepository(Task);
@@ -128,7 +128,7 @@ export const createNewTaskTracking = handlerWrapper(async (req, res) => {
   const orgId = task.orgId;
 
   const m = getManager();
-  const entity = await logTaskChat(m, taskId, senderId, message, id);
+  const entity = await logTaskChat(m, taskId, senderId, message);
   const eventBody = {
     ...entity,
     orgId,
