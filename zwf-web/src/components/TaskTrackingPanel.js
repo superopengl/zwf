@@ -18,9 +18,8 @@ const containerCss = css({
 const { Text } = Typography
 
 const ChatMessage = props => {
-  const { message } = props;
+  const { userId, message } = props;
   const context = React.useContext(GlobalContext);
-  const userId = context.user.id;
   const isMe = userId === context.user.id;
 
   return <Card
@@ -60,7 +59,7 @@ export const TaskTrackingPanel = React.memo((props) => {
       >
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text>{item.action ?? item.info}</Text>}
-          <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />
+          <TimeAgo value={item.createdAt} accurate={true} direction="horizontal" />
         </div>
       </Timeline.Item>
       )}

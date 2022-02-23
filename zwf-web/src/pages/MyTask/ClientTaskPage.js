@@ -2,17 +2,26 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Space, Button } from 'antd';
+import { Layout, Space, Typography, Row, Col, Card, Skeleton } from 'antd';
 
-import { getTask } from 'services/taskService';
+import { getTask, getTask$, listTaskTrackings$ } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
-import {TaskFormWizard} from './TaskFormWizard';
+import { TaskFormWizard } from './TaskFormWizard';
 import MyTaskReadView from './MyTaskReadView';
 import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
 import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
+import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
+import { TaskMessageForm } from 'components/TaskMessageForm';
+import { TaskTrackingPanel } from 'components/TaskTrackingPanel';
+import { combineLatest } from 'rxjs';
+import { PageContainer } from '@ant-design/pro-layout';
+import { finalize } from 'rxjs/operators';
+import { TaskIcon } from 'components/entityIcon';
+
+const { Text } = Typography;
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 4rem auto 0 auto;
@@ -34,30 +43,34 @@ height: 100%;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: #ffffff;
   height: 100%;
+  width: 100%;
+  max-width: 1200px;
 `;
 
 const ClientTaskPage = (props) => {
   const id = props.match.params.id;
   const isNew = !id || id === 'new';
 
-  const { chat, portfolioId } = queryString.parse(props.location.search);
+  const { chat } = queryString.parse(props.location.search);
   const [chatVisible, setChatVisible] = React.useState(Boolean(chat));
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
-
-  const loadEntity = async () => {
-    setLoading(true);
-    if (id && !isNew) {
-      const task = await getTask(id);
-      setTask(task);
-    }
-    setLoading(false);
-  }
+  const [list, setList] = React.useState([]);
+  const [saving, setSaving] = React.useState(null);
 
   React.useEffect(() => {
-    loadEntity();
+    const sub$ = combineLatest([getTask$(id), listTaskTrackings$(id)])
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(([task, list]) => {
+        setTask(task);
+        setList(list);
+      })
+
+    return () => sub$.unsubscribe();
   }, [])
 
   const onOk = () => {
@@ -71,27 +84,45 @@ const ClientTaskPage = (props) => {
     setChatVisible(!chatVisible);
   }
 
+  const handleMessageSent = () => {
+    listTaskTrackings$(id).subscribe(setList);
+  }
+
+
   const showsEditableForm = isNew || task?.status === 'todo';
   const showsSign = task?.status === 'to_sign';
   const showsChat = !isNew;
 
   return (<>
-  Client task page
+    Client task page
     <LayoutStyled>
-        {loading ? <Loading /> : <Layout style={{ backgroundColor: '#ffffff', height: '100%', justifyContent: 'center' }}>
-          <Layout.Content style={{ padding: 0, maxWidth: 500, margin: '0 auto', width: '100%' }}>
-            {!isNew && <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
-              <TaskStatus status={task.status} avatar={false} portfolioId={task.portfolioId} width={60} />
-              <Button type={chatVisible ? 'secondary' : 'primary'} size="large" icon={<MessageFilled />} onClick={() => toggleChatPanel()}></Button>
-            </Space>}
-            {showsEditableForm ? <TaskFormWizard onOk={onOk} onCancel={onCancel} portfolioId={portfolioId} value={task} /> :
-              showsSign ? <MyTaskSign value={task} /> :
-                <MyTaskReadView value={task} />}
-          </Layout.Content>
-          {showsChat && <Layout.Sider collapsed={!chatVisible} reverseArrow={true} collapsedWidth={0} width={400} collapsible={false} theme="light" style={{ paddingLeft: 30, height: '100%' }}>
-            <TaskTrackingDrawer taskId={task.id} />
-          </Layout.Sider>}
-        </Layout>}
+      {!task ? <Loading /> : <PageContainer
+              loading={loading}
+              backIcon={false}
+              ghost={true}
+              fixedHeader
+              header={{
+                title: <Space style={{ height: 34 }}>
+                  <TaskIcon />
+                  {task?.name || <Skeleton paragraph={false} />}
+                  {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
+                </Space>
+              }}
+      >
+        <Row gutter={40} wrap={false}>
+          <Col span={12}>
+            <Card size="large">
+              <AutoSaveTaskFormPanel value={task} type="client" onSavingChange={setSaving} />
+            </Card>
+          </Col>
+          <Col span={12}>
+            <Card size="large">
+              <TaskTrackingPanel dataSource={list} />
+              <TaskMessageForm taskId={task.id} loading={loading} onDone={handleMessageSent} />
+            </Card>
+          </Col>
+        </Row>
+      </PageContainer>}
     </LayoutStyled>
   </>
   );

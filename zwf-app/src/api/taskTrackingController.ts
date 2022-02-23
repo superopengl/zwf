@@ -20,26 +20,26 @@ import { logTaskChat } from '../services/taskTrackingService';
 export const listTaskTrackings = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
-  const { taskId } = req.params;
+  const { id } = req.params;
 
   let query;
   switch (role) {
     case Role.Admin:
     case Role.Agent:
       query = {
-        id: taskId,
+        id,
         orgId: getOrgIdFromReq(req)
       }
       break;
     case Role.Client:
       query = {
-        taskId,
-        user: getUserIdFromReq(req)
+        id,
+        userId: getUserIdFromReq(req)
       }
       break;
     case Role.Guest:
       query = {
-        taskId,
+        id,
       }
       break;
     default:
@@ -51,7 +51,7 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
 
   const list = await getRepository(TaskTracking).find({
     where: {
-      taskId
+      taskId: id
     },
     order: {
       createdAt: 'ASC'
@@ -116,7 +116,7 @@ export const createNewTaskTracking = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
 
-  const { taskId } = req.params;
+  const { id: taskId } = req.params;
   const { message } = req.body;
   assert(message, 400, 'Empty message body');
 

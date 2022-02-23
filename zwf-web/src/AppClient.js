@@ -14,10 +14,10 @@ import { Switch } from 'react-router-dom';
 import loadable from '@loadable/component'
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
+const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 
@@ -81,7 +81,6 @@ export const AppClient = React.memo(props => {
     <Layout.Content style={{ marginTop: 64, height: '100%', padding: 30 }}>
       <Switch>
         <RoleRoute exact path="/task" component={ClientTaskListPage} />
-        <RoleRoute exact path="/task/new" component={NewTaskPage} />
         <RoleRoute exact path="/task/:id" component={ClientTaskPage} />
       </Switch>
     </Layout.Content>
