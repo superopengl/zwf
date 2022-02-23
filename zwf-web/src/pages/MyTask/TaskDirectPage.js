@@ -2,17 +2,18 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Modal, Button, Alert, Typography, Space } from 'antd';
+import { Layout, Modal, Button, Skeleton, Typography, Space ,Alert } from 'antd';
 
 import { getDeepLinkedTask$ } from 'services/taskService';
 import * as queryString from 'query-string';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { Logo } from 'components/Logo';
 import Icon from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import PropTypes from 'prop-types';
 import { LogInPanel } from 'pages/LogInPanel';
 import { ForgotPasswordPanel } from 'pages/ForgotPasswordPanel';
+import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 
 const { Paragraph } = Typography
 
@@ -38,31 +39,19 @@ const TaskDirectPage = (props) => {
   const [chatVisible, setChatVisible] = React.useState(Boolean(chat));
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
-  const [userInfo, setUserInfo] = React.useState();
   const [loginModalVisible, setLoginModalVisible] = React.useState(false);
   const formRef = React.createRef();
 
   React.useEffect(() => {
-    const subscription$ = getDeepLinkedTask$(token)
+    const sub$ = getDeepLinkedTask$(token)
       .pipe(
-        catchError(() => setLoading(false))
+        finalize(() => setLoading(false))
       )
-      .subscribe(taskInfo => {
-        const { email, role, userId, orgId, orgName, ...task } = taskInfo;
-        setUserInfo({
-          email,
-          role,
-          userId,
-          orgId,
-          orgName,
-        })
+      .subscribe(task => {
         setLoginModalVisible(true);
         setTask(task);
-        setLoading(false);
       });
-    return () => {
-      subscription$.unsubscribe();
-    }
+    return () => sub$.unsubscribe()
   }, []);
 
   const handleSubmit = () => {
@@ -82,10 +71,10 @@ const TaskDirectPage = (props) => {
     // }
   }
 
-  const isClientUser = userInfo?.role === 'client';
+  const isClientUser = task?.client.role === 'client';
 
   return (<LayoutStyled>
-    <Layout.Header style={{ position: 'fixed', zIndex: 1, width: '100%', padding: 0 }}>
+    <Layout.Header style={{ zIndex: 1, width: '100%', padding: 0 }}>
       <Alert banner
         closable={false}
         type="info"
@@ -97,48 +86,33 @@ const TaskDirectPage = (props) => {
       />
     </Layout.Header>
     <ContainerStyled>
-      {task && <PageContainer
-        loading={loading}
-        header={{
-          title: task?.name || 'Loading'
-        }}
-        // content={<Paragraph type="secondary">{value.description}</Paragraph>}
-        extra={[
-          <Button key="reset" onClick={handleReset}>Reset</Button>,
-          <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
-        ]}
-        footer={[
-          <Button key="reset" onClick={handleReset}>Reset</Button>,
-          <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
-        ]}
+      {loading && <Skeleton active />}
+      <Modal
+        closable={false}
+        maskClosable={false}
+        destroyOnClose
+        title={<Space align="center"><Logo size={28} /> {isClientUser ? "Log In" : "Sign Up"}</Space>}
+        visible={loginModalVisible}
+        onOk={() => setLoginModalVisible(false)}
+        onCancel={() => setLoginModalVisible(false)}
+        footer={null}
+        width={400}
       >
-        {/* <TaskWorkPanel ref={formRef} task={task} type="client" /> */}
-      </PageContainer>}
+        {isClientUser ?
+          <>
+            <Paragraph>It appears this task belongs to an existing account. Please login and continue to have better experience.</Paragraph>
+            <LogInPanel email={task?.client.email} />
+          </>
+          :
+          <>
+            <Paragraph>Organazation <strong>{task?.client.orgName}</strong> invite you to join ZeeWorkflow to complete this task. Please click below button to set a password and sign in ZeeWorkflow.</Paragraph>
+            <ForgotPasswordPanel email={task?.client.email} onFinish={() => setLoginModalVisible(false)} returnUrl={`/task/${task?.id}`} />
+          </>
+        }
+        {/* <Button block type="link" onClick={() => setLoginModalVisible(false)}>Continue as anonymous user</Button> */}
+      </Modal>
     </ContainerStyled>
-    <Modal
-      closable={false}
-      maskClosable
-      destroyOnClose
-      title={<Space align="center"><Logo size={28} /> {isClientUser ? "Log In" : "Sign Up"}</Space>}
-      visible={loginModalVisible}
-      onOk={() => setLoginModalVisible(false)}
-      onCancel={() => setLoginModalVisible(false)}
-      footer={null}
-      width={400}
-    >
-      {isClientUser ?
-        <>
-          <Paragraph>It appears this task belongs to an existing user. Please login and continue to have better experience.</Paragraph>
-          <LogInPanel email={userInfo?.email} />
-        </>
-        :
-        <>
-          <Paragraph>Organazation <strong>{userInfo?.orgName}</strong> invite you to join ZeeWorkflow to complete this task. Please click below button to set a password and sign up to ZeeWorkflow.</Paragraph>
-          <ForgotPasswordPanel email={userInfo?.email} onFinish={() => setLoginModalVisible(false)} />
-        </>
-      }
-      <Button block type="link" onClick={() => setLoginModalVisible(false)}>Continue as anonymous user</Button>
-    </Modal>
+
   </LayoutStyled>
   );
 };

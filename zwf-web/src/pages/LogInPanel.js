@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Input, Button, Form, Divider, Typography } from 'antd';
+import { Input, Button, Form, Divider } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { login$ } from 'services/authService';
@@ -11,17 +11,14 @@ import { zip, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { getMyOrgProfile$ } from 'services/orgService';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Logo } from 'components/Logo';
+import * as queryString from 'query-string';
 
-const LogoContainer = styled.div`
-  margin-bottom: 2rem;
-`;
-
-const { Title } = Typography;
 
 export const LogInPanel = withRouter(props => {
   const { email } = props;
+
+  const { r: returnUrl } = queryString.parse(props.location.search);
+
   const [loading, setLoading] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
@@ -58,9 +55,9 @@ export const LogInPanel = withRouter(props => {
             setNotifyCount(count);
 
             if (user.role === 'admin' && !org) {
-              props.history.push('/onboard')
+              props.history.push(returnUrl || '/onboard')
             } else {
-              props.history.push('/task');
+              props.history.push(returnUrl || '/task');
             }
           }
         },

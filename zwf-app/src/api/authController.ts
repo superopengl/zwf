@@ -143,13 +143,14 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
   res.json(info);
 });
 
-async function setUserToResetPasswordStatus(user: User) {
+async function setUserToResetPasswordStatus(user: User, returnUrl: string) {
   const userRepo = getRepository(User);
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const returnUrlParam = returnUrl ? `?r=${encodeURIComponent(returnUrl)}` : '';
+  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/` + returnUrlParam;
   await sendEmailImmediately({
     to: user.profile.email,
     template: EmailTemplateType.ResetPassword,
@@ -164,14 +165,14 @@ async function setUserToResetPasswordStatus(user: User) {
 }
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
-  const { email } = req.body;
+  const { email, returnUrl } = req.body;
   const user = await getActiveUserByEmailWithProfile(email);
   if (!user) {
     res.json();
     return;
   }
 
-  await setUserToResetPasswordStatus(user);
+  await setUserToResetPasswordStatus(user, returnUrl);
 
   res.json();
 });
@@ -203,6 +204,7 @@ export const resetPassword = handlerWrapper(async (req, res) => {
 
 export const retrievePassword = handlerWrapper(async (req, res) => {
   const { token } = req.params;
+  const r = req.query.r as string;
   assert(token, 400, 'Invalid token');
 
   const userRepo = getRepository(User);
@@ -210,7 +212,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.ZWF_WEB_DOMAIN_NAME}/reset_password?token=${token}`;
+  const url = `${process.env.ZWF_WEB_DOMAIN_NAME}/reset_password?token=${token}` + (r ? `&r=${encodeURIComponent(r)}` : '');
   res.redirect(url);
 });
 

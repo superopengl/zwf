@@ -110,7 +110,13 @@ export function createAppInstance() {
 
   app.get('/healthcheck', (req, res) => res.send('OK'));
 
-  app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/r/${req.params.token}`));
+  app.get('/r/:token', (req, res) => {
+    const { token } = req.params;
+    const r = req.query.r as string;
+    const returnUrlParam = r ? `?r=${encodeURIComponent(r)}` : '';
+    const url = `/api/v1/auth/r/${token}` + returnUrlParam;
+    res.redirect(url);
+  });
 
   app.get('/t/:token', taskDirectLinkHanlder);
 
