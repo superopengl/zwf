@@ -1,4 +1,4 @@
-import { Space, Card, Typography, Descriptions } from 'antd';
+import { Space, Card, Typography, Descriptions, Row, Col, Divider } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -37,20 +37,16 @@ export const TaskClientCard = React.memo(withRouter(props => {
     size="large"
     hoverable
     onClick={e => goToTask(e, id)}
-    extra={<TaskStatusTag status={status}/>}
+    extra={<TaskStatusTag status={status} />}
   // className={lastUnreadMessageAt ? 'unread' : ''}
   >
     <Space direction="vertical" style={{ width: '100%' }}>
       <Text type="secondary">issued by <strong>{orgName}</strong></Text>
       <Paragraph>{description}</Paragraph>
-      <Descriptions title={null} column={1} >
-        <Descriptions.Item label="Updated At">
-          <TimeAgo value={lastUpdatedAt} direction="horizontal" showTime={false} />
-        </Descriptions.Item>
-        <Descriptions.Item label="Created At">
-          <TimeAgo value={createdAt} direction="horizontal" showTime={false} />
-        </Descriptions.Item>
-      </Descriptions>
+      <Space size="middle">
+        <TimeAgo key="0" prefix="Created" value={createdAt} direction="horizontal" showTime={false} />
+        <TimeAgo key="1" prefix="Updated" value={lastUpdatedAt} direction="horizontal" showTime={false} />
+      </Space>
     </Space>
     {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
   </StyledCard>
