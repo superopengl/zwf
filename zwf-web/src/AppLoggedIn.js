@@ -270,7 +270,7 @@ export const AppLoggedIn = React.memo(props => {
   >
     <Switch>
       <RoleRoute exact path="/" component={isSystem ? SystemBoardPage : isClient ? ClientTaskListPage : OrgTaskListPage} />
-      <RoleRoute visible={isAdmin || isAgent} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
+      <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/:id" component={DocTemplatePage} />

@@ -37,10 +37,6 @@ const LayoutStyled = styled.div`
     padding: 0 0 24px 24px;
   }
 
-  .ant-tabs-tab-active {
-    font-weight: bold;
-    // color: rgba(0, 0, 0, 0.85) !important;
-  }
 `;
 
 const TAB_DEFS = [
@@ -183,7 +179,6 @@ export const ClientTaskListPage = withRouter(() => {
           <Select key="org"
             options={orgOptions}
             value={query.org}
-
             onSelect={org => setQuery({ ...query, org })}
             dropdownMatchSelectWidth={false}
             style={{ width: 200 }} />,
@@ -198,6 +193,7 @@ export const ClientTaskListPage = withRouter(() => {
         <Tabs tabPosition={screens.md ? 'left' : 'top'}
           size="small"
           type="line"
+          animated={{inkBar: true, tabPane: true}}
           onChange={tab => setQuery({ ...query, tab })}
           defaultActiveKey={query.tab}>
           {TAB_DEFS.map(tab => {
