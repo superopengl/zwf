@@ -34,7 +34,7 @@ class HomeContactArea extends React.Component {
         xxl: 24
       },
       style: {
-        backgroundColor: '#006d75',
+        backgroundColor: '#0a425e',
         color: '#f0f0f0',
       }
     }

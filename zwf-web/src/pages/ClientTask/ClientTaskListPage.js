@@ -193,7 +193,7 @@ export const ClientTaskListPage = withRouter(() => {
         <Tabs tabPosition={screens.md ? 'left' : 'top'}
           size="small"
           type="line"
-          animated={{inkBar: true, tabPane: true}}
+          // animated={{inkBar: true, tabPane: true}}
           onChange={tab => setQuery({ ...query, tab })}
           defaultActiveKey={query.tab}>
           {TAB_DEFS.map(tab => {

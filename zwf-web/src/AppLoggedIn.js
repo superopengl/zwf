@@ -46,7 +46,6 @@ const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
-const HomePage = loadable(() => import('pages/HomePage'));
 
 const { Link: LinkText } = Typography;
 
@@ -238,7 +237,7 @@ export const AppLoggedIn = React.memo(props => {
               left: '-24px',
               cursor: 'pointer',
               // fontSize: '16px',
-              backgroundColor: '#002329',
+              backgroundColor: '#062638',
               width: '20px',
               color: 'white'
             }}

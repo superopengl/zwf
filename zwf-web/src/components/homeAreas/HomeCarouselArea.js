@@ -35,7 +35,7 @@ position: relative;
 // background-position: center;
 // background-image: url("images/logo.svg");
 // background-repeat: repeat;
-background-color: #00474f;
+background-color: #0a425e;
 // background-size: 120px;
 // opacity: 0.75;
 // background-image: linear-gradient(135deg, #37AFD2, #37AFD2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
