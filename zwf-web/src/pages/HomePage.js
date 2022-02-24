@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown, Button, Modal, Alert } from 'antd';
+import { Menu, Dropdown, Button, Modal, Alert , Typography} from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
@@ -11,7 +11,7 @@ import { Link, withRouter } from 'react-router-dom';
 import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
-import Icon from '@ant-design/icons';
+import Icon, { ArrowRightOutlined, RightOutlined } from '@ant-design/icons';
 import { IoLanguage } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
@@ -164,8 +164,8 @@ const HomePage = (props) => {
     rightContentRender={props => {
 
       if (isLoggedIn) {
-        return <Link to={isSystem ? '/org' : '/task'}><Button type="primary" ghost >
-          <FormattedMessage id="menu.dashboard" />
+        return <Link to={isSystem ? '/org' : '/task'}><Button type="primary" ghost>
+          <FormattedMessage id="menu.dashboard" /> <RightOutlined style={{color: '#37AFD2'}}/>
         </Button></Link>
       }
 
