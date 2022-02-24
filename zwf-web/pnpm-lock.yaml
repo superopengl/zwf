@@ -51,7 +51,7 @@ specifiers:
   react-google-login: ^5.2.2
   react-highlight-words: ^0.17.0
   react-hot-keys: ^2.7.1
-  react-icons: ^4.2.0
+  react-icons: ^4.3.1
   react-infinite-scroller: ^1.2.4
   react-innertext: ^1.1.5
   react-intl: ^5.15.7
@@ -66,6 +66,7 @@ specifiers:
   react-step-wizard: ^5.3.6
   react-time-ago: ^7.1.3
   react-to-print: ^2.12.3
+  react-use: ^17.3.2
   reactjs-localstorage: ^1.0.1
   rxjs: ^6.6.3
   serve: ^12.0.0
@@ -151,6 +152,7 @@ dependencies:
   react-step-wizard: 5.3.11_react@17.0.2
   react-time-ago: 7.1.9_0a55fffd5ee6f3547fda28fa53f5af44
   react-to-print: 2.14.4_react-dom@17.0.2+react@17.0.2
+  react-use: 17.3.2_react-dom@17.0.2+react@17.0.2
   reactjs-localstorage: 1.0.1
   rxjs: 6.6.7
   smoothscroll-polyfill: 0.4.4
@@ -6175,6 +6177,7 @@ packages:
   /errno/0.1.8:
     resolution: {integrity: sha512-dJ6oBr5SQ1VSd9qkk7ByRgb/1SH4JZjCHSW/mr63/QcXO9zLVxvJ6Oy13nio03rxpSnVDDjFor75SjVeZWPW/A==}
     hasBin: true
+    requiresBuild: true
     dependencies:
       prr: 1.0.1
     dev: true
@@ -8897,6 +8900,7 @@ packages:
   /make-dir/2.1.0:
     resolution: {integrity: sha512-LS9X+dc8KLxXCb8dni79fLIIUA5VyZoyjSMCwTluaXA0o27cCK0bhXkpgw+sTXVpPy/lSO57ilRixqk0vDmtRA==}
     engines: {node: '>=6'}
+    requiresBuild: true
     dependencies:
       pify: 4.0.1
       semver: 5.7.1
@@ -12003,6 +12007,30 @@ packages:
 
   /react-use/17.3.1_react-dom@17.0.2+react@17.0.2:
     resolution: {integrity: sha512-hs7+tS4rRm1QLHPfanLCqXIi632tP4V7Sai1ENUP2WTufU6am++tU9uSw9YrNCFqbABiEv0ndKU1XCUcfu2tXA==}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0
+      react-dom: ^16.8.0  || ^17.0.0
+    dependencies:
+      '@types/js-cookie': 2.2.7
+      '@xobotyi/scrollbar-width': 1.9.5
+      copy-to-clipboard: 3.3.1
+      fast-deep-equal: 3.1.3
+      fast-shallow-equal: 1.0.0
+      js-cookie: 2.2.1
+      nano-css: 5.3.4_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-universal-interface: 0.6.2_react@17.0.2+tslib@2.3.1
+      resize-observer-polyfill: 1.5.1
+      screenfull: 5.2.0
+      set-harmonic-interval: 1.0.1
+      throttle-debounce: 3.0.1
+      ts-easing: 0.2.0
+      tslib: 2.3.1
+    dev: false
+
+  /react-use/17.3.2_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-bj7OD0/1wL03KyWmzFXAFe425zziuTf7q8olwCYBfOeFHY1qfO1FAMjROQLsLZYwG4Rx63xAfb7XAbBrJsZmEw==}
     peerDependencies:
       react: ^16.8.0  || ^17.0.0
       react-dom: ^16.8.0  || ^17.0.0

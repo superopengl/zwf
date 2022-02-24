@@ -1,4 +1,4 @@
-import { ArrowDownOutlined, ArrowUpOutlined, DownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
 import { Button, Layout, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, PageHeader, Select, Input } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
@@ -10,7 +10,10 @@ import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
 import { TaskClientCard } from 'components/TaskClientCard';
 import DropdownMenu from 'components/DropdownMenu';
-import { uniq } from 'lodash';
+import { orderBy, uniq } from 'lodash';
+import { GrAscend, GrDescend } from 'react-icons/gr';
+import { useLocalStorage } from 'react-use';
+import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 
 const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -73,15 +76,20 @@ const TAB_DEFS = [
   },
 ];
 
+const TASK_FILTER_KEY = 'client.tasks.filter';
+const TASK_FILTER_DEFAULT = {
+  text: '',
+  org: '',
+  order: '-updatedAt',
+  tab: 'Action required',
+};
 
 export const ClientTaskListPage = withRouter(() => {
   const [loading, setLoading] = React.useState(true);
   const [allList, setAllList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
-  const [searchText, setSearchText] = React.useState('');
-  const [org, setOrg] = React.useState('');
-  const [order, setOrder] = React.useState('');
-  const [activeTab, setActiveTab] = React.useState(TAB_DEFS.find(x => x.default)?.label);
+  const [searchText, setSearchText] = React.useState();
+  const [query, setQuery] = useLocalStorage(TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
   const screens = useBreakpoint();
 
   React.useEffect(() => {
@@ -95,20 +103,44 @@ export const ClientTaskListPage = withRouter(() => {
   }, []);
 
   React.useEffect(() => {
-    const result = allList.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase()))
-    .filter(x => !org || x.orgName === org)
+    setSearchText(query.text);
+  }, [query]);
+
+  React.useEffect(() => {
+    const { text, org, order } = query;
+    let result = allList;
+    if (text) {
+      result = result.filter(x => x.name.toLowerCase().includes(text))
+    }
+    if (org) {
+      result = result.filter(x => !org || x.orgName === org)
+    }
+    if (order) {
+      const direction = order[0] === '+' ? 'asc' : 'desc';
+      const field = order.substring(1);
+      result = orderBy(result, [field], [direction]);
+    }
     setFilteredList(result);
-  }, [allList, searchText, org, order]);
+  }, [allList, query]);
 
   const sortOptions = React.useMemo(() => [
     {
-      value: '+createdAt',
-      label: <>Created <ArrowUpOutlined /></>,
+      value: '-updatedAt',
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated <ImSortAmountDesc /></Space>,
+    },
+    {
+      value: '+updatedAt',
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated <ImSortAmountAsc /></Space>,
     },
     {
       value: '-createdAt',
-      label: <>Created <ArrowDownOutlined /></>,
-    }
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created <ImSortAmountDesc /></Space>,
+    },
+    {
+      value: '+createdAt',
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created <ImSortAmountAsc /></Space>,
+    },
+
   ], []);
 
   const orgOptions = React.useMemo(() => {
@@ -116,7 +148,7 @@ export const ClientTaskListPage = withRouter(() => {
       value: x,
       label: x,
     }));
-    options.unshift({ value: '', label: 'All organizations' })
+    options.unshift({ value: '', label: '(All organisations)' })
     return options;
   }, [allList]);
 
@@ -126,19 +158,39 @@ export const ClientTaskListPage = withRouter(() => {
         title="All Cases"
         backIcon={false}
         extra={[
-          <Input.Search key="search" placeholder='Search text' style={{ width: 200 }}
-            onSearch={setSearchText}
+          <Button key="clear"
+            icon={<ClearOutlined />}
+            onClick={() => setQuery({ ...TASK_FILTER_DEFAULT, tab: query.tab })}
+            type="link">Reset filters</Button>,
+          <Input.Search
+            key="search"
+            placeholder='Search text'
+            style={{ width: 200 }}
+            value={searchText}
+            onChange={e => setSearchText(e.target.value)}
+            onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
             maxLength={200}
             allowClear />,
-          <Select key="org" options={orgOptions} defaultValue={''} dropdownMatchSelectWidth={false} style={{ width: 200 }} />,
-          <Select key="sort" options={sortOptions} dropdownMatchSelectWidth={false} style={{ width: 120 }} />,
+          <Select key="org"
+            options={orgOptions}
+            value={query.org}
+
+            onSelect={org => setQuery({ ...query, org })}
+            dropdownMatchSelectWidth={false}
+            style={{ width: 200 }} />,
+          <Select key="sort"
+            value={query.order}
+            options={sortOptions}
+            onSelect={order => setQuery({ ...query, order })}
+            dropdownMatchSelectWidth={false}
+            style={{ width: 120 }} />,
         ]}
       >
         <Tabs tabPosition={screens.md ? 'left' : 'top'}
           size="small"
           type="line"
-          onChange={setActiveTab}
-          defaultActiveKey={activeTab}>
+          onChange={tab => setQuery({ ...query, tab })}
+          defaultActiveKey={query.tab}>
           {TAB_DEFS.map(tab => {
             const count = allList.filter(tab.filter).length;
             const data = filteredList.filter(tab.filter);
@@ -168,7 +220,7 @@ export const ClientTaskListPage = withRouter(() => {
                   xxl: 2,
                 }}
                 renderItem={item => <List.Item>
-                  <TaskClientCard task={item} searchText={searchText}/>
+                  <TaskClientCard task={item} searchText={query.text} />
                 </List.Item>}
               />
             </Tabs.TabPane>
