@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 import { TimeAgo } from './TimeAgo';
 import { TaskStatusTag } from './TaskStatusTag';
 import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
+import { HighlightingText } from './HighlightingText';
 
 const { Link: TextLink, Paragraph, Text, Title } = Typography;
 
@@ -33,7 +34,7 @@ export const TaskClientCard = React.memo(withRouter(props => {
   }
 
   return <StyledCard
-    title={<>{name}</>}
+    title={<HighlightingText value={name} search={searchText} />}
     size="large"
     hoverable
     onClick={e => goToTask(e, id)}
