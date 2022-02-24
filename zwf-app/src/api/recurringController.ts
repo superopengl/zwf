@@ -45,7 +45,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
     .createQueryBuilder('x')
     .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .orderBy('x."lastUpdatedAt"', 'DESC', 'NULLS LAST')
+    .orderBy('x."updatedAt"', 'DESC', 'NULLS LAST')
     .addOrderBy('j.name', 'ASC')
     .addOrderBy('p.name', 'ASC')
     .select([
@@ -60,7 +60,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
       `j.id as "taskTemplateId"`,
       'x."lastRunAt" as "lastRunAt"',
       'x."nextRunAt" as "nextRunAt"',
-      'x."lastUpdatedAt" as "lastUpdatedAt"'
+      'x."updatedAt" as "updatedAt"'
     ])
     .execute();
 

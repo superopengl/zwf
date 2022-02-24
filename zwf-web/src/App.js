@@ -16,7 +16,6 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { AppClient } from 'AppClient';
 import { AppLoggedIn } from 'AppLoggedIn';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
@@ -118,7 +117,7 @@ export const App = React.memo(() => {
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-              <RoleRoute loading={loading} path="/" component={!isLoggedIn ? HomePage : isClient ? AppClient : AppLoggedIn} />
+              <RoleRoute loading={loading} path="/" component={!isLoggedIn ? HomePage : AppLoggedIn} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>

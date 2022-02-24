@@ -28,7 +28,7 @@ export const listBlog = handlerWrapper(async (req, res) => {
   const list = await getRepository(Blog)
     .createQueryBuilder('x')
     .orderBy('x."createdAt"', 'DESC')
-    // .select(['x.id', 'x.title', 'x.md', 'x.files', 'x.tags', 'x."createdAt"', 'x."lastUpdatedAt"'])
+    // .select(['x.id', 'x.title', 'x.md', 'x.files', 'x.tags', 'x."createdAt"', 'x."updatedAt"'])
     .getMany();
 
   res.json(list);

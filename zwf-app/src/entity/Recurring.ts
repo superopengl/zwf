@@ -17,7 +17,7 @@ export class Recurring {
 
   @UpdateDateColumn()
   @Index()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @Column('uuid')
   @Index()

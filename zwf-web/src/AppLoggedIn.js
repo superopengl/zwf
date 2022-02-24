@@ -27,6 +27,7 @@ import { ImInsertTemplate } from 'react-icons/im';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
+import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -44,6 +45,7 @@ const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateP
 const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
+const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -76,7 +78,7 @@ const ROUTES = [
     path: '/',
     name: <FormattedMessage id="menu.tasks" />,
     icon: <Icon component={() => <HiOutlineViewList />} />,
-    roles: ['admin', 'agent']
+    roles: ['admin', 'agent', 'client']
   },
   // {
   //   path: '/metrics',
@@ -188,10 +190,6 @@ export const AppLoggedIn = React.memo(props => {
   const isAgent = role === 'agent';
   const isClient = role === 'client';
 
-  if(isClient) {
-    throw new Error('This component is not for client role');
-  }
-
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
 
   return <StyledLayout
@@ -271,8 +269,8 @@ export const AppLoggedIn = React.memo(props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/" component={isSystem ? SystemBoardPage :  OrgTaskListPage} />
-      <RoleRoute visible={isAdmin || isAgent} path="/task/:id" component={OrgTaskPage} />
+      <RoleRoute exact path="/" component={isSystem ? SystemBoardPage : isClient ? ClientTaskListPage : OrgTaskListPage} />
+      <RoleRoute visible={isAdmin || isAgent} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/:id" component={DocTemplatePage} />

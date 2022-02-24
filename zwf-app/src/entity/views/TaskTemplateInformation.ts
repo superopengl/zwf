@@ -45,7 +45,7 @@ import { DocTemplate } from '../DocTemplate';
   createdAt: Date;
 
   @ViewColumn()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @ViewColumn()
   fields: any;

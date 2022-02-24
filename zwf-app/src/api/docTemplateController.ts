@@ -60,7 +60,7 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
       'description',
       'variables',
       'createdAt',
-      'lastUpdatedAt'
+      'updatedAt'
     ]
   });
 
@@ -199,7 +199,7 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
     const newTaskTemplateId = uuidv4();
     docTemplate.id = newTaskTemplateId;
     docTemplate.createdAt = getUtcNow();
-    docTemplate.lastUpdatedAt = getUtcNow();
+    docTemplate.updatedAt = getUtcNow();
     docTemplate.name = await getUniqueCopyName(m, docTemplate);
 
     await m.save(docTemplate);

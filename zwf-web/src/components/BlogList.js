@@ -68,7 +68,7 @@ export const BlogList = props => {
               <Space>
               <TimeAgo value={item.createdAt} prefix="Created At: " accurate={false} />
               <Divider type="vertical"/>
-              <TimeAgo value={item.lastUpdatedAt} prefix="Updated At: " accurate={false} />
+              <TimeAgo value={item.updatedAt} prefix="Updated At: " accurate={false} />
               </Space>
               {!readonly && <Space>
                 <Tooltip key="edit" placement="bottom" title="Edit post">
