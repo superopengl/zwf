@@ -6,10 +6,11 @@ import React from 'react';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import ScrollToBottom, { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
-import { getTask$, listTaskTrackings$, subscribeTaskTracking } from 'services/taskService';
+import { getTask$, listTaskTrackings$, nudgeTrackingAccess$, subscribeTaskTracking } from 'services/taskService';
 import { uniqBy, orderBy } from 'lodash';
 import * as moment from 'moment';
 import { css } from '@emotion/css'
+import { catchError } from 'rxjs/operators';
 const containerCss = css({
   height: '100%',
   width: '100%',
@@ -73,6 +74,7 @@ export const TaskTrackingPanel = React.memo((props) => {
       const event = JSON.parse(message.data);
       event.createdAt = moment.utc(event.createdAt).local().toDate();
       setList(list => [...list, event]);
+      nudgeTrackingAccess$(taskId).subscribe();
     }
 
     return () => {
