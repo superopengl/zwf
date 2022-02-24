@@ -9,37 +9,27 @@ const definitions = [
   {
     label: 'To Do',
     value: 'todo',
-    color: 'rgba(0,0,0,0.15)',
+    color: '#d9d9d9',
   },
   {
     label: 'In Progress',
     value: 'in_progress',
-    color: '#1890ff',
+    color: '#37AFD2',
   },
   {
-    label: 'Pending Fix',
-    value: 'pending_fix',
-    color: '#061178',
-  },
-  {
-    label: 'Pending Sign',
-    value: 'pending_sign',
-    color: '#f5222d',
-  },
-  {
-    label: 'Signed',
-    value: 'signed',
-    color: '#5c0011',
+    label: 'Action Required',
+    value: 'action_required',
+    color: '#cd201f',
   },
   {
     label: 'Done',
     value: 'done',
-    color: '#52c41a',
+    color: '#66c18c',
   },
   {
     label: 'Archived',
     value: 'archived',
-    color: '#434343',
+    color: '#262626',
   },
 ]
 

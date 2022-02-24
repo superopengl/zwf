@@ -12,10 +12,12 @@ const darkTheme = getThemeVariables({
 
 const modifyVars = {
   ...darkTheme,
-  '@primary-color': '#13c2c2',// '#13c2c2', // rgb(19,194,194)
+  '@primary-color': '#37AFD2',// '#37AFD2', // rgb(19,194,194)
   '@info-color': '#1890ff',
-  '@link-color': '#13c2c2',
+  '@link-color': '#37AFD2',
   '@success-color': '#66c18c',
+  '@error-color': '#cd201f',
+  '@highlight-color': '#cd201f',
   '@font-size-base': '14px',
   '@table-font-size': '12px',
   '@layout-header-background': '#002329',

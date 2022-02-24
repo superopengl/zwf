@@ -37,7 +37,7 @@ export function deleteTask$(id) {
   return httpDelete$(`task/${id}`);
 }
 
-export function listTask$() {
+export function listClientTask$() {
   return httpGet$('task');
 }
 

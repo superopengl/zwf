@@ -57,9 +57,7 @@ export const TaskSearchDrawer = props => {
   const StatusSelectOptions = [
     { label: 'To Do', value: 'todo' },
     { label: 'In Progress', value: 'in_progress' },
-    { label: 'Pending Fix', value: 'pending_fix' },
-    { label: 'Pending Sign', value: 'pending_sign' },
-    { label: 'Signed', value: 'signed' },
+    { label: 'Action Required', value: 'action_required' },
     { label: 'Done', value: 'done' },
     { label: 'Archived', value: 'archived' },
   ]
