@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
-import Icon, { SaveFilled } from '@ant-design/icons';
+import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
 import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate } from 'services/taskTemplateService';
@@ -20,12 +20,12 @@ import { TaskTemplateIcon } from 'components/entityIcon';
 const { Title, Text } = Typography;
 
 const LayoutStyled = styled.div`
-  // margin: 0 auto;
+  margin: 0 auto;
   // background-color: #ffff00;
   // height: calc(100vh - 64px);
   // height: calc(100vh - 48px - 48px);
   overflow: hidden;
-  // max-width: 900px;
+  max-width: 1000px;
 
   .ant-page-header-content {
     padding-top: 30px;
@@ -104,7 +104,7 @@ export const TaskTemplatePage = props => {
   }, []);
 
   const goBack = () => {
-    props.history.push('/task_template')
+    props.history.goBack()
   }
 
   const handleSave = async () => {
@@ -140,7 +140,7 @@ export const TaskTemplatePage = props => {
         loading={loading}
         ghost={true}
         header={{
-          backIcon: false,
+          backIcon: <LeftOutlined />,
           title: <Row align="middle" wrap={false} style={{height: 46}}>
             <Col><TaskTemplateIcon /></Col>
             <Col flex={1}>
