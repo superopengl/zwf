@@ -57,7 +57,7 @@ const TAB_DEFS = [
     }
   },
   {
-    badgeColor: '#66c18c',
+    badgeColor: '#73d13d',
     label: 'Completed',
     description: 'The cases that have been completed.',
     filter: item => {

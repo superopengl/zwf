@@ -18,7 +18,7 @@ const statusDefs = {
   },
   'done': {
     label: 'Completed',
-    color: '#66c18c',
+    color: '#73d13d',
   },
   'archived': {
     label: 'Archieved',

@@ -233,6 +233,7 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+
 export const getTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;

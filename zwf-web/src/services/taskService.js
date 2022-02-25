@@ -1,5 +1,5 @@
 import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$, httpDelete$ } from './http';
-import { API_BASE_URL, API_DOMAIN_NAME } from 'services/http';
+import { API_DOMAIN_NAME } from 'services/http';
 
 export function getTask(id) {
   return httpGet(`task/${id}`);
@@ -89,20 +89,6 @@ export function listTaskTrackings$(taskId) {
   return httpGet$(`task/${taskId}/tracking`);
 }
 
-export function createNewTaskTracking$(taskId, message) {
-  return httpPost$(`task/${taskId}/tracking`, { message });
-}
-
-export function subscribeTaskTracking(taskId) {
-  const url = `${API_BASE_URL}/task/${taskId}/tracking/subscribe`;
-  const es = new EventSource(url, { withCredentials: true });
-  return es;
-}
-
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
   return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
-}
-
-export function nudgeTrackingAccess$(taskId) {
-  return httpGet$(`task/${taskId}/tracking/nudge`);
 }

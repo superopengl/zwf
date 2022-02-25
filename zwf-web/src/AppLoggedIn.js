@@ -28,6 +28,7 @@ import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
+import { AiOutlineHistory } from 'react-icons/ai';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -46,7 +47,7 @@ const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
-
+const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
 const { Link: LinkText } = Typography;
 
 const StyledLayout = styled(ProLayout)`
@@ -79,6 +80,12 @@ const ROUTES = [
     name: <FormattedMessage id="menu.tasks" />,
     icon: <Icon component={() => <HiOutlineViewList />} />,
     roles: ['admin', 'agent', 'client']
+  },
+  {
+    path: '/activity',
+    name: 'Activity History',
+    icon: <Icon component={() => <AiOutlineHistory />} />,
+    roles: ['client']
   },
   // {
   //   path: '/metrics',
@@ -271,6 +278,7 @@ export const AppLoggedIn = React.memo(props => {
     <Switch>
       <RoleRoute exact path="/" component={isSystem ? SystemBoardPage : isClient ? ClientTaskListPage : OrgTaskListPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
+      <RoleRoute visible={isClient} exact path="/activity" component={ClientTrackingListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/:id" component={DocTemplatePage} />

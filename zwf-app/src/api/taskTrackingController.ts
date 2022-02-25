@@ -1,3 +1,4 @@
+import { TaskTrackingInformation } from './../entity/views/ClientTaskTrackingInformation';
 import { TaskTracking } from './../entity/TaskTracking';
 import { getEventChannel } from '../services/globalEventSubPubService';
 import { filter } from 'rxjs/operators';
@@ -35,15 +36,10 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
 
   let list;
   await getManager().transaction(async m => {
-    const task = await m.findOne(Task, {
-      id,
-      ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) })
-    });
-    assert(task, 404);
-
-    list = await m.find(TaskTracking, {
+    list = await m.find(TaskTrackingInformation, {
       where: {
         taskId: id,
+        ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {
         createdAt: 'ASC'
@@ -61,6 +57,38 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
   })
 
 
+
+  res.json(list);
+});
+
+
+export const listMyTaskTrackings = handlerWrapper(async (req, res) => {
+  assertRole(req, 'client');
+  const userId = getUserIdFromReq(req);
+  const page = +req.query.page || 1;
+  const size = +req.query.size || 50;
+
+  const list = await getRepository(TaskTrackingInformation).find({
+    where: {
+      userId,
+    },
+    order: {
+      createdAt: 'DESC'
+    },
+    skip: (page - 1) * size,
+    take: size,
+    select: [
+      'id',
+      'taskId',
+      'taskName',
+      'orgId',
+      'orgName',
+      'createdAt',
+      'by',
+      'action',
+      'info',
+    ]
+  })
 
   res.json(list);
 });
