@@ -1,4 +1,4 @@
-import { Row, Typography, Form, Input, Card, Space, Button, Collapse } from 'antd';
+import { Form, Input, Card, Space, Collapse } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -7,9 +7,6 @@ import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateB
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
 import { CaretRightOutlined } from '@ant-design/icons';
-
-const { Text, Title, Paragraph } = Typography;
-
 
 const Container = styled(Space)`
   margin: 0;
@@ -20,29 +17,18 @@ const Container = styled(Space)`
   // height: 100%;
 `;
 
-const StyledCard = styled(Card)`
-// box-shadow: 0 1px 2px rgba(0,0,0,0.1);
-.ant-card-body, .ant-card-head {
-  // background-color: rgba(0,0,0,0.05);
-  // padding: 16px;
-}
-`;
 
 const PreviewDocContainer = styled(Card)`
 // background-color: rgba(0,0,0,0.05);
 // padding: 0;
 // margin-top: 20px;
 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+// border-color: #37AFD2;
 `;
 
-const PreviewDocPage = styled.div`
-background-color: rgba(255,255,255);
-padding: 2rem;
-box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-`;
 
 const getPendingVarBag = (html, seedVarBag) => {
-  const { vars, invalidVars } = extractVarsFromDocTemplateBody(html);
+  const { vars } = extractVarsFromDocTemplateBody(html);
   const varBag = vars.reduce((bag, varName) => {
     bag[varName] = seedVarBag?.[varName] ?? '';
     return bag;

@@ -31,7 +31,7 @@ const ChatMessage = React.memo(props => {
       style={{
         // marginLeft: 40,
         // marginBottom: 4,
-        backgroundColor: isMe ? '#73d13d' : 'rgb(236, 236, 236)',
+        backgroundColor: isMe ? '#52c41a' : 'rgb(236, 236, 236)',
       }}>
       {message}
     </Card>
@@ -66,17 +66,17 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
         </Row>
 
         <Row gutter={40} wrap={false}
-      onClick={() => props.history.push(`/task/${item.taskId}`)}
+          onClick={() => multiMode ? props.history.push(`/task/${item.taskId}`) : null}
         >
           <Col flex={1}>
-          <Space direction="vertical" size="small" style={{ width: '100%' }} className="activity-title">
-            {multiMode && <Space style={{alignItems: 'baseline'}}>
-              {/* <TaskIcon style={{fontSize: 24, marginRight: 0}}/>  */}
-              <Link to={`/task/${item.taskId}`}><big><strong>{item.taskName}</strong></big></Link>
-              <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
-            </Space>}
-            {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text strong>{item.action ?? item.info}</Text>}
-          </Space>
+            <Space direction="vertical" size="small" style={{ width: '100%' }} className="activity-title">
+              {multiMode && <Space style={{ alignItems: 'baseline' }}>
+                {/* <TaskIcon style={{fontSize: 24, marginRight: 0}}/>  */}
+                <Link to={`/task/${item.taskId}`}><big><strong>{item.taskName}</strong></big></Link>
+                <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
+              </Space>}
+              {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text strong>{item.action ?? item.info}</Text>}
+            </Space>
           </Col>
         </Row>
 

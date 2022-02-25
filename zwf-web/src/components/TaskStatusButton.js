@@ -24,7 +24,7 @@ const definitions = [
   {
     label: 'Done',
     value: 'done',
-    color: '#73d13d',
+    color: '#52c41a',
   },
   {
     label: 'Archived',

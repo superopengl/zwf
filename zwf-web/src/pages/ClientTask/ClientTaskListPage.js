@@ -22,6 +22,7 @@ const { useBreakpoint } = Grid;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
+  margin-left: -16px;
   // background-color: #ffffff;
   height: 100%;
   max-width: 1500px;
@@ -57,7 +58,7 @@ const TAB_DEFS = [
     }
   },
   {
-    badgeColor: '#73d13d',
+    badgeColor: '#52c41a',
     label: 'Completed',
     description: 'The cases that have been completed.',
     filter: item => {
