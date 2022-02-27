@@ -7,6 +7,7 @@ export const frontendVersionCheckMiddleware = async (req, res, next) => {
   res.header('zwf-bff-version', beckendVersion);
   if(frontendVersion && frontendVersion !== beckendVersion) {
     res.sendStatus(409); // 409 Conflict
+    res.end('Webapp version and backend API version do not match.')
     return;
   }
 
