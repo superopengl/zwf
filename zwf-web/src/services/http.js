@@ -12,6 +12,7 @@ import * as queryString from 'query-string';
 axios.defaults.withCredentials = true;
 
 let isSessionTimeoutModalOn = false;
+let isVersionNotMatchModalOn = false;
 const DEVICE_ID_KEY = 'deviceId';
 
 function trimSlash(str) {
@@ -69,6 +70,9 @@ export async function request(method, path, queryParams, body, responseType = 'j
     return response.data;
   } catch (e) {
     const code = _.get(e, 'response.status', null);
+    if(code === 409) {
+      handleVersionNotMatch();
+    }
     if (code === 401) {
       handleSessionTimeout();
       return false;
@@ -92,7 +96,31 @@ function handleSessionTimeout() {
       content: 'Your session is timeout.',
       maskClosable: false,
       closable: false,
+      autoFocusButton: 'ok',
+      okButtonProps: {
+        type: 'primary'
+      },
       okText: 'Reload page',
+      onOk: () => {
+        reloadPage();
+      }
+    });
+  }
+}
+
+function handleVersionNotMatch() {
+  if (!isVersionNotMatchModalOn) {
+    isVersionNotMatchModalOn = true;
+    Modal.warning({
+      title: 'New version has been released',
+      content: 'A new version of platform has been released. Please reload the page to enjoy the latest version.',
+      maskClosable: false,
+      closable: false,
+      okText: 'Reload page',
+      autoFocusButton: 'ok',
+      okButtonProps: {
+        type: 'primary'
+      },
       onOk: () => {
         reloadPage();
       }
@@ -117,6 +145,10 @@ export function request$(method, path, queryParams, body, responseType = 'json')
     map(r => r.response),
     catchError(e => {
       const code = e.status;
+      if(code === 409) {
+        handleVersionNotMatch();
+        return false;
+      }
       if (code === 401) {
         handleSessionTimeout();
         return false;
