@@ -1,3 +1,4 @@
+import { frontendVersionCheckMiddleware } from './middlewares/frontendVersionCheckMiddleware';
 import * as express from 'express';
 import * as compression from 'compression';
 import * as listEndpoints from 'express-list-endpoints';
@@ -95,6 +96,7 @@ export function createAppInstance() {
   // });
   // connectPassport(app);
 
+  app.use(frontendVersionCheckMiddleware);
   app.use(authMiddleware);
   app.use((req, res, next) => {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
