@@ -2,12 +2,21 @@ import { httpGet$, httpPost$, httpDelete$ } from './http';
 import { BehaviorSubject, combineLatest, of } from 'rxjs';
 import { switchMap, switchMapTo, tap } from 'rxjs/operators';
 
-const taskTagsSource$  = new BehaviorSubject(null)
+const taskTagsSource$ = new BehaviorSubject(null)
+let listLoading = false;
 
 export function listTags$() {
-  return httpGet$(`/tag`).pipe(
-    tap(tags => taskTagsSource$.next(tags))
-  );
+  if (!listLoading) {
+    listLoading = true;
+    return httpGet$(`/tag`).pipe(
+      tap(() => {
+        listLoading = false;
+      }),
+      tap(tags => taskTagsSource$.next(tags))
+    );
+  } else {
+    return taskTagsSource$;
+  }
 }
 
 export function deleteTag$(id) {
@@ -21,6 +30,6 @@ export function saveTag$(tag) {
 
 export function subscribeTags(func) {
   return taskTagsSource$.pipe(
-    switchMap(tags =>  tags ? of(tags) : listTags$()),
+    switchMap(tags => tags ? of(tags) : listTags$()),
   ).subscribe(tags => func(tags));
 }
