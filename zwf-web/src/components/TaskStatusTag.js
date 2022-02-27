@@ -14,11 +14,11 @@ const statusDefs = {
   },
   'action_required': {
     label: 'Action Required',
-    color: '#cd201f'
+    color: '#cf222e'
   },
   'done': {
     label: 'Completed',
-    color: '#52c41a',
+    color: '#2da44e',
   },
   'archived': {
     label: 'Archieved',

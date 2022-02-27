@@ -38,14 +38,14 @@ const COLUMN_DEFS = [
   {
     status: 'action_required',
     label: `Await Client's Actions`,
-    bgColor: '#cd201f22',
-    hoverColor: '#cd201f',
+    bgColor: '#cf222e22',
+    hoverColor: '#cf222e',
   },
   {
     status: 'done',
     label: 'Completed',
-    bgColor: '#52c41a22',
-    hoverColor: '#52c41a',
+    bgColor: '#2da44e22',
+    hoverColor: '#2da44e',
   },
 ]
 
