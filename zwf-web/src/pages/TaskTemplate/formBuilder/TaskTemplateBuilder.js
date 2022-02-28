@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Typography, Input, Alert } from 'antd';
+import { Form, Typography, Input, Alert, Switch } from 'antd';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { FieldList } from './FieldList';
@@ -54,7 +54,8 @@ export const TaskTemplateBuilder = (props) => {
   const initialValues = {
     name: template?.name || '',
     description: template?.description || '',
-    docTemplateIds: template?.docTemplateIds || [],
+    hasDoc: template?.hasDoc ?? true,
+    docTemplateIds: template?.docs?.map(d => d.id) || [],
     fields: isEmpty(template?.fields) ? [createEmptyField()] : template.fields
   };
 
@@ -112,6 +113,14 @@ export const TaskTemplateBuilder = (props) => {
         {...formItemLayoutProps}
       >
         <DocTemplateSelect showVariables={true} onVariableChange={hanldeVariableChange} />
+      </Form.Item>
+      <Form.Item
+        label="Has attachments?"
+        name="hasDoc"
+        valuePropName="checked"
+        {...formItemLayoutProps}
+      >
+        <Switch />
       </Form.Item>
       <Alert
           description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
