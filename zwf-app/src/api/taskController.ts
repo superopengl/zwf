@@ -1,3 +1,4 @@
+import { TaskDoc } from './../entity/TaskDoc';
 import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
 import { TaskAction } from './../entity/TaskAction';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
@@ -31,6 +32,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
 import { logTaskArchived, logTaskAssigned } from '../services/taskTrackingService';
+import { File } from '../entity/File';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');

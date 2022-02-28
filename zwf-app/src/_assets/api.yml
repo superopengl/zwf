@@ -560,7 +560,7 @@ paths:
       #   - authLoggedInUser: []
       responses:
         200:
-          description: OK          
+          description: OK        
   /task/deep/{deepLinkId}:
     get:
       operationId: getDeepLinkedTask
@@ -806,6 +806,22 @@ paths:
       responses:
         200:
           description: OK
+  /task_doc:
+    post:
+      operationId: createOrphanTaskDoc
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK                         
+  /task_doc/search:
+    post:
+      operationId: searchTaskDocs
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK                                   
   /recurring:
     get:
       operationId: listRecurring

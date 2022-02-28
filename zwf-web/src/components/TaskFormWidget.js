@@ -4,6 +4,7 @@ import { Typography, Form, Divider } from 'antd';
 import FormBuilder from 'antd-form-builder'
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { convertTaskTemplateFieldsToFormFieldsSchema } from 'util/convertTaskTemplateFieldsToFormFieldsSchema';
+import { TaskAttachmentPanel } from './TaskAttachmentPanel';
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -54,13 +55,17 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       </Paragraph>
       <Divider style={{ marginTop: 4 }} />
       <FormBuilder meta={clientFieldSchema} form={ref} />
+      <Title level={5} type="secondary" style={{ marginTop: 20 }}>Attachments</Title>
+      <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
+        <TaskAttachmentPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} mode={mode} />
+      </Form.Item>
       {showDocs && <>
         <Title level={5} type="secondary" style={{ marginTop: 20 }}>Docs</Title>
         <Paragraph type="secondary">
           Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
         </Paragraph>
         <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-          <DocTemplateListPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} mode={mode}/>
+          <DocTemplateListPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} mode={mode} />
         </Form.Item>
       </>}
       {showOfficialFields && <>
