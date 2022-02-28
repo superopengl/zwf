@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
-import { Modal, Space, Table, Tag } from 'antd';
+import { Modal, Space, Table, Tag, Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
 
 import { TimeAgo } from 'components/TimeAgo';
@@ -18,13 +18,14 @@ import PropTypes from 'prop-types';
 import { MemberSelect } from 'components/MemberSelect';
 import { UserNameCard } from 'components/UserNameCard';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { TaskIcon, TaskTemplateIcon } from 'components/entityIcon';
 
 
 export const TaskListPanel = (props) => {
   const { tasks, onChange, searchText } = props;
 
   const context = React.useContext(GlobalContext);
-  const {role} = context;
+  const { role } = context;
   const postArchieveMessage = () => {
     notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
   }
@@ -42,19 +43,25 @@ export const TaskListPanel = (props) => {
     {
       title: 'Task Name',
       dataIndex: 'name',
+      fixed: 'left',
       // filteredValue: filteredInfo.name || null,
       sorter: () => 0,
       // onFilter: (value, record) => record.name.includes(value),
       render: (text, record) => {
-        const { id, name, forWhom, lastUnreadMessageAt } = record;
-        return <div>
+        const { id, name, taskTemplateName, lastUnreadMessageAt } = record;
+        return <div style={{ display: 'flex', flexDirection: 'column', fontSize: 14 }}>
           <Link to={`/task/${id}?${lastUnreadMessageAt ? 'chat=1' : ''}`}>
+            <TaskIcon />
             <Highlighter highlightClassName="search-highlighting" searchWords={[searchText]} autoEscape={true} textToHighlight={name || ''} />
             {lastUnreadMessageAt && <UnreadMessageIcon style={{ marginLeft: 4 }} />}
           </Link>
-          <Space size="small" style={{ alignItems: 'center', width: '100%' }}>
-            <Highlighter highlightClassName="search-highlighting" searchWords={[searchText]} autoEscape={true} textToHighlight={forWhom || ''} />
-          </Space>
+
+          {/* <small>
+            <Text type="secondary">
+                <TaskTemplateIcon size={9} style={{marginRight: 4}}/>
+                <Highlighter highlightClassName="search-highlighting" searchWords={[searchText]} autoEscape={true} textToHighlight={taskTemplateName || ''} />
+            </Text>
+          </small> */}
         </div>
       },
       ellipsis: false,
@@ -62,6 +69,7 @@ export const TaskListPanel = (props) => {
     {
       title: 'Status',
       dataIndex: 'status',
+      width: 160,
       sorter: () => 0,
       render: (value, record) => <small>
         <TaskStatusButton size="small" value={value} bordered={false} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />
@@ -69,14 +77,7 @@ export const TaskListPanel = (props) => {
       ellipsis: false
     },
     {
-      title: 'Task Template',
-      dataIndex: 'taskTemplateName',
-      sorter: () => 0,
-      render: (text) => <Highlighter highlightClassName="search-highlighting" searchWords={[searchText]} autoEscape={true} textToHighlight={text || ''} />,
-      ellipsis: false
-    },
-    {
-      title: 'User',
+      title: 'Client',
       dataIndex: 'userId',
       render: (value, item) => <UserNameCard userId={value} />
     },
@@ -106,23 +107,26 @@ export const TaskListPanel = (props) => {
     {
       title: 'Created At',
       dataIndex: 'createdAt',
+      width: 100,
       sorter: () => 0,
       render: (text) => <TimeAgo value={text} accurate={false} showTime={false} />
     },
     {
       title: 'Last Update At',
       dataIndex: 'updatedAt',
+      width: 100,
       sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
       render: (text) => {
-        return <TimeAgo value={text} accurate={false} showTime={false}/>;
+        return <TimeAgo value={text} accurate={false} showTime={false} />;
       }
     },
     {
       title: 'Last Unread Message',
       dataIndex: 'lastUnreadMessageAt',
+      width: 100,
       sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
       render: (text) => {
-        return <TimeAgo value={text} accurate={false} showTime={false}/>;
+        return <TimeAgo value={text} accurate={false} showTime={false} />;
       }
     },
     // {
@@ -138,8 +142,9 @@ export const TaskListPanel = (props) => {
     },
     {
       // title: 'Action',
-      // fixed: 'right',
-      // width: 200,
+      fixed: 'right',
+      align: 'center',
+      width: 70,
       render: (text, record) => (
         <DropdownMenu
           config={[
@@ -157,7 +162,7 @@ export const TaskListPanel = (props) => {
         />
       ),
     },
-    
+
   ];
 
   const assignTaskToAgent = (task, agentId) => {
@@ -190,6 +195,7 @@ export const TaskListPanel = (props) => {
       rowKey="id"
       size="small"
       pagination={false}
+      scroll={{ x: 1600 }}
       // onChange={handleTableChange}
       rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
       onRow={(record) => ({
