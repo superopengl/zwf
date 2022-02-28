@@ -118,10 +118,9 @@ export const searchFileMetaList = handlerWrapper(async (req, res) => {
 export const uploadFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { file } = (req as any).files;
-  assert(file, 404, 'No file to upload');
+  assert(file, 400, 'No file to upload');
   const { name, data, mimetype, md5 } = file;
   const userId = getUserIdFromReq(req);
-  const role = getRoleFromReq(req);
 
   const id = uuidv4();
   const location = await uploadToS3(id, name, data);
