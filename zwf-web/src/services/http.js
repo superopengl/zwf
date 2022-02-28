@@ -8,11 +8,11 @@ import { Modal } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import * as queryString from 'query-string';
+import {showVersionMismatchModal} from 'components/showVersionMismatchModal';
 
 axios.defaults.withCredentials = true;
 
 let isSessionTimeoutModalOn = false;
-let isVersionNotMatchModalOn = false;
 const DEVICE_ID_KEY = 'deviceId';
 
 function trimSlash(str) {
@@ -44,12 +44,12 @@ export const API_BASE_URL = getFullBaseUrl();
 export const API_DOMAIN_NAME = trimTrailingSlash(process.env.REACT_APP_ZWF_API_DOMAIN_NAME)
 export const WEBSOCKET_URL = API_BASE_URL.replace(/^(http)(s?:\/\/[^/]+)(.*)/i, 'ws$2');
 console.log('Backend API URL', API_BASE_URL, WEBSOCKET_URL);
-const gitVersion = process.env.REACT_APP_GIT_HASH;
+const webappVersion = process.env.REACT_APP_GIT_HASH;
 
 function getHeaders(responseType) {
   const headers = {
     'Content-Type': responseType === 'json' ? 'application/json; charset=utf-8' : 'text/plain; charset=utf-8',
-    'zwf-webapp-version': gitVersion,
+    'zwf-webapp-version': webappVersion,
   };
 
   return headers;
@@ -70,9 +70,6 @@ export async function request(method, path, queryParams, body, responseType = 'j
     return response.data;
   } catch (e) {
     const code = _.get(e, 'response.status', null);
-    if(code === 409) {
-      handleVersionNotMatch();
-    }
     if (code === 401) {
       handleSessionTimeout();
       return false;
@@ -108,26 +105,6 @@ function handleSessionTimeout() {
   }
 }
 
-function handleVersionNotMatch() {
-  if (!isVersionNotMatchModalOn) {
-    isVersionNotMatchModalOn = true;
-    Modal.warning({
-      title: 'New version has been released',
-      content: 'A new version of platform has been released. Please reload the page to enjoy the latest version.',
-      maskClosable: false,
-      closable: false,
-      okText: 'Reload page',
-      autoFocusButton: 'ok',
-      okButtonProps: {
-        type: 'primary'
-      },
-      onOk: () => {
-        reloadPage();
-      }
-    });
-  }
-}
-
 export function request$(method, path, queryParams, body, responseType = 'json') {
   const qs = queryString.stringify(queryParams);
   return ajax({
@@ -138,17 +115,10 @@ export function request$(method, path, queryParams, body, responseType = 'json')
     crossDomain: true,
     withCredentials: true,
   }).pipe(
-    // tap(r => {
-    //   debugger;
-    //   console.log(r)
-    // }),
+    tap(handleVersionMatch),
     map(r => r.response),
     catchError(e => {
       const code = e.status;
-      if(code === 409) {
-        handleVersionNotMatch();
-        return false;
-      }
       if (code === 401) {
         handleSessionTimeout();
         return false;
@@ -161,6 +131,11 @@ export function request$(method, path, queryParams, body, responseType = 'json')
       throw e;
     })
   );
+}
+
+function handleVersionMatch(response) {
+  const backendVersion = response.xhr.getResponseHeader('zwf-bff-version');
+  showVersionMismatchModal(webappVersion, backendVersion);
 }
 
 export async function uploadFile(fileBlob) {
