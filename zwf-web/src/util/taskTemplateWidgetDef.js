@@ -41,14 +41,14 @@ export const TaskTemplateWidgetDef = Object.freeze([
       maxLength: 1000,
     },
   },
-  {
-    type: 'upload',
-    label: 'File upload',
-    icon: <UploadOutlined />,
-    forwardRef: true,
-    widget: FileUploader,
-    widgetPorps: null,
-  },
+  // {
+  //   type: 'upload',
+  //   label: 'File upload',
+  //   icon: <UploadOutlined />,
+  //   forwardRef: true,
+  //   widget: FileUploader,
+  //   widgetPorps: null,
+  // },
   {
     type: 'radio',
     label: 'Multiple choice',
