@@ -47,7 +47,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
     assert(task.userId === userId, 404);
     // // Only record the read by client
     const now = getNow();
-    taskDoc.lastReadAt = now;
+    taskDoc.lastClientReadAt = now;
     await taskRepo.save(task);
 
     file.lastReadAt = now;

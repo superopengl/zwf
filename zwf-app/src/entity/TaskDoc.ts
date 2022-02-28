@@ -16,7 +16,7 @@ export class TaskDoc {
   createdBy: string;
 
   @Column({ nullable: true })
-  lastReadAt?: Date;
+  lastClientReadAt?: Date;
 
   @Column({ nullable: true })
   signedAt?: Date;
@@ -27,6 +27,12 @@ export class TaskDoc {
   @Column()
   name?: string;
 
+  @Column({ default: 'auto' })
+  type: 'client' | 'auto' | 'agent';
+
+  @Column({ default: false })
+  officialOnly: boolean;
+
   @Column({ default: false })
   requiresSign?: boolean;
   /**
@@ -35,8 +41,8 @@ export class TaskDoc {
   @Column({ nullable: true })
   signedHash?: string;
 
-  @Column()
-  status: 'error' | 'pending' | 'done' | 'read' | 'signed';
+  @Column({ default: 'done' })
+  status: 'pending' | 'proceeding' | 'done';
 
   @OneToOne(() => File)
   @JoinColumn()
