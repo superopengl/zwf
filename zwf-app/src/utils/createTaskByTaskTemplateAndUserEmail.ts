@@ -21,6 +21,7 @@ import { TaskDoc } from '../entity/TaskDoc';
 import { tryGenDocFile } from '../services/genDocService';
 import { logTaskCreated } from '../services/taskTrackingService';
 import { Role } from '../types/Role';
+import * as path from 'path';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -51,13 +52,18 @@ function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
   return `${taskTemplateName} - ${displayName}`;
 }
 
+function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
+  const n = path.basename(basename, ext);
+  return n + ext;
+}
+
 function generateAutoTaskDocs(docTemplates: DocTemplate[], creatorId: string): TaskDoc[] {
   const docs: TaskDoc[] = [];
   for (const docTemplate of docTemplates) {
     const taskDoc = new TaskDoc();
     taskDoc.docTemplateId = docTemplate.id;
     taskDoc.createdBy = creatorId;
-    taskDoc.name = docTemplate.name;
+    taskDoc.name = ensureFileNameExtension(docTemplate.name);
     taskDoc.status = 'pending';
     taskDoc.type = 'auto';
     // const file = await tryGenDocFile(docTemplate, fields, userId);

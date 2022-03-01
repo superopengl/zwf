@@ -10,7 +10,7 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, docs, type, mode, onChange } = props;
+  const { fields, taskDocIds, type, onChange } = props;
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
@@ -24,7 +24,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
     return type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, true) : null;
   }, [fields, type]);
 
-  const showDocs = docs?.length > 0;
+  const showDocs = taskDocIds?.length > 0;
   const showOfficialFields = agentFieldSchema?.fields?.length > 0;
 
   const varBag = React.useMemo(() => {
@@ -39,7 +39,11 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       f.value = allValues[f.name];
     })
 
-    onChange([...fields]);
+    onChange([...fields], taskDocIds);
+  }
+
+  const handleTaskDocIdsChange = ids => {
+    onChange(fields, ids);
   }
 
   return (
@@ -57,7 +61,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       <FormBuilder meta={clientFieldSchema} form={ref} />
       <Title level={5} type="secondary" style={{ marginTop: 20 }}>Attachments</Title>
       <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
-        <TaskAttachmentPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} mode={mode} />
+        <TaskAttachmentPanel value={taskDocIds} allowTest={false} varBag={varBag} showWarning={true} onChange={handleTaskDocIdsChange}/>
       </Form.Item>
       {showDocs && <>
         <Title level={5} type="secondary" style={{ marginTop: 20 }}>Docs</Title>
@@ -65,7 +69,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
           Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
         </Paragraph>
         <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-          <DocTemplateListPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} mode={mode} />
+          <DocTemplateListPanel value={taskDocIds} allowTest={false} varBag={varBag} showWarning={true} />
         </Form.Item>
       </>}
       {showOfficialFields && <>
@@ -82,17 +86,15 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
 TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
-  docs: PropTypes.arrayOf(PropTypes.string),
+  taskDocIds: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
-  mode: PropTypes.oneOf(['create', 'edit']),
 };
 
 TaskFormWidget.defaultProps = {
   readonly: false,
   type: 'agent',
   onChange: (fields) => { },
-  mode: 'create',
 };
 
