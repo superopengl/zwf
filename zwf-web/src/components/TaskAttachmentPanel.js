@@ -6,8 +6,8 @@ import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
-import { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { getPublicFileUrl } from 'services/fileService';
+import { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import { getFileUrl, getPublicFileUrl, openFile } from 'services/fileService';
 import { API_BASE_URL } from 'services/http';
 import { TimeAgo } from './TimeAgo';
 import { createOrphanTaskDoc$, listTaskDocs$ } from "services/taskDocService";
@@ -118,6 +118,10 @@ export const TaskAttachmentPanel = (props) => {
 
   const handleClickTaskDoc = (e, taskDoc) => {
     e.stopPropagation();
+    const {docTemplateId} = taskDoc;
+    if(docTemplateId) {
+      alert('preview')
+    }
   }
 
   const beforeUpload = (file) => {
@@ -173,12 +177,13 @@ export const TaskAttachmentPanel = (props) => {
         </List.Item> : <List.Item
           onClick={e => handleClickTaskDoc(e, item)}
           actions={[
-            item.isNewlyUploaded ? <Button danger type="text" icon={<DeleteOutlined />} onClick={() => handleDeleteDoc(item.id)} /> : null
-          ]}
+            item.isNewlyUploaded ? <Button danger type="text" icon={<DeleteOutlined />} onClick={() => handleDeleteDoc(item.id)} /> : null,
+            <Button key="view" type="link" icon={<EyeOutlined />}></Button>,
+          ].filter(x => x)}
         >
           <List.Item.Meta
             avatar={<FileIcon name={item.name} width={36} />}
-            title={item.docTemplateId ? <>{item.name} <Badge count={'auto'}/></> : item.name}
+            title={item.docTemplateId ? <>{item.name} <Badge count={'auto'}/></> : <TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink>}
             description={<>Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" /></>}
           />
         </List.Item>}

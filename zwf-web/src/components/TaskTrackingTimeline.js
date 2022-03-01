@@ -72,7 +72,7 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
             <Space direction="vertical" size="small" style={{ width: '100%' }} className="activity-title">
               {multiMode && <Space style={{ alignItems: 'baseline' }}>
                 {/* <TaskIcon style={{fontSize: 24, marginRight: 0}}/>  */}
-                <Link to={`/task/${item.taskId}`}><big><strong>{item.taskName}</strong></big></Link>
+                <Link to={`/task/${item.taskId}`}><strong>{item.taskName}</strong></Link>
                 <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
               </Space>}
               {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text strong>{item.action ?? item.info}</Text>}

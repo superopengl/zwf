@@ -14,6 +14,7 @@ import { Task } from '../Task';
     .select([
       'k.id as id',
       'k."taskId" as "taskId"',
+      't."status" as "status"',
       't."name" as "taskName"',
       't."userId" as "userId"',
       't."orgId" as "orgId"',
@@ -29,6 +30,9 @@ import { Task } from '../Task';
 
   @ViewColumn()
   taskId: string;
+
+  @ViewColumn()
+  status: string;
 
   @ViewColumn()
   taskName: string;
