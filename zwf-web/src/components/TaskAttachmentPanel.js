@@ -71,7 +71,7 @@ const LAST_ADD_DOC_BUTTON_ITEM = {
 }
 
 export const TaskAttachmentPanel = (props) => {
-  const { taskId, value: taskDocIds, allowTest, varBag, onChange, showWarning, renderVariable, mode, ...otherProps } = props;
+  const { value: taskDocIds, allowTest, varBag, onChange, showWarning, renderVariable, mode, ...otherProps } = props;
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -158,7 +158,6 @@ export const TaskAttachmentPanel = (props) => {
       itemRender={() => null}
       onChange={handleChange}
     >
-
       <List
         loading={loading}
         bordered={false}
@@ -186,62 +185,9 @@ export const TaskAttachmentPanel = (props) => {
       />
     </Upload.Dragger>
   </Container>
-
-  const isDocTemplateMode = mode === 'taskTemplate'
-
-  return taskDocIds?.length > 0 && <List
-    size="small"
-    bordered
-    {...otherProps}
-    rowKey="id"
-    dataSource={taskDocIds}
-    renderItem={doc => {
-      const missingVarComps = (doc.variables ?? []).filter(v => varBag[v] === undefined || varBag[v] === '').map(v => <span key={v}>{renderVariable(v)}</span>);
-      return <DocListItem onClick={isDocTemplateMode ? () => handlePreviewDocTemplate(doc.id) : null}>
-        {isDocTemplateMode
-          ? <Row justify="space-between" className="docItem">
-            <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
-          </Row>
-          : <TextLink href={getPublicFileUrl(doc.fileId)} target="_blank" style={{ width: '100%' }}>
-            <Row justify="space-between" className="docItem">
-              <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
-            </Row>
-          </TextLink>}
-        {showWarning && <Tooltip title={<>Fields {missingVarComps} are required to be input to generate the doc.</>}
-          placement="topLeft"
-          overlayStyle={{ maxWidth: 398 }}
-          arrowPointAtCenter>
-          <ExclamationCircleOutlined style={{
-            color: '#cf1322',
-            marginRight: 4,
-            fontSize: 18,
-            visibility: missingVarComps.length > 0 ? 'visible' : 'hidden',
-            position: 'absolute',
-            left: -30,
-          }}
-          />
-        </Tooltip>}
-        {/* {showWarning && missingVarComps.length > 0 && <Text style={{marginTop: 10, lineHeight: 0.8, fontSize: '0.8rem'}} type="danger">Fields {missingVarComps} are required for this doc.</Text>} */}
-      </DocListItem>
-    }}
-  />
 };
 
 TaskAttachmentPanel.propTypes = {
-  taskId: PropTypes.string,
-  // value: PropTypes.arrayOf(PropTypes.shape({
-  //   id: PropTypes.string,
-  //   name: PropTypes.string,
-  //   type: PropTypes.oneOf(['client', 'auto', 'agent']),
-  //   docTemplateId: PropTypes.string,
-  //   fileId: PropTypes.string,
-  //   status: PropTypes.string,
-  //   requiresSign: PropTypes.bool,
-  //   officialOnly: PropTypes.bool,
-  //   file: PropTypes.shape({
-  //     location: PropTypes.string
-  //   }),
-  // })),
   value: PropTypes.arrayOf(PropTypes.string),
   allowTest: PropTypes.bool,
   showWarning: PropTypes.bool,

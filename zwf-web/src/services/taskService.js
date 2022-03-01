@@ -30,11 +30,11 @@ export function saveTaskFields$(taskId, fields) {
 }
 
 export function createNewTask$(payload) {
-  return httpPut$('task', payload);
+  return httpPut$('/task', payload);
 }
 
 export function deleteTask$(id) {
-  return httpDelete$(`task/${id}`);
+  return httpDelete$(`/task/${id}`);
 }
 
 export function listClientTask$() {

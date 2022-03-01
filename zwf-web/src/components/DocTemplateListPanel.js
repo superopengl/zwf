@@ -42,7 +42,7 @@ export const DocTemplateListPanel = (props) => {
     })
   }
 
-  const isDocTemplateMode = mode === 'taskTemplate'
+  const isDocTemplateMode = mode === 'create'
 
   return docs?.length > 0 && <List
     size="small"
@@ -88,7 +88,7 @@ DocTemplateListPanel.propTypes = {
   showWarning: PropTypes.bool,
   varBag: PropTypes.object,
   renderVariable: PropTypes.func,
-  mode: PropTypes.oneOf(['taskTemplate', 'task']),
+  mode: PropTypes.oneOf(['create', 'edit']),
 };
 
 DocTemplateListPanel.defaultProps = {
@@ -97,6 +97,6 @@ DocTemplateListPanel.defaultProps = {
   showWarning: false,
   varBag: {},
   renderVariable: (varName) => <VarTag>{varName}</VarTag>,
-  mode: 'taskTemplate',
+  mode: 'create',
 };
 
