@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, List, Typography, Badge, Row, Col, Upload, Button } from 'antd';
+import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Switch, Checkbox } from 'antd';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
@@ -14,6 +14,7 @@ import { createOrphanTaskDoc$, listTaskDocs$ } from "services/taskDocService";
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { FileIcon } from './FileIcon';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -75,6 +76,8 @@ export const TaskAttachmentPanel = (props) => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const context = React.useContext(GlobalContext);
+  const { user, role } = context;
 
   React.useEffect(() => {
     if (!taskDocIds?.length) {
@@ -110,18 +113,20 @@ export const TaskAttachmentPanel = (props) => {
     setLoading(uploading);
   };
 
-  const handleDeleteDoc = id => {
+  const handleDeleteDoc = (id, e) => {
+    e.stopPropagation();
     const newList = list.filter(x => x.id !== id);
     setList(newList);
     onChange(newList.map(x => x.id));
   }
 
   const handleClickTaskDoc = (e, taskDoc) => {
+    // Prevent from triggering the below Upload
     e.stopPropagation();
-    const {docTemplateId} = taskDoc;
-    if(docTemplateId) {
-      alert('preview')
-    }
+    // const { docTemplateId } = taskDoc;
+    // if (docTemplateId) {
+    //   alert('preview')
+    // }
   }
 
   const beforeUpload = (file) => {
@@ -132,25 +137,46 @@ export const TaskAttachmentPanel = (props) => {
     return isLt20M;
   }
 
-  const listDataSource = React.useMemo(() => [...list, LAST_ADD_DOC_BUTTON_ITEM], [list]);
+  const canDelete = (taskDoc) => {
+    switch (taskDoc.type) {
+      case 'auto':
+        return false;
+      case 'client':
+        return role === 'client' && user.id === taskDoc.createdBy
+      case 'agent':
+        return role === 'admin' || role === 'agent'
+    }
+    return false;
+  }
+
+  const canToggleOfficalOnly = (taskDoc) => {
+    return role !== 'client' && taskDoc.type !== 'client'  
+  }
+
+  const handlePreviewAutoDoc = (taskDoc, e) => {
+    e.stopPropagation();
+    const { docTemplateId } = taskDoc;
+    getDocTemplate$(docTemplateId).subscribe(docTemplate => {
+      showDocTemplatePreviewModal(docTemplate, {
+        allowTest: false,
+        type: role === 'client' ? 'client' : 'agent',
+        varBag,
+      });
+    })
+  }
+
+  const handleToggleOfficialOnly = (taskDoc, e) => {
+    e.stopPropagation();
+
+  }
+
+  const listDataSource = React.useMemo(() => {
+    const filtered = role === 'client' ? list.filter(x => x.fileId) : list;
+    return [...filtered, LAST_ADD_DOC_BUTTON_ITEM];
+  }, [list]);
+
 
   return <Container>
-    {/* <Upload
-    action={`${API_BASE_URL}/file`}
-    withCredentials={true}
-    onChange={(info) => {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (info.file.status === 'done') {
-        debugger;
-      } else if (info.file.status === 'error') {
-        debugger;
-      }
-    }}
-  >
-    <Button>Upload</Button>
-  </Upload> */}
     <Upload.Dragger
       multiple={true}
       action={`${API_BASE_URL}/file`}
@@ -177,15 +203,24 @@ export const TaskAttachmentPanel = (props) => {
         </List.Item> : <List.Item
           onClick={e => handleClickTaskDoc(e, item)}
           actions={[
-            item.isNewlyUploaded ? <Button danger type="text" icon={<DeleteOutlined />} onClick={() => handleDeleteDoc(item.id)} /> : null,
-            <Button key="view" type="link" icon={<EyeOutlined />}></Button>,
+            canDelete(item) ? <Button danger type="text" icon={<DeleteOutlined />} onClick={(e) => handleDeleteDoc(item.id, e)} /> : null,
+            canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null,
           ].filter(x => x)}
         >
           <List.Item.Meta
+            // style={{width: '100%'}}
             avatar={<FileIcon name={item.name} width={36} />}
-            title={item.docTemplateId ? <>{item.name} <Badge count={'auto'}/></> : <TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink>}
-            description={<>Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" /></>}
-          />
+            title={item.fileId ?
+              <TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink> :
+              <><TextLink onClick={(e) => handlePreviewAutoDoc(item, e)}>{item.name}</TextLink></>}
+            description={<>
+              Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />
+              {item.type === 'auto' && <div>
+                <Text type="danger">from doc template, pending fields</Text>
+              </div>}
+            </>}
+          ></List.Item.Meta>
+
         </List.Item>}
       />
     </Upload.Dragger>
