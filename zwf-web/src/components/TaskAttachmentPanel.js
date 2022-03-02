@@ -153,6 +153,10 @@ export const TaskAttachmentPanel = (props) => {
     return !taskDoc.isAddButton && role !== 'client' && taskDoc.type !== 'client'
   }
 
+  const canRequestClientSign = (taskDoc) => {
+    return !taskDoc.isAddButton && role !== 'client' && taskDoc.type !== 'client' && taskDoc.fileId
+  }
+
   const handlePreviewAutoDoc = (taskDoc, e) => {
     e.stopPropagation();
     const { docTemplateId } = taskDoc;
@@ -170,9 +174,14 @@ export const TaskAttachmentPanel = (props) => {
 
   }
 
+  const handleRequireSign = (taskDoc, e) => {
+    e.stopPropagation();
+
+  }
+
+
   const listDataSource = React.useMemo(() => {
-    const filtered = role === 'client' ? list.filter(x => x.fileId) : list;
-    return [...filtered, LAST_ADD_DOC_BUTTON_ITEM];
+    return [...list, LAST_ADD_DOC_BUTTON_ITEM];
   }, [list]);
 
   const columns = [
@@ -205,6 +214,12 @@ export const TaskAttachmentPanel = (props) => {
       width: 20,
       align: 'center',
       render: (value, item) => canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null
+    },
+    {
+      title: 'Require sign',
+      width: 20,
+      align: 'center',
+      render: (value, item) => canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleRequireSign(item, e)} /> : null
     },
     {
       width: 20,
