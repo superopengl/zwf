@@ -11,8 +11,9 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { TaskStatusTag } from './TaskStatusTag';
 import { FileIcon } from './FileIcon';
+import { getTaskDocDownloadUrl } from 'services/taskDocService';
 
-const { Text } = Typography
+const { Text, Link: TextLink } = Typography
 
 const ChatMessage = React.memo(props => {
   const { userId, message } = props;
@@ -81,7 +82,7 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
                 : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
                   : item.action === 'doc-signed' ? <Space size="small" direction="vertical">
                     <Text strong>{item.action}</Text>
-                    <Space size="small"><FileIcon name={item.info.name} /> {item.info.name}</Space>
+                    <Space size="small"><FileIcon name={item.info.name} /> <TextLink href={getTaskDocDownloadUrl(item.info.taskDocId)} target="_blank">{item.info.name}</TextLink></Space>
                   </Space>
                     : <Text strong>{item.action}</Text>}
             </Space>
