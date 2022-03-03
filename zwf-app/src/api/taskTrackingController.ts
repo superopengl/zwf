@@ -95,7 +95,7 @@ export const listMyTaskTrackings = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-const TASK_ACTIVITY_EVENT_TYPE = 'zwf.task.activity'
+const TASK_ACTIVITY_EVENT_TYPE = 'task.activity'
 
 export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
   // assertRole(req, 'admin', 'agent', 'client', 'guest');

@@ -33,6 +33,9 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
 import { logTaskArchived, logTaskAssigned } from '../services/taskTrackingService';
 import { File } from '../entity/File';
+import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
+import { assertTaskAccess } from '../utils/assertTaskAccess';
+import { filter } from 'rxjs/operators';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -63,6 +66,39 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
   }
 }
 
+const TASK_CONTENT_EVENT_TYPE = 'task.content'
+
+export const subscribeTaskContent = handlerWrapper(async (req, res) => {
+  // assertRole(req, 'admin', 'agent', 'client', 'guest');
+  const role = getRoleFromReq(req);
+  assert(role !== Role.System, 404);
+  const { id } = req.params;
+
+  await assertTaskAccess(req, id);
+
+  // const { user: { id: userId } } = req as any;
+  const isProd = process.env.NODE_ENV === 'prod';
+  if (!isProd) {
+    res.setHeader('Access-Control-Allow-Origin', process.env.ZWF_WEB_DOMAIN_NAME);
+  }
+  res.sse();
+
+  const channelSubscription$ = getEventChannel(TASK_CONTENT_EVENT_TYPE)
+    .pipe(
+      filter(x => x?.taskId === id)
+    )
+    .subscribe((event) => {
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
+      (res as any).flush();
+    });
+
+  res.on('close', () => {
+    channelSubscription$.unsubscribe();
+    res.end();
+  });
+});
+
+
 export const saveTaskContent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { fields, taskDocIds } = req.body;
@@ -92,9 +128,15 @@ export const saveTaskContent = handlerWrapper(async (req, res) => {
   await getManager().transaction(async m => {
     const task = await m.findOneOrFail(Task, query) as Task;
     task.fields = fields;
-    const taskDocs = await m.findByIds(TaskDoc, taskDocIds);
-    task.docs = taskDocs;
+    const docs = await m.findByIds(TaskDoc, taskDocIds);
+    task.docs = docs;
     await m.save(task);
+
+    publishEvent(TASK_CONTENT_EVENT_TYPE, {
+      taskId: id, 
+      fields, 
+      taskDocIds: docs.map(x => x.id)
+    });
   })
 
   res.json();
