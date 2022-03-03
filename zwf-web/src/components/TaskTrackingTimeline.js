@@ -12,6 +12,7 @@ import { withRouter } from 'react-router-dom';
 import { TaskStatusTag } from './TaskStatusTag';
 import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from 'services/taskDocService';
+import { TaskDocItem } from './TaskDocItem';
 
 const { Text, Link: TextLink } = Typography
 
@@ -82,7 +83,7 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
                 : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
                   : item.action === 'doc-signed' ? <Space size="small" direction="vertical">
                     <Text strong>{item.action}</Text>
-                    <Space size="small"><FileIcon name={item.info.name} /> <TextLink href={getTaskDocDownloadUrl(item.info.taskDocId)} target="_blank">{item.info.name}</TextLink></Space>
+                    <TaskDocItem taskDoc={{name: item.info.name, id: item.info.taskDocId}} align="center" showCreatedAt={false} />
                   </Space>
                     : <Text strong>{item.action}</Text>}
             </Space>

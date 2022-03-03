@@ -18,6 +18,8 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { FaFileSignature, FaSignature } from 'react-icons/fa';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { Subscription } from 'rxjs';
+import { AddNewTaskDocItem } from './AddNewTaskDocItem';
+import { TaskDocItem } from './TaskDocItem';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -30,10 +32,6 @@ const Container = styled.div`
 
 .ant-upload.ant-upload-drag {
   text-align: left;
-}
-
-.ant-upload.ant-upload-drag .anticon-plus {
-  font-size: 36px !important;
 }
 
 .ant-table-placeholder {
@@ -76,11 +74,11 @@ export const TaskAttachmentPanel = (props) => {
   const reload$ = (force = false) => {
     setLoading(true);
 
-    if(!force) {
+    if (!force) {
       setList(list => [...list]);
       setLoading(false)
       return Subscription.EMPTY;
-    } 
+    }
 
     if (!taskDocIds?.length) {
       setLoading(false)
@@ -187,7 +185,7 @@ export const TaskAttachmentPanel = (props) => {
       reload$(true)
     })
   }
-  
+
   const handleSignTaskDoc = (taskDoc, e) => {
     e.stopPropagation();
     setLoading(true);
@@ -202,36 +200,17 @@ export const TaskAttachmentPanel = (props) => {
 
   const columns = [
     {
-      render: (value, item) => <Space align="start">
-        <>{item.isAddButton ? <PlusOutlined style={{ fontSize: 36 }} /> : <FileIcon name={item.name} width={36} />}</>
-        <div>
-          <big>
-            {item.isAddButton ? <Text type="secondary">Click or drag file to this area to upload</Text> :
-              item.fileId ?
-                <><TextLink href={getTaskDocDownloadUrl(item.id)} strong={pendingClientRead(item)} target="_blank">{item.name}</TextLink></> :
-                <><TextLink onClick={(e) => handlePreviewAutoDoc(item, e)}>{item.name}</TextLink></>
-            }
-          </big>
-          <div>
-            {item.isAddButton ? <>
-              <div><Text type="secondary">Support for single or bulk file upload. Maximumn 20MB per file.</Text></div>
-            </> : <>Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" /></>
-            }
-          </div>
-          <div>{item.type === 'auto' &&
-            <Text type="danger">Automatically generated doc, pending fields</Text>
-          }
-          </div>
-        </div>
-      </Space>
+      render: (value, item) => <big>
+        {item.isAddButton ? <AddNewTaskDocItem /> : <TaskDocItem taskDoc={item} showCreatedAt={true} description={item.type === 'auto' ? <Text type="danger">Automatically generated doc, pending fields</Text> : null} />}
+      </big>
     },
     isClient ? null : {
       title: 'Require sign',
       // width: 20,
       align: 'center',
-      render: (value, item) => item.signedAt ? <TimeAgo value={item.signedAt} /> 
-       : canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleToggleRequireSign(item, e)} /> 
-       : null
+      render: (value, item) => item.signedAt ? <TimeAgo value={item.signedAt} />
+        : canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleToggleRequireSign(item, e)} />
+          : null
     },
     isClient ? null : {
       title: 'Hide from client?',
@@ -243,8 +222,8 @@ export const TaskAttachmentPanel = (props) => {
       width: 20,
       align: 'center',
       render: (value, item) => <>
-      {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item, e)} />}
-      {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)} >sign</Button>}
+        {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item, e)} />}
+        {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)} >sign</Button>}
       </>
     }
   ].filter(x => x);
