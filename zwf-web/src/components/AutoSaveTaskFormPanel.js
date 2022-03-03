@@ -66,7 +66,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   return (
     <>
-    {disabled.toString()}
     <TaskFormWidget
       fields={fields}
       taskDocIds={taskDocIds}

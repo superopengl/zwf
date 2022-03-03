@@ -9,6 +9,7 @@ import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
+import { TaskStatusTag } from './TaskStatusTag';
 
 const { Text } = Typography
 
@@ -75,8 +76,9 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
                 <Link to={`/task/${item.taskId}`}><strong>{item.taskName}</strong></Link>
                 <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
               </Space>}
-              {item.action === 'chat' && <ChatMessage userId={item.by} message={item.info} />}
-              {item.action === 'status-change' && <Text strong>{item.info.oldStatus} <ArrowRightOutlined /> {item.info.newStatus}</Text>}
+              {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> 
+              : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus}/> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus}/></Text>
+              : <Text strong>{item.action}</Text>}
             </Space>
           </Col>
         </Row>
