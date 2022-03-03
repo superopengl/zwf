@@ -12,9 +12,9 @@ export const ConfirmDeleteButton = (props) => {
     setVisible(visible);
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e) => {
     setLoading(true);
-    await props.onOk();
+    await props.onOk(e);
     setVisible(false);
     setLoading(false);
   }

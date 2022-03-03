@@ -53,10 +53,8 @@ export async function logTaskClientSubmitted(m: EntityManager, taskId: string) {
   return await insertNewTrackingEntity(m, TaskActionType.ClientSubmitted, taskId, task.userId);
 }
 
-export async function logTaskClientSigned(m: EntityManager, taskId: string) {
-  const task = await m.findOne(Task, taskId);
-  assert(task, 500);
-  return await insertNewTrackingEntity(m, TaskActionType.ClientSigned, taskId, task.userId);
+export async function logTaskClientSigned(m: EntityManager, taskId: string, clientId: string, taskDocId: string) {
+  return await insertNewTrackingEntity(m, TaskActionType.ClientSigned, taskId, clientId, {taskDocId});
 }
 
 export async function logTaskCompleted(m: EntityManager, taskId: string, by: string) {
