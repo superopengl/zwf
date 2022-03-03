@@ -6,26 +6,14 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from "../utils/assertRole";
 import { getNow } from '../utils/getNow';
 import { Task } from '../entity/Task';
-import { getS3ObjectStream, uploadToS3 } from '../utils/uploadToS3';
+import { uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';
 import { Role } from '../types/Role';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { existsQuery } from '../utils/existsQuery';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
-
-function streamFileToResponse(file: File, res) {
-  assert(file, 404);
-
-  const { id, fileName, mime } = file;
-
-  const stream = getS3ObjectStream(id, fileName);
-  res.setHeader('Content-type', mime);
-  res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
-  res.setHeader('Cache-Control', `public, max-age=36536000, immutable`);
-
-  stream.pipe(res);
-}
+import { streamFileToResponse } from '../utils/streamFileToResponse';
 
 export const downloadFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
