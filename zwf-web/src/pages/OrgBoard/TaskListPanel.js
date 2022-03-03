@@ -6,7 +6,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
-import { assignTask$, changeTaskStatus$, deleteTask$ } from '../../services/taskService';
+import { assignTask$, changeTaskStatus$, } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import DropdownMenu from 'components/DropdownMenu';
@@ -178,7 +178,7 @@ export const TaskListPanel = (props) => {
       okText: 'Yes, Archive it',
       onOk: () => {
         postArchieveMessage();
-        deleteTask$(id).subscribe(() => onChange());
+        changeTaskStatus$(id, 'archived').subscribe(() => onChange());
       },
       maskClosable: true,
       okButtonProps: {
