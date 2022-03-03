@@ -19,7 +19,7 @@ export const TaskDocItem = React.memo(props => {
       <Link href={getTaskDocDownloadUrl(taskDoc.id)} target="_blank" strong={strong}>
         {taskDoc.name}
       </Link>
-      {showCreatedAt && <div><small><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" /></small></div>}
+      {showCreatedAt && taskDoc.createdAt && <div><small><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" /></small></div>}
       {description && <div><small>{description}</small></div>}
     </div>
   </Space>
@@ -29,7 +29,7 @@ TaskDocItem.propTypes = {
   taskDoc: PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    createdAt: PropTypes.string.isRequired,
+    createdAt: PropTypes.string,
   }).isRequired,
   showIcon: PropTypes.bool,
   showCreatedAt: PropTypes.bool,
