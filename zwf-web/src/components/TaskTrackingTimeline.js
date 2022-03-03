@@ -10,6 +10,7 @@ import { UserNameCard } from './UserNameCard';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { TaskStatusTag } from './TaskStatusTag';
+import { FileIcon } from './FileIcon';
 
 const { Text } = Typography
 
@@ -76,9 +77,13 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
                 <Link to={`/task/${item.taskId}`}><strong>{item.taskName}</strong></Link>
                 <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
               </Space>}
-              {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> 
-              : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus}/> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus}/></Text>
-              : <Text strong>{item.action}</Text>}
+              {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} />
+                : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
+                  : item.action === 'doc-signed' ? <Space size="small" direction="vertical">
+                    <Text strong>{item.action}</Text>
+                    <Space size="small"><FileIcon name={item.info.name} /> {item.info.name}</Space>
+                  </Space>
+                    : <Text strong>{item.action}</Text>}
             </Space>
           </Col>
         </Row>

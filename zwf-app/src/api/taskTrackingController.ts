@@ -63,7 +63,7 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
 });
 
 
-export const listMyTaskTrackings = handlerWrapper(async (req, res) => {
+export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const userId = getUserIdFromReq(req);
   const page = +req.query.page || 1;
