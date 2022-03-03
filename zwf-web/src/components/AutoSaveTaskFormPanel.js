@@ -4,6 +4,7 @@ import { TaskFormWidget } from './TaskFormWidget';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, switchMapTo, take, tap, throttle, throttleTime } from 'rxjs/operators';
 import { saveTaskContent$, subscribeTaskContent } from 'services/taskService';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
@@ -11,12 +12,19 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   const [fields, setFields] = React.useState(task?.fields);
   const [taskDocIds, setTaskDocIds] = React.useState(task?.docs?.map(x => x.id));
+  const [disabled, setDisabled] = React.useState(false);
   const source$ = React.useRef(new Subject());
+  const context = React.useContext(GlobalContext);
   const ref = React.useRef()
+  const role = context.role;
 
   React.useEffect(() => {
     setFields(task?.fields);
     setTaskDocIds(task?.docs?.map(x => x.id));
+    setDisabled(
+      ['done', 'archived'].includes(task.status)
+      || (role === 'client' && ['todo', 'in_progress'].includes(task.status))
+    )
   }, [task]);
 
   React.useEffect(() => {
@@ -57,13 +65,17 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, []);
 
   return (
+    <>
+    {disabled.toString()}
     <TaskFormWidget
       fields={fields}
       taskDocIds={taskDocIds}
       type={type}
       ref={ref}
       onChange={handleTaskContentChange}
+      disabled={disabled}
     />
+    </>
   );
 });
 
