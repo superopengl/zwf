@@ -10,7 +10,6 @@ import { Space } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { listRecurring, deleteRecurring, runRecurring } from 'services/recurringService';
 import RecurringForm from './RecurringForm';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { notify } from 'util/notify';
 import * as ReactDom from 'react-dom';
 
@@ -82,7 +81,6 @@ const RecurringListPage = (props) => {
       onFilter: (value, record) => record.agentId === value,
       render: (text, record) => record.portfolioName ? <>
         <Space>
-          <PortfolioAvatar value={text} user={record.portfolioId} size={40} />
           <div direction="vertical" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
             {text}
             <Text type="secondary"><small>{record.email || <Text type="danger">deleted user</Text>}</small></Text>
