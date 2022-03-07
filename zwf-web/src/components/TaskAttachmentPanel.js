@@ -254,7 +254,7 @@ export const TaskAttachmentPanel = (props) => {
         {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)}>sign</Button>}
       </>
     }
-  ].filter(x => x), []);
+  ].filter(x => x), [varBag]);
 
   const handleAddDocTemplate = (docTemplateId) => {
     createOrphanTaskDocFromDocTemplate$(docTemplateId).subscribe(taskDoc => {

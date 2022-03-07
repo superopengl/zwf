@@ -39,17 +39,17 @@ const getMissingVarWarningMessage = (variables, varBag) => {
     const def = varBag[varName];
     if (!def) {
       // Not found in varBag
-      missingVars.push(<>Variable {varName} is not defined in task</>)
+      missingVars.push(<>Variable '<strong>{varName}</strong>' is not defined in task</>)
     } else if (def.value === undefined || (_.isString(def.value) && def.value === '')) {
-      missingVars.push(<>Field {def.fieldName} is not input</>)
+      missingVars.push(<>Field '<strong>{def.fieldName}</strong>' has no value</>)
     }
   }
 
   return missingVars.length ? missingVars : null;
 }
 
-export const TaskDocItem = React.memo(props => {
-  const { taskDoc, showIcon, style, showCreatedAt, strong, description, align, iconOverlay, varBag } = props;
+export const TaskDocItem = props => {
+  const { taskDoc, showIcon, style, showCreatedAt, strong, description, align, iconOverlay, varBag, fields } = props;
   const context = React.useContext(GlobalContext);
 
   const missingVars = React.useMemo(() => {
@@ -68,12 +68,10 @@ export const TaskDocItem = React.memo(props => {
         {taskDoc.name} {getAutoDocTag(taskDoc, context.role)}
       </Link>
       {showCreatedAt && taskDoc.createdAt && <div><small><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" /></small></div>}
-      {missingVars && <div><small>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</small></div>}
+      {missingVars && <div style={{marginTop: 4}}><small>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</small></div>}
     </div>
-    {/* <em><small>{JSON.stringify(varBag, null, 2)}</small></em> */}
-
   </Space>
-});
+};
 
 TaskDocItem.propTypes = {
   taskDoc: PropTypes.shape({
