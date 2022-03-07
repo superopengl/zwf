@@ -34,10 +34,10 @@ const LogInPage = props => {
         <LogInPanel />
         <Form.Item>
             <Link to="/forgot_password">
-              <Button block type="link">Forgot password? Click here to reset</Button>
+              <Button block type="link">Forgot password</Button>
             </Link>
             {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-            <Link to="/signup"><Button size="small" block type="link">Not a user? Click to sign up</Button></Link>
+            <Link to="/signup"><Button block type="link">Not a user? Sign up now!</Button></Link>
           </Form.Item>
       </ContainerStyled>
     </LayoutStyled>
