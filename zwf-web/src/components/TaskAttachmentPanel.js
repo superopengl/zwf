@@ -110,7 +110,7 @@ export const TaskAttachmentPanel = (props) => {
   }
 
 
-  const handleChange = (info) => {
+  const handleUploadFile = (info) => {
     const { file } = info;
 
     if (file.status === 'done') {
@@ -129,9 +129,11 @@ export const TaskAttachmentPanel = (props) => {
   const handleDeleteDoc = (item, e) => {
     e.stopPropagation();
     const taskDocId = item.id;
-    const newList = list.filter(x => x.id !== taskDocId);
-    setList(newList);
-    onChange(newList.map(x => x.id));
+    setList(list => {
+      const newList = list.filter(x => x.id !== taskDocId);
+      onChange(newList.map(x => x.id));
+      return newList;
+    })
   }
 
   const handleGenDoc = (item, e) => {
@@ -143,7 +145,6 @@ export const TaskAttachmentPanel = (props) => {
     });
   }
 
-
   const beforeUpload = (file) => {
     const isLt20M = file.size / 1024 / 1024 < 20;
     if (!isLt20M) {
@@ -154,10 +155,9 @@ export const TaskAttachmentPanel = (props) => {
 
   const canDelete = (taskDoc) => {
     switch (taskDoc.type) {
-      case 'auto':
-        return false;
       case 'client':
         return role === 'client' && user.id === taskDoc.createdBy && !taskDoc.signedAt
+      case 'auto':
       case 'agent':
         return (role === 'admin' || role === 'agent') && !taskDoc.signedAt;
     }
@@ -178,22 +178,6 @@ export const TaskAttachmentPanel = (props) => {
 
   const canGenDoc = (taskDoc) => {
     return !taskDoc.isExtra && !isClient && taskDoc.docTemplateId && !taskDoc.fileId
-  }
-
-  const pendingClientRead = taskDoc => {
-    return isClient && !taskDoc.lastClientReadAt;
-  }
-
-  const handlePreviewAutoDoc = (taskDoc, e) => {
-    e.stopPropagation();
-    const { docTemplateId } = taskDoc;
-    getDocTemplate$(docTemplateId).subscribe(docTemplate => {
-      showDocTemplatePreviewModal(docTemplate, {
-        allowTest: false,
-        type: role === 'client' ? 'client' : 'agent',
-        varBag,
-      });
-    })
   }
 
   const handleToggleOfficialOnly = (taskDoc, e) => {
@@ -281,6 +265,7 @@ export const TaskAttachmentPanel = (props) => {
 
 
   return <Container>
+    {/* <em><small>{JSON.stringify(list, null, 2)}</small></em> */}
     <Upload.Dragger
       multiple={true}
       action={`${API_BASE_URL}/file`}
@@ -290,7 +275,7 @@ export const TaskAttachmentPanel = (props) => {
       beforeUpload={beforeUpload}
       // fileList={fileList}
       itemRender={() => null}
-      onChange={handleChange}
+      onChange={handleUploadFile}
       disabled={disabled}
     >
       <Table
