@@ -43,7 +43,7 @@ async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: 
 export async function tryGenDocFile(m: EntityManager, docTemplate: DocTemplate, fields: TaskField[]): Promise<File> {
   const { error, pdfData, fileName } = await generatePdfDataFromDocTemplate(docTemplate, fields);
   if (error) {
-    return null;
+    throw new Error(error);
   }
   const id = uuidv4();
   const location = await uploadToS3(id, fileName, pdfData);
