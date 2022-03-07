@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Switch, Checkbox, Table } from 'antd';
+import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Modal, Checkbox, Table } from 'antd';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
@@ -10,7 +10,7 @@ import Icon, { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutline
 import { getFileUrl, getPublicFileUrl, openFile } from 'services/fileService';
 import { API_BASE_URL } from 'services/http';
 import { TimeAgo } from './TimeAgo';
-import { createOrphanTaskDoc$, getTaskDocDownloadUrl, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
+import { createOrphanTaskDocFromDocTemplate$, createOrphanTaskDocFromUploadedFile$, getTaskDocDownloadUrl, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { FileIcon } from './FileIcon';
@@ -19,10 +19,13 @@ import { FaFileSignature, FaSignature } from 'react-icons/fa';
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { Subscription } from 'rxjs';
 import { AddNewTaskDocItem } from './AddNewTaskDocItem';
+import { AddFromDocTemplateItem } from './AddFromDocTemplateItem';
 import { TaskDocItem } from './TaskDocItem';
 import { showSignTaskDocModal } from './showSignTaskDocModal';
+import TaskTemplateSelect from './TaskTemplateSelect';
+import DocTemplateSelect from './DocTemplateSelect';
 
-const { Text, Link: TextLink } = Typography;
+const { Text, Link: TextLink, Paragraph } = Typography;
 
 const Container = styled.div`
 
@@ -52,15 +55,25 @@ const Container = styled.div`
 
 
 const LAST_ADD_DOC_BUTTON_ITEM = {
-  id: 'new',
-  isAddButton: true
+  id: 'newUploadFile',
+  isAddButton: true,
+  isExtra: true,
 }
+
+const LAST_DOC_TEMPLATEBUTTON_ITEM = {
+  id: 'add-docTemplate',
+  isAddDocTemplateButton: true,
+  isExtra: true,
+}
+
+const EXTRA_ITEMS = [LAST_DOC_TEMPLATEBUTTON_ITEM, LAST_ADD_DOC_BUTTON_ITEM];
 
 export const TaskAttachmentPanel = (props) => {
   const { value: taskDocIds, disabled, varBag, onChange, showWarning, renderVariable, mode } = props;
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const [docTemplateModalVisible, setDocTemplateModalVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const { user, role } = context;
 
@@ -99,7 +112,7 @@ export const TaskAttachmentPanel = (props) => {
 
     if (file.status === 'done') {
       const fileId = file.response.id;
-      createOrphanTaskDoc$(fileId).subscribe(taskDoc => {
+      createOrphanTaskDocFromUploadedFile$(fileId).subscribe(taskDoc => {
         taskDoc.isNewlyUploaded = true;
         setList(list => [...list, taskDoc]);
         onChange([...taskDocIds, taskDoc.id]);
@@ -140,15 +153,15 @@ export const TaskAttachmentPanel = (props) => {
   }
 
   const canToggleOfficalOnly = (taskDoc) => {
-    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client' && !taskDoc.signedAt
+    return !taskDoc.isExtra && isAgent && taskDoc.type !== 'client' && !taskDoc.signedAt
   }
 
   const canRequestClientSign = (taskDoc) => {
-    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client' && taskDoc.fileId && !taskDoc.signedAt
+    return !taskDoc.isExtra && isAgent && taskDoc.type !== 'client' && taskDoc.fileId && !taskDoc.signedAt
   }
 
   const canClientSign = (taskDoc) => {
-    return !taskDoc.isAddButton && isClient && taskDoc.requiresSign && !taskDoc.signedAt
+    return !taskDoc.isExtra && isClient && taskDoc.requiresSign && !taskDoc.signedAt
   }
 
   const pendingClientRead = taskDoc => {
@@ -201,13 +214,15 @@ export const TaskAttachmentPanel = (props) => {
   }
 
   const listDataSource = React.useMemo(() => {
-    return disabled ? list : [...list, LAST_ADD_DOC_BUTTON_ITEM];
+    return disabled ? list : [...list, ...EXTRA_ITEMS];
   }, [list]);
 
-  const columns = [
+  const columns = React.useMemo(() => [
     {
       render: (value, item) => <big>
-        {item.isAddButton ? <AddNewTaskDocItem /> : <TaskDocItem taskDoc={item} showCreatedAt={true} description={item.type === 'auto' ? <Text type="danger">Automatically generated doc, pending fields</Text> : null} />}
+        {item.isAddButton ? <AddNewTaskDocItem /> :
+          item.isAddDocTemplateButton ? <AddFromDocTemplateItem /> :
+            <TaskDocItem taskDoc={item} showCreatedAt={true} description={item.type === 'auto' ? <Text type="danger">Automatically generated doc, pending fields</Text> : null} />}
       </big>
     },
     isClient ? null : {
@@ -222,7 +237,7 @@ export const TaskAttachmentPanel = (props) => {
       title: 'Hide from client?',
       width: 20,
       align: 'center',
-      render: (value, item) => <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} disabled={!canToggleOfficalOnly(item)}/> 
+      render: (value, item) => item.isExtra ? null : <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} disabled={!canToggleOfficalOnly(item)} />
     },
     {
       width: 20,
@@ -232,7 +247,15 @@ export const TaskAttachmentPanel = (props) => {
         {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)} >sign</Button>}
       </>
     }
-  ].filter(x => x);
+  ].filter(x => x), []);
+
+  const handleAddDocTemplate = (docTemplateId) => {
+    createOrphanTaskDocFromDocTemplate$(docTemplateId).subscribe(taskDoc => {
+      setDocTemplateModalVisible(false);
+      setList(list => [...list, taskDoc]);
+      onChange([...taskDocIds, taskDoc.id]);
+    })
+  }
 
 
   return <Container>
@@ -261,7 +284,15 @@ export const TaskAttachmentPanel = (props) => {
         rowKey={item => item.id}
         onRow={(item) => {
           return {
-            onClick: e => item.isAddButton ? null : e.stopPropagation(),
+            onClick: e => {
+              if (!item.isAddButton) {
+                e.stopPropagation();
+              }
+              if (item.isAddDocTemplateButton) {
+                setDocTemplateModalVisible(true);
+              }
+              return null;
+            },
             onDoubleClick: e => item.isAddButton ? null : e.stopPropagation(),
           }
         }}
@@ -273,6 +304,19 @@ export const TaskAttachmentPanel = (props) => {
         }}
       />
     </Upload.Dragger>
+    <Modal
+      title={<><DocTemplateIcon /> Add Doc Template</>}
+      visible={docTemplateModalVisible}
+      footer={null}
+      onOk={() => setDocTemplateModalVisible(false)}
+      onCancel={() => setDocTemplateModalVisible(false)}
+      closable
+      maskClosable
+      destroyOnClose
+    >
+      <Paragraph>Select a doc template to add to the current task.</Paragraph>
+      <DocTemplateSelect onChange={handleAddDocTemplate} style={{ width: '100%' }} isMultiple={false}/>
+    </Modal>
   </Container>
 };
 
