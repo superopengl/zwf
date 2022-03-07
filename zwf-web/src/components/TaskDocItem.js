@@ -32,7 +32,7 @@ const getAutoDocTag = (taskDoc, role) => {
 }
 
 export const TaskDocItem = React.memo(props => {
-  const { taskDoc, showIcon, style, showCreatedAt, strong, description, align, iconOverlay } = props;
+  const { taskDoc, showIcon, style, showCreatedAt, strong, description, align, iconOverlay, varBag } = props;
   const context = React.useContext(GlobalContext);
 
 
@@ -50,6 +50,8 @@ export const TaskDocItem = React.memo(props => {
       {showCreatedAt && taskDoc.createdAt && <div><small><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" /></small></div>}
       {description && <div><small>{description}</small></div>}
     </div>
+    <em><small>{JSON.stringify(taskDoc, null, 2)}</small></em>
+
   </Space>
 });
 
@@ -64,13 +66,15 @@ TaskDocItem.propTypes = {
   strong: PropTypes.bool,
   description: PropTypes.object,
   iconOverlay: PropTypes.object,
-  align: PropTypes.oneOf(['start', 'center'])
+  align: PropTypes.oneOf(['start', 'center']),
+  varBag: PropTypes.object,
 };
 
 TaskDocItem.defaultProps = {
   showIcon: true,
   showCreatedAt: false,
   strong: false,
-  align: 'start'
+  align: 'start',
+  varBag: {},
 }
 

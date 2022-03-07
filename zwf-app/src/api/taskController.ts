@@ -253,14 +253,17 @@ export const getTask = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
 
   let query: any;
+  let relations: any;
 
   switch (role) {
     case Role.Admin:
     case Role.Agent:
       query = { id, orgId: getOrgIdFromReq(req) };
+      relations = ['tags', 'docs', 'docs.file'];
       break;
     case Role.Client:
       query = { id, userId: getUserIdFromReq(req) };
+      relations = ['docs', 'docs.file'];
       break;
     default:
       assert(false, 404);
@@ -269,7 +272,7 @@ export const getTask = handlerWrapper(async (req, res) => {
 
   const task = await getRepository(Task).findOne({
     where: query,
-    relations: ['tags', 'docs', 'docs.file']
+    relations,
   })
   assert(task, 404);
 

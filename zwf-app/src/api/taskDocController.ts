@@ -58,35 +58,45 @@ export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
   const taskDoc = new TaskDoc();
   taskDoc.createdBy = getUserIdFromReq(req);
   taskDoc.taskId = null; // This is an orphan TaskDoc having no associated Task
-  if (fileId) {
-    // File has been uploaded
-    const file = await getRepository(File).findOne(fileId, { select: ['fileName'] });
-    assert(file, 400);
 
-    taskDoc.type = role === Role.Client ? 'client' : 'agent';
-    taskDoc.fileId = fileId;
-    taskDoc.name = file.fileName;
-    taskDoc.status = 'done';
-  } else if (docTemplateId) {
-    // Create task doc from a doc template
-    const docTemplate = await getRepository(DocTemplate).findOne({
-      where: {
-        id: docTemplateId,
-        orgId: getOrgIdFromReq(req)
-      },
-      select: [
-        'name'
-      ]
-    });
-    assert(docTemplate, 400);
+  await getManager().transaction(async m => {
+    if (fileId) {
+      // File has been uploaded
+      const file = await m.findOne(File, {
+        where: {
+          id: fileId
+        },
+        select: [
+          'fileName'
+        ]
+      });
+      assert(file, 400);
 
-    taskDoc.type = 'auto';
-    taskDoc.docTemplateId = docTemplateId;
-    taskDoc.name = `${docTemplate.name}.pdf`;
-    taskDoc.status = 'pending';
-  }
+      taskDoc.type = role === Role.Client ? 'client' : 'agent';
+      taskDoc.fileId = fileId;
+      taskDoc.name = file.fileName;
+      taskDoc.status = 'done';
+    } else if (docTemplateId) {
+      // Create task doc from a doc template
+      const docTemplate = await m.findOne(DocTemplate, {
+        where: {
+          id: docTemplateId,
+          orgId: getOrgIdFromReq(req)
+        },
+        select: [
+          'name'
+        ]
+      });
+      assert(docTemplate, 400);
 
-  await getManager().save(taskDoc);
+      taskDoc.type = 'auto';
+      taskDoc.docTemplateId = docTemplateId;
+      taskDoc.name = `${docTemplate.name}.pdf`;
+      taskDoc.status = 'pending';
+    }
+
+    await m.save(taskDoc);
+  })
 
   res.json(taskDoc);
 });
@@ -97,20 +107,24 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
   assert(ids?.length, 400);
 
   const role = getRoleFromReq(req);
-  const query = role === Role.Client ? {
-    id: In(ids),
-    officialOnly: false,
-    fileId: Not(IsNull()),
-  } : {
-    id: In(ids)
+
+  let query = await getRepository(TaskDoc)
+    .createQueryBuilder('t')
+    .orderBy(`t."createdAt"`, 'ASC')
+    .where(`t.id = ANY(:ids)`, { ids });
+
+  if (role === Role.Client) {
+    query = query.where(`"officialOnly" IS FALSE`)
+      .where(`"fileId" IS NOT NULL`)
+  } else {
+    query = query.leftJoin(DocTemplate, 'd', `t."docTemplateId" = d.id`)
+    .select([
+      't.*',
+      'd.variables as variables'
+    ])
   }
 
-  const list = await getRepository(TaskDoc).find({
-    where: query,
-    order: {
-      createdAt: 'ASC'
-    }
-  });
+  const list = await query.execute()
 
   res.json(list);
 });
