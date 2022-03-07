@@ -306,7 +306,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   //   .leftJoinAndSelect('t.docs', 'docs')
   //   .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
   //   .getOne();
-  
+
   const task = await getRepository(Task).findOne({
     where: query,
     select: ['id']
@@ -330,6 +330,22 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
 
   res.json();
 });
+
+export const updateTaskName = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+  const { name } = req.body;
+  const orgId = getOrgIdFromReq(req);
+
+  await getRepository(Task).update({
+    id,
+    orgId,
+  }, { name });
+
+  res.json();
+});
+
+
 
 export const assignTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');

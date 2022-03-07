@@ -40,6 +40,10 @@ export function updateTaskTags$(id, tags) {
   return httpPost$(`task/${id}/tags`, { tags });
 }
 
+export function renameTask$(id, name) {
+  return httpPost$(`task/${id}/rename`, { name });
+}
+
 export function assignTask$(taskId, agentId) {
   return httpPost$(`task/${taskId}/assign`, { agentId });
 }
