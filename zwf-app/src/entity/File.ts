@@ -12,8 +12,8 @@ export class File {
    * User ID of the uploader. 
    * For auto-gen doc, it's the org ID.
    */
-  @Column('uuid')
-  owner?: string;
+  @Column('uuid', { nullable: true })
+  createdBy?: string;
 
   @Column()
   fileName: string;

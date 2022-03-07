@@ -1,3 +1,4 @@
+import { createPdfFromDocTemplate } from './docTemplateController';
 import { getUtcNow } from './../utils/getUtcNow';
 import { TaskDoc } from '../entity/TaskDoc';
 
@@ -16,7 +17,33 @@ import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { DocTemplate } from '../entity/DocTemplate';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { tryGenDocFile } from '../services/genDocService';
 
+export const generateAutoDoc = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+
+  await getManager().transaction(async m => {
+    const taskDoc = await m.findOne(TaskDoc, {
+      where: {
+        id,
+      },
+      relations: ['task']
+    });
+
+    assert(taskDoc.task.orgId === orgId, 404, 'Task doc is not found');
+    assert(taskDoc?.docTemplateId, 404, 'Task doc is not found');
+    const docTemplate = await m.findOne(DocTemplate, taskDoc.docTemplateId);
+    assert(docTemplate, 404, 'Doc template is not found');
+
+    const file = await tryGenDocFile(m, docTemplate, taskDoc.task.fields);
+    taskDoc.fileId = file.id;
+    await m.save(taskDoc);
+  })
+
+  res.json();
+});
 
 export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
   const { fileId, docTemplateId } = req.body;
@@ -35,7 +62,7 @@ export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
     // File has been uploaded
     const file = await getRepository(File).findOne(fileId, { select: ['fileName'] });
     assert(file, 400);
-    
+
     taskDoc.type = role === Role.Client ? 'client' : 'agent';
     taskDoc.fileId = fileId;
     taskDoc.name = file.fileName;

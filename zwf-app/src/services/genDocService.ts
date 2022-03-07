@@ -5,7 +5,7 @@ import * as _ from 'lodash';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfStreamFromHtml';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
-import { getRepository } from 'typeorm';
+import { getRepository, EntityManager } from 'typeorm';
 import { File } from '../entity/File';
 import { createHash } from 'crypto';
 
@@ -40,24 +40,22 @@ async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: 
   return { error, pdfData, fileName };
 }
 
-export async function tryGenDocFile(docTemplate: DocTemplate, fields: TaskField[], userId: string): Promise<File> {
+export async function tryGenDocFile(m: EntityManager, docTemplate: DocTemplate, fields: TaskField[]): Promise<File> {
   const { error, pdfData, fileName } = await generatePdfDataFromDocTemplate(docTemplate, fields);
   if (error) {
     return null;
   }
   const id = uuidv4();
   const location = await uploadToS3(id, fileName, pdfData);
-  const file: File = {
-    id,
-    owner: userId,
-    fileName,
-    mime: 'application/pdf',
-    location,
-    md5: createHash('md5').update(pdfData).digest('hex'),
-    public: false,
-  };
+  const file = new File();
+  file.id = id;
+  file.fileName = fileName;
+  file.mime = 'application/pdf'
+  file.location = location,
+  file.md5 = createHash('md5').update(pdfData).digest('hex'),
+  file.public = false;
 
-  await getRepository(File).insert(file);
+  await m.save(file);
 
   return file;
 }

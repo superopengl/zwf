@@ -688,7 +688,7 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/content/subscribe:
+  /task/{id}/content/sse:
     get:
       operationId: subscribeTaskContent
       parameters:
@@ -700,7 +700,7 @@ paths:
       responses:
         200:
           description: OK          
-  /task/{id}/tracking/subscribe:
+  /task/{id}/tracking/sse:
     get:
       operationId: subscribeTaskTracking
       parameters:
@@ -798,7 +798,19 @@ paths:
           required: true
       responses:
         200:
-          description: OK            
+          description: OK     
+  /task_doc/{id}/gendoc:
+    post:
+      operationId: generateAutoDoc
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                    
   /task_doc/{id}/requires_sign:
     post:
       operationId: setTaskDocRequiresSign
