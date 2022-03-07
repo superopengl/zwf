@@ -18,7 +18,7 @@ export const TaskTrackingDrawer = React.memo((props) => {
   return <Drawer
     visible={visible}
     onClose={onClose}
-    title="Activity History"
+    title="Interactions & Messages"
     destroyOnClose={false}
     closable
     autoFocus
