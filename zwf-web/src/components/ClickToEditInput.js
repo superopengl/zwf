@@ -9,7 +9,7 @@ border-radius: 0px;
 width: 100%;
 
 &.error {
-  border-color: #ff4d4f;
+  border-color: #cf222e;
 }
 
 &:focus, &:active {
@@ -17,7 +17,7 @@ width: 100%;
   background-color: white;
 
   &.error {
-    border-color: #ff4d4f;
+    border-color: #cf222e;
   }
 }
 `;

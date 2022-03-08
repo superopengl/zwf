@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import PropTypes from 'prop-types';
-import { Typography, Space, List, Tooltip, Tag, Checkbox, Button } from 'antd';
+import { Typography, Space, List, Tooltip, Tag, Avatar, Button } from 'antd';
 import { FileIcon } from './FileIcon';
 import { TimeAgo } from './TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -17,6 +17,7 @@ import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';
 import { MdBrightnessAuto } from 'react-icons/md';
+import { Modal } from 'antd';
 
 const { Link, Text } = Typography;
 
@@ -38,9 +39,11 @@ const getAutoDocTag = (taskDoc, role) => {
     return null;
   }
 
+  let label = 'pending';
   let color = '#cf222e';
   let tooltipMessage = 'The file is not generated yet. Fill in fields first.';
   if (taskDoc.fileId) {
+    label = 'generated';
     color = '#2da44e';
     tooltipMessage = 'The file has been generated.';
   }
@@ -132,7 +135,27 @@ export const TaskDocItem = React.memo(props => {
   }
 
   const handleDeleteDoc = (item) => {
-    onDelete();
+    Modal.confirm({
+      title: <Space>
+        <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#cf222e' }} />
+        Delete file
+      </Space>,
+      content: <>Delete file <strong>{item.name}</strong> from this task?</>,
+      closable: true,
+      maskClosable: true,
+      icon: null,
+      onOk: () => onDelete(),
+      okText: 'Delete it',
+      okButtonProps: {
+        type: 'primary',
+        danger: true,
+      },
+      cancelButtonProps: {
+        type: 'text'
+      },
+      autoFocusButton: 'cancel',
+      focusTriggerAfterClose: true,
+    });
   }
 
   const handleGenDoc = (item) => {

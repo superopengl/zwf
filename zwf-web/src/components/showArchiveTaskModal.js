@@ -10,7 +10,7 @@ const { Paragraph } = Typography
 export function showArchiveTaskModal(taskId, onFinish) {
   const modalRef = Modal.confirm({
     title: <Space>
-      <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#ff4d4f' }} />
+      <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#cf222e' }} />
       Archive Task
     </Space>,
     content: <>
