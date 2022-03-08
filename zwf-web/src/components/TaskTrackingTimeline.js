@@ -81,9 +81,14 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
               </Space>}
               {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} />
                 : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
-                  : item.action === 'doc-signed' ? <Space size="small" direction="vertical">
-                    <Text strong>{item.action}</Text>
-                    <TaskDocItem taskDoc={{name: item.info.name, id: item.info.taskDocId}} align="center" showCreatedAt={false} />
+                  : item.action === 'doc-signed' ? <Space size="small" onClick={e => e.stopPropagation()}>
+                    <TextLink href={getTaskDocDownloadUrl(item.info.taskDocId)} target="_blank" >
+                      <Space>
+                        <FileIcon name={item.info.name} />
+                        {item.info.name}
+                      </Space>
+                    </TextLink>
+                    <strong>signed</strong>
                   </Space>
                     : <Text strong>{item.action}</Text>}
             </Space>

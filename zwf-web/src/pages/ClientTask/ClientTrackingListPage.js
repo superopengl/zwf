@@ -53,7 +53,7 @@ const LayoutStyled = styled.div`
       position: relative;
 
       &::after {
-        content: 'go to the case >';
+        content: 'go to task >';
         position: absolute;
         color: #37AFD2;
         top: 0;

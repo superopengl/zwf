@@ -2,12 +2,43 @@ import React from 'react';
 
 import { Modal, Typography, Space, Button } from 'antd';
 import Icon from '@ant-design/icons';
-import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import { DocTemplateIcon } from './entityIcon';
-import { FaFileSignature, FaSignature } from 'react-icons/fa';
-import { TaskDocItem } from './TaskDocItem';
+import { FaFileSignature } from 'react-icons/fa';
+import { FileIcon } from './FileIcon';
+import { getTaskDocDownloadUrl, signTaskDoc$ } from 'services/taskDocService';
 
-const { Paragraph } = Typography;
+const { Paragraph, Link: TextLink } = Typography;
+
+const Content = props => {
+  const { taskDoc, onCancel, onOk } = props;
+
+  const [agreed, setAgreed] = React.useState(!!taskDoc.lastClientReadAt);
+
+  const handleSign = () => {
+    signTaskDoc$(taskDoc.id).subscribe(() => {
+      onOk();
+    })
+  }
+
+  return <>
+    <Paragraph>
+      Please view and sign the document. Click below file to download or open it before signing.
+    </Paragraph>
+    <Space direction="vertical" style={{ width: '100%' }}>
+
+      <TextLink href={getTaskDocDownloadUrl(taskDoc.id)} target="_blank" onClick={() => setAgreed(true)}>
+        <Space>
+          <FileIcon name={taskDoc.name} />
+          {taskDoc.name}
+        </Space>
+      </TextLink>
+      {/* <Checkbox checked={agreed} onClick={e => setAgreed(e.target.checked)} >I have read the file and agree with the term and conditions.</Checkbox> */}
+      <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 20 }}>
+        <Button type="text" onClick={onCancel}>Cancel</Button>
+        <Button type="primary" onClick={handleSign} disabled={!agreed}>Sign</Button>
+      </Space>
+    </Space>
+  </>
+}
 
 export function showSignTaskDocModal(taskDoc, options = {}) {
   if (!taskDoc) {
@@ -16,16 +47,12 @@ export function showSignTaskDocModal(taskDoc, options = {}) {
   const { onOk } = options;
   const modalRef = Modal.info({
     title: 'Sign document',
-    content: <>
-      <Paragraph>
-        Please view and sign the document. Click below file to download or open it before signing.
-      </Paragraph>
-      <TaskDocItem taskDoc={taskDoc} strong={true} align="center" />
-      <Space style={{width: '100%', justifyContent: 'flex-end'}}>
-        <Button type="text" onClick={() => modalRef.destroy()}>Cancel</Button>
-        <Button type="primary" onClick={() => modalRef.destroy()}>Sign</Button>
-      </Space>
-    </>,
+    content: <Content taskDoc={taskDoc} 
+    onCancel={() => modalRef.destroy()} 
+    onOk={() => {
+      modalRef.destroy();
+      onOk();
+    }} />,
     afterClose: () => {
       // onClose?.();
     },
@@ -34,7 +61,7 @@ export function showSignTaskDocModal(taskDoc, options = {}) {
     maskClosable: true,
     destroyOnClose: true,
     footer: null,
-    // width: 700,
+    width: 600,
     // style: { top: 20 },
     okButtonProps: {
       style: {
