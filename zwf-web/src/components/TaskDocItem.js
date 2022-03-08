@@ -183,7 +183,7 @@ export const TaskDocItem = React.memo(props => {
     actions={isClient ? null : [
       // <Button key="auto" icon={<Icon component={() => <BsPatchCheck />} />} type="link">Generate</Button>,
       <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
-      <Checkbox key="client-visible" checked={taskDoc.officialOnly} onClick={e => handleToggleOfficialOnly(taskDoc, e.target.checked)}><Link>Client visible</Link></Checkbox>,
+      <Checkbox key="client-visible" checked={taskDoc.officialOnly} onClick={e => handleToggleOfficialOnly(taskDoc, e.target.checked)}><Link>Official only</Link></Checkbox>,
       // <Button key="delete" danger icon={<DeleteOutlined/>} type="link" onClick={() => handleDeleteDoc(taskDoc)}>Delete</Button>,
     ].filter(x => x)}
     extra={<>

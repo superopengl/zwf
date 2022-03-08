@@ -114,14 +114,15 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
     .where(`t.id = ANY(:ids)`, { ids });
 
   if (role === Role.Client) {
-    query = query.where(`"officialOnly" IS FALSE`)
-      .where(`"fileId" IS NOT NULL`)
+    query = query.andWhere(`"officialOnly" IS FALSE`)
+      .andWhere(`"fileId" IS NOT NULL`)
+      .select('*')
   } else {
     query = query.leftJoin(DocTemplate, 'd', `t."docTemplateId" = d.id`)
-    .select([
-      't.*',
-      'd.variables as variables'
-    ])
+      .select([
+        't.*',
+        'd.variables as variables'
+      ])
   }
 
   const list = await query.execute()
@@ -134,7 +135,9 @@ export const setTaskDocOfficialOnly = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { officialOnly } = req.body;
 
-  await getRepository(TaskDoc).update(id, { officialOnly });
+  await getRepository(TaskDoc).update(id, officialOnly ?
+    { officialOnly, requiresSign: false } :
+    { officialOnly });
 
   res.json();
 });
