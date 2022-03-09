@@ -4,7 +4,10 @@ import { Typography, Button, Table, Input, Modal, Form, Drawer, PageHeader } fro
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  ClearOutlined
+  ClearOutlined,
+  PlusOutlined,
+  TagOutlined,
+  TagsOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
@@ -21,7 +24,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 const ContainerStyled = styled.div`
 `;
@@ -42,7 +45,6 @@ const ClientUserListPage = () => {
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
-  const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
@@ -101,40 +103,7 @@ const ClientUserListPage = () => {
     }
   }
 
-  const handleDelete = async (item) => {
-    const { id, email } = item;
-    Modal.confirm({
-      title: <>Delete user</>,
-      content: <>Delete user <Text code>{email}</Text>?</>,
-      onOk: async () => {
-        setLoading(true);
-        await deleteUser(id);
-        await searchByQueryInfo(queryInfo);
-      },
-      maskClosable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete it!'
-    });
-  }
 
-  const handleImpersonante = async (item) => {
-    Modal.confirm({
-      title: 'Impersonate',
-      icon: <QuestionOutlined />,
-      content: <>To impersonate user <Text code>{item.email}</Text></>,
-      okText: 'Yes, impersonate',
-      maskClosable: true,
-      onOk: () => {
-        impersonate$(item.email)
-          .subscribe(() => {
-            reactLocalStorage.clear();
-            window.location = '/';
-          });
-      }
-    })
-  }
 
 
   const openProfileModal = async (user) => {
@@ -142,21 +111,11 @@ const ClientUserListPage = () => {
     setCurrentUser(user);
   }
 
-  const handleSetPassword = async (id, values) => {
-    setLoading(true);
-    await setPasswordForUser(id, values.password);
-    setSetPasswordVisible(false);
-    setCurrentUser(undefined);
-    setLoading(false);
-  }
 
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo({ ...queryInfo, page: 1, tags });
   }
 
-  const handleClearFilter = () => {
-    searchByQueryInfo(DEFAULT_QUERY_INFO);
-  }
 
   const handlePaginationChange = (page, pageSize) => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
@@ -192,40 +151,38 @@ const ClientUserListPage = () => {
       dataIndex: 'countToDo',
       width: 40,
       align: 'right',
-      render: (value, item) => value
+      render: (value) => value
     },
     {
       title: <TaskStatusTag status="in_progress" />,
       dataIndex: 'countInProgress',
       width: 40,
       align: 'right',
-      render: (value, item) => value
+      render: (value) => value
     },
     {
       title: <TaskStatusTag status="action_required" />,
       dataIndex: 'countActionRequired',
       width: 40,
       align: 'right',
-      render: (value, item) => value
+      render: (value) => value
     },
     {
       title: <TaskStatusTag status="done" />,
       dataIndex: 'countDone',
       width: 40,
       align: 'right',
-      render: (value, item) => value
+      render: (value) => value
     },
     {
       title: <TaskStatusTag status="archived" />,
       dataIndex: 'countArchived',
       width: 40,
       align: 'right',
-      render: (value, item) => value
+      render: (value) => value
     },
     {
-      // title: 'Action',
-      // fixed: 'right',
-      // width: 200,
+      width: 70,
       align: 'right',
       fixed: 'right',
       render: (text, user) => {
@@ -233,14 +190,16 @@ const ClientUserListPage = () => {
           <DropdownMenu
             config={[
               {
+                icon: <PlusOutlined />,
+                menu: `Create task for this client`,
+                onClick: () => openProfileModal(user)
+              },
+              {
                 menu: `Tasks of client`,
                 onClick: () => openProfileModal(user)
               },
               {
-                menu: 'Resend invite',
-                onClick: () => openProfileModal(user)
-              },
-              {
+                icon: <TagsOutlined />,
                 menu: 'Tags',
                 onClick: () => openProfileModal(user)
               },
@@ -283,28 +242,6 @@ const ClientUserListPage = () => {
           }}
         />
       </PageHeader>
-      <Modal
-        visible={setPasswordVisible}
-        destroyOnClose={true}
-        maskClosable={false}
-        onOk={() => setSetPasswordVisible(false)}
-        onCancel={() => setSetPasswordVisible(false)}
-        title={<>Set Password</>}
-        footer={null}
-        width={400}
-      >
-        <Form layout="vertical" onFinish={values => handleSetPassword(currentUser?.id, values)}>
-          <Space style={{ justifyContent: 'center', width: '100%' }}>
-            <Paragraph code>{currentUser?.email}</Paragraph>
-          </Space>
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: ' ' }]}>
-            <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
-          </Form.Item>
-          <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={loading}>Set Password</Button>
-          </Form.Item>
-        </Form>
-      </Modal>
       <Drawer
         visible={profileModalVisible}
         destroyOnClose={true}
