@@ -16,6 +16,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   const role = context.role;
 
   const isClient = role === 'client';
+  const hideAttachment = isClient && disabled && !taskDocIds.length;
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
@@ -80,17 +81,19 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
         </Paragraph>
         <FormBuilder meta={agentFieldSchema} form={ref} />
       </>}
-      <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Attachments</Divider>
-      <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
-        <TaskAttachmentPanel
-          value={taskDocIds}
-          allowTest={false}
-          varBag={varBag}
-          showWarning={true}
-          onChange={handleTaskDocIdsChange}
-          disabled={disabled}
-        />
-      </Form.Item>
+      {!hideAttachment && <>
+        <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Attachments</Divider>
+        <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
+          <TaskAttachmentPanel
+            value={taskDocIds}
+            allowTest={false}
+            varBag={varBag}
+            showWarning={true}
+            onChange={handleTaskDocIdsChange}
+            disabled={disabled}
+          />
+        </Form.Item>
+      </>}
     </Form>
   );
 }));
