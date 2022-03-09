@@ -14,6 +14,7 @@ import { UserStatus } from '../../types/UserStatus';
     .select([
       'u.id as "id"',
       'o.id as "orgId"',
+      'c."createdAt" as "invitedAt"',
       'o.name as "orgName"',
       'u.email as "email"',
       'u."givenName" as "givenName"',
@@ -29,6 +30,9 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   orgId: string;
+
+  @ViewColumn()
+  invitedAt: Date;
 
   @ViewColumn()
   orgName: string;

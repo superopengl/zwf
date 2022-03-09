@@ -38,8 +38,12 @@ export function impersonate$(email) {
   return httpPost$(`auth/impersonate`, { email });
 }
 
-export function inviteUser$(email, role) {
-  return httpPost$(`auth/invite`, { email, role });
+export function inviteMember$(email) {
+  return httpPost$(`auth/invite/member`, { email });
+}
+
+export function inviteClient$(email) {
+  return httpPost$(`auth/invite/client`, { email });
 }
 
 export function ssoGoogle$(token) {

@@ -73,7 +73,7 @@ const TAB_DEFS = [
   },
 ];
 
-const TASK_FILTER_KEY = 'client.tasks.filter';
+const CLIENT_TASK_FILTER_KEY = 'client.tasks.filter';
 const TASK_FILTER_DEFAULT = {
   text: '',
   org: '',
@@ -86,7 +86,7 @@ export const ClientTaskListPage = withRouter(() => {
   const [allList, setAllList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
-  const [query, setQuery] = useLocalStorage(TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
+  const [query, setQuery] = useLocalStorage(CLIENT_TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
   const screens = useBreakpoint();
 
   const load$ = () => {

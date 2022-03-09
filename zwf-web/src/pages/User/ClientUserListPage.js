@@ -7,13 +7,14 @@ import {
   ClearOutlined,
   PlusOutlined,
   TagOutlined,
-  TagsOutlined
+  TagsOutlined,
+  UserAddOutlined,
+  PhoneOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import { searchOrgClientUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
+import { searchOrgClientUsers, deleteUser, setPasswordForUser, setUserTags, setUserTags$, searchOrgClientUsers$ } from 'services/userService';
 import { impersonate$ } from 'services/authService';
-import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import { TagSelect } from 'components/TagSelect';
@@ -22,6 +23,11 @@ import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskStatusTag } from 'components/TaskStatusTag';
+import { showSetTagsModal } from 'components/showSetTagsModal';
+import { finalize } from 'rxjs/operators';
+import { useLocalStorage, useClickAway } from 'react-use';
+import { InviteClientModal } from 'components/InviteClientModal';
+import { TimeAgo } from 'components/TimeAgo';
 
 
 const { Text } = Typography;
@@ -46,26 +52,21 @@ const ClientUserListPage = () => {
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState();
+  const [inviteUserModalVisible, setInviteUserModalVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
+  const [queryInfo, setQueryInfo] = useLocalStorage(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
 
-  const handleTagChange = async (user, tags) => {
-    await setUserTags(user.id, tags);
+  const handleTagChange = (user, tags) => {
+    setUserTags$(user.id, tags).subscribe()
   }
 
-
-
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      await searchByQueryInfo(queryInfo)
-    } catch {
-      setLoading(false);
-    }
+  const loadList$ = () => {
+    return searchByQueryInfo$(queryInfo)
   }
 
   React.useEffect(() => {
-    loadList();
+    const sub = loadList$();
+    return () => sub.unsubscribe();
   }, []);
 
   const handleSearchTextChange = text => {
@@ -75,7 +76,7 @@ const ClientUserListPage = () => {
     }));
   }
 
-  const handleSearch = async (value) => {
+  const handleSearch = (value) => {
     const text = value?.trim();
 
     const newQueryInfo = {
@@ -83,42 +84,49 @@ const ClientUserListPage = () => {
       text
     }
 
-    await searchByQueryInfo(newQueryInfo);
+    searchByQueryInfo$(newQueryInfo);
   }
 
-  const searchByQueryInfo = async (queryInfo) => {
-    try {
-      setLoading(true);
-      const resp = await searchOrgClientUsers(queryInfo);
+  const searchByQueryInfo$ = (queryInfo) => {
+    setLoading(true);
+    return searchOrgClientUsers$(queryInfo).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(resp => {
       const { count, page, data } = resp;
-      ReactDOM.unstable_batchedUpdates(() => {
-        setTotal(count);
-        setList(data);
-        setQueryInfo({ ...queryInfo, page });
-        setLoading(false);
-      });
-      reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    } catch {
-      setLoading(false);
-    }
+      setTotal(count);
+      setList(data);
+      setQueryInfo({ ...queryInfo, page });
+    })
+
   }
 
-
-
-
-  const openProfileModal = async (user) => {
+  const openProfileModal = (user) => {
     setProfileModalVisible(true);
     setCurrentUser(user);
   }
 
 
   const handleTagFilterChange = (tags) => {
-    searchByQueryInfo({ ...queryInfo, page: 1, tags });
+    searchByQueryInfo$({ ...queryInfo, page: 1, tags });
   }
 
 
   const handlePaginationChange = (page, pageSize) => {
-    searchByQueryInfo({ ...queryInfo, page, size: pageSize });
+    searchByQueryInfo$({ ...queryInfo, page, size: pageSize });
+  }
+
+  const handleTagsChange = user => {
+    showSetTagsModal(user.tags, (tagIds, onClose) => {
+      setUserTags$(user.id, tagIds).pipe(
+        finalize(() => onClose())
+      ).subscribe(() => {
+        loadList$();
+      });
+    })
+  }
+
+  const handleInviteClient = () => {
+
   }
 
   const columnDef = [
@@ -144,7 +152,14 @@ const ClientUserListPage = () => {
     {
       title: <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />,
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} readonly={true} />
+      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} inPlaceEdit={true} />
+    },
+    {
+      title: "Invited",
+      dataIndex: 'invitedAt',
+      align: 'center',
+      width: 110,
+      render: (value) => <TimeAgo value={value} showTime={false} accurate={false}/>
     },
     {
       title: <TaskStatusTag status="todo" />,
@@ -195,14 +210,19 @@ const ClientUserListPage = () => {
                 onClick: () => openProfileModal(user)
               },
               {
-                menu: `Tasks of client`,
+                icon: <PhoneOutlined />,
+                menu: `Client contact`,
                 onClick: () => openProfileModal(user)
               },
               {
-                icon: <TagsOutlined />,
-                menu: 'Tags',
+                menu: `Tasks of client`,
                 onClick: () => openProfileModal(user)
               },
+              // {
+              //   icon: <TagsOutlined />,
+              //   menu: 'Tags',
+              //   onClick: () => handleTagsChange(user)
+              // },
             ]}
           />
         )
@@ -215,6 +235,10 @@ const ClientUserListPage = () => {
       <PageHeader
         backIcon={false}
         title={"Clients"}
+        extra={[
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}>Refresh</Button>,
+          <Button key="invite" icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
+        ]}
       >
         <Table columns={columnDef}
           dataSource={list}
@@ -237,7 +261,7 @@ const ClientUserListPage = () => {
             disabled: loading,
             onChange: handlePaginationChange,
             onShowSizeChange: (page, size) => {
-              searchByQueryInfo({ ...queryInfo, page, size });
+              searchByQueryInfo$({ ...queryInfo, page, size });
             }
           }}
         />
@@ -256,6 +280,12 @@ const ClientUserListPage = () => {
 
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
+      <InviteClientModal visible={inviteUserModalVisible}
+        onOk={() => {
+          setInviteUserModalVisible(false);
+          loadList$();
+        }}
+        onCancel={() => setInviteUserModalVisible(false)} />
     </ContainerStyled>
 
   );

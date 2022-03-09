@@ -25,9 +25,9 @@ export const UserNameCard = React.memo((props) => {
     let ret = '';
     if (data) {
       if (data.givenName) {
-        ret += data.givenName[0];
+        ret += data.givenName[0].toUpperCase();
         if (data.surname) {
-          ret += data.surname[0];
+          ret += data.surname[0].toUpperCase();
         }
       }
     }

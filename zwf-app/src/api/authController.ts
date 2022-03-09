@@ -1,3 +1,4 @@
+import { OrgClient } from './../entity/OrgClient';
 
 import { getRepository, getConnection, getManager } from 'typeorm';
 import { User } from '../entity/User';
@@ -23,6 +24,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSendingEmail';
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
+import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -255,6 +257,23 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
     await inviteOrgMemberWithSendingEmail(m, user, profile);
   })
+
+  res.json();
+});
+
+export const inviteClientToOrg = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { email } = req.body;
+  const orgId = getOrgIdFromReq(req);
+
+  await getManager().transaction(async m => {
+    const user = await ensureClientOrGuestUser(m, email);
+    const orgClient = new OrgClient();
+    orgClient.orgId = orgId;
+    orgClient.userId = user.id;
+
+    await m.save(orgClient);
+  });
 
   res.json();
 });
