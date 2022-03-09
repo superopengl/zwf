@@ -1,22 +1,33 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { map } from 'rxjs/operators';
+import { map, debounceTime, debounce, switchMap } from 'rxjs/operators';
 import { searchOrgClientUsers$ } from 'services/userService';
 import { UserSelect } from './UserSelect';
+import { BehaviorSubject, Subject, timer } from 'rxjs';
 
 export const ClientSelect = React.memo((props) => {
   const { value, valueProp, onChange, allowInput } = props;
   const [dataSource, setDataSource] = React.useState([]);
+  const source$ = React.useRef(new BehaviorSubject(''));
 
   React.useEffect(() => {
-    const sub$ = searchOrgClientUsers$().pipe(
-      map(resp => resp.data)
+    let firstLoad = true;
+
+    const sub$ = source$.current.pipe(
+      debounce(() => {
+        const span = firstLoad ? 0 : 500;
+        firstLoad = false;
+        return timer(span);
+      }),
+      switchMap((text) => searchOrgClientUsers$({ size: 2, text })),
+      map(resp => resp.data),
     ).subscribe(setDataSource);
+
     return () => sub$.unsubscribe();
   }, [])
 
   const handleTextChange = text => {
-    debugger;
+    source$.current.next(text);
   }
 
   return <UserSelect
