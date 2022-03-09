@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { map } from 'rxjs/operators';
-import { listOrgExistingClients$ } from 'services/orgService';
+import { searchOrgClientUsers$ } from 'services/userService';
 import { UserSelect } from './UserSelect';
 
 export const ClientSelect = React.memo((props) => {
@@ -9,11 +9,15 @@ export const ClientSelect = React.memo((props) => {
   const [dataSource, setDataSource] = React.useState([]);
 
   React.useEffect(() => {
-    const sub$ = listOrgExistingClients$().pipe(
+    const sub$ = searchOrgClientUsers$().pipe(
       map(resp => resp.data)
     ).subscribe(setDataSource);
     return () => sub$.unsubscribe();
   }, [])
+
+  const handleTextChange = text => {
+    debugger;
+  }
 
   return <UserSelect
     value={value}
@@ -21,6 +25,7 @@ export const ClientSelect = React.memo((props) => {
     allowInput={allowInput}
     valueProp={valueProp}
     onChange={onChange}
+    onTextChange={handleTextChange}
     placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
   />
 });

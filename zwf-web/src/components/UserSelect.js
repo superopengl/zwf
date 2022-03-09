@@ -2,7 +2,6 @@ import { Select, Typography, Button, Space } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { UserDisplayName } from 'components/UserDisplayName';
 import isEmail from 'validator/lib/isEmail';
 import { UserAvatar } from './UserAvatar';
 import { UserNameCard } from './UserNameCard';
@@ -30,7 +29,7 @@ width: 100%;
 `;
 
 export const UserSelect = React.memo((props) => {
-  const { value, valueProp, placeholder, onChange, allowInput, dataSource, bordered, ...other } = props;
+  const { value, valueProp, placeholder, onChange, onTextChange, allowInput, dataSource, bordered, ...other } = props;
 
   const [userList, setUserList] = React.useState(dataSource);
   const [searchText, setSearchText] = React.useState();
@@ -43,10 +42,11 @@ export const UserSelect = React.memo((props) => {
 
   React.useEffect(() => {
     setIsValidEmail(searchText && isEmail(searchText));
+    onTextChange(searchText);
   }, [searchText])
 
   const handleChange = value => {
-    // onChange(value);
+    // onTextChange(value);
   }
 
   const handleSelect = (value) => {
@@ -104,6 +104,7 @@ UserSelect.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
   onChange: PropTypes.func,
+  onTextChange: PropTypes.func,
   valueProp: PropTypes.oneOf(['id', 'email']),
   allowInput: PropTypes.bool,
   bordered: PropTypes.bool,
@@ -115,5 +116,6 @@ UserSelect.defaultProps = {
   loading: false,
   allowInput: true,
   bordered: true,
+  onTextChange: (text) => {}
 };
 

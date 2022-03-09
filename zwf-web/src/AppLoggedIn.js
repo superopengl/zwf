@@ -35,7 +35,7 @@ const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSetting
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
-const ClientUserListPage = loadable(() => import('pages/User/ClientUserListPage'));
+const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
 const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
@@ -286,7 +286,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/new" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/:id" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/scheduler" component={RecurringListPage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/client" component={ClientUserListPage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/client" component={OrgClientListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isAdmin} exact path="/team" component={OrgMemberListPage} />

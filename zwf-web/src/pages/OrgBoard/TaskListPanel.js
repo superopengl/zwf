@@ -10,8 +10,6 @@ import { assignTask$, changeTaskStatus$, } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import DropdownMenu from 'components/DropdownMenu';
-import { UserDisplayName } from 'components/UserDisplayName';
-import { UserAvatar } from 'components/UserAvatar';
 import { notify } from 'util/notify';
 import { TagSelect } from 'components/TagSelect';
 import PropTypes from 'prop-types';

@@ -5,8 +5,6 @@ import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entit
 import { EnterOutlined, SearchOutlined } from '@ant-design/icons';
 import Tag from './Tag';
 import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
-import { UserDisplayName } from 'components/UserDisplayName';
-import { UserAvatar } from './UserAvatar';
 import Hotkeys from 'react-hot-keys';
 import { UserNameCard } from './UserNameCard';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Drawer, PageHeader } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Drawer, PageHeader, Descriptions, List } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -13,7 +13,7 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import { searchOrgClientUsers, deleteUser, setPasswordForUser, setUserTags, setUserTags$, searchOrgClientUsers$ } from 'services/userService';
+import { deleteUser, setPasswordForUser, setUserTags, setUserTags$, searchOrgClientUsers$ } from 'services/userService';
 import { impersonate$ } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
@@ -28,6 +28,7 @@ import { finalize } from 'rxjs/operators';
 import { useLocalStorage, useClickAway } from 'react-use';
 import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
+import { UserAvatar } from 'components/UserAvatar';
 
 
 const { Text } = Typography;
@@ -46,7 +47,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_KEY = 'user_query';
 
-const ClientUserListPage = () => {
+const OrgClientListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
@@ -100,10 +101,16 @@ const ClientUserListPage = () => {
 
   }
 
-  const openProfileModal = (user) => {
+  const openClientContact = (user) => {
     setProfileModalVisible(true);
     setCurrentUser(user);
   }
+
+  const createTaskForUser = (user) => {
+    setProfileModalVisible(true);
+  }
+
+  
 
 
   const handleTagFilterChange = (tags) => {
@@ -160,7 +167,7 @@ const ClientUserListPage = () => {
       dataIndex: 'invitedAt',
       align: 'center',
       width: 110,
-      render: (value) => <TimeAgo value={value} showTime={false} accurate={false}/>
+      render: (value) => <TimeAgo value={value} showTime={false} accurate={false} />
     },
     {
       title: <TaskStatusTag status="todo" />,
@@ -208,16 +215,16 @@ const ClientUserListPage = () => {
               {
                 icon: <PlusOutlined />,
                 menu: `Create task for this client`,
-                onClick: () => openProfileModal(user)
+                onClick: () => createTaskForUser(user)
               },
               {
                 icon: <PhoneOutlined />,
                 menu: `Client contact`,
-                onClick: () => openProfileModal(user)
+                onClick: () => openClientContact(user)
               },
               {
                 menu: `Tasks of client`,
-                onClick: () => openProfileModal(user)
+                onClick: () => {}
               },
               // {
               //   icon: <TagsOutlined />,
@@ -270,7 +277,7 @@ const ClientUserListPage = () => {
         visible={profileModalVisible}
         destroyOnClose={true}
         maskClosable={true}
-        title="Update Profile"
+        title="Client Contact"
         onClose={() => setProfileModalVisible(false)}
         footer={null}
         width={400}
@@ -278,7 +285,15 @@ const ClientUserListPage = () => {
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
-        {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
+        {currentUser && <Space style={{width: '100%', alignItems: 'center'}} direction="vertical" size="large">
+          <UserAvatar size={120} editable={false} userId={currentUser.id} givenName={currentUser.givenName} surname={currentUser.surname} />
+          <Descriptions column={1} bordered={true}>
+            <Descriptions.Item label="Email">{currentUser.email}</Descriptions.Item>
+            <Descriptions.Item label="Given Name">{currentUser.givenName}</Descriptions.Item>
+            <Descriptions.Item label="Surname">{currentUser.surname}</Descriptions.Item>
+            <Descriptions.Item label="Phone">{currentUser.phone}</Descriptions.Item>
+          </Descriptions>
+        </Space>}
       </Drawer>
       <InviteClientModal visible={inviteUserModalVisible}
         onOk={() => {
@@ -291,8 +306,8 @@ const ClientUserListPage = () => {
   );
 };
 
-ClientUserListPage.propTypes = {};
+OrgClientListPage.propTypes = {};
 
-ClientUserListPage.defaultProps = {};
+OrgClientListPage.defaultProps = {};
 
-export default withRouter(ClientUserListPage);
+export default withRouter(OrgClientListPage);

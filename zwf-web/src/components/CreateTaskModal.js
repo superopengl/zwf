@@ -8,7 +8,7 @@ import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 export const CreateTaskModal = withRouter(React.memo(props => {
-  const { visible, onOk, onCancel, taskTemplateId } = props;
+  const { visible, onOk, onCancel, taskTemplateId, userId } = props;
   return <Modal
     visible={visible}
     title={<><TaskIcon /> Create New Task</>}
@@ -29,6 +29,7 @@ export const CreateTaskModal = withRouter(React.memo(props => {
   >
     <TaskGenerator
       taskTemplateId={taskTemplateId}
+      userId={userId}
       onCancel={onCancel}
       onCreated={(task) => {
         onOk(task);
@@ -39,6 +40,7 @@ export const CreateTaskModal = withRouter(React.memo(props => {
 
 TaskGenerator.propTypes = {
   taskTemplateId: PropTypes.string,
+  userId: PropTypes.string,
   visible: PropTypes.bool.isRequired,
   onCancel: PropTypes.func,
   onOk: PropTypes.func,
