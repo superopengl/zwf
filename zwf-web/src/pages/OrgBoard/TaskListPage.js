@@ -12,6 +12,7 @@ import { TaskListPanel } from './TaskListPanel';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { TaskSearchDrawer } from './TaskSearchPanel';
+import { useLocalStorage } from 'react-use';
 
 const { Link: TextLink } = Typography;
 
@@ -22,7 +23,9 @@ const LayoutStyled = styled(Space)`
   width: 100%;
 `;
 
-const DEFAULT_QUERY_INFO = {
+const TASK_QUERY_KEY = 'tasks.filter';
+
+const DEFAULT_QUERY = {
   text: '',
   page: 1,
   size: 200,
@@ -32,11 +35,14 @@ const DEFAULT_QUERY_INFO = {
   orderDirection: 'DESC'
 };
 
+const TASK_BOARD_VIEW_WARNING = 'task.boardView.closed';
+
 const TaskListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
   const [viewMode, setViewMode] = React.useState('board');
-  const [queryInfo, setQueryInfo] = React.useState(DEFAULT_QUERY_INFO)
+  const [queryInfo, setQueryInfo] = useLocalStorage(TASK_QUERY_KEY, DEFAULT_QUERY);
+  const [messageClosed, setMessageClosed] = useLocalStorage(TASK_BOARD_VIEW_WARNING, false);
   const [filterVisible, setFilterVisible] = React.useState(false);
   const [message, setMessage] = React.useState();
 
@@ -46,14 +52,12 @@ const TaskListPage = () => {
   }, []);
 
   React.useEffect(() => {
-    reactLocalStorage.setObject('query', queryInfo);
-
-    if (queryInfo.status?.includes('archived') && viewMode === 'board') {
-      setMessage(<>The current filter contains status "Archived". Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see archived tasks.</>);
+    if(viewMode === 'board') {
+      setMessage(<>Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see all tasks including archived ones.</>);
     } else {
       setMessage(null);
     }
-  }, [queryInfo]);
+  }, [viewMode]);
 
   const handleSwitchToListView = () => {
     setViewMode('list');
@@ -124,7 +128,7 @@ const TaskListPage = () => {
       ]}
     >
       <LayoutStyled direction="vertical" size="large">
-        {message && <Alert type="warning" showIcon closable message={message} />}
+        {!messageClosed && message && <Alert type="info" showIcon closable description={message} onClose={() => setMessageClosed(true)}/>}
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
