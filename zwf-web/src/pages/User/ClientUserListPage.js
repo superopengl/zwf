@@ -141,6 +141,7 @@ const ClientUserListPage = () => {
         value={queryInfo?.text}
         allowClear
       />,
+      // width: 400,
       fixed: 'left',
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
@@ -246,7 +247,6 @@ const ClientUserListPage = () => {
           scroll={{
             x: 'max-content'
           }}
-          // scroll={{x: 1000}}
           rowKey="id"
           loading={loading}
           style={{ marginTop: 20 }}

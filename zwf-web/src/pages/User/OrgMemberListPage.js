@@ -261,7 +261,6 @@ const OrgMemberListPage = () => {
           scroll={{
             x: 'max-content'
           }}
-          // scroll={{x: 1000}}
           rowKey="id"
           loading={loading}
           style={{ marginTop: 20 }}

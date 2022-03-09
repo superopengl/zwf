@@ -231,29 +231,31 @@ const RecurringListPage = (props) => {
 
   return (
     <LayoutStyled>
-      
-        <Space direction="vertical" style={{ width: '100%' }} size="large">
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Scheduler</Button>
-          </Space>
 
-          <Table columns={columnDef}
-            dataSource={list}
-            size="small"
-            // scroll={{x: 1000}}
-            rowKey="id"
-            loading={loading}
-            pagination={false}
-            // pagination={queryInfo}
-            // onChange={handleTableChange}
-            onRow={(record) => ({
-              onDoubleClick: () => {
-                setCurrentId(record.id);
-                setFormVisible(true);
-              }
-            })}
-          />
+      <Space direction="vertical" style={{ width: '100%' }} size="large">
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Scheduler</Button>
         </Space>
+
+        <Table columns={columnDef}
+          dataSource={list}
+          size="small"
+          scroll={{
+            x: 'max-content'
+          }}
+          rowKey="id"
+          loading={loading}
+          pagination={false}
+          // pagination={queryInfo}
+          // onChange={handleTableChange}
+          onRow={(record) => ({
+            onDoubleClick: () => {
+              setCurrentId(record.id);
+              setFormVisible(true);
+            }
+          })}
+        />
+      </Space>
 
       <StyledDrawer
         title={currentId ? 'Edit Recurring' : 'New Recurring'}
