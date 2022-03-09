@@ -57,7 +57,7 @@ export class TaskDoc {
   @Column({ nullable: true })
   taskId: string;
 
-  @ManyToOne(() => Task, task => task.docs)
+  @ManyToOne(() => Task, task => task.docs, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
   task: Task;
 
