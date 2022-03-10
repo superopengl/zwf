@@ -172,7 +172,7 @@ export const TaskAttachmentPanel = (props) => {
         renderItem={item => item.isAddButton ? <AddNewTaskDocItem key="new-file" /> :
           item.isAddDocTemplateButton ? <AddFromDocTemplateItem key="new-doc-template" onClick={() => setDocTemplateModalVisible(true)} /> :
             <TaskDocItem
-              key={item.id}
+              // key={item.id}
               taskDoc={item}
               showCreatedAt={true}
               varBag={varBag}
