@@ -12,7 +12,7 @@ import { TaskListPanel } from './TaskListPanel';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { TaskSearchDrawer } from './TaskSearchDrawer';
-import { useLocalStorage } from 'react-use';
+import { useLocalStorage } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 
 const { Link: TextLink } = Typography;
