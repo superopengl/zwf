@@ -12,7 +12,7 @@ import { TaskListPanel } from './TaskListPanel';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { TaskSearchDrawer } from './TaskSearchDrawer';
-import { useLocalStorage } from 'rooks';
+import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 
 const { Link: TextLink } = Typography;
@@ -42,8 +42,8 @@ const TaskListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
   const [viewMode, setViewMode] = React.useState('board');
-  const [queryInfo, setQueryInfo] = useLocalStorage(TASK_QUERY_KEY, DEFAULT_QUERY);
-  const [messageClosed, setMessageClosed] = useLocalStorage(TASK_BOARD_VIEW_WARNING, false);
+  const [queryInfo, setQueryInfo] = useLocalstorageState(TASK_QUERY_KEY, DEFAULT_QUERY);
+  const [messageClosed, setMessageClosed] = useLocalstorageState(TASK_BOARD_VIEW_WARNING, false);
   const [filterVisible, setFilterVisible] = React.useState(false);
   const [message, setMessage] = React.useState();
 

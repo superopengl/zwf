@@ -12,7 +12,7 @@ import { TaskClientCard } from 'components/TaskClientCard';
 import DropdownMenu from 'components/DropdownMenu';
 import { orderBy, uniq } from 'lodash';
 import { GrAscend, GrDescend } from 'react-icons/gr';
-import { useLocalStorage } from 'rooks';
+import { useLocalstorageState } from 'rooks';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import Icon from '@ant-design/icons';
 
@@ -86,7 +86,7 @@ export const ClientTaskListPage = withRouter(() => {
   const [allList, setAllList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
-  const [query, setQuery] = useLocalStorage(CLIENT_TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
+  const [query, setQuery] = useLocalstorageState(CLIENT_TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
   const screens = useBreakpoint();
 
   const load$ = () => {
