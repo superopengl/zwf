@@ -1,38 +1,28 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { map, debounceTime, debounce, switchMap, tap } from 'rxjs/operators';
 import { searchOrgClientUsers$ } from 'services/userService';
 import { UserSelect } from './UserSelect';
-import { BehaviorSubject, Subject, timer } from 'rxjs';
+import { useDebounce } from "rooks";
 
 export const ClientSelect = React.memo((props) => {
   const { value, valueProp, onChange, allowInput } = props;
   const [dataSource, setDataSource] = React.useState([]);
-  const source$ = React.useRef(new BehaviorSubject());
 
   React.useEffect(() => {
-    source$.current.next(value);
-  }, [value])
-
-  React.useEffect(() => {
-    let firstLoad = true;
-
-    const sub$ = source$.current.pipe(
-      debounce(() => {
-        const span = firstLoad ? 0 : 500;
-        firstLoad = false;
-        return timer(span);
-      }),
-      switchMap((text) => searchOrgClientUsers$({ text })),
-      map(resp => resp.data),
-    ).subscribe(setDataSource);
-
-    return () => sub$.unsubscribe();
+    load$();
   }, [])
 
-  const handleTextChange = text => {
-    source$.current.next(text);
+  const load$ = (text) => {
+    searchOrgClientUsers$({ text }).subscribe(resp => {
+      setDataSource(resp.data)
+    })
   }
+
+  const handleTextChange = useDebounce(text => {
+    if(valueProp === 'email') {
+      load$(text);
+    }
+  }, 500);
 
   return <UserSelect
     value={value}
