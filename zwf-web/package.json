@@ -62,6 +62,7 @@
     "react-to-print": "^2.12.3",
     "react-use": "^17.3.2",
     "reactjs-localstorage": "^1.0.1",
+    "rooks": "^5.10.2",
     "rxjs": "^6.6.3",
     "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.2.1",

@@ -68,6 +68,7 @@ specifiers:
   react-to-print: ^2.12.3
   react-use: ^17.3.2
   reactjs-localstorage: ^1.0.1
+  rooks: ^5.10.2
   rxjs: ^6.6.3
   serve: ^12.0.0
   smoothscroll-polyfill: ^0.4.4
@@ -154,6 +155,7 @@ dependencies:
   react-to-print: 2.14.4_react-dom@17.0.2+react@17.0.2
   react-use: 17.3.2_react-dom@17.0.2+react@17.0.2
   reactjs-localstorage: 1.0.1
+  rooks: 5.10.2_react-dom@17.0.2+react@17.0.2
   rxjs: 6.6.7
   smoothscroll-polyfill: 0.4.4
   styled-components: 5.3.3_281a4fa50a045c9112baf635f3bc27a7
@@ -12425,6 +12427,19 @@ packages:
     hasBin: true
     optionalDependencies:
       fsevents: 2.3.2
+
+  /rooks/5.10.2_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-xn3xVUiMk6nOfLdZmHEbTHzPJy40mXyJUGSmhiagUZGzxLHVKG0uimnuprAIFRmCZPLrDH6EUdoZx6MomcGa+g==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: ^16.8.0  || ^17.0.0
+      react-dom: ^16.8.0  || ^17.0.0
+    dependencies:
+      lodash.debounce: 4.0.8
+      raf: 3.4.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+    dev: false
 
   /rtl-css-js/1.15.0:
     resolution: {integrity: sha512-99Cu4wNNIhrI10xxUaABHsdDqzalrSRTie4GeCmbGVuehm4oj+fIy8fTzB+16pmKe8Bv9rl+hxIBez6KxExTew==}
