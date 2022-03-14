@@ -1,4 +1,4 @@
-FROM node:16-slim
+FROM node:14-slim
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
@@ -68,8 +68,9 @@ ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
 ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
-ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=561759632332-dqs7s6u1dqma6kqh32paq192d7qocg9k.apps.googleusercontent.com
-ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51Hp56jEBt7ChgqJqBRoTJ8V2IPcwYDAMdJhp9XbNTPDHoyOhpOt3HBPIv8iV39mHoUMUQ9NN7gKxZIVDVzJhGWWx00MK1EEkKD
+ENV REACT_APP_ZWF_API_DOMAIN_NAME=https://zeeworkflow.com
+ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
+ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
 # Build app
 COPY ./zwf-app /usr/portal/app
