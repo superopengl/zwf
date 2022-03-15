@@ -19,7 +19,7 @@ export class CreateAdminUser1596415746494 implements MigrationInterface {
         const userMetadata = getRepository(User).metadata;
         await queryRunner.query(`INSERT INTO "${userMetadata.schema}"."${userMetadata.tableName}" ("emailHash", secret, salt, role, "profileId", "orgId")
         VALUES (
-        '16b11ebf-5c3d-5ebf-b303-783cfb33a119',
+        '479475cc-9183-567e-9534-2c71245cb9f6',
         'bf1d03be616a88a42b0af835f5f0bf69f51d879534e1b33af91765fd6a935cd3',
         '00000000-f200-485b-ad4f-90b530bdd4a4',
         'system',
