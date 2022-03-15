@@ -30,7 +30,7 @@ const LogInPage = props => {
     <LayoutStyled>
       <ContainerStyled>
         <LogoContainer><Logo /></LogoContainer>
-        <Title level={3}>Log In</Title>
+        <Title level={3}>Login</Title>
         <LogInPanel />
         <Form.Item>
             <Link to="/forgot_password">
