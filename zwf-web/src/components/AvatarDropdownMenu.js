@@ -54,16 +54,20 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
     return null;
   }
 
+  const goToHomePage = () => {
+    window.location = process.env.REACT_APP_ZWF_HOME_SITE_URL || '/';
+  }
+
   const handleLogout = () => {
     logout$().subscribe(() => {
       // reactLocalStorage.clear();
       setUser(null);
-      props.history.push('/');
+      goToHomePage();
     });
   };
 
   const handleGoHome = () => {
-    props.history.push('/home');
+    goToHomePage();
   };
 
   const isSystem = role === 'system';
