@@ -2,7 +2,7 @@ import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import {HighlightingText} from './HighlightingText';
-import { getUserDisplayName } from '../util/getDisplayName';
+import { getUserDisplayName } from '../util/getUserDisplayName';
 
 const { Text } = Typography;
 

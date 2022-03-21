@@ -3,7 +3,7 @@ import { Space, Skeleton, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { getUserNameCardInfo$ } from 'services/userService';
-import { getUserDisplayName } from 'util/getDisplayName';
+import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 
