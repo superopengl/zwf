@@ -23,10 +23,12 @@ export const AdminReplyContactDrawer = React.memo((props) => {
       setLoading(false)
       return;
     }
-    const sub$ = load$();
+    if (visible) {
+      const sub$ = load$();
+      return () => sub$.unsubscribe()
+    }
 
-    return () => sub$.unsubscribe()
-  }, [userId]);
+  }, [userId, visible]);
 
   React.useEffect(() => {
     const sub$ = eventSource.pipe(
@@ -64,7 +66,7 @@ export const AdminReplyContactDrawer = React.memo((props) => {
     autoFocus
     maskClosable
     width={500}
-    extra={<Button icon={<SyncOutlined />} onClick={handleReload} />}
+    extra={<Button type="link" icon={<SyncOutlined />} onClick={handleReload} />}
     bodyStyle={{ padding: 0, height: 'calc(100vh - 55px)' }}
     footerStyle={{ padding: 0 }}
     footer={<ContactMessageInput loading={loading} onSubmit={handleSubmitMessage} />}
