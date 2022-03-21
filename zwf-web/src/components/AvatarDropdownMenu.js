@@ -10,7 +10,6 @@ import { logout$ } from 'services/authService';
 import { Dropdown, Menu, Modal, Layout, Button } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
-import ContactForm from 'components/ContactForm';
 import AboutModal from 'pages/About/AboutModal';
 import { Switch } from 'react-router-dom';
 import loadable from '@loadable/component'
@@ -42,7 +41,6 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
 
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
-  const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [tcVisible, setTcVisible] = React.useState(false);
   const [ppVisible, setPpVisible] = React.useState(false);
@@ -126,17 +124,6 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />
-    <Modal
-      title="Contact Us"
-      visible={contactVisible}
-      onOk={() => setContactVisible(false)}
-      onCancel={() => setContactVisible(false)}
-      footer={null}
-      destroyOnClose={true}
-      maskClosable={false}
-    >
-      <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
-    </Modal>
     <AboutModal
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}

@@ -5,7 +5,6 @@ import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
-import { ContactWidget } from 'components/ContactWidget';
 import { Subject } from 'rxjs';
 import { ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
@@ -126,7 +125,6 @@ export const App = React.memo(() => {
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>
           </BrowserRouter>
-          {/* {isGuest && <ContactWidget />} */}
         </IntlProvider>
       </ConfigProvider>
     </GlobalContext.Provider>

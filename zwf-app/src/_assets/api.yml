@@ -12,13 +12,39 @@ definitions:
     type: "object"
 paths:
   /contact:
+    get:
+      operationId: listContact
+      responses:
+        200:
+          description: OK    
     post:
       operationId: saveContact
-      # security:
-      #   - authLoggedInUser: []
       responses:
         200:
           description: OK
+  /contact/sse:
+    get:
+      operationId: subscribeContact
+      responses:
+        200:
+          description: OK      
+  /contact/{userId}:
+    get:
+      operationId: listUserContact
+      parameters:
+        - name: userId
+          in: path
+          type: string
+          format: uuid
+          required: true          
+      responses:
+        200:
+          description: OK    
+    post:
+      operationId: saveContact
+      responses:
+        200:
+          description: OK                    
   /file/download/task/{taskId}/file/{fileId}:
     get:
       operationId: downloadFile

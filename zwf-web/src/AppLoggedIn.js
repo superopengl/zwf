@@ -11,7 +11,6 @@ import { Link } from 'react-router-dom';
 import { Space, Typography, Modal, Row, Col } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
-import ContactForm from 'components/ContactForm';
 import AboutModal from 'pages/About/AboutModal';
 import { Switch } from 'react-router-dom';
 import { BiDollar } from 'react-icons/bi';
@@ -30,6 +29,7 @@ import { CreateNewButton } from 'components/CreateNewButton';
 import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { ContactAffix } from 'components/ContactAffix';
+import { MdMessage } from 'react-icons/md';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -37,6 +37,7 @@ const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
+const ContactListPage = loadable(() => import('pages/Org/ContactListPage'));
 const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
@@ -47,7 +48,7 @@ const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateP
 const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
-const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
+const ClientTaskPage = loadable(() => import('pages/Contact/ClientTaskPage'));
 const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
 const { Link: LinkText } = Typography;
 
@@ -126,6 +127,12 @@ const ROUTES = [
     roles: ['system']
   },
   {
+    path: '/contact',
+    name: 'Contact',
+    icon: <Icon component={() => <MdMessage />} />,
+    roles: ['system']
+  },
+  {
     path: '/client',
     name: <FormattedMessage id="menu.client" />,
     icon: <TeamOutlined />,
@@ -182,7 +189,6 @@ export const AppLoggedIn = React.memo(props => {
   const context = React.useContext(GlobalContext);
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
-  const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
@@ -269,7 +275,6 @@ export const AppLoggedIn = React.memo(props => {
       props?.collapsed ?
         <QuestionOutlined style={{ color: 'rgba(255,255,255,0.95' }} onClick={() => setCollapsed(!collapsed)} /> :
         <Space direction="vertical" style={{ width: 188 }}>
-          <LinkText onClick={() => setContactVisible(true)}>Contact Us</LinkText>
           <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
           <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
           <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
@@ -294,6 +299,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
+      <RoleRoute visible={isSystem} exact path="/contact" component={ContactListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
     </Switch>
 
@@ -307,17 +313,6 @@ export const AppLoggedIn = React.memo(props => {
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />
-    <Modal
-      title="Contact Us"
-      visible={contactVisible}
-      onOk={() => setContactVisible(false)}
-      onCancel={() => setContactVisible(false)}
-      footer={null}
-      destroyOnClose={true}
-      maskClosable={false}
-    >
-      <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
-    </Modal>
     <Modal
       title="Organization Profile"
       visible={orgProfileVisible}
@@ -333,7 +328,7 @@ export const AppLoggedIn = React.memo(props => {
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />
-    <ContactAffix />
+    {(isAdmin || isAgent) && <ContactAffix />}
   </StyledLayout>
 })
 

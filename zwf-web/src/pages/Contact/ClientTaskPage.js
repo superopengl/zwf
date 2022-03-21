@@ -77,7 +77,6 @@ const ClientTaskPage = (props) => {
             <Card 
             bordered={false}
             title="Interactions & Messages"
-            size="small"
             size="large" 
             bodyStyle={{height: 'calc(100vh - 420px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px'}}
             actions={[
