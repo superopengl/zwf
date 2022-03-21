@@ -16,7 +16,7 @@ import { SyncOutlined } from '@ant-design/icons';
 export const AdminReplyContactDrawer = React.memo((props) => {
   const { title, userId, visible, onClose, eventSource } = props;
   const [loading, setLoading] = React.useState(true);
-  const [chatDataSource, setChatDataSource] = React.useState([]);
+  const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
     if (!userId) {
@@ -29,20 +29,22 @@ export const AdminReplyContactDrawer = React.memo((props) => {
   }, [userId]);
 
   React.useEffect(() => {
-    eventSource.pipe(
+    const sub$ = eventSource.pipe(
       filter(e => e.userId === userId)
     ).subscribe(event => {
-      setChatDataSource(list => {
+      setList(list => {
         return [...(list ?? []), event]
       });
     });
+
+    return () => sub$.unsubscribe()
   }, []);
 
   const load$ = () => {
     setLoading(true)
     return listUserContact$(userId).pipe(
       finalize(() => setLoading(false))
-    ).subscribe(setChatDataSource)
+    ).subscribe(setList)
   }
 
   const handleSubmitMessage = (message) => {
@@ -64,10 +66,10 @@ export const AdminReplyContactDrawer = React.memo((props) => {
     width={500}
     extra={<Button icon={<SyncOutlined />} onClick={handleReload} />}
     bodyStyle={{ padding: 0, height: 'calc(100vh - 55px)' }}
-    footerStyle={{padding: 0}}
+    footerStyle={{ padding: 0 }}
     footer={<ContactMessageInput loading={loading} onSubmit={handleSubmitMessage} />}
   >
-    <ContactMessageList dataSource={chatDataSource} loading={loading} />
+    <ContactMessageList dataSource={list} loading={loading} />
   </Drawer>
 });
 

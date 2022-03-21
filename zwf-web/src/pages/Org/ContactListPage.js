@@ -65,8 +65,8 @@ const ContactListPage = () => {
       fixed: 'left',
       render: (_, item) => <Space>
         <UserNameCard userId={item.userId} />
-        {!item.replied  && <Button type="text" danger icon={<Icon component={() => <MdMessage />} />}/>}
-        </Space>
+        {!item.replied && <Button type="text" danger icon={<Icon component={() => <MdMessage />} />} />}
+      </Space>
     },
     // {
     //   title: 'ID',
@@ -135,11 +135,18 @@ const ContactListPage = () => {
     const es = subscribeContactChange();
     es.onmessage = (e) => {
       const event = JSON.parse(e.data);
-      const item = list.find(x => x.userId === event.userId);
-      if(item) {
-        item.replied = false;
-      }
       eventSource$.current.next(event);
+      setList(list => {
+        const item = list.find(x => x.userId === event.userId);
+        if (item) {
+          const beforeValue = item.replied;
+          item.replied = event.by !== event.userId;
+          if(beforeValue !== item.replied) {
+            return [...list];
+          }
+        }
+        return list;
+      })
     }
 
     return () => {
