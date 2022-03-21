@@ -24,6 +24,11 @@ import { finalize } from 'rxjs/operators';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { ContactMessageList } from 'components/ContactMessageList';
 import { AdminReplyContactDrawer } from 'components/AdminReplyContactDrawer';
+import { Subject } from 'rxjs';
+import { getUserDisplayName } from 'util/getUserDisplayName';
+import { UserNameCard } from 'components/UserNameCard';
+import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
+import { MdMessage } from 'react-icons/md';
 
 
 const { Text, Paragraph } = Typography;
@@ -51,19 +56,17 @@ const ContactListPage = () => {
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
   const context = React.useContext(GlobalContext);
-  const eventSource = React.useRef();
+  const eventSource$ = React.useRef(new Subject());
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
   const columnDef = [
     {
       title: 'User',
       fixed: 'left',
-      render: (_, item) => <UserDisplayName
-        surname={item.surname}
-        givenName={item.givenName}
-        email={item.email}
-        showEmail={true}
-      />
+      render: (_, item) => <Space>
+        <UserNameCard userId={item.userId} />
+        {!item.replied  && <Button type="text" danger icon={<Icon component={() => <MdMessage />} />}/>}
+        </Space>
     },
     // {
     //   title: 'ID',
@@ -132,12 +135,16 @@ const ContactListPage = () => {
     const es = subscribeContactChange();
     es.onmessage = (e) => {
       const event = JSON.parse(e.data);
-
+      const item = list.find(x => x.userId === event.userId);
+      if(item) {
+        item.replied = false;
+      }
+      eventSource$.current.next(event);
     }
 
-    eventSource.current = es;
-
-    return () => es?.close()
+    return () => {
+      es?.close()
+    }
   }, []);
 
   const updateQueryInfo = (queryInfo) => {
@@ -271,10 +278,11 @@ const ContactListPage = () => {
         />
       </Space>
       <AdminReplyContactDrawer
+        title={currentUser ? <UserNameCard userId={currentUser.userId} /> : null}
         userId={currentUser?.userId}
         visible={chatVisible}
         onClose={() => setChatVisible(false)}
-
+        eventSource={eventSource$.current}
       />
     </ContainerStyled>
 

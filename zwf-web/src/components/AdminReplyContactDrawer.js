@@ -7,14 +7,14 @@ import { TaskTrackingPanel } from './TaskTrackingPanel';
 import { TaskMessageForm } from './TaskMessageForm';
 import { listMyContact$, listUserContact$, subscribeUserContactChange, sendContact$ } from 'services/contactService';
 import { ContactMessageList } from 'components/ContactMessageList';
-import { finalize } from 'rxjs/operators';
+import { filter, finalize } from 'rxjs/operators';
 import { ContactMessageInput } from './ContactMessageInput';
 import { SyncOutlined } from '@ant-design/icons';
 
 
 
 export const AdminReplyContactDrawer = React.memo((props) => {
-  const { userId, visible, onClose, eventSource } = props;
+  const { title, userId, visible, onClose, eventSource } = props;
   const [loading, setLoading] = React.useState(true);
   const [chatDataSource, setChatDataSource] = React.useState([]);
 
@@ -29,26 +29,14 @@ export const AdminReplyContactDrawer = React.memo((props) => {
   }, [userId]);
 
   React.useEffect(() => {
-    if (!userId) {
-      setLoading(false)
-      return;
-    }
-    const sub$ = load$();
-
-    const eventSource = subscribeUserContactChange(userId);
-    eventSource.onmessage = (e) => {
-      const event = JSON.parse(e.data);
+    eventSource.pipe(
+      filter(e => e.userId === userId)
+    ).subscribe(event => {
       setChatDataSource(list => {
         return [...(list ?? []), event]
       });
-    }
-
-    return () => {
-      sub$.unsubscribe();
-      eventSource?.close();
-    }
-
-  }, [userId]);
+    });
+  }, []);
 
   const load$ = () => {
     setLoading(true)
@@ -68,7 +56,7 @@ export const AdminReplyContactDrawer = React.memo((props) => {
   return <Drawer
     visible={visible}
     onClose={onClose}
-    title="Reply Contact"
+    title={title}
     destroyOnClose
     closable={false}
     autoFocus
@@ -76,6 +64,7 @@ export const AdminReplyContactDrawer = React.memo((props) => {
     width={500}
     extra={<Button icon={<SyncOutlined />} onClick={handleReload} />}
     bodyStyle={{ padding: 0, height: 'calc(100vh - 55px)' }}
+    footerStyle={{padding: 0}}
     footer={<ContactMessageInput loading={loading} onSubmit={handleSubmitMessage} />}
   >
     <ContactMessageList dataSource={chatDataSource} loading={loading} />
@@ -86,7 +75,7 @@ AdminReplyContactDrawer.propTypes = {
   userId: PropTypes.string,
   visible: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
-  eventSource: PropTypes.object,
+  eventSource: PropTypes.object.isRequired,
 };
 
 AdminReplyContactDrawer.defaultProps = {

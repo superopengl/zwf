@@ -87,7 +87,7 @@ export const ContactAffix = () => {
   }
 
   return <>
-    <Affix style={{ position: 'fixed', bottom: 30, right: 30 }}>
+    <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 3000 }}>
       <Space direction="vertical" style={{ alignItems: 'flex-end' }} size="large" >
         {visible &&
           <StyledCard
