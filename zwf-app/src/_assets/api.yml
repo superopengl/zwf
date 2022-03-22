@@ -11,26 +11,38 @@ definitions:
   PingResponse:
     type: "object"
 paths:
-  /contact:
+  /support:
     get:
-      operationId: listContact
+      operationId: getMySupport
       responses:
         200:
           description: OK    
     post:
-      operationId: saveContact
+      operationId: createSupportMessage
       responses:
         200:
           description: OK
-  /contact/sse:
-    get:
-      operationId: subscribeContact
+  /support/nudge:
+    post:
+      operationId: nudgeMyLastReadSupportMessage
       responses:
         200:
-          description: OK      
-  /contact/{userId}:
+          description: OK        
+  /support/list:
     get:
-      operationId: listUserContact
+      operationId: listAllSupport
+      responses:
+        200:
+          description: OK              
+  /support/sse:
+    get:
+      operationId: subscribeSupportMessage
+      responses:
+        200:
+          description: OK
+  /support/{userId}:
+    get:
+      operationId: getUserSupport
       parameters:
         - name: userId
           in: path
@@ -39,12 +51,19 @@ paths:
           required: true          
       responses:
         200:
-          description: OK    
+          description: OK      
+  /support/{userId}/nudge:
     post:
-      operationId: saveContact
+      operationId: nudgeUserLastReadBySupporter
+      parameters:
+        - name: userId
+          in: path
+          type: string
+          format: uuid
+          required: true          
       responses:
         200:
-          description: OK                    
+          description: OK                           
   /file/download/task/{taskId}/file/{fileId}:
     get:
       operationId: downloadFile

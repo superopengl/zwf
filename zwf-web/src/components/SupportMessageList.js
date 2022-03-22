@@ -58,7 +58,7 @@ const ChatMessage = React.memo(props => {
   </Space>
 });
 
-export const ContactMessageList = React.memo((props) => {
+export const SupportMessageList = React.memo((props) => {
   const { dataSource, loading } = props;
   return <ScrollToBottom className={containerCss} debug={false}>
       <StyledList
@@ -70,10 +70,10 @@ export const ContactMessageList = React.memo((props) => {
     </ScrollToBottom>
 });
 
-ContactMessageList.propTypes = {
+SupportMessageList.propTypes = {
   dataSource: PropTypes.array,
   loading: PropTypes.bool,
 };
 
-ContactMessageList.defaultProps = {
+SupportMessageList.defaultProps = {
 };

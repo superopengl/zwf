@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Tag, Drawer } from 'antd';
+import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -19,11 +19,11 @@ import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
 import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
-import { listMyContact$, listUserContact$, subscribeContactChange, sendContact$ } from 'services/contactService';
+import { getMySupport$, getUserSupport$, subscribeSupportMessage, sendContact$, listAllSupports$ } from 'services/supportService';
 import { finalize } from 'rxjs/operators';
 import { UserDisplayName } from 'components/UserDisplayName';
-import { ContactMessageList } from 'components/ContactMessageList';
-import { AdminReplyContactDrawer } from 'components/AdminReplyContactDrawer';
+import { SupportMessageList } from 'components/SupportMessageList';
+import { SupportReplyDrawer } from 'components/SupportReplyDrawer';
 import { Subject } from 'rxjs';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserNameCard } from 'components/UserNameCard';
@@ -31,7 +31,7 @@ import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, Use
 import { MdMessage } from 'react-icons/md';
 
 
-const { Text, Paragraph } = Typography;
+const { Text } = Typography;
 
 const StyledTable = styled(Table)`
 .ant-table-tbody {
@@ -72,15 +72,13 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_KEY = 'user_query';
 
-const ContactListPage = () => {
+const SupportListPage = () => {
 
   const [chatVisible, setChatVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
-  const [tags, setTags] = React.useState([]);
-  const context = React.useContext(GlobalContext);
   const eventSource$ = React.useRef(new Subject());
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
@@ -88,10 +86,9 @@ const ContactListPage = () => {
     {
       title: 'User',
       fixed: 'left',
-      render: (_, item) => <Space>
+      render: (_, item) => <Badge count={item.unreadCount} showZero={false}>
         <UserNameCard userId={item.userId} />
-        {!item.replied && <Button type="text" danger icon={<Icon component={() => <MdMessage />} />} onClick={() =>  handleChatWith(item)}/>}
-      </Space>
+      </Badge>
     },
     // {
     //   title: 'ID',
@@ -111,7 +108,7 @@ const ContactListPage = () => {
     {
       title: 'Last Contact At',
       dataIndex: 'lastMessageAt',
-      render: (value, item) => <TimeAgo value={value} />
+      render: (value) => <TimeAgo value={value} />
     },
     {
       // title: 'Action',
@@ -141,7 +138,7 @@ const ContactListPage = () => {
   const loadList = () => {
     setLoading(true);
 
-    return listMyContact$().pipe(
+    return listAllSupports$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(
       list => setList(list)
@@ -157,7 +154,7 @@ const ContactListPage = () => {
 
   // Subscribe message events
   React.useEffect(() => {
-    const es = subscribeContactChange();
+    const es = subscribeSupportMessage();
     es.onmessage = (e) => {
       const event = JSON.parse(e.data);
       eventSource$.current.next(event);
@@ -204,7 +201,7 @@ const ContactListPage = () => {
     await loadList(newQueryInfo);
   }
 
-  const searchByQueryInfo = async (queryInfo) => {
+  const searchByQueryInfo = async () => {
     // try {
     //   setLoading(true);
     //   const resp = await searchOrgMemberUsers(queryInfo);
@@ -243,15 +240,6 @@ const ContactListPage = () => {
     setChatVisible(true);
   }
 
-  const handleOpenPromotionCode = (user) => {
-    setCurrentUser(user);
-    setChatVisible(true);
-  }
-
-  const handleTagFilterChange = (tags) => {
-    searchByQueryInfo({ ...queryInfo, page: 1, tags });
-  }
-
   const handleClearFilter = () => {
     searchByQueryInfo(DEFAULT_QUERY_INFO);
   }
@@ -260,9 +248,6 @@ const ContactListPage = () => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
-  const handleSubmitMessage = (message) => {
-    return sendContact$(message, null, currentUser.userId);
-  }
 
   return (
     <>
@@ -283,7 +268,6 @@ const ContactListPage = () => {
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
-        {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
         <StyledTable columns={columnDef}
           dataSource={list}
           size="small"
@@ -298,7 +282,7 @@ const ContactListPage = () => {
             if(item === currentUser) {
               classNames.push('current-item');
             }
-            if(!item.replied) {
+            if(item.unreadCount) {
               classNames.push('pending-reply');
             }
             return classNames.join(' ');
@@ -324,7 +308,7 @@ const ContactListPage = () => {
           }}
         />
       </Space>
-      <AdminReplyContactDrawer
+      <SupportReplyDrawer
         title={currentUser ? <UserNameCard userId={currentUser.userId} /> : null}
         userId={currentUser?.userId}
         visible={chatVisible}
@@ -336,8 +320,8 @@ const ContactListPage = () => {
   );
 };
 
-ContactListPage.propTypes = {};
+SupportListPage.propTypes = {};
 
-ContactListPage.defaultProps = {};
+SupportListPage.defaultProps = {};
 
-export default withRouter(ContactListPage);
+export default withRouter(SupportListPage);

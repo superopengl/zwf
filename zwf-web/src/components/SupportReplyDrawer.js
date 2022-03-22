@@ -5,15 +5,15 @@ import 'react-chat-elements/dist/main.css';
 import { listTaskTrackings$ } from 'services/taskService';
 import { TaskTrackingPanel } from './TaskTrackingPanel';
 import { TaskMessageForm } from './TaskMessageForm';
-import { listMyContact$, listUserContact$, subscribeUserContactChange, sendContact$ } from 'services/contactService';
-import { ContactMessageList } from 'components/ContactMessageList';
-import { filter, finalize, tap } from 'rxjs/operators';
-import { ContactMessageInput } from './ContactMessageInput';
+import { getMySupport$, getUserSupport$, subscribeUserSupportMessage, sendContact$, nudgeUserLastReadBySupporter$ } from 'services/supportService';
+import { SupportMessageList } from 'components/SupportMessageList';
+import { catchError, filter, finalize, tap } from 'rxjs/operators';
+import { SupportMessageInput } from './SupportMessageInput';
 import { SyncOutlined } from '@ant-design/icons';
 
 
 
-export const AdminReplyContactDrawer = React.memo((props) => {
+export const SupportReplyDrawer = React.memo((props) => {
   const { title, userId, visible, onClose, eventSource } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -48,9 +48,19 @@ export const AdminReplyContactDrawer = React.memo((props) => {
     return () => sub$.unsubscribe()
   }, [userId]);
 
+  React.useEffect(() => {
+    if(userId && list?.length) {
+      const lastMessage = list[list.length - 1];
+      const {id} = lastMessage;
+      nudgeUserLastReadBySupporter$(userId, id).pipe(
+        catchError()
+      ).subscribe();
+    }
+  }, [list, userId]);
+
   const load$ = () => {
     setLoading(true)
-    return listUserContact$(userId).pipe(
+    return getUserSupport$(userId).pipe(
       finalize(() => setLoading(false))
     ).subscribe(setList)
   }
@@ -75,20 +85,20 @@ export const AdminReplyContactDrawer = React.memo((props) => {
     extra={<Button type="link" icon={<SyncOutlined />} onClick={handleReload} />}
     bodyStyle={{ padding: 0, height: 'calc(100vh - 55px)' }}
     footerStyle={{ padding: 0 }}
-    footer={<ContactMessageInput loading={loading} onSubmit={handleSubmitMessage} />}
+    footer={<SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />}
   >
-    <ContactMessageList dataSource={list} loading={loading} />
+    <SupportMessageList dataSource={list} loading={loading} />
   </Drawer>
 });
 
-AdminReplyContactDrawer.propTypes = {
+SupportReplyDrawer.propTypes = {
   userId: PropTypes.string,
   visible: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
   eventSource: PropTypes.object.isRequired,
 };
 
-AdminReplyContactDrawer.defaultProps = {
+SupportReplyDrawer.defaultProps = {
   visible: false,
   onClose: () => { },
 };

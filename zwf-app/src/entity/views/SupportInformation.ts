@@ -1,4 +1,5 @@
-import { Contact } from './../Contact';
+import { SupportSupporterUnreadInformation } from './SupportSupporterUnreadInformation';
+import { SupportMessage } from '../SupportMessage';
 import { UserInformation } from './UserInformation';
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
@@ -9,16 +10,13 @@ import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
+import { SupportLastRead } from '../SupportLastRead';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(UserInformation, 'u')
-    .leftJoin(q => q.from(Contact, 'c')
-      .distinctOn(['"userId"'])
-      .orderBy('"userId"')
-      .addOrderBy('"createdAt"', 'DESC')
-      , 'c', 'u.id = c."userId"')
+    .leftJoin(SupportSupporterUnreadInformation, 'r', 'r."userId" = u.id')
     .select([
       'u.id as "userId"',
       'u.email as email',
@@ -28,12 +26,10 @@ import { UserStatus } from '../../types/UserStatus';
       'u."orgName" as "orgName"',
       'u."orgOwner" as "orgOwner"',
       'u."orgId" as "orgId"',
-      'c."createdAt" as "lastMessageAt"',
-      'c.by as "lastMessageBy"',
-      'CASE WHEN c.by = u.id THEN FALSE ELSE TRUE END as "replied"',
+      'COALESCE(r.count, 0) as "unreadCount"',
     ])
 })
-export class UserContactInformation {
+export class SupportInformation {
   @ViewColumn()
   @PrimaryColumn()
   userId: string;
@@ -60,11 +56,6 @@ export class UserContactInformation {
   orgOwner: boolean;
 
   @ViewColumn()
-  lastMessageAt: Date;
-
-  @ViewColumn()
-  lastMessageBy: string;
-
-  @ViewColumn()
-  replied: boolean;
+  unreadCount: number;
 }
+
