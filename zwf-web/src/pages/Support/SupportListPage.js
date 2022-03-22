@@ -49,6 +49,12 @@ const StyledTable = styled(Table)`
     background-color: #cf222e22;
     font-weight: 700;
   }
+
+  &:hover {
+    .ant-table-cell {
+      background-color: #cf222e33;
+    }
+  }
 }
 
 .current-item {
@@ -86,9 +92,10 @@ const SupportListPage = () => {
     {
       title: 'User',
       fixed: 'left',
-      render: (_, item) => <Badge count={item.unreadCount} showZero={false}>
+      render: (_, item) => <Space>
         <UserNameCard userId={item.userId} />
-      </Badge>
+        <Badge count={item.unreadCount} showZero={false} />
+      </Space>
     },
     // {
     //   title: 'ID',
@@ -161,11 +168,8 @@ const SupportListPage = () => {
       setList(list => {
         const item = list.find(x => x.userId === event.userId);
         if (item) {
-          const beforeValue = item.replied;
-          item.replied = event.by !== event.userId;
-          if(beforeValue !== item.replied) {
-            return [...list];
-          }
+          item.unreadCount += event.by === event.userId ? 1 : 0;
+          return [...list];
         }
         return list;
       })
