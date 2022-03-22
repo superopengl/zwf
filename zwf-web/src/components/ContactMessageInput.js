@@ -7,10 +7,15 @@ export const ContactMessageInput = React.memo(props => {
   const { loading: propLoading, onSubmit } = props;
   const [loading, setLoading] = React.useState(propLoading);
   const [form] = Form.useForm();
+  const inputRef = React.useRef();
 
   React.useEffect(() => {
     setLoading(propLoading);
   }, [propLoading])
+
+  React.useEffect(() => {
+    inputRef.current?.focus();
+  })
 
   const handleSubmit = values => {
     if (loading) {
@@ -37,6 +42,8 @@ export const ContactMessageInput = React.memo(props => {
         autoSize={{ minRows: 3 }}
         allowClear={true}
         showCount
+        ref={inputRef}
+        autoFocus
         maxLength={1000}
         disabled={loading}
         placeholder="Feedback, bug report, feature request..." 

@@ -60,7 +60,7 @@ const ChatMessage = React.memo(props => {
 
 export const ContactMessageList = React.memo((props) => {
   const { dataSource, loading } = props;
-  return <ScrollToBottom className={containerCss} debug={true}>
+  return <ScrollToBottom className={containerCss} debug={false}>
       <StyledList
         loading={loading}
         dataSource={dataSource}

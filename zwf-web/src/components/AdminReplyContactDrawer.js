@@ -7,7 +7,7 @@ import { TaskTrackingPanel } from './TaskTrackingPanel';
 import { TaskMessageForm } from './TaskMessageForm';
 import { listMyContact$, listUserContact$, subscribeUserContactChange, sendContact$ } from 'services/contactService';
 import { ContactMessageList } from 'components/ContactMessageList';
-import { filter, finalize } from 'rxjs/operators';
+import { filter, finalize, tap } from 'rxjs/operators';
 import { ContactMessageInput } from './ContactMessageInput';
 import { SyncOutlined } from '@ant-design/icons';
 
@@ -32,7 +32,13 @@ export const AdminReplyContactDrawer = React.memo((props) => {
 
   React.useEffect(() => {
     const sub$ = eventSource.pipe(
-      filter(e => e.userId === userId)
+      // tap(e => {
+      //   debugger;
+      // }),
+      filter(e => {
+        // debugger;
+        return e.userId === userId
+      })
     ).subscribe(event => {
       setList(list => {
         return [...(list ?? []), event]
@@ -40,7 +46,7 @@ export const AdminReplyContactDrawer = React.memo((props) => {
     });
 
     return () => sub$.unsubscribe()
-  }, []);
+  }, [userId]);
 
   const load$ = () => {
     setLoading(true)
