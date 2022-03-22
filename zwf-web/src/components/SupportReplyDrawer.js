@@ -5,7 +5,7 @@ import 'react-chat-elements/dist/main.css';
 import { listTaskTrackings$ } from 'services/taskService';
 import { TaskTrackingPanel } from './TaskTrackingPanel';
 import { TaskMessageForm } from './TaskMessageForm';
-import { getMySupport$, getUserSupport$, subscribeUserSupportMessage, sendContact$, nudgeUserLastReadBySupporter$ } from 'services/supportService';
+import { getMySupport$, getUserSupport$, subscribeUserSupportMessage, sendContact$ } from 'services/supportService';
 import { SupportMessageList } from 'components/SupportMessageList';
 import { catchError, filter, finalize, tap } from 'rxjs/operators';
 import { SupportMessageInput } from './SupportMessageInput';
@@ -47,16 +47,6 @@ export const SupportReplyDrawer = React.memo((props) => {
 
     return () => sub$.unsubscribe()
   }, [userId]);
-
-  React.useEffect(() => {
-    if(userId && list?.length) {
-      const lastMessage = list[list.length - 1];
-      const {id} = lastMessage;
-      nudgeUserLastReadBySupporter$(userId, id).pipe(
-        catchError()
-      ).subscribe();
-    }
-  }, [list, userId]);
 
   const load$ = () => {
     setLoading(true)

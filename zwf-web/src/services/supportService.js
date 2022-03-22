@@ -29,13 +29,6 @@ export function getUserSupport$(userId) {
   return httpGet$(`/support/${userId}`);
 }
 
-export function nudgeUserLastReadBySupporter$(userId, messageId) {
-  if(!messageId) {
-    throw new Error('messageId is not specified');
-  }
-  return httpPost$(`/support/${userId}/nudge`, {messageId});
-}
-
 export function subscribeUserSupportMessage(userId) {
   const url = `${API_BASE_URL}/support/${userId}/sse`;
   const es = new EventSource(url, { withCredentials: true });

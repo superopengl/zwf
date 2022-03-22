@@ -1,6 +1,6 @@
-import { SupportUserUnreadInformation } from './../entity/views/SupportUnreadInformation';
+import { SupportUserUnreadInformation } from '../entity/views/SupportUserUnreadInformation';
 import { getUtcNow } from './../utils/getUtcNow';
-import { SupportLastRead } from './../entity/SupportLastRead';
+import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
 import { SupportInformation } from '../entity/views/SupportInformation';
 import { UserInformation } from '../entity/views/UserInformation';
 import { getManager, getRepository } from 'typeorm';
@@ -77,33 +77,28 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
   const role = getRoleFromReq(req);
 
-  const supportEntity = new SupportMessage();
-  const lastReadEntity = new SupportLastRead();
+  const sm = new SupportMessage();
 
-  supportEntity.id = uuidv4();
-  supportEntity.by = userId;
-  supportEntity.message = message;
+  sm.id = uuidv4();
+  sm.by = userId;
+  sm.message = message;
 
   if (role === Role.System) {
     assert(replyToUserId, 400, 'replyToUserId is not specified');
-    supportEntity.userId = replyToUserId;
-    lastReadEntity.supporterLastReadMessageId = supportEntity.id;
+    sm.userId = replyToUserId;
   } else {
-    supportEntity.userId = userId;
-    supportEntity.capturedUrl = capturedUrl;
-    lastReadEntity.userLastReadMessageId = supportEntity.id;
+    sm.userId = userId;
+    sm.capturedUrl = capturedUrl;
   }
 
-  lastReadEntity.userId = supportEntity.userId;
-
-  await getManager().save([supportEntity, lastReadEntity])
+  await getManager().save(sm)
 
   publishEvent(CONTACT_EVENT_TYPE, {
-    id: supportEntity.id,
-    userId: supportEntity.userId,
+    id: sm.id,
+    userId: sm.userId,
     message,
-    createdAt: supportEntity.createdAt,
-    by: supportEntity.by,
+    createdAt: sm.createdAt,
+    by: sm.by,
   });
 
   res.json();
@@ -115,28 +110,15 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
   assert(messageId, 400, `messageId is not specified.`);
   const userId = getUserIdFromReq(req);
 
-  const lastReadEntity = new SupportLastRead();
-
+  const lastReadEntity = new SupportUserLastAccess();
   lastReadEntity.userId = userId;
-  lastReadEntity.userLastReadMessageId = messageId;
 
-  await getManager().save(lastReadEntity)
-
-  res.json();
-});
-
-export const nudgeUserLastReadBySupporter = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
-  const {userId} = req.params;
-  const { messageId } = req.body;
-  assert(messageId, 400, `messageId is not specified.`);
-
-  const lastReadEntity = new SupportLastRead();
-
-  lastReadEntity.userId = userId;
-  lastReadEntity.supporterLastReadMessageId = messageId;
-
-  await getManager().save(lastReadEntity)
+  await getManager().createQueryBuilder()
+    .insert()
+    .into(SupportUserLastAccess)
+    .values(lastReadEntity)
+    .onConflict(`("userId") DO UPDATE SET "lastAccessAt" = NOW()`)
+    .execute();
 
   res.json();
 });

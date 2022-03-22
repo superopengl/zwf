@@ -1,4 +1,4 @@
-import { SupportSupporterUnreadInformation } from './SupportSupporterUnreadInformation';
+import { SupportPendingReplyInformation } from './SupportPendingReplyInformation';
 import { SupportMessage } from '../SupportMessage';
 import { UserInformation } from './UserInformation';
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
@@ -10,13 +10,13 @@ import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
-import { SupportLastRead } from '../SupportLastRead';
+import { SupportUserLastAccess } from '../SupportUserLastAccess';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(UserInformation, 'u')
-    .leftJoin(SupportSupporterUnreadInformation, 'r', 'r."userId" = u.id')
+    .leftJoin(SupportPendingReplyInformation, 'r', 'r."userId" = u.id')
     .select([
       'u.id as "userId"',
       'u.email as email',
