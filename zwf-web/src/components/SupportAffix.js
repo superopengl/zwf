@@ -49,6 +49,7 @@ width: 400px;
 
 export const SupportAffix = () => {
   const [visible, setVisible] = React.useState(false);
+  const visibleRef = React.useRef(visible);
   const [loading, setLoading] = React.useState(true);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [list, setList] = React.useState([]);
@@ -65,7 +66,11 @@ export const SupportAffix = () => {
       setList(list => {
         return [...(list ?? []), event]
       });
-      setUnreadCount(x => x + 1);
+      // Has to use a ref to get the latest value of visible,
+      // because it's closured by the onmessage callback function.
+      if (!visibleRef.current) {
+        setUnreadCount(x => x + 1);
+      }
     }
 
     return () => {
@@ -100,6 +105,7 @@ export const SupportAffix = () => {
     if (visible) {
       setUnreadCount(0);
     }
+    visibleRef.current = visible;
   }, [visible])
 
   const handleSubmitMessage = (message) => {
@@ -127,7 +133,7 @@ export const SupportAffix = () => {
             <hr />
             <SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />
           </StyledCard>}
-        <Badge count={visible ? 0 : unreadCount} showZero={false}>
+        <Badge count={unreadCount} showZero={false}>
           <AffixContactButton type="primary" size="large" onClick={() => setVisible(x => !x)}>
             {visible ? <AiOutlineDown size={24} /> : <MdMessage size={24} />}
           </AffixContactButton>
