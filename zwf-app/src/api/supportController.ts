@@ -3,7 +3,7 @@ import { getUtcNow } from './../utils/getUtcNow';
 import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
 import { SupportInformation } from '../entity/views/SupportInformation';
 import { UserInformation } from '../entity/views/UserInformation';
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { assert } from '../utils/assert';
@@ -47,7 +47,12 @@ export const getMySupport = handlerWrapper(async (req, res) => {
 
 export const listAllSupport = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const list = await getRepository(SupportInformation).find();
+  const userId = getUserIdFromReq(req);
+  const list = await getRepository(SupportInformation).find({
+    where: {
+      userId: Not(userId)
+    }
+  });
   list.forEach(x => {
     x.unreadCount = +x.unreadCount;
   })
