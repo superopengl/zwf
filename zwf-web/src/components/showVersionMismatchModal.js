@@ -1,10 +1,8 @@
 import React from 'react';
 import { Typography, Space, Button, notification, Collapse } from 'antd';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { tag, notes } from '../release_changes';
+import { notes } from '../release_changes';
 import { CaretRightOutlined } from '@ant-design/icons';
-import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
-import {Logo} from 'components/Logo';
 const { Paragraph } = Typography
 
 const LAST_ASKED_BACKEND_VERSION = 'lastAskedBackendVersion';
@@ -51,7 +49,6 @@ export const showVersionMismatchModal = (webappVersion, backendVersion) => {
 
   const notificationKey = 'versionCheck';
   notification.info({
-    icon: <Icon component={() => <Logo/>} />,
     message: 'New version is released',
     description: <VersionMismatchModalContent onClose={() => {
       reactLocalStorage.set(LAST_ASKED_BACKEND_VERSION, backendVersion)
