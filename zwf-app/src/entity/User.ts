@@ -1,5 +1,5 @@
 import { Tag } from './Tag';
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne, Unique } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
@@ -19,7 +19,7 @@ export class User {
    * as TypeOrm doesn't support case insensitive index.
    */
   @Column()
-  @Index()
+  @Index({ unique: true })
   emailHash!: string;
 
   @Column({ default: 'local' })
@@ -66,12 +66,12 @@ export class User {
   @JoinTable()
   tags: Tag[];
 
-  @Column({default: false})
+  @Column({ default: false })
   isProfileComplete: boolean;
 
-  @Column({default: false})
+  @Column({ default: false })
   orgOwner: boolean;
 
-  @Column({default: false})
+  @Column({ default: false })
   paid: boolean;
 }

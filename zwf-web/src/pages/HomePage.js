@@ -29,11 +29,11 @@ const HomePage = () => {
       <Link to="/terms_and_conditions">Terms of services</Link>
     </Space>} banner />}
     <iframe src={HOME_SITE_URL} width="100%" height="100%" style={{ border: 0 }}></iframe>
-    {isLoggedIn && <Affix style={{ position: 'absolute', top: 8, right: 8 }}>
+    {/* {isLoggedIn && <Affix style={{ position: 'absolute', top: 8, right: 8 }}>
       <Link to={isSystem ? '/org' : '/'}><Button type="primary">
         <FormattedMessage id="menu.dashboard" /> <RightOutlined />
       </Button></Link>
-    </Affix>}
+    </Affix>} */}
   </>
 }
 
