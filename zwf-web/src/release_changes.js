@@ -1,4 +1,5 @@
 export const notes=`
-fix org initial creation
-styling refine
-refine release`
+ui refine
+modal not closable when payment is in progress
+wording change
+name fix`

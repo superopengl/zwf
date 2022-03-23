@@ -19,6 +19,7 @@ import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
@@ -55,7 +56,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
   }
 
   const goToHomePage = () => {
-    window.location = process.env.REACT_APP_ZWF_HOME_SITE_URL || '/';
+    props.history.push('/')
   }
 
   const handleLogout = () => {
@@ -76,11 +77,11 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
     </Menu.Item>
     <Menu.Divider />
-    <TextLink href={process.env.REACT_APP_ZWF_HOME_SITE_URL} target="_blank">
+    <Link to="/">
       <Menu.Item key="home">
         <FormattedMessage id="menu.home" />
       </Menu.Item>
-    </TextLink>
+    </Link>
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>
