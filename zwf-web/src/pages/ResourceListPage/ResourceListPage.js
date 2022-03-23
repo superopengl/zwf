@@ -30,7 +30,7 @@ const LayoutStyled = styled.div`
 
 
 
-export const DocTemplateListPage = props => {
+export const ResourceListPage = props => {
 
 
   const [list, setList] = React.useState([]);
@@ -92,26 +92,13 @@ export const DocTemplateListPage = props => {
 
 
   const handleCreateNew = () => {
-    props.history.push('/doc_template/new');
-  }
-
-
-  const handlePreview = () => {
-  }
-
-  const handleClone = item => {
-    cloneDocTemplate$(item.id)
-      .subscribe(cloned => {
-        // console.log(task);
-        notify.success('Cloned task', <>Successfully cloned doc template. The new doc template is  <TextLink target="_blank" href={`/doc_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
-        loadList();
-      })
+    props.history.push('/resources/new');
   }
 
   return (<>
     <LayoutStyled>
       <PageHeader
-        title="Doc Templates"
+        title="Resources"
         backIcon={false}
         extra={[
           // <Radio.Group
@@ -128,7 +115,7 @@ export const DocTemplateListPage = props => {
           //     <Icon component={() => <HiViewList />} />
           //   </Radio.Button>
           // </Radio.Group>,
-          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>
         ]}
       >
         <List
@@ -147,9 +134,9 @@ export const DocTemplateListPage = props => {
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
-                There is no doc template. Let's start creating one!
+                There is no resources. Let's start creating one!
               </Paragraph>
-              <Link to="/task_template/new">Create new doc template</Link>
+              <Link to="/resources/new">Create new resource page</Link>
             </div>
           }}
           renderItem={item => <List.Item>
@@ -168,18 +155,6 @@ export const DocTemplateListPage = props => {
                     icon: <EditOutlined />,
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
-                  },
-                  // {
-                  //   menu: 'Preview',
-                  //   onClick: () => handlePreview(item)
-                  // },
-                  {
-                    icon: <CopyOutlined />,
-                    menu: 'Clone',
-                    onClick: () => handleClone(item)
-                  },
-                  {
-                    menu: '-'
                   },
                   {
                     icon: <Text type="danger"><DeleteOutlined /></Text>,
@@ -205,8 +180,8 @@ export const DocTemplateListPage = props => {
   );
 };
 
-DocTemplateListPage.propTypes = {};
+ResourceListPage.propTypes = {};
 
-DocTemplateListPage.defaultProps = {};
+ResourceListPage.defaultProps = {};
 
-export default withRouter(DocTemplateListPage);
+export default withRouter(ResourceListPage);
