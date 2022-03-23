@@ -74,7 +74,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
       userEnitty.orgId = orgId;
       userEnitty.orgOwner = true;
       userEnitty.paid = false;
-      m.save(userEnitty);
+      await m.save(userEnitty);
     }
     // Copy email templates to org
     const systemEmailTemplates = await m.getRepository(SystemEmailTemplate).find({});
@@ -97,7 +97,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     })
 
     await m.save([org, ...orgEmailTemplates, ...orgEmailSignatures]);
-    await createOrgTrialSubscription(m, orgId, userEnitty.id);
+    await createOrgTrialSubscription(m, orgId);
   })
 
   res.json();

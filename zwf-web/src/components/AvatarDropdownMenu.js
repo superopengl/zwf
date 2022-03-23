@@ -21,7 +21,7 @@ import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import PropTypes from 'prop-types';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
-const OrgOnBoardForm = loadable(() => import('pages/Org/OrgProfileForm'));
+const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
 
 const { Link: TextLink } = Typography;
 
@@ -161,7 +161,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       destroyOnClose={true}
       maskClosable={false}
     >
-      <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
+      <OrgProfileForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
   </>
 }));

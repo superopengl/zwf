@@ -20,7 +20,7 @@ const ProfileModal = props => {
 
   return (
     <Modal
-      title="Update Profile"
+      title="User Profile"
       closable={true}
       maskClosable={true}
       destroyOnClose={true}

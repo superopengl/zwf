@@ -5,7 +5,7 @@ import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { v4 as uuidv4 } from 'uuid';
 
-export async function createOrgTrialSubscription(m: EntityManager, orgId: string, orgOwnerUserId: string) {
+export async function createOrgTrialSubscription(m: EntityManager, orgId: string) {
   const now = moment();
   const subscription = new Subscription();
   subscription.id = uuidv4();
@@ -18,6 +18,6 @@ export async function createOrgTrialSubscription(m: EntityManager, orgId: string
   subscription.recurring = false;
   subscription.status = SubscriptionStatus.Alive;
 
-  m.insert(Subscription, subscription);
+  await m.insert(Subscription, subscription);
 }
 
