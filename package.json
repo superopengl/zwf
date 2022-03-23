@@ -16,7 +16,7 @@
     "flush": "aws cloudfront create-invalidation --distribution-id E33SLLY0LP0K89 --paths \"/*\"",
     "release:tag": "git tag \"Release-`date \"+%Y%m%d-%H%M\"`\" && git push --tags",
     "release:notes": "echo $\"export const tag='$(git describe --tags --abbrev=0)'\\nexport const notes=\\`\"> zwf-web/src/release_changes.js && git log $(git describe --tags --abbrev=0 @^)..@ --pretty=format:\"%s\" >> zwf-web/src/release_changes.js && echo \"\\`\" >> zwf-web/src/release_changes.js",
-    "release": "pnpm docker:build && pnpm docker:push && pnpm ecs:update && pnpm flush"
+    "release": "pnpm release:notes && pnpm release:tag && pnpm docker:build && pnpm docker:push && pnpm ecs:update && pnpm flush"
   },
   "author": "mr.shaojun@gmail.com",
   "license": "MIT"
