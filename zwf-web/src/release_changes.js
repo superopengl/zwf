@@ -1,5 +1,3 @@
 export const notes=`
-ui refine
-modal not closable when payment is in progress
-wording change
-name fix`
+resource page
+give up external home website`
