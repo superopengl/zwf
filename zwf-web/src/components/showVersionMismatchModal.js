@@ -1,7 +1,8 @@
 import React from 'react';
-import { Typography, Space, Button, notification } from 'antd';
+import { Typography, Space, Button, notification, Collapse } from 'antd';
 import { reactLocalStorage } from 'reactjs-localstorage';
-
+import { tag, notes } from '../release_changes';
+import { CaretRightOutlined } from '@ant-design/icons';
 const { Paragraph, Link: TextLink } = Typography
 
 const LAST_ASKED_BACKEND_VERSION = 'lastAskedBackendVersion';
@@ -16,8 +17,21 @@ const VersionMismatchModalContent = React.memo(props => {
 
   return <>
     <Paragraph>A new version of platform has been released. Reload the page to upgrade.</Paragraph>
-    <Paragraph><TextLink href="/release_notes" target="_blank">See release notes.</TextLink></Paragraph>
-    <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+    <Collapse ghost bordered={false} defaultActiveKey={['tag']}
+      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
+      style={{position: 'relative', left: -16}}
+    >
+      <Collapse.Panel header={tag} key="tag">
+        <ul>
+          {notes.split(/\n/)
+            .map(x => x.trim())
+            .filter(x => x)
+            .map(x => <li key={x}>{x}</li>)
+          }
+        </ul>
+      </Collapse.Panel>
+    </Collapse>
+    <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 20 }}>
       <Button type="text" onClick={onClose}>No, later</Button>
       <Button type="primary" autoFocus onClick={handleReloadPage}>Reload Page</Button>
     </Space>
@@ -25,7 +39,7 @@ const VersionMismatchModalContent = React.memo(props => {
 });
 
 export const showVersionMismatchModal = (webappVersion, backendVersion) => {
-  if(webappVersion === backendVersion) {
+  if (webappVersion === backendVersion) {
     return;
   }
   const lastAskedBackendVersion = reactLocalStorage.get(LAST_ASKED_BACKEND_VERSION);

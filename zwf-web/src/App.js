@@ -22,7 +22,6 @@ const LogInPage = loadable(() => import('pages/LogInPage'));
 const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
-const ReleaseNotesPage = loadable(() => import('pages/ReleaseNotesPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
@@ -117,7 +116,6 @@ export const App = React.memo(() => {
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
-              <RoleRoute loading={loading} exact path="/release_notes" component={ReleaseNotesPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
               <RoleRoute visible={!isGuest} path="/home" exact component={HomePage} />
               <RoleRoute loading={loading} path="/" component={!isLoggedIn ? HomePage : AppLoggedIn} />
