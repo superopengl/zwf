@@ -40,8 +40,6 @@ const ContainerStyled = styled.div`
 `;
 
 
-
-
 const PaymentModal = (props) => {
   const { visible, onClose, onComplete } = props;
 
