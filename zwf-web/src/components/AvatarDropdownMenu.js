@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { logout$ } from 'services/authService';
-import { Dropdown, Menu, Modal, Layout, Button } from 'antd';
+import { Dropdown, Menu, Modal, Layout, Button, Typography } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import AboutModal from 'pages/About/AboutModal';
@@ -22,6 +22,8 @@ import PropTypes from 'prop-types';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgOnBoardForm = loadable(() => import('pages/Org/OrgProfileForm'));
+
+const { Link: TextLink } = Typography;
 
 const StyledLayout = styled(Layout)`
 .ant-layout-footer {
@@ -64,10 +66,6 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
     });
   };
 
-  const handleGoHome = () => {
-    goToHomePage();
-  };
-
   const isSystem = role === 'system';
   const isAdmin = role === 'admin';
   const isAgent = role === 'agent';
@@ -78,9 +76,11 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
     </Menu.Item>
     <Menu.Divider />
-    <Menu.Item key="home" onClick={handleGoHome}>
-      <FormattedMessage id="menu.home" />
-    </Menu.Item>
+    <TextLink href={process.env.REACT_APP_ZWF_HOME_SITE_URL} target="_blank">
+      <Menu.Item key="home">
+        <FormattedMessage id="menu.home" />
+      </Menu.Item>
+    </TextLink>
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>
