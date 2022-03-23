@@ -1,6 +1,6 @@
 
 import { getRepository, getManager } from 'typeorm';
-import { Blog } from '../entity/Blog';
+import { ResourcePage } from '../entity/ResourcePage';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';

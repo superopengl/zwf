@@ -16,7 +16,7 @@ paths:
       operationId: getMySupport
       responses:
         200:
-          description: OK    
+          description: OK
     post:
       operationId: createSupportMessage
       responses:
@@ -27,13 +27,13 @@ paths:
       operationId: nudgeMyLastReadSupportMessage
       responses:
         200:
-          description: OK        
+          description: OK
   /support/list:
     get:
       operationId: listAllSupport
       responses:
         200:
-          description: OK              
+          description: OK
   /support/sse:
     get:
       operationId: subscribeSupportMessage
@@ -48,10 +48,10 @@ paths:
           in: path
           type: string
           format: uuid
-          required: true          
+          required: true
       responses:
         200:
-          description: OK                           
+          description: OK
   /file/download/task/{taskId}/file/{fileId}:
     get:
       operationId: downloadFile
@@ -181,7 +181,7 @@ paths:
       #   - authAnyRole: []
       responses:
         200:
-          description: OK          
+          description: OK
   /auth/reset_password:
     post:
       operationId: resetPassword
@@ -259,7 +259,7 @@ paths:
       #   - authClient: []
       responses:
         200:
-          description: OK          
+          description: OK
   /user/:id/set_password:
     post:
       operationId: setUserPassword
@@ -324,12 +324,12 @@ paths:
       operationId: createMyOrg
       responses:
         200:
-          description: OK    
+          description: OK
     post:
       operationId: saveOrgProfile
       responses:
         200:
-          description: OK            
+          description: OK
   /org/member:
     get:
       operationId: listOrgMembers
@@ -410,7 +410,59 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
+  /resources:
+    get:
+      operationId: listPublishedResourcePages
+      responses:
+        200:
+          description: OK
+  /resources/:id:
+    get:
+      operationId: getPublishedResourcePage
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /manage/resources:
+    get:
+      operationId: listAllResourcePages
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveResourcePage
+      responses:
+        200:
+          description: OK
+  /manage/resources/:id:
+    get:
+      operationId: getEditResourcePage
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteResourcePage
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /task_template:
     post:
       operationId: saveTaskTemplate
@@ -480,7 +532,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                  
+          description: OK
   /doc_template:
     post:
       operationId: saveDocTemplate
@@ -522,7 +574,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /doc_template/{id}/clone:
     put:
       operationId: cloneDocTemplate
@@ -536,7 +588,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK      
+          description: OK
   /doc_template/{id}/rename:
     post:
       operationId: renameDocTemplate
@@ -550,7 +602,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                 
+          description: OK
   /doc_template/{id}/apply:
     post:
       operationId: applyDocTemplate
@@ -601,7 +653,7 @@ paths:
       #   - authLoggedInUser: []
       responses:
         200:
-          description: OK        
+          description: OK
   /task/deep/{deepLinkId}:
     get:
       operationId: getDeepLinkedTask
@@ -665,7 +717,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK         
+          description: OK
   /task/{id}/tags:
     post:
       operationId: updateTaskTags
@@ -679,7 +731,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK         
+          description: OK
   /task/{id}/rename:
     post:
       operationId: updateTaskName
@@ -693,7 +745,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                
+          description: OK
   /task/{id}/history:
     get:
       operationId: getTaskHistory
@@ -705,7 +757,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /task/{id}/tracking:
     get:
       operationId: listTaskTrackings
@@ -740,7 +792,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /task/{id}/tracking/sse:
     get:
       operationId: subscribeTaskTracking
@@ -764,7 +816,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /task/{id}/assign:
     post:
       operationId: assignTask
@@ -827,7 +879,7 @@ paths:
       #   - authLoggedInUser: []
       responses:
         200:
-          description: OK             
+          description: OK
   /task_doc/{id}/offical_only:
     post:
       operationId: setTaskDocOfficialOnly
@@ -839,7 +891,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK     
+          description: OK
   /task_doc/{id}/gendoc:
     post:
       operationId: generateAutoDoc
@@ -851,7 +903,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                    
+          description: OK
   /task_doc/{id}/requires_sign:
     post:
       operationId: setTaskDocRequiresSign
@@ -863,7 +915,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK            
+          description: OK
   /task_doc/{id}/sign:
     post:
       operationId: signTaskDoc
@@ -875,7 +927,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /task_doc/{id}/data:
     get:
       operationId: getTaskDocFileStream
@@ -887,7 +939,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK                                  
+          description: OK
   /task_doc/search:
     post:
       operationId: searchTaskDocs
@@ -895,7 +947,7 @@ paths:
       #   - authLoggedInUser: []
       responses:
         200:
-          description: OK                                   
+          description: OK
   /recurring:
     get:
       operationId: listRecurring
