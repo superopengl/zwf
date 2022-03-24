@@ -31,7 +31,7 @@ const ResourcePage = loadable(() => import('pages/ResourcePage/ResourcePage'))
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
-  background-color: white;
+  // background-color: white;
 }
 
 .ant-menu-item:hover {
@@ -90,6 +90,7 @@ const StyledLayout = styled(ProLayout)`
   font-weight: 400;
 }
 `;
+
 
 const scrollToElement = (selector) => {
   document.querySelector(selector)?.scrollIntoView({
