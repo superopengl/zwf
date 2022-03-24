@@ -35,7 +35,7 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
 
 
 export const getPublishedResourcePage = handlerWrapper(async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   const page = await getRepository(ResourcePage).findOne({
     where: {
       id,
@@ -69,15 +69,18 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
 
 export const saveResourcePage = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const {id, title, keywords, html, publishedAt} = req.body;
+  const { id, html } = req.body;
 
-  const page = new ResourcePage();
-  page.id = id;
-  page.title = title;
-  page.keywords = keywords,
-  page.html = html,
-  page.brief = getBrief(html),
-  page.publishedAt = publishedAt;
+  let page: ResourcePage = null;
+  if (id) {
+    page = await getRepository(ResourcePage).findOne(id);
+  }
+
+  Object.assign(page, req.body);
+
+  if(html) {
+    page.brief = getBrief(html);
+  }
 
   await getRepository(ResourcePage).save(page);
 
@@ -86,7 +89,7 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
 
 export const getEditResourcePage = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const {id} = req.params;
+  const { id } = req.params;
   const page = await getRepository(ResourcePage).findOne(id);
   assert(page, 404);
 
@@ -95,8 +98,8 @@ export const getEditResourcePage = handlerWrapper(async (req, res) => {
 
 export const deleteResourcePage = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const {id} = req.params;
-   await getRepository(ResourcePage).delete(id);
+  const { id } = req.params;
+  await getRepository(ResourcePage).delete(id);
 
   res.json();
 });
