@@ -69,9 +69,10 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
 
 export const saveResourcePage = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const {title, keywords, html, publishedAt} = req.body;
+  const {id, title, keywords, html, publishedAt} = req.body;
 
   const page = new ResourcePage();
+  page.id = id;
   page.title = title;
   page.keywords = keywords,
   page.html = html,

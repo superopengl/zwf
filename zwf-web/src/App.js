@@ -1,7 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.less';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
-import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
@@ -16,6 +15,7 @@ import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppLoggedIn } from 'AppLoggedIn';
+import PortalApp from 'pages/PortalApp';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
@@ -27,6 +27,9 @@ const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const TaskDirectPage = loadable(() => import('pages/MyTask/TaskDirectPage'))
+const ResourceListPage = loadable(() => import('pages/ResourcePage/ResourceListPage'))
+const ResourcePage = loadable(() => import('pages/ResourcePage/ResourcePage'))
+
 
 const localeDic = {
   'en-US': {
@@ -107,18 +110,16 @@ export const App = React.memo(() => {
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Switch>
-              <RoleRoute loading={loading} path="/" exact component={HomePage} />
-              <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
-              <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
-              <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
-              <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
+              <RoleRoute loading={loading} path="/(resources|resources/:id)?" exact component={PortalApp} />
+              <RoleRoute visible={isGuest} exact path="/login" component={LogInPage} />
+              <RoleRoute visible={isGuest} exact path="/signup" component={SignUpPage} />
+              <RoleRoute visible={isGuest} exact path="/signup/org" component={OrgSignUpPage} />
+              <RoleRoute visible={isGuest} exact path="/forgot_password" component={ForgotPasswordPage} />
+              <RoleRoute exact path="/reset_password" component={ResetPasswordPage} />
+              <RoleRoute exact path="/terms_and_conditions" component={TermAndConditionPage} />
+              <RoleRoute exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute visible={!isSystem} exact path="/task/direct/:token" component={TaskDirectPage} />
-              <RoleRoute visible={isAdmin} loading={loading} exact path="/onboard" component={OrgOnBoardPage} />
-              <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
-              <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
-              <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
-              <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-              <RoleRoute visible={!isGuest} path="*" exact component={AppLoggedIn} />
+              <RoleRoute visible={!isGuest} component={AppLoggedIn} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>

@@ -42,7 +42,7 @@ const EMPTY_DOC_TEMPLATE = {
 };
 
 
-export const ResourceEditPage = (props) => {
+export const ResourcePage = (props) => {
 
   const routeParamId = props.match.params.id;
   const docTemplateId = routeParamId || uuidv4();
@@ -121,8 +121,8 @@ export const ResourceEditPage = (props) => {
   </LayoutStyled >
 };
 
-ResourceEditPage.propTypes = {};
+ResourcePage.propTypes = {};
 
-ResourceEditPage.defaultProps = {};
+ResourcePage.defaultProps = {};
 
-export default ResourceEditPage;
+export default ResourcePage;

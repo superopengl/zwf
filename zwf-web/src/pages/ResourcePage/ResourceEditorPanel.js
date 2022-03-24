@@ -32,8 +32,8 @@ export const ResourceEditorPanel = props => {
         onValuesChange={(changedValues, allValues) => onChange(allValues)}
         initialValues={entity}
         style={{ position: 'relative' }}>
-        <Form.Item name="description" label="Description" rules={[{ required: true, message: ' ' }]}>
-          <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
+        <Form.Item name="keywords" label="Keywords" rules={[{ required: false, message: ' ' }]}>
+          <Input allowClear placeholder="Keywords, space delimited" />
         </Form.Item>
         <Form.Item name="html" label="Body" rules={[{ required: true, message: ' ' }]}>
           <RichTextInput />

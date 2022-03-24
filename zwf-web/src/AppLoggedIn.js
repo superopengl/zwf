@@ -43,8 +43,8 @@ const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'))
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
-const ResourceListPage = loadable(() => import('pages/ResourceListPage/ResourceListPage'));
-const ResourceEditPage = loadable(() => import('pages/ResourceListPage/ResourceEditPage'));
+const ResourceListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
+const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
@@ -130,7 +130,7 @@ const ROUTES = [
     roles: ['system']
   },
   {
-    path: '/resources',
+    path: '/manage/resources',
     name: 'Resources',
     icon: <Icon component={() => <MdOutlinePages />} />,
     roles: ['system']
@@ -309,9 +309,9 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem} exact path="/support" component={SupportListPage} />
-      <RoleRoute visible={isSystem} exact path="/resources" component={ResourceListPage} />
-      <RoleRoute visible={isSystem} exact path="/resources/new" component={ResourceEditPage} />
-      <RoleRoute visible={isSystem} exact path="/resources/:id" component={ResourceEditPage} />
+      <RoleRoute visible={isSystem} exact path="/manage/resources" component={ResourceListPage} />
+      <RoleRoute visible={isSystem} exact path="/manage/resources/new" component={ResourceEditPage} />
+      <RoleRoute visible={isSystem} exact path="/manage/resources/:id" component={ResourceEditPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
       {/* <RoleRoute path="*" component={Error404} /> */}
     </Switch>
