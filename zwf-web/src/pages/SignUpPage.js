@@ -6,6 +6,7 @@ import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import SignUpForm from 'components/SignUpForm';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -31,6 +32,8 @@ const LayoutStyled = styled(Layout)`
 `;
 
 const SignUpPage = (props) => {
+
+  useDocumentTitle('Individual user sign up')
 
   return (
     <GlobalContext.Consumer>{

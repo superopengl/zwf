@@ -4,6 +4,7 @@ import { Link, withRouter } from 'react-router-dom';
 import { Typography, Button, Form, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { LogInPanel } from './LogInPanel';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
@@ -26,6 +27,9 @@ const LogoContainer = styled.div`
 
 const { Title } = Typography;
 const LogInPage = props => {
+
+  useDocumentTitle('User login');
+
   return (
     <LayoutStyled>
       <ContainerStyled>
