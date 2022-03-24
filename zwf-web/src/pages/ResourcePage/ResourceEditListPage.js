@@ -95,7 +95,7 @@ export const ResourceEditListPage = props => {
   return (<>
     <LayoutStyled>
       <PageHeader
-        title="Resources"
+        title="Resources2"
         backIcon={false}
         extra={[
           <Button type="primary" ghost key="refres" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,

@@ -13,7 +13,7 @@ const { Text, Paragraph, Title, Link: TextLink } = Typography;
 
 const Container = styled.div`
   margin: 48px auto 120px auto;
-  padding: 1rem;
+  padding: 2rem 1rem;
   max-width: 1000px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);

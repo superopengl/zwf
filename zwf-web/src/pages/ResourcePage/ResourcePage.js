@@ -12,7 +12,7 @@ const { Paragraph, Title, Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 48px auto 120px auto;
-  padding: 1rem;
+  padding: 2rem 1rem;
   max-width: 1000px;
 `;
 
@@ -41,7 +41,7 @@ export const ResourcePage = (props) => {
   return <Loading loading={loading}>
     {page ? <LayoutStyled>
       <PageHeader
-        title={page.title}
+        title={<Title>{page.title}</Title>}
         ghost
       >
       <Text type="secondary">
