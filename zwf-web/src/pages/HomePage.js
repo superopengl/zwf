@@ -6,6 +6,7 @@ import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import { withRouter } from 'react-router-dom';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 smoothscroll.polyfill();
 
@@ -20,8 +21,10 @@ const scrollToElement = (selector) => {
 
 
 const HomePage = (props) => {
-  return <>
 
+  useDocumentTitle('All in one task doc management');
+
+  return <>
     <section>
       <HomeCarouselArea />
     </section>

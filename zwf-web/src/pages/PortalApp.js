@@ -22,6 +22,7 @@ import * as queryString from 'query-string';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import { RoleRoute } from 'components/RoleRoute';
 import HomePage from './HomePage';
+import Error404 from './Error404';
 
 smoothscroll.polyfill();
 
@@ -190,16 +191,13 @@ const PortalPage = (props) => {
     footerRender={() => <HomeFooter />}
   >
     <PageContainer>
-
-    <Switch>
-      <RoleRoute path="/" exact component={HomePage} />
-      <RoleRoute exact path="/resources" component={ResourceListPage} />
-      <RoleRoute exact path="/resources/:id" component={ResourcePage} />
-      {/* <RoleRoute component={Error404} /> */}
-    </Switch>
+      <Switch>
+        <RoleRoute path="/" exact component={HomePage} />
+        <RoleRoute exact path="/resources" component={ResourceListPage} />
+        <RoleRoute exact path="/resources/:id" component={ResourcePage} />
+        {/* <RoleRoute component={Error404} /> */}
+      </Switch>
     </PageContainer>
-
-    
 
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.

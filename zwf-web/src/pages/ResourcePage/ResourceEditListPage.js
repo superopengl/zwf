@@ -38,15 +38,13 @@ export const ResourceEditListPage = props => {
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
-  const [drawerVisible, setDrawerVisible] = React.useState(false);
-  const [currentId, setCurrentId] = React.useState();
 
   React.useEffect(() => {
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
   }, [list, searchText])
 
   const handleEdit = (item) => {
-    props.history.push(`/manage/resource/${item.id}`);
+    props.history.push(`/manage/resources/${item.id}`);
   }
 
   const handleTogglePublished = (item) => {
@@ -161,11 +159,15 @@ export const ResourceEditListPage = props => {
               onClick={() => handleEdit(item)}
             >
               <Paragraph>{item.description}</Paragraph>
-              <Space size="large">
-                <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-                <TimeAgo key="3" value={item.publishedAt} showTime={false} prefix={<Text type="secondary">Published:</Text>} direction="horizontal" />
-              </Space>
+              <Text type="secondary">
+                <small>
+                  <Space size="large">
+                    <TimeAgo value={item.createdAt} showTime={false} prefix="Created:" direction="horizontal" />
+                    <TimeAgo value={item.updatedAt} showTime={false} prefix="Updated" direction="horizontal" />
+                    <TimeAgo value={item.publishedAt} showTime={false} prefix="Published" direction="horizontal" />
+                  </Space>
+                </small>
+              </Text>
             </Card>
           </List.Item>}
         />
