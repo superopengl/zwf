@@ -1,4 +1,4 @@
-import { Button, Layout, PageHeader, Row, Col } from 'antd';
+import { Button, Layout, PageHeader, Row, Col, Skeleton } from 'antd';
 
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
@@ -52,9 +52,9 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
 
   const { id } = props.match.params;
   const isNew = !id;
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(!isNew);
   const [saving, setSaving] = React.useState(false);
-  const [page, setPage] = React.useState(createEmptyPage());
+  const [page, setPage] = React.useState(isNew ? createEmptyPage() : null);
   const [debouncedPage, setPageImmidiately] = useDebouncedValue(page, 500);
   const debugMode = false;
 
@@ -110,13 +110,13 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
             <ResourcePageIcon />
           </Col>
           <Col flex={1}>
-            <ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page.title} size={24} onChange={handleRename} maxLength={100} />
+            <ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />
           </Col>
           <Col>
             {saving ? "saving..." : "saved"}
           </Col>
         </Row>}
-        extra={<Button type="primary" ghost={!!page.publishedAt} onClick={handleTogglePublish}>{page.publishedAt ? 'Unpublish' : 'Publish'}</Button>}
+        extra={page ? <Button type="primary" ghost={!!page.publishedAt} onClick={handleTogglePublish}>{page.publishedAt ? 'Unpublish' : 'Publish'}</Button> : <Skeleton.Button />}
       >
         {!loading && <ResourceEditorPanel
           value={page}

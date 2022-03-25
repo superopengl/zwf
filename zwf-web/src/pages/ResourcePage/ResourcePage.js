@@ -50,6 +50,7 @@ export const ResourcePage = (props) => {
         </small>
       </Text>
       <Divider />
+      <img src={page.imageBase64} alt="picture" style={{float: 'left', margin: '0 2rem 2rem 0'}}/>
       <RawHtmlDisplay value={page.html} />
       </PageHeader>
 

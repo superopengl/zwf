@@ -26,7 +26,8 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
       'title',
       'brief',
       'createdAt',
-      'updatedAt'
+      'updatedAt',
+      'imageBase64',
     ]
   });
 
@@ -60,7 +61,8 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
       'title',
       'brief',
       'createdAt',
-      'updatedAt'
+      'updatedAt',
+      'imageBase64',
     ]
   });
 
@@ -76,7 +78,7 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
     page = await getRepository(ResourcePage).findOne(id);
   }
 
-  Object.assign(page, req.body);
+  page = Object.assign(page || {}, req.body);
 
   if(html) {
     page.brief = getBrief(html);

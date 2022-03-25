@@ -18,6 +18,9 @@ export class ResourcePage {
   @Column()
   title: string;
 
+  @Column({nullable: true})
+  imageBase64: string;
+
   @Column({ default: '' })
   keywords: string;
 

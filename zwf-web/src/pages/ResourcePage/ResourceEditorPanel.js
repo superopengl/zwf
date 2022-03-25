@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 import {RichTextInput} from 'components/RichTextInput';
+import { ResourcePagePictureUpload } from 'components/ResourcePagePictureUpload';
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
@@ -34,6 +35,9 @@ export const ResourceEditorPanel = props => {
         style={{ position: 'relative' }}>
         <Form.Item name="keywords" label="Keywords" rules={[{ required: false, message: ' ' }]}>
           <Input allowClear placeholder="Keywords, space delimited" />
+        </Form.Item>
+        <Form.Item name="imageBase64" label="Picture" rules={[{ required: false, message: ' ' }]}>
+          <ResourcePagePictureUpload />
         </Form.Item>
         <Form.Item name="html" label="Body" rules={[{ required: true, message: ' ' }]}>
           <RichTextInput />
