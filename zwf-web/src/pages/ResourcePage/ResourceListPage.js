@@ -1,4 +1,4 @@
-import { Button, Typography, List, Card, Image, Space } from 'antd';
+import { Button, Typography, List, Card, Image, Space, Row } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -66,20 +66,22 @@ export const ResourceListPage = React.memo(props => {
           bodyStyle={{ paddingTop: 16 }}
           onClick={() => props.history.push(`/resources/${item.id}`)}
         >
-          <Space style={{ alignItems: 'flex-start' }} size="large">
-            <Space direction="vertical">
-              <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
-                <Title>{item.title}</Title>
-                <Button icon={<Icon component={() => <MdOpenInNew />} />} type="link" href={`/resources/${item.id}`} target="_blank" />
-              </Space>
-              <Paragraph type="secondary">
-                <small>
-                  <TimeAgo value={item.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
-                </small>
-              </Paragraph>
+
+
+          <Space direction="vertical">
+            <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+              <Title style={{marginBottom: 0}}>{item.title}</Title>
+              <Button icon={<Icon component={() => <MdOpenInNew />} />} type="link" href={`/resources/${item.id}`} target="_blank" />
+            </Space>
+            <Text type="secondary">
+              <small>
+                <TimeAgo value={item.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
+              </small>
+            </Text>
+            <Space style={{ alignItems: 'flex-start' }} size="large">
+              {item.imageBase64 && <Image src={item.imageBase64} alt="picture" preview={false} width={200} />}
               <Paragraph style={{ lineBreak: 'anywhere' }}>{item.brief}...</Paragraph>
             </Space>
-            {item.imageBase64 && <Image src={item.imageBase64} alt="picture" preview={false} width={200} />}
           </Space>
 
         </Card>

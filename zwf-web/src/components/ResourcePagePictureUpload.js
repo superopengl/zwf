@@ -1,15 +1,44 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload } from 'antd';
+import { Image as AntdImage, Upload } from 'antd';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
 import { API_BASE_URL } from 'services/http';
 import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
-function getBase64$(img) {
+import { finalize } from 'rxjs/operators';
+import { notify } from 'util/notify';
+import styled from 'styled-components';
+
+const Container = styled.div`
+width: 50vw;
+max-width: 100%;
+height: 50vw;
+max-height: 300px;
+
+.ant-upload, .ant-image-img {
+  width: 50vw;
+  max-width: 100%;
+  height: 50vw;
+  max-height: 300px;
+}
+`;
+function getBase64$(file, size) {
   const subject = new Subject();
   const reader = new FileReader();
-  reader.addEventListener('load', () => subject.next(reader.result));
-  reader.readAsDataURL(img);
+  reader.onload = () => {
+    const base64Url = reader.result;
+    const image = new Image();
+    image.onload = () => {
+      const { width, height } = image;
+      if (width >= size && height >= size) {
+        subject.next(base64Url);
+      } else {
+        notify.error('Picture size is too small', `Please update a picture larger than ${size}px X ${size}px.`)
+      }
+    }
+    image.src = base64Url;
+  };
+  reader.readAsDataURL(file);
   return subject;
 }
 
@@ -19,16 +48,19 @@ export const ResourcePagePictureUpload = React.memo((props) => {
   const [loading, setLoading] = React.useState(false);
 
   const handleChange = async (info) => {
-    const { file } = info;
 
-    if (file.status === 'done') {
-      getBase64$(file.originFileObj).subscribe(onChange).add(() => setLoading(false));
-    } else if (file.status === 'uploading') {
-      setLoading(true);
-    } else {
-      setLoading(false);
-    }
   };
+
+  const handleConvetToBase64 = (file) => {
+    getBase64$(file, size)
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(onChange)
+
+    // Stop uploading to server
+    return false;
+  }
 
   const uploadButton = (
     <div>
@@ -38,18 +70,20 @@ export const ResourcePagePictureUpload = React.memo((props) => {
   );
 
   return (
+    <Container>
     <Upload
       multiple={false}
       listType="picture-card"
-      action={`${API_BASE_URL}/file?public=1`}
-      withCredentials={true}
       accept="image/*"
       showUploadList={false}
+      beforeUpload={handleConvetToBase64}
       onChange={handleChange}
       disabled={loading}
+      width="100%"
     >
-     {value ? <img src={value} alt="picture" style={{ width: size }} /> : uploadButton}
+      {value ? <AntdImage src={value} alt="picture" preview={false}/> : uploadButton}
     </Upload>
+    </Container>
   );
 });
 
@@ -61,7 +95,7 @@ ResourcePagePictureUpload.propTypes = {
 
 ResourcePagePictureUpload.defaultProps = {
   size: 120,
-  onChange: (imageBase64) => {}
+  onChange: (imageBase64) => { }
 };
 
 

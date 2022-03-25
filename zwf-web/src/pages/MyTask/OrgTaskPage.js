@@ -22,6 +22,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
 import { showRenameTaskModal } from 'components/showRenameTaskModal';
 import {MdDriveFileRenameOutline} from 'react-icons/md'
+import { SavingAffix } from 'components/SavingAffix';
 
 const { Text } = Typography;
 
@@ -122,7 +123,6 @@ const OrgTaskPage = React.memo((props) => {
           title: <Space style={{ height: 34 }}>
             <TaskIcon />
             {task?.name || <Skeleton paragraph={false} />}
-            {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
           </Space>
         }}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
@@ -180,6 +180,7 @@ const OrgTaskPage = React.memo((props) => {
         </Row>
       </PageContainer>}
       {task && <TaskTrackingDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+    {saving && <SavingAffix />}
     </ContainerStyled>
   </>
   );
