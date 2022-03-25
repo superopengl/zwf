@@ -12,7 +12,7 @@ const { Paragraph, Title, Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 48px auto 120px auto;
-  padding: 2rem 1rem;
+  padding: 3rem 1rem;
   max-width: 1000px;
 `;
 
