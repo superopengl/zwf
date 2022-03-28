@@ -1,25 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image as AntdImage, Upload } from 'antd';
+import { Image as AntdImage, Upload, Button, Space } from 'antd';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
 import { API_BASE_URL } from 'services/http';
-import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import styled from 'styled-components';
 
 const Container = styled.div`
-width: 50vw;
-max-width: 100%;
-height: 50vw;
-max-height: 300px;
-
 .ant-upload, .ant-image-img {
-  width: 50vw;
-  max-width: 100%;
-  height: 50vw;
-  max-height: 300px;
+  min-width: 104px;
+  min-height: 104px;
+}
+
+.ant-upload.ant-upload-select-picture-card {
+  width: auto;
+  height: auto;
 }
 `;
 function getBase64$(file, size) {
@@ -62,6 +60,10 @@ export const ResourcePagePictureUpload = React.memo((props) => {
     return false;
   }
 
+  const handleDelete = () => {
+    onChange(null);
+  }
+
   const uploadButton = (
     <div>
       {loading ? <LoadingOutlined /> : <PlusOutlined />}
@@ -71,18 +73,19 @@ export const ResourcePagePictureUpload = React.memo((props) => {
 
   return (
     <Container>
-    <Upload
-      multiple={false}
-      listType="picture-card"
-      accept="image/*"
-      showUploadList={false}
-      beforeUpload={handleConvetToBase64}
-      onChange={handleChange}
-      disabled={loading}
-      width="100%"
-    >
-      {value ? <AntdImage src={value} alt="picture" preview={false}/> : uploadButton}
-    </Upload>
+      <Upload
+        multiple={false}
+        listType="picture-card"
+        accept="image/*"
+        showUploadList={false}
+        beforeUpload={handleConvetToBase64}
+        onChange={handleChange}
+        disabled={loading}
+        width="100%"
+      >
+        {value ? <AntdImage src={value} alt="picture" preview={false} /> : uploadButton}
+      </Upload>
+      {value && <Button type="link" icon={<DeleteOutlined />} danger onClick={handleDelete} >delete</Button>}
     </Container>
   );
 });
