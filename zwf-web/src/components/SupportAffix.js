@@ -26,12 +26,12 @@ background-color:  #37AFD2bb;
 color: white;
 // box-shadow: 1px 1px 5px #222222;
 box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-border: 1px solid white;
+// border: 1px solid white;
 
 &:focus,&:hover,&:active {
 color: white;
 background-color: #37AFD2;
-border: 1px solid white;
+// border: 1px solid white;
 }
 `;
 
