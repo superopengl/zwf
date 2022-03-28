@@ -105,7 +105,7 @@ const SupportListPage = () => {
     {
       title: 'Role',
       dataIndex: 'role',
-      render: (role, item) => <>{role} {item.orgOwner && <Tag color="red">Owner</Tag>}</>
+      render: (role, item) => <>{role} {item.orgOwner && <Tag color="red">org owner</Tag>}</>
     },
     {
       title: 'Org',

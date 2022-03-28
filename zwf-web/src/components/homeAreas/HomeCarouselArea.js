@@ -35,7 +35,7 @@ position: relative;
 // background-position: center;
 // background-image: url("images/logo.svg");
 // background-repeat: repeat;
-background-color: #0a425e;
+background-color: #37AFD2;
 // background-size: 120px;
 // opacity: 0.75;
 // background-image: linear-gradient(135deg, #37AFD2, #37AFD2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
@@ -105,7 +105,7 @@ const HomeCarouselAreaRaw = props => {
         <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
           <Space size="large">
             <Logo />
-            <Title style={{ fontSize: catchPhraseSize, color: '#5cdbd3' }} >ZeeWorkflow</Title>
+            <Title style={{ fontSize: catchPhraseSize, color: '#ffc53d' }} >ZeeWorkflow</Title>
           </Space>
           <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
             All in one system for file, doc, job, task and workflow management. Come on, join us today!!
