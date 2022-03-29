@@ -14,7 +14,7 @@ import { assertRole } from '../utils/assertRole';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { id, portfolioId, taskTemplateId, userId, startFrom, every, period, repeatOn } = req.body;
+  const { id, portfolioId, taskTemplateId, userId, firstRunOn, every, period, repeatOn } = req.body;
 
   const taskTemplate = await getRepository(TaskTemplate).findOne(taskTemplateId);
   assert(taskTemplate, 404, 'TaskTemplate is not found');
@@ -24,7 +24,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.nameTemplate = `${taskTemplate.name} {{createdDate}}`;
   recurring.taskTemplateId = taskTemplateId;
   recurring.userId = userId;
-  recurring.firstRunOn = startFrom ? moment.tz(`${startFrom} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
+  recurring.firstRunOn = firstRunOn ? moment.tz(`${firstRunOn} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
   recurring.repeatOn = repeatOn;
@@ -49,7 +49,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
     .select([
       'x.id as id',
       'x."nameTemplate" as "nameTemplate"',
-      'x."startFrom" as "startFrom"',
+      'x."firstRunOn" as "firstRunOn"',
       'x."every" as "every"',
       'x."period" as "period"',
       'x."dueDay" as "dueDay"',

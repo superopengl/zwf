@@ -110,15 +110,15 @@ const RecurringListPage = (props) => {
       title: 'Schedule',
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
-        const { startFrom, every, period, lastRunAt, nextRunAt } = record;
+        const { firstRunOn, every, period, lastRunAt, nextRunAt } = record;
         return <StylePatternTable>
           <tbody>
-            {startFrom && <tr>
+            {firstRunOn && <tr>
               <td className="label">
                 <small>Start From</small>
               </td>
               <td>
-                <TimeAgo value={startFrom} direction="horizontal" />
+                <TimeAgo value={firstRunOn} direction="horizontal" />
               </td>
             </tr>}
             <tr>
