@@ -175,7 +175,7 @@ const ROUTES = [
     path: '/settings',
     name: <FormattedMessage id="menu.settings" />,
     icon: <SettingOutlined />,
-    roles: ['system', 'admin'],
+    roles: ['system'],
     routes: [
       {
         path: '/config',
@@ -305,8 +305,8 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isAdmin || isAgent} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isAdmin} exact path="/team" component={OrgMemberListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
+      <RoleRoute visible={isSystem} exact path="/config" component={ConfigListPage} />
+      <RoleRoute visible={isSystem} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem} exact path="/support" component={SupportListPage} />
       <RoleRoute visible={isSystem} exact path="/manage/resources" component={ResourceListPage} />
