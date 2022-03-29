@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Space, Button, notification, Collapse } from 'antd';
+import { Typography, Space, Button, notification, Collapse, Avatar } from 'antd';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { notes } from '../release_changes';
 import { CaretRightOutlined } from '@ant-design/icons';
@@ -16,21 +16,16 @@ const VersionMismatchModalContent = React.memo(props => {
   }
 
   return <>
-    <Paragraph>A new version of platform has been released. Reload the page to upgrade.</Paragraph>
-    <Collapse ghost bordered={false} 
-      expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
-      style={{position: 'relative', left: -16}}
-    >
-      <Collapse.Panel header={"What's new?"} key="tag">
-        <ul>
-          {notes.split(/\n/)
-            .map(x => x.trim())
-            .filter(x => x)
-            .map(x => <li key={x}>{x}</li>)
-          }
-        </ul>
-      </Collapse.Panel>
-    </Collapse>
+    <Paragraph>A new version of ZeeWorkflow has been released with below changes. Reload the page to upgrade.</Paragraph>
+    <Paragraph>
+      <ul>
+        {notes.split(/\n/)
+          .map(x => x.trim())
+          .filter(x => x)
+          .map(x => <li key={x}>{x}</li>)
+        }
+      </ul>
+    </Paragraph>
     <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 20 }}>
       <Button type="text" onClick={onClose}>No, later</Button>
       <Button type="primary" autoFocus onClick={handleReloadPage}>Reload Page</Button>
@@ -49,7 +44,7 @@ export const showVersionMismatchModal = (webappVersion, backendVersion) => {
 
   const notificationKey = 'versionCheck';
   notification.info({
-    icon: null,
+    icon: <Avatar src="/maskable_icon_x96.png"/>,
     message: 'New version is released',
     description: <VersionMismatchModalContent onClose={() => {
       reactLocalStorage.set(LAST_ASKED_BACKEND_VERSION, backendVersion)
