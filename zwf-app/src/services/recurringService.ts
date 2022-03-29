@@ -9,7 +9,6 @@ import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import * as moment from 'moment-timezone';
 import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
-import { createNewTask } from '../api';
 
 export const CLIENT_TZ = 'Australia/Sydney';
 

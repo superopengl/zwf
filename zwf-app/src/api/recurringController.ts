@@ -1,35 +1,33 @@
-import { UserInformation } from './../entity/views/UserInformation';
 
 import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
-import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/recurringService';
+import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/cronService';
 import * as moment from 'moment-timezone';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
+import { assertRole } from '../utils/assertRole';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const { id, clientId, taskTemplateId, startFrom, every, period } = req.body;
+  assertRole(req, 'admin', 'agent');
+  const { id, portfolioId, taskTemplateId, userId, startFrom, every, period, repeatOn } = req.body;
 
-  const user = await getRepository(UserInformation).findOne(clientId);
-  assert(user, 404, 'User is not found');
   const taskTemplate = await getRepository(TaskTemplate).findOne(taskTemplateId);
   assert(taskTemplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
   recurring.id = id || uuidv4();
-  recurring.nameTemplate = `${user.surname} ${taskTemplate.name} {{createdDate}}`;
-  recurring.userId = clientId;
+  recurring.nameTemplate = `${taskTemplate.name} {{createdDate}}`;
   recurring.taskTemplateId = taskTemplateId;
-  recurring.startFrom = startFrom ? moment.tz(`${startFrom} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
+  recurring.userId = userId;
+  recurring.firstRunOn = startFrom ? moment.tz(`${startFrom} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
+  recurring.repeatOn = repeatOn;
   recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
 
   const repo = getRepository(Recurring);
@@ -39,13 +37,13 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const listRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
 
   const list = await getRepository(Recurring)
     .createQueryBuilder('x')
     .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .orderBy('x."updatedAt"', 'DESC', 'NULLS LAST')
+    .orderBy('x."lastUpdatedAt"', 'DESC', 'NULLS LAST')
     .addOrderBy('j.name', 'ASC')
     .addOrderBy('p.name', 'ASC')
     .select([
@@ -58,9 +56,10 @@ export const listRecurring = handlerWrapper(async (req, res) => {
       'u.email as email',
       'j.name as "taskTemplateName"',
       `j.id as "taskTemplateId"`,
+      'p.name as "portfolioName"',
       'x."lastRunAt" as "lastRunAt"',
       'x."nextRunAt" as "nextRunAt"',
-      'x."updatedAt" as "updatedAt"'
+      'x."lastUpdatedAt" as "lastUpdatedAt"'
     ])
     .execute();
 
@@ -68,7 +67,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const getRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const repo = getRepository(Recurring);
   const recurring = await repo.findOne(id);
@@ -78,7 +77,7 @@ export const getRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const deleteRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const repo = getRepository(Recurring);
   await repo.delete({ id });
@@ -87,7 +86,7 @@ export const deleteRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const runRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
 
   const task = await testRunRecurring(id);

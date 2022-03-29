@@ -20,3 +20,4 @@ export * from './smartSearchController';
 export * from './tagController';
 export * from './taskDocController';
 export * from './resourceController';
+export * from './recurringController';
