@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Typography, Modal, Button } from 'antd';
+import { Row, Col, Typography, Modal, Button, Card, Tag, Alert } from 'antd';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
@@ -25,7 +25,7 @@ const LayoutStyled = styled.div`
   // height: calc(100vh - 64px);
   // height: calc(100vh - 48px - 48px);
   overflow: hidden;
-  max-width: 1000px;
+  // max-width: 1000px;
 
   .ant-page-header-content {
     padding-top: 30px;
@@ -38,6 +38,13 @@ const LayoutStyled = styled.div`
       flex: 1;
     }
   }
+`;
+
+const StyledModal = styled(Modal)`
+.ant-modal-content {
+  background-color: transparent;
+  box-shadow: none;
+}
 `;
 
 const EmptyTaskTamplateSchema = {
@@ -77,10 +84,7 @@ export const TaskTemplatePage = props => {
 
   const [loading, setLoading] = React.useState(!isNew);
   const [preview, setPreview] = React.useState(false);
-  const [previewSider, setPreviewSider] = React.useState(false);
-  const [previewWidth, setPreviewWidth] = React.useState(300);
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
-
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
 
   React.useEffect(() => {
@@ -102,6 +106,12 @@ export const TaskTemplatePage = props => {
       subscription$.unsubscribe();
     }
   }, []);
+
+  React.useEffect(() => {
+    if (taskTemplate) {
+      setTaskTemplate(x => ({ ...x, name: taskTemplateName }));
+    }
+  }, [taskTemplateName])
 
   const goBack = () => {
     props.history.goBack()
@@ -141,7 +151,7 @@ export const TaskTemplatePage = props => {
         ghost={true}
         header={{
           backIcon: <LeftOutlined />,
-          title: <Row align="middle" wrap={false} style={{height: 46}}>
+          title: <Row align="middle" wrap={false} style={{ height: 46 }}>
             <Col><TaskTemplateIcon /></Col>
             <Col flex={1}>
               <ClickToEditInput placeholder={isNew ? 'New Task Template' : "Task template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />,
@@ -149,14 +159,22 @@ export const TaskTemplatePage = props => {
           </Row>,
           onBack: goBack,
           extra: [
-            <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
             <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
             <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
           ]
         }}
       >
-        <div style={{ height: 'calc(100vh - 48px - 72px - 30px)', overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
-          <div style={{ overflowY: 'auto', flexGrow: 1 }}>
+        <Row gutter={40} wrap={false} style={{ height: 'calc(100vh - 48px - 72px - 30px)', overflow: 'hidden' }}>
+          <Col style={{ overflowY: 'auto' }}>
+            <Card>
+              <TaskTemplatePreviewPanel
+                value={taskTemplate}
+                debug={debugMode}
+                type="agent"
+              />
+            </Card>
+          </Col>
+          <Col style={{ overflowY: 'auto' }}>
             {taskTemplate && <TaskTemplateEditorPanel
               value={taskTemplate}
               onChange={schema => {
@@ -164,39 +182,12 @@ export const TaskTemplatePage = props => {
               }}
               debug={debugMode}
             />}
-          </div>
-          {previewSider && <Resizable
-            style={{ marginLeft: 30 }}
-            size={{ width: previewWidth, height: '100%' }}
-            minWidth={300}
-            maxWidth={800}
-            enable={{ top: false, right: false, bottom: false, left: true }}
-            handleClasses={{ left: 'resize-handler' }}
-            onResizeStop={(e, direction, ref, d) => {
-              setPreviewWidth(w => Math.max(w + d.width, 300));
-            }}
-          >
-            <div style={{ padding: 16, height: '100%', width: '100%', overflowY: 'auto' }}>
-              <Row justify="center" style={{ marginBottom: 40 }}>
-                <Text type="warning">Preview</Text>
-              </Row>
-              <Row justify="center">
-                <TaskTemplatePreviewPanel
-                  value={taskTemplate}
-                  debug={debugMode}
-                  type="agent"
-                />
-              </Row>
-            </div>
-          </Resizable>}
-        </div>
-        {/* <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
-
-          </Layout.Sider> */}
+          </Col>
+        </Row>
       </PageContainer>
 
 
-      <Modal
+      <StyledModal
         visible={preview}
         onOk={() => setPreview(false)}
         onCancel={() => setPreview(false)}
@@ -204,13 +195,34 @@ export const TaskTemplatePage = props => {
         destroyOnClose
         maskClosable
         footer={null}
+        width={1000}
       >
-        <TaskTemplatePreviewPanel
-          value={taskTemplate}
-          debug={debugMode}
-          type="agent"
-        />
-      </Modal>
+        <Row gutter={40}>
+          <Col span={12}>
+            <Row justify="center" style={{marginBottom: 12}}><Tag color="processing">Agent view</Tag></Row>
+              <Card>
+                <TaskTemplatePreviewPanel
+                  value={taskTemplate}
+                  debug={debugMode}
+                  type="agent"
+                />
+              </Card>
+          </Col>
+          <Col span={12}>
+          <Row justify="center" style={{marginBottom: 12}}><Tag color="warning">Client view</Tag></Row>
+
+              <Card>
+
+                <TaskTemplatePreviewPanel
+                  value={taskTemplate}
+                  debug={debugMode}
+                  type="client"
+                />
+              </Card>
+          </Col>
+        </Row>
+
+      </StyledModal>
     </LayoutStyled >
     // </PageContainer>
 

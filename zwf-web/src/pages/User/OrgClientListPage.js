@@ -152,11 +152,6 @@ const OrgClientListPage = () => {
       fixed: 'left',
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
-    // {
-    //   title: 'Login Type',
-    //   dataIndex: 'loginType',
-    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    // },
     {
       title: <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />,
       dataIndex: 'tags',

@@ -84,11 +84,6 @@ const OrgListPage = () => {
       dataIndex: 'ownerEmail',
       render: (value) => value
     },
-    // {
-    //   title: 'Login Type',
-    //   dataIndex: 'loginType',
-    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    // },
     {
       title: 'Next pay / trial end',
       dataIndex: 'subscription',
