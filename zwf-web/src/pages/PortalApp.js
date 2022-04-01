@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown, Button, Modal, Alert, Typography } from 'antd';
+import { Menu, Dropdown, Button, Modal, Alert, Typography, Space } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
@@ -130,16 +130,6 @@ const PortalPage = (props) => {
       name: <FormattedMessage id="menu.resources" />,
       visible: true,
     },
-    {
-      path: '/signup/org',
-      name: <FormattedMessage id="menu.join" />,
-      visible: !isLoggedIn,
-    },
-    {
-      path: '/login',
-      name: <FormattedMessage id="menu.login" />,
-      visible: !isLoggedIn,
-    }
   ];
 
   const handleMenuClick = (path) => {
@@ -169,12 +159,18 @@ const PortalPage = (props) => {
     fixedHeader={true}
     menuItemRender={(item, dom) => item.visible ? <div onClick={() => handleMenuClick(item.path)}>{dom}</div> : null}
     rightContentRender={() => {
-
-      if (isLoggedIn) {
-        return <Link to={isSystem ? '/support' : '/task'}><Button type="primary">
-          <FormattedMessage id="menu.dashboard" /> <RightOutlined />
-        </Button></Link>
-      }
+      return isLoggedIn ? <Link to={isSystem ? '/support' : '/task'}><Button type="primary">
+        <FormattedMessage id="menu.dashboard" /> <RightOutlined />
+      </Button>
+      </Link>
+        : <Space size="large">
+          <Link to="/login">
+            <Button ghost>Log in</Button>
+          </Link>
+          <Link to="/signup/org">
+            <Button type="primary">Start free trial</Button>
+          </Link>
+        </Space>
 
       // const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
       //   <Menu.Item key="en-US">English</Menu.Item>
@@ -191,12 +187,12 @@ const PortalPage = (props) => {
     }}
     footerRender={() => <HomeFooter />}
   >
-      <Switch>
-        <RoleRoute path="/" exact component={HomePage} />
-        <RoleRoute exact path="/resources" component={ResourceListPage} />
-        <RoleRoute exact path="/resources/:id" component={ResourcePage} />
-        {/* <RoleRoute component={Error404} /> */}
-      </Switch>
+    <Switch>
+      <RoleRoute path="/" exact component={HomePage} />
+      <RoleRoute exact path="/resources" component={ResourceListPage} />
+      <RoleRoute exact path="/resources/:id" component={ResourcePage} />
+      {/* <RoleRoute component={Error404} /> */}
+    </Switch>
 
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.
