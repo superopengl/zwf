@@ -93,24 +93,20 @@ const SupportListPage = () => {
       title: 'User',
       fixed: 'left',
       render: (_, item) => <Space>
-        <UserNameCard userId={item.userId} />
+        <UserNameCard userId={item.userId} searchText={queryInfo.text}/>
         <Badge count={item.unreadCount} showZero={false} />
       </Space>
     },
-    // {
-    //   title: 'ID',
-    //   dataIndex: 'id',
-    //   render: (value, item) => <Text code>{value}</Text>,
-    // },
     {
       title: 'Role',
       dataIndex: 'role',
-      render: (role, item) => <>{role} {item.orgOwner && <Tag color="red">org owner</Tag>}</>
+      width: 140,
+      render: (role, item) => <Text strong={item.orgOwner}>{role}</Text>
     },
     {
       title: 'Org',
       dataIndex: 'orgName',
-      render: (value) => value
+      render: (value) => <HighlightingText search={queryInfo.text} value={value} />,
     },
     {
       title: 'Last Contact At',
@@ -118,9 +114,7 @@ const SupportListPage = () => {
       render: (value) => <TimeAgo value={value} />
     },
     {
-      // title: 'Action',
-      // fixed: 'right',
-      // width: 200,
+      width: 60,
       align: 'right',
       fixed: 'right',
       render: (text, item) => {
