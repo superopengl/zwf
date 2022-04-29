@@ -67,7 +67,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       layout="horizontal"
       colon={false}
     >
-      <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">{isClient ? 'Fields' : 'Client fields'}</Divider>
+      {type !== 'client' && <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Client fields</Divider>}
       {!isClient && <>
         <Paragraph type="secondary">
           You can prefill some fileds on behalf of the client if you already have some of the information for this task.
