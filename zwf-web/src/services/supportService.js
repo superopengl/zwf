@@ -11,8 +11,8 @@ export function nudgeMyLastReadSupportMessage$(messageId) {
   return httpPost$(`/support/nudge`, { messageId });
 }
 
-export function listAllSupports$() {
-  return httpGet$(`/support/list`);
+export function searchUserSupports$(queryInfo) {
+  return httpPost$(`/support/search`, queryInfo);
 }
 
 export function sendContact$(message, capturedUrl, replyToUserId) {

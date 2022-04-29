@@ -19,7 +19,7 @@ import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
 import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
-import { getMySupport$, getUserSupport$, subscribeSupportMessage, sendContact$, listAllSupports$ } from 'services/supportService';
+import { getMySupport$, getUserSupport$, subscribeSupportMessage, sendContact$, searchUserSupports$ } from 'services/supportService';
 import { finalize } from 'rxjs/operators';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { SupportMessageList } from 'components/SupportMessageList';
@@ -29,6 +29,7 @@ import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserNameCard } from 'components/UserNameCard';
 import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
 import { MdMessage } from 'react-icons/md';
+import { useLocalstorageState } from 'rooks';
 
 
 const { Text } = Typography;
@@ -69,14 +70,13 @@ const StyledTable = styled(Table)`
 
 const DEFAULT_QUERY_INFO = {
   text: '',
-  tags: [],
   page: 1,
   size: 50,
   orderField: 'createdAt',
   orderDirection: 'DESC'
 };
 
-const LOCAL_STORAGE_KEY = 'user_query';
+const LOCAL_STORAGE_KEY = 'user_support_query';
 
 const SupportListPage = () => {
 
@@ -86,7 +86,7 @@ const SupportListPage = () => {
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const eventSource$ = React.useRef(new Subject());
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
+  const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
 
   const columnDef = [
     {
@@ -145,10 +145,13 @@ const SupportListPage = () => {
   const loadList = () => {
     setLoading(true);
 
-    return listAllSupports$().pipe(
+    return searchUserSupports$(queryInfo).pipe(
       finalize(() => setLoading(false))
     ).subscribe(
-      list => setList(list)
+      resp => {
+        setTotal(resp.count);
+        setList(resp.data);
+      }
     );
   }
 
@@ -157,7 +160,7 @@ const SupportListPage = () => {
     return () => {
       load$.unsubscribe();
     }
-  }, []);
+  }, [queryInfo]);
 
   // Subscribe message events
   React.useEffect(() => {
@@ -181,7 +184,6 @@ const SupportListPage = () => {
   }, []);
 
   const updateQueryInfo = (queryInfo) => {
-    reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
     setQueryInfo(queryInfo);
   }
 
@@ -206,20 +208,7 @@ const SupportListPage = () => {
   }
 
   const searchByQueryInfo = async () => {
-    // try {
-    //   setLoading(true);
-    //   const resp = await searchOrgMemberUsers(queryInfo);
-    //   const { count, page, data } = resp;
-    //   ReactDOM.unstable_batchedUpdates(() => {
-    //     setTotal(count);
-    //     setList(data);
-    //     setQueryInfo({ ...queryInfo, page });
-    //     setLoading(false);
-    //   });
-    //   reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    // } catch {
-    //   setLoading(false);
-    // }
+
   }
 
   const handleImpersonante = async (user) => {
@@ -245,11 +234,11 @@ const SupportListPage = () => {
   }
 
   const handleClearFilter = () => {
-    searchByQueryInfo(DEFAULT_QUERY_INFO);
+    setQueryInfo(q => ({ ...q, text: '' }));
   }
 
   const handlePaginationChange = (page, pageSize) => {
-    searchByQueryInfo({ ...queryInfo, page, size: pageSize });
+    setQueryInfo(q => ({ ...q, page, size: pageSize }));
   }
 
 
@@ -297,17 +286,17 @@ const SupportListPage = () => {
             }
           }}
           pagination={{
-            current: queryInfo.current,
+            current: queryInfo.page,
             pageSize: queryInfo.size,
             total: total,
             showTotal: total => `Total ${total}`,
-            pageSizeOptions: [10, 30, 60],
+            pageSizeOptions: [20, 50, 100],
             showSizeChanger: true,
             showQuickJumper: true,
             disabled: loading,
             onChange: handlePaginationChange,
             onShowSizeChange: (page, size) => {
-              searchByQueryInfo({ ...queryInfo, page, size });
+              setQueryInfo(q => ({ ...q, page, size }));
             }
           }}
         />
