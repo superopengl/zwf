@@ -5,7 +5,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined
+  BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
 } from '@ant-design/icons';
 import { Link } from 'react-router-dom';
 import { Space, Typography, Modal, Row, Col } from 'antd';
@@ -160,33 +160,29 @@ const ROUTES = [
     roles: ['admin'],
   },
   {
-    path: '/revenue',
-    name: <FormattedMessage id="menu.revenue" />,
-    icon: <Icon component={() => <RiCoinsLine />} />,
-    roles: ['system']
-  },
-  {
     path: '/tags',
     name: <FormattedMessage id="menu.tags" />,
     icon: <TagsOutlined />,
     roles: ['admin', 'agent'],
   },
+  // {
+  //   path: '/revenue',
+  //   name: <FormattedMessage id="menu.revenue" />,
+  //   icon: <Icon component={() => <RiCoinsLine />} />,
+  //   roles: ['system']
+  // },
   {
-    path: '/settings',
-    name: <FormattedMessage id="menu.settings" />,
+    path: '/config',
+    name: <FormattedMessage id="menu.config" />,
     icon: <SettingOutlined />,
     roles: ['system'],
-    routes: [
-      {
-        path: '/config',
-        name: <FormattedMessage id="menu.config" />,
-      },
-      {
-        path: '/email_template',
-        name: <FormattedMessage id="menu.emailTemplate" />,
-      },
-    ]
   },
+  {
+    path: '/email_template',
+    name: <FormattedMessage id="menu.emailTemplate" />,
+    icon: <MailOutlined />,
+    roles: ['system'],
+  }
 ];
 
 function getSanitizedPathName(pathname) {
