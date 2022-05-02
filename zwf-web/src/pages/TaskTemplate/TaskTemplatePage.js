@@ -86,6 +86,7 @@ export const TaskTemplatePage = props => {
   const [preview, setPreview] = React.useState(false);
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
+  const formRef = React.useRef();
 
   React.useEffect(() => {
     let subscription$ = Subscription.EMPTY;
@@ -118,6 +119,8 @@ export const TaskTemplatePage = props => {
   }
 
   const handleSave = async () => {
+    await formRef.current.validateFields();
+
     const entity = {
       ...taskTemplate,
       id: taskTemplateId,
@@ -176,6 +179,7 @@ export const TaskTemplatePage = props => {
           </Col>
           <Col style={{ overflowY: 'auto' }}>
             {taskTemplate && <TaskTemplateEditorPanel
+              ref={formRef}
               value={taskTemplate}
               onChange={schema => {
                 setTaskTemplate(schema);
@@ -212,7 +216,6 @@ export const TaskTemplatePage = props => {
           <Row justify="center" style={{marginBottom: 12}}><Tag color="warning">Client view</Tag></Row>
 
               <Card>
-
                 <TaskTemplatePreviewPanel
                   value={taskTemplate}
                   debug={debugMode}
