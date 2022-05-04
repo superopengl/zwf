@@ -13,18 +13,24 @@ background-color: rgb(250,250,250);
 border-radius: 4px;
 `;
 
-const RenderOptions = (props) => {
+export const OptionsBuilder = (props) => {
 
-  const { type, options: propOptions, fieldIndex, onChange } = props;
-  const [options, setOptions] = React.useState(propOptions || []);
+  const { value, onChange } = props;
+  const [options, setOptions] = React.useState(value || []);
 
   React.useEffect(() => {
-    setOptions(propOptions || [])
-  }, [propOptions])
+    setOptions(value || [])
+    debugger;
+  }, [value])
 
   const handleOptionsChange = (newOptions) => {
     const sanitizedOptions = uniq(newOptions.filter(x => x));
     onChange(sanitizedOptions);
+  }
+
+  const handleOptionTextChange = (value, index) => {
+    options[index] = value?.trim();
+    handleOptionsChange(options);
   }
 
   return (
@@ -40,13 +46,9 @@ const RenderOptions = (props) => {
               </div>
             </Col> */}
             <Col flex="auto">
-              <Form.Item noStyle 
-              name={['fields', fieldIndex, 'options', index]} rules={[{ required: true, message: ' ' }]}>
-                <Input autoFocus maxLength={100}/>
-              </Form.Item>
+                <Input autoFocus maxLength={100} value={option} onChange={e => handleOptionTextChange(e.target.value, index)}/>
             </Col>
             <Col>
-            <Tooltip title="Delete option" placement="topLeft">
               <Button
                 type="link"
                 size="small"
@@ -58,7 +60,6 @@ const RenderOptions = (props) => {
                   handleOptionsChange(options);
                 }}
               />
-              </Tooltip>
             </Col>
           </Row>
         );
@@ -87,14 +88,10 @@ const RenderOptions = (props) => {
   );
 };
 
-RenderOptions.propTypes = {
-  type: PropTypes.oneOf(['checkbox', 'radio', 'select']).isRequired,
-  options: PropTypes.arrayOf(PropTypes.string).isRequired,
-  fieldIndex: PropTypes.number.isRequired,
-  onChange: PropTypes.func.isRequired,
+OptionsBuilder.propTypes = {
+  value: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func,
 };
 
-RenderOptions.defaultProps = {
+OptionsBuilder.defaultProps = {
 };
-
-export default RenderOptions;

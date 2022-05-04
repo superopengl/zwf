@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, Switch, Row, Input, Form, Col, Select, Tooltip, Typography, Button } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined } from '@ant-design/icons'
-import RenderOptions from './RenderOptions';
+import { OptionsBuilder } from './OptionsBuilder';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
 import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
@@ -72,9 +72,18 @@ const FieldEditCard = (props) => {
             />
           </Form.Item>
           {['radio', 'checkbox', 'select'].includes(value.type) &&
-            <Form.Item label="Options" required
-              {...formItemLayoutProps}>
-              <RenderOptions type={value.type} fieldIndex={index} options={value.options} onChange={handleOptionChange} />
+            <Form.Item label="Options"
+              {...formItemLayoutProps}
+              name={['fields', index, 'options']}
+              rules={[{
+                validator: async (rule, options) => {
+                  if(!options?.every(x => x?.trim().length)) {
+                    throw 'Options are not defined'
+                  }
+                }
+              }]}
+              >
+              <OptionsBuilder />
             </Form.Item>
           }
         </Col>
