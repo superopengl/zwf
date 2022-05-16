@@ -49,7 +49,7 @@ const DocTemplateSelect = props => {
 
   React.useEffect(() => {
     const allVariables = _.chain(docTemplateOptions)
-    .filter(x => value.includes(x.id))
+    .filter(x => Array.isArray(value) ? value.includes(x.id) : value === x.id)
     .map(x => x.variables || [])
     .flatten()
     .uniq()
@@ -59,8 +59,8 @@ const DocTemplateSelect = props => {
     onVariableChange(allVariables);
   }, [value, docTemplateOptions]);
 
-  const handleChange = (selectedIds, options) => {
-    onChange(selectedIds);
+  const handleChange = (selectedValue, options) => {
+    onChange(selectedValue);
   }
 
   return <Loading loading={loading}>
@@ -88,7 +88,7 @@ const DocTemplateSelect = props => {
 }
 
 DocTemplateSelect.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.string).isRequired,
+  value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]).isRequired,
   onChange: PropTypes.func.isRequired,
   onVariableChange: PropTypes.func,
   placeholder: PropTypes.string,

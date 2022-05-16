@@ -86,13 +86,12 @@ const FileIconWithOverlay = props => {
 }
 
 export const FileUploader = (props) => {
-  const { onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
+  const { value, onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
   const loadFileList = async () => {
-    const { value } = props;
     if (value && value.length) {
       setLoading(true);
       const list = await getFileMetaList(value);
@@ -151,6 +150,10 @@ export const FileUploader = (props) => {
     showsSignedAt={showsSignedAt}
   />
 
+  const renderFileItem = (originNode, file, fileList) => {
+    return originNode;
+  }
+
   return (
     <Container className="clearfix">
       <Dragger
@@ -169,6 +172,7 @@ export const FileUploader = (props) => {
         // iconRender={() => <UploadOutlined />}
         disabled={disabled || fileList.length >= maxSize}
         iconRender={getFileIcon}
+        itemRender={renderFileItem}
       // showUploadList={true}
       >
         {disabled ? <Text type="secondary">File upload is disabled</Text>

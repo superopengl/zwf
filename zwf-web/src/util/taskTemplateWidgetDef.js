@@ -10,6 +10,8 @@ import {TiSortNumerically} from 'react-icons/ti'
 import Icon, { UploadOutlined } from '@ant-design/icons'
 import { FileUploader } from 'components/FileUploader';
 import { DateInput } from 'components/DateInput';
+import { Upload } from 'antd';
+import { AutoDocInput } from 'components/AutoDocInput';
 
 export const TaskTemplateWidgetDef = Object.freeze([
   {
@@ -46,14 +48,6 @@ export const TaskTemplateWidgetDef = Object.freeze([
       maxLength: 1000,
     },
   },
-  // {
-  //   type: 'upload',
-  //   label: 'File upload',
-  //   icon: <UploadOutlined />,
-  //   forwardRef: true,
-  //   widget: FileUploader,
-  //   widgetPorps: null,
-  // },
   {
     type: 'radio',
     label: 'Multiple choice',
@@ -112,6 +106,22 @@ export const TaskTemplateWidgetDef = Object.freeze([
     widgetPorps: {
       picker: 'year',
       format: 'YYYY'
+    },
+  },
+  {
+    type: 'upload',
+    label: 'Attachments',
+    icon: <UploadOutlined />,
+    widget: FileUploader,
+    widgetPorps: {
+    },
+  },
+  {
+    type: 'autodoc',
+    label: 'Auto doc',
+    icon: <UploadOutlined />,
+    widget: AutoDocInput,
+    widgetPorps: {
     },
   },
 ]);

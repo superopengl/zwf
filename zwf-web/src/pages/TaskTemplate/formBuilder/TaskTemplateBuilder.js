@@ -2,7 +2,7 @@ import React from 'react';
 import { Form, Typography, Input, Alert, Switch } from 'antd';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
-import { FieldList } from './FieldList';
+import { TaskTemplateFieldsEditor } from './TaskTemplateFieldsEditor';
 import DocTemplateSelect from 'components/DocTemplateSelect';
 import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
 // import { EditTitleInput } from 'components/EditTitleInput';
@@ -14,7 +14,7 @@ const { Text, Paragraph } = Typography;
 export const createEmptyField = () => {
   return {
     type: 'input',
-    name: '',
+    name: 'Unnamed field',
     description: '',
   }
 }
@@ -50,6 +50,7 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
   const { value: template, onChange } = props;
 
   const [allVars, setAllVars] = React.useState([]);
+  const [form] = Form.useForm();
 
   const initialValues = {
     name: template?.name || '',
@@ -81,6 +82,7 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
   return <TaskTemplateEditorContext.Provider value={{ vars: allVars }}>
     <Form
       ref={ref}
+      form={form}
       onKeyPress={e => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -108,32 +110,35 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
           rows={5}
         />
       </Form.Item>
-      <Form.Item
+      {/* <Form.Item
         label="Doc templates"
         name="docTemplateIds"
         {...formItemLayoutProps}
       >
         <DocTemplateSelect showVariables={true} onVariableChange={hanldeVariableChange} />
-      </Form.Item>
-      <Form.Item
+      </Form.Item> */}
+      {/* <Form.Item
         label="Has attachments?"
         name="hasDoc"
         valuePropName="checked"
         {...formItemLayoutProps}
       >
         <Switch />
-      </Form.Item>
+      </Form.Item> */}
       <Alert
-          description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
-          showIcon
-          closable
-          type="info"
-          style={{ marginBottom: 20 }}
-        />
-      {/* <Form.Item
+        description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
+        showIcon
+        closable
+        type="info"
+        style={{ marginBottom: 20 }}
+      />
+      <Form.Item
         label="Fields"
         name="fields"
-        {...formItemLayoutProps}
+        // {...formItemLayoutProps}
+        labelCol={{ span: 0 }}
+        wrapperCol={{ span: 24 }}
+        labelAlign='left'
         rules={[
           {
             required: true,
@@ -152,8 +157,8 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
             // },
           },
         ]}>
-      </Form.Item> */}
-      <FieldList />
+        <TaskTemplateFieldsEditor />
+      </Form.Item>
       {/* <Form.Item>
         <Button htmlType="submit">Save</Button>
       </Form.Item> */}

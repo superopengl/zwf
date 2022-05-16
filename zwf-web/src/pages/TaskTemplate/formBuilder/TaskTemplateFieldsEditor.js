@@ -6,15 +6,21 @@ import { PlusOutlined } from '@ant-design/icons';
 import { DroppableFieldList } from './DroppableFieldList';
 import { createEmptyField } from './TaskTemplateBuilder';
 import PropTypes from 'prop-types';
+import { showFieldItemEditor } from './showFieldItemEditor';
 
-export const FieldList = (props) => {
-  // const { value, onChange } = props;
-  const form = Form.useFormInstance();
-  const value = form.getFieldValue('fields');
+export const TaskTemplateFieldsEditor = (props) => {
+  const { value, onChange } = props;
+  // const form = Form.useFormInstance();
   const handleChange = fields => {
-    const currentValue = form.getFieldsValue(true);
-    form.setFieldsValue({...currentValue, fields})
+    onChange(fields)
   };
+
+  const handleAddField = () => {
+    const defaultField = createEmptyField();
+    showFieldItemEditor(defaultField, addedField => {
+      handleChange([...value, addedField]);
+    });
+  }
   return (
     <>
       <DroppableFieldList
@@ -35,13 +41,7 @@ export const FieldList = (props) => {
           type="primary"
           icon={<PlusOutlined />}
           // block
-          onClick={() => {
-            const updatedList = [
-              ...value,
-              createEmptyField(),
-            ];
-            handleChange(updatedList);
-          }}
+          onClick={handleAddField}
         >
           Add field
         </Button>
@@ -50,12 +50,12 @@ export const FieldList = (props) => {
   );
 }
 
-FieldList.propTypes = {
+TaskTemplateFieldsEditor.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.array.isRequired,
 };
 
-FieldList.defaultProps = {
+TaskTemplateFieldsEditor.defaultProps = {
   onChange: () => { },
   value: [],
 };
