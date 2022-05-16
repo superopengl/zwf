@@ -13,14 +13,14 @@ import { showFieldItemEditor } from './showFieldItemEditor';
 const { Text } = Typography;
 
 export const FieldItemEditor = (props) => {
-  const { value, index, onDelete, onChange } = props;
-
+  const { value: item, index, onDelete, onChange } = props;
+  const formRef = React.createRef()
   const handleEditItem = () => {
-    showFieldItemEditor(value, onChange);
+    showFieldItemEditor(item, onChange);
   }
 
-  const widgetDef = TaskTemplateWidgetDef.find(x => x.type === value.type);
-  const name = value.name;
+  const widgetDef = TaskTemplateWidgetDef.find(x => x.type === item.type);
+  const name = item.name;
 
   const meta = React.useMemo(() => ({
     columns: 1,
@@ -28,26 +28,25 @@ export const FieldItemEditor = (props) => {
       {
         key: `${name}.${index}`,
         label: name,
-        required: value.required,
-        extra: value.description,
-        options: value.options,
-        forwardRef: value.forwardRef,
+        initialValue: item.value,
+        required: item.required,
+        extra: item.description,
+        options: item.options,
+        forwardRef: item.forwardRef,
         widget: widgetDef.widget,
         widgetProps: {
           ...widgetDef.widgetPorps,
-          style: {
-            ...widgetDef.widgetPorps?.style,
-            // pointerEvents: 'none',
-          },
           // onClick: () => {}
         }
       }
     ]
-  }), [value]);
+  }), [item]);
 
   return <Row wrap={false} gutter={16}>
     <Col flex="auto">
-      <FormBuilder meta={meta} />
+      <Form layout="horizontal" ref={formRef}>
+        <FormBuilder meta={meta} form={formRef}/>
+      </Form>
     </Col>
     <Col>
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>

@@ -83,6 +83,7 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
     <Form
       ref={ref}
       form={form}
+      // layout="vertical"
       onKeyPress={e => {
         if (e.key === 'Enter') {
           e.preventDefault();

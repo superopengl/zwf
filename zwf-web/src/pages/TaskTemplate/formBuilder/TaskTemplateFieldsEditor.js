@@ -7,6 +7,8 @@ import { DroppableFieldList } from './DroppableFieldList';
 import { createEmptyField } from './TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 import { showFieldItemEditor } from './showFieldItemEditor';
+import {RiInsertRowTop, RiInsertRowBottom} from 'react-icons/ri';
+import Icon from '@ant-design/icons';
 
 export const TaskTemplateFieldsEditor = (props) => {
   const { value, onChange } = props;
@@ -21,15 +23,26 @@ export const TaskTemplateFieldsEditor = (props) => {
       handleChange([...value, addedField]);
     });
   }
+
+  const handlePrependField = () => {
+    const defaultField = createEmptyField();
+    showFieldItemEditor(defaultField, addedField => {
+      handleChange([addedField, ...value]);
+    });
+  }
   return (
     <>
-      <Alert
-        description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
-        showIcon
-        closable
-        type="info"
-        style={{ marginBottom: 20 }}
-      />
+      <Row justify="end">
+        <Button
+          style={{ marginTop: 16, marginBottom: 24 }}
+          type="primary"
+          icon={<Icon component={() => <RiInsertRowTop />} />}
+          // block
+          onClick={handlePrependField}
+        >
+          Add field
+        </Button>
+      </Row>
       <DroppableFieldList
         items={value}
         onChange={handleChange}
@@ -46,7 +59,7 @@ export const TaskTemplateFieldsEditor = (props) => {
         <Button
           style={{ marginTop: 16 }}
           type="primary"
-          icon={<PlusOutlined />}
+          icon={<Icon component={() => <RiInsertRowBottom />} />}
           // block
           onClick={handleAddField}
         >
