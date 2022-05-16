@@ -119,9 +119,10 @@ export const App = React.memo(() => {
               <RoleRoute exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute visible={!isSystem} exact path="/task/direct/:token" component={TaskDirectPage} />
-              <RoleRoute visible={!isGuest} component={AppLoggedIn} />
-              <Redirect to="/" />
+              <RoleRoute path="*" component={AppLoggedIn} />
+              {/* <Redirect to="/" /> */}
               {/* <RoleRoute loading={loading} component={Error404} /> */}
+              {/* <RoleRoute component={Error404} /> */}
             </Switch>
           </BrowserRouter>
         </IntlProvider>

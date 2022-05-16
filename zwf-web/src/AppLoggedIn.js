@@ -7,12 +7,11 @@ import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
   BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
 } from '@ant-design/icons';
-import { Link } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect, Link } from 'react-router-dom';
 import { Space, Typography, Modal, Row, Col } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import AboutModal from 'pages/About/AboutModal';
-import { Switch } from 'react-router-dom';
 import { BiDollar } from 'react-icons/bi';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
@@ -310,6 +309,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem} exact path="/manage/resources/:id" component={ResourceEditPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
       {/* <RoleRoute path="*" component={Error404} /> */}
+      <Redirect to="/" /> 
     </Switch>
 
     <ChangePasswordModal
