@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Button, Form } from 'antd';
+import { Row, Button, Alert } from 'antd';
 import { camelCase } from 'lodash';
 import { arrayMove } from '@dnd-kit/sortable';
 import { PlusOutlined } from '@ant-design/icons';
@@ -23,6 +23,13 @@ export const TaskTemplateFieldsEditor = (props) => {
   }
   return (
     <>
+      <Alert
+        description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
+        showIcon
+        closable
+        type="info"
+        style={{ marginBottom: 20 }}
+      />
       <DroppableFieldList
         items={value}
         onChange={handleChange}

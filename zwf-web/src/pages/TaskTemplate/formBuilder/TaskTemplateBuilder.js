@@ -99,7 +99,7 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
       <Form.Item
         label="Description"
         name="description"
-        {...formItemLayoutProps}
+        // {...formItemLayoutProps}
         rules={[{ required: false, message: ' ' }]}>
         <Input.TextArea
           placeholder="Task template description"
@@ -125,19 +125,12 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
       >
         <Switch />
       </Form.Item> */}
-      <Alert
-        description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
-        showIcon
-        closable
-        type="info"
-        style={{ marginBottom: 20 }}
-      />
       <Form.Item
-        label="Fields"
+        // label="Fields"
         name="fields"
         // {...formItemLayoutProps}
-        labelCol={{ span: 0 }}
-        wrapperCol={{ span: 24 }}
+        // labelCol={{ span: 0 }}
+        // wrapperCol={{ span: 24 }}
         labelAlign='left'
         rules={[
           {
