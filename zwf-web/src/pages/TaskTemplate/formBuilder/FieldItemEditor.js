@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Switch, Row, Input, Form, Col, Select, Tooltip, Typography, Button } from 'antd';
+import { Card, Space, Row, Avatar, Form, Col, Modal, Tooltip, Typography, Button } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons'
 import { OptionsBuilder } from './OptionsBuilder';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
@@ -9,6 +9,7 @@ import { VarTag } from 'components/VarTag';
 import DocTemplateSelect from 'components/DocTemplateSelect';
 import FormBuilder from 'antd-form-builder'
 import { showFieldItemEditor } from './showFieldItemEditor';
+import {RiDeleteRow} from 'react-icons/ri'
 
 const { Text } = Typography;
 
@@ -36,21 +37,36 @@ export const FieldItemEditor = (props) => {
         widget: widgetDef.widget,
         widgetProps: {
           ...widgetDef.widgetPorps,
-          // onClick: () => {}
+          ...(item.type === 'autodoc' ? { mode: 'taskTemplate' } : null)
         }
       }
     ]
   }), [item]);
 
+  const handleDelete = () => {
+    Modal.confirm({
+      title: <Space><Avatar icon={<Icon component={() => <RiDeleteRow />}/>} style={{ backgroundColor: '#cf222e' }} /> Delete field <Text code>{item.name}</Text>?</Space>,
+      onOk: () => {
+        onDelete();
+      },
+      icon: null,
+      maskClosable: true,
+      okButtonProps: {
+        danger: true
+      },
+      okText: 'Yes, delete it!'
+    });
+  }
+
   return <Row wrap={false} gutter={16}>
     <Col flex="auto">
       <Form layout="horizontal" ref={formRef}>
-        <FormBuilder meta={meta} form={formRef}/>
+        <FormBuilder meta={meta} form={formRef} />
       </Form>
     </Col>
     <Col>
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>
-      <Button type="link" danger icon={<DeleteOutlined />} onClick={onDelete}></Button>
+      <Button type="link" danger icon={<DeleteOutlined />} onClick={handleDelete}></Button>
       <Tooltip title="Drag to adjust order">
         <Button type="text" icon={<HolderOutlined />}></Button>
       </Tooltip>

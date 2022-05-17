@@ -34,9 +34,6 @@ export class TaskTemplate {
   @JoinTable()
   docs: DocTemplate[];
 
-  @Column({default: true})
-  hasDoc: boolean;
-
   @Column({ default: true })
   allowAttachments: boolean;
 }
