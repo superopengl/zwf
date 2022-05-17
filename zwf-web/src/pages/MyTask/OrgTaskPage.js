@@ -24,7 +24,6 @@ import { showRenameTaskModal } from 'components/showRenameTaskModal';
 import { MdDriveFileRenameOutline } from 'react-icons/md'
 import { SavingAffix } from 'components/SavingAffix';
 import { RiInsertRowBottom } from 'react-icons/ri';
-import { showEditTaskFieldsModal } from 'components/showEditTaskFieldsModal';
 import { TaskFieldsEditorModal } from 'components/TaskFieldsEditorModal';
 
 const { Text } = Typography;
