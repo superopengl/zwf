@@ -259,11 +259,11 @@ export const getTask = handlerWrapper(async (req, res) => {
     case Role.Admin:
     case Role.Agent:
       query = { id, orgId: getOrgIdFromReq(req) };
-      relations = ['tags', 'docs', 'docs.file'];
+      relations = ['tags', 'fields', 'fields.docs', 'fields.docs.file'];
       break;
     case Role.Client:
       query = { id, userId: getUserIdFromReq(req) };
-      relations = ['docs', 'docs.file'];
+      relations = ['fields', 'fields.docs', 'fields.docs.file'];
       break;
     default:
       assert(false, 404);

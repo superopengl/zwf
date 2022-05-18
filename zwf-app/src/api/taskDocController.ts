@@ -1,3 +1,4 @@
+import { TaskField } from './../entity/TaskField';
 import { createPdfFromDocTemplate } from './docTemplateController';
 import { getUtcNow } from './../utils/getUtcNow';
 import { TaskDoc } from '../entity/TaskDoc';
@@ -29,15 +30,17 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
       where: {
         id,
       },
-      relations: ['task']
+      relations: ['docTemplate']
     });
 
-    assert(taskDoc.task.orgId === orgId, 404, 'Task doc is not found');
-    assert(taskDoc?.docTemplateId, 404, 'Task doc is not found');
-    const docTemplate = await m.findOne(DocTemplate, taskDoc.docTemplateId);
-    assert(docTemplate, 404, 'Doc template is not found');
+    assert(taskDoc?.docTemplate, 404, 'Task doc is not found');
+    assert(taskDoc.docTemplate.orgId === orgId, 404, 'Task doc is not found');
 
-    const file = await tryGenDocFile(m, docTemplate, taskDoc.task.fields);
+    const { docTemplate } = taskDoc;
+
+    const fields = await m.getRepository(TaskField).find({ taskId: taskDoc.taskId });
+
+    const file = await tryGenDocFile(m, docTemplate, fields);
     taskDoc.fileId = file.id;
     await m.save(taskDoc);
   })
@@ -56,7 +59,6 @@ export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
 
   const taskDoc = new TaskDoc();
-  taskDoc.createdBy = getUserIdFromReq(req);
   taskDoc.taskId = null; // This is an orphan TaskDoc having no associated Task
 
   await getManager().transaction(async m => {
@@ -130,18 +132,6 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const setTaskDocOfficialOnly = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { id } = req.params;
-  const { officialOnly } = req.body;
-
-  await getRepository(TaskDoc).update(id, officialOnly ?
-    { officialOnly, requiresSign: false } :
-    { officialOnly });
-
-  res.json();
-});
-
 export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
@@ -151,11 +141,8 @@ export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
     id,
     signedAt: IsNull(),
     requiresSign: !requiresSign,
-  }, requiresSign ? {
-    requiresSign: true,
-    officialOnly: false,
-  } : {
-    requiresSign: false
+  }, {
+    requiresSign,
   });
 
   res.json();
@@ -193,9 +180,8 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
         signedAt: IsNull(),
         requiresSign: true,
       },
-      relations: ['file', 'task']
+      relations: ['file']
     });
-    assert(taskDoc.task.userId === userId, 403, 'Wrong person attempts to sign the task doc.')
     assert(taskDoc, 400, 'The task doc cannot be found or has been signed already');
 
     const now = getUtcNow();

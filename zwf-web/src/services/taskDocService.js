@@ -12,9 +12,6 @@ export function listTaskDocs$(taskDocIds) {
   return httpPost$(`/task_doc/search`, { ids: taskDocIds });
 }
 
-export function toggleTaskDocsOfficialOnly$(taskDocId, officialOnly) {
-  return httpPost$(`/task_doc/${taskDocId}/offical_only`, { officialOnly });
-}
 
 export function toggleTaskDocsRequiresSign$(taskDocId, requiresSign) {
   return httpPost$(`/task_doc/${taskDocId}/requires_sign`, { requiresSign });

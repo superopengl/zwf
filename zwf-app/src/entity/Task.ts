@@ -3,7 +3,8 @@ import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, Update
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from './TaskDoc';
 import { Tag } from './Tag';
-import { TaskField } from '../types/TaskField';
+import { TaskField } from './TaskField';
+// import { TaskField } from '../types/TaskField';
 
 @Entity()
 @Index('idex_task_orgId_userId', ['orgId', 'userId'])
@@ -47,14 +48,12 @@ export class Task {
   userId: string;
 
   @Column('jsonb', { default: '[]' })
+  @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE' })
   fields: TaskField[];
 
   @ManyToMany(() => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: Tag[];
-
-  @OneToMany(() => TaskDoc, doc => doc.task, { onDelete: 'CASCADE' })
-  docs: TaskDoc[];
 }
 
 

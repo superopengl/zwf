@@ -27,9 +27,6 @@ export class File {
   @Column()
   md5: string;
 
-  @Column({ nullable: true })
-  lastReadAt?: Date;
-
   @Column({ default: false })
   public?: boolean;
 }

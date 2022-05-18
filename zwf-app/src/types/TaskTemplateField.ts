@@ -1,9 +1,10 @@
 
-export class TaskField {
+export class TaskTemplateField {
   name: string;
   description: string;
   type: string;
   required: boolean;
+  officialOnly: boolean;
   varName: string;
-  value: string | number | boolean | Date;
+  value: any;
 }

@@ -54,7 +54,7 @@ export const CreateNewButton = withRouter(React.memo(props => {
 }));
 
 CreateNewButton.propTypes = {
-  siza: PropTypes.oneOf(['small', 'middle', 'large'])
+  size: PropTypes.oneOf(['small', 'middle', 'large'])
 };
 
 CreateNewButton.defaultProps = {

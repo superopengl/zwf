@@ -1,5 +1,5 @@
 import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
-import { TaskField } from "../types/TaskField";
+import { TaskTemplateField } from "../types/TaskTemplateField";
 import { DocTemplate } from './DocTemplate';
 
 @Entity()
@@ -28,7 +28,7 @@ export class TaskTemplate {
   updatedAt: Date;
 
   @Column('jsonb', { default: '[]' })
-  fields: TaskField[];
+  fields: TaskTemplateField[];
 
   @ManyToMany(type => DocTemplate, { onDelete: 'CASCADE' })
   @JoinTable()

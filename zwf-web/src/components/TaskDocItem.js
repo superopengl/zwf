@@ -12,7 +12,7 @@ import Icon, { DeleteOutlined } from '@ant-design/icons';
 import { BsPatchCheck } from 'react-icons/bs';
 import { showSignTaskDocModal } from './showSignTaskDocModal';
 import { FaFileSignature } from 'react-icons/fa';
-import { genDoc$, getTaskDocDownloadUrl, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
+import { genDoc$, getTaskDocDownloadUrl, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';
@@ -113,13 +113,6 @@ export const TaskDocItem = React.memo(props => {
     return !isClient && taskDoc.docTemplateId && !taskDoc.fileId && !missingVars.length
   }
 
-  const handleToggleOfficialOnly = (taskDoc) => {
-    const checked = !taskDoc.officialOnly;
-    toggleTaskDocsOfficialOnly$(taskDoc.id, checked).subscribe(() => {
-      onChange()
-    })
-  }
-
   const handleToggleRequireSign = (taskDoc, checked) => {
     onLoading(true)
     toggleTaskDocsRequiresSign$(taskDoc.id, checked).pipe(
@@ -180,12 +173,6 @@ export const TaskDocItem = React.memo(props => {
     //   menu: 'Require client sign',
     //   onClick: () => handleToggleRequireSign(taskDoc, !taskDoc.requiresSign)
     // },
-    // {
-    //   icon: taskDoc.officialOnly ? <CheckSquareOutlined /> : <BorderOutlined />,
-    //   menu: 'Hide from client',
-    //   onClick: () => handleToggleOfficialOnly(taskDoc, !taskDoc.officialOnly),
-    //   disabled: !canToggleOfficalOnly(taskDoc)
-    // },
     taskDoc.type === 'auto' && !taskDoc.fileId ? {
       icon: <Icon component={() => <BsPatchCheck />} />,
       menu: 'Generate doc',
@@ -205,7 +192,6 @@ export const TaskDocItem = React.memo(props => {
     actions={isClient ? null : [
       // <Button key="auto" icon={<Icon component={() => <BsPatchCheck />} />} type="link">Generate</Button>,
       taskDoc.signedAt ? null : <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
-      taskDoc.signedAt ? null : <Checkbox key="client-visible" checked={taskDoc.officialOnly} onClick={e => handleToggleOfficialOnly(taskDoc, e.target.checked)}><Link>Official only</Link></Checkbox>,
       // <Button key="delete" danger icon={<DeleteOutlined/>} type="link" onClick={() => handleDeleteDoc(taskDoc)}>Delete</Button>,
     ].filter(x => x)}
     extra={<>
