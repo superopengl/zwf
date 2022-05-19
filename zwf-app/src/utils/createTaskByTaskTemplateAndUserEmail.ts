@@ -82,7 +82,7 @@ export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: numb
   field.required = taskTemplateField.required;
   field.linkedVarName = taskTemplateField.varName;
   field.value = null;
-  field.officialOnly = taskTemplateField.officialOnly;
+  field.officialOnly = taskTemplateField.official;
   field.value = taskTemplateField.value;
 
   return field;
