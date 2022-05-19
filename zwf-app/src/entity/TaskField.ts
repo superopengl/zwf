@@ -45,6 +45,9 @@ export class TaskField {
   @Column({ default: false })
   officialOnly: boolean;
 
+  @Column('jsonb', {nullable: true })
+  options: string[];
+
   @Column('jsonb', { nullable: true })
   value?: any;
 
