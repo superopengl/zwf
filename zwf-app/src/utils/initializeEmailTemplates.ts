@@ -15,7 +15,7 @@ export async function initializeEmailTemplates() {
     return entity;
   });
 
-  await getManager()
+  await AppDataSource.manager
     .createQueryBuilder()
     .insert()
     .into(SystemEmailTemplate)

@@ -6,9 +6,10 @@ import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getNow } from '../utils/getNow';
+import { AppDataSource } from '../db';
 
 async function listMessageForClient(clientId, pagenation, unreadOnly) {
-  const query = getManager()
+  const query = AppDataSource.manager
     .createQueryBuilder()
     .select('*')
     .from(q => q.from(Message, 'x')
@@ -37,7 +38,7 @@ async function listMessageForClient(clientId, pagenation, unreadOnly) {
 }
 
 async function listMessageForAgent(agentId, pagenation, unreadOnly) {
-  const query = getManager()
+  const query = AppDataSource.manager
     .createQueryBuilder()
     .select('*')
     .from(q => q.from(Message, 'x')
@@ -65,7 +66,7 @@ async function listMessageForAgent(agentId, pagenation, unreadOnly) {
 }
 
 async function listMessageForAdmin(pagenation, unreadOnly) {
-  const query = getManager()
+  const query = AppDataSource.manager
     .createQueryBuilder()
     .select('*')
     .from(q => q.from(Message, 'x')
@@ -124,7 +125,7 @@ export const getMessage = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const { user: { id: userId, role } } = req as any;
-  const repo = getRepository(Message);
+  const repo = AppDataSource.getRepository(Message);
   const query: any = { id };
   const isClient = role === 'client';
   if (isClient) {
@@ -159,7 +160,7 @@ export const getMessageUnreadCount = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { user: { role, id } } = req as any;
 
-  const info = await getManager()
+  const info = await AppDataSource.manager
     .createQueryBuilder()
     .from(q => q.from(Message, 'x')
       .where(`"readAt" IS NULL`)

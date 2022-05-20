@@ -1,18 +1,17 @@
+import { AppDataSource } from './../db';
 import { TaskDoc } from './../entity/TaskDoc';
-import { getRepository, IsNull, Not } from 'typeorm';
+import { IsNull, Not } from 'typeorm';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
 import { sendEmailImmediately } from '../services/emailService';
-import { File } from '../entity/File';
 import { getEmailRecipientName } from './getEmailRecipientName';
-import { getUserEmailAddress } from './getUserEmailAddress';
 
 
 export async function sendCompletedEmail(task: Task) {
-  const user = await getRepository(User).findOne(task.userId);
+  const user = await AppDataSource.getRepository(User).findOne({where: {id: task.userId}});
   const { id: taskId, name: taskName } = task;
 
-  const taskDocs = await getRepository(TaskDoc).find({
+  const taskDocs = await AppDataSource.getRepository(TaskDoc).find({
     where: { 
       taskId,
       fileId: Not(IsNull())

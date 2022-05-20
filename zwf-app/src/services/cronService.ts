@@ -11,6 +11,7 @@ import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import * as moment from 'moment-timezone';
 import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
+import { AppDataSource } from '../db';
 
 export const CLIENT_TZ = 'Australia/Sydney';
 
@@ -34,27 +35,6 @@ function getCronPattern() {
   }
 }
 
-async function onCronJobExecute() {
-  console.log('[Recurring]'.bgYellow, 'Cron job is executing');
-  logging({
-    message: '[Recurring] Cron job is executing'
-  });
-
-  const list = await getRepository(Recurring)
-    .createQueryBuilder('x')
-    .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
-    .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .where(`x."nextRunAt" <= now()`)
-    .getMany();
-
-  for (const r of list) {
-    await executeSingleRecurringFromCron(r);
-  }
-  console.log('[Recurring]'.bgYellow, `Cron job finished ${list.length} recurrings`);
-  logging({
-    message: `[Recurring] Cron job finished ${list.length} recurrings`
-  });
-}
 
 function logging(log: {
   level?: string,
@@ -65,13 +45,13 @@ function logging(log: {
   sysLog.level = 'info';
   Object.assign(sysLog, log);
   sysLog.createdBy = 'cron';
-  getRepository(SysLog).save(sysLog).catch(err => {
+  AppDataSource.getRepository(SysLog).save(sysLog).catch(err => {
     console.error('Logging error', errorToJSON(err));
   });
 }
 
 export async function testRunRecurring(recurringId: string) {
-  const recurring = await getRepository(Recurring).findOne(recurringId);
+  const recurring = await AppDataSource.getRepository(Recurring).findOne({where: {id: recurringId}});
   assert(recurring, 404);
   return executeRecurring(recurring, false);
 }
@@ -92,12 +72,12 @@ async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
 
   sendNewTaskCreatedEmail(task);
 
-  await getRepository(Task).save(task);
+  await AppDataSource.getRepository(Task).save(task);
 
   if (resetNextRunAt) {
     recurring.lastRunAt = new Date();
     recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
-    await getRepository(Recurring).save(recurring);
+    await AppDataSource.getRepository(Recurring).save(recurring);
   }
 
   return task;

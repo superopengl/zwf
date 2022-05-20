@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 
 import { getManager, getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -11,9 +12,9 @@ import { getCreditBalance } from '../utils/getCreditBalance';
 
 const getAccountForOrg = async (orgId) => {
 
-  const subscription = await getRepository(OrgAliveSubscription).findOne({ orgId })
+  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOne({ where: {orgId} })
 
-  const credit = await getCreditBalance(getManager(), orgId);
+  const credit = await getCreditBalance(AppDataSource.manager, orgId);
 
   const result = {
     subscription,
@@ -51,7 +52,7 @@ export const adjustCredit = handlerWrapper(async (req, res) => {
     entity.amount = amount;
     entity.type = 'grant';
 
-    await getRepository(CreditTransaction).insert(entity);
+    await AppDataSource.getRepository(CreditTransaction).insert(entity);
   }
 
   res.json();

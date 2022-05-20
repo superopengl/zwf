@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { getUtcNow } from './../utils/getUtcNow';
 
 import { getRepository, getManager, EntityManager } from 'typeorm';
@@ -38,7 +39,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   docTemplate.html = html;
   docTemplate.variables = extractVariables(html);
 
-  await getRepository(DocTemplate).save(docTemplate);
+  await AppDataSource.getRepository(DocTemplate).save(docTemplate);
 
   res.json();
 });
@@ -47,7 +48,7 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
 
-  const list = await getRepository(DocTemplate).find({
+  const list = await AppDataSource.getRepository(DocTemplate).find({
     where: {
       orgId
     },
@@ -71,7 +72,7 @@ export const getDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) }
-  const docTemplate = await getRepository(DocTemplate).findOne(query);
+  const docTemplate = await AppDataSource.getRepository(DocTemplate).findOne({ where: query });
   assert(docTemplate, 404);
 
   res.json(docTemplate);
@@ -81,7 +82,7 @@ export const deleteDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  await getRepository(DocTemplate).softDelete({ id, orgId });
+  await AppDataSource.getRepository(DocTemplate).softDelete({ id, orgId });
 
   res.json();
 });
@@ -93,7 +94,7 @@ export const renameDocTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  await getRepository(DocTemplate).update({ id, orgId }, { name });
+  await AppDataSource.getRepository(DocTemplate).update({ id, orgId }, { name });
 
   res.json();
 });
@@ -103,8 +104,8 @@ export const applyDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const { variables: inboundVariables } = req.body;
-  const repo = getRepository(DocTemplate);
-  const docTemplate = await repo.findOne(id);
+  const repo = AppDataSource.getRepository(DocTemplate);
+  const docTemplate = await repo.findOne({ where: { id } });
   assert(docTemplate, 404);
 
   const { variables, description, name } = docTemplate;
@@ -139,8 +140,8 @@ export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const { variables: inboundVariables } = req.body;
-  const repo = getRepository(DocTemplate);
-  const docTemplate = await repo.findOne(id);
+  const repo = AppDataSource.getRepository(DocTemplate);
+  const docTemplate = await repo.findOne({ where: { id } });
   assert(docTemplate, 404);
 
   const { name, html, variables } = docTemplate;
@@ -169,7 +170,7 @@ export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
     md5: md5(data)
   };
 
-  await getRepository(File).save(file);
+  await AppDataSource.getRepository(File).save(file);
 
   res.json(file);
 });
@@ -179,8 +180,8 @@ async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplat
   const { orgId, name } = sourceDocTemplate;
   while (true) {
     const tryName = round === 1 ? `Copy of ${name}` : `Copy ${round} of ${name}`;
-    const existing = await m.findOne(DocTemplate, { name: tryName, orgId });
-    if(!existing) {
+    const existing = await m.findOne(DocTemplate, { where: { name: tryName, orgId } });
+    if (!existing) {
       return tryName;
     }
     round++;
@@ -192,8 +193,8 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   let docTemplate: DocTemplate;
-  await getManager().transaction(async m => {
-    docTemplate = await m.findOne(DocTemplate, { id, orgId });
+  await AppDataSource.transaction(async m => {
+    docTemplate = await m.findOne(DocTemplate, { where: { id, orgId } });
     assert(docTemplate, 404);
 
     const newTaskTemplateId = uuidv4();

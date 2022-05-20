@@ -8,6 +8,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { assert } from '../utils/assert';
+import { AppDataSource } from '../db';
 
 export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
   const token = req.params.token;
@@ -42,7 +43,7 @@ export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
       assert(false, 404);
   }
 
-  const task = await getRepository(Task).findOne({
+  const task = await AppDataSource.getRepository(Task).findOne({
     where: query,
     select: ['id']
   })

@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { OrgEmailTemplateInformation } from './../entity/views/OrgEmailTemplateInformation';
 
 import { getManager, getRepository } from 'typeorm';
@@ -13,24 +14,20 @@ import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
 import { Locale } from '../types/Locale';
 
 export const listEmailTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req, 'system');
   const orgId = getOrgIdFromReq(req);
 
-  const whereClause = orgId ? { where: { orgId } } : null;
-  const list = await getRepository(orgId ? OrgEmailTemplateInformation : SystemEmailTemplate).find({
-    ...whereClause,
-    order: {
+  const list = await AppDataSource.getRepository(SystemEmailTemplate).find({order: {
       key: 'ASC',
       locale: 'ASC'
-    }
-  });
+    }});
 
   res.json(list);
 });
 
 
 export const saveEmailTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req, 'system');
   const orgId = getOrgIdFromReq(req);
   const { key, locale } = req.params;
   const { subject, body } = req.body;
@@ -42,7 +39,7 @@ export const saveEmailTemplate = handlerWrapper(async (req, res) => {
     entity.locale = locale;
     entity.subject = subject;
     entity.body = body;
-    await getManager()
+    await AppDataSource
       .createQueryBuilder()
       .insert()
       .into(OrgEmailTemplate)
@@ -50,7 +47,7 @@ export const saveEmailTemplate = handlerWrapper(async (req, res) => {
       .onConflict(`("orgId", key, locale) DO UPDATE SET subject = excluded.subject, body = excluded.body`)
       .execute();
   } else {
-    await getRepository(SystemEmailTemplate)
+    await AppDataSource.getRepository(SystemEmailTemplate)
       .update({ key, locale: locale as Locale }, { subject, body });
   }
 

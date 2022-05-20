@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 import { TaskField } from '../entity/TaskField';
 import { getUtcNow } from './getUtcNow';
@@ -60,7 +61,7 @@ function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
 }
 
 export const createTaskDocByDocTemplate = async (m: EntityManager, taskId: string, fieldId: string, docTemplateId: string) => {
-  const docTemplate = await m.getRepository(DocTemplate).findOne(docTemplateId);
+  const docTemplate = await m.getRepository(DocTemplate).findOne({where: {id: docTemplateId}});
   const taskDoc = new TaskDoc();
   taskDoc.taskId = taskId;
   taskDoc.fieldId = fieldId;
@@ -95,8 +96,8 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
 
   let task: Task;
   let user: User;
-  await getManager().transaction(async m => {
-    const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, taskTemplateId, { relations: ['docs'] });
+  await AppDataSource.transaction(async m => {
+    const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, { where: { id: taskTemplateId }, relations: { docs: true } });
     assert(taskTemplate, 404, 'taskTemplate is not found');
 
     user = await ensureClientOrGuestUser(m, email);
@@ -143,7 +144,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     await logTaskCreated(m, task.id, creatorId);
   });
 
-  const org = await getRepository(Org).findOne(task.orgId);
+  const org = await AppDataSource.getRepository(Org).findOne({ where: { id: task.orgId } });
 
   enqueueEmail({
     template: EmailTemplateType.TaskCreated,

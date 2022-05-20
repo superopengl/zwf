@@ -20,7 +20,7 @@ export async function initializeConfig() {
     bcc
   ];
 
-  await getManager()
+  await AppDataSource.manager
     .createQueryBuilder()
     .insert()
     .into(SystemConfig)

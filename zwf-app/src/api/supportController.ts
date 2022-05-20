@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { SupportUserUnreadInformation } from '../entity/views/SupportUserUnreadInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
@@ -26,7 +27,7 @@ export const getMySupport = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const userId = getUserIdFromReq(req);
 
-  const list = await getRepository(SupportMessage).find({
+  const list = await AppDataSource.getRepository(SupportMessage).find({
     where: {
       userId
     },
@@ -34,7 +35,7 @@ export const getMySupport = handlerWrapper(async (req, res) => {
       createdAt: 'ASC'
     }
   });
-  const unreadCountResult = await getRepository(SupportUserUnreadInformation).findOne(userId);
+  const unreadCountResult = await AppDataSource.getRepository(SupportUserUnreadInformation).findOne({where: {userId}});
   const unreadCount = +unreadCountResult?.count ?? 0;
 
   const result = {
@@ -54,7 +55,7 @@ export const searchSupportList = handlerWrapper(async (req, res) => {
   const pageSize = size || 50;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
-  let query = getRepository(SupportInformation)
+  let query = AppDataSource.getRepository(SupportInformation)
     .createQueryBuilder()
     .where('"userId" != :userId', { userId });
 
@@ -86,7 +87,7 @@ export const getUserSupport = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { userId } = req.params;
 
-  const list = await getRepository(SupportMessage).find({
+  const list = await AppDataSource.getRepository(SupportMessage).find({
     where: {
       userId
     },
@@ -119,7 +120,7 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
     sm.capturedUrl = capturedUrl;
   }
 
-  await getManager().save(sm)
+  await AppDataSource.manager.save(sm)
 
   publishEvent(CONTACT_EVENT_TYPE, {
     id: sm.id,
@@ -141,7 +142,7 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
   const lastReadEntity = new SupportUserLastAccess();
   lastReadEntity.userId = userId;
 
-  await getManager().createQueryBuilder()
+  await AppDataSource.createQueryBuilder()
     .insert()
     .into(SupportUserLastAccess)
     .values(lastReadEntity)

@@ -2,6 +2,7 @@ import { OrgClientStatInformation } from './../entity/views/OrgClientStatInforma
 import { getRepository } from 'typeorm';
 import { assert } from './assert';
 import { OrgClientInformation } from '../entity/views/OrgClientInformation';
+import { AppDataSource } from '../db';
 
 export type StockUserParams = {
   text?: string;
@@ -19,7 +20,7 @@ export async function searchOrgClients(orgId: string, queryInfo: StockUserParams
   const pageSize = size || 50;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
-  let query = getRepository(OrgClientStatInformation)
+  let query = AppDataSource.getRepository(OrgClientStatInformation)
     .createQueryBuilder()
     .where('"orgId" = :orgId', { orgId });
 

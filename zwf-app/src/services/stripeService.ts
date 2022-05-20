@@ -25,7 +25,7 @@ async function createStripeCustomer(userId: string, userProfile: UserProfile) {
 }
 
 export async function getOrgStripeCustomerId(m: EntityManager, orgId: string) {
-  const org = await m.findOneOrFail(Org, orgId);
+  const org = await m.findOneOrFail(Org, {where: {id: orgId}});
   if (!org.stripeCustomerId) {
     const owner = await getOrgOwner(org.id);
     const stripeCustomer = await createStripeCustomer(owner.id, owner.profile);

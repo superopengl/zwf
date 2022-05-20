@@ -11,6 +11,7 @@ import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import * as voucherCodes from 'voucher-code-generator';
 import { Subscription } from '../entity/Subscription';
 import { Org } from '../entity/Org';
+import { AppDataSource } from '../db';
 
 function generatePromotionCode() {
   const result = voucherCodes.generate({
@@ -23,7 +24,7 @@ function generatePromotionCode() {
 
 export const listPromotionCode = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const list = await getRepository(OrgPromotionCode)
+  const list = await AppDataSource.getRepository(OrgPromotionCode)
     .createQueryBuilder('p')
     .leftJoin(Subscription, 's', 'p.code = s."promotionCode"')
     .leftJoin(Org, 'o', 's."orgId" = o.id')
@@ -51,7 +52,7 @@ export const savePromotion = handlerWrapper(async (req, res) => {
   promotion.end = end;
   promotion.createdBy = (req as any).user.id;
 
-  await getManager().save(promotion);
+  await AppDataSource.manager.save(promotion);
 
   res.json();
 });
@@ -63,7 +64,7 @@ export const newPromotionCode = handlerWrapper(async (req, res) => {
   let existing;
   do {
     code = generatePromotionCode();
-    existing = await getRepository(OrgPromotionCode).findOne(code);
+    existing = await AppDataSource.getRepository(OrgPromotionCode).findOne({where: {code}});
   } while (existing);
 
   res.json(code);

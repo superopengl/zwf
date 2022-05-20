@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 
 import { getRepository, getConnection, getManager } from 'typeorm';
@@ -52,7 +53,7 @@ export const login = handlerWrapper(async (req, res) => {
   user.status = UserStatus.Enabled;
   user.role = user.role === Role.Guest ? Role.Client : user.role;
 
-  await getRepository(User).save(user);
+  await AppDataSource.getRepository(User).save(user);
 
   attachJwtCookie(user, res);
 
@@ -73,7 +74,7 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
   user.resetPasswordToken = uuidv4();
   user.status = UserStatus.ResetPassword;
 
-  await getManager().save([profile, user]);
+  await AppDataSource.manager.save([profile, user]);
 
   return { user, profile };
 }
@@ -146,7 +147,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
 });
 
 async function setUserToResetPasswordStatus(user: User, returnUrl: string) {
-  const userRepo = getRepository(User);
+  const userRepo = AppDataSource.getRepository(User);
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
@@ -209,8 +210,8 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
   const r = req.query.r as string;
   assert(token, 400, 'Invalid token');
 
-  const userRepo = getRepository(User);
-  const user = await userRepo.findOne({ resetPasswordToken: token });
+  const userRepo = AppDataSource.getRepository(User);
+  const user = await userRepo.findOne({where: { resetPasswordToken: token }});
 
   assert(user, 401, 'Token expired');
 
@@ -250,8 +251,8 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
     role: Role.Agent
   });
 
-  await getManager().transaction(async m => {
-    const subscription = await m.findOne(OrgAliveSubscription, { orgId });
+  await AppDataSource.transaction(async m => {
+    const subscription = await m.findOne(OrgAliveSubscription, { where: {orgId }});
     assert(subscription, 400, 'No active subscription');
     const { seats, occupiedSeats } = subscription;
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
@@ -266,7 +267,7 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  await getManager().transaction(async m => {
+  await AppDataSource.manager.transaction(async m => {
     const user = await ensureClientOrGuestUser(m, email);
     const orgClient = new OrgClient();
     orgClient.orgId = orgId;
@@ -313,7 +314,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     user.profile = profile;
     profile.givenName = givenName;
     profile.surname = surname;
-    await getManager().save([user, profile]);
+    await AppDataSource.manager.save([user, profile]);
 
     enqueueEmail({
       to: user.profile.email,
@@ -325,7 +326,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     });
   } else {
     user = Object.assign(user, extra);
-    await getRepository(User).save(user);
+    await AppDataSource.getRepository(User).save(user);
   }
 
   attachJwtCookie(user, res);

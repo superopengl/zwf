@@ -1,5 +1,4 @@
-
-import { getRepository, getManager } from 'typeorm';
+import { AppDataSource } from './../db';
 import { assertRole } from "../utils/assertRole";
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Org } from '../entity/Org';
@@ -22,29 +21,28 @@ import { assert } from '../utils/assert';
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { user: { id } } = req as any;
-  const { orgId } = await getRepository(User).findOne(id);
-  const org = orgId ? await getRepository(Org).findOne({ id: orgId }) : null;
+  const { orgId } = await AppDataSource.getRepository(User).findOne({ where: { id } });
+  const org = orgId ? await AppDataSource.getRepository(Org).findOne({ where: { id: orgId } }) : null;
   res.json(org);
 });
 
 export const listOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { user: { id } } = req as any;
-  const list = await getRepository(OrgBasicInformation).find({});
+  const list = await AppDataSource.getRepository(OrgBasicInformation).find({});
   res.json(list);
 });
 
 export const saveOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const userId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const org = await getRepository(Org).findOne(orgId);
+  const org = await AppDataSource.getRepository(Org).findOne({ where: { id: orgId } });
   assert(org, 404);
 
   Object.assign(org, req.body);
 
-  await getManager().save(org);
+  await AppDataSource.manager.save(org);
 
   res.json();
 })
@@ -53,7 +51,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const userId = getUserIdFromReq(req);
   const { name, domain, businessName, country, address, tel, abn } = req.body;
-  const userEnitty = await getRepository(User).findOne(userId);
+  const userEnitty = await AppDataSource.getRepository(User).findOne({ where: { id: userId } });
 
   const isFirstSave = !userEnitty.orgId;
 
@@ -68,8 +66,8 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
-  await getManager().transaction(async m => {
-    
+  await AppDataSource.transaction(async m => {
+
     if (isFirstSave) {
       userEnitty.orgId = orgId;
       userEnitty.orgOwner = true;
