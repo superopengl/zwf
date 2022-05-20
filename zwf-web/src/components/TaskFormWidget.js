@@ -11,7 +11,7 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, taskDocIds, type, onChange, disabled } = props;
+  const { fields, type, onChange, disabled } = props;
   const context = React.useContext(GlobalContext);
   const role = context.role;
 
@@ -34,7 +34,6 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
     return schema;
   }, [fields, type, disabled]);
 
-  const showDocs = taskDocIds?.length > 0;
   const showOfficialFields = agentFieldSchema?.fields?.length > 0;
 
   const varBag = React.useMemo(() => {
@@ -48,21 +47,18 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   }, [fields]);
 
   const handleFormValueChange = (changedValues, allValues) => {
-    fields.forEach(f => {
-      f.value = allValues[f.name];
-    })
-
-    onChange([...fields], taskDocIds);
+    onChange(changedValues);
   }
 
-  const handleTaskDocIdsChange = ids => {
-    onChange(fields, ids);
-  }
+  // const handleFieldsChange = (changedFields, allFields) => {
+  //   debugger;
+  // }
 
   return (
     <Form
       ref={ref}
       onValuesChange={handleFormValueChange}
+      // onFieldsChange={handleFieldsChange}
       layout="horizontal"
       colon={false}
     >
@@ -86,7 +82,6 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
 TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
-  taskDocIds: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
@@ -97,6 +92,6 @@ TaskFormWidget.defaultProps = {
   readonly: false,
   disabled: false,
   type: 'agent',
-  onChange: (fields) => { },
+  onChange: (fieldId, newValue) => { },
 };
 

@@ -31,7 +31,6 @@ export const TaskTemplatePreviewPanel = props => {
       <Divider style={{ marginTop: 4 }} />
       <TaskFormWidget 
         fields={taskTemplate.fields}
-        docs={taskTemplate.docs}
         type={type}
         mode="create"
       />

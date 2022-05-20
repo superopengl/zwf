@@ -10,7 +10,7 @@ export function convertTaskTemplateFieldsToFormFieldsSchema(fields, official) {
       return {
         key: name,
         label: name,
-        name: [name],
+        name: f.id,
         initialValue: f.value,
         required: f.required,
         extra: f.description,

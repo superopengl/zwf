@@ -149,10 +149,10 @@ const FieldEditor = (props) => {
     },
     {
       title: 'Official Only ?',
-      dataIndex: 'officialOnly',
+      dataIndex: 'official',
       render: (value, record, index) => <Checkbox
         checked={value}
-        onChange={(e) => changeValue(index, 'officialOnly', e.target.checked)}
+        onChange={(e) => changeValue(index, 'official', e.target.checked)}
         disabled={record.value}
       />
     },

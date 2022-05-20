@@ -20,9 +20,13 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function saveTaskContent$(taskId, fields, taskDocIds) {
-  return httpPost$(`/task/${taskId}`, {fields, taskDocIds});
+export function saveTaskFields$(taskId, fields) {
+  return httpPost$(`/task/${taskId}/fields`, { fields });
 }
+
+// export function saveTaskFields$(taskId, fields) {
+//   return httpPost$(`/task/${taskId}/fields`, fields);
+// }
 
 export function createNewTask$(payload) {
   return httpPut$('/task', payload);
@@ -84,7 +88,7 @@ export function getTaskDeepLinkUrl(taskDeepLinkId) {
   return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
 }
 
-export function subscribeTaskContent(taskId) {
+export function subscribeTaskFieldsChange(taskId) {
   const url = `${API_BASE_URL}/task/${taskId}/content/sse`;
   const es = new EventSource(url, { withCredentials: true });
   return es;
