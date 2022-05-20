@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 
 
@@ -11,5 +11,6 @@ export class TaskTrackingLastAccess {
   userId: string;
 
   @Column('timestamp', {default: () => 'now()'})
+  @UpdateDateColumn()
   lastAccessAt: Date;
 }
