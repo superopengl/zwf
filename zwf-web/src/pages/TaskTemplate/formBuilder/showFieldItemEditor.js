@@ -32,12 +32,11 @@ const FieldEditModalContent = (props) => {
   }
 
   const handleFormSubmit = (formValues) => {
-    debugger;
-    const changed = {
+    const changedFieldItem = {
       ...value,
       ...formValues,
     };
-    onChange(changed);
+    onChange(changedFieldItem);
   }
 
   return (
