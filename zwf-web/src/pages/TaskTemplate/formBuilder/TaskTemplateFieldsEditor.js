@@ -12,12 +12,16 @@ import Icon from '@ant-design/icons';
 
 export const TaskTemplateFieldsEditor = (props) => {
   const { value, onChange } = props;
-  // const form = Form.useFormInstance();
+  
   const handleChange = fields => {
+    // Reset fields ordinal
+    fields.forEach((f, i) => {
+      f.ordinal = i;
+    })
     onChange(fields)
   };
 
-  const handleAddField = () => {
+  const handleAppendField = () => {
     const defaultField = createEmptyField();
     showFieldItemEditor(defaultField, addedField => {
       handleChange([...value, addedField]);
@@ -63,7 +67,7 @@ export const TaskTemplateFieldsEditor = (props) => {
           ghost
           icon={<Icon component={() => <RiInsertRowBottom />} />}
           // block
-          onClick={handleAddField}
+          onClick={handleAppendField}
         >
           Add Field At Bottom
         </Button>

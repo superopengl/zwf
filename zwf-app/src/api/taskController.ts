@@ -99,8 +99,22 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
   });
 });
 
-
 export const saveTaskFields = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { fields } = req.body;
+  const { id } = req.params;
+
+  assert(fields.length, 400, 'No fields to update');
+  
+  const query: any = { id, orgId: getOrgIdFromReq(req) };
+  await getRepository(Task).update(query, { fields });
+
+  await getRepository(TaskField).save(fields);
+
+  res.json();
+})
+
+export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { fields } = req.body;
   const { id } = req.params;
@@ -134,7 +148,6 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
   publishEvent(TASK_CONTENT_EVENT_TYPE, {
     taskId: id,
     fields,
-    // taskDocIds: docs.map(x => x.id)
   });
 
   res.json();

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from './TaskFormWidget';
-import { saveTaskFields$, subscribeTaskFieldsChange } from 'services/taskService';
+import { saveTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } from 'services/taskService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';
@@ -30,7 +30,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   React.useEffect(() => {
     if (!isEmpty(aggregatedChangedFields)) {
-      saveTaskFields$(task.id, aggregatedChangedFields).subscribe(() => {
+      saveTaskFieldValues$(task.id, aggregatedChangedFields).subscribe(() => {
         setChangedFields({})
         onSavingChange(false);
       });
