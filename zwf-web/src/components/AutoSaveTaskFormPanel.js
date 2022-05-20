@@ -1,21 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from './TaskFormWidget';
-import { BehaviorSubject, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, switchMapTo, take, tap, throttle, throttleTime } from 'rxjs/operators';
 import { saveTaskFields$, subscribeTaskFieldsChange } from 'services/taskService';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { useDebounce, useDebouncedValue } from "rooks";
+import { isEmpty } from 'lodash';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   const { value: task, type, onSavingChange } = props;
 
   const [fields, setFields] = React.useState(task?.fields);
+  const [changedFields, setChangedFields] = React.useState({});
+  const [aggregatedChangedFields] = useDebouncedValue(changedFields, 1000);
   const [disabled, setDisabled] = React.useState(false);
-  const source$ = React.useRef(new Subject());
   const context = React.useContext(GlobalContext);
   // const [bufferedChangedFields, setBu]
-  const ref = React.useRef()
+  const ref = React.useRef();
+
   const role = context.role;
 
   React.useEffect(() => {
@@ -27,13 +29,15 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, [task]);
 
   React.useEffect(() => {
-    const sub$ = source$.current.pipe(
-      debounceTime(1000),
-      switchMap(({ fields }) => saveTaskFields$(task.id, fields)),
-    ).subscribe(() => {
-      onSavingChange(false)
-    });
+    if (!isEmpty(aggregatedChangedFields)) {
+      saveTaskFields$(task.id, aggregatedChangedFields).subscribe(() => {
+        setChangedFields({})
+        onSavingChange(false);
+      });
+    }
+  }, [aggregatedChangedFields]);
 
+  React.useEffect(() => {
     // Subscribe task content change events
     const eventSource = subscribeTaskFieldsChange(task.id)
     eventSource.onmessage = (message) => {
@@ -46,7 +50,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     }
 
     return () => {
-      sub$?.unsubscribe();
       eventSource?.close();
     }
   }, []);
@@ -54,7 +57,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const updateFieldsWithChangedFields = (changedFields) => {
     setFields(fields => {
       fields.forEach(field => {
-        if(field.id in changedFields) {
+        if (field.id in changedFields) {
           field.value = changedFields[field.id];
         }
       })
@@ -66,18 +69,18 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const handleTaskFieldsValueChange = React.useCallback(changedFields => {
     updateFieldsWithChangedFields(changedFields);
     onSavingChange(true);
-    source$.current.next({ fields: changedFields });
+    setChangedFields(x => ({ ...x, ...changedFields }))
   }, []);
 
   return (
     <>
-    <TaskFormWidget
-      fields={fields}
-      type={type}
-      ref={ref}
-      onChange={handleTaskFieldsValueChange}
-      disabled={disabled}
-    />
+      <TaskFormWidget
+        fields={fields}
+        type={type}
+        ref={ref}
+        onChange={handleTaskFieldsValueChange}
+        disabled={disabled}
+      />
     </>
   );
 });
