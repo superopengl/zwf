@@ -17,7 +17,12 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppLoggedIn } from 'AppLoggedIn';
 import PortalApp from 'pages/PortalApp';
 import { Loading } from 'components/Loading';
+import CookieConsent from "react-cookie-consent";
+import HomePage from 'pages/HomePage';
+import { Navigate } from 'react-router-dom';
 
+const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
+const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
 const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
@@ -30,7 +35,26 @@ const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const TaskDirectPage = loadable(() => import('pages/MyTask/TaskDirectPage'))
 const ResourceListPage = loadable(() => import('pages/ResourcePage/ResourceListPage'))
 const ResourcePage = loadable(() => import('pages/ResourcePage/ResourcePage'))
-
+const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
+const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
+const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
+const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
+const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
+const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
+const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
+const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
+const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
+const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
+const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
+const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
+const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
+const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
+const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
+const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
+const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
+const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
+const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
+const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
 
 const localeDic = {
   'en-US': {
@@ -97,12 +121,13 @@ export const App = React.memo(() => {
   const isClient = role === 'client';
   const isAdmin = role === 'admin';
   const isSystem = role === 'system';
+  const isAgent = role === 'agent';
 
   const isLoggedIn = !isGuest;
 
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
-  if(loading) {
+  if (loading) {
     return <Loading loading={true} />
   }
 
@@ -112,23 +137,52 @@ export const App = React.memo(() => {
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Routes>
-              <Route path={'/'} element={<PortalApp />} />
-              {/* <Route path={'resources'} element={<PortalApp />} />
-              <Route path={'/resources/:id'} element={<PortalApp />} /> */}
-              <Route path="/login" element={<LogInPage />} />
-              {/* {isGuest && <Route path="/signup" element={<SignUpPage />} />}
-              {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
-              {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
-              <Route path="/reset_password" element={<ResetPasswordPage />} />
+              <Route path={'/'} element={<PortalApp />} >
+                <Route index element={<HomePage />} />
+                <Route path="resource" element={<ResourceListPage />} />
+                <Route path="resource/:id" element={<ResourcePage />} />
+              </Route>
               <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
               <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
+              {isGuest && <Route path="/login" element={<LogInPage />} />}
+              {isGuest && <Route path="/signup" element={<SignUpPage />} />}
+              {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
+              {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
+              {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
               {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
-              <Route path="/*" element={<AppLoggedIn />} /> */}
-              {/* <Redirect to="/" /> */}
-              {/* <RoleRoute loading={loading} element={Error404} /> */}
-              {/* <RoleRoute element={Error404} /> */}
+              {!isGuest && <Route path="/" element={<AppLoggedIn />} >
+                {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
+                {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
+                {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}
+                {isClient && <Route path="/task/:id" element={<ClientTaskPage />} />}
+                {(isAdmin || isAgent) && <Route path="/task/:id" element={<OrgTaskPage />} />}
+                {isClient && <Route path="/activity" element={<ClientTrackingListPage />} />}
+                <Route path="/doc_template" element={<DocTemplateListPage />} />
+                <Route path="/doc_template/new" element={<DocTemplatePage />} />
+                <Route path="/doc_template/:id" element={<DocTemplatePage />} />
+                <Route path="/task_template" element={<TaskTemplateListPage />} />
+                <Route path="/task_template/new" element={<TaskTemplatePage />} />
+                <Route path="/task_template/:id" element={<TaskTemplatePage />} />
+                <Route path="/scheduler" element={<RecurringListPage />} />
+                <Route path="/client" element={<OrgClientListPage />} />
+                <Route path="/tags" element={<TagsSettingPage />} />
+                <Route path="/account" element={<OrgAccountPage />} />
+                <Route path="/team" element={<OrgMemberListPage />} />
+                <Route path="/config" element={<ConfigListPage />} />
+                <Route path="/email_template" element={<EmailTemplateListPage />} />
+                <Route path="/org" element={<OrgListPage />} />
+                <Route path="/support" element={<SupportListPage />} />
+                <Route path="/manage/resource" element={<ResourceListPage />} />
+                <Route path="/manage/resource/new" element={<ResourceEditPage />} />
+                <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
+                <Route path="/revenue" element={<RevenuePage />} />
+              </Route>}
+              {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
             </Routes>
           </BrowserRouter>
+          <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
+            We use cookies to improve your experiences on our website.
+          </CookieConsent>
         </IntlProvider>
       </ConfigProvider>
     </GlobalContext.Provider>

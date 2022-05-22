@@ -44,7 +44,7 @@ export function showRenameTaskModal(id, oldName, onOk) {
     }} />,
     afterClose: () => {
     },
-    icon: <Icon component={() => <MdDriveFileRenameOutline />} />,
+    icon: <Icon component={MdDriveFileRenameOutline } />,
     closable: true,
     maskClosable: true,
     destroyOnClose: true,

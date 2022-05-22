@@ -41,7 +41,7 @@ export const TaskTemplateFieldsEditor = (props) => {
           style={{ marginTop: 16, marginBottom: 24 }}
           type="primary"
           ghost
-          icon={<Icon component={() => <RiInsertRowTop />} />}
+          icon={<Icon component={RiInsertRowTop } />}
           // block
           onClick={handlePrependField}
         >
@@ -65,7 +65,7 @@ export const TaskTemplateFieldsEditor = (props) => {
           style={{ marginTop: 16 }}
           type="primary"
           ghost
-          icon={<Icon component={() => <RiInsertRowBottom />} />}
+          icon={<Icon component={RiInsertRowBottom } />}
           // block
           onClick={handleAppendField}
         >

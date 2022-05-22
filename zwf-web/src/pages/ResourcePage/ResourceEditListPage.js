@@ -53,7 +53,7 @@ export const ResourceEditListPage = props => {
   }, [list, searchText])
 
   const handleEdit = (item) => {
-    navigate(`/manage/resources/${item.id}`);
+    navigate(`/manage/resource/${item.id}`);
   }
 
   const handleTogglePublished = (item) => {
@@ -98,7 +98,7 @@ export const ResourceEditListPage = props => {
 
 
   const handleCreateNew = () => {
-    navigate('/manage/resources/new');
+    navigate('/manage/resource/new');
   }
 
   return (<>
@@ -129,7 +129,7 @@ export const ResourceEditListPage = props => {
               <Paragraph type="secondary">
                 There is no resources. Let's start creating one!
               </Paragraph>
-              <Link to="/manage/resources/new">Create new resource page</Link>
+              <Link to="/manage/resource/new">Create new resource page</Link>
             </div>
           }}
           renderItem={item => <List.Item>

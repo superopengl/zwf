@@ -13,7 +13,6 @@ import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import {HighlightingText} from 'components/HighlightingText';
-import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';

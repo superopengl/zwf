@@ -165,13 +165,13 @@ const OrgTaskPage = React.memo((props) => {
               </Collapse.Panel> */}
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>
+                  <Button type="link" icon={<Icon component={AiOutlineHistory } />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
-                  <Button type="link" icon={<Icon component={() => <MdDriveFileRenameOutline />} />} block onClick={() => showRenameTaskModal(task.id, task.name, load$)}>Rename task</Button>
-                  <Button type="link" icon={<Icon component={() => <RiInsertRowBottom />} />} block onClick={() => setEditFieldVisible(true)}>Edit fields</Button>
+                  <Button type="link" icon={<Icon component={MdDriveFileRenameOutline } />} block onClick={() => showRenameTaskModal(task.id, task.name, load$)}>Rename task</Button>
+                  <Button type="link" icon={<Icon component={RiInsertRowBottom } />} block onClick={() => setEditFieldVisible(true)}>Edit fields</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>
-                  <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button>
+                  <Button type="link" icon={<Icon component={FaSignature } />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button>
                   {!['archived', 'done'].includes(task.status) && <Button type="link" icon={<CheckOutlined />} block onClick={() => setHistoryVisible(true)}>Complete this task</Button>}
                   {task.status !== 'archived' && <>
                     <hr />

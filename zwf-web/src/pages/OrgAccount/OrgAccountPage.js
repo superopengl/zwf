@@ -8,7 +8,6 @@ import { SubscriptionCard } from 'components/SubscriptionCard';
 import { getMyCurrentSubscription, listMySubscriptionHistory } from 'services/subscriptionService';
 import MoneyAmount from 'components/MoneyAmount';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
-import ReactDOM from 'react-dom';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
@@ -76,15 +75,12 @@ const OrgAccountPage = (props) => {
       const user = refreshAuthUser ? await getAuthUser() : null;
       const subscriptionHistory = await listMySubscriptionHistory();
 
-      ReactDOM.unstable_batchedUpdates(() => {
-        setAccount(account);
-        setCurrentSubscription(subscription);
-        if (refreshAuthUser) {
-          context.setUser(user);
-        }
-        setSubscriptionHistory(subscriptionHistory);
-        setLoading(false);
-      })
+      setAccount(account);
+      setCurrentSubscription(subscription);
+      if (refreshAuthUser) {
+        context.setUser(user);
+      }
+      setSubscriptionHistory(subscriptionHistory);
     } catch {
       setLoading(false);
     }
@@ -150,19 +146,19 @@ const OrgAccountPage = (props) => {
             <Space direction="vertical" style={{ width: '100%' }} size="large">
               {currentSubscription && !currentSubscription?.lastRecurring && <Alert type="info" showIcon description={<>
                 Your subscription will expire on <Text underline strong>{moment.tz(currentSubscription.end, 'utc').format('D MMM YYYY')}</Text>.
-                  You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
-                  The new plan will take effect right after all your alive subscription ends.
+                You can extend the subscription by continue purchasing a new plan, where you can opt in auto renew payment.
+                The new plan will take effect right after all your alive subscription ends.
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={
                 <FormattedMessage id="text.freeToPaidSuggestion" />
               } />}
-              <Space direction="vertical" align="center" style={{width: '100%'}}>
+              <Space direction="vertical" align="center" style={{ width: '100%' }}>
                 {/* <Title><TextLink underline onClick={handleBuyLicense}>Change subscription</TextLink></Title> */}
-                <Button size="large" onClick={handleBuyLicense} type="primary" style={{transform: 'scale(1.3)'}}>Change subscription</Button>
+                <Button size="large" onClick={handleBuyLicense} type="primary" style={{ transform: 'scale(1.3)' }}>Change subscription</Button>
               </Space>
-                <Paragraph type="secondary">
-                  You can buy more or reduce licenses by purchasing a new subscription. The ongoing subscription will be terminated and the remaining licenses will be returned as credits, which will be applied to your new subscription's payment automatically. The new subscription will start right away.
-                </Paragraph>
+              <Paragraph type="secondary">
+                You can buy more or reduce licenses by purchasing a new subscription. The ongoing subscription will be terminated and the remaining licenses will be returned as credits, which will be applied to your new subscription's payment automatically. The new subscription will start right away.
+              </Paragraph>
             </Space>
             <OrgSubscriptionHistoryPanel data={subscriptionHistory} />
           </Card>

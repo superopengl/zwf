@@ -45,7 +45,7 @@ export const FieldItemEditor = (props) => {
 
   const handleDelete = () => {
     Modal.confirm({
-      title: <Space><Avatar icon={<Icon component={() => <RiDeleteRow />}/>} style={{ backgroundColor: '#cf222e' }} /> Delete field <Text code>{item.name}</Text>?</Space>,
+      title: <Space><Avatar icon={<Icon component={RiDeleteRow }/>} style={{ backgroundColor: '#cf222e' }} /> Delete field <Text code>{item.name}</Text>?</Space>,
       onOk: () => {
         onDelete();
       },

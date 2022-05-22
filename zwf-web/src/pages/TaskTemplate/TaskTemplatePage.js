@@ -163,7 +163,7 @@ export const TaskTemplatePage = props => {
           </Row>,
           onBack: goBack,
           extra: [
-            <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={() => setPreview(true)}>Preview</Button>,
+            <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew } />} onClick={() => setPreview(true)}>Preview</Button>,
             <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
           ]
         }}
