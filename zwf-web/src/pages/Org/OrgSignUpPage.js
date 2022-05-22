@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -45,7 +45,7 @@ const LayoutStyled = styled(Layout)`
 `;
 
 const OrgSignUpPage = (props) => {
-
+  const navigate = useNavigate();
   useDocumentTitle('Join by creating org')
   return (
     <GlobalContext.Consumer>{
@@ -56,7 +56,7 @@ const OrgSignUpPage = (props) => {
             <div className="poster-patterns" />
             <ContainerStyled>
               <Logo />
-              <OrgSignUpForm onOk={() => props.history.push('/')} />
+              <OrgSignUpForm onOk={() => history.push('/')} />
             </ContainerStyled>
           </PageContainer>
         </LayoutStyled>;
@@ -70,4 +70,4 @@ OrgSignUpPage.propTypes = {};
 
 OrgSignUpPage.defaultProps = {};
 
-export default withRouter(OrgSignUpPage);
+export default OrgSignUpPage;

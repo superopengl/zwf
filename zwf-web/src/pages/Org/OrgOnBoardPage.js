@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout, Typography } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -32,10 +32,11 @@ const InnerContainer = styled.div`
 
 
 const OrgOnBoardPage = (props) => {
+  const navigate = useNavigate();
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe(() => {
-      props.history.push('/');
+      history.push('/');
     });
   }
 
@@ -55,4 +56,4 @@ OrgOnBoardPage.propTypes = {};
 
 OrgOnBoardPage.defaultProps = {};
 
-export default withRouter(OrgOnBoardPage);
+export default OrgOnBoardPage;

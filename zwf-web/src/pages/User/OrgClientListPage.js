@@ -11,7 +11,7 @@ import {
   UserAddOutlined,
   PhoneOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+
 import { Space } from 'antd';
 import { deleteUser, setPasswordForUser, setUserTags, setUserTags$, searchOrgClientUsers$ } from 'services/userService';
 import { impersonate$ } from 'services/authService';
@@ -311,4 +311,4 @@ OrgClientListPage.propTypes = {};
 
 OrgClientListPage.defaultProps = {};
 
-export default withRouter(OrgClientListPage);
+export default OrgClientListPage;

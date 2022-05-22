@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
@@ -64,6 +64,7 @@ const OrgTaskPage = React.memo((props) => {
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
   const context = React.useContext(GlobalContext);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const subscription$ = load$();
@@ -85,7 +86,7 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleGoBack = () => {
-    props.history.push('/task');
+    history.push('/task');
   }
 
   const handleStatusChange = newStatus => {
@@ -203,4 +204,4 @@ OrgTaskPage.defaultProps = {
   // taskId: 'new'
 };
 
-export default withRouter(OrgTaskPage);
+export default OrgTaskPage;

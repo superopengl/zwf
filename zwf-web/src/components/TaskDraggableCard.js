@@ -1,10 +1,10 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import { Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 import { TaskCard } from './TaskCard';
 
-export const TaskDraggableCard =withRouter( (props) => {
+export const TaskDraggableCard = (props) => {
 
   const { task, index, searchText } = props;
 
@@ -25,7 +25,7 @@ export const TaskDraggableCard =withRouter( (props) => {
       )
     }
   </Draggable>
-});
+};
 
 TaskDraggableCard.propTypes = {
   task: PropTypes.any.isRequired,

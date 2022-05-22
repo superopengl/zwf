@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
+
 import { Button, Select, Checkbox, Table, Space, Typography, AutoComplete } from 'antd';
 import { UpOutlined, DownOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { BuiltInFieldLabelValuePairs, BuiltInFieldType, getBuiltInFieldByLabelName, getBuiltInFieldByVarName } from 'components/FieldDef';
@@ -204,4 +204,4 @@ FieldEditor.defaultProps = {
   loading: false,
 };
 
-export default withRouter(FieldEditor);
+export default FieldEditor;

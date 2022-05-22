@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import { TagListPanel } from 'components/TagListPanel';
 import styled from 'styled-components';
 import { deleteTag$, listTags$, saveTag$ } from 'services/tagService';
@@ -50,4 +50,4 @@ TagsSettingPage.propTypes = {};
 
 TagsSettingPage.defaultProps = {};
 
-export default withRouter(TagsSettingPage);
+export default TagsSettingPage;

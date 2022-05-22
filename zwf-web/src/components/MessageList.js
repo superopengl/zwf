@@ -6,7 +6,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { countUnreadMessage$ } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import InfiniteScroll from 'react-infinite-scroller';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Loading } from './Loading';
 
 const { Paragraph } = Typography;
@@ -44,6 +44,7 @@ const MessageList = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [hasMore, setHasMore] = React.useState(true);
   const [page, setPage] = React.useState(0);
+  const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
 
   const { role } = context;
@@ -76,7 +77,7 @@ const MessageList = (props) => {
   const handleItemClick = (item) => {
     const { taskId } = item;
     const url = isClient ? `/tasks/${taskId}?chat=1` : `/tasks/${taskId}/proceed?chat=1`;
-    props.history.push(url);
+    history.push(url);
   }
 
   return (
@@ -125,4 +126,4 @@ MessageList.defaultProps = {
   onItemRead: () => { },
 };
 
-export default withRouter(MessageList);
+export default MessageList;

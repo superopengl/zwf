@@ -4,10 +4,10 @@ import { Modal } from 'antd';
 
 import { TaskIcon } from 'components/entityIcon';
 import { TaskGenerator } from 'pages/MyTask/TaskGenerator';
-import { withRouter } from 'react-router-dom';
+
 import PropTypes from 'prop-types';
 
-export const CreateTaskModal = withRouter(React.memo(props => {
+export const CreateTaskModal = React.memo(props => {
   const { visible, onOk, onCancel, taskTemplateId, client } = props;
   return <Modal
     visible={visible}
@@ -36,7 +36,7 @@ export const CreateTaskModal = withRouter(React.memo(props => {
       }}
     />
   </Modal>
-}));
+});
 
 TaskGenerator.propTypes = {
   taskTemplateId: PropTypes.string,

@@ -1,13 +1,12 @@
 import React from 'react';
 import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
-import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
   BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
 } from '@ant-design/icons';
-import { BrowserRouter, Switch, Redirect, Link } from 'react-router-dom';
+import { Routes, Route, Redirect, Link } from 'react-router-dom';
 import { Space, Typography, Modal, Row, Col } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
@@ -82,19 +81,19 @@ const ROUTES = [
   {
     path: '/task',
     name: <FormattedMessage id="menu.tasks" />,
-    icon: <Icon component={() => <HiOutlineViewList />} />,
+    icon: <Icon element={() => <HiOutlineViewList />} />,
     roles: ['admin', 'agent', 'client']
   },
   {
     path: '/activity',
     name: 'Interactions & Messages',
-    icon: <Icon component={() => <AiOutlineHistory />} />,
+    icon: <Icon element={() => <AiOutlineHistory />} />,
     roles: ['client']
   },
   // {
   //   path: '/metrics',
   //   name: <FormattedMessage id="menu.metrics" />,
-  //   icon: <Icon component={() => <RiBarChartFill />} />,
+  //   icon: <Icon element={() => <RiBarChartFill />} />,
   //   roles: ['admin']
   // },
 
@@ -107,7 +106,7 @@ const ROUTES = [
   {
     path: '/task_template',
     name: <FormattedMessage id="menu.taskTemplate" />,
-    icon: <Icon component={() => <ImInsertTemplate />} />,
+    icon: <Icon element={() => <ImInsertTemplate />} />,
     roles: ['admin', 'agent']
   },
   {
@@ -119,19 +118,19 @@ const ROUTES = [
   // {
   //   path: '/procedure',
   //   name: <FormattedMessage id="menu.procedure" />,
-  //   icon: <Icon component={() => <GoTools />} />,
+  //   icon: <Icon element={() => <GoTools />} />,
   //   roles: ['admin']
   // },
   {
     path: '/support',
     name: 'User Support',
-    icon: <Icon component={() => <MdMessage />} />,
+    icon: <Icon element={() => <MdMessage />} />,
     roles: ['system']
   },
   {
     path: '/manage/resources',
     name: 'Resource Pages',
-    icon: <Icon component={() => <MdOutlinePages />} />,
+    icon: <Icon element={() => <MdOutlinePages />} />,
     roles: ['system']
   },
   {
@@ -149,13 +148,13 @@ const ROUTES = [
   {
     path: '/team',
     name: <FormattedMessage id="menu.team" />,
-    icon: <Icon component={() => <HiOutlineUserGroup />} />,
+    icon: <Icon element={() => <HiOutlineUserGroup />} />,
     roles: ['admin'],
   },
   {
     path: '/account',
     name: 'Subscription & Billings',
-    icon: <Icon component={() => <BiDollar />} />,
+    icon: <Icon element={() => <BiDollar />} />,
     roles: ['admin'],
   },
   {
@@ -167,7 +166,7 @@ const ROUTES = [
   // {
   //   path: '/revenue',
   //   name: <FormattedMessage id="menu.revenue" />,
-  //   icon: <Icon component={() => <RiCoinsLine />} />,
+  //   icon: <Icon element={() => <RiCoinsLine />} />,
   //   roles: ['system']
   // },
   {
@@ -285,32 +284,35 @@ export const AppLoggedIn = React.memo(props => {
         </Space>
     )}
   >
-    <Switch>
-      <RoleRoute exact path="/task" component={isSystem ? SystemBoardPage : isClient ? ClientTaskListPage : OrgTaskListPage} />
-      <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
-      <RoleRoute visible={isClient} exact path="/activity" component={ClientTrackingListPage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/:id" component={DocTemplatePage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/task_template" component={TaskTemplateListPage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/new" component={TaskTemplatePage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/:id" component={TaskTemplatePage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/scheduler" component={RecurringListPage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/client" component={OrgClientListPage} />
-      <RoleRoute visible={isAdmin || isAgent} exact path="/tags" component={TagsSettingPage} />
-      <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
-      <RoleRoute visible={isAdmin} exact path="/team" component={OrgMemberListPage} />
-      <RoleRoute visible={isSystem} exact path="/config" component={ConfigListPage} />
-      <RoleRoute visible={isSystem} exact path="/email_template" component={EmailTemplateListPage} />
-      <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isSystem} exact path="/support" component={SupportListPage} />
-      <RoleRoute visible={isSystem} exact path="/manage/resources" component={ResourceListPage} />
-      <RoleRoute visible={isSystem} exact path="/manage/resources/new" component={ResourceEditPage} />
-      <RoleRoute visible={isSystem} exact path="/manage/resources/:id" component={ResourceEditPage} />
-      <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      <RoleRoute path="*" component={Error404} />
-      <Redirect to="/" />
-    </Switch>
+    <Routes>
+      {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
+      {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
+      {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}
+      {isClient && <Route path="/task/:id" element={<ClientTaskPage />} />}
+      {(isAdmin || isAgent) && <Route path="/task/:id" element={<OrgTaskPage />} />}
+      {isClient && <Route path="/activity" element={<ClientTrackingListPage />} />}
+      {/* <Route visible={isAdmin || isAgent} path="/doc_template" element={DocTemplateListPage} />
+      <Route visible={isAdmin || isAgent} path="/doc_template/new" element={DocTemplatePage} />
+      <Route visible={isAdmin || isAgent} path="/doc_template/:id" element={DocTemplatePage} />
+      <Route visible={isAdmin || isAgent} path="/task_template" element={TaskTemplateListPage} />
+      <Route visible={isAdmin || isAgent} path="/task_template/new" element={TaskTemplatePage} />
+      <Route visible={isAdmin || isAgent} path="/task_template/:id" element={TaskTemplatePage} />
+      <Route visible={isAdmin || isAgent} path="/scheduler" element={RecurringListPage} />
+      <Route visible={isAdmin || isAgent} path="/client" element={OrgClientListPage} />
+      <Route visible={isAdmin || isAgent} path="/tags" element={TagsSettingPage} />
+      <Route visible={isAdmin} path="/account" element={OrgAccountPage} />
+      <Route visible={isAdmin} path="/team" element={OrgMemberListPage} />
+      <Route visible={isSystem} path="/config" element={ConfigListPage} />
+      <Route visible={isSystem} path="/email_template" element={EmailTemplateListPage} />
+      <Route visible={isSystem} path="/org" element={OrgListPage} />
+      <Route visible={isSystem} path="/support" element={SupportListPage} />
+      <Route visible={isSystem} path="/manage/resources" element={ResourceListPage} />
+      <Route visible={isSystem} path="/manage/resources/new" element={ResourceEditPage} />
+      <Route visible={isSystem} path="/manage/resources/:id" element={ResourceEditPage} />
+      <Route visible={isSystem} path="/revenue" element={RevenuePage} />
+      <Route path="*" render={() => <Redirect to="/" />} /> */}
+
+    </Routes>
 
     <ChangePasswordModal
       visible={changePasswordVisible}

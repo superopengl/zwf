@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Typography, Modal, Button, Card, Tag, Alert } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
@@ -87,6 +87,7 @@ export const TaskTemplatePage = props => {
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
   const formRef = React.useRef();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     let subscription$ = Subscription.EMPTY;
@@ -115,7 +116,7 @@ export const TaskTemplatePage = props => {
   }, [taskTemplateName])
 
   const goBack = () => {
-    props.history.goBack()
+    history.goBack()
   }
 
   const handleSave = async () => {
@@ -223,4 +224,4 @@ TaskTemplatePage.propTypes = {};
 
 TaskTemplatePage.defaultProps = {};
 
-export default withRouter(TaskTemplatePage);
+export default TaskTemplatePage;

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+
 import { Typography, Button, Form, Input, Upload, Avatar } from 'antd';
 import PropTypes from 'prop-types';
 import { saveProfile } from 'services/userService';
@@ -94,4 +94,4 @@ ProfileForm.defaultProps = {
   initial: false
 };
 
-export default withRouter(ProfileForm);
+export default ProfileForm;

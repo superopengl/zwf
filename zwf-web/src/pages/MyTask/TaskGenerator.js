@@ -14,20 +14,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import Icon from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 
 const { Text, Link: TextLink } = Typography;
 
 const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
-export const TaskGenerator = withRouter(React.memo(props => {
+export const TaskGenerator = React.memo(props => {
   const {client} = props;
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
   const [taskName, setTaskName] = React.useState();
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     if (taskTemplateId) {
@@ -70,7 +71,7 @@ export const TaskGenerator = withRouter(React.memo(props => {
         Successfully created task <TextLink
           onClick={() => {
             notifyHandler.close()
-            props.history.push(`/task/${task.id}`)
+            history.push(`/task/${task.id}`)
           }}>
           <Icon component={() => <MdOpenInNew />} /> {task.name}
         </TextLink>
@@ -99,7 +100,7 @@ export const TaskGenerator = withRouter(React.memo(props => {
   const handleCreateAndEdit = () => {
     createTaskWithVarBag$().subscribe(task => {
       props.onCreated(task)
-      props.history.push(`/task/${task.id}`)
+      history.push(`/task/${task.id}`)
     });
   }
 
@@ -145,7 +146,7 @@ export const TaskGenerator = withRouter(React.memo(props => {
       </Space>
     </Loading>
   );
-}));
+});
 
 
 TaskGenerator.propTypes = {

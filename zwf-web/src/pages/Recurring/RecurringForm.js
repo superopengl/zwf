@@ -2,7 +2,7 @@ import { Button, Form, Select, Space, Typography, InputNumber, Checkbox, Switch 
 import PropTypes from 'prop-types';
 import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
-import { withRouter } from 'react-router-dom';
+
 import { listTaskTemplate } from 'services/taskTemplateService';
 import { listPortfolio } from 'services/portfolioService';
 import { getRecurring, saveRecurring } from 'services/recurringService';
@@ -122,4 +122,4 @@ RecurringForm.defaultProps = {
   visible: false,
 };
 
-export default withRouter(RecurringForm);
+export default RecurringForm;

@@ -1,6 +1,6 @@
 import { Card, Button, Modal, Space, Typography, Row, Col, Alert } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { subscriptionDef } from 'def/subscriptionDef';
@@ -122,4 +122,4 @@ PaymentModal.propTypes = {
 
 PaymentModal.defaultProps = {};
 
-export default withRouter(PaymentModal);
+export default PaymentModal;

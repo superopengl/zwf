@@ -4,20 +4,21 @@ import { Menu, Dropdown, Typography } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
 import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
 import { CreateTaskModal } from 'components/CreateTaskModal';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useKeys } from "rooks";
 
-export const CreateNewButton = withRouter(React.memo(props => {
+export const CreateNewButton = React.memo(props => {
   const { size } = props;
   const [modalVisible, setModalVisible] = React.useState(false)
+  const navigate = useNavigate();
 
   const handleMenuSelected = (e) => {
     switch (e.key) {
       case 'task_template':
-        props.history.push('/task_template/new')
+        history.push('/task_template/new')
         break;
       case 'doc_template':
-        props.history.push('/doc_template/new')
+        history.push('/doc_template/new')
         break;
       default:
         throw new Error(`Unknonw command '${e.key}'`)
@@ -51,7 +52,7 @@ export const CreateNewButton = withRouter(React.memo(props => {
     </Dropdown.Button>
     <CreateTaskModal visible={modalVisible} onCancel={() => setModalVisible(false)} onOk={() => setModalVisible(false)} />
   </>
-}));
+});
 
 CreateNewButton.propTypes = {
   size: PropTypes.oneOf(['small', 'middle', 'large'])

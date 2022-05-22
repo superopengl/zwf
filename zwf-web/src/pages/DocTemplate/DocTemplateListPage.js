@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
-import { withRouter, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 
@@ -39,13 +39,14 @@ export const DocTemplateListPage = props => {
   const [loading, setLoading] = React.useState(true);
   const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [currentId, setCurrentId] = React.useState();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
   }, [list, searchText])
 
   const handleEditOne = (id) => {
-    props.history.push(`/doc_template/${id}`);
+    history.push(`/doc_template/${id}`);
   }
 
   const handleEdit = (item) => {
@@ -92,7 +93,7 @@ export const DocTemplateListPage = props => {
 
 
   const handleCreateNew = () => {
-    props.history.push('/doc_template/new');
+    history.push('/doc_template/new');
   }
 
 
@@ -209,4 +210,4 @@ DocTemplateListPage.propTypes = {};
 
 DocTemplateListPage.defaultProps = {};
 
-export default withRouter(DocTemplateListPage);
+export default DocTemplateListPage;

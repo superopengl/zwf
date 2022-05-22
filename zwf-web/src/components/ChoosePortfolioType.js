@@ -4,7 +4,6 @@ import { Typography, Layout, Modal, Space, Divider } from 'antd';
 import { UserOutlined, TeamOutlined } from '@ant-design/icons';
 import { listPortfolio, deletePortfolio } from 'services/portfolioService';
 import { Card } from 'antd';
-import { withRouter } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 const { Title } = Typography;
@@ -81,4 +80,4 @@ ChoosePortfolioType.defaultProps = {
   visible: false
 };
 
-export default withRouter(ChoosePortfolioType);
+export default ChoosePortfolioType;

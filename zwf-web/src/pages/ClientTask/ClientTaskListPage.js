@@ -2,7 +2,7 @@ import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOu
 import { Button, Layout, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, PageHeader, Select, Input } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+
 import { saveTask, listClientTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -81,7 +81,7 @@ const TASK_FILTER_DEFAULT = {
   tab: 'Action required',
 };
 
-export const ClientTaskListPage = withRouter(() => {
+export const ClientTaskListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [allList, setAllList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
@@ -235,7 +235,7 @@ export const ClientTaskListPage = withRouter(() => {
       </PageHeader>
     </LayoutStyled>
   )
-})
+}
 
 ClientTaskListPage.propTypes = {};
 

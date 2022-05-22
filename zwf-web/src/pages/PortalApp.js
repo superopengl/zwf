@@ -7,7 +7,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout, { DefaultFooter, PageContainer } from '@ant-design/pro-layout';
@@ -104,6 +104,7 @@ const scrollToElement = (selector) => {
 const PortalPage = (props) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const context = React.useContext(GlobalContext);
+  const navigate = useNavigate();
 
 
   const { role } = context;
@@ -138,7 +139,7 @@ const PortalPage = (props) => {
       scrollToElement(path.replace(/\//, ''))
       setCollapsed(true);
     } else {
-      props.history.push(path);
+      history.push(path);
     }
   }
 
@@ -204,4 +205,4 @@ PortalPage.propTypes = {};
 
 PortalPage.defaultProps = {};
 
-export default withRouter(PortalPage);
+export default PortalPage;

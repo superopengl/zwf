@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { ssoGoogle$ } from 'services/authService';
 import { countUnreadMessage$ } from 'services/messageService';
@@ -14,6 +14,7 @@ const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
   const { render } = props;
+  const navigate = useNavigate();
 
   const handleGoogleSso = (response) => {
     console.log('Google sso', response);
@@ -33,7 +34,7 @@ const GoogleSsoButton = props => {
           if (user) {
             setUser(user);
             setNotifyCount(count);
-            props.history.push('/');
+            history.push('/');
           }
         },
         err => notify.error('Failed to log in with Google')
@@ -53,4 +54,4 @@ const GoogleSsoButton = props => {
   />
 }
 
-export default withRouter(GoogleSsoButton);
+export default GoogleSsoButton;

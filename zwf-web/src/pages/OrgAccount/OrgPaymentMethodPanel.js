@@ -1,6 +1,6 @@
 import { Card, Button, Modal, Space, Typography, Tag, List } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import { Loading } from 'components/Loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
@@ -147,4 +147,4 @@ OrgPaymentMethodPanel.propTypes = {};
 
 OrgPaymentMethodPanel.defaultProps = {};
 
-export default withRouter(OrgPaymentMethodPanel);
+export default OrgPaymentMethodPanel;

@@ -19,7 +19,7 @@ import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewMo
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { getEditResourcePage$, getPublishedResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
 import { useDebouncedValue } from "rooks";
-import { withRouter } from 'react-router-dom';
+
 import { SavingAffix } from 'components/SavingAffix';
 
 const { Text } = Typography;
@@ -50,7 +50,7 @@ const createEmptyPage = () => {
 }
 
 
-export const ResourceEditPage = withRouter(React.memo((props) => {
+export const ResourceEditPage = React.memo((props) => {
 
   const { id } = props.match.params;
   const isNew = !id;
@@ -137,7 +137,7 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
     </Loading>
     {saving && <SavingAffix />}
   </LayoutStyled>
-}));
+});
 
 ResourceEditPage.propTypes = {};
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Input, Button, Form, Divider } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
@@ -14,12 +14,13 @@ import PropTypes from 'prop-types';
 import * as queryString from 'query-string';
 
 
-export const LogInPanel = withRouter(props => {
+export const LogInPanel = props => {
   const { email } = props;
 
   const { r: returnUrl } = queryString.parse(props.location.search);
 
   const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
 
@@ -54,9 +55,9 @@ export const LogInPanel = withRouter(props => {
             setNotifyCount(count);
 
             if (user.role === 'system') {
-              props.history.push(returnUrl || '/support')
+              history.push(returnUrl || '/support')
             } else {
-              props.history.push(returnUrl || '/task');
+              history.push(returnUrl || '/task');
             }
           }
         },
@@ -99,7 +100,7 @@ export const LogInPanel = withRouter(props => {
       </Form>
     </>
   );
-});
+};
 
 LogInPanel.propTypes = {
   email: PropTypes.string,

@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout, Space, Typography, Row, Col, Card, Skeleton } from 'antd';
 
 import { getTask$, listTaskTrackings$ } from 'services/taskService';
@@ -33,6 +33,7 @@ const ClientTaskPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const sub$ = getTask$(id).pipe(
@@ -49,7 +50,7 @@ const ClientTaskPage = (props) => {
   }
 
   const handleGoBack = () => {
-    props.history.goBack();
+    history.goBack();
   }
 
   return (<>
@@ -104,4 +105,4 @@ ClientTaskPage.defaultProps = {
   // taskId: 'new'
 };
 
-export default withRouter(ClientTaskPage);
+export default ClientTaskPage;

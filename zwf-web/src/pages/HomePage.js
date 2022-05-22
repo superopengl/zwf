@@ -3,7 +3,7 @@ import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import React from 'react';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
-import { withRouter } from 'react-router-dom';
+
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
@@ -55,4 +55,4 @@ HomePage.propTypes = {};
 
 HomePage.defaultProps = {};
 
-export default withRouter(HomePage);
+export default HomePage;

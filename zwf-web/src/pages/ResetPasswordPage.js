@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Typography, Input, Button, Form, Divider, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import * as queryString from 'query-string';
@@ -29,9 +29,10 @@ const LogoContainer = styled.div`
 const { Title } = Typography;
 const ResetPasswordPage = props => {
   const [loading, setLoading] = React.useState(false);
+  const navigate = useNavigate();
 
   const goBack = () => {
-    props.history.goBack();
+    history.goBack();
   }
 
   const handleSubmit = values => {
@@ -49,7 +50,7 @@ const ResetPasswordPage = props => {
       )
       .subscribe(() => {
         notify.success('Successfully reset password');
-        props.history.push('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
+        history.push('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
       });
   }
 
@@ -92,4 +93,4 @@ ResetPasswordPage.propTypes = {};
 
 ResetPasswordPage.defaultProps = {};
 
-export default withRouter(ResetPasswordPage);
+export default ResetPasswordPage;

@@ -5,7 +5,7 @@ import Text from 'antd/lib/typography/Text';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import Highlighter from "react-highlight-words";
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { assignTask$, changeTaskStatus$, } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -23,6 +23,7 @@ export const TaskListPanel = (props) => {
   const { tasks, onChange, searchText } = props;
 
   const context = React.useContext(GlobalContext);
+  const navigate = useNavigate();
   const { role } = context;
   const postArchieveMessage = () => {
     notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
@@ -149,7 +150,7 @@ export const TaskListPanel = (props) => {
             {
               icon: <EditOutlined />,
               menu: 'Edit',
-              onClick: () => props.history.push(`/tasks/${record.id}`)
+              onClick: () => history.push(`/tasks/${record.id}`)
             },
             {
               icon: <Text type="danger"><DeleteOutlined /></Text>,
@@ -199,7 +200,7 @@ export const TaskListPanel = (props) => {
       rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
       onRow={(record) => ({
         onDoubleClick: () => {
-          props.history.push(`/task/${record.id}?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
+          history.push(`/task/${record.id}?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
         }
       })}
     />

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Space, Row, Col } from 'antd';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
@@ -82,6 +82,7 @@ const span = {
 const HomeCarouselAreaRaw = props => {
 
   const windowWidth = useWindowWidth();
+  const navigate = useNavigate();
   const context = useContext(GlobalContext);
 
   const isGuest = context.role === 'guest';
@@ -95,7 +96,7 @@ const HomeCarouselAreaRaw = props => {
       44;
 
   const handleSignIn = () => {
-    props.history.push('/signup')
+    history.push('/signup')
   }
 
   return (
@@ -144,6 +145,6 @@ HomeCarouselAreaRaw.propTypes = {};
 
 HomeCarouselAreaRaw.defaultProps = {};
 
-export const HomeCarouselArea = withRouter(HomeCarouselAreaRaw);
+export const HomeCarouselArea = HomeCarouselAreaRaw;
 
 export default HomeCarouselArea;

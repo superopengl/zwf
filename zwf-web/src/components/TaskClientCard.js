@@ -1,6 +1,6 @@
 import { Space, Card, Typography, Descriptions, Row, Col, Divider } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { TimeAgo } from './TimeAgo';
@@ -23,14 +23,15 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 `;
 
-export const TaskClientCard = React.memo(withRouter(props => {
+export const TaskClientCard = React.memo(props => {
 
   const { task, searchText } = props;
   const { id, name, description, orgName, createdAt, updatedAt, tags, status } = task;
+  const navigate = useNavigate();
 
   const goToTask = (e, id) => {
     e.stopPropagation();
-    props.history.push(`/task/${id}`);
+    history.push(`/task/${id}`);
   }
 
   return <StyledCard
@@ -51,7 +52,7 @@ export const TaskClientCard = React.memo(withRouter(props => {
     </Space>
     {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
   </StyledCard>
-}));
+});
 
 TaskClientCard.propTypes = {
   task: PropTypes.any.isRequired,

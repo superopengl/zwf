@@ -134,7 +134,7 @@ export const SmartSearch = React.memo((props) => {
     }
 
     const path = config.pathHandler(id);
-    props.history.push(path);
+    history.push(path);
 
     reset();
   }

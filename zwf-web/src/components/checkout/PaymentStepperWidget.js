@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import { Typography, Button, Divider, Input, Card, Tooltip } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
@@ -242,4 +242,4 @@ PaymentStepperWidget.propTypes = {
 PaymentStepperWidget.defaultProps = {
 };
 
-export default withRouter(PaymentStepperWidget);
+export default PaymentStepperWidget;

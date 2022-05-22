@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+
 import { Typography, Button, Form, Input, Divider, Tabs } from 'antd';
 import { signUp$ } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
@@ -111,4 +111,4 @@ SignUpForm.propTypes = {};
 
 SignUpForm.defaultProps = {};
 
-export default withRouter(SignUpForm);
+export default SignUpForm;

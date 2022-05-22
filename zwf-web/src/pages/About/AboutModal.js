@@ -1,7 +1,7 @@
 import { Typography, Modal, Divider } from 'antd';
 import React from 'react';
 import { FormattedMessage } from 'react-intl';
-import { withRouter } from 'react-router-dom';
+
 
 const { Paragraph } = Typography;
 
@@ -50,4 +50,4 @@ AboutModal.propTypes = {};
 
 AboutModal.defaultProps = {};
 
-export default withRouter(AboutModal);
+export default AboutModal;

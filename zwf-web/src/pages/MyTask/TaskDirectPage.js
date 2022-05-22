@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getDeepLinkedTask$ } from 'services/taskService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { catchError } from 'rxjs/operators';
@@ -8,21 +8,22 @@ const TaskDirectPage = (props) => {
   const { token } = props.match.params;
 
   const context = React.useContext(GlobalContext);
+  const navigate = useNavigate();
 
   const isGuest = context.role === 'guest';
 
   React.useEffect(() => {
     if (isGuest) {
       // If not logged in, show login page
-      props.history.push(`/login?r=/task/direct/${token}`)
+      history.push(`/login?r=/task/direct/${token}`)
     } else {
       // If logged in, go to the task page.
       const sub$ = getDeepLinkedTask$(token)
         .pipe(
-          catchError(() => props.history.push('/'))
+          catchError(() => history.push('/'))
         )
         .subscribe(task => {
-          props.history.push(`/task/${task.id}`)
+          history.push(`/task/${task.id}`)
         });
       return () => sub$.unsubscribe()
     }
@@ -31,4 +32,4 @@ const TaskDirectPage = (props) => {
   return null
 };
 
-export default withRouter(TaskDirectPage);
+export default TaskDirectPage;

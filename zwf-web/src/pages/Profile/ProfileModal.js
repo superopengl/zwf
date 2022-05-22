@@ -1,5 +1,5 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import ProfileForm from '../Profile/ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Modal } from 'antd';
@@ -45,4 +45,4 @@ ProfileModal.propTypes = {};
 
 ProfileModal.defaultProps = {};
 
-export default withRouter(ProfileModal);
+export default ProfileModal;

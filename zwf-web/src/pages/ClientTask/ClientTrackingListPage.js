@@ -2,7 +2,7 @@ import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOu
 import { Button, Timeline, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, message, Tooltip, PageHeader, Select, Input, Card } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+
 import { saveTask, listClientTask$, listTaskTrackings$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
@@ -72,7 +72,7 @@ const containerCss = css({
   }
 });
 
-export const ClientTrackingListPage = withRouter(() => {
+export const ClientTrackingListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(1);
   const [list, setList] = React.useState([]);
@@ -134,7 +134,7 @@ export const ClientTrackingListPage = withRouter(() => {
       </PageHeader>
     </LayoutStyled>
   )
-})
+}
 
 ClientTrackingListPage.propTypes = {};
 
