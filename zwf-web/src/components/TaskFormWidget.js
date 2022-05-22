@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Typography, Form, Divider } from 'antd';
 import FormBuilder from 'antd-form-builder'
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
-import { convertFormSchemaFromFields } from 'util/convertFormSchemaFromFields';
+import { createFormSchemaFromFields } from 'util/createFormSchemaFromFields';
 import { TaskAttachmentPanel } from './TaskAttachmentPanel';
 import { GlobalContext } from '../contexts/GlobalContext';
 
@@ -20,7 +20,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   const isClient = role === 'client';
 
   const clientFieldSchema = React.useMemo(() => {
-    const schema = convertFormSchemaFromFields(fields, false);
+    const schema = createFormSchemaFromFields(fields, false);
     schema?.fields?.forEach(f => {
       // f.required = false;
       f.disabled = disabled;
@@ -29,7 +29,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   }, [fields, disabled]);
 
   const agentFieldSchema = React.useMemo(() => {
-    const schema = type == 'agent' ? convertFormSchemaFromFields(fields, true) : null;
+    const schema = type == 'agent' ? createFormSchemaFromFields(fields, true) : null;
     schema?.fields?.forEach(f => {
       f.disabled = disabled;
     });

@@ -8,7 +8,7 @@ import {
 } from 'react-icons/fa';
 import {TiSortNumerically} from 'react-icons/ti'
 import Icon, { UploadOutlined } from '@ant-design/icons'
-import { FileUploader } from 'components/FileUploader';
+import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
 import { Upload } from 'antd';
 import { AutoDocInput } from 'components/AutoDocInput';
@@ -110,7 +110,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
     type: 'upload',
     label: 'Attachments',
     icon: <UploadOutlined />,
-    widget: FileUploader,
+    widget: TaskFileUploader,
     widgetPorps: {
     },
   },

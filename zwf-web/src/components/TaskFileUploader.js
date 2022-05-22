@@ -72,24 +72,26 @@ const FileIconWithOverlay = props => {
 
   return <Popover content={
     <Space direction="vertical">
-        <TimeAgo value={lastReadAt} prefix="Last read:" direction="horizontal" defaultContent="Unread"/>
-        <TimeAgo value={signedAt} prefix="Signed at:" direction="horizontal" defaultContent="Unsigned"/>
+      <TimeAgo value={lastReadAt} prefix="Last read:" direction="horizontal" defaultContent="Unread" />
+      <TimeAgo value={signedAt} prefix="Signed at:" direction="horizontal" defaultContent="Unsigned" />
     </Space>
   } trigger="click">
     <FileIconContainer>
       <FileIcon name={name} />
-      {!lastReadAt ? <Badge color="blue" style={{ position: 'absolute', top: -8, left: -8 }} /> : 
-        !signedAt ? <Badge color="red" style={{ position: 'absolute', top: -8, left: -8 }} /> : 
-        null}
+      {!lastReadAt ? <Badge color="blue" style={{ position: 'absolute', top: -8, left: -8 }} /> :
+        !signedAt ? <Badge color="red" style={{ position: 'absolute', top: -8, left: -8 }} /> :
+          null}
     </FileIconContainer>
   </Popover>
 }
 
-export const FileUploader = (props) => {
-  const { value, onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
+export const TaskFileUploader = (props) => {
+  const { value, fieldId, onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
+
+  const isPreviewMode = fieldId === null;
 
   const loadFileList = async () => {
     if (value && value.length) {
@@ -120,8 +122,8 @@ export const FileUploader = (props) => {
     const { file, fileList } = info;
     setFileList(fileList);
 
-    if(file.status === 'done' || file.status === 'removed') {
-      props.onAdd?.( _.get(file, 'response.id', file.uid));
+    if (file.status === 'done' || file.status === 'removed') {
+      props.onAdd?.(_.get(file, 'response.id', file.uid));
       onChange(fileList.map(f => f.id || f.response.id));
     }
 
@@ -158,7 +160,7 @@ export const FileUploader = (props) => {
     <Container className="clearfix">
       <Dragger
         multiple={true}
-        action={`${API_BASE_URL}/file`}
+        action={`${API_BASE_URL}/field/${fieldId}/file`}
         withCredentials={true}
         accept="*/*"
         listType="text"
@@ -170,7 +172,7 @@ export const FileUploader = (props) => {
         showUploadList={showUploadList}
         // showUploadList={false}
         // iconRender={() => <UploadOutlined />}
-        disabled={disabled || fileList.length >= maxSize}
+        disabled={isPreviewMode || disabled || fileList.length >= maxSize}
         iconRender={getFileIcon}
         itemRender={renderFileItem}
       // showUploadList={true}
@@ -178,8 +180,8 @@ export const FileUploader = (props) => {
         {disabled ? <Text type="secondary">File upload is disabled</Text>
           : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
             <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-          Click or drag file to this area to upload
-        </div>}
+            Click or drag file to this area to upload
+          </div>}
       </Dragger>
       {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
     </Container>
@@ -187,8 +189,9 @@ export const FileUploader = (props) => {
 
 }
 
-FileUploader.propTypes = {
+TaskFileUploader.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
+  fieldId: PropTypes.string,
   onChange: PropTypes.func,
   onAdd: PropTypes.func,
   size: PropTypes.number,
@@ -198,10 +201,10 @@ FileUploader.propTypes = {
   showUploadList: PropTypes.any,
 };
 
-FileUploader.defaultProps = {
+TaskFileUploader.defaultProps = {
   disabled: false,
-  onChange: () => {},
-  onAdd: () => {},
+  onChange: () => { },
+  onAdd: () => { },
   showsLastReadAt: false,
   showsSignedAt: false,
   showUploadList: {

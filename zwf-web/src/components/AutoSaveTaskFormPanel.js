@@ -73,7 +73,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, []);
 
   return (
-    <>
       <TaskFormWidget
         fields={fields}
         type={type}
@@ -81,7 +80,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
         onChange={handleTaskFieldsValueChange}
         disabled={disabled}
       />
-    </>
   );
 });
 
