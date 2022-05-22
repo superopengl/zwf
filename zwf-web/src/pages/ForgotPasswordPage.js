@@ -29,14 +29,14 @@ const ForgotPasswordPage = props => {
   const navigate = useNavigate();
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   return <LayoutStyled>
     <ContainerStyled>
       <LogoContainer><Logo /></LogoContainer>
       <Title level={2}>Forgot Password</Title>
-      <ForgotPasswordPanel onFinish={() => history.push('/')} />
+      <ForgotPasswordPanel onFinish={() => navigate('/')} />
       <Form.Item >
         <Button block type="link" onClick={() => goBack()}>Cancel</Button>
       </Form.Item>

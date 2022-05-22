@@ -15,15 +15,15 @@ const TaskDirectPage = (props) => {
   React.useEffect(() => {
     if (isGuest) {
       // If not logged in, show login page
-      history.push(`/login?r=/task/direct/${token}`)
+      navigate(`/login?r=/task/direct/${token}`)
     } else {
       // If logged in, go to the task page.
       const sub$ = getDeepLinkedTask$(token)
         .pipe(
-          catchError(() => history.push('/'))
+          catchError(() => navigate('/'))
         )
         .subscribe(task => {
-          history.push(`/task/${task.id}`)
+          navigate(`/task/${task.id}`)
         });
       return () => sub$.unsubscribe()
     }

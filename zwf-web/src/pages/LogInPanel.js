@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Input, Button, Form, Divider } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
@@ -11,13 +11,13 @@ import { zip, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { getMyOrgProfile$ } from 'services/orgService';
 import PropTypes from 'prop-types';
-import * as queryString from 'query-string';
 
 
 export const LogInPanel = props => {
   const { email } = props;
 
-  const { r: returnUrl } = queryString.parse(props.location.search);
+  const [searchParams] = useSearchParams();
+  const returnUrl = searchParams.get('r');
 
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
@@ -55,9 +55,9 @@ export const LogInPanel = props => {
             setNotifyCount(count);
 
             if (user.role === 'system') {
-              history.push(returnUrl || '/support')
+              navigate(returnUrl || '/support')
             } else {
-              history.push(returnUrl || '/task');
+              navigate(returnUrl || '/task');
             }
           }
         },

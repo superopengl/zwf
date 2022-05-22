@@ -71,7 +71,7 @@ export const TaskGenerator = React.memo(props => {
         Successfully created task <TextLink
           onClick={() => {
             notifyHandler.close()
-            history.push(`/task/${task.id}`)
+            navigate(`/task/${task.id}`)
           }}>
           <Icon component={() => <MdOpenInNew />} /> {task.name}
         </TextLink>
@@ -100,7 +100,7 @@ export const TaskGenerator = React.memo(props => {
   const handleCreateAndEdit = () => {
     createTaskWithVarBag$().subscribe(task => {
       props.onCreated(task)
-      history.push(`/task/${task.id}`)
+      navigate(`/task/${task.id}`)
     });
   }
 

@@ -46,7 +46,7 @@ export const DocTemplateListPage = props => {
   }, [list, searchText])
 
   const handleEditOne = (id) => {
-    history.push(`/doc_template/${id}`);
+    navigate(`/doc_template/${id}`);
   }
 
   const handleEdit = (item) => {
@@ -93,7 +93,7 @@ export const DocTemplateListPage = props => {
 
 
   const handleCreateNew = () => {
-    history.push('/doc_template/new');
+    navigate('/doc_template/new');
   }
 
 

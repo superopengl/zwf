@@ -1,9 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { Typography, Input, Button, Form, Divider, Layout } from 'antd';
 import { Logo } from 'components/Logo';
-import * as queryString from 'query-string';
 import { resetPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { finalize } from 'rxjs/operators';
@@ -30,9 +29,10 @@ const { Title } = Typography;
 const ResetPasswordPage = props => {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   const handleSubmit = values => {
@@ -42,7 +42,8 @@ const ResetPasswordPage = props => {
 
     setLoading(true);
     const { password } = values;
-    const { token, r } = queryString.parse(props.location.search);
+    const token = searchParams.get('token');
+    const r = searchParams.get('r');
 
     resetPassword$(token, password)
       .pipe(
@@ -50,7 +51,7 @@ const ResetPasswordPage = props => {
       )
       .subscribe(() => {
         notify.success('Successfully reset password');
-        history.push('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
+        navigate('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
       });
   }
 

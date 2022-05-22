@@ -56,7 +56,7 @@ const OrgSignUpPage = (props) => {
             <div className="poster-patterns" />
             <ContainerStyled>
               <Logo />
-              <OrgSignUpForm onOk={() => history.push('/')} />
+              <OrgSignUpForm onOk={() => navigate('/')} />
             </ContainerStyled>
           </PageContainer>
         </LayoutStyled>;

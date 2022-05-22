@@ -53,7 +53,7 @@ export const ResourceEditListPage = props => {
   }, [list, searchText])
 
   const handleEdit = (item) => {
-    history.push(`/manage/resources/${item.id}`);
+    navigate(`/manage/resources/${item.id}`);
   }
 
   const handleTogglePublished = (item) => {
@@ -98,7 +98,7 @@ export const ResourceEditListPage = props => {
 
 
   const handleCreateNew = () => {
-    history.push('/manage/resources/new');
+    navigate('/manage/resources/new');
   }
 
   return (<>

@@ -44,7 +44,7 @@ const SignUpPage = (props) => {
           <PageContainer>
             <ContainerStyled>
               <Logo />
-              <SignUpForm onOk={() => history.push('/')} />
+              <SignUpForm onOk={() => navigate('/')} />
             </ContainerStyled>
           </PageContainer>
         </LayoutStyled>;

@@ -150,7 +150,7 @@ export const TaskListPanel = (props) => {
             {
               icon: <EditOutlined />,
               menu: 'Edit',
-              onClick: () => history.push(`/tasks/${record.id}`)
+              onClick: () => navigate(`/tasks/${record.id}`)
             },
             {
               icon: <Text type="danger"><DeleteOutlined /></Text>,
@@ -200,7 +200,7 @@ export const TaskListPanel = (props) => {
       rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
       onRow={(record) => ({
         onDoubleClick: () => {
-          history.push(`/task/${record.id}?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
+          navigate(`/task/${record.id}?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
         }
       })}
     />

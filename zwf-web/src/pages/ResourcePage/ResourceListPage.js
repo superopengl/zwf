@@ -64,7 +64,7 @@ export const ResourceListPage = React.memo(props => {
           hoverable
           title={null}
           bodyStyle={{ paddingTop: 16 }}
-          onClick={() => history.push(`/resources/${item.id}`)}
+          onClick={() => navigate(`/resources/${item.id}`)}
         >
           <Space direction="vertical">
             <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>

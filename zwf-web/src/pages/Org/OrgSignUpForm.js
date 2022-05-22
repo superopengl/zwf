@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { Typography, Button, Form, Input } from 'antd';
 import { signUpOrg$ } from 'services/authService';
 import { notify } from 'util/notify';
-import * as queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 const { Title, Text, Paragraph } = Typography;
