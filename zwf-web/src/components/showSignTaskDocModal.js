@@ -56,7 +56,7 @@ export function showSignTaskDocModal(taskDoc, options = {}) {
     afterClose: () => {
       // onClose?.();
     },
-    icon: <Icon component={() => <FaFileSignature />} />,
+    icon: <Icon component={FaFileSignature } />,
     closable: true,
     maskClosable: true,
     destroyOnClose: true,

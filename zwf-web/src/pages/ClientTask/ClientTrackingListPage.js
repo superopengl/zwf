@@ -5,7 +5,6 @@ import React from 'react';
 
 import { saveTask, listClientTask$, listTaskTrackings$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
 import { TaskClientCard } from 'components/TaskClientCard';
