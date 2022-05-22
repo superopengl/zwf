@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Space, Typography, Row, Col, Card, Skeleton } from 'antd';
 
 import { getTask$, listTaskTrackings$ } from 'services/taskService';
@@ -27,7 +27,8 @@ const Container = styled.div`
 `;
 
 const ClientTaskPage = (props) => {
-  const id = props.match.params.id;
+  const params = useParams();
+  const {id} = params;
 
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
