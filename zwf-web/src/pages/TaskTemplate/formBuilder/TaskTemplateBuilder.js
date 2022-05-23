@@ -19,33 +19,6 @@ export const createEmptyField = () => {
   }
 }
 
-const checkRequiredFields = items => {
-  return items.every(x => x.name && x.type);
-};
-
-const checkOptions = items => {
-  for (let i = 0; i < items.length; i += 1) {
-    const currQuestion = items[i];
-    if (
-      currQuestion.type === 'radio' ||
-      currQuestion.type === 'checkbox' ||
-      currQuestion.type === 'select'
-    ) {
-      const currOptions = currQuestion.options;
-      if (currOptions.length === 0) {
-        return false;
-      }
-
-      for (let j = 0; j < currOptions.length; j += 1) {
-        if (currOptions[j].value === '') {
-          return false;
-        }
-      }
-    }
-  }
-  return true;
-};
-
 export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
   const { value: template, onChange } = props;
 
@@ -68,15 +41,6 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
     onChange(allValues);
   };
 
-  const formItemLayoutProps = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 20 },
-    labelAlign: 'left'
-  }
-
-  const hanldeVariableChange = (vars) => {
-    setAllVars(vars);
-  }
 
   return <TaskTemplateEditorContext.Provider value={{ vars: allVars }}>
     <Form

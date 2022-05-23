@@ -36,6 +36,7 @@ const FieldEditModalContent = (props) => {
       ...value,
       ...formValues,
     };
+    debugger;
     onChange(changedFieldItem);
   }
 
