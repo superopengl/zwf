@@ -6,7 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { DroppableFieldList } from './DroppableFieldList';
 import PropTypes from 'prop-types';
 import { showFieldItemEditor } from './showFieldItemEditor';
-import {RiInsertRowTop, RiInsertRowBottom} from 'react-icons/ri';
+import { RiInsertRowTop, RiInsertRowBottom } from 'react-icons/ri';
 import Icon from '@ant-design/icons';
 
 const createEmptyField = () => {
@@ -19,7 +19,7 @@ const createEmptyField = () => {
 
 export const TaskTemplateFieldsEditor = (props) => {
   const { value, onChange } = props;
-  
+
   const handleChange = fields => {
     // Reset fields ordinal
     fields.forEach((f, i) => {
@@ -48,31 +48,20 @@ export const TaskTemplateFieldsEditor = (props) => {
           style={{ marginTop: 16, marginBottom: 24 }}
           type="primary"
           ghost
-          icon={<Icon component={RiInsertRowTop } />}
+          icon={<Icon component={RiInsertRowTop} />}
           // block
           onClick={handlePrependField}
         >
           Add Field On Top
         </Button>
       </Row>
-      <DroppableFieldList
-        items={value}
-        onChange={handleChange}
-        onSortEnd={({ oldIndex, newIndex }) => {
-          // Re-assigned avoid mutation.
-          let updatedSchema = value;
-          updatedSchema = arrayMove(updatedSchema, oldIndex, newIndex);
-          updatedSchema.forEach((e, index) => {
-            e.field = camelCase(`Question ${index + 1}`);
-          });
-          handleChange(updatedSchema);
-        }} />
+      <DroppableFieldList items={value} onChange={handleChange} />
       <Row justify="end">
         <Button
           style={{ marginTop: 16 }}
           type="primary"
           ghost
-          icon={<Icon component={RiInsertRowBottom } />}
+          icon={<Icon component={RiInsertRowBottom} />}
           // block
           onClick={handleAppendField}
         >
