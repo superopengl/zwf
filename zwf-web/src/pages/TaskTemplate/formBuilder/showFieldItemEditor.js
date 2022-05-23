@@ -36,19 +36,18 @@ const FieldEditModalContent = (props) => {
       ...value,
       ...formValues,
     };
-    debugger;
     onChange(changedFieldItem);
   }
 
   return (
     <Form
-      style={{marginTop: 32}}
+      style={{ marginTop: 32 }}
       initialValues={item}
       onFinish={handleFormSubmit}
       onValuesChange={handleFormValuesChange}
       // layout="vertical"
-      labelCol={{span: 6}}
-      wrapperCol={{span: 18}}
+      labelCol={{ span: 6 }}
+      wrapperCol={{ span: 18 }}
     >
       <Form.Item label="Field name"
         {...formItemLayoutProps}
@@ -60,7 +59,7 @@ const FieldEditModalContent = (props) => {
         {...formItemLayoutProps}
         name='type'
         rules={[{ required: true, message: ' ' }]}>
-        <Select >
+        <Select>
           {TaskTemplateWidgetDef.map((d, i) => <Select.Option key={i} value={d.type}>
             <Icon component={() => d.icon} />
             <span style={{ marginLeft: 10 }}>{d.label}</span>
@@ -122,9 +121,9 @@ const FieldEditModalContent = (props) => {
       >
         <DocTemplateSelect isMultiple={false} />
       </Form.Item>}
-      <Row justify="end" style={{marginTop: 32}}>
+      <Row justify="end" style={{ marginTop: 32 }}>
         <Button type="text" onClick={onCancel} >Cancel</Button>
-        <Button type="primary" htmlType="submit" style={{marginLeft: 16}}>Save</Button>
+        <Button type="primary" htmlType="submit" style={{ marginLeft: 16 }}>Save</Button>
       </Row>
     </Form>
   );
