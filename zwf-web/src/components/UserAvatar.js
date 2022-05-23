@@ -10,6 +10,7 @@ import * as abbreviate from 'abbreviate';
 import uniqolor from 'uniqolor';
 import { empty, EMPTY } from 'rxjs';
 import { API_BASE_URL } from 'services/http';
+import ImgCrop from 'antd-img-crop';
 
 const { Text } = Typography;
 
@@ -111,22 +112,24 @@ export const UserAvatar = React.memo((props) => {
   };
 
   return (
-    <Upload
-      multiple={false}
-      action={`${API_BASE_URL}/file?public=1`}
-      withCredentials={true}
-      accept="image/*"
-      showUploadList={false}
-      fileList={fileList}
-      onChange={handleChange}
-    >
-      <Container>
-        {avatarComponent}
-        <div className="edit-text">
-          edit
-        </div>
-      </Container>
-    </Upload>
+    <ImgCrop shape='round'>
+      <Upload
+        multiple={false}
+        action={`${API_BASE_URL}/file?public=1`}
+        withCredentials={true}
+        accept="image/*"
+        showUploadList={false}
+        fileList={fileList}
+        onChange={handleChange}
+      >
+        <Container>
+          {avatarComponent}
+          <div className="edit-text">
+            edit
+          </div>
+        </Container>
+      </Upload>
+    </ImgCrop>
   );
 });
 

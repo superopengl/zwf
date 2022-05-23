@@ -16,6 +16,7 @@ specifiers:
   abnacn-validator: ^0.0.5
   antd: ^4.20.6
   antd-form-builder: ^2.1.4
+  antd-img-crop: ^4.2.3
   axios: ^0.21.1
   babel-plugin-import: ^1.13.0
   craco-less: ^2.0.0
@@ -25,7 +26,6 @@ specifiers:
   form-data: ^3.0.0
   i18next: ^20.3.2
   javascript-time-ago: ^2.3.10
-  jsx-runtime: ^1.2.0
   lodash: ^4.17.21
   mgr-pdf-viewer-react: ^1.0.3
   moment: ^2.25.3
@@ -35,14 +35,14 @@ specifiers:
   prop-types: ^15.7.2
   query-string: ^6.13.1
   re-resizable: ^6.9.1
-  react: 17.0.2
+  react: ^17.0.2
   react-addons-update: ^15.6.3
   react-chat-elements: ^10.15.0
   react-cookie-consent: ^7.3.1
   react-copy-to-clipboard: ^5.0.3
   react-dnd: ^16.0.1
   react-dnd-html5-backend: ^16.0.1
-  react-dom: 17.0.2
+  react-dom: ^17.0.2
   react-file-icon: ^1.0.0
   react-google-login: ^5.2.2
   react-highlight-words: ^0.17.0
@@ -99,13 +99,13 @@ dependencies:
   abnacn-validator: 0.0.5
   antd: 4.20.6_react-dom@17.0.2+react@17.0.2
   antd-form-builder: 2.1.4_ff20bd9f92a8b8e518d7cd56d8c1b649
+  antd-img-crop: 4.2.3_63b51dfb4d8e454a89b1e0714843f1eb
   axios: 0.21.4
   dompurify: 2.3.8
   file-saver: 2.0.5
   form-data: 3.0.1
   i18next: 20.6.1
   javascript-time-ago: 2.5.2
-  jsx-runtime: 1.2.0
   lodash: 4.17.21
   mgr-pdf-viewer-react: 1.0.3_react-dom@17.0.2
   moment: 2.29.3
@@ -4343,6 +4343,19 @@ packages:
       react-dom: 17.0.2_react@17.0.2
     transitivePeerDependencies:
       - eslint
+    dev: false
+
+  /antd-img-crop/4.2.3_63b51dfb4d8e454a89b1e0714843f1eb:
+    resolution: {integrity: sha512-YZgsUdfHnkBCOQ1sLXTwfVRgBdMRM//joddFnSlWe/QU52m8PPbBxtgt0YdEf+UTPXOAx6RQJp1gUjAmMU2knA==}
+    peerDependencies:
+      antd: '>=4.0.0'
+      react: '>=16.8.0'
+      react-dom: '>=16.8.0'
+    dependencies:
+      antd: 4.20.6_react-dom@17.0.2+react@17.0.2
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      react-easy-crop: 4.2.0_react-dom@17.0.2+react@17.0.2
     dev: false
 
   /antd/4.20.6_react-dom@17.0.2+react@17.0.2:
@@ -8726,12 +8739,6 @@ packages:
       object.assign: 4.1.2
     dev: true
 
-  /jsx-runtime/1.2.0:
-    resolution: {integrity: sha1-O64NrVDsMFQbtbBCCxBIVmlDUMs=}
-    dependencies:
-      object-assign: 3.0.0
-    dev: false
-
   /kdbush/3.0.0:
     resolution: {integrity: sha512-hRkd6/XW4HTsA9vjVpY9tuXJYLSlelnkTmVFu4M9/7MIYQtFcHpbugAU7UbOfjOiVSVYl2fqgBuJ32JUmRo5Ew==}
     dev: false
@@ -9487,6 +9494,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /normalize-wheel/1.0.1:
+    resolution: {integrity: sha1-rsiGr/2wRQcNhWRH32Ls+GFG7EU=}
+    dev: false
+
   /npm-run-path/2.0.2:
     resolution: {integrity: sha1-NakjLfo11wZ7TLLd8jV7GHFTbF8=}
     engines: {node: '>=4'}
@@ -9520,11 +9531,6 @@ packages:
   /nwsapi/2.2.0:
     resolution: {integrity: sha512-h2AatdwYH+JHiZpv7pt/gSX1XoRGb7L/qSIeuqA6GwYoF9w1vP1cw42TO0aI2pNyshRK5893hNSl+1//vHK7hQ==}
     dev: true
-
-  /object-assign/3.0.0:
-    resolution: {integrity: sha1-m+3VygiXlJvKR+f/QIBi1Un1h/I=}
-    engines: {node: '>=0.10.0'}
-    dev: false
 
   /object-assign/4.1.1:
     resolution: {integrity: sha1-IQmtx5ZYh8/AXLvUQsrIv7s2CGM=}
@@ -11657,6 +11663,18 @@ packages:
       scheduler: 0.20.2
     dev: false
 
+  /react-easy-crop/4.2.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-NJdeG6JPlOvXPNcQlmyEyjuseTiZVDa0M5X6BwTxSPR30MG3ROsSHKeGl5SQdI3TfmsoEgvl7MbM+AjFGj+faw==}
+    peerDependencies:
+      react: '>=16.4.0'
+      react-dom: '>=16.4.0'
+    dependencies:
+      normalize-wheel: 1.0.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      tslib: 2.0.1
+    dev: false
+
   /react-error-overlay/6.0.11:
     resolution: {integrity: sha512-/6UZ2qgEyH2aqzYZgQPxEnz33NJ2gNsnHA2o5+o4wW9bLM/JYQitNP9xPhsXwC08hMMovfGe/8retsdDsczPRg==}
     dev: true
@@ -13670,6 +13688,10 @@ packages:
 
   /tslib/1.14.1:
     resolution: {integrity: sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg==}
+
+  /tslib/2.0.1:
+    resolution: {integrity: sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==}
+    dev: false
 
   /tslib/2.4.0:
     resolution: {integrity: sha512-d6xOpEDfsi2CZVlPQzGeux8XMwLT9hssAsaPYExaQMuYskwb+x1x7J371tWlbBdWHroy99KnVB6qIkUbs5X3UQ==}
