@@ -42,6 +42,7 @@ import { OrgClientInformation } from './entity/views/OrgClientInformation';
 import { ReceiptInformation } from './entity/views/ReceiptInformation';
 import { OrgCurrentSubscriptionRefund } from './entity/views/OrgCurrentSubscriptionRefund';
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
+import { EmailSentOutTask } from './entity/EmailSentOutTask';
 
 const views = [
   // StockLatestPaidInformation,
@@ -212,6 +213,7 @@ export let AppDataSource = new DataSource({
     OrgCurrentSubscriptionRefund,
     SupportInformation,
     SupportPendingReplyInformation,
+    EmailSentOutTask,
   ],
 })
 
