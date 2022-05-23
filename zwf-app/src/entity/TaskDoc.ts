@@ -62,7 +62,7 @@ export class TaskDoc {
   @Index()
   fieldId: string;
 
-  @ManyToOne(() => TaskField, field => field.docs, { onDelete: 'CASCADE', eager: false })
+  @ManyToOne(() => TaskField, field => field.docs, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   // @JoinColumn({ name: 'taskFieldId', referencedColumnName: 'id' })
   field: TaskField;
 
