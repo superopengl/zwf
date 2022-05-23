@@ -343,28 +343,27 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   const { name, data, mimetype, md5 } = file;
   const userId = getUserIdFromReq(req);
   const role = getRoleFromReq(req);
-  const { taskId, fieldId } = req.params;
-
-  await assertTaskAccess(req, taskId);
+  const { fieldId } = req.params;
 
   const taskField = await AppDataSource.getRepository(TaskField).findOne({
     where: {
       id: fieldId,
-      taskId
     },
     select: {
       id: true,
+      taskId: true,
       value: true,
     }
   });
   assert(taskField, 404);
+
+  await assertTaskAccess(req, taskField.taskId);
 
   // Upload file binary to S3
   const id = uuidv4();
   const location = await uploadToS3(id, name, data);
 
   const fileEntity = new File();
-  fileEntity.id = id;
   fileEntity.fileName = name;
   fileEntity.createdBy = userId;
   fileEntity.mime = mimetype;
@@ -373,16 +372,16 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   fileEntity.public = false;
 
   await AppDataSource.transaction(async m => {
-    taskField.value = [...taskField.value, fileEntity.id];
-
     const taskDoc = new TaskDoc();
+    taskDoc.id = id;
+    taskDoc.taskId = taskField.taskId,
     taskDoc.fieldId = fieldId;
-    taskDoc.fileId = fileEntity.id;
+    taskDoc.file = fileEntity;
     taskDoc.name = name;
     taskDoc.type = role === Role.Client ? 'client' : 'agent';
     taskDoc.status = 'done';
 
-    await m.save([taskField, fileEntity, taskDoc]);
+    await m.save([fileEntity, taskDoc]);
   });
 
   res.json({

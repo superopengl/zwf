@@ -86,7 +86,7 @@ const FileIconWithOverlay = props => {
 }
 
 export const TaskFileUploader = (props) => {
-  const { value, fieldId, onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
+  const { value, fieldId, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -107,12 +107,6 @@ export const TaskFileUploader = (props) => {
       setLoading(false);
     }
   }
-
-  React.useEffect(() => {
-    if (onUploadingChange) {
-      onUploadingChange(loading);
-    }
-  }, [loading]);
 
   React.useEffect(() => {
     loadFileList()
@@ -160,7 +154,7 @@ export const TaskFileUploader = (props) => {
     <Container className="clearfix">
       <Dragger
         multiple={true}
-        action={`${API_BASE_URL}/field/${fieldId}/file`}
+        action={`${API_BASE_URL}/task/field/${fieldId}/file`}
         withCredentials={true}
         accept="*/*"
         listType="text"
