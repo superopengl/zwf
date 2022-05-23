@@ -88,7 +88,7 @@ export const DroppableFieldList = (props) => {
   //   )
   // }, [])
 
-  const moveCard = React.useCallback((dragIndex, hoverIndex) => {
+  const handleMoveItem = React.useCallback((dragIndex, hoverIndex) => {
     setAllItems((prevCards) =>
       update(prevCards, {
         $splice: [
@@ -100,11 +100,11 @@ export const DroppableFieldList = (props) => {
   }, [])
   const renderCard = React.useCallback((field, index) => {
     return (
-      <Card
+      <DraggableFieldItem
         key={field.id}
         index={index}
         field={field}
-        moveCard={moveCard}
+        onMoveItem={handleMoveItem}
       />
     )
   }, [])
@@ -130,12 +130,12 @@ DroppableFieldList.propTypes = {
 DroppableFieldList.defaultProps = {
 };
 
-export const Card = ({ field, index, moveCard }) => {
+export const DraggableFieldItem = ({ field, index, onMoveItem }) => {
   const style = {
-    border: '1px dashed gray',
-    padding: '0.5rem 1rem',
-    marginBottom: '.5rem',
-    backgroundColor: 'white',
+    // border: '1px dashed gray',
+    // padding: '0.5rem 1rem',
+    // marginBottom: '.5rem',
+    // backgroundColor: 'white',
     cursor: 'move',
   }
 
@@ -178,7 +178,7 @@ export const Card = ({ field, index, moveCard }) => {
         return
       }
       // Time to actually perform the action
-      moveCard(dragIndex, hoverIndex)
+      onMoveItem(dragIndex, hoverIndex)
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
@@ -199,7 +199,7 @@ export const Card = ({ field, index, moveCard }) => {
   drag(drop(ref))
   return (
     <Col span={24} ref={ref} style={{ ...style, opacity }} data-handler-id={handlerId}>
-      {field.name}
+      {/* {field.name} */}
       <FieldItemEditor
         value={field}
         index={index}
