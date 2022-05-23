@@ -67,9 +67,7 @@ export const FieldItemEditor = (props) => {
     <Col>
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>
       <Button type="link" danger icon={<DeleteOutlined />} onClick={handleDelete}></Button>
-      <Tooltip title="Drag to adjust order">
-        <Button type="text" icon={<HolderOutlined />}></Button>
-      </Tooltip>
+      <Button type="text" icon={<HolderOutlined />} style={{cursor: 'move'}}></Button>
     </Col>
   </Row>
 };

@@ -36,6 +36,7 @@ specifiers:
   query-string: ^6.13.1
   re-resizable: ^6.9.1
   react: ^18.1.0
+  react-addons-update: ^15.6.3
   react-beautiful-dnd: ^13.1.0
   react-chat-elements: ^10.15.0
   react-cookie-consent: ^7.3.1
@@ -114,6 +115,7 @@ dependencies:
   query-string: 6.14.1
   re-resizable: 6.9.1_react-dom@18.1.0+react@18.1.0
   react: 18.1.0
+  react-addons-update: 15.6.3
   react-beautiful-dnd: 13.1.0_react-dom@18.1.0+react@18.1.0
   react-chat-elements: 10.16.0_28428ba0c391cf6cfa125a69ce03058f
   react-cookie-consent: 7.3.1_react@18.1.0
@@ -11312,6 +11314,12 @@ packages:
       fast-memoize: 2.5.2
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
+    dev: false
+
+  /react-addons-update/15.6.3:
+    resolution: {integrity: sha512-wBkjgx5cR0XTjZEz5jl2kScChrjI9T7rWVdaM0dLiIdHSgeHycLRdHPPiTgKk7vK18Od4rXmLJv91qofBXlE0A==}
+    dependencies:
+      object-assign: 4.1.1
     dev: false
 
   /react-app-polyfill/3.0.0:
