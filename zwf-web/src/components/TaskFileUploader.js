@@ -86,31 +86,37 @@ const FileIconWithOverlay = props => {
 }
 
 export const TaskFileUploader = (props) => {
-  const { value, fieldId, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
+  const { value, fieldId, docs, size, disabled, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
-  const [fileList, setFileList] = React.useState([]);
+  const [fileList, setFileList] = React.useState((docs || []).map(doc => ({
+    uid: doc.id,
+    name: doc.name,
+    status: 'done',
+    url: `${API_BASE_URL}/task/field/${fieldId}/file/${doc.id}`
+  })));
   const [loading, setLoading] = React.useState(false);
 
   const isPreviewMode = fieldId === null;
+  const maxSize = size || 30;
 
-  const loadFileList = async () => {
-    if (value && value.length) {
-      setLoading(true);
-      const list = await getFileMetaList(value);
-      const fileList = list.map(x => ({
-        uid: x.id,
-        name: x.fileName,
-        status: 'done',
-        url: x.location,
-      }));
-      setFileList(fileList);
-      setLoading(false);
-    }
-  }
+  // const loadFileList = async () => {
+  //   if (value && value.length) {
+  //     setLoading(true);
+  //     const list = await getFileMetaList(value);
+  //     const fileList = list.map(x => ({
+  //       uid: x.id,
+  //       name: x.fileName,
+  //       status: 'done',
+  //       url: x.location,
+  //     }));
+  //     setFileList(fileList);
+  //     setLoading(false);
+  //   }
+  // }
 
-  React.useEffect(() => {
-    loadFileList()
-  }, []);
+  // React.useEffect(() => {
+  //   loadFileList()
+  // }, []);
 
   const handleChange = (info) => {
     const { file, fileList } = info;
@@ -134,10 +140,6 @@ export const TaskFileUploader = (props) => {
   const handleRemove = file => {
     props.onRemove?.(file.uid);
   }
-
-  const { size, disabled } = props;
-
-  const maxSize = size || 30;
 
   const getFileIcon = file => <FileIconWithOverlay
     id={file.uid}

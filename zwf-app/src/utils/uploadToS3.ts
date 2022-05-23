@@ -8,20 +8,20 @@ function getS3Service() {
 }// Upload your image to S3
 
 
-function getDefaultConfig(id, name) {
+function getDefaultConfig(fileId, name) {
   const bucketName = process.env.ZWF_S3_BUCKET;
   const prefix = process.env.ZWF_FILE_PREFIX;
-  const key = `${prefix}/${id}/${name}`;
-  assert(prefix && id, 404, `image path cannot be composed '${bucketName}/${key}'`);
+  const key = `${prefix}/${fileId}/${name}`;
+  assert(prefix && fileId, 404, `file path cannot be composed '${bucketName}/${key}'`);
   return {
     Bucket: bucketName,
     Key: key,
   };
 }
 
-export async function uploadToS3(id, name, data): Promise<string> {
+export async function uploadToS3(fileId, name, data): Promise<string> {
   const s3 = getS3Service();
-  const defaultOpt = getDefaultConfig(id, name);
+  const defaultOpt = getDefaultConfig(fileId, name);
 
   const opt = {
     ...defaultOpt,

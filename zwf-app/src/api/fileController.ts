@@ -17,26 +17,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { TaskDoc } from '../entity/TaskDoc';
 
-export const downloadTaskFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'client', 'agent');
-  const { fileId } = req.params;
-  const { user: { id: userId, role } } = req as any;
 
-  const taskRepo = AppDataSource.getRepository(TaskDoc);
-  const taskDoc = await taskRepo.findOne({
-    where: { fileId },
-    relations: { file: true }
-  });
-  assert(taskDoc?.file, 404);
-
-  if (role === 'client') {
-    const now = getNow();
-    taskDoc.lastClientReadAt = now;
-    await taskRepo.save(taskDoc);
-  }
-
-  streamFileToResponse(taskDoc.file, res);
-});
 
 export const getPrivateFileStream = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
