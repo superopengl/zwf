@@ -29,7 +29,8 @@ import { TaskAction } from '../TaskAction';
       'u.id as "userId"',
     ])
     .orderBy('t.id')
-    .addOrderBy('a."createdAt"')
+    .addOrderBy('a."createdAt"'),
+  dependsOn: [Task, TaskAction, UserInformation]
 }) export class TaskHistoryInformation {
   @ViewColumn()
   id: string;

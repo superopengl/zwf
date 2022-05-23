@@ -1,3 +1,4 @@
+import { SupportInformation } from './entity/views/SupportInformation';
 import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
 import { Payment } from './entity/Payment';
@@ -32,10 +33,15 @@ import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
 import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
 import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadInformation';
-import { TaskTrackingInformation } from './entity/views/ClientTaskTrackingInformation';
+import { TaskTrackingInformation } from './entity/views/TaskTrackingInformation';
 import { TaskTrackingLastAccess } from './entity/TaskTrackingLastAccess';
 import { TaskTracking } from './entity/TaskTracking';
 import { UserLogin } from './entity/UserLogin';
+import { TaskTagsTag } from './entity/TaskTagsTag';
+import { OrgClientInformation } from './entity/views/OrgClientInformation';
+import { ReceiptInformation } from './entity/views/ReceiptInformation';
+import { OrgCurrentSubscriptionRefund } from './entity/views/OrgCurrentSubscriptionRefund';
+import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 
 const views = [
   // StockLatestPaidInformation,
@@ -199,6 +205,13 @@ export let AppDataSource = new DataSource({
     TaskTrackingLastAccess,
     TaskTracking,
     UserLogin,
+    TaskTagsTag,
+    OrgClientInformation,
+    ReceiptInformation,
+    OrgBasicInformation,
+    OrgCurrentSubscriptionRefund,
+    SupportInformation,
+    SupportPendingReplyInformation,
   ],
 })
 

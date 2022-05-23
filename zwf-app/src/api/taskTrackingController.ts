@@ -1,6 +1,6 @@
 import { AppDataSource } from './../db';
 import { TaskStatus } from './../types/TaskStatus';
-import { TaskTrackingInformation } from './../entity/views/ClientTaskTrackingInformation';
+import { TaskTrackingInformation } from '../entity/views/TaskTrackingInformation';
 import { TaskTracking } from './../entity/TaskTracking';
 import { getEventChannel } from '../services/globalEventSubPubService';
 import { filter } from 'rxjs/operators';
@@ -46,13 +46,13 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
       order: {
         createdAt: 'ASC'
       },
-      select: [
-        'id',
-        'createdAt',
-        'by',
-        'action',
-        'info'
-      ]
+      select: {
+        id: true,
+        createdAt: true,
+        by: true,
+        action: true,
+        info: true,
+      }
     });
 
     await nudgeTrackingAccess(m, id, userId);

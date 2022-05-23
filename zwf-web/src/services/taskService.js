@@ -20,15 +20,15 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function saveTaskFields$(taskId, fields, deletedFieldIds) {
-  return httpPost$(`/task/${taskId}/fields`, { fields, deletedFieldIds });
+export function updateTaskFields$(taskId, fields) {
+  return httpPost$(`/task/${taskId}/fields`, { fields });
 }
 
 export function saveTaskFieldValues$(taskId, fields) {
   return httpPost$(`/task/${taskId}/field/value`, { fields });
 }
 
-// export function saveTaskFields$(taskId, fields) {
+// export function updateTaskFields$(taskId, fields) {
 //   return httpPost$(`/task/${taskId}/fields`, fields);
 // }
 

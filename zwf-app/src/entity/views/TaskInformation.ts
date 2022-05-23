@@ -30,7 +30,7 @@ import { Tag } from '../Tag';
       't."deepLinkId" as "deepLinkId"',
       't.name as name',
       't.description as description',
-      't.fields as fields',
+      // 't.fields as fields',
       't.status as status',
       't."userId" as "userId"',
       't."orgId" as "orgId"',
@@ -45,7 +45,8 @@ import { Tag } from '../Tag';
       't."createdAt" as "createdAt"',
       't."updatedAt" as "updatedAt"',
       `coalesce(tag.tags, '{}'::json[]) as tags`,
-    ])
+    ]),
+  dependsOn: [Task, TaskTagsTag, Tag, Org, TaskTemplate, User, UserProfile]
 }) export class TaskInformation {
   @ViewColumn()
   id: string;
@@ -59,8 +60,8 @@ import { Tag } from '../Tag';
   @ViewColumn()
   description: string;
 
-  @ViewColumn()
-  fields: any;
+  // @ViewColumn()
+  // fields: any;
 
   @ViewColumn()
   status: TaskStatus;

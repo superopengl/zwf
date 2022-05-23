@@ -47,7 +47,6 @@ export class Task {
   @Column('uuid')
   userId: string;
 
-  @Column('jsonb', { default: '[]' })
   @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   fields: TaskField[];
 

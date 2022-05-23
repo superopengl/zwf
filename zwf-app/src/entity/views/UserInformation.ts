@@ -37,7 +37,8 @@ import { UserStatus } from '../../types/UserStatus';
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
       'tg.tags as tags',
-    ])
+    ]),
+  dependsOn: [User, UserProfile, Org]
 })
 export class UserInformation {
   @ViewColumn()
@@ -72,10 +73,10 @@ export class UserInformation {
   orgOwner: boolean;
 
   @ViewColumn()
-  avatarFileId:string;
+  avatarFileId: string;
 
   @ViewColumn()
-  avatarColorHex:string;
+  avatarColorHex: string;
 
   @ViewColumn()
   tags: string[];

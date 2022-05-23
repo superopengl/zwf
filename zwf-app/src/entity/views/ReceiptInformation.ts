@@ -37,7 +37,8 @@ import { OrgPaymentMethod } from '../OrgPaymentMethod';
       'coalesce(p.amount, 0) as payable',
       'coalesce(-c.amount, 0) as deduction',
       'm."cardLast4" as "cardLast4"'
-    ])
+    ]),
+  dependsOn: [Payment, OrgPaymentMethod, Subscription, OrgBasicInformation, CreditTransaction]
 })
 export class ReceiptInformation {
   @ViewColumn()
