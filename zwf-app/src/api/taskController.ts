@@ -103,7 +103,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
 
 export const saveTaskFields = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { fields } = req.body;
+  const { fields, deletedFieldIds } = req.body;
   const { id } = req.params;
 
   assert(fields.length, 400, 'No fields to update');
@@ -116,7 +116,12 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
     f.taskId = id;
   })
 
-  await AppDataSource.getRepository(TaskField).save(fields);
+  await AppDataSource.transaction(async m => {
+    await m.getRepository(TaskField).save(fields);
+    if(deletedFieldIds?.length) {
+      await m.getRepository(TaskField).delete(deletedFieldIds);
+    }
+  })
 
   res.json();
 })

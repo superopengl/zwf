@@ -20,8 +20,8 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function saveTaskFields$(taskId, fields) {
-  return httpPost$(`/task/${taskId}/fields`, { fields });
+export function saveTaskFields$(taskId, fields, deletedFieldIds) {
+  return httpPost$(`/task/${taskId}/fields`, { fields, deletedFieldIds });
 }
 
 export function saveTaskFieldValues$(taskId, fields) {
