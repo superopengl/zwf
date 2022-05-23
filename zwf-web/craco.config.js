@@ -55,6 +55,7 @@ module.exports = {
     },
   ],
   webpack: {
+    // This webpack config is for React 17. May consider removing once upgrade to React 18
     configure: {
       resolve: {
         fallback: {
