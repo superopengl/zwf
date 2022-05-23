@@ -52,7 +52,7 @@ const EmptyTaskTamplateSchema = {
   description: 'Please fill in the information as complete as possible.',
   fields: [
     {
-      name: '',
+      name: 'Unnamed field',
       description: '',
       type: 'input',
       required: true
@@ -171,9 +171,7 @@ export const TaskTemplatePage = props => {
         {taskTemplate && <TaskTemplateEditorPanel
           ref={formRef}
           value={taskTemplate}
-          onChange={schema => {
-            setTaskTemplate(schema);
-          }}
+          onChange={setTaskTemplate}
           debug={debugMode}
         />}
       </PageContainer>
