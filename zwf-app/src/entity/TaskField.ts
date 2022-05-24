@@ -51,6 +51,6 @@ export class TaskField {
   @Column('jsonb', { nullable: true })
   value?: any;
 
-  @OneToMany(() => TaskDoc, taskDoc => taskDoc.field, {onDelete: 'CASCADE', orphanedRowAction: 'delete'})
+  @OneToMany(() => TaskDoc, taskDoc => taskDoc.field, {eager: false, onDelete: 'CASCADE', orphanedRowAction: 'delete'})
   docs: TaskDoc[]
 }
