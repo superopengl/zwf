@@ -19,7 +19,7 @@ export function createFormSchemaFromFields(fields, official) {
         widget: widgetDef.widget,
         widgetProps: {
           ...widgetDef.widgetPorps,
-          ...(f.type === 'upload' ? {
+          ...(['upload', 'autodoc'].includes(f.type) ? {
             fieldId: f.id,
           } : null),
         }

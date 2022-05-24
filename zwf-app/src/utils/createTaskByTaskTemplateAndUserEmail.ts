@@ -20,7 +20,6 @@ import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
 import { DocTemplate } from '../entity/DocTemplate';
 import { TaskDoc } from '../entity/TaskDoc';
-import { tryGenDocFile } from '../services/genDocService';
 import { logTaskCreated } from '../services/taskTrackingService';
 import { Role } from '../types/Role';
 import * as path from 'path';

@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { TaskTemplateField } from '../types/TaskTemplateField';
 import { DocTemplate } from './../entity/DocTemplate';
 import { Stream } from 'stream';
@@ -5,25 +6,71 @@ import * as _ from 'lodash';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfStreamFromHtml';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
-import { getRepository, EntityManager } from 'typeorm';
+import { getRepository, EntityManager, In } from 'typeorm';
 import { File } from '../entity/File';
 import { createHash } from 'crypto';
 import { TaskField } from '../entity/TaskField';
+import * as moment from 'moment';
+import { TaskDoc } from '../entity/TaskDoc';
 
-function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskField[]) {
+async function stringifyFieldValue(f) {
+  const { value, type } = f;
+  if (value === undefined || value === null) {
+    return '';
+  }
+
+  switch (type) {
+    case 'input':
+    case 'number':
+    case 'textarea':
+    case 'radio':
+    case 'checkbox':
+    case 'select':
+      return value;
+    case 'date':
+      return moment(value).format('YYYY-MM-DD');
+    case 'month':
+      return moment(value).format('YYYY-MM');
+    case 'quarter':
+      return moment(value).format('YYYY [Q]Q');
+    case 'year':
+      return moment(value).format('YYYY');
+    case 'upload':
+      {
+        const taskDocIds = value;
+        if (taskDocIds?.length) {
+          const taskDocs = await AppDataSource.getRepository(TaskDoc).find({
+            where: {
+              id: In(taskDocIds)
+            },
+            select: {
+              name: true
+            }
+          });
+
+          return taskDocs.map(x => x.name).join(', ');
+        }
+      }
+    case 'autodoc':
+      return '$autodoc$'
+    default:
+      throw new Error(`Unrecognized field type '${type}'`)
+  }
+}
+
+async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskField[]) {
   let error: string = null;
   let renderedHtml = docTemplate.html;
-  const varBag = fields.reduce((bag, f) => {
-    bag[f.linkedVarName] = f.value;
-    return bag;
-  }, {});
-  for (const varName of docTemplate.refFields) {
-    const value = varBag[varName];
+  const fieldMap = new Map(fields.map(f => [f.name, f]));
+  for (const fieldName of docTemplate.refFields) {
+    const field = fieldMap.get(fieldName);
+    const value = field?.value;
     if (value || value === 0) {
-      const regex = new RegExp(`{{${varName}}}`, 'g');
-      renderedHtml = renderedHtml.replace(regex, `${value}`);
+      const regex = new RegExp(`{{${fieldName}}}`, 'g');
+      const replacementString = await stringifyFieldValue(field);
+      renderedHtml = renderedHtml.replace(regex, replacementString);
     } else {
-      error = `Value of '${varName}' is not specified`;
+      error = `The value of field '${fieldName}' is not specified yet on form`;
       break;
     }
   }
@@ -31,7 +78,7 @@ function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskF
 }
 
 async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: TaskField[]): Promise<{ error: string, pdfData: Buffer, fileName: string }> {
-  const { error, renderedHtml } = renderDocTemplateBodyWithVarBag(docTemplate, fields);
+  const { error, renderedHtml } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
 
   const options = { format: 'A4' };
 
@@ -51,9 +98,9 @@ export async function tryGenDocFile(m: EntityManager, docTemplate: DocTemplate, 
   const file = new File();
   file.id = id;
   file.fileName = fileName;
-  file.mime = 'application/pdf'
-  file.location = location,
-  file.md5 = createHash('md5').update(pdfData).digest('hex'),
+  file.mime = 'application/pdf';
+  file.location = location;
+  file.md5 = createHash('md5').update(pdfData).digest('hex');
   file.public = false;
 
   await m.save(file);

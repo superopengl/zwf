@@ -23,30 +23,50 @@ import { AppDataSource } from '../db';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { id } = req.params;
+  const { fieldId } = req.params;
   const orgId = getOrgIdFromReq(req);
 
+  const taskDoc = new TaskDoc();
   await AppDataSource.transaction(async m => {
-    const taskDoc = await m.findOne(TaskDoc, {
+    const taskField = await m.getRepository(TaskField).findOne({
       where: {
-        id,
+        id: fieldId
       },
-      relations: ['docTemplate']
+      relations: {
+        task: {
+          fields: true
+        }
+      },
     });
 
-    assert(taskDoc?.docTemplate, 404, 'Task doc is not found');
-    assert(taskDoc.docTemplate.orgId === orgId, 404, 'Task doc is not found');
+    assert(taskField?.task?.orgId === orgId, 404, 'Task doc is not found');
 
-    const { docTemplate } = taskDoc;
+    const { fields } = taskField.task;
+    const { docTemplateId } = taskField.value;
 
-    const fields = await m.getRepository(TaskField).find({ where: { taskId: taskDoc.taskId }});
+    const docTemplate = await m.getRepository(DocTemplate).findOneBy({ id: docTemplateId });
 
     const file = await tryGenDocFile(m, docTemplate, fields);
-    taskDoc.fileId = file.id;
-    await m.save(taskDoc);
+
+    taskDoc.fieldId = taskField.id;
+    taskDoc.taskId = taskField.taskId;
+    taskDoc.docTemplate = docTemplate;
+    taskDoc.type = 'agent';
+    taskDoc.status = 'done';
+    taskDoc.file = file;
+    taskDoc.name = file.fileName;
+
+    taskField.value = {
+      ...taskField.value,
+      taskDocId: taskDoc.id
+    }
+    
+    await m.save([taskField, taskDoc]);
   })
 
-  res.json();
+  res.json({
+    taskDocId: taskDoc.id
+  });
 });
 
 export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
