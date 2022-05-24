@@ -49,20 +49,6 @@ export const DroppableFieldList = (props) => {
     )
   }, []);
 
-  const renderCard = (field, index) => {
-    return (
-      <DraggableFieldItem
-        key={field.id}
-        index={index}
-        field={field}
-        onMoveItem={handleMoveItem}
-        onDelete={() => handleDelete(index)}
-        onChange={updatedItem => handleChange(index, updatedItem)}
-        onDropEnd={() => handleDropEnd()}
-      />
-    )
-  }
-
   return (
     <DndProvider backend={HTML5Backend}>
       <Row
@@ -109,7 +95,7 @@ export const DraggableFieldItem = ({ field, index, onMoveItem, onDelete, onChang
         handlerId: monitor.getHandlerId(),
       }
     },
-    drop(item, monitor) {
+    drop() {
       onDropEnd();
     },
     hover(item, monitor) {
