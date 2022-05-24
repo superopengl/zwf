@@ -34,7 +34,7 @@ const DocTemplateSelect = props => {
   const { value, onChange, onVariableChange, placeholder, showVariables, isMultiple } = props;
   const [loading, setLoading] = React.useState(true);
   const [docTemplateOptions, setDocTemplateOptions] = React.useState([]);
-  const [allVars, setAllVars] = React.useState([]);
+  const [allRefFields, setAllRefFields] = React.useState([]);
 
   const load = async () => {
     setLoading(true);
@@ -48,15 +48,15 @@ const DocTemplateSelect = props => {
   }, []);
 
   React.useEffect(() => {
-    const allVariables = _.chain(docTemplateOptions)
+    const allRefFields = _.chain(docTemplateOptions)
       .filter(x => Array.isArray(value) ? value.includes(x.id) : value === x.id)
-      .map(x => x.variables || [])
+      .map(x => x.refFields || [])
       .flatten()
       .uniq()
       .value();
 
-    setAllVars(allVariables);
-    onVariableChange(allVariables);
+    setAllRefFields(allRefFields);
+    onVariableChange(allRefFields);
   }, [value, docTemplateOptions]);
 
   const handleChange = (selectedValue, options) => {
@@ -77,8 +77,8 @@ const DocTemplateSelect = props => {
         {x.name}
       </Select.Option>))}
     </StyledSelect>
-    {showVariables && allVars.length > 0 && <Paragraph type="secondary" style={{marginTop: 8}}>
-      This doc template requires variables {allVars.map(v => <VarTag key={v}>{v}</VarTag>)}. You can link other fileds with these variables, after that this document can be generated automatically when all variables are fulfilled.
+    {showVariables && allRefFields.length > 0 && <Paragraph type="secondary" style={{marginTop: 8}}>
+      This doc template references fields {allRefFields.map(v => <VarTag key={v}>{v}</VarTag>)}.
     </Paragraph>}
   </Loading>
 }

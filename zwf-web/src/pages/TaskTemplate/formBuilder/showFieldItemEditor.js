@@ -66,7 +66,7 @@ const FieldEditModalContent = (props) => {
           </Select.Option>)}
         </Select>
       </Form.Item>
-      {!['upload', 'autodoc'].includes(item.type) && <Form.Item label="Variable"
+      {/* {!['upload', 'autodoc'].includes(item.type) && <Form.Item label="Variable"
         {...formItemLayoutProps}
         name='varName'
         rules={[{ required: false }]}>
@@ -77,7 +77,7 @@ const FieldEditModalContent = (props) => {
             label: <VarTag>{v}</VarTag>,
             value: v
           }))} />
-      </Form.Item>}
+      </Form.Item>} */}
       <Form.Item label="Required"
         {...formItemLayoutProps}
         valuePropName="checked" name='required'>

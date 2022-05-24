@@ -1,6 +1,6 @@
 import React from 'react';
-import { Card, Space, Row, Avatar, Form, Col, Modal, Tooltip, Typography, Button } from 'antd';
-import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons'
+import { Card, Space, Row, Avatar, Form, Col, Modal, Tooltip, Typography, Button, Checkbox, Switch } from 'antd';
+import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined, EyeFilled, EyeInvisibleOutlined, EyeOutlined, HolderOutlined } from '@ant-design/icons'
 import { OptionsBuilder } from './OptionsBuilder';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
@@ -60,6 +60,13 @@ export const FieldItemEditor = (props) => {
     });
   }
 
+  const handleToggleOfficial = () => {
+    onChange({
+      ...item,
+      official: !item.official
+    })
+  }
+
   return <Row wrap={false} gutter={16}>
     <Col flex="auto">
       {/* <Form layout="horizontal" ref={formRef}> */}
@@ -68,6 +75,8 @@ export const FieldItemEditor = (props) => {
     </Col>
     <Col>
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>
+      {/* <Button type="link" icon={item.official ? <EyeInvisibleOutlined/> : <EyeFilled />} onClick={handleToggleOfficial}></Button>
+      <Switch checked={item.required} size="small"/> */}
       <Button type="link" danger icon={<DeleteOutlined />} onClick={handleDelete}></Button>
       <Button type="text" icon={<HolderOutlined />} style={{cursor: 'move'}}></Button>
     </Col>
