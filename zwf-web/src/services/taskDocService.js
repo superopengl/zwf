@@ -1,13 +1,5 @@
 import { API_BASE_URL, httpPost$, httpPut$ } from './http';
 
-export function createOrphanTaskDocFromUploadedFile$(fileId) {
-  return httpPut$(`/task_doc`, { fileId });
-}
-
-export function createOrphanTaskDocFromDocTemplate$(docTemplateId) {
-  return httpPut$(`/task_doc`, { docTemplateId });
-}
-
 export function listTaskDocs$(taskDocIds) {
   return httpPost$(`/task_doc/search`, { ids: taskDocIds });
 }

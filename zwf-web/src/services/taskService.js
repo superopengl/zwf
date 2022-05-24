@@ -24,10 +24,6 @@ export function updateTaskFields$(taskId, fields) {
   return httpPost$(`/task/${taskId}/fields`, { fields });
 }
 
-export function getTaskFieldDocs$(fieldId, taskDocIds) {
-  return httpPost$(`/task/field/${fieldId}/docs`, { taskDocIds });
-}
-
 export function generateAutoDoc$(fieldId) {
   return httpPost$(`/task/field/${fieldId}/autodoc`);
 }

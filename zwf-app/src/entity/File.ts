@@ -8,6 +8,9 @@ export class File {
   @CreateDateColumn()
   createdAt?: Date;
 
+  @Column('uuid', { nullable: true })
+  taskId?: string;
+
   /**
    * User ID of the uploader. 
    * For auto-gen doc, it's the org ID.
@@ -29,4 +32,7 @@ export class File {
 
   @Column({ default: false })
   public?: boolean;
+
+  @Column({ nullable: true })
+  lastClientReadAt?: Date;
 }

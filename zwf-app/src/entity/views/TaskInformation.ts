@@ -3,7 +3,6 @@ import { Role } from './../../types/Role';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { TaskTemplate } from '../TaskTemplate';
 import { Task } from '../Task';
-import { TaskDoc } from '../TaskDoc';
 import { TaskStatus } from '../../types/TaskStatus';
 import { Org } from '../Org';
 import { User } from '../User';

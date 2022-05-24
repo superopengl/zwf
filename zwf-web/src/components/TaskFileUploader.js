@@ -11,7 +11,6 @@ import { Badge } from 'antd';
 import { Popover } from 'antd';
 import { TimeAgo } from './TimeAgo';
 import { API_BASE_URL } from 'services/http';
-import { getTaskFieldDocs$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
 
 const { Dragger } = Upload;
@@ -91,26 +90,21 @@ export const TaskFileUploader = React.memo((props) => {
   const { value, fieldId, size, disabled, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
+  const [loading, setLoading] = React.useState(false);
 
   const isPreviewMode = !fieldId;
   const maxSize = size || 30;
 
   React.useEffect(() => {
     if (!isPreviewMode && value?.length) {
-      setLoading(true);
-      getTaskFieldDocs$(fieldId, value).subscribe(docs => {
-        setFileList(docs.map(doc => ({
-          uid: doc.id,
-          name: doc.name,
-          status: 'done',
-          url: `${API_BASE_URL}/task/field/${fieldId}/file/${doc.id}`
-        })));
-        setLoading(false);
-      })
+      setFileList(value.map(f => ({
+        uid: f.fileId,
+        name: f.name,
+        status: 'done',
+        url: `${API_BASE_URL}/task/file/${f.fileId}`
+      })));
     } else {
       setFileList([]);
-      setLoading(false);
     }
   }, [value]);
 
@@ -120,12 +114,12 @@ export const TaskFileUploader = React.memo((props) => {
 
     if (file.status === 'done') {
       // props.onAdd?.(_.get(file, 'response.id', file.uid));
-      const newTaskDocId = file.response?.id
-      if (newTaskDocId) {
-        file.uid = newTaskDocId;
-        file.url = `${API_BASE_URL}/task/field/${fieldId}/file/${newTaskDocId}`
+      const newFileId = file.response?.fileId
+      if (newFileId) {
+        file.uid = newFileId;
+        file.url = `${API_BASE_URL}/task/file/${newFileId}`
       }
-      onChange(fileList.map(f => f.uid));
+      onChange(fileList.map(f => ({ fileId: f.uid, name: f.name })));
     }
 
     const uploading = file.status === 'uploading';
@@ -139,7 +133,7 @@ export const TaskFileUploader = React.memo((props) => {
   }
 
   const handleRemove = file => {
-    onChange(fileList.filter(f => f !== file).map(f => f.uid));
+    onChange(fileList.filter(f => f !== file).map(f => ({ fileId: f.uid, name: f.name })));
   }
 
   const getFileIcon = file => <FileIconWithOverlay
@@ -188,7 +182,10 @@ export const TaskFileUploader = React.memo((props) => {
 })
 
 TaskFileUploader.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.string),
+  value: PropTypes.arrayOf(PropTypes.shape({
+    fileId: PropTypes.string,
+    name: PropTypes.string,
+  })),
   fieldId: PropTypes.string,
   onChange: PropTypes.func,
   onAdd: PropTypes.func,

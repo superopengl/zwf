@@ -1,6 +1,5 @@
 import { AppDataSource } from './../db';
 import { TaskField } from './../entity/TaskField';
-import { TaskDoc } from './../entity/TaskDoc';
 import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
 import { TaskAction } from './../entity/TaskAction';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
@@ -101,32 +100,30 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
   });
 });
 
-export const downloadTaskFieldFile = handlerWrapper(async (req, res) => {
+export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assert(getUserIdFromReq(req), 404);
 
   assertRole(req, 'system', 'admin', 'client', 'agent');
-  const { fieldId, docId } = req.params;
+  const { fileId } = req.params;
   const role = getRoleFromReq(req);
 
-  const taskRepo = AppDataSource.getRepository(TaskDoc);
-  const taskDoc = await taskRepo.findOne({
+  const fileRepo = AppDataSource.getRepository(File);
+  const file = await fileRepo.findOne({
     where: {
-      id: docId,
-      fieldId
+      id: fileId,
     },
-    relations: { file: true }
   });
 
-  assert(taskDoc, 404);
-  await assertTaskAccess(req, taskDoc.taskId);
+  assert(file, 404);
+  await assertTaskAccess(req, file.taskId);
 
   if (role === 'client') {
     const now = getNow();
-    taskDoc.lastClientReadAt = now;
-    await taskRepo.save(taskDoc);
+    file.lastClientReadAt = now;
+    await fileRepo.save(file);
   }
 
-  streamFileToResponse(taskDoc.file, res);
+  streamFileToResponse(file, res);
 });
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {
@@ -206,37 +203,6 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   });
 
   res.json();
-});
-
-export const getTaskFieldDocs = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { taskDocIds } = req.body;
-  const { fieldId } = req.params;
-  assert(taskDocIds?.length, 400, 'taskDocIds not specified');
-
-  const field = await AppDataSource.getRepository(TaskField).findOne({
-    where: {
-      id: fieldId
-    },
-    select: {
-      taskId: true
-    }
-  })
-  assert(field, 404);
-  await assertTaskAccess(req, field.taskId);
-
-  const docs = await AppDataSource.getRepository(TaskDoc).find({ 
-    where: {
-      id: In(taskDocIds),
-      fieldId,
-    },
-    select: {
-      id: true,
-      name: true,
-    }
-  });
-
-  res.json(docs);
 });
 
 interface ISearchTaskQuery {
@@ -416,12 +382,13 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   await assertTaskAccess(req, taskField.taskId);
 
   // Upload file binary to S3
-  const taskDocId = uuidv4();
   const fileId = uuidv4();
 
   const location = await uploadToS3(fileId, name, data);
+
   const fileEntity = new File();
   fileEntity.id = fileId;
+  fileEntity.taskId = taskField.taskId;
   fileEntity.fileName = name;
   fileEntity.createdBy = userId;
   fileEntity.mime = mimetype;
@@ -429,22 +396,10 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   fileEntity.md5 = md5;
   fileEntity.public = false;
 
-
-  await AppDataSource.transaction(async m => {
-    const taskDoc = new TaskDoc();
-    taskDoc.id = taskDocId;
-    taskDoc.taskId = taskField.taskId,
-      taskDoc.fieldId = fieldId;
-    taskDoc.file = fileEntity;
-    taskDoc.name = name;
-    taskDoc.type = role === Role.Client ? 'client' : 'agent';
-    taskDoc.status = 'done';
-
-    await m.save([fileEntity, taskDoc]);
-  });
+  await AppDataSource.manager.save(fileEntity);
 
   res.json({
-    id: taskDocId,
+    fileId: fileId,
   });
 });
 

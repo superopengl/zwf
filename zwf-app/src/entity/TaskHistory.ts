@@ -1,6 +1,5 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
-import { TaskDoc } from './TaskDoc';
 
 @Entity()
 export class TaskHistory {
@@ -24,7 +23,4 @@ export class TaskHistory {
 
   @Column({ type: 'jsonb', nullable: true })
   fields: any;
-
-  @Column({ type: 'jsonb', default: [] })
-  docs: TaskDoc[];
 }

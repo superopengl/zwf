@@ -4,7 +4,6 @@ import { Typography, Form, Divider } from 'antd';
 import FormBuilder from 'antd-form-builder'
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { createFormSchemaFromFields } from 'util/createFormSchemaFromFields';
-import { TaskAttachmentPanel } from './TaskAttachmentPanel';
 import { GlobalContext } from '../contexts/GlobalContext';
 
 const { Title, Text, Paragraph } = Typography;

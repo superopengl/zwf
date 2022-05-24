@@ -8,7 +8,6 @@ import { Message } from './entity/Message';
 import { DocTemplate } from './entity/DocTemplate';
 import { TaskTemplate } from './entity/TaskTemplate';
 import { UserProfile } from './entity/UserProfile';
-import { TaskDoc } from './entity/TaskDoc';
 import { TaskField } from './entity/TaskField';
 import { Task } from './entity/Task';
 import { Tag } from './entity/Tag';
@@ -181,7 +180,6 @@ export let AppDataSource = new DataSource({
     Tag, 
     Task, 
     TaskField, 
-    TaskDoc, 
     File, 
     TaskTemplate, 
     DocTemplate, 
