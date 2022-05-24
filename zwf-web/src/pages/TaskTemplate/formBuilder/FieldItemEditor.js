@@ -27,7 +27,7 @@ export const FieldItemEditor = (props) => {
     columns: 1,
     fields: [
       {
-        key: `${name}.${index}`,
+        key: `_${index}`,
         label: name,
         initialValue: item.value,
         required: item.required,
