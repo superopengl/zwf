@@ -119,7 +119,7 @@ const FieldEditModalContent = (props) => {
         name={['value', 'docTemplateId']}
         rules={[{ required: true, message: ' ' }]}
       >
-        <DocTemplateSelect isMultiple={false} />
+        <DocTemplateSelect showVariables={true} isMultiple={false} />
       </Form.Item>}
       <Row justify="end" style={{ marginTop: 32 }}>
         <Button type="text" onClick={onCancel} >Cancel</Button>

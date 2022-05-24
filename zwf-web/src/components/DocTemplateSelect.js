@@ -6,7 +6,7 @@ import * as _ from 'lodash';
 import { listDocTemplate } from 'services/docTemplateService';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
-import {VarTag} from './VarTag';
+import { VarTag } from './VarTag';
 
 const { Paragraph } = Typography;
 
@@ -49,11 +49,11 @@ const DocTemplateSelect = props => {
 
   React.useEffect(() => {
     const allVariables = _.chain(docTemplateOptions)
-    .filter(x => Array.isArray(value) ? value.includes(x.id) : value === x.id)
-    .map(x => x.variables || [])
-    .flatten()
-    .uniq()
-    .value();
+      .filter(x => Array.isArray(value) ? value.includes(x.id) : value === x.id)
+      .map(x => x.variables || [])
+      .flatten()
+      .uniq()
+      .value();
 
     setAllVars(allVariables);
     onVariableChange(allVariables);
@@ -77,13 +77,9 @@ const DocTemplateSelect = props => {
         {x.name}
       </Select.Option>))}
     </StyledSelect>
-    {showVariables && allVars.length > 0 && <Alert 
-    showIcon
-    type="warning"
-    style={{marginTop: 10}}
-    message="Doc templates requires variables"
-    description={<>Please specify these variables {allVars.map(v => <VarTag key={v}>{v}</VarTag>)}to fields</>}
-      />}
+    {showVariables && allVars.length > 0 && <Paragraph type="secondary" style={{marginTop: 8}}>
+      This doc template requires variables {allVars.map(v => <VarTag key={v}>{v}</VarTag>)}. You can link other fileds with these variables, after that this document can be generated automatically when all variables are fulfilled.
+    </Paragraph>}
   </Loading>
 }
 
