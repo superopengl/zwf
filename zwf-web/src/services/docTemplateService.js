@@ -32,10 +32,6 @@ export async function applyDocTemplate(id, refFields) {
   return httpPost(`doc_template/${id}/apply`, {refFields});
 }
 
-export async function genPdfFromDocTemplate(id, refFields) {
-  return httpPost(`doc_template/${id}/pdf`, {refFields});
-}
-
 export function renameDocTemplate$(id, name) {
   return httpPost$(`/doc_template/${id}/rename`, {name});
 }

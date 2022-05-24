@@ -1,5 +1,4 @@
 import { TaskField } from './../entity/TaskField';
-import { createPdfFromDocTemplate } from './docTemplateController';
 import { getUtcNow } from './../utils/getUtcNow';
 
 import { getManager, getRepository, In, Not, IsNull } from 'typeorm';
