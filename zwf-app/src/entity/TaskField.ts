@@ -16,13 +16,13 @@ export class TaskField {
   @Column()
   name: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   description: string;
 
   @Column()
   type: string;
 
-  @Column({default: false})
+  @Column({ default: false })
   required: boolean;
 
   @Column('int')
@@ -40,9 +40,9 @@ export class TaskField {
   @Column({ default: false })
   official: boolean;
 
-  @Column('jsonb', {nullable: true })
+  @Column('jsonb', { nullable: true })
   options: string[];
 
   @Column('jsonb', { nullable: true })
-  value?: any;
+  value?: any; // string | number | boolean | { fileId: string, name: string }[] | { docTemplateId: string, fileId?: string };
 }
