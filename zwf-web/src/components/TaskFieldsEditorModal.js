@@ -17,7 +17,7 @@ export const TaskFieldsEditorModal = props => {
   const formRef = React.createRef();
 
   const handleSaveTaskFields = async () => {
-    await formRef.current.validateFields();
+    // await formRef.current.validateFields();
     const values = formRef.current.getFieldsValue();
     updateTaskFields$(task.id, values.fields).subscribe(() => {
       onOk();
