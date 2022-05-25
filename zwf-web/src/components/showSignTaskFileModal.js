@@ -4,7 +4,9 @@ import { Modal, Typography, Space, Button, Checkbox, Row, Col } from 'antd';
 import Icon from '@ant-design/icons';
 import { FaFileSignature, FaSignature } from 'react-icons/fa';
 import { FileIcon } from './FileIcon';
-import { getTaskDocDownloadUrl } from 'services/taskDocService';
+import { getTaskDocDownloadUrl, signTaskFile$ } from 'services/taskService';
+import { Loading } from './Loading';
+import { catchError, finalize } from 'rxjs/operators';
 
 const { Paragraph, Link: TextLink } = Typography;
 
@@ -12,14 +14,19 @@ const Content = props => {
   const { taskDoc, onCancel, onOk } = props;
 
   const hasRead = !!taskDoc.lastClientReadAt
+  const [loading, setLoading] = React.useState(false);
   const [agreed, setAgreed] = React.useState(false);
 
-
   const handleSign = () => {
-    onOk();
+    setLoading(true);
+    signTaskFile$(taskDoc.fileId).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(() => {
+      onOk();
+    })
   }
 
-  return <>
+  return <Loading loading={loading}>
     <Paragraph>
       Please view and sign the document. Click below file to download or open it before signing.
     </Paragraph>
@@ -36,10 +43,10 @@ const Content = props => {
         <Button type="primary" onClick={handleSign} disabled={!agreed} icon={<Icon component={FaSignature} />}>Sign</Button>
       </Space>
     </Space>
-  </>
+  </Loading>
 }
 
-export function showSignTaskDocModal(taskDoc, options = {}) {
+export function showSignTaskFileModal(taskDoc, options = {}) {
   if (!taskDoc) {
     throw new Error('taskDoc is null');
   }

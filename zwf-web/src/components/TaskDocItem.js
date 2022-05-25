@@ -10,9 +10,9 @@ import { CheckOutlined, CheckSquareOutlined, BorderOutlined } from '@ant-design/
 import _ from 'lodash';
 import Icon, { DeleteOutlined } from '@ant-design/icons';
 import { BsPatchCheck } from 'react-icons/bs';
-import { showSignTaskDocModal } from './showSignTaskDocModal';
+import { showSignTaskFileModal } from './showSignTaskFileModal';
 import { FaFileSignature } from 'react-icons/fa';
-import { getTaskDocDownloadUrl} from "services/taskDocService";
+import { getTaskDocDownloadUrl} from "services/taskService";
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';
@@ -99,7 +99,7 @@ export const TaskDocItem = React.memo(props => {
   }
 
   const handleSignTaskDoc = () => {
-    showSignTaskDocModal(taskFile, {
+    showSignTaskFileModal(taskFile, {
       onOk: () => {
         taskFile.signedAt = new Date();
         onChange(taskFile);

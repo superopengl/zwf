@@ -15,6 +15,9 @@ import { TaskFileMetaInformation } from './TaskFileMetaInformation';
       `f.md5 as md5`,
       `f."usedValueBag" as "usedValueBag"`,
       `f."usedValueHash" as "usedValueHash"`,
+      `f."esign" as "esign"`,
+      `f."signedBy" as "signedBy"`,
+      `f."signedAt" as "signedAt"`,
     ]),
   dependsOn: [TaskFileMetaInformation]
 })
@@ -57,6 +60,12 @@ export class TaskFileInformation {
 
   @ViewColumn()
   lastClientReadAt: Date;
+
+  @ViewColumn()
+  esign: string;
+
+  @ViewColumn()
+  signedBy: string;
 
   @ViewColumn()
   signedAt: Date;

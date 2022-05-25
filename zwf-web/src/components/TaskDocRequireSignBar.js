@@ -9,7 +9,7 @@ import { Alert, Row, Col, Space, Typography, Button } from 'antd';
 import { FileIcon } from 'components/FileIcon';
 import { FaSignature } from 'react-icons/fa';
 import Icon, { DeleteOutlined } from '@ant-design/icons';
-import { showSignTaskDocModal } from './showSignTaskDocModal';
+import { showSignTaskFileModal } from './showSignTaskFileModal';
 
 const { Paragraph, Link: TextLink } = Typography;
 
@@ -53,7 +53,7 @@ export const TaskDocRequireSignBar = React.memo((props) => {
   }, [task]);
 
   const handleSignTaskDoc = (taskFile) => {
-    showSignTaskDocModal(taskFile, {
+    showSignTaskFileModal(taskFile, {
       onOk: () => {
         taskFile.signedAt = new Date();
         onChange(taskFile);
