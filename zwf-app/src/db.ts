@@ -1,4 +1,4 @@
-import { TaskFileInformation } from './entity/views/TaskFileInformation';
+import { TaskUploadFileInformation } from './entity/views/TaskFileInformation';
 import { SupportInformation } from './entity/views/SupportInformation';
 import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
@@ -213,7 +213,7 @@ export let AppDataSource = new DataSource({
     SupportInformation,
     SupportPendingReplyInformation,
     EmailSentOutTask,
-    TaskFileInformation,
+    TaskUploadFileInformation,
   ],
 })
 

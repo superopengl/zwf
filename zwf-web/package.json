@@ -27,7 +27,7 @@
     "mgr-pdf-viewer-react": "^1.0.3",
     "moment": "^2.25.3",
     "moment-timezone": "^0.5.32",
-    "object-hash": "^2.0.3",
+    "object-hash": "^2.2.0",
     "query-string": "^6.13.1",
     "re-resizable": "^6.9.1",
     "react": "^17.0.2",

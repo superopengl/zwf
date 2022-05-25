@@ -16,7 +16,7 @@ import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { DocTemplate } from '../entity/DocTemplate';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { tryGenDocFile } from '../services/genDocService';
+import { generatePdfDocFile } from '../services/genDocService';
 import { AppDataSource } from '../db';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
@@ -45,7 +45,7 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
 
     const docTemplate = await m.getRepository(DocTemplate).findOneBy({ id: docTemplateId });
 
-    file = await tryGenDocFile(m, docTemplate, fields);
+    file = await generatePdfDocFile(m, docTemplate, fields);
 
     taskField.value = {
       ...taskField.value,

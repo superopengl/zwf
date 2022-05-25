@@ -66,6 +66,7 @@
     "moment-timezone": "^0.5.32",
     "node-fetch": "^2.6.1",
     "nodemailer": "^6.4.14",
+    "object-hash": "^3.0.0",
     "pg": "^8.7.3",
     "redis": "^3.1.1",
     "request-ip": "^2.1.3",
