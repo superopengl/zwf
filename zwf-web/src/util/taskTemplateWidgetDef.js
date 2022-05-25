@@ -7,7 +7,7 @@ import {
   FaCalendarAlt,
 } from 'react-icons/fa';
 import {TiSortNumerically} from 'react-icons/ti'
-import Icon, { UploadOutlined } from '@ant-design/icons'
+import Icon, { FilePdfFilled, FilePdfOutlined, UploadOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
 import { Upload } from 'antd';
@@ -116,8 +116,8 @@ export const TaskTemplateWidgetDef = Object.freeze([
   },
   {
     type: 'autodoc',
-    label: 'Auto doc',
-    icon: <UploadOutlined />,
+    label: 'Auto generated PDF',
+    icon: <FilePdfFilled />,
     widget: AutoDocInput,
     widgetPorps: {
     },
