@@ -1,21 +1,23 @@
-import { TaskField } from './../TaskField';
-import { ViewEntity, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
+import { File } from '../File';
+import { TaskFileMetaInformation } from './TaskFileMetaInformation';
+
+
 
 @ViewEntity({
-  expression: `
-  select 
-      tf."taskId", 
-      tf.id as "fieldId", 
-      tf.name as "fieldName", 
-      tf.ordinal, x.doc->>'name' as "fileName", 
-      x.doc->>'fileId' as "fileId" 
-  from "${process.env.TYPEORM_SCHEMA || 'zwf'}".task_field tf
-  left join jsonb_array_elements(tf.value) x(doc) on true
-  where tf.type = 'upload'
-  `,
-  dependsOn: [TaskField]
+  expression: (ds: DataSource) => ds.createQueryBuilder()
+    .from(TaskFileMetaInformation, 'm')
+    .leftJoin(File, 'f', `m."fileId"::uuid = f.id`)
+    .select([
+      `m.*`,
+      `f.mime as mime`,
+      `f.location as location`,
+      `f.md5 as md5`,
+      `f."usedValueBag" as "usedValueBag"`,
+      `f."usedValueHash" as "usedValueHash"`,
+    ])
 })
-export class TaskUploadFileInformation {
+export class TaskFileInformation {
   @ViewColumn()
   taskId: string;
 
@@ -33,4 +35,19 @@ export class TaskUploadFileInformation {
 
   @ViewColumn()
   fileId: string;
+
+  @ViewColumn()
+  mime: string;
+
+  @ViewColumn()
+  location: string;
+
+  @ViewColumn()
+  md5: string;
+
+  @ViewColumn()
+  usedValueBag?: { [key: string]: any; };
+
+  @ViewColumn()
+  usedValueHash?: string;
 }
