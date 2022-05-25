@@ -15,7 +15,8 @@ import { TaskFileMetaInformation } from './TaskFileMetaInformation';
       `f.md5 as md5`,
       `f."usedValueBag" as "usedValueBag"`,
       `f."usedValueHash" as "usedValueHash"`,
-    ])
+    ]),
+  dependsOn: [TaskFileMetaInformation]
 })
 export class TaskFileInformation {
   @ViewColumn()
@@ -50,4 +51,13 @@ export class TaskFileInformation {
 
   @ViewColumn()
   usedValueHash?: string;
+
+  @ViewColumn()
+  requiresSign: boolean;
+
+  @ViewColumn()
+  lastClientReadAt: Date;
+
+  @ViewColumn()
+  signedAt: Date;
 }

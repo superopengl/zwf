@@ -69,7 +69,7 @@ export const searchFileMetaList = handlerWrapper(async (req, res) => {
 });
 
 
-export const uploadFile = handlerWrapper(async (req, res) => {
+export const uploadPublicFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
   const { file } = (req as any).files;
   assert(file, 400, 'No file to upload');
@@ -86,7 +86,7 @@ export const uploadFile = handlerWrapper(async (req, res) => {
     mime: mimetype,
     location,
     md5,
-    public: !!req.query.public
+    public: true
   };
 
   const repo = AppDataSource.getRepository(File);

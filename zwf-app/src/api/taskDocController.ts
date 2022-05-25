@@ -106,25 +106,6 @@ export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-
-export const getTaskDocFileStream = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client', 'agent');
-  const { id } = req.params;
-  const role = getRoleFromReq(req);
-  assertTaskAccess(req, id);
-
-  const file = await AppDataSource.getRepository(File).findOneBy({ id });
-  assert(file, 404);
-
-  if (role === Role.Client) {
-    await AppDataSource.getRepository(File).update(id, {
-      lastClientReadAt: getUtcNow()
-    })
-  }
-
-  streamFileToResponse(file, res);
-});
-
 export const signTaskDoc = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { id } = req.params;

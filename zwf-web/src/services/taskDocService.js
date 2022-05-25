@@ -17,6 +17,6 @@ export function genDoc$(taskDocId) {
   return httpPost$(`/task_doc/${taskDocId}/gendoc`);
 }
 
-export function getTaskDocDownloadUrl(taskDocId) {
-  return `${API_BASE_URL}/task_doc/${taskDocId}/data`;
+export function getTaskDocDownloadUrl(fileId) {
+  return `${API_BASE_URL}/task/file/${fileId}`;
 }

@@ -86,43 +86,21 @@ export const TaskDocItem = React.memo(props => {
   const { user, role } = context;
 
   const isClient = role === 'client';
-  const isAgent = role === 'agent' || role === 'admin';
+  const isOrg = role === 'agent' || role === 'admin';
 
-  const missingVars = React.useMemo(() => getMissingVarWarningMessage(taskFile, varBag), [taskFile, varBag]);
+  const canClientSign = isClient && taskFile.requiresSign && !taskFile.signedAt
 
-  const canDelete = (taskFile) => {
-    switch (taskFile.type) {
-      case 'client':
-        return role === 'client' && user.id === taskFile.createdBy && !taskFile.signedAt
-      case 'auto':
-      case 'agent':
-        return (role === 'admin' || role === 'agent') && !taskFile.signedAt;
-    }
-    return false;
-  }
-
-  const canRequestClientSign = (taskFile) => {
-    return isAgent && taskFile.type !== 'client' && taskFile.fileId && !taskFile.signedAt
-  }
-
-  const canClientSign = (taskFile) => {
-    return isClient && taskFile.requiresSign && !taskFile.signedAt
-  }
-
-  const canGenDoc = (taskFile) => {
-    return !isClient && taskFile.docTemplateId && !taskFile.fileId && !missingVars.length
-  }
+  const canDelete = isOrg && !taskFile.signedAt;
 
   const handleToggleRequireSign = () => {
     taskFile.requiresSign = !taskFile.requiresSign;
     onChange(taskFile);
   }
 
-  const handleSignTaskDoc = (taskFile, e) => {
-    e.stopPropagation();
+  const handleSignTaskDoc = () => {
     showSignTaskDocModal(taskFile, {
       onOk: () => {
-        onChange();
+        onChange(taskFile);
       },
     })
   }
@@ -141,6 +119,7 @@ export const TaskDocItem = React.memo(props => {
       okText: 'Delete it',
       okButtonProps: {
         type: 'primary',
+        ghost: true,
         danger: true,
       },
       cancelButtonProps: {
@@ -169,16 +148,24 @@ export const TaskDocItem = React.memo(props => {
       </Space>
     </Col>
     <Col style={{ paddingTop: 6 }}>
-      <Tooltip title={taskFile.requiresSign ? 'Waiting for client to sign' : 'Ask client to sign this doc'}>
+      {canClientSign && <Tooltip title="Sign this document">
+        <Button
+          type="primary"
+          danger
+          icon={<Icon component={FaSignature} />}
+          onClick={handleSignTaskDoc}
+        >Sign</Button>
+      </Tooltip>}
+      {isOrg && <Tooltip title={taskFile.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
         <Button shape="circle"
           type={taskFile.requiresSign ? 'primary' : 'default'}
           icon={<Icon component={FaSignature} />}
           onClick={handleToggleRequireSign}
         />
-      </Tooltip>
-      <Tooltip title="Delete file">
-        <Button key="delete" danger icon={<DeleteOutlined />} type="link" onClick={handleDelete} />
-      </Tooltip>
+      </Tooltip>}
+      {isOrg && <Tooltip title="Delete file">
+        <Button key="delete" danger icon={<DeleteOutlined />} type="link" onClick={handleDelete} disabled={!canDelete} />
+      </Tooltip>}
     </Col>
   </StyledListItem>
 

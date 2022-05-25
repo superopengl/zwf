@@ -104,7 +104,7 @@ paths:
           description: OK
   /file:
     post:
-      operationId: uploadFile
+      operationId: uploadPublicFile
       responses:
         200:
           description: OK
@@ -965,18 +965,6 @@ paths:
   /task_doc/{id}/sign:
     post:
       operationId: signTaskDoc
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /task_doc/{id}/data:
-    get:
-      operationId: getTaskDocFileStream
       parameters:
         - name: id
           in: path

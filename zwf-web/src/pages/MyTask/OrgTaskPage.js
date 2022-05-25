@@ -171,7 +171,7 @@ const OrgTaskPage = React.memo((props) => {
                   <Button type="link" icon={<Icon component={RiInsertRowBottom} />} block onClick={() => setEditFieldVisible(true)}>Edit fields</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>
-                  <Button type="link" icon={<Icon component={FaSignature} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button>
+                  {/* <Button type="link" icon={<Icon component={FaSignature} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button> */}
                   {!['archived', 'done'].includes(task.status) && <Button type="link" icon={<CheckOutlined />} block onClick={() => setHistoryVisible(true)}>Complete this task</Button>}
                   {task.status !== 'archived' && <>
                     <hr />
