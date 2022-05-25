@@ -81,7 +81,7 @@ const OrgAccountPage = (props) => {
         context.setUser(user);
       }
       setSubscriptionHistory(subscriptionHistory);
-    } catch {
+    } finally {
       setLoading(false);
     }
   }
