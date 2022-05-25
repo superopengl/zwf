@@ -12,7 +12,7 @@ import Icon, { DeleteOutlined } from '@ant-design/icons';
 import { BsPatchCheck } from 'react-icons/bs';
 import { showSignTaskDocModal } from './showSignTaskDocModal';
 import { FaFileSignature } from 'react-icons/fa';
-import { genDoc$, getTaskDocDownloadUrl, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
+import { genDoc$, getTaskDocDownloadUrl} from "services/taskDocService";
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';
@@ -89,7 +89,8 @@ export const TaskDocItem = React.memo(props => {
   const isOrg = role === 'agent' || role === 'admin';
 
   const canClientSign = isClient && taskFile.requiresSign && !taskFile.signedAt
-
+  const canRequestSign = isOrg && !taskFile.signedAt;
+  
   const canDelete = isOrg && !taskFile.signedAt;
 
   const handleToggleRequireSign = () => {
@@ -100,6 +101,7 @@ export const TaskDocItem = React.memo(props => {
   const handleSignTaskDoc = () => {
     showSignTaskDocModal(taskFile, {
       onOk: () => {
+        taskFile.signedAt = new Date();
         onChange(taskFile);
       },
     })
@@ -145,6 +147,7 @@ export const TaskDocItem = React.memo(props => {
           >{iconOverlay}</div>}
         </div>
         <Link href={getTaskDocDownloadUrl(taskFile.fileId)} target="_blank">{taskFile.name}</Link>
+        {!!taskFile.signedAt && <Tag color="#52c41a">signed</Tag>}
       </Space>
     </Col>
     <Col style={{ paddingTop: 6 }}>
@@ -156,7 +159,7 @@ export const TaskDocItem = React.memo(props => {
           onClick={handleSignTaskDoc}
         >Sign</Button>
       </Tooltip>}
-      {isOrg && <Tooltip title={taskFile.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
+      {canRequestSign && <Tooltip title={taskFile.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
         <Button shape="circle"
           type={taskFile.requiresSign ? 'primary' : 'default'}
           icon={<Icon component={FaSignature} />}

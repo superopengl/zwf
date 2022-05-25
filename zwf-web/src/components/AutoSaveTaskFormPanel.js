@@ -5,6 +5,7 @@ import { updateTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } fr
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';
+import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
@@ -19,12 +20,13 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const ref = React.useRef();
 
   const role = context.role;
+  const isClient = role === 'client';
 
   React.useEffect(() => {
     setFields(task?.fields);
     setDisabled(
       ['done', 'archived'].includes(task.status)
-      || (role === 'client' && ['todo', 'in_progress'].includes(task.status))
+      || (isClient && ['todo', 'in_progress'].includes(task.status))
     )
   }, [task]);
 
@@ -72,14 +74,20 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     setChangedFields(x => ({ ...x, ...changedFields }))
   }, []);
 
-  return (
-      <TaskFormWidget
-        fields={fields}
-        type={type}
-        ref={ref}
-        onChange={handleTaskFieldsValueChange}
-        disabled={disabled}
-      />
+  const handleSignDoc = () => {
+    
+  }
+
+  return (<>
+    {isClient && <TaskDocRequireSignBar value={task} onChange={handleSignDoc} />}
+    <TaskFormWidget
+      fields={fields}
+      type={type}
+      ref={ref}
+      onChange={handleTaskFieldsValueChange}
+      disabled={disabled}
+    />
+  </>
   );
 });
 

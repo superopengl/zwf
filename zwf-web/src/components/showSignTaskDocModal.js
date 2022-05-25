@@ -4,7 +4,7 @@ import { Modal, Typography, Space, Button, Checkbox, Row, Col } from 'antd';
 import Icon from '@ant-design/icons';
 import { FaFileSignature, FaSignature } from 'react-icons/fa';
 import { FileIcon } from './FileIcon';
-import { getTaskDocDownloadUrl, signTaskDoc$ } from 'services/taskDocService';
+import { getTaskDocDownloadUrl } from 'services/taskDocService';
 
 const { Paragraph, Link: TextLink } = Typography;
 
@@ -16,9 +16,7 @@ const Content = props => {
 
 
   const handleSign = () => {
-    signTaskDoc$(taskDoc.id).subscribe(() => {
-      onOk();
-    })
+    onOk();
   }
 
   return <>

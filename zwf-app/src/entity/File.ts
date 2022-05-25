@@ -54,4 +54,13 @@ export class File {
    */
   @Column({ nullable: true })
   usedValueHash?: string;
+
+  @Column({ nullable: true })
+  esign?: string;
+
+  @Column({ nullable: true })
+  signedAt?: Date;
+
+  @Column({ nullable: true })
+  signedBy?: string;
 }
