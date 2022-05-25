@@ -12,7 +12,7 @@ import Icon, { DeleteOutlined } from '@ant-design/icons';
 import { BsPatchCheck } from 'react-icons/bs';
 import { showSignTaskDocModal } from './showSignTaskDocModal';
 import { FaFileSignature } from 'react-icons/fa';
-import { genDoc$, getTaskDocDownloadUrl} from "services/taskDocService";
+import { getTaskDocDownloadUrl} from "services/taskDocService";
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';

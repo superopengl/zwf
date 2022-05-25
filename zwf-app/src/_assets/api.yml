@@ -950,14 +950,6 @@ paths:
       responses:
         200:
           description: OK
-  /task_doc/search:
-    post:
-      operationId: searchTaskDocs
-      # security:
-      #   - authLoggedInUser: []
-      responses:
-        200:
-          description: OK
   /recurring:
     get:
       operationId: listRecurring
