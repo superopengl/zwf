@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import PropTypes from 'prop-types';
-import { Typography, Space, List, Tooltip, Tag, Avatar, Button, Checkbox } from 'antd';
+import { Typography, Space, List, Tooltip, Tag, Avatar, Button, Checkbox, Row, Col } from 'antd';
 import { FileIcon } from './FileIcon';
 import { TimeAgo } from './TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -18,10 +18,14 @@ import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';
 import { MdBrightnessAuto } from 'react-icons/md';
 import { Modal } from 'antd';
+import { FaSignature } from 'react-icons/fa';
 
 const { Link, Text } = Typography;
 
-const StyledListItem = styled(List.Item)`
+const StyledListItem = styled(Row)`
+// margin-top: 4px;
+padding: 4px 0;
+
 &.error-doc {
   background-color: #cf222e11;
 }
@@ -39,27 +43,27 @@ const StyledListItem = styled(List.Item)`
 }
 `;
 
-const getAutoDocTag = (taskDoc, role) => {
-  if (role === 'client' || taskDoc.type !== 'auto') {
+const getAutoDocTag = (taskFile, role) => {
+  if (role === 'client' || taskFile.type !== 'auto') {
     return null;
   }
 
   let label = 'pending';
   let color = '#cf222e';
   let tooltipMessage = 'The file is not generated yet. Fill in fields first.';
-  if (taskDoc.fileId) {
+  if (taskFile.fileId) {
     label = 'generated';
     color = '#2da44e';
     tooltipMessage = 'The file has been generated.';
   }
 
   return <Tooltip title={tooltipMessage}>
-    <Icon component={MdBrightnessAuto } style={{ color, fontSize: 20 }} />
+    <Icon component={MdBrightnessAuto} style={{ color, fontSize: 20 }} />
   </Tooltip>
 }
 
-const getMissingVarWarningMessage = (taskDoc, varBag) => {
-  const { refFields, fileId } = taskDoc;
+const getMissingVarWarningMessage = (taskFile, varBag) => {
+  const { refFields, fileId } = taskFile;
   const missingVars = [];
   if (!fileId && refFields) {
     for (const varName of refFields) {
@@ -77,71 +81,63 @@ const getMissingVarWarningMessage = (taskDoc, varBag) => {
 }
 
 export const TaskDocItem = React.memo(props => {
-  const { taskDoc, showIcon, style, showCreatedAt, strong, onChange, onDelete, varBag, onLoading } = props;
+  const { value: taskFile, showIcon, style, showCreatedAt, strong, onChange, onDelete, varBag } = props;
   const context = React.useContext(GlobalContext);
   const { user, role } = context;
 
   const isClient = role === 'client';
   const isAgent = role === 'agent' || role === 'admin';
 
-  const missingVars = React.useMemo(() => getMissingVarWarningMessage(taskDoc, varBag), [taskDoc, varBag]);
+  const missingVars = React.useMemo(() => getMissingVarWarningMessage(taskFile, varBag), [taskFile, varBag]);
 
-  const canDelete = (taskDoc) => {
-    switch (taskDoc.type) {
+  const canDelete = (taskFile) => {
+    switch (taskFile.type) {
       case 'client':
-        return role === 'client' && user.id === taskDoc.createdBy && !taskDoc.signedAt
+        return role === 'client' && user.id === taskFile.createdBy && !taskFile.signedAt
       case 'auto':
       case 'agent':
-        return (role === 'admin' || role === 'agent') && !taskDoc.signedAt;
+        return (role === 'admin' || role === 'agent') && !taskFile.signedAt;
     }
     return false;
   }
 
-  const canToggleOfficalOnly = (taskDoc) => {
-    return isAgent && taskDoc.type !== 'client' && !taskDoc.signedAt
+  const canRequestClientSign = (taskFile) => {
+    return isAgent && taskFile.type !== 'client' && taskFile.fileId && !taskFile.signedAt
   }
 
-  const canRequestClientSign = (taskDoc) => {
-    return isAgent && taskDoc.type !== 'client' && taskDoc.fileId && !taskDoc.signedAt
+  const canClientSign = (taskFile) => {
+    return isClient && taskFile.requiresSign && !taskFile.signedAt
   }
 
-  const canClientSign = (taskDoc) => {
-    return isClient && taskDoc.requiresSign && !taskDoc.signedAt
+  const canGenDoc = (taskFile) => {
+    return !isClient && taskFile.docTemplateId && !taskFile.fileId && !missingVars.length
   }
 
-  const canGenDoc = (taskDoc) => {
-    return !isClient && taskDoc.docTemplateId && !taskDoc.fileId && !missingVars.length
+  const handleToggleRequireSign = () => {
+    taskFile.requiresSign = !taskFile.requiresSign;
+    onChange(taskFile);
   }
 
-  const handleToggleRequireSign = (taskDoc, checked) => {
-    onLoading(true)
-    toggleTaskDocsRequiresSign$(taskDoc.id, checked).pipe(
-      finalize(() => onLoading(false))
-    ).subscribe(() => {
-      onChange()
-    })
-  }
-
-  const handleSignTaskDoc = (taskDoc, e) => {
+  const handleSignTaskDoc = (taskFile, e) => {
     e.stopPropagation();
-    showSignTaskDocModal(taskDoc, {
+    showSignTaskDocModal(taskFile, {
       onOk: () => {
         onChange();
       },
     })
   }
 
-  const handleDeleteDoc = (item) => {
+  const handleDelete = () => {
     Modal.confirm({
       title: <Space>
         <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#cf222e' }} />
         Delete file
       </Space>,
-      content: <>Delete file <strong>{item.name}</strong> from this task?</>,
+      content: <>Delete file <strong>{taskFile.name}</strong> from this task?</>,
       closable: true,
       maskClosable: true,
       icon: null,
-      onOk: () => onDelete(),
+      onOk: () => onDelete(taskFile),
       okText: 'Delete it',
       okButtonProps: {
         type: 'primary',
@@ -155,71 +151,69 @@ export const TaskDocItem = React.memo(props => {
     });
   }
 
-  const handleGenDoc = (item) => {
-    const taskDocId = item.id;
-    onLoading(true)
-    genDoc$(taskDocId).pipe(
-      finalize(() => onLoading(false))
-    ).subscribe(() => {
-      onChange();
-    });
-  }
+  const iconOverlay = getAutoDocTag(taskFile, context.role);
 
-  const iconOverlay = getAutoDocTag(taskDoc, context.role);
-
-  const menuConfig = [
-    // {
-    //   icon: taskDoc.requiresSign ? <CheckSquareOutlined /> : <BorderOutlined />,
-    //   menu: 'Require client sign',
-    //   onClick: () => handleToggleRequireSign(taskDoc, !taskDoc.requiresSign)
-    // },
-    taskDoc.type === 'auto' && !taskDoc.fileId ? {
-      icon: <Icon component={BsPatchCheck } />,
-      menu: 'Generate doc',
-      onClick: () => handleGenDoc(taskDoc),
-      disabled: !canGenDoc(taskDoc),
-    } : null,
-    canDelete(taskDoc) ? {
-      icon: <Text type="danger"><DeleteOutlined /></Text>,
-      menu: <Text type="danger">Delete</Text>,
-      onClick: () => handleDeleteDoc(taskDoc)
-    } : null,
-
-  ].filter(x => x);
-
-  return <StyledListItem onClick={e => e.stopPropagation()}
-    className={missingVars.length > 0 ? 'error-doc' : !taskDoc.fileId ? 'not-generated' : null}
-    actions={isClient ? null : [
-      // <Button key="auto" icon={<Icon component={BsPatchCheck } />} type="link">Generate</Button>,
-      taskDoc.signedAt ? null : <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
-      // <Button key="delete" danger icon={<DeleteOutlined/>} type="link" onClick={() => handleDeleteDoc(taskDoc)}>Delete</Button>,
-    ].filter(x => x)}
-    extra={<>
-      {canClientSign(taskDoc) && <Button type="link" icon={<Icon component={FaFileSignature } />} onClick={(e) => handleSignTaskDoc(taskDoc, e)}>Sign</Button>}
-      {!isClient && menuConfig.length > 0 && <DropdownMenu config={menuConfig} />}
-
-      {taskDoc.signedAt && <Tooltip title={<TimeAgo value={taskDoc.signedAt}/>}><Tag>Signed</Tag></Tooltip>}
-    </>}
+  return <StyledListItem
+    onClick={e => e.stopPropagation()}
+  // className={missingVars.length > 0 ? 'error-doc' : !taskFile.fileId ? 'not-generated' : null}
   >
-    <List.Item.Meta
-      avatar={<div style={{ position: 'relative' }}>
-        <FileIcon name={taskDoc.name} />
-        {iconOverlay && <div
-          style={{ position: 'absolute', right: -6, top: -6 }}
-        >{iconOverlay}</div>}
-      </div>}
-      title={<Link href={getTaskDocDownloadUrl(taskDoc.id)} target="_blank">{taskDoc.name}</Link>}
-      description={<>
-        {showCreatedAt && taskDoc.createdAt && <div><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" accurate={false} showTime={false} /></div>}
-        {missingVars.length > 0 && <div style={{ marginTop: 4 }}>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</div>}
-      </>}
-    />
+    <Col flex={1}>
+      <Space>
+        <div style={{ position: 'relative' }}>
+          <FileIcon name={taskFile.name} />
+          {iconOverlay && <div
+            style={{ position: 'absolute', right: -6, top: -6 }}
+          >{iconOverlay}</div>}
+        </div>
+        <Link href={getTaskDocDownloadUrl(taskFile.fileId)} target="_blank">{taskFile.name}</Link>
+      </Space>
+    </Col>
+    <Col style={{ paddingTop: 6 }}>
+      <Tooltip title={taskFile.requiresSign ? 'Waiting for client to sign' : 'Ask client to sign this doc'}>
+        <Button shape="circle"
+          type={taskFile.requiresSign ? 'primary' : 'default'}
+          icon={<Icon component={FaSignature} />}
+          onClick={handleToggleRequireSign}
+        />
+      </Tooltip>
+      <Tooltip title="Delete file">
+        <Button key="delete" danger icon={<DeleteOutlined />} type="link" onClick={handleDelete} />
+      </Tooltip>
+    </Col>
   </StyledListItem>
+
+  // return <StyledListItem onClick={e => e.stopPropagation()}
+  //   className={missingVars.length > 0 ? 'error-doc' : !taskFile.fileId ? 'not-generated' : null}
+  //   actions={isClient ? null : [
+  //     // <Button key="auto" icon={<Icon component={BsPatchCheck } />} type="link">Generate</Button>,
+  //     taskFile.signedAt ? null : <Checkbox key="require-sign" checked={taskFile.requiresSign} onClick={e => handleToggleRequireSign(taskFile, e.target.checked)}><Link>Require sign</Link></Checkbox>,
+  //     <Button key="delete" danger icon={<DeleteOutlined />} type="link" onClick={() => handleDelete(taskFile)}></Button>,
+  //   ].filter(x => x)}
+  //   extra={<>
+  //     {canClientSign(taskFile) && <Button type="link" icon={<Icon component={FaFileSignature} />} onClick={(e) => handleSignTaskDoc(taskFile, e)}>Sign</Button>}
+  //     {!isClient && menuConfig.length > 0 && <DropdownMenu config={menuConfig} />}
+  //     {taskFile.signedAt && <Tooltip title={<TimeAgo value={taskFile.signedAt} />}><Tag>Signed</Tag></Tooltip>}
+  //   </>}
+  // >
+  //   <List.Item.Meta
+  //     avatar={<div style={{ position: 'relative' }}>
+  //       <FileIcon name={taskFile.name} />
+  //       {iconOverlay && <div
+  //         style={{ position: 'absolute', right: -6, top: -6 }}
+  //       >{iconOverlay}</div>}
+  //     </div>}
+  //     title={<Link href={getTaskDocDownloadUrl(taskFile.fileId)} target="_blank">{taskFile.name}</Link>}
+  //     description={<>
+  //       {showCreatedAt && taskFile.createdAt && <div><TimeAgo value={taskFile.createdAt} prefix="Created:" direction="horizontal" accurate={false} showTime={false} /></div>}
+  //       {missingVars.length > 0 && <div style={{ marginTop: 4 }}>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</div>}
+  //     </>}
+  //   />
+  // </StyledListItem>
 });
 
 TaskDocItem.propTypes = {
-  taskDoc: PropTypes.shape({
-    id: PropTypes.string.isRequired,
+  value: PropTypes.shape({
+    fileId: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
     createdAt: PropTypes.string,
   }).isRequired,
@@ -227,7 +221,6 @@ TaskDocItem.propTypes = {
   showCreatedAt: PropTypes.bool,
   onChange: PropTypes.func,
   onDelete: PropTypes.func,
-  onLoading: PropTypes.func,
   varBag: PropTypes.object,
 };
 
@@ -237,6 +230,5 @@ TaskDocItem.defaultProps = {
   varBag: {},
   onChange: () => { },
   onDelete: () => { },
-  onLoading: () => { },
 }
 

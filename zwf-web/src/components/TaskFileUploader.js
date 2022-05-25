@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space } from 'antd';
+import { Upload, Typography, Space, List } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { getFileMeta, getFileMetaList } from 'services/fileService';
@@ -12,6 +12,7 @@ import { Popover } from 'antd';
 import { TimeAgo } from './TimeAgo';
 import { API_BASE_URL } from 'services/http';
 import { Loading } from 'components/Loading';
+import { TaskDocItem } from './TaskDocItem';
 
 const { Dragger } = Upload;
 const { Text } = Typography;
@@ -119,6 +120,7 @@ export const TaskFileUploader = React.memo((props) => {
         file.uid = newFileId;
         file.url = `${API_BASE_URL}/task/file/${newFileId}`
       }
+      debugger;
       onChange(fileList.map(f => ({ fileId: f.uid, name: f.name })));
     }
 
@@ -126,14 +128,8 @@ export const TaskFileUploader = React.memo((props) => {
     setLoading(uploading);
   };
 
-  const handlePreview = file => {
-    const fileName = file.name || file.response.fileName;
-    const url = file.url || file.response.location;
-    saveAs(url, fileName);
-  }
-
   const handleRemove = file => {
-    onChange(fileList.filter(f => f !== file).map(f => ({ fileId: f.uid, name: f.name })));
+    onChange(value.filter(f => f !== file));
   }
 
   const getFileIcon = file => <FileIconWithOverlay
@@ -147,6 +143,10 @@ export const TaskFileUploader = React.memo((props) => {
     return originNode;
   }
 
+  const handleSingleFileChange = file => {
+    onChange([...value]);
+  }
+
   return (
     <Loading loading={loading}>
       <Container className="clearfix">
@@ -156,7 +156,7 @@ export const TaskFileUploader = React.memo((props) => {
           withCredentials={true}
           accept="*/*"
           listType="text"
-          fileList={fileList}
+          fileList={null}
           // onPreview={handlePreview}
           onChange={handleChange}
           onRemove={handleRemove}
@@ -175,7 +175,11 @@ export const TaskFileUploader = React.memo((props) => {
               Click or drag file to this area to upload
             </div>}
         </Dragger>
-        {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
+        {!isPreviewMode && value?.map((f, i) => <TaskDocItem key={i}
+          value={f}
+          onDelete={handleRemove}
+          onChange={handleSingleFileChange}
+        />)}
       </Container>
     </Loading>
   );
