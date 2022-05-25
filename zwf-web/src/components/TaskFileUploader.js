@@ -88,7 +88,7 @@ const FileIconWithOverlay = props => {
 }
 
 export const TaskFileUploader = React.memo((props) => {
-  const { value, fieldId, size, disabled, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
+  const { value, fieldId, size, disabled, showsLastReadAt, showsSignedAt, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -120,7 +120,6 @@ export const TaskFileUploader = React.memo((props) => {
         file.uid = newFileId;
         file.url = `${API_BASE_URL}/task/file/${newFileId}`
       }
-      debugger;
       onChange(fileList.map(f => ({ fileId: f.uid, name: f.name })));
     }
 
@@ -156,12 +155,12 @@ export const TaskFileUploader = React.memo((props) => {
           withCredentials={true}
           accept="*/*"
           listType="text"
-          fileList={null}
+          fileList={fileList}
           // onPreview={handlePreview}
           onChange={handleChange}
-          onRemove={handleRemove}
+          // onRemove={handleRemove}
           // beforeUpload={handleBeforeUpload}
-          showUploadList={showUploadList}
+          showUploadList={false}
           // showUploadList={false}
           // iconRender={() => <UploadOutlined />}
           disabled={isPreviewMode || disabled || fileList.length >= maxSize}
@@ -197,7 +196,6 @@ TaskFileUploader.propTypes = {
   disabled: PropTypes.bool,
   showsLastReadAt: PropTypes.bool,
   showsSignedAt: PropTypes.bool,
-  showUploadList: PropTypes.any,
 };
 
 TaskFileUploader.defaultProps = {
@@ -206,8 +204,4 @@ TaskFileUploader.defaultProps = {
   onAdd: () => { },
   showsLastReadAt: false,
   showsSignedAt: false,
-  showUploadList: {
-    showDownloadIcon: false,
-    showRemoveIcon: true,
-  },
 };
