@@ -1,6 +1,6 @@
 import { DocTemplate } from './../entity/DocTemplate';
 import * as _ from 'lodash';
-import { generatePdfBufferFromHtml } from '../utils/generatePdfStreamFromHtml';
+import { generatePdfBufferFromHtml } from "../utils/generatePdfBufferFromHtml";
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { EntityManager } from 'typeorm';
@@ -65,7 +65,7 @@ async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields:
 async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: TaskField[]) {
   const { error, renderedHtml, usedValueBag } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
 
-  const options = { format: 'A4' };
+  const options = { format: 'A4', border: '0.5in' };
 
   const pdfData = error ? null : await generatePdfBufferFromHtml(renderedHtml, options);
   const fileName = `${docTemplate.name}.pdf`;
