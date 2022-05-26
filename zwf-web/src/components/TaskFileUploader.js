@@ -52,6 +52,11 @@ padding: 4px 12px;
     width: auto;
     padding-left: 8px;
   }
+
+  .ant-upload.ant-upload-drag {
+    border: none;
+    background-color: transparent;
+  }
 }`;
 
 const FileIconContainer = styled.div`

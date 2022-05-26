@@ -79,7 +79,7 @@ const ClientTaskPage = (props) => {
               bordered={false}
               title="Interactions & Messages"
               size="large"
-              bodyStyle={{ height: 'calc(100vh - 420px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px' }}
+              bodyStyle={{ height: 'calc(100vh - 380px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px' }}
               actions={[
                 <div style={{ paddingLeft: 24, paddingRight: 24, width: '100%' }}>
                   <TaskMessageForm key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
