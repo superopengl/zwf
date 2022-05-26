@@ -86,7 +86,7 @@ export const AutoDocInput = (props) => {
         <Link onClick={handlePreview}>
           {/* <DocTemplateIcon /> */}
           <Space>
-            <FileIcon name={'.pdf'} />
+            <FileIcon name={'.pdf'} type="pending" />
             {docTemplate.name}
           </Space>
         </Link>
@@ -109,7 +109,7 @@ export const AutoDocInput = (props) => {
     <Paragraph>
       {docTemplate.refFields?.map(f => <VarTag key={f}>{f}</VarTag>)}
     </Paragraph>
-    <em>{JSON.stringify(value, null, 2)}</em>
+    {/* <em>{JSON.stringify(value, null, 2)}</em> */}
   </Loading>
 }
 
