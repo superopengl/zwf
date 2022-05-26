@@ -95,8 +95,6 @@ export async function generatePdfDocFile(m: EntityManager, docTemplate: DocTempl
   file.usedValueBag = usedValueBag;
   file.usedValueHash = computeObjectHash(usedValueBag);
 
-  await m.save(file);
-
   return file;
 }
 

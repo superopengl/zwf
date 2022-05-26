@@ -30,7 +30,7 @@ export function showArchiveTaskModal(taskId, onFinish) {
     destroyOnClose: true,
     // footer: null,
     // width: 600,
-    focusTriggerAfterClose: false,
+    focusTriggerAfterClose: true,
     okButtonProps: {
       danger: true
     },
