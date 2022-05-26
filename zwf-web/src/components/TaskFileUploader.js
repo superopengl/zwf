@@ -167,6 +167,7 @@ export const TaskFileUploader = React.memo((props) => {
           disabled={isPreviewMode || disabled || fileList.length >= maxSize}
           iconRender={getFileIcon}
           itemRender={renderFileItem}
+          style={{marginBottom: 8}}
         // showUploadList={true}
         >
           {disabled ? <Text type="secondary">File upload is disabled</Text>

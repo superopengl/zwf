@@ -8,23 +8,30 @@ import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
 import { Loading } from './Loading';
 import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from './entityIcon';
-import { EditOutlined, EyeOutlined, FileAddFilled, FileAddOutlined } from '@ant-design/icons';
+import { EditOutlined, EyeOutlined, FileAddFilled, FileAddOutlined, SyncOutlined } from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
 import { generateAutoDoc$, getTaskDocDownloadUrl } from 'services/taskService';
 import { FileIcon } from './FileIcon';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { TaskFileName } from './TaskFileName';
 
 const { Link, Paragraph } = Typography;
 
 export const AutoDocInput = (props) => {
-  const { value, mode, fieldId } = props;
+  const { value, mode, fieldId, onChange } = props;
   const { docTemplateId } = value || {};
   const form = Form.useFormInstance();
 
   const [loading, setLoading] = React.useState(!!docTemplateId);
   const [docTemplate, setDocTemplate] = React.useState({});
+  const context = React.useContext(GlobalContext);
+
+  const {role} = context;
+
+  const isClient = role === 'client';
 
   const validateMissingSiblingFields = () => {
     const allFields = form.getFieldsValue();
@@ -57,10 +64,16 @@ export const AutoDocInput = (props) => {
   }
 
   const hasGenerated = !!value.fileId;
+  const canGenerateDoc = !hasGenerated && !isClient;
+  const canRegenerateDoc = hasGenerated && !isClient;
 
   const handleGenerateDoc = () => {
     setLoading(true);
-    generateAutoDoc$(fieldId).subscribe(() => {
+    generateAutoDoc$(fieldId).subscribe((result) => {
+      onChange({
+        ...value,
+        ...result,
+      })
       setLoading(false);
     })
   }
@@ -68,13 +81,7 @@ export const AutoDocInput = (props) => {
   return <Loading loading={loading}>
     <Row wrap={false} align="top" justify="space-between">
       {hasGenerated ? <Col>
-        <Link href={getTaskDocDownloadUrl(value.fileId)} target="_blank">
-          {/* <DocTemplateIcon /> */}
-          <Space>
-            <FileIcon name={'.pdf'} />
-            {docTemplate.name}
-          </Space>
-        </Link>
+        <TaskFileName taskFile={value} />
       </Col> : <Col>
         <Link onClick={handlePreview}>
           {/* <DocTemplateIcon /> */}
@@ -89,9 +96,12 @@ export const AutoDocInput = (props) => {
           </Link>}
       </Col>}
       <Col>
-        <Tooltip title="Generate document">
+        {canGenerateDoc && <Tooltip title="Generate document">
           <Button type="primary" shape="circle" icon={<FileAddFilled />} onClick={handleGenerateDoc}></Button>
-        </Tooltip>
+        </Tooltip>}
+        {canRegenerateDoc && <Tooltip title="Re-generate document">
+          <Button type="primary" shape="circle" icon={<SyncOutlined />} onClick={handleGenerateDoc}></Button>
+        </Tooltip>}
       </Col>
     </Row>
     {/* <Button type="link" icon={<EyeOutlined/>}/> */}
