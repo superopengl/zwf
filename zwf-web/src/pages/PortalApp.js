@@ -18,7 +18,6 @@ import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import logoSvg from '../logo.svg';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { RoleRoute } from 'components/RoleRoute';
 import HomePage from './HomePage';
 import Error404 from './Error404';
 import { Outlet } from 'react-router-dom';
@@ -188,7 +187,6 @@ const PortalPage = (props) => {
     footerRender={() => <HomeFooter />}
   >
     <Outlet />
-    {/* <RoleRoute component={Error404} /> */}
   </StyledLayout>
 }
 
