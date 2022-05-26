@@ -20,8 +20,8 @@ import { ViewEntity, ViewColumn } from 'typeorm';
       ad."taskId",
       ad.id as "fieldId", 
       ad.name as "fieldName", 
-      null as ordinal,
-      ad.value->>name as "fileName",
+      ad.ordinal,
+      ad.value->>'name' as "fileName",
       ad.value->>'fileId' as "fileId",
       ad.value->>'requiresSign' as "requiresSign", 
       ad.value->>'lastClientReadAt' as "lastClientReadAt" 
