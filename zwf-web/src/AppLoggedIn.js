@@ -314,7 +314,8 @@ export const AppLoggedIn = React.memo(props => {
 
       onClose={() => setAboutVisible(false)}
     />
-    {(isAdmin || isAgent) && <SupportAffix />}
+    {/* {(isAdmin || isAgent) && <SupportAffix />} */}
+    {!isSystem && <SupportAffix />}
   </StyledLayout>
 })
 
