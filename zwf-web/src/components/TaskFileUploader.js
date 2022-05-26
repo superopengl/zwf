@@ -19,6 +19,11 @@ const { Dragger } = Upload;
 const { Text } = Typography;
 
 const Container = styled.div`
+border: 1px solid #D9D9D9;
+border-radius: 4px;
+width: 100%;
+padding: 12px;
+
 & {
   .ant-upload-list-item {
     height: 60px;
@@ -150,6 +155,11 @@ export const TaskFileUploader = React.memo((props) => {
   return (
     <Loading loading={loading}>
       <Container className="clearfix">
+      {!isPreviewMode && value?.map((f, i) => <TaskDocItem key={i}
+          value={f}
+          onDelete={handleRemove}
+          onChange={handleSingleFileChange}
+        />)}
         <Dragger
           multiple={true}
           action={`${API_BASE_URL}/task/field/${fieldId}/file`}
@@ -167,7 +177,6 @@ export const TaskFileUploader = React.memo((props) => {
           disabled={isPreviewMode || disabled || fileList.length >= maxSize}
           iconRender={getFileIcon}
           itemRender={renderFileItem}
-          style={{marginBottom: 8}}
         // showUploadList={true}
         >
           {disabled ? <Text type="secondary">File upload is disabled</Text>
@@ -176,11 +185,7 @@ export const TaskFileUploader = React.memo((props) => {
               Click or drag file to this area to upload
             </div>}
         </Dragger>
-        {!isPreviewMode && value?.map((f, i) => <TaskDocItem key={i}
-          value={f}
-          onDelete={handleRemove}
-          onChange={handleSingleFileChange}
-        />)}
+
       </Container>
     </Loading>
   );

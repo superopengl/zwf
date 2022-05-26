@@ -5,7 +5,7 @@ import { updateTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } fr
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';
-import { Alert, Row, Col, Space, Typography, Button } from 'antd';
+import { Alert, Row, Col, Space, Typography, Button, Modal } from 'antd';
 import { FileIcon } from 'components/FileIcon';
 import { FaSignature } from 'react-icons/fa';
 import Icon, { DeleteOutlined } from '@ant-design/icons';
@@ -37,6 +37,7 @@ export const TaskDocRequireSignBar = React.memo((props) => {
   const { value: task, type, onSavingChange, onChange } = props;
 
   const [files, setFiles] = React.useState([]);
+  const [visible, setVisible] = React.useState(false);
   const [changedFields, setChangedFields] = React.useState({});
   const [aggregatedChangedFields] = useDebouncedValue(changedFields, 1000);
   const [disabled, setDisabled] = React.useState(false);
@@ -50,6 +51,7 @@ export const TaskDocRequireSignBar = React.memo((props) => {
   React.useEffect(() => {
     const files = getSignnableFiles(task?.fields);
     setFiles(files);
+    setVisible(!!files.length);
   }, [task]);
 
   const handleSignTaskDoc = (taskFile) => {
@@ -61,6 +63,28 @@ export const TaskDocRequireSignBar = React.memo((props) => {
     })
   }
 
+  // return <Modal
+  //   visible={visible}
+  //   title={<Space><Icon component={FaSignature} /> Documents require sign</Space>}
+  //   onOk={() => setVisible(false)}
+  //   onCancel={() => setVisible(false)}
+  //   footer={<Button type="primary" onClick={() => setVisible(false)}>Done</Button>}
+  // >
+  //   {files.map((f, i) => <Row key={i} justify="space-between" align="middle">
+  //     <TextLink onClick={() => handleSignTaskDoc(f)} >
+  //       <Space>
+  //         <FileIcon name={f.name} />
+  //         {f.name}
+  //       </Space>
+  //     </TextLink>
+  //   </Row>)}
+
+  // </Modal>
+
+  if (!files?.length) {
+    return null;
+  }
+
   return (<>
     <Alert
       showIcon
@@ -69,14 +93,14 @@ export const TaskDocRequireSignBar = React.memo((props) => {
       style={{ marginBottom: 32 }}
       message="These documents require to be signed"
       description={<>
-        {files.map((f, i) => <Row key={i} justify="space-between" align="middle">
-          <TextLink onClick={() => handleSignTaskDoc(f)} >
-            <Space>
-              <FileIcon name={f.name} />
-              {f.name}
-            </Space>
-          </TextLink>
-        </Row>)}
+     {files.map((f, i) => <Row key={i} justify="space-between" align="middle">
+       <TextLink onClick={() => handleSignTaskDoc(f)} >
+         <Space>
+           <FileIcon name={f.name} />
+           {f.name}
+         </Space>
+       </TextLink>
+     </Row>)}
       </>}
     />
   </>
