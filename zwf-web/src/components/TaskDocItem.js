@@ -44,24 +44,6 @@ padding: 4px 0;
 }
 `;
 
-const getMissingVarWarningMessage = (taskFile, varBag) => {
-  const { refFields, fileId } = taskFile;
-  const missingVars = [];
-  if (!fileId && refFields) {
-    for (const varName of refFields) {
-      const def = varBag[varName];
-      if (!def) {
-        // Not found in varBag
-        missingVars.push(<>Variable '<strong>{varName}</strong>' is not defined in task</>)
-      } else if (def.value === undefined || (_.isString(def.value) && def.value === '')) {
-        missingVars.push(<>Field '<strong>{def.fieldName}</strong>' has no value</>)
-      }
-    }
-  }
-
-  return missingVars;
-}
-
 export const TaskDocItem = React.memo(props => {
   const { value: taskFile, showIcon, style, showCreatedAt, strong, onChange, onDelete, varBag } = props;
   const context = React.useContext(GlobalContext);
@@ -182,13 +164,11 @@ TaskDocItem.propTypes = {
   showCreatedAt: PropTypes.bool,
   onChange: PropTypes.func,
   onDelete: PropTypes.func,
-  varBag: PropTypes.object,
 };
 
 TaskDocItem.defaultProps = {
   showIcon: true,
   showCreatedAt: false,
-  varBag: {},
   onChange: () => { },
   onDelete: () => { },
 }
