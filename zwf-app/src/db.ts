@@ -1,3 +1,4 @@
+import { SystemConfig } from './entity/SystemConfig';
 import { TaskFileMetaInformation } from './entity/views/TaskFileMetaInformation';
 import { TaskFileInformation } from "./entity/views/TaskFileInformation";
 import { SupportInformation } from './entity/views/SupportInformation';
@@ -216,6 +217,7 @@ export let AppDataSource = new DataSource({
     EmailSentOutTask,
     TaskFileMetaInformation,
     TaskFileInformation,
+    SystemConfig,
   ],
 })
 
