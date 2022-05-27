@@ -1,2 +1,2 @@
 export const notes=`
-clean up`
+use puppeteer to replace html-pdf`
