@@ -4,12 +4,12 @@ import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
 
 import { listTaskTemplate } from 'services/taskTemplateService';
-import { listPortfolio } from 'services/portfolioService';
 import { getRecurring, saveRecurring } from 'services/recurringService';
 import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
+import { ClientSelect } from 'components/ClientSelect';
 
 const { Paragraph } = Typography;
 
@@ -27,7 +27,7 @@ const RecurringForm = (props) => {
   const loadEntity = async () => {
     setLoading(true);
     const taskTemplateList = await listTaskTemplate();
-    const portfolioList = await listPortfolio();
+    const portfolioList = []//  await listPortfolio();
     if (id) {
       const recurring = await getRecurring(id);
       setInitialValues(recurring);
@@ -55,6 +55,9 @@ const RecurringForm = (props) => {
     {!loading && <Form layout="vertical" onFinish={handleSaveRecurring} form={form} initialValues={initialValues}>
       <Space direction="vertical" size="small">
         <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
+        <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
+          <ClientSelect style={{ width: '100%' }} />
+        </Form.Item>
         <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
           <TaskTemplateSelect />
         </Form.Item>
@@ -89,21 +92,6 @@ const RecurringForm = (props) => {
             <Select.Option value="week">Weekly</Select.Option>
             <Select.Option value="day">Daily</Select.Option>
           </Select>
-        </Form.Item>
-
-
-        <Form.Item
-          label="Due Day (+N days after the recurring executes)" name="dueDay" rules={[{ required: false, message: ' ', type: 'number', min: 1, max: 366 }]}
-          extra="When the recurring executes, this value will be used to automatically populate the 'Due Date' field (if defined) on the task template."
-        >
-          {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
-          {/* <Text type="secondary"><small>This will automatically fill the 'Due Date' field if it's defined on the task template when the recurring creates one.</small></Text> */}
-          {/* <Select>
-            <Select.Option value={null}> </Select.Option>
-            {new Array(31).fill(null).map((x, i) => <Select.Option key={i} value={i + 1}>{i + 1}</Select.Option>)}
-          </Select> */}
-          <InputNumber min={1} max={366} />
-
         </Form.Item>
         <Form.Item style={{ marginTop: '1rem' }}>
           <Button type="primary" block htmlType="submit" disabled={loading} >Save</Button>
