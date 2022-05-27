@@ -3,6 +3,7 @@ import { getManager } from 'typeorm';
 import { EmailTemplateType } from "../types/EmailTemplateType";
 import { Locale } from '../types/Locale';
 import { defaultEmailTemplateDef } from './defaultEmailTemplateDef';
+import { AppDataSource } from "../db";
 
 export async function initializeEmailTemplates() {
   const entities = Object.entries(defaultEmailTemplateDef).map(([key, def]) => {

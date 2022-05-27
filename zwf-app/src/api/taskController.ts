@@ -575,7 +575,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
     await logTaskChat(AppDataSource.manager, task.id, userId, message);
   }
 
-  const taskUrl = `${process.env.ZWF_WEB_DOMAIN_NAME}/t/${task.deepLinkId}`;
+  const taskUrl = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;
 
   enqueueEmailToUserId(task.userId, EmailTemplateType.TaskRequireAction, {
     taskName: task.name,

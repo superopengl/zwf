@@ -45,6 +45,10 @@ import { ReceiptInformation } from './entity/views/ReceiptInformation';
 import { OrgCurrentSubscriptionRefund } from './entity/views/OrgCurrentSubscriptionRefund';
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 import { EmailSentOutTask } from './entity/EmailSentOutTask';
+import * as dotenv from 'dotenv';
+import { SystemEmailTemplate } from './entity/SystemEmailTemplate';
+import { SystemEmailSignature } from './entity/SystemEmailSignature';
+dotenv.config();
 
 const views = [
   // StockLatestPaidInformation,
@@ -76,15 +80,16 @@ export async function connectDatabase(shouldSyncSchema = false) {
   // const connection = await createConnection();
   // if (shouldSyncSchema) {
   //   await syncDatabaseSchema(connection);
-  //   await initializeData();
+  await initializeData();
   // }
   // return connection;
+  return AppDataSource;
 }
 
-// async function initializeData() {
-//   await initializeConfig();
-//   await initializeEmailTemplates();
-// }
+async function initializeData() {
+  await initializeConfig();
+  await initializeEmailTemplates();
+}
 
 async function syncDatabaseSchema(connection: Connection) {
   /**
@@ -162,7 +167,7 @@ export let AppDataSource = new DataSource({
   port: +(process.env.TYPEORM_PORT || 5432),
   username: process.env.TYPEORM_USERNAME,
   password: process.env.TYPEORM_PASSWORD,
-  database:  process.env.TYPEORM_DATABASE,
+  database: process.env.TYPEORM_DATABASE,
   synchronize: process.env.TYPEORM_SYNCHRONIZE === 'true',
   logging: process.env.TYPEORM_LOGGING === 'true',
   schema: process.env.TYPEORM_SCHEMA || 'zwf',
@@ -175,17 +180,17 @@ export let AppDataSource = new DataSource({
     connectionTimeoutMillis: 3000,
   },
   entities: [
-    User, 
-    UserProfile, 
-    Org, 
-    OrgClient, 
-    SysLog, 
-    Tag, 
-    Task, 
-    TaskField, 
-    File, 
-    TaskTemplate, 
-    DocTemplate, 
+    User,
+    UserProfile,
+    Org,
+    OrgClient,
+    SysLog,
+    Tag,
+    Task,
+    TaskField,
+    File,
+    TaskTemplate,
+    DocTemplate,
     EmailLog,
     Message,
     Subscription,
@@ -218,6 +223,8 @@ export let AppDataSource = new DataSource({
     TaskFileMetaInformation,
     TaskFileInformation,
     SystemConfig,
+    SystemEmailTemplate,
+    SystemEmailSignature,
   ],
 })
 
