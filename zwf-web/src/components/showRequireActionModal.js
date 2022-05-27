@@ -3,7 +3,7 @@ import { Modal, Typography, Input, Row, Space, Avatar, Button, Form } from 'antd
 import { TaskIcon } from 'components/entityIcon';
 import { getTaskDeepLinkUrl, renameTask$ } from 'services/taskService';
 import { ClickToCopyTooltip } from './ClickToCopyTooltip';
-import Icon, { ShareAltOutlined } from '@ant-design/icons';
+import Icon, { NotificationOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { MdDriveFileRenameOutline } from 'react-icons/md'
 
 const { Text, Paragraph } = Typography;
@@ -19,37 +19,44 @@ const Content = props => {
   }
 
   return <>
+    <Paragraph>Send notification to client for more information</Paragraph>
     <Form
       ref={formRef}
       initialValues={{ name }}
       onFinish={handleRename}
       style={{ marginTop: 20 }}
     >
-      <Form.Item name="name" rules={[{ required: true, max: 100, message: ' ', whitespace: false }]}>
-        <Input autoFocus allowClear />
+      <Form.Item name="name" rules={[{ required: true, max: 1000, message: ' ', whitespace: false }]}>
+        <Input.TextArea 
+        placeholder="Leave additional message or explanation of the request."
+        autoSize={{minRows: 3}}
+        autoFocus 
+        allowClear 
+        maxLength={1000} 
+        showCount 
+        />
       </Form.Item>
     </Form>
-    <Row justify="end" style={{ marginTop: 32 }}>
-      <Button type="primary" onClick={() => formRef.current.submit()}>Save</Button>
+    <Row justify="end" style={{marginTop: 32}}>
+      <Button type="primary" onClick={() => formRef.current.submit()}>Send</Button>
     </Row>
   </>
 }
 
-export function showRenameTaskModal(id, oldName, onOk) {
+export function showRequireActionModal(taskID, onOk) {
   const modalRef = Modal.info({
-    title: <>Rename task</>,
     title: <Space>
-      <Avatar icon={<Icon component={MdDriveFileRenameOutline} />} style={{ backgroundColor: '#37AFD2' }} />
-      Rename task
+      <Avatar icon={<NotificationOutlined />} style={{ backgroundColor: '#37AFD2' }} />
+      Notify client
     </Space>,
-    content: <Content id={id} name={oldName} onOk={() => {
+    content: <Content id={taskID} onOk={() => {
       modalRef.destroy();
       onOk();
     }} />,
     afterClose: () => {
     },
-    icon: null,
     className: 'modal-hide-footer',
+    icon: null,
     closable: true,
     maskClosable: true,
     destroyOnClose: true,

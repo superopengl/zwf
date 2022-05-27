@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Typography, Input, Row, Col, Avatar } from 'antd';
+import { Modal, Typography, Input, Row, Col, Avatar, Space } from 'antd';
 import { TaskIcon } from 'components/entityIcon';
 import { getTaskDeepLinkUrl } from 'services/taskService';
 import { ClickToCopyTooltip } from './ClickToCopyTooltip';
@@ -35,15 +35,17 @@ const Content = props => {
 export function showShareTaskDeepLinkModal(taskDeepLinkId) {
   const url = getTaskDeepLinkUrl(taskDeepLinkId);
   const modalRef = Modal.info({
-    title: <>Share this task with client or other member</>,
+    title: <Space>
+    <Avatar icon={<ShareAltOutlined />} style={{ backgroundColor: '#37AFD2' }} />
+    Share this task with client or other member
+  </Space>,
     content: <Content url={url} />,
     afterClose: () => {
     },
-    // icon: null,
+    icon: null,
     closable: true,
     maskClosable: true,
     destroyOnClose: true,
-    footer: null,
     width: 600,
     focusTriggerAfterClose: true,
     okText: 'Done',
