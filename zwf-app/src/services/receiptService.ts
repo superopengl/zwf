@@ -1,5 +1,4 @@
 import * as fs from 'fs';
-import * as pdf from 'html-pdf';
 import * as handlebars from 'handlebars';
 import { Stream } from 'stream';
 import * as moment from 'moment';
@@ -8,7 +7,7 @@ import * as _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
-import { generatePdfStreamFromHtml } from '../utils/generatePdfStreamFromHtml';
+import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 
 const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_template.html`);
 const compiledTemplate = handlebars.compile(receiptTemplateHtml.toString());
@@ -42,12 +41,11 @@ function getVarBag(receipt: ReceiptInformation): {[key:string]: any} {
   };
 }
 
-export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Stream, fileName: string }> {
+export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream, fileName: string }> {
   const varBag = getVarBag(receipt);
   const html = compiledTemplate(varBag);
-  const options = { format: 'A4' };
 
-  const pdfStream = await generatePdfStreamFromHtml(html, options);
+  const pdfStream = await generatePdfBufferFromHtml(html);
   const fileName = `Receipt_${varBag.receiptNumber}.pdf`;
 
   return { pdfStream, fileName };

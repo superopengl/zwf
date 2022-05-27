@@ -65,9 +65,7 @@ async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields:
 async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: TaskField[]) {
   const { error, renderedHtml, usedValueBag } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
 
-  const options = { format: 'A4', border: '0.5in' };
-
-  const pdfData = error ? null : await generatePdfBufferFromHtml(renderedHtml, options);
+  const pdfData = error ? null : await generatePdfBufferFromHtml(renderedHtml);
   const fileName = `${docTemplate.name}.pdf`;
 
   return { error, pdfData, fileName, usedValueBag };
