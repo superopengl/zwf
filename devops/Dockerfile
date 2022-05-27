@@ -57,8 +57,8 @@ RUN pnpm install
 
 WORKDIR /usr/portal/app
 RUN pnpm install
-RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
-RUN npm link phantomjs-prebuilt
+# RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
+# RUN npm link phantomjs-prebuilt
 
 # Env vars in build time
 ARG NODE_ENV
