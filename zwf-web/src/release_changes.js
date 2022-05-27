@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 recurring implementation
 add view
 recurring draft
