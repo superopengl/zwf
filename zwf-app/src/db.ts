@@ -1,3 +1,4 @@
+import { RecurringInformation } from './entity/views/RecurringInformation';
 import { SystemConfig } from './entity/SystemConfig';
 import { TaskFileMetaInformation } from './entity/views/TaskFileMetaInformation';
 import { TaskFileInformation } from "./entity/views/TaskFileInformation";
@@ -225,6 +226,7 @@ export let AppDataSource = new DataSource({
     SystemConfig,
     SystemEmailTemplate,
     SystemEmailSignature,
+    RecurringInformation,
   ],
 })
 
