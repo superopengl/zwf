@@ -72,20 +72,9 @@ export function getTaskHistory$(taskId) {
   return httpGet$(`/task/${taskId}/history`);
 }
 
-
-export async function listTaskNotifies(taskId, from, size = 20) {
-  return httpGet(`task/${taskId}/notify`, { from, size });
-}
-
-export async function markTaskNotifyRead(taskId) {
-  return httpPost(`task/${taskId}/notify/read`);
-}
-
-export async function notifyTask(taskId, msg) {
-  const content = msg?.trim();
-  if (content) {
-    return httpPost(`task/${taskId}/notify`, { content });
-  }
+export function notifyTask$(taskId, msg) {
+  const message = msg?.trim();
+  return httpPost$(`task/${taskId}/notify`, { message });
 }
 
 export async function listTaskComments(taskId) {

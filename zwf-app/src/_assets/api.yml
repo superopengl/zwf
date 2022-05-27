@@ -924,19 +924,6 @@ paths:
         200:
           description: OK
   /task/{id}/notify:
-    get:
-      operationId: listTaskNotifies
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
     post:
       operationId: notifyTask
       # security:
@@ -949,21 +936,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
-  /task/{id}/notify/read:
-    post:
-      operationId: markTaskNotifyRead
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
+          description: OK          
   /recurring:
     get:
       operationId: listRecurring

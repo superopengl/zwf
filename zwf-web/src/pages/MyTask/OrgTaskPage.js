@@ -176,7 +176,7 @@ const OrgTaskPage = React.memo((props) => {
                   <hr />
                   {/* <Paragraph type="secondary" style={{ margin: 0 }}>Communication with the client.</Paragraph> */}
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setHistoryVisible(true)}>Message to client</Button>
-                  {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id, load$)}>Request client for more information</Button>}
+                  {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>}
                   {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                   {!hasFinished && <hr />}
                   {!hasFinished && <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>}
