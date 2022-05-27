@@ -13,12 +13,16 @@ export const MemberSelect = React.memo((props) => {
     return () => sub$.unsubscribe();
   }, [])
 
+  const handleChange = selectedUser => {
+    onChange(selectedUser?.id)
+  }
+
   return <UserSelect
     value={value}
     dataSource={dataSource}
     allowInput={false}
     valueProp={'id'}
-    onChange={onChange}
+    onChange={handleChange}
     placeholder={'Select a member by name or email'}
     bordered={bordered}
   />

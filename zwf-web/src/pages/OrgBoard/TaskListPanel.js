@@ -98,7 +98,7 @@ export const TaskListPanel = (props) => {
       //   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
       // </Select>,
       render: (value, record) => <MemberSelect
-        onChange={agent => assignTaskToAgent(record, agent.id)}
+        onChange={agentId => assignTaskToAgent(record, agentId)}
         value={value}
         bordered={false}
       />

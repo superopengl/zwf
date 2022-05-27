@@ -1,11 +1,11 @@
-import { httpGet, httpPost, httpDelete } from './http';
+import { httpGet$, httpPost$, httpDelete$, httpGet, httpPost, httpDelete } from './http';
 
-export async function getRecurring(id) {
-  return httpGet(`recurring/${id}`);
+export function getRecurring$(id) {
+  return httpGet$(`recurring/${id}`);
 }
 
-export async function saveRecurring(recurring) {
-  return httpPost('recurring', recurring);
+export function saveRecurring$(recurring) {
+  return httpPost$('recurring', recurring);
 }
 
 export async function deleteRecurring(id) {

@@ -104,10 +104,9 @@ const OrgTaskPage = React.memo((props) => {
     updateTaskTags$(task.id, tagIds).subscribe()
   }
 
-  const handleChangeAssignee = memberUser => {
-    const newAssigneeId = memberUser.id;
-    assignTask$(task.id, newAssigneeId).subscribe(() => {
-      setAssigneeId(newAssigneeId);
+  const handleChangeAssignee = agentId => {
+    assignTask$(task.id, agentId).subscribe(() => {
+      setAssigneeId(agentId);
     });
   }
 
