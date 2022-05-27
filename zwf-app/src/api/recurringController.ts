@@ -1,3 +1,4 @@
+import { RecurringInformation } from './../entity/views/RecurringInformation';
 import { AppDataSource } from './../db';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
@@ -10,23 +11,25 @@ import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/cron
 import * as moment from 'moment-timezone';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
 import { assertRole } from '../utils/assertRole';
+import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { id, portfolioId, taskTemplateId, userId, firstRunOn, every, period, repeatOn } = req.body;
+  const { id, clientId, name, taskTemplateId, firstRunOn, every, period } = req.body;
+  const orgId = getOrgIdFromReq(req);
 
-  const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOne({where: {id: taskTemplateId}});
+  const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOne({ where: { id: taskTemplateId } });
   assert(taskTemplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
   recurring.id = id || uuidv4();
-  recurring.nameTemplate = `${taskTemplate.name} {{createdDate}}`;
+  recurring.name = name;
+  recurring.orgId = orgId;
   recurring.taskTemplateId = taskTemplateId;
-  recurring.userId = userId;
+  recurring.userId = clientId;
   recurring.firstRunOn = firstRunOn ? moment.tz(`${firstRunOn} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
-  recurring.repeatOn = repeatOn;
   recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
 
   const repo = AppDataSource.getRepository(Recurring);
@@ -37,30 +40,12 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
 
 export const listRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
+  const orgId = getOrgIdFromReq(req);
 
-  const list = await AppDataSource.getRepository(Recurring)
-    .createQueryBuilder('x')
-    .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
-    .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .orderBy('x."lastUpdatedAt"', 'DESC', 'NULLS LAST')
-    .addOrderBy('j.name', 'ASC')
-    .addOrderBy('p.name', 'ASC')
-    .select([
-      'x.id as id',
-      'x."nameTemplate" as "nameTemplate"',
-      'x."firstRunOn" as "firstRunOn"',
-      'x."every" as "every"',
-      'x."period" as "period"',
-      'x."dueDay" as "dueDay"',
-      'u.email as email',
-      'j.name as "taskTemplateName"',
-      `j.id as "taskTemplateId"`,
-      'p.name as "portfolioName"',
-      'x."lastRunAt" as "lastRunAt"',
-      'x."nextRunAt" as "nextRunAt"',
-      'x."lastUpdatedAt" as "lastUpdatedAt"'
-    ])
-    .execute();
+  const list = await AppDataSource.getRepository(RecurringInformation)
+    .findBy({
+      orgId
+    })
 
   res.json(list);
 });
@@ -69,7 +54,7 @@ export const getRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const repo = AppDataSource.getRepository(Recurring);
-  const recurring = await repo.findOne({where: {id}});
+  const recurring = await repo.findOne({ where: { id } });
   assert(recurring, 404);
 
   res.json(recurring);

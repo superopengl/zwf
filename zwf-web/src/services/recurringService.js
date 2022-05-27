@@ -16,8 +16,8 @@ export async function runRecurring(id) {
   return httpPost(`recurring/${id}/run`);
 }
 
-export async function listRecurring() {
-  return httpGet('recurring');
+export function listRecurring$() {
+  return httpGet$('/recurring');
 }
 
 

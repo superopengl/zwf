@@ -8,9 +8,10 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
-import { listRecurring, deleteRecurring, runRecurring } from 'services/recurringService';
+import { listRecurring$, deleteRecurring, runRecurring } from 'services/recurringService';
 import RecurringEditModal from './RecurringEditModal';
 import { notify } from 'util/notify';
+import { UserNameCard } from 'components/UserNameCard';
 
 const { Title, Link: TextLink } = Typography;
 
@@ -70,6 +71,13 @@ const RecurringListPage = (props) => {
 
   const columnDef = [
     {
+      title: 'Name',
+      dataIndex: 'recurringName',
+      fixed: 'left',
+      render: (text) => text,
+      ellipsis: false
+    },
+    {
       title: 'Task Template',
       dataIndex: 'taskTemplateName',
       render: (text, record) => record.taskTemplateName ? <Link to={`/task_template/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
@@ -77,21 +85,9 @@ const RecurringListPage = (props) => {
     },
     {
       title: 'Client',
+      dataIndex: 'userId',
       onFilter: (value, record) => record.agentId === value,
-      render: (text, record) => record.portfolioName ? <>
-        <Space>
-          <div direction="vertical" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
-            {text}
-            <Text type="secondary"><small>{record.email || <Text type="danger">deleted user</Text>}</small></Text>
-          </div>
-        </Space>
-      </> : <Text type="danger">deleted portfolio</Text>
-    },
-    {
-      title: 'Task Template',
-      dataIndex: 'nameTemplate',
-      render: (text) => text,
-      ellipsis: false
+      render: (value, record) => <UserNameCard userId={value}/>
     },
     {
       title: 'Frequency',
@@ -162,19 +158,17 @@ const RecurringListPage = (props) => {
     },
   ];
 
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      const list = [] // await listRecurring();
+  const loadList$ = () => {
+    setLoading(true);
+    return listRecurring$().subscribe(list => {
       setList(list);
       setLoading(false);
-    } catch {
-      setLoading(false);
-    }
+    })
   }
 
   React.useEffect(() => {
-    loadList();
+    const sub$ = loadList$();
+    return () => sub$.unsubscribe();
   }, []);
 
   const handleCreateNew = async () => {
@@ -196,7 +190,7 @@ const RecurringListPage = (props) => {
       onOk: async () => {
         setLoading(true);
         await deleteRecurring(id);
-        await loadList();
+        await loadList$();
         setLoading(false);
       },
       maskClosable: true,
@@ -221,8 +215,8 @@ const RecurringListPage = (props) => {
     );
   }
 
-  const handleEditOnOk = async () => {
-    await loadList();
+  const handleEditOnOk = () => {
+    loadList$();
     setFormVisible(false);
   }
 
@@ -256,7 +250,7 @@ const RecurringListPage = (props) => {
 
       <RecurringEditModal id={currentId}
         visible={formVisible}
-        onOk={() => setFormVisible(false)}
+        onOk={handleEditOnOk}
         onCancel={() => setFormVisible(false)}
       />
     </LayoutStyled >

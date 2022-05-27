@@ -1,16 +1,20 @@
 import { Column, PrimaryColumn, Entity, UpdateDateColumn, CreateDateColumn, Index, Unique } from 'typeorm';
 
 @Entity()
-@Unique('idx_recurring_org_name_unique', ['orgId', 'nameTemplate'])
 export class Recurring {
   @PrimaryColumn('uuid')
   id: string;
 
   @Column('uuid')
+  @Index()
   orgId: string;
 
   @Column()
-  nameTemplate: string;
+  name: string;
+
+  @Column('uuid')
+  @Index()
+  taskTemplateId: string;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -18,10 +22,6 @@ export class Recurring {
   @UpdateDateColumn()
   @Index()
   updatedAt: Date;
-
-  @Column('uuid')
-  @Index()
-  taskTemplateId: string;
 
   @Column('uuid')
   @Index()
@@ -35,12 +35,6 @@ export class Recurring {
   
   @Column()
   period: 'day' | 'week' | 'month' | 'year';
-
-  @Column()
-  repeatOn: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun' | 'the-date-monthly' | 'last-day-monthly';
-
-  @Column({nullable: true})
-  endsOn: Date;
 
   @Column({nullable: true})
   lastRunAt: Date;
