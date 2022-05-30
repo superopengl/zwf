@@ -2,6 +2,7 @@ import * as puppeteer from 'puppeteer';
 
 export async function generatePdfBufferFromHtml(html) {
   const browser = await puppeteer.launch({
+    executablePath: '/usr/bin/google-chrome',
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
     headless: true
   })
