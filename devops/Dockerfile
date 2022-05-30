@@ -57,6 +57,12 @@ RUN pnpm install
 
 WORKDIR /usr/portal/app
 RUN pnpm install
+    # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    # && mkdir -p /home/pptruser/Downloads \
+    # && chown -R pptruser:pptruser /home/pptruser \
+    # && chown -R pptruser:pptruser /node_modules \
+    # && chown -R pptruser:pptruser /package.json \
+    # && chown -R pptruser:pptruser /package-lock.json
 
 # Env vars in build time
 ARG NODE_ENV
@@ -90,6 +96,9 @@ RUN rm -rf /usr/portal/web
 
 # Start the portal website
 WORKDIR /usr/portal/app
+
+# USER pptruser
+
 # CMD node index.js
 CMD node index.js
 
