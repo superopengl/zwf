@@ -3,25 +3,7 @@ import * as fetch from 'node-fetch';
 
 
 export async function getRequestGeoInfo(req) {
-  const ipstackKey = process.env.IPSTACK_ACCESS_KEY;
-  if (!ipstackKey) {
-    throw new Error(`IPSTACK_ACCESS_KEY is not specified`);
-  }
-
-  const ip = requestIp.getClientIp(req);
-  // IpStack free plan only supports HTTP
-  const url = `http://api.ipstack.com/${ip}?access_key=${ipstackKey}&output=json&fields=country_code,region_code,latitude,longitude`; 
-
-  const resp = await fetch(url, {timeout: 5000});
-  const obj = await resp.json();
-
-  return {
-    ip,
-    country: obj?.country_code,
-    region: obj?.region_code,
-    latitude: obj?.latitude,
-    longitude: obj?.longitude,
-  }
+  return null;
 }
 
 /**
