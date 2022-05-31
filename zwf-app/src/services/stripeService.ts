@@ -13,13 +13,15 @@ function getStripe() {
   return stripe;
 }
 
-async function createStripeCustomer(userId: string, userProfile: UserProfile) {
+async function createStripeCustomer(userId: string, userProfile: UserProfile, org: Org) {
   return await getStripe().customers.create({
     email: userProfile.email,
     name: `${userProfile.givenName} ${userProfile.surname}`.trim(),
     metadata: {
       zwf_user_id: userId,
       zwf_payment_id: null,
+      zwf_org_id: org.id,
+      zef_org_name: org.name,
     }
   });
 }
@@ -28,7 +30,7 @@ export async function getOrgStripeCustomerId(m: EntityManager, orgId: string) {
   const org = await m.findOneOrFail(Org, {where: {id: orgId}});
   if (!org.stripeCustomerId) {
     const owner = await getOrgOwner(org.id);
-    const stripeCustomer = await createStripeCustomer(owner.id, owner.profile);
+    const stripeCustomer = await createStripeCustomer(owner.id, owner.profile, org);
     org.stripeCustomerId = stripeCustomer.id;
     await m.save(org);
   }

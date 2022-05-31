@@ -82,7 +82,7 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
 
   const { pdfStream, fileName } = await generateReceiptPdfStream(receipt);
 
-  res.set('Cache-Control', `public, max-age=36536000`);
+  res.set('Cache-Control', `public, max-age=36536000, immutable`);
   res.attachment(fileName);
   res.send(pdfStream);
   // pdfStream.pipe(res);
