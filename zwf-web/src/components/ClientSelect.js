@@ -4,7 +4,7 @@ import { searchOrgClientUsers$ } from 'services/userService';
 import { UserSelect } from './UserSelect';
 import { useDebounce } from "rooks";
 
-export const ClientSelect = React.memo((props) => {
+export const ClientSelect = (props) => {
   const { value, valueProp, onChange, allowInput } = props;
   const [dataSource, setDataSource] = React.useState([]);
 
@@ -20,26 +20,28 @@ export const ClientSelect = React.memo((props) => {
   }
 
   const handleTextChange = useDebounce(text => {
-    if(valueProp === 'email') {
+    if (valueProp === 'email') {
       load$(text);
     }
   }, 500);
 
   const handleChange = (selectedItem) => {
-    const selectedValue = selectedItem[valueProp];
-    onChange(selectedValue)
+    const propValue = selectedItem[valueProp];
+    onChange(propValue, selectedItem);
   }
 
-  return <UserSelect
-    value={value}
-    dataSource={dataSource}
-    allowInput={allowInput}
-    valueProp={valueProp}
-    onChange={handleChange}
-    onTextChange={handleTextChange}
-    placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
-  />
-});
+  return <>
+    <UserSelect
+      value={value}
+      dataSource={dataSource}
+      allowInput={allowInput}
+      valueProp={valueProp}
+      onChange={handleChange}
+      onTextChange={handleTextChange}
+      placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
+    />
+  </>
+};
 
 ClientSelect.propTypes = {
   value: PropTypes.string,
