@@ -41,9 +41,13 @@ async function stringifyFieldValue(f) {
   }
 }
 
+function formatHtmlForRendering(html) {
+  return `<body style="font-size: 14px;font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;">${html}</body>`;
+}
+
 async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskField[]) {
   let error: string = null;
-  let renderedHtml = docTemplate.html;
+  let renderedHtml = formatHtmlForRendering(docTemplate.html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
   const usedValueBag = {};
   for (const fieldName of docTemplate.refFields) {
