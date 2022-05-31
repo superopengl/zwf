@@ -10,11 +10,6 @@ function serializeReq(req): string {
   return JSON.stringify(data);
 }
 
-function serializeRes(res): String {
-  const data = res ? _.pick(res, ['user', 'headers', 'headersSent', 'statusCode']) : res;
-  return JSON.stringify(data);
-}
-
 export async function logError(err, req, res, ...args) {
   try {
     console.error(err);
