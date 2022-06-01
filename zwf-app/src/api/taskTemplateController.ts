@@ -89,7 +89,7 @@ export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   const repo = AppDataSource.getRepository(TaskTemplate);
-  await repo.softDelete({ id, orgId });
+  await repo.delete({ id, orgId });
 
   res.json();
 });
