@@ -70,7 +70,7 @@ export const DocTemplatePreviewPanel = props => {
 
       {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Collapse.Panel key="1"
-          header="Test"
+          header="Preview by filling values of linked fields"
           // style={{ border: 'none' }}
         // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
         >
