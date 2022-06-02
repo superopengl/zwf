@@ -38,6 +38,7 @@ export const FieldItemEditor = (props) => {
         widgetProps: {
           ...widgetDef.widgetPorps,
           ...(item.type === 'autodoc' ? { mode: 'taskTemplate' } : null),
+          disabled: true,
           // ...(item.type === 'upload' ? { docs: item.docs } : null)
         },
         // valuePropName: item.type === 'upload' ? 'docs' : null
@@ -69,9 +70,8 @@ export const FieldItemEditor = (props) => {
 
   return <Row wrap={false} gutter={16}>
     <Col flex="auto">
-      {/* <Form layout="horizontal" ref={formRef}> */}
         <FormBuilder meta={meta} />
-      {/* </Form> */}
+      {/* {JSON.stringify(item.value)} */}
     </Col>
     <Col>
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>
