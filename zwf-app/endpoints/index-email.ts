@@ -59,7 +59,7 @@ export async function handleEmailTasks() {
       await AppDataSource.getRepository(EmailSentOutTask).increment({ id: task.id }, 'failedCount', 1);
     }
   }
-  console.log(`Email sender ${emailTasks.length} emails to send out, ${okCounter} succedded.`);
+  console.log(`Email sender ${emailTasks.length} emails to send out, ${okCounter} succeeded.`);
 }
 
 start(JOB_NAME, async () => {
