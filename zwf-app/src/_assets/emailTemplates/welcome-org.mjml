@@ -1,0 +1,38 @@
+<mjml>
+  <mj-head>
+    <mj-include path="./emailTemplateHeader.mjml" />
+    <mj-title>{{subject}}</mj-title>
+  </mj-head>
+  <mj-body css-class="content">
+    <mj-include path="./emailTemplateTitle.mjml" />
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Please verify your email address</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="20px" font-weight="400">
+          Welcome to join ZeeWorkflow! To complete the registraion, please click below button to continue.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-button align="left" background-color="#ffc53d" padding="20px 0" inner-padding="16px 36px" border-radius="8px" font-size="18px" href="{{URL_accept}}">
+          Verify now
+        </mj-button>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          Or, paste this link into your browser: <a href="{{URL_accept}}" target="_blank" class="verify-url">{{url}}</a>
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          This account <strong>{{email}}</strong> will be the org owner.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./emailTemplateFooter.mjml" />
+  </mj-body>
+</mjml>
