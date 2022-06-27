@@ -1,3 +1,4 @@
+import { EmailTemplateType } from './../src/types/EmailTemplateType';
 import { AppDataSource } from './../src/db';
 import errorToJson from 'error-to-json';
 import 'colors';
@@ -45,7 +46,7 @@ export async function handleEmailTasks() {
       await sendEmail({
         to: task.to,
         from: task.from,
-        template: task.template,
+        template: task.template as EmailTemplateType,
         vars: task.vars,
         attachments: task.attachments as { filename: string; path: string }[],
         shouldBcc: task.shouldBcc,
