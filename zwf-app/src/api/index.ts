@@ -9,7 +9,6 @@ export * from './recurringController';
 export * from './messageController';
 export * from './supportController';
 export * from './statsController';
-export * from './emailTemplateController';
 export * from './configController';
 export * from './orgController';
 export * from './orgPaymentMethodController';

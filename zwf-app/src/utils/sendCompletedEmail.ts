@@ -2,7 +2,7 @@ import { AppDataSource } from './../db';
 import { IsNull, Not } from 'typeorm';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
-import { sendEmailImmediately } from '../services/emailService';
+import { sendEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 
 
@@ -26,7 +26,7 @@ export async function sendCompletedEmail(task: Task) {
   //   path: doc.file.location,
   // }));
 
-  await sendEmailImmediately({
+  await sendEmail({
     to: user.profile.email,
     // bcc: [await getUserEmailAddress(task.agentId), SYSTEM_EMAIL_SENDER],
     template: 'taskComplete',

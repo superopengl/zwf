@@ -20,9 +20,8 @@ import { OrgClient } from './entity/OrgClient';
 import { Org } from './entity/Org';
 import { User } from './entity/User';
 import { File } from './entity/File';
-import { Connection, createConnection, getConnectionManager, getManager, getRepository, DataSource } from 'typeorm';
+import { Connection, DataSource } from 'typeorm';
 import { initializeConfig } from './utils/initializeConfig';
-import { initializeEmailTemplates } from './utils/initializeEmailTemplates';
 import { redisCache } from './services/redisCache';
 import { OrgAliveSubscription } from './entity/views/OrgAliveSubscription';
 import { OrgBasicInformation } from './entity/views/OrgBasicInformation';
@@ -47,8 +46,6 @@ import { OrgCurrentSubscriptionRefund } from './entity/views/OrgCurrentSubscript
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
-import { SystemEmailTemplate } from './entity/SystemEmailTemplate';
-import { SystemEmailSignature } from './entity/SystemEmailSignature';
 dotenv.config();
 
 const views = [
@@ -89,7 +86,6 @@ export async function connectDatabase(shouldSyncSchema = false) {
 
 async function initializeData() {
   await initializeConfig();
-  await initializeEmailTemplates();
 }
 
 async function syncDatabaseSchema(connection: Connection) {
@@ -223,8 +219,6 @@ export let AppDataSource = new DataSource({
     TaskFileMetaInformation,
     TaskFileInformation,
     SystemConfig,
-    SystemEmailTemplate,
-    SystemEmailSignature,
     RecurringInformation,
     ReceiptInformation,
   ],

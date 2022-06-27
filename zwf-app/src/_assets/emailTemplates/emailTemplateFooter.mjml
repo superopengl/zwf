@@ -1,7 +1,7 @@
 <mj-section>
   <mj-column width="100%">
     <mj-text align="left" font-size="20px" font-weight="500" padding="30px 0 0">
-      Thanks for joining!
+      Thanks for using!
     </mj-text>
   </mj-column>
   <mj-column width="100%">
@@ -22,7 +22,7 @@
   </mj-column>
   <mj-column width="100%">
     <mj-text align="center" color="#FFFFFF" font-size="14px" padding="40px 0 10px" line-height="17px">
-      You have received this email at <a href="mailto:{{email}}">{{email}}</a> because you have signed up for ZeeWorkflow.
+      You have received this email at <a href="mailto:{{email}}">{{email}}</a> because you are registering or have signed up for ZeeWorkflow.
     </mj-text>
   </mj-column>
   <mj-column width="120px" padding-top="30px">

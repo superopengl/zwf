@@ -8,9 +8,3 @@
     </mj-column>
   </mj-group>
 </mj-section>
-
-<mj-section>
-  <mj-column width="100%">
-    <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {{toWhom}}</mj-text>
-  </mj-column>
-</mj-section>

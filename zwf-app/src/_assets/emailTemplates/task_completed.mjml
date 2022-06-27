@@ -1,0 +1,38 @@
+<mjml>
+  <mj-head>
+    <mj-title>Task is completed</mj-title>
+    <mj-include path="./emailTemplateHeader.mjml" />
+  </mj-head>
+  <mj-body css-class="content">
+    <mj-include path="./emailTemplateTitle.mjml" />
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {toWhom}, your task is completed</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="20px" font-weight="400">
+          Your task <strong>{{task}}</strong>, proceeded by {{org}}, has been completed. You can click below button to check the outcome.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-button align="left" background-color="#ffc53d" padding="20px 0" inner-padding="16px 36px" border-radius="8px" font-size="18px" href="{{url}}">
+          View task
+        </mj-button>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          Should you have any questions about this task, you can contact with {{org}} on the task page in ZeeWorkflow.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./emailTemplateFooter.mjml" />
+  </mj-body>
+</mjml>

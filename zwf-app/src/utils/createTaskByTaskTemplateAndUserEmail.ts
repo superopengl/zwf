@@ -15,7 +15,7 @@ import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 import { v4 as uuidv4 } from 'uuid';
 import * as voucherCodes from 'voucher-code-generator';
 import { User } from '../entity/User';
-import { enqueueEmail } from '../services/emailService';
+import { sendEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
 import { DocTemplate } from '../entity/DocTemplate';
@@ -116,18 +116,18 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     await logTaskCreated(m, task.id, creatorId);
   });
 
-  const org = await AppDataSource.getRepository(Org).findOne({ where: { id: task.orgId } });
+  // const org = await AppDataSource.getRepository(Org).findOne({ where: { id: task.orgId } });
 
-  enqueueEmail({
-    template: EmailTemplateType.TaskCreated,
-    to: email,
-    vars: {
-      toWhom: getEmailRecipientName(user),
-      orgName: org.name,
-      taskName: task.name,
-      directUrl: `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`
-    },
-  });
+  // enqueueEmail({
+  //   template: EmailTemplateType.TaskCreated,
+  //   to: email,
+  //   vars: {
+  //     toWhom: getEmailRecipientName(user),
+  //     orgName: org.name,
+  //     taskName: task.name,
+  //     directUrl: `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`
+  //   },
+  // });
 
   return task;
 };

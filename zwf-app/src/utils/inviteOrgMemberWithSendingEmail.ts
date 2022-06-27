@@ -1,7 +1,7 @@
 import { EntityManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
-import { enqueueEmail } from '../services/emailService';
+import { sendEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
@@ -17,7 +17,7 @@ export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user, pr
 
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   const email = profile.email;
-  await enqueueEmail({
+  await sendEmail({
     to: email,
     template: EmailTemplateType.InviteOrgMember,
     vars: {

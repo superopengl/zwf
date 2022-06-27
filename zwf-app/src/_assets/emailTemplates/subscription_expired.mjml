@@ -1,0 +1,38 @@
+<mjml>
+  <mj-head>
+    <mj-title>Subscription is expired</mj-title>
+    <mj-include path="./emailTemplateHeader.mjml" />
+  </mj-head>
+  <mj-body css-class="content">
+    <mj-include path="./emailTemplateTitle.mjml" />
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {toWhom}, subscription was expired</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="20px" font-weight="400">
+          Your subscription has been expired on {{endDate}}. 
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          Your organization's last subscription of {{seats}} seats started from {{startDate}} and has ended on {{endDate}}. 
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          The owner account (this email address {{email}}) is the only active account in your organization. To keep on your business smoothly, please go back to ZeeWorkflow and check the primary payment method to make sure that the automatic renew can be working.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          Should you have any questions about this task, please contact us.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./emailTemplateFooter.mjml" />
+  </mj-body>
+</mjml>

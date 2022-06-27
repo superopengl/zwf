@@ -4,7 +4,8 @@ import * as dotenv from 'dotenv';
 loadEnv();
 import { createAppInstance } from './app';
 import { connectDatabase } from './db';
-
+import { getEmailTemplate } from './services/mjmlService';
+import { EmailTemplateType } from './types/EmailTemplateType';
 
 function validateEnvVars() {
   const requiredEnvVars = [
@@ -41,6 +42,8 @@ function loadEnv() {
 }
 
 async function launchApp() {
+
+  getEmailTemplate(EmailTemplateType.WelcomeOrg);
 
   console.log('Connecting database');
   await connectDatabase(true);
