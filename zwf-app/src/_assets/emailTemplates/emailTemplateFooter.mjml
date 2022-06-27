@@ -21,16 +21,16 @@
     </mj-text>
   </mj-column>
   <mj-column width="100%">
-    <mj-text align="center" color="#FFFFFF" font-size="14px" padding="40px 0 10px" line-height="17px">
+    <mj-text align="center" color="#FFFFFF" font-size="14px" padding="20px 0 10px" line-height="17px">
       You have received this email at <a href="mailto:{{email}}">{{email}}</a> because you are registering or have signed up for ZeeWorkflow.
     </mj-text>
   </mj-column>
-  <mj-column width="120px" padding-top="30px">
+  <mj-column width="120px" padding-top="20px">
     <mj-text color="#FFFFFF" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
       <a href="https://zeeworkflow.com" target="_blank">Contact Us</a>
     </mj-text>
   </mj-column>
-  <mj-column width="120px" padding-top="30px">
+  <mj-column width="120px" padding-top="20px">
     <mj-text color="#FFFFFF" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
       <a target="_blank" href="https://zeeworkflow.com/resource">Resources</a>
     </mj-text>
@@ -40,7 +40,7 @@
 <mj-section padding-top="30px">
   <mj-column>
     <mj-text font-size="14px" font-weight="400" color="#464B53" line-height="17px" padding-bottom="0" align="center">
-      ©2022 ZeeWorkflow. All rights Reserved
+      ©{{year}} ZeeWorkflow. All rights Reserved
     </mj-text>
   </mj-column>
 </mj-section>
@@ -52,3 +52,7 @@
     </mj-text>
   </mj-column>
 </mj-section>
+
+<mj-raw>
+  <span style="color:#FFFFFF;display:none;">{{random_salt}} This unique hidden text is to prevent footer folding.</span>
+</mj-raw>
