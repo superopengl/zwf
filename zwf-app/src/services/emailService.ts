@@ -46,9 +46,9 @@ async function composeEmailOption(req: EmailRequest) {
 }
 
 async function compileEmailBody(req: EmailRequest) {
-  const { orgId, template, vars, locale } = req;
+  const { orgId, template, vars } = req;
   const emailTemplate = await getEmailTemplate(template as EmailTemplateType);
-  const subject = emailTemplate.subject || 'Un-subject';
+  const subject = emailTemplate.subject || 'System notification';
   const body = emailTemplate.html || '';
 
   const allVars = {

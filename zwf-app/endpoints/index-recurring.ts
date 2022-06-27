@@ -10,7 +10,6 @@ import { Recurring } from '../src/entity/Recurring';
 import { TaskStatus } from '../src/types/TaskStatus';
 import errorToJSON from 'error-to-json';
 import { calculateRecurringNextRunAt } from '../src/utils/calculateRecurringNextRunAt';
-import { sendNewTaskCreatedEmail } from '../src/utils/sendNewTaskCreatedEmail';
 import { TaskTemplate } from '../src/entity/TaskTemplate';
 import { executeRecurring } from '../src/services/recurringService';
 

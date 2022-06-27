@@ -7,7 +7,6 @@ import { Task } from '../entity/Task';
 import errorToJSON from 'error-to-json';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { User } from '../entity/User';
-import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import * as moment from 'moment-timezone';
 import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
@@ -51,8 +50,6 @@ async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
 
   task.status = TaskStatus.TODO;
-
-  sendNewTaskCreatedEmail(task);
 
   await AppDataSource.getRepository(Task).save(task);
 
