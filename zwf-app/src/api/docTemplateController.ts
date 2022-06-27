@@ -1,7 +1,7 @@
 import { AppDataSource } from './../db';
 import { getUtcNow } from './../utils/getUtcNow';
 
-import { getRepository, getManager, EntityManager } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';

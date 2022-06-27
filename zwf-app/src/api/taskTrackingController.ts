@@ -5,7 +5,7 @@ import { TaskTracking } from './../entity/TaskTracking';
 import { getEventChannel } from '../services/globalEventSubPubService';
 import { filter } from 'rxjs/operators';
 
-import { getRepository, getManager, In } from 'typeorm';
+import { In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';

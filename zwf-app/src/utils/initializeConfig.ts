@@ -1,4 +1,3 @@
-import { getManager } from 'typeorm';
 import { AppDataSource } from '../db';
 import { SystemConfig } from '../entity/SystemConfig';
 
