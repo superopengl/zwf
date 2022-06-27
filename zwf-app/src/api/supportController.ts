@@ -19,7 +19,7 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { SupportMessage } from '../entity/SupportMessage';
 import { assertRole } from '../utils/assertRole';
 
-const CONTACT_EVENT_TYPE = 'contact'
+const CONTACT_EVENT_TYPE = 'contact';
 
 export const getMySupport = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -39,7 +39,7 @@ export const getMySupport = handlerWrapper(async (req, res) => {
   const result = {
     list,
     unreadCount
-  }
+  };
 
   res.json(result);
 });
@@ -63,14 +63,14 @@ export const searchSupportList = handlerWrapper(async (req, res) => {
 
   const count = await query.getCount();
 
-  const data = await query //.orderBy(`"${orderField}"`, orderDirection)
+  const data = await query // .orderBy(`"${orderField}"`, orderDirection)
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .getMany();
 
   data.forEach(x => {
     x.unreadCount = +x.unreadCount;
-  })
+  });
 
   const result = {
     count,
@@ -118,7 +118,7 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
     sm.capturedUrl = capturedUrl;
   }
 
-  await AppDataSource.manager.save(sm)
+  await AppDataSource.manager.save(sm);
 
   publishEvent(CONTACT_EVENT_TYPE, {
     id: sm.id,

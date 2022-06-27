@@ -25,20 +25,20 @@ export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
       query = {
         ...query,
         orgId,
-      }
+      };
       break;
     case Role.Client:
       const userId = getUserIdFromReq(req);
       query = {
         ...query,
         userId
-      }
+      };
       break;
     case Role.Guest:
       // Redirect to a task deep page without login
       res.redirect(`${process.env.ZWF_WEB_DOMAIN_NAME}/task/direct/${token}`);
     case Role.System:
-      assert(false, 403, 'Task direct link is for org, client and guest users.')
+      assert(false, 403, 'Task direct link is for org, client and guest users.');
     default:
       assert(false, 404);
   }
@@ -46,7 +46,7 @@ export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
   const task = await AppDataSource.getRepository(Task).findOne({
     where: query,
     select: ['id']
-  })
+  });
   httpAssert(task, 404);
   // Redirect to a logged in task page
   res.redirect(`${process.env.ZWF_WEB_DOMAIN_NAME}/task/${task.id}`);

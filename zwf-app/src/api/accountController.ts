@@ -1,7 +1,7 @@
 import { AppDataSource } from './../db';
 
 import { v4 as uuidv4 } from 'uuid';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
@@ -11,7 +11,7 @@ import { getCreditBalance } from '../utils/getCreditBalance';
 
 const getAccountForOrg = async (orgId) => {
 
-  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOne({ where: {orgId} })
+  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOne({ where: {orgId} });
 
   const credit = await getCreditBalance(AppDataSource.manager, orgId);
 

@@ -6,9 +6,9 @@ import { createUserAndProfileEntity } from './createUserAndProfileEntity';
 
 /**
  * Get client user if it exists. Otherwise create a guest user
- * @param m 
- * @param email 
- * @returns 
+ * @param m
+ * @param email
+ * @returns
  */
 export async function ensureClientOrGuestUser(m: EntityManager, email: string): Promise<User> {
   let user: User;

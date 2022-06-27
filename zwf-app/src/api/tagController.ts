@@ -1,7 +1,7 @@
 
 import { getRepository, In } from 'typeorm';
 import { Tag } from '../entity/Tag';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { generateRandomColorHex } from '../utils/generateRandomColorHex';

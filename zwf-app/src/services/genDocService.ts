@@ -1,6 +1,6 @@
 import { DocTemplate } from './../entity/DocTemplate';
 import * as _ from 'lodash';
-import { generatePdfBufferFromHtml } from "../utils/generatePdfBufferFromHtml";
+import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { EntityManager } from 'typeorm';
@@ -37,7 +37,7 @@ async function stringifyFieldValue(f) {
     case 'autodoc':
       return value.name;
     default:
-      throw new Error(`Unrecognized field type '${type}'`)
+      throw new Error(`Unrecognized field type '${type}'`);
   }
 }
 

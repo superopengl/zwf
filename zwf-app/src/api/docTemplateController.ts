@@ -3,7 +3,7 @@ import { getUtcNow } from './../utils/getUtcNow';
 
 import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -71,7 +71,7 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
 export const getDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
-  const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) }
+  const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
   const docTemplate = await AppDataSource.getRepository(DocTemplate).findOne({ where: query });
   assert(docTemplate, 404);
 
@@ -165,7 +165,7 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
     docTemplate.name = await getUniqueCopyName(m, docTemplate);
 
     await m.save(docTemplate);
-  })
+  });
 
   res.json(docTemplate);
 });

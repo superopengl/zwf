@@ -22,11 +22,11 @@ describe('calculateRecurringNextRunAt', () => {
   beforeAll(() => {
     Date.now = jest.fn().mockReturnValue(createSydneyDate('2021-01-31 13:00'));
     nowMoment = moment();
-  })
+  });
 
   afterAll(() => {
     (Date.now as any).mockRestore();
-  })
+  });
   describe('firstRunOn is past day', () => {
 
     it('nextRunAt should be future day with 1 week recurring', () => {
@@ -42,7 +42,7 @@ describe('calculateRecurringNextRunAt', () => {
       const nextRunAt = calculateRecurringNextRunAt(recurring);
       const expected = createSydneyDate('2021-02-12 5:00');
       expect(nextRunAt).toEqual(expected);
-    })
+    });
 
     it('nextRunAt should be future day with 1 month recurring', () => {
       const recurring = createRecurring('2021-01-15', 1, 'month');

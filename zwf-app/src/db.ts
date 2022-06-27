@@ -1,7 +1,7 @@
 import { RecurringInformation } from './entity/views/RecurringInformation';
 import { SystemConfig } from './entity/SystemConfig';
 import { TaskFileMetaInformation } from './entity/views/TaskFileMetaInformation';
-import { TaskFileInformation } from "./entity/views/TaskFileInformation";
+import { TaskFileInformation } from './entity/views/TaskFileInformation';
 import { SupportInformation } from './entity/views/SupportInformation';
 import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
@@ -110,11 +110,11 @@ async function syncDatabaseSchema(connection: Connection) {
 async function dropAllViewsAndMatviews() {
   const list = await AppDataSource.manager.query(`
 select format('DROP VIEW IF EXISTS "%I"."%I" cascade;', schemaname, viewname) as sql
-from pg_catalog.pg_views 
+from pg_catalog.pg_views
 where schemaname = 'zwf'
-union 
+union
 select format('DROP MATERIALIZED VIEW IF EXISTS "%I"."%I" cascade;', schemaname, matviewname) as sql
-from pg_catalog.pg_matviews 
+from pg_catalog.pg_matviews
 where schemaname = 'zwf'
   `);
 
@@ -139,7 +139,7 @@ async function createIndexOnMaterilializedView() {
   }
 }
 
-const REFRESHING_MV_CACHE_KEY = 'database.mv.refreshing'
+const REFRESHING_MV_CACHE_KEY = 'database.mv.refreshing';
 
 export async function refreshMaterializedView(mviewEnitity?: any) {
   const refreshing = await redisCache.get(REFRESHING_MV_CACHE_KEY);
@@ -159,8 +159,8 @@ export async function refreshMaterializedView(mviewEnitity?: any) {
 }
 
 export let AppDataSource = new DataSource({
-  type: "postgres",
-  host: process.env.TYPEORM_HOST || "localhost",
+  type: 'postgres',
+  host: process.env.TYPEORM_HOST || 'localhost',
   port: +(process.env.TYPEORM_PORT || 5432),
   username: process.env.TYPEORM_USERNAME,
   password: process.env.TYPEORM_PASSWORD,
@@ -222,5 +222,5 @@ export let AppDataSource = new DataSource({
     RecurringInformation,
     ReceiptInformation,
   ],
-})
+});
 

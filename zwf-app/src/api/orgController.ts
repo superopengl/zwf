@@ -1,5 +1,5 @@
 import { AppDataSource } from './../db';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Org } from '../entity/Org';
 import { User } from '../entity/User';
@@ -41,7 +41,7 @@ export const saveOrgProfile = handlerWrapper(async (req, res) => {
   await AppDataSource.manager.save(org);
 
   res.json();
-})
+});
 
 export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -73,7 +73,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
 
     await m.save(org);
     await createOrgTrialSubscription(m, orgId);
-  })
+  });
 
   res.json();
 });

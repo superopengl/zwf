@@ -8,7 +8,7 @@ import { TaskTrackingLastAccess } from '../entity/TaskTrackingLastAccess';
 import { TaskStatus } from '../types/TaskStatus';
 import { publishEvent } from '../services/globalEventSubPubService';
 
-export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity'
+export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 
 
 async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType, taskId: string, by: string, info?: any) {

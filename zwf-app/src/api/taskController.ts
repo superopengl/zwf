@@ -16,7 +16,7 @@ import { User } from '../entity/User';
 import { TaskStatus } from '../types/TaskStatus';
 import { sendEmailForUserId } from '../services/emailService';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { getNow } from '../utils/getNow';
@@ -45,7 +45,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
-const TASK_CONTENT_EVENT_TYPE = 'task.content'
+const TASK_CONTENT_EVENT_TYPE = 'task.content';
 
 export const subscribeTaskContent = handlerWrapper(async (req, res) => {
   // assertRole(req, 'admin', 'agent', 'client', 'guest');
@@ -135,7 +135,7 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
   } else if (type === 'autodoc') {
     fileItem = value;
   } else {
-    assert(false, 400, `Invalid field type '${type}'`)
+    assert(false, 400, `Invalid field type '${type}'`);
   }
 
   const now = getUtcNow();
@@ -173,7 +173,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
 
   fields.forEach(f => {
     f.taskId = id;
-  })
+  });
 
   const originalFieldIds = task.fields.map(x => x.id);
   const currentFieldIds = fields.map(x => x.id);
@@ -184,10 +184,10 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
     if (deletedFieldIds?.length) {
       await m.getRepository(TaskField).delete(deletedFieldIds);
     }
-  })
+  });
 
   res.json();
-})
+});
 
 export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
@@ -202,13 +202,13 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
       query = {
         ...query,
         orgId: getOrgIdFromReq(req),
-      }
+      };
       break;
     case Role.Client:
       query = {
         ...query,
         userId: getUserIdFromReq(req),
-      }
+      };
       break;
     default:
       assert(false, 404, 'Task is not found');
@@ -327,7 +327,7 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
       'createdAt',
       'updatedAt'
     ]
-  })
+  });
 
   res.json(list);
 });
@@ -374,7 +374,7 @@ export const getTask = handlerWrapper(async (req, res) => {
         ordinal: 'ASC'
       }
     }
-  })
+  });
 
   assert(task, 404);
 
@@ -444,7 +444,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
       query = {
         ...query,
         userId: getUserIdFromReq(req)
-      }
+      };
       break;
     default:
       assert(false, 500);
@@ -455,7 +455,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
     select: {
       id: true,
     }
-  })
+  });
 
   assert(task, 404);
 
@@ -525,7 +525,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
       await m.update(Task, { id }, { status: newStatus });
       await logTaskStatusChange(m, id, userId, oldStatus, newStatus);
     }
-  })
+  });
 
   res.json();
 });
@@ -571,13 +571,13 @@ export const getTaskHistory = handlerWrapper(async (req, res) => {
       query = {
         ...query,
         orgId: getOrgIdFromReq(req)
-      }
-      break
+      };
+      break;
     case Role.Client:
       query = {
         ...query,
         clientId: getUserIdFromReq(req)
-      }
+      };
     default:
       break;
   }

@@ -7,10 +7,10 @@ export async function getOrgOwner(orgId: string) {
     where: {
       orgId,
       orgOwner: true
-    }, 
+    },
     relations: { profile: true }
   });
 
-  assert(user, 500, `Failed to get org owner for ${orgId}`)
+  assert(user, 500, `Failed to get org owner for ${orgId}`);
   return user;
 }

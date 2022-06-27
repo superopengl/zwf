@@ -56,7 +56,7 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
     });
 
     await nudgeTrackingAccess(m, id, userId);
-  })
+  });
 
 
 
@@ -91,7 +91,7 @@ export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) 
       'action',
       'info',
     ]
-  })
+  });
 
   res.json(list);
 });

@@ -28,7 +28,7 @@ export class Subscription {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   unitPrice: number;
-  
+
   @Column('int')
   seats: number;
 

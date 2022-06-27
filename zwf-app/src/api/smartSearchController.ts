@@ -5,7 +5,7 @@ import { getRepository, ILike, Not } from 'typeorm';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';

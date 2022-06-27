@@ -3,7 +3,7 @@ import { AppDataSource } from './../db';
 import { Not } from 'typeorm';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getStripeClientSecretForOrg, retrieveStripePaymentMethod as retrieveStripePaymentMethod } from '../services/stripeService';
@@ -29,7 +29,7 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
     const existing = await m.getRepository(OrgPaymentMethod).findOne({ where: {orgId} });
     entity.primary = !existing;
     await m.save(entity);
-  })
+  });
 
   res.json();
 });

@@ -3,7 +3,7 @@ import { OrgClient } from './../entity/OrgClient';
 
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
@@ -186,7 +186,7 @@ export const resetPassword = handlerWrapper(async (req, res) => {
   const salt = uuidv4();
   const secret = computeUserSecret(password, salt);
 
-  
+
   await AppDataSource
     .createQueryBuilder()
     .update(User)
@@ -257,7 +257,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
     const { seats, occupiedSeats } = subscription;
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
     await inviteOrgMemberWithSendingEmail(m, user, profile);
-  })
+  });
 
   res.json();
 });

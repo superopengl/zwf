@@ -45,7 +45,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
   const list = await AppDataSource.getRepository(RecurringInformation)
     .findBy({
       orgId
-    })
+    });
 
   res.json(list);
 });

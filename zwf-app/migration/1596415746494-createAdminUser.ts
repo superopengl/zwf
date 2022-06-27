@@ -1,5 +1,5 @@
 import { MigrationInterface, QueryRunner, getRepository } from 'typeorm';
-import { User } from "../src/entity/User";
+import { User } from '../src/entity/User';
 import { UserProfile } from '../src/entity/UserProfile';
 
 export class CreateAdminUser1596415746494 implements MigrationInterface {

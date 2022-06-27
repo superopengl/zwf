@@ -38,7 +38,7 @@ export async function searchUsers(orgId: string, queryInfo: StockUserParams) {
       .andWhere('role IN (:...roles)', { roles: [Role.Admin, Role.Agent] });
   } else {
     // For the requests from system
-    query = query.leftJoin(Org, 'o', `u."orgId" = o.id`)
+    query = query.leftJoin(Org, 'o', `u."orgId" = o.id`);
   }
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
@@ -76,7 +76,7 @@ export async function searchUsers(orgId: string, queryInfo: StockUserParams) {
       'u."createdAt" as "createdAt"'
     ]);
 
-  if(!orgId) {
+  if (!orgId) {
     query = query
     .addSelect(`o.id as "orgId"`)
     .addSelect(`o.name as "orgName"`);

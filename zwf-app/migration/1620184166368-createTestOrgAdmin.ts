@@ -1,6 +1,6 @@
-import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
-import { Org } from "../src/entity/Org";
-import { User } from "../src/entity/User";
+import { getRepository, MigrationInterface, QueryRunner } from 'typeorm';
+import { Org } from '../src/entity/Org';
+import { User } from '../src/entity/User';
 import { UserProfile } from '../src/entity/UserProfile';
 
 export class createTestOrgAdmin1620184166368 implements MigrationInterface {

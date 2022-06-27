@@ -1,7 +1,7 @@
 import { ResourcePage } from './../entity/ResourcePage';
 
 import { Not, IsNull } from 'typeorm';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { htmlToText } from 'html-to-text';
@@ -81,7 +81,7 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
 
   page = Object.assign(page || {}, req.body);
 
-  if(html) {
+  if (html) {
     page.brief = getBrief(html);
   }
 
