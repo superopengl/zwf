@@ -1,8 +1,5 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
-import logoSvg from '../logo.svg';
-import { Image } from 'antd';
 import styled from 'styled-components';
 import { Button, Typography, PageHeader, Row, Col, Skeleton, message, Affix } from 'antd';
 const { Text } = Typography;
