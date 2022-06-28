@@ -10,7 +10,6 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const PageContainer = styled.div`
   width: 100%;
-  height: 100%;
   padding: 0;
   margin: 0;
   // background-color: #f3f3f3;
@@ -28,7 +27,6 @@ const ContainerStyled = styled.div`
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
-  height: 100%;
 `;
 
 const SignUpPage = (props) => {

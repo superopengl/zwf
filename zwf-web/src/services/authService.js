@@ -1,5 +1,4 @@
-import { httpPost, httpGet, httpPost$, httpGet$ } from './http';
-import {reactLocalStorage} from 'reactjs-localstorage';
+import { httpGet, httpPost$, httpGet$ } from './http';
 
 export function login$(name, password) {
   const data = { name, password };
