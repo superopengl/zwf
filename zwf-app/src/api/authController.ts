@@ -26,6 +26,7 @@ import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSen
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 import { UserInformation } from '../entity/views/UserInformation';
+import { sleep } from '../utils/sleep';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -133,7 +134,9 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
     role: Role.Admin,
   });
 
-  if (!exists) {
+  if (exists) {
+    await sleep(2000);
+  } else {
     const { resetPasswordToken } = user;
 
     const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;

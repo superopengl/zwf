@@ -3,21 +3,16 @@ import { AppDataSource } from './../src/db';
 import errorToJson from 'error-to-json';
 import 'colors';
 import { start } from './jobStarter';
-import { getRepository, IsNull, LessThan } from 'typeorm';
+import { IsNull, LessThan } from 'typeorm';
 import { EmailSentOutTask } from '../src/entity/EmailSentOutTask';
 import { sendEmail } from '../src/services/emailService';
 import { getUtcNow } from '../src/utils/getUtcNow';
+import { sleep } from '../src/utils/sleep';
 
 const JOB_NAME = 'email-sender';
 
 const EMAIL_RATE_LIMIT_PER_SEC = 13; // Max limit rate is 14/sec right now
 const EMAIL_POLLING_INTERVAL_SEC = 30;
-
-async function sleep(ms): Promise<void> {
-  return new Promise(res => {
-    setTimeout(() => res(), ms);
-  });
-}
 
 export async function handleEmailTasks() {
   const takeSize = EMAIL_RATE_LIMIT_PER_SEC * EMAIL_POLLING_INTERVAL_SEC;
