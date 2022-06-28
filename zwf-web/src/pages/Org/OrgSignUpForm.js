@@ -58,6 +58,7 @@ const OrgSignUpForm = (props) => {
           onCancel: onOk,
           maskClosable: false,
           closable: false,
+          destroyOnClose: true,
         })
       }
     ).add(() => {
