@@ -1,7 +1,7 @@
 import { SupportPendingReplyInformation } from './SupportPendingReplyInformation';
 import { SupportMessage } from '../SupportMessage';
 import { UserInformation } from './UserInformation';
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { Subscription } from '../Subscription';
 import { Payment } from '../Payment';
@@ -14,7 +14,7 @@ import { SupportUserLastAccess } from '../SupportUserLastAccess';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(UserInformation, 'u')
     .leftJoin(SupportPendingReplyInformation, 'r', 'r."userId" = u.id')
     .select([

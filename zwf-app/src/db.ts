@@ -20,7 +20,7 @@ import { OrgClient } from './entity/OrgClient';
 import { Org } from './entity/Org';
 import { User } from './entity/User';
 import { File } from './entity/File';
-import { Connection, DataSource } from 'typeorm';
+import { DataSource, DataSource } from 'typeorm';
 import { initializeConfig } from './utils/initializeConfig';
 import { redisCache } from './services/redisCache';
 import { OrgAliveSubscription } from './entity/views/OrgAliveSubscription';
@@ -88,7 +88,7 @@ async function initializeData() {
   await initializeConfig();
 }
 
-async function syncDatabaseSchema(connection: Connection) {
+async function syncDatabaseSchema(connection: DataSource) {
   /**
    * We have to drop all views manually before typeorm sync up the database schema,
    * because typeorm cannot handle the view dependencies (view A depends on view B) correctly

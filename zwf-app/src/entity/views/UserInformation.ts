@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { Subscription } from '../Subscription';
 import { Payment } from '../Payment';
@@ -10,7 +10,7 @@ import { UserStatus } from '../../types/UserStatus';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(User, 'u')
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')

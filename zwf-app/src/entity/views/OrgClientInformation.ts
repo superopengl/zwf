@@ -1,12 +1,12 @@
 import { OrgClient } from './../OrgClient';
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserInformation } from './UserInformation';
 import { UserStatus } from '../../types/UserStatus';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(Org, 'o')
     .innerJoin(OrgClient, 'c', `o.id = c."orgId"`)

@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { PaymentStatus } from '../../types/PaymentStatus';
 import { Role } from '../../types/Role';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
@@ -7,7 +7,7 @@ import { Subscription } from '../Subscription';
 import { User } from '../User';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Subscription, 's')
     .where(`status = '${SubscriptionStatus.Alive}'`)
     .leftJoin(q => q

@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
@@ -9,7 +9,7 @@ import { DocTemplate } from '../DocTemplate';
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(TaskTemplate, 't')
     .leftJoin(q => q

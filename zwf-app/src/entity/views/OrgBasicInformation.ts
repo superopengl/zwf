@@ -1,4 +1,4 @@
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
@@ -6,7 +6,7 @@ import { UserProfile } from '../UserProfile';
 import { OrgAliveSubscription } from './OrgAliveSubscription';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(Org, 'o')
     .leftJoin(User, 'u', `u."orgId" = o.id AND u.role = '${Role.Admin}' AND u."orgOwner" IS TRUE`)

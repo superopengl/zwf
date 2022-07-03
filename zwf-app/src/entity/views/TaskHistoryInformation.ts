@@ -1,10 +1,10 @@
 import { UserInformation } from './UserInformation';
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { Task } from '../Task';
 import { TaskAction } from '../TaskAction';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(Task, 't')
     .leftJoin(TaskAction, 'a', 't.id = a."taskId"')
