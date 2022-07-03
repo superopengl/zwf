@@ -3,6 +3,7 @@ export enum EmailTemplateType {
   // On board
   WelcomeClient = 'welcome_client',
   WelcomeOrg = 'welcome_org',
+  RegisterExistingAccount = 'register_existing_account',
   InviteOrgMember = 'invite_agent_user',
   InviteClientUser = 'invite_client_user',
   SetPassword = 'set_password',
