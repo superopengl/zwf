@@ -1,25 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, Index, IsNull, Not } from 'typeorm';
-
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, Index } from 'typeorm';
 
 @Entity()
 export class EmailSentOutTask {
-  static scope = {
-    'default': {
-      sentAt: IsNull()
-    },
-    'all': {
-      sentAt: Not(IsNull())
-    }
-  };
-
   @PrimaryGeneratedColumn()
   id: number;
 
   @CreateDateColumn()
-  createAt: Date;
+  createdAt: Date;
 
-  @DeleteDateColumn()
   @Index()
+  @Column({ nullable: true })
   sentAt: Date;
 
   @Column()
@@ -31,15 +21,15 @@ export class EmailSentOutTask {
   @Column()
   template: string;
 
-  @Column('jsonb', { nullable: true })
+  @Column('json')
   vars: object;
 
-  @Column('jsonb', { nullable: true })
+  @Column('json', { nullable: true })
   attachments: object;
 
   @Column({ default: true })
   shouldBcc: boolean;
 
-  @Column('int', {default: 0})
+  @Column('int', { default: 0 })
   failedCount: number;
 }
