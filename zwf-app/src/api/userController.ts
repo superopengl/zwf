@@ -21,9 +21,6 @@ import { Subscription } from '../entity/Subscription';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { Role } from '../types/Role';
 import { searchOrgClients } from '../utils/searchOrgClients';
-import { response } from 'express';
-import { getRoleFromReq } from '../utils/getRoleFromReq';
-import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');

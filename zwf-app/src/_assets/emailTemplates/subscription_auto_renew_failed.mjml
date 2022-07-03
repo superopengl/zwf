@@ -13,7 +13,7 @@
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="20px" font-weight="400">
-          Your current subscription will expire in 7 days if the primary payment method is still unavailable.
+          Your current subscription will expire after {{endDate}} if the primary payment method is still unavailable.
         </mj-text>
       </mj-column>
       <mj-column width="100%">

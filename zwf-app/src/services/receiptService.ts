@@ -2,7 +2,6 @@ import * as fs from 'fs';
 import * as handlebars from 'handlebars';
 import { Stream } from 'stream';
 import * as moment from 'moment';
-import { PaymentMethod } from '../types/PaymentMethod';
 import * as _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';

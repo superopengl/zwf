@@ -1,4 +1,5 @@
-import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
+import { Org } from './../Org';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn, In, IsNull } from 'typeorm';
 import { PaymentStatus } from '../../types/PaymentStatus';
 import { Role } from '../../types/Role';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
@@ -10,11 +11,11 @@ import { User } from '../User';
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Subscription, 's')
     .where(`status = '${SubscriptionStatus.Alive}'`)
+    .innerJoin(Org, 'o', 's."orgId" = o.id')
     .leftJoin(q => q
       .from(User, 'u')
-      .where('"deletedAt" IS NULL')
+      .where({ deletedAt: IsNull() })
       .andWhere(`role IN ('${Role.Admin}', '${Role.Agent}')`)
-      // .andWhere('role IN (:...roles)', { roles: [Role.Admin, Role.Agent] })
       .groupBy('"orgId"')
       .select([
         '"orgId"',
@@ -25,9 +26,10 @@ import { User } from '../User';
       's."orgId" as "orgId"',
       '"type"',
       '"seats"',
+      'recurring',
       '"start"',
       '"end"',
-      'id as "subscriptionId"',
+      's.id as "subscriptionId"',
       'count as "occupiedSeats"'
     ])
 })
@@ -41,6 +43,9 @@ export class OrgAliveSubscription {
 
   @ViewColumn()
   seats: number;
+
+  @ViewColumn()
+  recurring: boolean;
 
   @ViewColumn()
   start: Date;

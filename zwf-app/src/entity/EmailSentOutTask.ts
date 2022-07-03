@@ -21,7 +21,7 @@ export class EmailSentOutTask {
   @Column()
   template: string;
 
-  @Column('json')
+  @Column('json', { nullable: true })
   vars: object;
 
   @Column('json', { nullable: true })
