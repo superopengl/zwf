@@ -1,4 +1,4 @@
-import { Connection, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import 'colors';
