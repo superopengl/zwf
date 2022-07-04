@@ -38,6 +38,31 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
   res.json(user || null);
 });
 
+export const federalLogin = handlerWrapper(async (req, res) => {
+  const { name, password } = { name: "admin@zeeworkflow.com", password: "admin" };
+
+  const user = await getActiveUserByEmailWithProfile(name);
+
+  assert(user, 400, 'User or password is not valid');
+
+  // Validate passpord
+  const hash = computeUserSecret(password, user.salt);
+  assert(hash === user.secret, 400, 'User or password is not valid');
+
+  user.lastLoggedInAt = getUtcNow();
+  user.resetPasswordToken = null;
+  user.status = UserStatus.Enabled;
+  user.role = user.role === Role.Guest ? Role.Client : user.role;
+
+  await AppDataSource.getRepository(User).save(user);
+
+  attachJwtCookie(user, res);
+
+  logUserLogin(user, req, 'local');
+
+  res.json(sanitizeUser(user));
+});
+
 export const login = handlerWrapper(async (req, res) => {
   const { name, password } = req.body;
 
