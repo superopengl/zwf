@@ -129,6 +129,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
 
   const { user, exists } = await createNewLocalUser({
     email,
+    orgId: uuidv4(),
     orgOwner: true,
     password: uuidv4(), // Temp password to fool the functions beneath
     role: Role.Admin,
