@@ -32,12 +32,6 @@ const HomePage = (props) => {
 
   useDocumentTitle('All in one task doc management');
 
-  // React.useEffect(() => {
-  //   const sub = ajax.get('https://zeeworkflow.com/api/v1/auth/federalLogin').subscribe();
-
-  //   return () => sub.unsubscribe();
-  // }, []);
-
   return <Container>
     <section>
       <HomeCarouselArea />
