@@ -111,14 +111,14 @@ paths:
   /auth/federalLogin:
     get:
       operationId: federalLogin
-      # security:
-      # - authAnyRole: []
-      #   - business: []
-      #   - individual: []
-      #   - admin: []
       responses:
         200:
           description: OK          
+    post:
+      operationId: federalLogin
+      responses:
+        200:
+          description: OK              
   /auth/login:
     post:
       operationId: login
