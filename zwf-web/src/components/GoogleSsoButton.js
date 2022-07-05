@@ -4,7 +4,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { ssoGoogle$ } from 'services/authService';
-import { countUnreadMessage$ } from 'services/messageService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import { concat, zip, of } from 'rxjs';
@@ -12,7 +11,7 @@ import { switchMap, take } from 'rxjs/operators';
 
 const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
-  const { setUser, setNotifyCount } = context;
+  const { setUser } = context;
   const { render } = props;
   const navigate = useNavigate();
 
