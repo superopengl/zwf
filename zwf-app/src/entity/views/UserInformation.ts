@@ -12,6 +12,7 @@ import { UserStatus } from '../../types/UserStatus';
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(User, 'u')
+    .where(`u."deletedAt" IS NULL`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
     .leftJoin(q => q
@@ -22,7 +23,6 @@ import { UserStatus } from '../../types/UserStatus';
         'array_agg(tg."tagId") as tags'
       ]),
       'tg', 'tg."userId" = u.id')
-    .where(`u."deletedAt" IS NULL`)
     .select([
       'u.id as id',
       'o.id as "orgId"',

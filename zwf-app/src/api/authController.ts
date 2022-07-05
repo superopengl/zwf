@@ -85,7 +85,6 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
     }
   })
 
-
   return { user, profile, exists };
 }
 
