@@ -29,14 +29,7 @@ const ProfileModal = props => {
       visible={visible}
       onOk={onOk}
       {...props}>
-      <ProfileForm user={{
-        id: user.id,
-        avatar: user.profile.avatarFileId,
-        email: user.profile.email,
-        givenName: user.profile.givenName,
-        surname: user.profile.surname,
-        locale: user.profile.locale
-      }} onOk={handlePostSave} />
+      <ProfileForm user={user} onOk={handlePostSave} />
     </Modal>
   );
 };

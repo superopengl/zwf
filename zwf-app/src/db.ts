@@ -38,7 +38,7 @@ import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadIn
 import { TaskTrackingInformation } from './entity/views/TaskTrackingInformation';
 import { TaskTrackingLastAccess } from './entity/TaskTrackingLastAccess';
 import { TaskTracking } from './entity/TaskTracking';
-import { UserLogin } from './entity/UserLogin';
+import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
 import { OrgClientInformation } from './entity/views/OrgClientInformation';
 import { ReceiptInformation } from './entity/views/ReceiptInformation';
@@ -210,7 +210,7 @@ export let AppDataSource = new DataSource({
     TaskTrackingInformation,
     TaskTrackingLastAccess,
     TaskTracking,
-    UserLogin,
+    UserAudit,
     TaskTagsTag,
     OrgClientInformation,
     OrgBasicInformation,

@@ -67,7 +67,6 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     if (isFirstSave) {
       userEnitty.orgId = orgId;
       userEnitty.orgOwner = true;
-      userEnitty.paid = false;
       await m.save(userEnitty);
     }
 

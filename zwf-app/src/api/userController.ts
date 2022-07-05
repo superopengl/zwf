@@ -21,6 +21,7 @@ import { Subscription } from '../entity/Subscription';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { Role } from '../types/Role';
 import { searchOrgClients } from '../utils/searchOrgClients';
+import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -108,7 +109,8 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   }
 
   if (id === loginUserId) {
-    attachJwtCookie(user, res);
+    const userInfo = await getActiveUserInformation(user.profile.email);
+    attachJwtCookie(userInfo, res);
   }
 
   res.json();

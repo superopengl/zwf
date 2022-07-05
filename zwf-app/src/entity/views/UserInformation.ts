@@ -7,6 +7,8 @@ import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
+import { OrgAliveSubscription } from './OrgAliveSubscription';
+import { SubscriptionType } from '../../types/SubscriptionType';
 
 
 @ViewEntity({
@@ -15,6 +17,7 @@ import { UserStatus } from '../../types/UserStatus';
     .where(`u."deletedAt" IS NULL`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
+    .leftJoin(OrgAliveSubscription, 's', 's."orgId" = u."orgId"')
     .leftJoin(q => q
       .from('user_tags_tag', 'tg')
       .groupBy('tg."userId"')
@@ -29,6 +32,7 @@ import { UserStatus } from '../../types/UserStatus';
       'p.id as "profileId"',
       'u.role as role',
       'u.status as status',
+      'u."emailHash" as "emailHash"',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
@@ -36,14 +40,18 @@ import { UserStatus } from '../../types/UserStatus';
       'u."orgOwner" as "orgOwner"',
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
+      'CASE WHEN s."subscriptionId" IS NULL THEN FALSE ELSE TRUE END as "subscriptionAlive"',
       'tg.tags as tags',
     ]),
-  dependsOn: [User, UserProfile, Org]
+  dependsOn: [User, UserProfile, Org, OrgAliveSubscription]
 })
 export class UserInformation {
   @ViewColumn()
   @PrimaryColumn()
   id: string;
+
+  @ViewColumn()
+  emailHash: string;
 
   @ViewColumn()
   email: string;
@@ -77,6 +85,9 @@ export class UserInformation {
 
   @ViewColumn()
   avatarColorHex: string;
+
+  @ViewColumn()
+  subscriptionAlive?: boolean;
 
   @ViewColumn()
   tags: string[];

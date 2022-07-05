@@ -67,7 +67,7 @@ const ChangePasswordPage = props => {
     <LayoutStyled>
       <ContainerStyled>
         <Title level={2}>Change Password</Title>
-        <Text code>{user.profile.email}</Text>
+        <Text code>{user.email}</Text>
         <br />
         <br />
         <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>

@@ -55,7 +55,7 @@ export const SupportAffix = () => {
   const [list, setList] = React.useState([]);
   const context = React.useContext(GlobalContext);
 
-  const { givenName, surname } = context.user?.profile ?? {};
+  const { givenName, surname } = context.user ?? {};
   const name = `${givenName || ''} ${surname || ''}`.trim();
   const cheerName = `Hi ${name || 'there'}`.trim();
 
