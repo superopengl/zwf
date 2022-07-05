@@ -91,14 +91,9 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
 export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
+  assert(orgId, 400, 'orgId not found');
 
-  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOne(
-    {
-      where: {
-        orgId
-      }
-    }
-  );
+  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOneBy({ orgId });
 
   res.json(subscription);
 });

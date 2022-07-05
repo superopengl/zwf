@@ -8,7 +8,7 @@ import { countUnreadMessage$ } from 'services/messageService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { zip, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { getMyOrgProfile$ } from 'services/orgService';
 import PropTypes from 'prop-types';
 
@@ -40,31 +40,22 @@ export const LogInPanel = props => {
 
     login$(values.name, values.password)
       .pipe(
-        switchMap(user => {
-          return zip(
-            of(user),
-            user ? countUnreadMessage$() : of(0), // If logged in, get message count
-            user?.role === 'admin' ? getMyOrgProfile$() : of(null) // If it's org admin, check if org profile is complete
-          );
-        })
+        finalize(() => setLoading(false))
       )
       .subscribe(
-        ([user, count, org]) => {
+        (user) => {
           if (user) {
             setUser(user);
-            setNotifyCount(count);
 
             if (user.role === 'system') {
               navigate(returnUrl || '/support')
             } else {
-              navigate(returnUrl || '/task');
+              const isAdminFirstLogin = user.role === 'admin' && !user.orgId;
+              navigate(isAdminFirstLogin ? '/onboard' : (returnUrl || '/task'));
             }
           }
         },
-      ).add(
-        () => {
-          setLoading(false);
-        });
+      )
   }
 
   return (

@@ -24,17 +24,12 @@ const GoogleSsoButton = props => {
     }
 
     ssoGoogle$(tokenId)
-      .pipe(
-        switchMap(user => {
-          return zip(of(user), user ? countUnreadMessage$() : of(0));
-        })
-      )
       .subscribe(
-        ([user, count]) => {
+        (user) => {
           if (user) {
             setUser(user);
-            setNotifyCount(count);
-            navigate('/');
+            const isAdminFirstLogin = user.role === 'admin' && !user.orgId;
+            navigate(isAdminFirstLogin ? '/onboard' : '/task');
           }
         },
         err => notify.error('Failed to log in with Google')
