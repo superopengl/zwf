@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 federated login test
 refine user login
 tidy up table schema
