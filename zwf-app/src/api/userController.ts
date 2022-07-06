@@ -188,16 +188,6 @@ export const deleteUser = handlerWrapper(async (req, res) => {
       await m.getRepository(User).softDelete(id);
       await m.getRepository(UserProfile).delete(profileId);
     });
-
-    // await enqueueEmail({
-    //   to: user.profile.email,
-    //   template: EmailTemplateType.DeleteUser,
-    //   vars: {
-    //     toWhom: getEmailRecipientName(user.profile),
-    //     email: user.profile.email,
-    //   },
-    //   shouldBcc: false
-    // });
   }
 
   res.json();

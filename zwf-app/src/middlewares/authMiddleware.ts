@@ -14,14 +14,13 @@ export const authMiddleware = async (req, res, next) => {
       const { expires } = user;
       if (moment(expires).isBefore()) {
         // JWT token expired. Needs to refresh
-        const existingUser = await getActiveUserInformation(user.profile.email);
+        const existingUser = await getActiveUserInformation(user.email);
         if (!existingUser) {
           // User not existing anymore
           clearJwtCookie(res);
           res.sendStatus(401);
           return;
         }
-        // console.log('Renewed cookie for'.green, user.profile.email);
 
         user = existingUser;
       }

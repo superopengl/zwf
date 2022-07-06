@@ -32,7 +32,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
   if (user) {
-    const email = user.profile.email;
+    const email = user.email;
     user = await getActiveUserInformation(email);
     attachJwtCookie(user, res);
   }
