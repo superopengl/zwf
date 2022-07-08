@@ -15,7 +15,7 @@ const ContainerStyled = styled.div`
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: #ffffff;
 `;
 
 const LogoContainer = styled.div`
