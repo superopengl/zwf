@@ -6,6 +6,7 @@ import { Logo } from 'components/Logo';
 import { resetPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { finalize } from 'rxjs/operators';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
@@ -16,7 +17,7 @@ const ContainerStyled = styled.div`
   margin: 2rem auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 300px;
+  max-width: 360px;
 `;
 
 const LogoContainer = styled.div`
@@ -68,21 +69,22 @@ const ResetPasswordPage = props => {
     <ContainerStyled>
       <LogoContainer><Logo /></LogoContainer>
       <Title level={2}>Set Password</Title>
-      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
+      <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left', minWidth: 300 }}>
         <Form.Item label="Password (at least 8 letters)" name="password" rules={[{ required: true, min: 8, message: ' ' }]}>
-          <Input.Password placeholder="Password" maxLength="50" autoComplete="new-password" disabled={loading} visibilityToggle={false} autoFocus={true} />
+          <Input.Password placeholder="Password" maxLength="50" 
+          autoComplete="new-password" disabled={loading} autoFocus={true} />
         </Form.Item>
-        <Form.Item label="Confirm Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
+        {/* <Form.Item label="Confirm Password" name="confirmPassword" rules={[{ required: true, min: 8, message: ' ' }, validateConfirmPasswordRule]}>
           <Input.Password placeholder="Password" maxLength="50" autoComplete="new-password" disabled={loading} visibilityToggle={false} />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item style={{ marginTop: '2rem' }}>
           <Button block type="primary" htmlType="submit" disabled={loading}>Set Password</Button>
         </Form.Item>
-        <Form.Item>
+        {/* <Form.Item>
           <Button block type="link" onClick={() => goBack()}>Cancel</Button>
-        </Form.Item>
+        </Form.Item> */}
       </Form>
-      <Divider />
+      {/* <Divider /> */}
       <Link to="/"><Button block type="link">Go to home page</Button></Link>
     </ContainerStyled>
   </LayoutStyled>
