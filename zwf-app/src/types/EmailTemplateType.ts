@@ -6,6 +6,7 @@ export enum EmailTemplateType {
   RegisterExistingAccount = 'register_existing_account',
   InviteOrgMember = 'invite_agent_user',
   InviteClientUser = 'invite_client_user',
+  InviteNewClientUser = 'invite_new_client_user',
   SetPassword = 'set_password',
 
   // Task

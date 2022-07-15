@@ -1,34 +1,14 @@
 <mjml>
   <mj-head>
-    <mj-title>You are invited</mj-title>
+    <mj-title>To be served by an organization</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Please verify your email address</mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-section>
-      <mj-column width="100%">
         <mj-text align="left" font-size="20px" font-weight="400">
-          You are invited and to be served by {{org}} in ZeeWorkflow. Please click below button to accept the invitation.
-        </mj-text>
-      </mj-column>
-      <mj-column width="100%">
-        <mj-button align="left" background-color="#ffc53d" padding="20px 0" inner-padding="16px 36px" border-radius="8px" font-size="18px" href="{{url}}">
-          Accept
-        </mj-button>
-      </mj-column>
-      <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
-          Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
-        </mj-text>
-      </mj-column>
-      <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
-          After opening ZeeWorkflow, you can follow the instructions on the page to complete the process, like setting password. This email address will be used as your account in ZeeWorkflow.
+          You are invited and to be served by the orgnization <strong>{{org}}</strong> in ZeeWorkflow. <strong>{{org}}</strong> will contact you in near future when necessary.
         </mj-text>
       </mj-column>
     </mj-section>

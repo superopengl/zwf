@@ -28,12 +28,14 @@ import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 import { UserInformation } from '../entity/views/UserInformation';
 import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
+import { Org } from '../entity/Org';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
   if (user) {
     const email = user.email;
     user = await getActiveUserInformation(email);
+    assert(user, 400, 'User not found');
     attachJwtCookie(user, res);
   }
   res.json(user || null);
@@ -257,12 +259,13 @@ export const impersonate = handlerWrapper(async (req, res) => {
   const loginUser = (req as any).user;
 
   const user = await getActiveUserInformation(email);
+  assert(user, 404, 'User not found');
+
   if (role === Role.Admin) {
     const orgId = getOrgIdFromReq(req);
     assert(user.orgId === orgId, 404, 'User not found');
   }
 
-  assert(user, 404, 'User not found');
 
   attachJwtCookie(user, res);
 
@@ -277,7 +280,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
   const existingUser = await getActiveUserInformation(email);
-  assert(!existingUser, 400, 'User exists');
+  assert(!existingUser, 400, 'User already exists');
 
   const { user, profile } = createUserAndProfileEntity({
     email,
@@ -302,12 +305,45 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
 
   await AppDataSource.manager.transaction(async m => {
-    const user = await ensureClientOrGuestUser(m, email);
+    const { user, newlyCreated } = await ensureClientOrGuestUser(m, email);
     const orgClient = new OrgClient();
     orgClient.orgId = orgId;
     orgClient.userId = user.id;
 
-    await m.save(orgClient);
+    await m.insert(OrgClient, orgClient);
+    const org = await m.findOneBy(Org, {id: orgId});
+
+    if (newlyCreated) {
+      const resetPasswordToken = uuidv4();
+      user.resetPasswordToken = resetPasswordToken;
+      user.status = UserStatus.ResetPassword;
+      await m.save(user);
+
+      const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+
+      await sendEmail({
+        to: email,
+        template: EmailTemplateType.InviteNewClientUser,
+        vars: {
+          toWhom: getEmailRecipientName(user),
+          email,
+          url,
+          org: org.name,
+        },
+        shouldBcc: false
+      });
+    } else {
+      await sendEmail({
+        to: email,
+        template: EmailTemplateType.InviteClientUser,
+        vars: {
+          toWhom: getEmailRecipientName(user),
+          email,
+          org: org.name,
+        },
+        shouldBcc: false
+      });
+    }
   });
 
   res.json();
