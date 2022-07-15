@@ -1,3 +1,2 @@
 export const notes=`
-bgcolor
-no confirm password`
+handle invite emails`
