@@ -18,6 +18,7 @@ import PortalApp from 'pages/PortalApp';
 import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import HomePage from 'pages/HomePage';
+import { Navigate } from 'react-router-dom';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -149,6 +150,7 @@ export const App = React.memo(() => {
               {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
               {isAdmin && <Route path="/onboard" element={<OrgOnBoardPage />} />}
               {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
+
               {!isGuest && <Route path="/" element={<AppLoggedIn />} >
                 {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
                 {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
@@ -175,7 +177,7 @@ export const App = React.memo(() => {
                 <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
                 <Route path="/revenue" element={<RevenuePage />} />
               </Route>}
-              {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+              <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </BrowserRouter>
           <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
