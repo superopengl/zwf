@@ -6,7 +6,7 @@ import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
-import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate } from 'services/taskTemplateService';
+import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate$ } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -75,7 +75,7 @@ const EMPTY_TASK_TEMPLATE = {
 export const TaskTemplatePage = props => {
   const params = useParams();
   const {id: routeParamId} = params;
-  const initTaskTemplateId = routeParamId || uuidv4();
+  const initTaskTemplateId = routeParamId;
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(!isNew);
@@ -119,8 +119,9 @@ export const TaskTemplatePage = props => {
       name: taskTemplateName,
     };
 
-    await saveTaskTemplate(entity);
-    notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
+    saveTaskTemplate$(entity).subscribe(() => {
+      notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
+    });
   }
 
   const debugMode = false;

@@ -10,7 +10,7 @@ import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { cloneTaskTemplate$, deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
+import { cloneTaskTemplate$, deleteTaskTemplate$, listTaskTemplate$ } from 'services/taskTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
@@ -20,6 +20,7 @@ import { BiGridAlt } from 'react-icons/bi';
 import { HiViewList } from 'react-icons/hi';
 import { CreateTaskModal } from 'components/CreateTaskModal';
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
+import { finalize, switchMap } from 'rxjs/operators';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -51,13 +52,21 @@ export const TaskTemplateListPage = props => {
 
   const loadList = async () => {
     setLoading(true);
-    const list = await listTaskTemplate();
+    const list = await listTaskTemplate$();
     setList(list);
     setLoading(false);
   }
 
   React.useEffect(() => {
-    loadList();
+    setLoading(true);
+
+    const sub$ = listTaskTemplate$().pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(list => {
+      setList(list);
+    });
+
+    return () => sub$.unsubscribe();
   }, [])
 
   React.useEffect(() => {
@@ -77,11 +86,16 @@ export const TaskTemplateListPage = props => {
     const { id, name } = item;
     Modal.confirm({
       title: <>Delete Doc Template <strong>{name}</strong>?</>,
-      onOk: async () => {
+      onOk: () => {
         setLoading(true);
-        await deleteTaskTemplate(id);
-        await loadList();
-        setLoading(false);
+
+        deleteTaskTemplate$(id).pipe(
+          finalize(() => setLoading(false)),
+          switchMap(() => listTaskTemplate$()),
+          finalize(() => setLoading(false)),
+        ).subscribe(list => {
+          setList(list);
+        });
       },
       maskClosable: true,
       okButtonProps: {
@@ -127,10 +141,10 @@ export const TaskTemplateListPage = props => {
             onChange={e => setViewMode(e.target.value)}
           >
             <Radio.Button value="grid">
-              <Icon component={BiGridAlt } />
+              <Icon component={BiGridAlt} />
             </Radio.Button>
             <Radio.Button value="list">
-              <Icon component={HiViewList } />
+              <Icon component={HiViewList} />
             </Radio.Button>
           </Radio.Group>,
           <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
