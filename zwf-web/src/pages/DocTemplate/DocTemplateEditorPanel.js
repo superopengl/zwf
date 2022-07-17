@@ -36,7 +36,7 @@ export const DocTemplateEditorPanel = props => {
           required: true, 
           message: 'Doc template content is empty',
           validator: async (rule, value) => { 
-            debugger;
+            // debugger;
           }
         }]}>
           <RichTextInput />
