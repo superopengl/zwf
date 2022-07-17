@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Button, Form, Typography, Row, Col, Tooltip, Space } from 'antd';
 import * as moment from 'moment';
 import { DocTemplatePreviewPanel } from './DocTemplatePreviewPanel';
-import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
+import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
 import { Loading } from './Loading';
 import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from './entityIcon';

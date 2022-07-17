@@ -1,27 +1,19 @@
-import { httpGet, httpGet$,httpPut$, httpPost$,httpPost, httpDelete} from './http';
-
-export async function getDocTemplate(id) {
-  return httpGet(`doc_template/${id}`);
-}
+import { httpGet$, httpPut$, httpPost$, httpPost, httpDelete$ } from './http';
 
 export function getDocTemplate$(id) {
   return httpGet$(`doc_template/${id}`);
 }
 
-export async function saveDocTemplate(docTemplate) {
-  return httpPost('doc_template', docTemplate);
+export function saveDocTemplate$(docTemplate) {
+  return httpPost$('doc_template', docTemplate);
 }
 
 export function cloneDocTemplate$(sourceTemplateId) {
-  return httpPut$(`/doc_template/${sourceTemplateId}/clone`, );
+  return httpPut$(`/doc_template/${sourceTemplateId}/clone`,);
 }
 
-export async function deleteDocTemplate(id) {
-  return httpDelete(`doc_template/${id}`);
-}
-
-export async function listDocTemplate() {
-  return httpGet('doc_template');
+export function deleteDocTemplate$(id) {
+  return httpDelete$(`/doc_template/${id}`);
 }
 
 export function listDocTemplate$() {
@@ -29,9 +21,9 @@ export function listDocTemplate$() {
 }
 
 export async function applyDocTemplate(id, refFields) {
-  return httpPost(`doc_template/${id}/apply`, {refFields});
+  return httpPost(`doc_template/${id}/apply`, { refFields });
 }
 
 export function renameDocTemplate$(id, name) {
-  return httpPost$(`/doc_template/${id}/rename`, {name});
+  return httpPost$(`/doc_template/${id}/rename`, { name });
 }
