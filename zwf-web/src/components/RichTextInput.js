@@ -113,7 +113,7 @@ export const RichTextInput = React.memo((props) => {
         initialValue={value}
         onEditorChange={handleChange}
         init={{
-          height: 500,
+          height: 'calc(100vh - 340px)',
           plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor insertdatetime advlist lists quickbars',
           menubar: false, //'file edit view insert format tools table tc help',
           toolbar: 'blocks fontfamily fontsize  | bold italic underline | strikethrough blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor removeformat | table image link',
