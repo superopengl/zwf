@@ -72,7 +72,6 @@ specifiers:
   uniqolor: ^1.0.1
   uuid: ^8.3.2
   validator: ^13.1.1
-  wangeditor-for-react: ^1.5.6
   web-vitals: ^0.2.4
   workbox-background-sync: ^5.1.4
   workbox-broadcast-update: ^5.1.4
@@ -150,7 +149,6 @@ dependencies:
   uniqolor: 1.0.2
   uuid: 8.3.2
   validator: 13.7.0
-  wangeditor-for-react: 1.5.6_react@17.0.2
   web-vitals: 0.2.4
   workbox-background-sync: 5.1.4
   workbox-broadcast-update: 5.1.4
@@ -14022,23 +14020,6 @@ packages:
     dependencies:
       makeerror: 1.0.12
     dev: true
-
-  /wangeditor-for-react/1.5.6_react@17.0.2:
-    resolution: {integrity: sha512-FLxU4K6PXc9AS3SFfU7vZhUR+EpUEWUVraFPRUiSH9VSzt9jLO9fp4IyReT7ebbp/YaMKXHhN5JLu2v2/zvNrA==}
-    peerDependencies:
-      react: ^17.0.2
-    dependencies:
-      react: 17.0.2
-      wangeditor: 4.7.15
-    dev: false
-
-  /wangeditor/4.7.15:
-    resolution: {integrity: sha512-aPTdREd8BxXVyJ5MI+LU83FQ7u1EPd341iXIorRNYSOvoimNoZ4nPg+yn3FGbB93/owEa6buLw8wdhYnMCJQLg==}
-    dependencies:
-      '@babel/runtime': 7.18.0
-      '@babel/runtime-corejs3': 7.18.0
-      tslib: 2.4.0
-    dev: false
 
   /warning/4.0.3:
     resolution: {integrity: sha512-rpJyN222KWIvHJ/F53XSZv0Zl/accqHR8et1kpaMTD/fLCRxtV8iX8czMzY7sVZupTI3zcUTg8eycS2kNF9l6w==}
