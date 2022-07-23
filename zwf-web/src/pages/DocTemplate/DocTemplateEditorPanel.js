@@ -15,47 +15,19 @@ const Container = styled.div`
 `;
 
 
-export const DocTemplateEditorPanel = props => {
-  const { value, debug, onChange } = props;
+export const DocTemplateEditorPanel = React.memo(props => {
+  const { value, onChange } = props;
 
-  const [entity, setEntity] = React.useState(value);
-
-  React.useEffect(() => {
-    setEntity(value);
-  }, [value])
-
-  return (
-    <Container>
-      <Form
-        // onFinish={handleSave} 
-        layout="vertical"
-        onValuesChange={(changedValues, allValues) => onChange(allValues)}
-        initialValues={entity}
-        style={{ position: 'relative' }}>
-        <Form.Item name="html" rules={[{
-          required: true, 
-          message: 'Doc template content is empty',
-          validator: async (rule, value) => { 
-            // debugger;
-          }
-        }]}>
-          <RichTextInput />
-        </Form.Item>
-        {/* <Form.Item name="description" label="Notes" rules={[{ required: false, message: ' ' }]}>
-          <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description or extra information. This won't be display to the end clients." />
-        </Form.Item> */}
-      </Form>
-    </Container >
-  );
-};
+  return <Container>
+    <RichTextInput value={value} onChange={onChange} />
+  </Container>
+});
 
 DocTemplateEditorPanel.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.object.isRequired,
-  debug: PropTypes.bool.isRequired,
+  value: PropTypes.string.isRequired,
 };
 
 DocTemplateEditorPanel.defaultProps = {
-  debug: false
 };
 

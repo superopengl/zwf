@@ -1,4 +1,4 @@
-import { Button, Layout, PageHeader, Row, Col } from 'antd';
+import { Button, Layout, PageHeader, Row, Col, Typography } from 'antd';
 
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
@@ -18,6 +18,8 @@ import { DocTemplateIcon } from 'components/entityIcon';
 import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+const { Paragraph, Text } = Typography
 
 
 const LayoutStyled = styled(Layout)`
@@ -121,9 +123,12 @@ export const DocTemplatePage = (props) => {
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >
+            <Paragraph type="secondary">
+              The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field with name "Client Name". The variable replacement is <Text strong>case sensitive</Text>. So please make sure the variables specified in this doc template content are aligned with the field names when <Link to="/task_template">design task templates</Link>.
+            </Paragraph>
             {!loading && <DocTemplateEditorPanel
-              value={docTemplate}
-              onChange={d => setDocTemplate(dt => ({ ...dt, ...d }))}
+              value={docTemplate.html}
+              onChange={html => docTemplate.html = html}
               debug={debugMode}
             />}
           </PageHeader>
