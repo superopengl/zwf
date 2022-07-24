@@ -94,10 +94,6 @@ export const RichTextInput = React.memo((props) => {
     setReady(true)
   }, []);
 
-  const handleChange = React.useCallback((content) => {
-    onChange(content)
-  }, []);
-
   return (
     <>
       {!ready && <Skeleton active ></Skeleton>}
@@ -119,14 +115,55 @@ export const RichTextInput = React.memo((props) => {
           branding: false,
           elementpath: false,
           statusbar: true,
-          contextmenu: false,
+          // contextmenu: 'table',
           paste_data_images: true,
           link_default_target: '_blank',
           link_default_protocol: 'https',
+          image_title: false,
+          file_picker_types: 'image',
+          images_reuse_filename: true,
+          automatic_uploads: true,
           // autoresize_bottom_margin: 100,
           onpageload: handleEditorLoad,
-          images_upload_handler: (blobInfo, success, failure) => {
-            success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
+          // images_upload_handler: (blobInfo, success, failure) => {
+          //   success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
+          // },
+          file_picker_callback: function (cb, value, meta) {
+            const input = document.createElement('input');
+            input.setAttribute('type', 'file');
+            input.setAttribute('accept', 'image/*');
+
+            /*
+              Note: In modern browsers input[type="file"] is functional without
+              even adding it to the DOM, but that might not be the case in some older
+              or quirky browsers like IE, so you might want to add it to the DOM
+              just in case, and visually hide it. And do not forget do remove it
+              once you do not need it anymore.
+            */
+
+            input.onchange = function () {
+              const file = this.files[0];
+
+              const reader = new FileReader();
+              reader.onload = function () {
+                /*
+                  Note: Now we need to register the blob in TinyMCEs image blob
+                  registry. In the next release this part hopefully won't be
+                  necessary, as we are looking to handle it internally.
+                */
+                const id = 'blobid' + (new Date()).getTime();
+                const blobCache = editorRef.current.activeEditor.editorUpload.blobCache;
+                const base64 = reader.result.split(',')[1];
+                const blobInfo = blobCache.create(id, file, base64);
+                blobCache.add(blobInfo);
+
+                /* call the callback and populate the Title field with the file name */
+                cb(blobInfo.blobUri(), { title: file.name });
+              };
+              reader.readAsDataURL(file);
+            };
+
+            input.click();
           },
         }}
       />
