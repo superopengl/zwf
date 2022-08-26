@@ -63,8 +63,6 @@ export async function calcNewSubscriptionPaymentInfo(
   }
 
   const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { where: { orgId, primary: true } });
-  assert(primaryPaymentMethod, 500, `Cannot find primary payment method.`);
-  const { id: paymentMethodId, stripePaymentMethodId } = primaryPaymentMethod;
 
   const result = {
     unitPrice,
@@ -79,8 +77,9 @@ export async function calcNewSubscriptionPaymentInfo(
     refundable,
     deduction,
     payable,
-    paymentMethodId,
-    stripePaymentMethodId,
+    // For preview, there may not be primary payment method.
+    paymentMethodId: primaryPaymentMethod?.id, 
+    stripePaymentMethodId: primaryPaymentMethod?.stripePaymentMethodId,
   };
   return result;
 }
@@ -91,7 +90,11 @@ async function getRefundableCredits(m: EntityManager, orgId: string): Promise<nu
     relations: ['headBlock', 'headBlock.payment']
   });
 
-  const { headBlock: { startAt, endingAt, payment } } = sub;
+  const { headBlock: { startAt, endingAt, payment, type } } = sub;
+  if (type === 'trial' || !payment) {
+    return 0;
+  }
+
   const startMoment = moment(startAt);
   const endingMoment = moment(endingAt);
 

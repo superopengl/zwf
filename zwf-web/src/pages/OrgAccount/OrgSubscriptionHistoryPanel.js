@@ -27,8 +27,8 @@ export const OrgSubscriptionHistoryPanel = (props) => {
     setList(data);
   }, [data]);
 
-  const handleReceipt = async (payment) => {
-    const data = await downloadReceipt(payment.id);
+  const handleReceipt = async (paymentId) => {
+    const data = await downloadReceipt(paymentId);
     const fileUrl = URL.createObjectURL(data);
     window.open(fileUrl);
   }
@@ -42,7 +42,7 @@ export const OrgSubscriptionHistoryPanel = (props) => {
           <TimeAgo value={item.startAt} showAgo={false} accurate={false} />
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {moment(item.startAt).isBefore() && moment(item.endingAt).isAfter() && <Tag>current</Tag>}
+          {!item.endedAt && moment(item.startAt).isBefore() && moment(item.endingAt).isAfter() && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
@@ -82,7 +82,7 @@ export const OrgSubscriptionHistoryPanel = (props) => {
         if (!payment) return null;
 
         const { amount, createdAt, id } = payment;
-        return <Row>
+        return <Row align="middle">
           <Col span={8}>
             <MoneyAmount value={amount} />
           </Col>
@@ -90,54 +90,11 @@ export const OrgSubscriptionHistoryPanel = (props) => {
             <TimeAgo value={createdAt} showAgo={false} accurate={false} />
           </Col>
           <Col span={8}>
-            <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
+            <Button type="link" size="small" onClick={() => handleReceipt(payment.id)} icon={<DownloadOutlined />}>Receipt</Button>
           </Col>
         </Row>
       }
     },
-    // {
-    //   title: 'Billing',
-    //   dataIndex: 'payment',
-    //   align: 'center',
-    //   width: 370,
-    //   render: (payment, item) => {
-    //     return <StyledReceiptTable
-    //       columns={[
-    //         {
-    //           title: 'link',
-    //           dataIndex: 'amount',
-    //           align: 'right',
-    //           width: '33%',
-    //           render: (amount, item) => <MoneyAmount value={amount} />
-    //         },
-    //         {
-    //           title: 'link',
-    //           dataIndex: 'createdAt',
-    //           align: 'right',
-    //           width: '34%',
-    //           render: (createdAt, item) => <TimeAgo value={createdAt} showAgo={false} accurate={false} />
-    //         },
-    //         {
-    //           title: 'link',
-    //           dataIndex: 'id',
-    //           width: '33%',
-    //           align: 'right',
-    //           render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
-    //         },
-    //       ]}
-    //       bordered={false}
-    //       rowKey="id"
-    //       showHeader={false}
-    //       dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
-    //       pagination={false}
-    //       scroll={false}
-    //       locale={{
-    //         emptyText: '15 day single license free trial'
-    //       }}
-    //     // style={{ width: '100%', minWidth: 370 }}
-    //     />
-    //   }
-    // },
   ];
 
   return (

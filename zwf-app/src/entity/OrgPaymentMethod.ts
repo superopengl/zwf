@@ -30,4 +30,7 @@ export class OrgPaymentMethod {
 
   @Column()
   cardLast4: string;
+
+  @Column({default: ''})
+  cardNumberHash: string;
 }
