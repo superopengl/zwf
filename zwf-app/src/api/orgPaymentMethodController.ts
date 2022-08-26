@@ -26,9 +26,14 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
   entity.cardLast4 = paymentMethod.card.last4;
 
   await db.transaction(async m => {
-    const existing = await m.getRepository(OrgPaymentMethod).findOne({ where: {orgId} });
-    entity.primary = !existing;
-    await m.save(entity);
+    const hasPrimary = await m.getRepository(OrgPaymentMethod).findOneBy({ orgId, primary: true });
+    entity.primary = !hasPrimary;
+    await m.createQueryBuilder()
+      .insert()
+      .into(OrgPaymentMethod)
+      .values(entity)
+      .orIgnore()
+      .execute();
   });
 
   res.json();
@@ -50,7 +55,7 @@ export const setOrgPrimaryPaymentMethod = handlerWrapper(async (req, res) => {
 export const listOrgPaymentMethods = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const list = await db.getRepository(OrgPaymentMethod).find({ where: {orgId} });
+  const list = await db.getRepository(OrgPaymentMethod).find({ where: { orgId } });
   res.json(list);
 });
 

@@ -4,6 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 
 
 @Entity()
 @Index('idx_paymentMethod_org_primary', ['orgId'], { where: '"primary" IS TRUE', unique: true })
+@Index('idx_paymentMethod_org_card_unique', ['orgId', 'cardHash'], { unique: true })
 export class OrgPaymentMethod {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -31,6 +32,6 @@ export class OrgPaymentMethod {
   @Column()
   cardLast4: string;
 
-  @Column({default: ''})
-  cardNumberHash: string;
+  @Column({ generatedType: "STORED", asExpression: `md5("cardLast4" || "cardExpiry")`})
+  cardHash: string;
 }

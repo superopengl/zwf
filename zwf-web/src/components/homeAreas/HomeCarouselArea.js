@@ -1,12 +1,15 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col, Image } from 'antd';
+import { Typography, Button, Space, Row, Col, Image, Input } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { Logo } from 'components/Logo';
+import { InputYear } from 'components/InputYear';
+import { OrgRegisterInput } from 'components/OrgRegisterInput';
+
 
 const { Title } = Typography;
 
@@ -35,7 +38,7 @@ position: relative;
 // background-position: center;
 // background-image: url("images/logo.svg");
 // background-repeat: repeat;
-background-color: #37AFD2;
+// background-color: #37AFD2;
 // background-size: 120px;
 // opacity: 0.75;
 // background-image: linear-gradient(135deg, #37AFD2, #37AFD2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
@@ -50,7 +53,7 @@ padding: 1rem;
 // display: block;
 
 .ant-typography {
-  color: rgba(255,255,255,1);
+  // color: rgba(255,255,255,1);
   text-align: center;
 }
 
@@ -105,11 +108,12 @@ const HomeCarouselAreaRaw = props => {
         <div className="poster-patterns" />
         <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
           <Space size="large">
-            <Image src="images/logo-vertical-gold.png" alt="ZeeWorkflow logo" preview={false} width={300}/>
+            <Image src="images/logo-vertical-gold.png" alt="ZeeWorkflow logo" preview={false} width={300} />
           </Space>
           <Title level={1} style={{ marginTop: 30, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
             All in one system for file, doc, job, task and workflow management. Come on, join us today!!
-              </Title>
+          </Title>
+          <OrgRegisterInput />
           {/* {isGuest &&
             <Row style={{ maxWidth: 500, margin: '0 auto' }} gutter={30}>
               <Col {...span}>

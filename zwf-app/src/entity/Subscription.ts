@@ -28,7 +28,7 @@ export class Subscription {
   @JoinColumn({ name: 'headBlockId', referencedColumnName: 'id' })
   headBlock: SubscriptionBlock;
 
-  @OneToMany(() => Payment, block => block.subscription, { onDelete: 'CASCADE' })
+  @OneToMany(() => SubscriptionBlock, block => block.subscription, { onDelete: 'CASCADE' })
   blocks: SubscriptionBlock[];
 
   @Column()

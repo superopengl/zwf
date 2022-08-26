@@ -6,6 +6,7 @@ import { signUpOrg$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
+import PropTypes from 'prop-types';
 const { Title, Text, Paragraph } = Typography;
 
 
@@ -43,6 +44,7 @@ const OrgSignUpForm = (props) => {
 
     signUpOrg$(email).subscribe(
       () => {
+        onOk();
         Modal.success({
           title: '🎉 Successfully signed up!',
           content: <>
@@ -53,11 +55,8 @@ const OrgSignUpForm = (props) => {
               If you cannot receieve the verification email within 30 minutes, please check your spam box, whether the email address is valid, or if the email address has been registered in ZeeWorkflow before, in which case, you may use forgot password to find back your credential.
             </Paragraph>
           </>,
-          okText: 'Go To Homepage',
-          onOk: onOk,
-          onCancel: onOk,
-          maskClosable: false,
-          closable: false,
+          maskClosable: true,
+          closable: true,
           destroyOnClose: true,
         })
       }
@@ -71,7 +70,7 @@ const OrgSignUpForm = (props) => {
       <Title level={2}>
         <FormattedMessage id="menu.signUpOrg" />
       </Title>
-      <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'member' }}>
+      <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ email: props.value }}>
         <Form.Item>
           <Text>
             We will send an verification email to below email address. This email address will be the account of the root administrator of the organasation.
@@ -116,8 +115,12 @@ const OrgSignUpForm = (props) => {
   );
 }
 
-OrgSignUpForm.propTypes = {};
+OrgSignUpForm.propTypes = {
+  value: PropTypes.string,
+  onOk: PropTypes.func,
+};
 
-OrgSignUpForm.defaultProps = {};
+OrgSignUpForm.defaultProps = {
+};
 
 export default OrgSignUpForm;

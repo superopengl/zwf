@@ -62,9 +62,11 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     block.unitPrice = unitPrice;
     block.promotionCode = promotionCode;
 
+    await m.save([block, headBlock]);
+
     subscription.headBlockId = block.id;
     subscription.enabled = true;
-    await m.save([block, headBlock, subscription]);
+    await m.update(Subscription, { id: subscription.id }, { headBlockId: block.id, enabled: true });
 
     // Handle refund credit from current unfinished subscrption
     if (refundable > 0) {
