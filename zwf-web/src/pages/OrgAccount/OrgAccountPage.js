@@ -13,7 +13,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import * as moment from 'moment-timezone';
-import OrgSubscriptionHistoryPanel from './OrgSubscriptionHistoryPanel';
+import {OrgSubscriptionHistoryPanel} from './OrgSubscriptionHistoryPanel';
 import { from } from 'rxjs';
 import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
 

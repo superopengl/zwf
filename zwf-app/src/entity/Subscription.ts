@@ -21,7 +21,7 @@ export class Subscription {
   @Column()
   status: SubscriptionStatus;
 
-  @Column()
+  @Column({nullable: true})
   headBlockId: string;
 
   @OneToOne(() => SubscriptionBlock, {cascade: true})

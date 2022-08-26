@@ -9,8 +9,6 @@ import { PaymentStatus } from '../../types/PaymentStatus';
 import { OrgBasicInformation } from '../views/OrgBasicInformation';
 import { OrgPaymentMethod } from '../OrgPaymentMethod';
 
-
-
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Payment, 'p')

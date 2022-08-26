@@ -61,5 +61,6 @@ export class Payment {
   creditTransaction: CreditTransaction;
 
   @OneToOne(() => SubscriptionBlock, block => block.payment , { onDelete: 'CASCADE' })
+  @JoinColumn()
   subscriptionBlock: SubscriptionBlock;
 }

@@ -1,4 +1,4 @@
-import { Tag, Space, Table, Button, Typography } from 'antd';
+import { Tag, Space, Table, Button, Typography, Row, Col } from 'antd';
 import React from 'react';
 
 import { TimeAgo } from 'components/TimeAgo';
@@ -11,7 +11,7 @@ import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const StyledReceiptTable = styled(Table)`
 .ant-table {
@@ -19,7 +19,7 @@ const StyledReceiptTable = styled(Table)`
 }
 `;
 
-const OrgSubscriptionHistoryPanel = (props) => {
+export const OrgSubscriptionHistoryPanel = (props) => {
   const { data } = props;
   const [list, setList] = React.useState(data || []);
 
@@ -35,14 +35,14 @@ const OrgSubscriptionHistoryPanel = (props) => {
 
   const columnDef = [
     {
-      title: 'Subscription from',
+      title: 'Period from',
       align: 'left',
       render: (value, item) => {
         return <Space>
-          <TimeAgo value={item.start} showAgo={false} accurate={false} />
+          <TimeAgo value={item.startAt} showAgo={false} accurate={false} />
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {item?.status === 'alive' && <Tag>current</Tag>}
+          {moment(item.startAt).isBefore() && moment(item.endingAt).isAfter() && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
@@ -52,14 +52,14 @@ const OrgSubscriptionHistoryPanel = (props) => {
       title: 'End',
       align: 'left',
       render: (value, item) => {
-        return item.end ? <TimeAgo value={item.end} showAgo={false} accurate={false} />: null;
+        return item.endingAt ? <TimeAgo value={item.endingAt} showAgo={false} accurate={false} /> : null;
       }
     },
     {
       title: 'Days',
       align: 'center',
       render: (value, item) => {
-        return item.end ? <Text>{moment(item.end).diff(moment(item.start), 'days') + 1}</Text>: null;
+        return item.endingAt ? <Text>{moment(item.endingAt).diff(moment(item.startAt), 'days') + 1}</Text> : null;
       }
     },
     {
@@ -72,47 +72,72 @@ const OrgSubscriptionHistoryPanel = (props) => {
     },
     {
       title: 'Billing',
-      dataIndex: 'payments',
+      dataIndex: 'payment',
       align: 'center',
       width: 370,
-      render: (payments, item) => {
-        return <StyledReceiptTable
-          columns={[
-            {
-              title: 'link',
-              dataIndex: 'amount',
-              align: 'right',
-              width: '33%',
-              render: (amount, item) => <MoneyAmount value={amount} />
-            },
-            {
-              title: 'link',
-              dataIndex: 'createdAt',
-              align: 'right',
-              width: '34%',
-              render: (createdAt, item) => <TimeAgo value={createdAt} showAgo={false} accurate={false} />
-            },
-            {
-              title: 'link',
-              dataIndex: 'id',
-              width: '33%',
-              align: 'right',
-              render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
-            },
-          ]}
-          bordered={false}
-          rowKey="id"
-          showHeader={false}
-          dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
-          pagination={false}
-          scroll={false}
-          locale={{
-            emptyText: '15 day single license free trial'
-          }}
-        // style={{ width: '100%', minWidth: 370 }}
-        />
+      render: (payment, item) => {
+        if(item.type === 'trial') {
+          return 'Single license free trial'
+        }
+        if (!payment) return null;
+
+        const { amount, createdAt, id } = payment;
+        return <Row>
+          <Col span={8}>
+            <MoneyAmount value={amount} />
+          </Col>
+          <Col span={8}>
+            <TimeAgo value={createdAt} showAgo={false} accurate={false} />
+          </Col>
+          <Col span={8}>
+            <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
+          </Col>
+        </Row>
       }
     },
+    // {
+    //   title: 'Billing',
+    //   dataIndex: 'payment',
+    //   align: 'center',
+    //   width: 370,
+    //   render: (payment, item) => {
+    //     return <StyledReceiptTable
+    //       columns={[
+    //         {
+    //           title: 'link',
+    //           dataIndex: 'amount',
+    //           align: 'right',
+    //           width: '33%',
+    //           render: (amount, item) => <MoneyAmount value={amount} />
+    //         },
+    //         {
+    //           title: 'link',
+    //           dataIndex: 'createdAt',
+    //           align: 'right',
+    //           width: '34%',
+    //           render: (createdAt, item) => <TimeAgo value={createdAt} showAgo={false} accurate={false} />
+    //         },
+    //         {
+    //           title: 'link',
+    //           dataIndex: 'id',
+    //           width: '33%',
+    //           align: 'right',
+    //           render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
+    //         },
+    //       ]}
+    //       bordered={false}
+    //       rowKey="id"
+    //       showHeader={false}
+    //       dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
+    //       pagination={false}
+    //       scroll={false}
+    //       locale={{
+    //         emptyText: '15 day single license free trial'
+    //       }}
+    //     // style={{ width: '100%', minWidth: 370 }}
+    //     />
+    //   }
+    // },
   ];
 
   return (
@@ -139,4 +164,3 @@ OrgSubscriptionHistoryPanel.defaultProps = {
   data: []
 };
 
-export default OrgSubscriptionHistoryPanel;
