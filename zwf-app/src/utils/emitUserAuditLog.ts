@@ -1,5 +1,5 @@
 import { UserAudit } from '../entity/UserAudit';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 export function emitUserAuditLog(userId: string, action: string, info: any = null) {
   const entity = new UserAudit();
@@ -8,5 +8,5 @@ export function emitUserAuditLog(userId: string, action: string, info: any = nul
   entity.action = action;
   entity.info = info;
 
-  AppDataSource.getRepository(UserAudit).insert(entity).catch(() => { });
+  db.getRepository(UserAudit).insert(entity).catch(() => { });
 }

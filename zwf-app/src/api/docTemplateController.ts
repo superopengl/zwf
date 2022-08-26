@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { getUtcNow } from './../utils/getUtcNow';
 
 import { EntityManager } from 'typeorm';
@@ -39,7 +39,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   docTemplate.html = html;
   docTemplate.refFields = extractVariables(html);
 
-  await AppDataSource.getRepository(DocTemplate).save(docTemplate);
+  await db.getRepository(DocTemplate).save(docTemplate);
 
   res.json();
 });
@@ -48,7 +48,7 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
 
-  const list = await AppDataSource.getRepository(DocTemplate).find({
+  const list = await db.getRepository(DocTemplate).find({
     where: {
       orgId
     },
@@ -72,7 +72,7 @@ export const getDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
-  const docTemplate = await AppDataSource.getRepository(DocTemplate).findOne({ where: query });
+  const docTemplate = await db.getRepository(DocTemplate).findOne({ where: query });
   assert(docTemplate, 404);
 
   res.json(docTemplate);
@@ -82,7 +82,7 @@ export const deleteDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  await AppDataSource.getRepository(DocTemplate).delete({ id, orgId });
+  await db.getRepository(DocTemplate).delete({ id, orgId });
 
   res.json();
 });
@@ -94,7 +94,7 @@ export const renameDocTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  await AppDataSource.getRepository(DocTemplate).update({ id, orgId }, { name });
+  await db.getRepository(DocTemplate).update({ id, orgId }, { name });
 
   res.json();
 });
@@ -117,7 +117,7 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   let docTemplate: DocTemplate;
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     docTemplate = await m.findOne(DocTemplate, { where: { id, orgId } });
     assert(docTemplate, 404);
 

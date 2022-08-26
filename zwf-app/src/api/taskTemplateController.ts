@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { DocTemplate } from './../entity/DocTemplate';
 import { getUtcNow } from './../utils/getUtcNow';
 
@@ -24,7 +24,7 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   assert(fields?.length || docTemplateIds?.length, 400, 'Neither fields nor doc templates is specified.');
 
 
-  await AppDataSource.manager.transaction(async m => {
+  await db.manager.transaction(async m => {
     const taskTemplate = new TaskTemplate();
     taskTemplate.id = id || uuidv4();
     taskTemplate.orgId = orgId;
@@ -49,7 +49,7 @@ export const renameTaskTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  await AppDataSource.getRepository(TaskTemplate).update({ id, orgId }, { name });
+  await db.getRepository(TaskTemplate).update({ id, orgId }, { name });
 
   res.json();
 });
@@ -58,7 +58,7 @@ export const renameTaskTemplate = handlerWrapper(async (req, res) => {
 export const listTaskTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
-  const list = await AppDataSource.getRepository(TaskTemplate)
+  const list = await db.getRepository(TaskTemplate)
     .find({
       where: {
         orgId
@@ -78,7 +78,7 @@ export const getTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
-  const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOne({ where: query, relations: { docs: true } });
+  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: query, relations: { docs: true } });
   assert(taskTemplate, 404);
 
   res.json(taskTemplate);
@@ -88,7 +88,7 @@ export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  const repo = AppDataSource.getRepository(TaskTemplate);
+  const repo = db.getRepository(TaskTemplate);
   await repo.delete({ id, orgId });
 
   res.json();
@@ -112,7 +112,7 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   let taskTemplate: TaskTemplate;
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     taskTemplate = await m.findOne(TaskTemplate, { where: { id, orgId }, relations: { docs: true } });
     assert(taskTemplate, 404);
 

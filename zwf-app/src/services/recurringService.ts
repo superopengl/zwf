@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { UserInformation } from './../entity/views/UserInformation';
 import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { Recurring } from '../entity/Recurring';
@@ -14,7 +14,7 @@ export const CLIENT_TZ = 'Australia/Sydney';
 export const CRON_EXECUTE_TIME = process.env.NODE_ENV === 'dev' ? moment().add(2, 'minute').format('HH:mm') : '5:00';
 
 export async function testRunRecurring(recurringId: string) {
-  const recurring = await AppDataSource.getRepository(Recurring).findOne({where: {id: recurringId}});
+  const recurring = await db.getRepository(Recurring).findOne({where: {id: recurringId}});
   assert(recurring, 404);
   return executeRecurring(recurring, false);
 }
@@ -23,7 +23,7 @@ export async function executeRecurring(recurring: Recurring, resetNextRunAt: boo
   const { taskTemplateId, userId, name } = recurring;
 
   const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
-  const client = await AppDataSource.getRepository(UserInformation).findOne({where: {id: userId}});
+  const client = await db.getRepository(UserInformation).findOne({where: {id: userId}});
   const clientEmail = client.email;
 
   const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, null);
@@ -32,12 +32,12 @@ export async function executeRecurring(recurring: Recurring, resetNextRunAt: boo
 
   task.status = TaskStatus.TODO;
 
-  await AppDataSource.getRepository(Task).save(task);
+  await db.getRepository(Task).save(task);
 
   if (resetNextRunAt) {
     recurring.lastRunAt = new Date();
     recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
-    await AppDataSource.getRepository(Recurring).save(recurring);
+    await db.getRepository(Recurring).save(recurring);
   }
 
   return task;

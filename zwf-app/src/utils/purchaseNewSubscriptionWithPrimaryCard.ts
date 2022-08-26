@@ -1,7 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';
-import { SubscriptionType } from '../types/SubscriptionType';
+import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { calcNewSubscriptionPaymentInfo } from './calcNewSubscriptionPaymentInfo';
@@ -11,7 +11,8 @@ import { assert } from './assert';
 import { getRequestGeoInfo } from './getIpGeoLocation';
 import { chargeStripeForCardPayment, getOrgStripeCustomerId } from '../services/stripeService';
 import { User } from '../entity/User';
-import { AppDataSource } from '../db';
+import { db } from '../db';
+import { SubscriptionBlock } from '../entity/SubscriptionBlock';
 
 export type PurchaseSubscriptionRequest = {
   orgId: string;
@@ -28,7 +29,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const start = now.toDate();
   const end = now.add(1, 'month').add(-1, 'day').toDate();
 
-  await AppDataSource.manager.transaction(async m => {
+  await db.manager.transaction(async m => {
     const { 
       creditBalance, 
       deduction, 
@@ -43,26 +44,25 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
     const stripeRawResponse = await chargeStripeForCardPayment(payable, stripeCustomerId, stripePaymentMethodId, true);
 
-    // Terminate current subscription
-    await m.update(Subscription, {
-      orgId,
-      status: SubscriptionStatus.Alive
-    }, {
-      end: start,
-      status: SubscriptionStatus.Terminated
-    });
+    // Ends the head subscription block
+    const subscription = await m.findOneBy(Subscription, {orgId});
+    const headBlock = subscription.headBlock;
+    headBlock.endedAt = now.toDate();
 
-    // Create new alive subscription
-    const subscription = new Subscription();
-    subscription.id = uuidv4();
-    subscription.orgId = orgId;
-    subscription.type = SubscriptionType.Monthly;
-    subscription.start = start;
-    subscription.seats = seats;
-    subscription.unitPrice = unitPrice;
-    subscription.recurring = true;
-    subscription.status = SubscriptionStatus.Alive;
-    await m.save(subscription);
+    // Create new subscription block
+    const block = new SubscriptionBlock();
+    block.id = uuidv4();
+    block.orgId = orgId;
+    block.type = SubscriptionBlockType.Monthly;
+    block.parentBlockId = headBlock.id;
+    block.startAt = start;
+    block.endingAt = now.add(1, 'month').add(-1, 'day').endOf('day').toDate()
+    block.seats = seats;
+    block.unitPrice = unitPrice;
+    block.promotionCode = promotionCode;
+
+    subscription.headBlockId = block.id;
+    await m.save([block, headBlock, subscription]);
 
     // Handle refund credit from current unfinished subscrption
     if (refundable > 0) {
@@ -87,8 +87,8 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     const payment = new Payment();
     payment.id = uuidv4();
     payment.orgId = orgId;
-    payment.start = start;
-    payment.end = end;
+    payment.subscriptionId = subscription.id;
+    payment.subscriptionBlockId = block.id;
     payment.rawResponse = stripeRawResponse;
     payment.paidAt = new Date();
     payment.amount = payable;
@@ -97,8 +97,6 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.geo = await getRequestGeoInfo(expressReq);
     payment.orgPaymentMethodId = paymentMethodId;
     payment.creditTransaction = deductCreditTransaction;
-    payment.promotionCode = promotionCode;
-    payment.subscription = subscription;
 
     await m.save(payment);
   });

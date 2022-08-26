@@ -1,0 +1,32 @@
+import { SubscriptionBlock } from '../entity/SubscriptionBlock';
+import { EntityManager } from 'typeorm';
+import * as moment from 'moment';
+import { Subscription } from '../entity/Subscription';
+import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
+import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { v4 as uuidv4 } from 'uuid';
+
+export async function createOrgSubscriptionWithTrial(m: EntityManager, orgId: string) {
+  const now = moment();
+  const subscriptionId = uuidv4();
+
+  const trialBlock = new SubscriptionBlock();
+  trialBlock.id = uuidv4();
+  trialBlock.orgId =orgId;
+  trialBlock.subscriptionId = subscriptionId;
+  trialBlock.type = SubscriptionBlockType.Trial;
+  trialBlock.parentBlockId = null;
+  trialBlock.seats = 1;
+  trialBlock.unitPrice = 0;
+  trialBlock.startAt = now.toDate();
+  trialBlock.endingAt = now.add(14, 'days').endOf('day').toDate();
+
+  const subscription = new Subscription();
+  subscription.id = subscriptionId;
+  subscription.orgId = orgId;
+  subscription.headBlockId = trialBlock.id;
+  subscription.status = SubscriptionStatus.Alive;
+
+  await m.save([trialBlock, subscription]);
+}
+

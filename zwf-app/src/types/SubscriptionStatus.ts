@@ -1,7 +1,6 @@
 
 export enum SubscriptionStatus {
-  Provisioning = 'provisioning',
   Alive = 'alive',
+  Overdue = 'alive-overdue',
   Terminated = 'terminated',
-  Expired = 'expired',
 }

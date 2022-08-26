@@ -1,5 +1,5 @@
 import { getUtcNow } from './../utils/getUtcNow';
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
 import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
 import { TaskAction } from './../entity/TaskAction';
@@ -85,7 +85,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   const isClient = role === Role.Client;
 
-  const file = await AppDataSource.getRepository(File).findOne({
+  const file = await db.getRepository(File).findOne({
     where: {
       id: fileId,
     },
@@ -103,7 +103,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
     const fileItem = value.find(x => x.fileId === fileId);
 
     fileItem.lastClientReadAt = getUtcNow();
-    await AppDataSource.getRepository(TaskField).save(taskField);
+    await db.getRepository(TaskField).save(taskField);
   }
 
   streamFileToResponse(file, res);
@@ -113,7 +113,7 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { fileId } = req.params;
 
-  const file = await AppDataSource.getRepository(File).findOne({
+  const file = await db.getRepository(File).findOne({
     where: {
       id: fileId,
     },
@@ -144,7 +144,7 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
   file.esign = computeTaskFileSignedHash(file.md5, userId, now);
 
   fileItem.signedAt = now;
-  await AppDataSource.manager.save([file, taskField]);
+  await db.manager.save([file, taskField]);
 
   res.json(fileItem);
 });
@@ -157,7 +157,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   assert(fields.length, 400, 'No fields to update');
 
   const query: any = { id, orgId: getOrgIdFromReq(req) };
-  const task = await AppDataSource.getRepository(Task).findOne({
+  const task = await db.getRepository(Task).findOne({
     where: query,
     relations: {
       fields: true,
@@ -179,7 +179,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   const currentFieldIds = fields.map(x => x.id);
   const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
 
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     await m.getRepository(TaskField).save(fields);
     if (deletedFieldIds?.length) {
       await m.getRepository(TaskField).delete(deletedFieldIds);
@@ -214,12 +214,12 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
       assert(false, 404, 'Task is not found');
   }
 
-  const task = await AppDataSource.getRepository(Task).findOne({ where: query, select: { id: true } });
+  const task = await db.getRepository(Task).findOne({ where: query, select: { id: true } });
   assert(task, 404);
 
   const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));
 
-  await AppDataSource.getRepository(TaskField).save(fieldEntities);
+  await db.getRepository(TaskField).save(fieldEntities);
   publishEvent(TASK_CONTENT_EVENT_TYPE, {
     taskId: id,
     fields,
@@ -260,7 +260,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   const { role, id } = (req as any).user;
   const isClient = role === Role.Client;
 
-  let query = AppDataSource.manager
+  let query = db.manager
     .createQueryBuilder()
     .from(TaskInformation, 'x')
     .where(`1 = 1`);
@@ -312,7 +312,7 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const userId = getUserIdFromReq(req);
 
-  const list = await AppDataSource.getRepository(TaskInformation).find({
+  const list = await db.getRepository(TaskInformation).find({
     where: {
       userId,
       status: In([TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE]),
@@ -366,7 +366,7 @@ export const getTask = handlerWrapper(async (req, res) => {
       break;
   }
 
-  const task = await AppDataSource.getRepository(Task).findOne({
+  const task = await db.getRepository(Task).findOne({
     where: query,
     relations,
     order: {
@@ -390,7 +390,7 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   const { fieldId } = req.params;
 
-  const taskField = await AppDataSource.getRepository(TaskField).findOne({
+  const taskField = await db.getRepository(TaskField).findOne({
     where: {
       id: fieldId,
     },
@@ -420,7 +420,7 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   fileEntity.md5 = md5;
   fileEntity.public = false;
 
-  await AppDataSource.manager.save(fileEntity);
+  await db.manager.save(fileEntity);
 
   res.json({
     fileId: fileId,
@@ -450,7 +450,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
       assert(false, 500);
   }
 
-  const task = await AppDataSource.getRepository(Task).findOne({
+  const task = await db.getRepository(Task).findOne({
     where: query,
     select: {
       id: true,
@@ -467,7 +467,7 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { tags: tagIds } = req.body;
 
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     const task = await m.findOne(Task, {
       where: { id },
       select: {
@@ -488,7 +488,7 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
   const { name } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  await AppDataSource.getRepository(Task).update({
+  await db.getRepository(Task).update({
     id,
     orgId,
   }, { name });
@@ -503,7 +503,7 @@ export const assignTask = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     await m.update(Task, { id, orgId }, { agentId });
     await logTaskAssigned(m, id, userId, agentId);
   });
@@ -517,7 +517,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     const task = await m.findOneOrFail(Task, { where: { id, orgId } });
     const oldStatus = task.status;
     const newStatus = status as TaskStatus;
@@ -536,7 +536,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
-  const task = await AppDataSource.getRepository(Task).findOne({
+  const task = await db.getRepository(Task).findOne({
     where: {
       id,
       orgId
@@ -546,7 +546,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 
   const message = req.body.message?.trim();
   if (message) {
-    await logTaskChat(AppDataSource.manager, task.id, userId, message);
+    await logTaskChat(db.manager, task.id, userId, message);
   }
 
   const taskUrl = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;
@@ -581,7 +581,7 @@ export const getTaskHistory = handlerWrapper(async (req, res) => {
     default:
       break;
   }
-  const list = await AppDataSource.getRepository(TaskHistoryInformation).find({ where: query });
+  const list = await db.getRepository(TaskHistoryInformation).find({ where: query });
 
   res.json(list);
 });

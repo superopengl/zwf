@@ -125,17 +125,17 @@ export const RichTextInput = React.memo((props) => {
           automatic_uploads: true,
           // autoresize_bottom_margin: 100,
           onpageload: handleEditorLoad,
-          images_upload_handler2: (blobInfo, success, failure, progress) => {
-            const imageSize = blobInfo.blob().size;
-            const maxSize = 1 * 1000 * 1000;
-            if (imageSize > maxSize) {
-              failure(`Image is too large. Maximum image size is ${maxSize / 1000 / 1000} MB`);
-              return;
-            }
-            const uri = blobInfo.blobUri()
-            success(uri);
-            progress(100);
-          },
+          // images_upload_handler2: (blobInfo, success, failure, progress) => {
+          //   const imageSize = blobInfo.blob().size;
+          //   const maxSize = 1 * 1000 * 1000;
+          //   if (imageSize > maxSize) {
+          //     failure(`Image is too large. Maximum image size is ${maxSize / 1000 / 1000} MB`);
+          //     return;
+          //   }
+          //   const uri = blobInfo.blobUri()
+          //   success(uri);
+          //   progress(100);
+          // },
           placeholder,
           ...editorConfig
         }}

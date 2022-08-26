@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -10,7 +10,7 @@ import { OrgConfig } from '../entity/OrgConfig';
 export const listConfig = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const orgId = getOrgIdFromReq(req);
-  const list = await AppDataSource.getRepository(SystemConfig).find({
+  const list = await db.getRepository(SystemConfig).find({
     order: { key: 'ASC' }
   });
   res.json(list);
@@ -28,7 +28,7 @@ export const saveConfig = handlerWrapper(async (req, res) => {
     (item as OrgConfig).orgId = orgId;
   }
 
-  await AppDataSource
+  await db
     .createQueryBuilder()
     .insert()
     .into(orgId ? OrgConfig : SystemConfig)

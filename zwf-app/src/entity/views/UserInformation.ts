@@ -7,8 +7,8 @@ import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
-import { OrgAliveSubscription } from './OrgAliveSubscription';
-import { SubscriptionType } from '../../types/SubscriptionType';
+import { OrgCurrentSubscriptionInformation } from './OrgCurrentSubscriptionInformation';
+import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 
 
 @ViewEntity({
@@ -17,7 +17,7 @@ import { SubscriptionType } from '../../types/SubscriptionType';
     .where(`u."deletedAt" IS NULL`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
-    .leftJoin(OrgAliveSubscription, 's', 's."orgId" = u."orgId"')
+    .leftJoin(OrgCurrentSubscriptionInformation, 's', 's."orgId" = u."orgId"')
     .leftJoin(q => q
       .from('user_tags_tag', 'tg')
       .groupBy('tg."userId"')
@@ -38,12 +38,14 @@ import { SubscriptionType } from '../../types/SubscriptionType';
       'p.surname as surname',
       'o.name as "orgName"',
       'u."orgOwner" as "orgOwner"',
+      'u.overdue as overdue',
+      'u.suspended as suspended',
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
-      'CASE WHEN s."subscriptionId" IS NULL THEN FALSE ELSE TRUE END as "subscriptionAlive"',
+      's.enabled as "subscriptionEnabled"',
       'tg.tags as tags',
     ]),
-  dependsOn: [User, UserProfile, Org, OrgAliveSubscription]
+  dependsOn: [User, UserProfile, Org, OrgCurrentSubscriptionInformation]
 })
 export class UserInformation {
   @ViewColumn()
@@ -81,13 +83,19 @@ export class UserInformation {
   orgOwner: boolean;
 
   @ViewColumn()
+  overdue: boolean;
+
+  @ViewColumn()
+  suspended: boolean;
+
+  @ViewColumn()
   avatarFileId: string;
 
   @ViewColumn()
   avatarColorHex: string;
 
   @ViewColumn()
-  subscriptionAlive?: boolean;
+  subscriptionEnabled?: boolean;
 
   @ViewColumn()
   tags: string[];

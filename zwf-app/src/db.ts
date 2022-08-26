@@ -23,7 +23,7 @@ import { File } from './entity/File';
 import { DataSource } from 'typeorm';
 import { initializeConfig } from './utils/initializeConfig';
 import { redisCache } from './services/redisCache';
-import { OrgAliveSubscription } from './entity/views/OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from './entity/views/OrgCurrentSubscriptionInformation';
 import { OrgBasicInformation } from './entity/views/OrgBasicInformation';
 import { OrgPaymentMethod } from './entity/OrgPaymentMethod';
 import { CreditTransaction } from './entity/CreditTransaction';
@@ -42,12 +42,11 @@ import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
 import { OrgClientInformation } from './entity/views/OrgClientInformation';
 import { ReceiptInformation } from './entity/views/ReceiptInformation';
-import { OrgCurrentSubscriptionRefund } from './entity/views/OrgCurrentSubscriptionRefund';
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
-import { UserAliveSubscriptionInformation } from './entity/views/UserAliveSubscriptionInformation';
 import { SubscriptionEndingNotificationEmailInformation } from './entity/views/SubscriptionEndingNotificationEmailInformation';
+import { SubscriptionBlock } from './entity/SubscriptionBlock';
 dotenv.config();
 
 const views = [
@@ -76,14 +75,14 @@ const mviews = [
 ];
 
 export async function connectDatabase(shouldSyncSchema = false) {
-  await AppDataSource.initialize();
+  await db.initialize();
   // const connection = await createConnection();
   // if (shouldSyncSchema) {
   //   await syncDatabaseSchema(connection);
   await initializeData();
   // }
   // return connection;
-  return AppDataSource;
+  return db;
 }
 
 async function initializeData() {
@@ -110,7 +109,7 @@ async function syncDatabaseSchema(connection: DataSource) {
 }
 
 async function dropAllViewsAndMatviews() {
-  const list = await AppDataSource.manager.query(`
+  const list = await db.manager.query(`
 select format('DROP VIEW IF EXISTS "%I"."%I" cascade;', schemaname, viewname) as sql
 from pg_catalog.pg_views
 where schemaname = 'zwf'
@@ -121,7 +120,7 @@ where schemaname = 'zwf'
   `);
 
   for (const item of list) {
-    await AppDataSource.manager.query(item.sql);
+    await db.manager.query(item.sql);
   }
 }
 
@@ -134,10 +133,10 @@ async function createIndexOnMaterilializedView() {
   ];
 
   for (const item of list) {
-    const { schema, tableName } = AppDataSource.getRepository(item.tableEntity).metadata;
+    const { schema, tableName } = db.getRepository(item.tableEntity).metadata;
     const idxName = `${tableName}_${item.fields.map(x => x.replace(/"/g, '')).join('_')}`;
     const fields = item.fields.join(',');
-    await AppDataSource.manager.query(`CREATE INDEX ${idxName} ON "${schema}"."${tableName}" (${fields})`);
+    await db.manager.query(`CREATE INDEX ${idxName} ON "${schema}"."${tableName}" (${fields})`);
   }
 }
 
@@ -152,15 +151,15 @@ export async function refreshMaterializedView(mviewEnitity?: any) {
     const targetViews = mviewEnitity ? [mviewEnitity] : mviews;
     for (const viewEntity of targetViews) {
       await redisCache.setex(REFRESHING_MV_CACHE_KEY, 5 * 60, true);
-      const { schema, tableName } = AppDataSource.manager.getRepository(viewEntity).metadata;
-      await AppDataSource.manager.query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
+      const { schema, tableName } = db.manager.getRepository(viewEntity).metadata;
+      await db.manager.query(`REFRESH MATERIALIZED VIEW "${schema}"."${tableName}"`);
     }
   } finally {
     await redisCache.del(REFRESHING_MV_CACHE_KEY);
   }
 }
 
-export let AppDataSource = new DataSource({
+export const db = new DataSource({
   type: 'postgres',
   host: process.env.TYPEORM_HOST || 'localhost',
   port: +(process.env.TYPEORM_PORT || 5432),
@@ -193,6 +192,7 @@ export let AppDataSource = new DataSource({
     EmailLog,
     Message,
     Subscription,
+    SubscriptionBlock,
     Payment,
     OrgPaymentMethod,
     ResourcePage,
@@ -203,7 +203,7 @@ export let AppDataSource = new DataSource({
     UserInformation,
     OrgClientStatInformation,
     OrgMemberInformation,
-    OrgAliveSubscription,
+    OrgCurrentSubscriptionInformation,
     Recurring,
     SupportUserLastAccess,
     SupportUserUnreadInformation,
@@ -214,7 +214,6 @@ export let AppDataSource = new DataSource({
     TaskTagsTag,
     OrgClientInformation,
     OrgBasicInformation,
-    OrgCurrentSubscriptionRefund,
     SupportInformation,
     SupportPendingReplyInformation,
     EmailSentOutTask,
@@ -223,7 +222,6 @@ export let AppDataSource = new DataSource({
     SystemConfig,
     RecurringInformation,
     ReceiptInformation,
-    UserAliveSubscriptionInformation,
     SubscriptionEndingNotificationEmailInformation,
   ],
 });

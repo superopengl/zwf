@@ -3,6 +3,7 @@ import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { CreditTransaction } from './CreditTransaction';
 import { Subscription } from './Subscription';
+import { SubscriptionBlock } from "./SubscriptionBlock";
 
 @Entity()
 @Index(['orgId', 'createdAt'])
@@ -22,52 +23,43 @@ export class Payment {
   @Index()
   orgId: string;
 
+  @Column('uuid')
+  subscriptionId: string;
+
+  @Column('uuid', {nullable: true})
+  subscriptionBlockId: string;
+
+  @Column('uuid', { nullable: true })
+  creditTransactionId: string;
+
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
 
-  @Column('uuid', { nullable: true })
+  @Column('uuid')
   orgPaymentMethodId: string;
 
   @Column('jsonb', { nullable: true })
   rawResponse: object;
 
   @Column()
-  @Index()
   status: PaymentStatus;
 
   @Column({ nullable: true })
-  @Index()
   paidAt?: Date;
-
-  @Column('date')
-  start: Date;
-
-  @Column('date')
-  end: Date;
 
   @Column({ default: false })
   auto: boolean;
 
-  @Column({ default: 1 })
-  attempt: number;
-
   @Column('jsonb', { nullable: true })
   geo: object;
-
-  @ManyToOne(() => Subscription, subscription => subscription.payments, { onDelete: 'CASCADE' })
+  @OneToOne(() => Subscription)
   @JoinColumn({ name: 'subscriptionId', referencedColumnName: 'id' })
   subscription: Subscription;
-
-  @Column()
-  subscriptionId: string;
-
-  @Column({nullable: true})
-  promotionCode: string;
 
   @OneToOne(() => CreditTransaction, { nullable: true, cascade: true })
   @JoinColumn({ name: 'creditTransactionId', referencedColumnName: 'id' })
   creditTransaction: CreditTransaction;
 
-  @Column('uuid', { nullable: true })
-  creditTransactionId: string;
+  @OneToOne(() => SubscriptionBlock, block => block.payment , { onDelete: 'CASCADE' })
+  subscriptionBlock: SubscriptionBlock;
 }

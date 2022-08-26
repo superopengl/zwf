@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Org } from '../entity/Org';
@@ -6,26 +6,26 @@ import { User } from '../entity/User';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
-import { createOrgTrialSubscription } from '../utils/createOrgTrialSubscription';
+import { createOrgSubscriptionWithTrial } from '../utils/createOrgSubscriptionWithTrial';
 import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { SubscriptionType } from '../types/SubscriptionType';
+import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { assert } from '../utils/assert';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { user: { id } } = req as any;
-  const { orgId } = await AppDataSource.getRepository(User).findOne({ where: { id } });
-  const org = orgId ? await AppDataSource.getRepository(Org).findOne({ where: { id: orgId } }) : null;
+  const { orgId } = await db.getRepository(User).findOne({ where: { id } });
+  const org = orgId ? await db.getRepository(Org).findOne({ where: { id: orgId } }) : null;
   res.json(org);
 });
 
 export const listOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { user: { id } } = req as any;
-  const list = await AppDataSource.getRepository(OrgBasicInformation).find({});
+  const list = await db.getRepository(OrgBasicInformation).find({});
   res.json(list);
 });
 
@@ -34,11 +34,11 @@ export const saveOrgProfile = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   assert(orgId, 400, 'orgId not found');
 
-  const orgInDb = await AppDataSource.getRepository(Org).findOneBy({id: orgId });
+  const orgInDb = await db.getRepository(Org).findOneBy({id: orgId });
 
   const org = {...orgInDb, ...req.body, orgId};
 
-  await AppDataSource.getRepository(Org).save(org);
+  await db.getRepository(Org).save(org);
 
   res.json();
 });
@@ -47,7 +47,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const userId = getUserIdFromReq(req);
   const { name, domain, businessName, country, address, tel, abn } = req.body;
-  const userEnitty = await AppDataSource.getRepository(User).findOne({ where: { id: userId } });
+  const userEnitty = await db.getRepository(User).findOne({ where: { id: userId } });
 
   const isFirstSave = !userEnitty.orgId;
 
@@ -62,7 +62,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
 
     if (isFirstSave) {
       userEnitty.orgId = orgId;
@@ -71,7 +71,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     }
 
     await m.save(org);
-    await createOrgTrialSubscription(m, orgId);
+    await createOrgSubscriptionWithTrial(m, orgId);
   });
 
   res.json();

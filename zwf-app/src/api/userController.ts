@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { UserInformation } from './../entity/views/UserInformation';
 import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
 import { Tag } from '../entity/Tag';
@@ -28,7 +28,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
   const { password, newPassword } = req.body;
   validatePasswordStrength(newPassword);
 
-  const repo = AppDataSource.getRepository(User);
+  const repo = db.getRepository(User);
   const { user: { id } } = req as any;
   const user = await repo.findOne({where: {id}});
   assert(password && newPassword && user.secret === computeUserSecret(password, user.salt), 400, 'Invalid password');
@@ -46,7 +46,7 @@ export const getUserBrief = handlerWrapper(async (req, res) => {
   assertRole(req, Role.System, Role.Admin, Role.Agent, Role.Client);
   const { id } = req.params;
 
-  const data = await AppDataSource.getRepository(UserInformation).findOne({
+  const data = await db.getRepository(UserInformation).findOne({
     where: { id },
     select: [
       'id',
@@ -65,7 +65,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   assertRole(req, Role.System, Role.Admin, Role.Agent, Role.Client);
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
-  const repo = AppDataSource.getRepository(User);
+  const repo = db.getRepository(User);
   const userQuery: any = { id };
   switch (role) {
     case Role.Agent:
@@ -100,12 +100,12 @@ export const saveProfile = handlerWrapper(async (req, res) => {
       user.emailHash = newEmailHash;
       user.profile.email = email;
 
-      await inviteOrgMemberWithSendingEmail(AppDataSource.manager, user, user.profile);
+      await inviteOrgMemberWithSendingEmail(db.manager, user, user.profile);
     }
   }
 
   if (!hasEmailChange) {
-    await AppDataSource.manager.save(user.profile);
+    await db.manager.save(user.profile);
   }
 
   if (id === loginUserId) {
@@ -120,7 +120,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 export const listOrgMembers = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
-  const list = await AppDataSource.getRepository(OrgMemberInformation).find({ where: { orgId } });
+  const list = await db.getRepository(OrgMemberInformation).find({ where: { orgId } });
   res.json(list);
 });
 
@@ -155,7 +155,7 @@ const BUILTIN_SYSTEM_ADMIN_EMIAL_HASH = computeEmailHash('admin@zeeworkflow.com'
 export const listAllUsers = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
 
-  const list = await AppDataSource.getRepository(UserProfile)
+  const list = await db.getRepository(UserProfile)
     .createQueryBuilder('p')
     .innerJoin(User, 'u', `u."profileId" = p.id AND u."deletedAt" IS NULL`)
     .select([
@@ -173,7 +173,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin');
   const { id } = req.params;
 
-  const repo = AppDataSource.getRepository(User);
+  const repo = db.getRepository(User);
   const user = await repo.findOne({
     where: {
       id,
@@ -185,7 +185,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   if (user) {
     const { profileId } = user;
 
-    await AppDataSource.transaction(async m => {
+    await db.transaction(async m => {
       await m.getRepository(User).softDelete(id);
       await m.getRepository(UserProfile).delete(profileId);
     });
@@ -199,10 +199,10 @@ export const setUserTags = handlerWrapper(async (req, res) => {
   const { id } = req.params;
 
   const { tags: tagIds } = req.body;
-  const repo = AppDataSource.getRepository(User);
+  const repo = db.getRepository(User);
   const user = await repo.findOne({ where: { id } });
   if (tagIds?.length) {
-    user.tags = await AppDataSource.getRepository(Tag).find({
+    user.tags = await db.getRepository(Tag).find({
       where: {
         id: In(tagIds)
       }
@@ -221,7 +221,7 @@ export const setUserRole = handlerWrapper(async (req, res) => {
   const { role } = req.body;
   assert([Role.Admin, Role.Agent].includes(role), 400, `Invalid role ${role}`);
 
-  await AppDataSource.manager.update(User, {
+  await db.manager.update(User, {
     id,
     orgId,
     orgOwner: false,
@@ -238,7 +238,7 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
   const { password } = req.body;
   assert(password, 404, 'Invalid password');
 
-  const repo = AppDataSource.getRepository(User);
+  const repo = db.getRepository(User);
   const newSalt = uuidv4();
   const newSecret = computeUserSecret(password, newSalt);
   await repo.update(id, { secret: newSecret, salt: newSalt });
@@ -249,7 +249,7 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
 export const listMyCreditHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const list = await AppDataSource.getRepository(CreditTransaction)
+  const list = await db.getRepository(CreditTransaction)
     .createQueryBuilder('uc')
     .where('uc."orgId" = :orgId', { orgId })
     // .andWhere('uc.amount != 0')
@@ -269,7 +269,7 @@ export const listMyCreditHistory = handlerWrapper(async (req, res) => {
 export const listUserCreditHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { id } = req.params;
-  const list = await AppDataSource.getRepository(CreditTransaction)
+  const list = await db.getRepository(CreditTransaction)
     .createQueryBuilder('uc')
     .where('uc."orgId" = :id', { id })
     .leftJoin(q => q.from(User, 'u'), 'u', 'uc."referredUserId" = u.id')

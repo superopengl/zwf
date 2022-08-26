@@ -10,7 +10,7 @@ import { User } from '../entity/User';
 import * as moment from 'moment-timezone';
 import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 export const CLIENT_TZ = 'Australia/Sydney';
 
@@ -25,13 +25,13 @@ function logging(log: {
   sysLog.level = 'info';
   Object.assign(sysLog, log);
   sysLog.createdBy = 'cron';
-  AppDataSource.getRepository(SysLog).save(sysLog).catch(err => {
+  db.getRepository(SysLog).save(sysLog).catch(err => {
     console.error('Logging error', errorToJSON(err));
   });
 }
 
 export async function testRunRecurring(recurringId: string) {
-  const recurring = await AppDataSource.getRepository(Recurring).findOne({where: {id: recurringId}});
+  const recurring = await db.getRepository(Recurring).findOne({where: {id: recurringId}});
   assert(recurring, 404);
   return executeRecurring(recurring, false);
 }
@@ -39,7 +39,7 @@ export async function testRunRecurring(recurringId: string) {
 async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
   const { name, taskTemplateId } = recurring;
 
-  // const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOneBy({id: taskTemplateId});
+  // const taskTemplate = await db.getRepository(TaskTemplate).findOneBy({id: taskTemplateId});
   const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
   // const task = await generateTaskByTaskTemplateAndPortfolio(
   //   taskTemplateId,
@@ -51,12 +51,12 @@ async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
 
   task.status = TaskStatus.TODO;
 
-  await AppDataSource.getRepository(Task).save(task);
+  await db.getRepository(Task).save(task);
 
   if (resetNextRunAt) {
     recurring.lastRunAt = new Date();
     recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
-    await AppDataSource.getRepository(Recurring).save(recurring);
+    await db.getRepository(Recurring).save(recurring);
   }
 
   return task;

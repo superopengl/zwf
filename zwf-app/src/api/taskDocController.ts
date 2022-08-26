@@ -16,7 +16,7 @@ import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { DocTemplate } from '../entity/DocTemplate';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { generatePdfDocFile } from '../services/genDocService';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -24,7 +24,7 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
 
   let result: any;
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     const taskField = await m.getRepository(TaskField).findOne({
       where: {
         id: fieldId

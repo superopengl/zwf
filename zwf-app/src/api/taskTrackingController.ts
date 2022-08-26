@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { TaskStatus } from './../types/TaskStatus';
 import { TaskTrackingInformation } from '../entity/views/TaskTrackingInformation';
 import { TaskTracking } from './../entity/TaskTracking';
@@ -25,7 +25,7 @@ export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const userId = getUserIdFromReq(req);
-  await nudgeTrackingAccess(AppDataSource.manager, id, userId);
+  await nudgeTrackingAccess(db.manager, id, userId);
   res.json();
 });
 
@@ -37,7 +37,7 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
 
   let list;
-  await AppDataSource.manager.transaction(async m => {
+  await db.manager.transaction(async m => {
     list = await m.find(TaskTrackingInformation, {
       where: {
         taskId: id,
@@ -70,7 +70,7 @@ export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) 
   const page = +req.query.page || 1;
   const size = +req.query.size || 50;
 
-  const list = await AppDataSource.getRepository(TaskTrackingInformation).find({
+  const list = await db.getRepository(TaskTrackingInformation).find({
     where: {
       userId,
       status: In([TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE])
@@ -147,13 +147,13 @@ export const createNewTaskTracking = handlerWrapper(async (req, res) => {
   const { message } = req.body;
   assert(message, 400, 'Empty message body');
 
-  const taskRepo = AppDataSource.getRepository(Task);
+  const taskRepo = db.getRepository(Task);
   const task = await taskRepo.findOne({where: {id: taskId}});
   assert(task, 404);
 
   const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
 
-  const m = AppDataSource.manager;
+  const m = db.manager;
   await logTaskChat(m, taskId, senderId, message);
 
   res.json();
