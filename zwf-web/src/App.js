@@ -14,10 +14,10 @@ import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppLoggedIn } from 'AppLoggedIn';
-import PortalApp from 'pages/PortalApp';
+import { PortalPage } from 'pages/PortalPage';
 import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
-import {HomePage} from 'pages/HomePage';
+import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
@@ -136,7 +136,7 @@ export const App = React.memo(() => {
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Routes>
-              <Route path={'/'} element={<PortalApp />} >
+              <Route path={'/'} element={<PortalPage />} >
                 <Route index element={<HomePage />} />
                 <Route path="resource" element={<ResourceListPage />} />
                 <Route path="resource/:id" element={<ResourcePage />} />
