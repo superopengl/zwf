@@ -27,25 +27,25 @@ const COLUMN_DEFS = [
   {
     status: 'todo',
     label: 'To Do',
-    bgColor: '#d9d9d922',
+    bgColor: '#F1F2F5',
     hoverColor: '#d9d9d9',
   },
   {
     status: 'in_progress',
     label: 'In Progress',
-    bgColor: '#37AFD222',
+    bgColor: '#F1F2F5',
     hoverColor: '#37AFD2',
   },
   {
     status: 'action_required',
     label: `Await Client's Actions`,
-    bgColor: '#cf222e22',
+    bgColor: '#F1F2F5',
     hoverColor: '#cf222e',
   },
   {
     status: 'done',
     label: 'Completed',
-    bgColor: '#2da44e22',
+    bgColor: '#F1F2F5',
     hoverColor: '#2da44e',
   },
 ]
@@ -54,7 +54,7 @@ export const TaskBoardPanel = props => {
   const { tasks, onChange, searchText } = props;
 
   return <DndProvider backend={HTML5Backend}>
-    <StyledRow gutter={10}>
+    <StyledRow gutter={20}>
       {COLUMN_DEFS.map((s, i) => <TaskBoardColumn
         status={s.status}
         key={i}

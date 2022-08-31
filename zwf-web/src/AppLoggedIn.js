@@ -55,7 +55,7 @@ const { Link: LinkText } = Typography;
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
-  // background-color: white;
+  background-color: #f8f8fa;
 }
 
 .ant-pro-global-header {
@@ -70,7 +70,7 @@ const StyledLayout = styled(ProLayout)`
   padding: 0 0 16px 16px;
   .ant-typography {
     font-size: 12px;
-    color: rgba(255,255,255,0.45);
+    color: #7787A2;
   }
 }
 
@@ -211,7 +211,7 @@ export const AppLoggedIn = React.memo(props => {
     // logo="/header-logo.png"
     route={{ routes }}
     location={{ pathname }}
-    navTheme="dark"
+    navTheme="light"
     siderWidth={230}
     fixSiderbar={true}
     fixedHeader={true}
@@ -271,7 +271,7 @@ export const AppLoggedIn = React.memo(props => {
     )}
     menuFooterRender={props => (
       props?.collapsed ?
-        <QuestionOutlined style={{ color: 'rgba(255,255,255,0.95' }} onClick={() => setCollapsed(!collapsed)} /> :
+        <QuestionOutlined style={{ color: '#7787A2' }} onClick={() => setCollapsed(!collapsed)} /> :
         <Space direction="vertical" style={{ width: 188 }}>
           <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
           <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
