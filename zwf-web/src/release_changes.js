@@ -1,2 +1,3 @@
 export const notes=`
-temp fix for subscription cron`
+separate google sso register and login
+albe to google sso to register org`

@@ -6,7 +6,7 @@ import Icon, {
   BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
 } from '@ant-design/icons';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
-import { Space, Typography, Modal, Row, Col } from 'antd';
+import { Space, Typography, Modal, Row, Col, Button } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import AboutModal from 'pages/About/AboutModal';
@@ -51,7 +51,7 @@ const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPa
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
 const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
-const { Link: LinkText } = Typography;
+const { Link: LinkText, Text } = Typography;
 
 const StyledLayout = styled(ProLayout)`
 .ant-layout {
@@ -64,6 +64,10 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-pro-global-header-collapsed-button {
   margin-right: 16px;
+}
+
+.ant-pro-sider {
+  background-color: #F1F2F5
 }
 
 .ant-pro-sider-footer {
@@ -79,16 +83,20 @@ const StyledLayout = styled(ProLayout)`
 
 const ROUTES = [
   {
+    group: 'Task',
+  },
+
+  {
     path: '/task',
     name: <FormattedMessage id="menu.tasks" />,
     icon: <Icon component={HiOutlineViewList }/>,
-    roles: ['admin', 'agent', 'client']
+    roles: ['admin', 'agent', 'client'],
   },
   {
     path: '/activity',
     name: 'Interactions & Messages',
     icon: <Icon component={AiOutlineHistory} />,
-    roles: ['client']
+    roles: ['client'],
   },
   // {
   //   path: '/metrics',
@@ -101,43 +109,43 @@ const ROUTES = [
     path: '/scheduler',
     name: <FormattedMessage id="menu.scheduler" />,
     icon: <ClockCircleOutlined />,
-    roles: ['admin', 'agent']
+    roles: ['admin', 'agent'],
+  },
+  {
+    group: 'Templates',
   },
   {
     path: '/task_template',
     name: <FormattedMessage id="menu.taskTemplate" />,
     icon: <Icon component={ImInsertTemplate } />,
-    roles: ['admin', 'agent']
+    roles: ['admin', 'agent'],
   },
   {
     path: '/doc_template',
     name: <FormattedMessage id="menu.docTemplate" />,
     icon: <FileOutlined />,
-    roles: ['admin', 'agent']
+    roles: ['admin', 'agent'],
   },
-  // {
-  //   path: '/procedure',
-  //   name: <FormattedMessage id="menu.procedure" />,
-  //   icon: <Icon component={GoTools } /> />,
-  //   roles: ['admin']
-  // },
+  {
+    group: 'Admin',
+  },
   {
     path: '/support',
     name: 'User Support',
     icon: <Icon component={MdMessage } />,
-    roles: ['system']
+    roles: ['system'],
   },
   {
     path: '/manage/resource',
     name: 'Resource Pages',
     icon: <Icon component={MdOutlinePages } />,
-    roles: ['system']
+    roles: ['system'],
   },
   {
     path: '/org',
     name: <FormattedMessage id="menu.org" />,
     icon: <BankOutlined />,
-    roles: ['system']
+    roles: ['system'],
   },
   {
     path: '/client',
@@ -150,6 +158,9 @@ const ROUTES = [
     name: <FormattedMessage id="menu.team" />,
     icon: <Icon component={HiOutlineUserGroup } />,
     roles: ['admin'],
+  },
+  {
+    group: 'Others',
   },
   {
     path: '/account',
@@ -174,6 +185,7 @@ const ROUTES = [
     name: <FormattedMessage id="menu.config" />,
     icon: <SettingOutlined />,
     roles: ['system'],
+    group: 'Others',
   },
 ];
 
@@ -219,6 +231,10 @@ export const AppLoggedIn = React.memo(props => {
     collapsed={collapsed}
     onCollapse={setCollapsed}
     menuItemRender={(item, dom) => {
+      if(item.group) {
+        return <Text type="secondary" style={{fontSize: 'small'}}>{item.group}</Text>
+      }
+      // return <Button type="text" block size="large" icon={item.icon}>{item.name}</Button>
       return <Link to={item.path} onClick={() => {
         setPathname(item.path);
       }}>
