@@ -8,8 +8,8 @@ import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Divider } from 'antd';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { GoogleSsoButton } from 'components/GoogleSsoButton';
+import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
 const { Title, Text, Paragraph } = Typography;
 
@@ -127,6 +127,7 @@ const OrgSignUpForm = (props) => {
       </Form>
       <Divider>or</Divider>
       <GoogleSsoButton
+        type="register"
         render={
           renderProps => (
             <GoogleButton

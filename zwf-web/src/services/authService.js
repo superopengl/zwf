@@ -45,6 +45,10 @@ export function inviteClient$(email) {
   return httpPost$(`auth/invite/client`, { email });
 }
 
-export function ssoGoogle$(token) {
-  return httpPost$(`auth/sso/google`, { token });
+export function ssoGoogleRegisterOrg$(token) {
+  return httpPost$(`auth/register/google`, { token });
+}
+
+export function ssoGoogleLogin$(token) {
+  return httpPost$(`auth/login/google`, { token });
 }

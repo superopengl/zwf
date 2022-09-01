@@ -8,6 +8,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import smoothscroll from 'smoothscroll-polyfill';
 import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
+import { OrgRegisterModal } from 'components/OrgRegisterModal';
 
 const { Text } = Typography;
 
@@ -42,10 +43,20 @@ const scrollToElement = (selector) => {
 
 
 export const PortalPage = () => {
+
   const navigate = useNavigate();
+  const [visible, setVisible] = React.useState(false);
 
   const handleMenuChange = (path) => {
     navigate(path);
+  }
+
+  const handleShowModal = () => {
+    setVisible(true);
+  }
+
+  const handleHideModal = () => {
+    setVisible(false);
   }
 
   return <StyledLayoutPage>
@@ -69,9 +80,7 @@ export const PortalPage = () => {
             </Link>
           </Col>
           <Col>
-            <Link to="/signup/org">
-              <Button type="primary">Try it Now</Button>
-            </Link>
+            <Button type="primary" onClick={handleShowModal}>Try it Now</Button>
           </Col>
         </Row>
       </Space>
@@ -80,6 +89,11 @@ export const PortalPage = () => {
       <Outlet />
     </Layout.Content>
     <HomeFooter />
+    <OrgRegisterModal
+      visible={visible}
+      onOk={handleHideModal}
+      onCancel={handleHideModal}
+    />
   </StyledLayoutPage>
 }
 

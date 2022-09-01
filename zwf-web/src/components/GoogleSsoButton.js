@@ -3,17 +3,25 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GlobalContext } from '../contexts/GlobalContext';
-import { ssoGoogle$ } from 'services/authService';
+import { ssoGoogleRegisterOrg$, ssoGoogleLogin$ } from 'services/authService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
-import { concat, zip, of } from 'rxjs';
-import { switchMap, take } from 'rxjs/operators';
+import PropTypes from 'prop-types';
 
-const GoogleSsoButton = props => {
+export const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
   const { setUser } = context;
-  const { render } = props;
+  const { render, type } = props;
   const navigate = useNavigate();
+
+  const loginWithUser = (user) => {
+    if (!user) {
+      throw new Error('User is null');
+    }
+    setUser(user);
+    const isAdminFirstLogin = user.role === 'admin' && !user.orgId;
+    navigate(isAdminFirstLogin ? '/onboard' : '/task');
+  }
 
   const handleGoogleSso = (response) => {
     console.log('Google sso', response);
@@ -22,17 +30,20 @@ const GoogleSsoButton = props => {
       return;
     }
 
-    ssoGoogle$(tokenId)
-      .subscribe(
-        (user) => {
-          if (user) {
-            setUser(user);
-            const isAdminFirstLogin = user.role === 'admin' && !user.orgId;
-            navigate(isAdminFirstLogin ? '/onboard' : '/task');
-          }
-        },
-        err => notify.error('Failed to log in with Google')
-      );
+    if (type === 'register') {
+      ssoGoogleRegisterOrg$(tokenId)
+        .subscribe((user) => loginWithUser(user),
+          err => notify.error('Failed to register with Google')
+        );
+    } else if (type === 'login') {
+      ssoGoogleLogin$(tokenId)
+        .subscribe(user => loginWithUser(user),
+          err => notify.error('Failed to log in with Google')
+        );
+    } else {
+      throw new Error(`Unsupported type ${type}`);
+    }
+
   }
 
   return <GoogleLogin
@@ -48,4 +59,9 @@ const GoogleSsoButton = props => {
   />
 }
 
-export default GoogleSsoButton;
+GoogleSsoButton.propTypes = {
+  type: PropTypes.oneOf(['register', 'login'])
+};
+
+GoogleSsoButton.defaultProps = {
+};

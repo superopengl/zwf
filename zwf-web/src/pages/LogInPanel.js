@@ -4,8 +4,8 @@ import { Input, Button, Form, Divider } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { login$ } from 'services/authService';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { GoogleSsoButton } from 'components/GoogleSsoButton';
+import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import { zip, of } from 'rxjs';
 import { finalize, switchMap } from 'rxjs/operators';
 import { getMyOrgProfile$ } from 'services/orgService';
@@ -60,6 +60,7 @@ export const LogInPanel = props => {
   return (
     <>
       <GoogleSsoButton
+        type="login"
         render={
           renderProps => (
             <Button

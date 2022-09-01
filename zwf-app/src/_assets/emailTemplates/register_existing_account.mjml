@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>Please verify org registration</mj-title>
+    <mj-title>You already have registered in ZeeWorkflow</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
