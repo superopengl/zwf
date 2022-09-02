@@ -96,7 +96,7 @@ export const AvatarDropdownMenu = React.memo(props => {
     </Menu.Item>
   </StyledMenu>
 
-  return <>
+  return <div style={props.style}>
     <Dropdown overlay={avatarMenu} trigger={['click']}>
       <a onClick={e => e.preventDefault()}>
         {/* <Avatar size={40}
@@ -159,5 +159,5 @@ export const AvatarDropdownMenu = React.memo(props => {
     >
       <OrgProfileForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
-  </>
+  </div>
 });
