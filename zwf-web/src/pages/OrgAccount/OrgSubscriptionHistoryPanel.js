@@ -28,9 +28,7 @@ export const OrgSubscriptionHistoryPanel = (props) => {
   }, [data]);
 
   const handleReceipt = async (paymentId) => {
-    const data = await downloadReceipt(paymentId);
-    const fileUrl = URL.createObjectURL(data);
-    window.open(fileUrl);
+    await downloadReceipt(paymentId);
   }
 
   const columnDef = [

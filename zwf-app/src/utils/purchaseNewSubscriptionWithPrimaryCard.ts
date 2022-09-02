@@ -84,22 +84,26 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     subscription.enabled = true;
     await m.update(Subscription, { id: subscription.id }, { headBlockId: block.id, enabled: true });
 
+    const paymentId = uuidv4();
     // Handle refund credit from current unfinished subscrption
     if (refundable > 0) {
       const refundCreditTransaction = new CreditTransaction();
       refundCreditTransaction.orgId = orgId;
-      refundCreditTransaction.amount = Math.abs(refundable);
       refundCreditTransaction.type = 'refund';
+      refundCreditTransaction.paymentId = paymentId;
+      refundCreditTransaction.amount = refundable;
       await m.save(refundCreditTransaction);
     }
 
     // Pay with credit as possible
     let deductCreditTransaction = null;
-    if (creditBalance > 0) {
+    const deductableCreditBalance = creditBalance + refundable;
+    if (deductableCreditBalance > 0) {
       deductCreditTransaction = new CreditTransaction();
       deductCreditTransaction.orgId = orgId;
-      deductCreditTransaction.amount = Math.abs(deduction) * -1;
       deductCreditTransaction.type = 'deduct';
+      deductCreditTransaction.paymentId = paymentId;
+      deductCreditTransaction.amount = deductableCreditBalance * -1;
       await m.save(deductCreditTransaction);
     }
 
@@ -116,7 +120,6 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.auto = false;
     payment.geo = geoInfo;
     payment.orgPaymentMethodId = paymentMethodId;
-    payment.creditTransaction = deductCreditTransaction;
 
     await m.save(payment);
   });
