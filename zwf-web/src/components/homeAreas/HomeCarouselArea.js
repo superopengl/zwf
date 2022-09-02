@@ -82,25 +82,14 @@ const span = {
 
 export const HomeCarouselArea = () => {
 
-  const windowWidth = useWindowWidth();
-  const navigate = useNavigate();
-  const context = useContext(GlobalContext);
-
-
-  const posterHeight = windowWidth < 576 ? 400 :
-    windowWidth < 992 ? 450 :
-      500;
-
-
-
   return (
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
-      <PosterContainer style={{ height: posterHeight, position: 'relative' }}>
+      <PosterContainer style={{ position: 'relative'}}>
         {/* <div className="poster-patterns" /> */}
         <Row justify="center" align="middle" gutter={[40, 40]}>
           <Col {...span}>
-            <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center' }}>
-              <Title style={{fontSize: 36, fontWeight: 800}}>
+            <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: '40px auto' }}>
+              <Title style={{fontSize: 'clamp(18px, 2vw, 36px)', fontWeight: 800}}>
                 <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
               <Paragraph>
@@ -114,7 +103,7 @@ export const HomeCarouselArea = () => {
               <div style={{padding: 10, position: 'relative'}}>
                 <div style={{backgroundColor: '#0FBFC4', width: 150, height: 150, borderRadius: 8, position: 'absolute', left:0, bottom : 0}}></div>
                 <div style={{backgroundColor: '#FF7D00', width: 150, height: 150, borderRadius: 8, position: 'absolute', right:0, top : 0}}></div>
-                <Image src="/images/catchPicture.png" width="100%" preview={false}/>
+                <Image src="/images/catchPicture.png" preview={false}/>
               </div>
             </CatchPicture>
           </Col>
