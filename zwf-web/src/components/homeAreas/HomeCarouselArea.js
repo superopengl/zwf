@@ -89,7 +89,7 @@ export const HomeCarouselArea = () => {
         <Row justify="center" align="middle" gutter={[40, 40]}>
           <Col {...span}>
             <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: '40px auto' }}>
-              <Title style={{fontSize: 'clamp(18px, 2vw, 36px)', fontWeight: 800}}>
+              <Title style={{fontSize: 'clamp(20px, 2vw, 36px)', fontWeight: 800}}>
                 <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
               <Paragraph>
