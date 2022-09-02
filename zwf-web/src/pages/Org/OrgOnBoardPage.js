@@ -1,12 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { Layout, Typography } from 'antd';
+import { Typography } from 'antd';
 import { Logo } from 'components/Logo';
-import { GlobalContext } from 'contexts/GlobalContext';
-import SignUpForm from 'components/SignUpForm';
-import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
-import OrgOnBoardWizard from './OrgOnBoardWizard';
 import OrgProfileForm from './OrgProfileForm';
 import { getAuthUser$ } from 'services/authService';
 

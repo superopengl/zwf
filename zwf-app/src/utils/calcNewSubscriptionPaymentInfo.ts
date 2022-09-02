@@ -90,12 +90,12 @@ async function getRefundableCredits(m: EntityManager, orgId: string): Promise<nu
     relations: ['headBlock', 'headBlock.payment']
   });
 
-  const { headBlock: { startAt, endingAt, payment, type } } = sub;
+  const { headBlock: { startedAt, endingAt, payment, type } } = sub;
   if (type === 'trial' || !payment) {
     return 0;
   }
 
-  const startMoment = moment(startAt);
+  const startMoment = moment(startedAt);
   const endingMoment = moment(endingAt);
 
   if (endingMoment.isBefore()) {

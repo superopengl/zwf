@@ -27,7 +27,7 @@ import { OrgPaymentMethod } from '../OrgPaymentMethod';
       'org."ownerEmail" as email',
       `to_char(p."paidAt", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
       'p."paidAt" as "paidAt"',
-      's."startAt" as "startAt"',
+      's."startedAt" as "startedAt"',
       's."endingAt" as "endingAt"',
       'coalesce(p.amount, 0) - coalesce(c.amount, 0) as price',
       'coalesce(p.amount, 0) as payable',
@@ -63,7 +63,7 @@ export class ReceiptInformation {
   paidAt: Date;
 
   @ViewColumn()
-  startAt: Date;
+  startedAt: Date;
 
   @ViewColumn()
   endingAt: Date;

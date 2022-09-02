@@ -23,7 +23,7 @@ async function getUserSubscriptionHistory(orgId) {
       orgId
     },
     order: {
-      startAt: 'ASC',
+      startedAt: 'ASC',
     },
     relations: ['payment']
   })

@@ -5,8 +5,8 @@ import { Payment } from './Payment';
 import { Subscription } from './Subscription';
 
 @Entity()
-@Index(['orgId', 'startAt'])
-@Index(['subscriptionId', 'startAt'])
+@Index(['orgId', 'startedAt'])
+@Index(['subscriptionId', 'startedAt'])
 @Index('idx_subscription_block_single_trial', ['orgId'], { where: `type = '${SubscriptionBlockType.Trial}'`, unique: true })
 export class SubscriptionBlock {
   @PrimaryGeneratedColumn('uuid')
@@ -33,13 +33,13 @@ export class SubscriptionBlock {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   unitPrice: number;
 
-  @Column('date')
-  startAt: Date;
+  @Column()
+  startedAt: Date;
 
-  @Column('date', { nullable: true })
+  @Column({ nullable: true })
   endedAt: Date;
 
-  @Column('date', { nullable: false })
+  @Column({ nullable: false })
   endingAt: Date;
 
   @OneToOne(() => Payment, payment => payment.subscriptionBlock, { onDelete: 'CASCADE', eager: false })

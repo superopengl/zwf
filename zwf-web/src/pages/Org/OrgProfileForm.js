@@ -41,7 +41,6 @@ const InnerContainer = styled.div`
 
 const DEFAULT_PROFILE = {
   country: 'AU',
-  domain: 'zeeworkflow.com'
 }
 
 const OrgProfileForm = (props) => {
@@ -103,12 +102,6 @@ const OrgProfileForm = (props) => {
         rules={[{ required: true, validator: (rule, value) => value && isValidABN(value) ? Promise.resolve() : Promise.reject('Invalid ABN') }]}>
         <Input placeholder="" allowClear={true} maxLength={20} />
       </Form.Item>}
-      <Form.Item label="Domain name"
-        name="domain"
-        help={<>This domain name will be used to generate email sender addresses like <Text code>noreply@zeeworkflow.com</Text>.</>}
-        rules={[{ required: false, message: ' ', whitespace: true, max: 100 }]}>
-        <Input placeholder="zeeworkflow.com" allowClear={true} defaultValue="zeeworkflow.com" />
-      </Form.Item>
       <Form.Item label="Address"
         name="address"
         rules={[{ required: false, message: ' ', whitespace: true, max: 100 }]}>
