@@ -10,6 +10,7 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import styled from 'styled-components';
 import HomeFooter from 'components/HomeFooter';
 import { ajax } from 'rxjs/ajax';
+import { HomeFeaturesArea } from 'components/homeAreas/HomeFeaturesArea';
 
 smoothscroll.polyfill();
 
@@ -42,6 +43,9 @@ export const HomePage = (props) => {
     <section><HomeServiceArea /></section>
     <section id="pricing">
       <HomePricingArea />
+    </section>
+    <section id="features">
+      <HomeFeaturesArea />
     </section>
     {/* <section><HomeContactArea bgColor="#0a425e"></HomeContactArea></section> */}
     {/* <section><HomeSearchArea /></section> */}

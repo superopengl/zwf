@@ -67,12 +67,35 @@ export const HomePricingArea = props => {
     <Container>
       <InnerContainer>
         <Title style={{ color: '#0FBFC4', textAlign: 'center', fontWeight: 700, fontSize: 18, lineHeight: 1.5, margin: 0 }}>Only One Plan !</Title>
-        <Title style={{ textAlign: 'center', fontWeight: 800, fontSize: 36, lineHeight: 1, margin: 0 }}>We get tired of multiple plans</Title>
-        <Row align='end' gutter={20} style={{alignItems: 'flex-end'}}>
-          <Col flex="auto" style={{textAlign: 'right'}}>
+        <Title style={{ textAlign: 'center', fontWeight: 800, margin: 0 }}>We get tired of multiple plans</Title>
+        <Row align='end'
+        justify='center'
+          gutter={20}
+          style={{alignItems: 'flex-end'}}
+        >
+          <Col flex="auto" style={{ textAlign: 'right',  }}
+            {...{
+              xs: 0,
+              sm: 0,
+              md: 0,
+              lg: 6,
+              xl: 8,
+              xxl: 8
+            }}
+          >
             <Image src="/images/price-card-left.svg" preview={false} />
           </Col>
-          <Col flex="none" style={{ position: 'relative', top: 48 }}>
+          <Col
+            style={{ position: 'relative', top: 48, display: 'flex', justifyContent: 'center' }}
+            {...{
+              xs: 24,
+              sm: 24,
+              md: 24,
+              lg: 12,
+              xl: 8,
+              xxl: 8
+            }}
+          >
             <div className='price-card'>
               <Space direction='vertical' style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
                 <Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text>
@@ -93,7 +116,16 @@ export const HomePricingArea = props => {
               <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }}>Join Now</Button>
             </div>
           </Col>
-          <Col flex="auto">
+          <Col flex="auto"
+            {...{
+              xs: 0,
+              sm: 0,
+              md: 0,
+              lg: 6,
+              xl: 8,
+              xxl: 8
+            }}
+          >
             <Image src="/images/price-card-right.svg" preview={false} />
 
           </Col>
