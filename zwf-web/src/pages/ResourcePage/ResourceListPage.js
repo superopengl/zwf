@@ -46,6 +46,7 @@ export const ResourceListPage = React.memo(props => {
 
   return <Container justify='center'>
     <Col flex="auto" style={{maxWidth: 1000}}>
+      <Title>Resource Library</Title>
     <List
       size="small"
       grid={{
