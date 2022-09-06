@@ -1,2 +1,2 @@
 export const notes=`
-update release notes`
+show readingTime on resource list page`
