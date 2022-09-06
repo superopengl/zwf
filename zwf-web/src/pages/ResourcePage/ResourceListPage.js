@@ -82,7 +82,12 @@ export const ResourceListPage = React.memo(props => {
                 marginBottom: '1rem',
               }}
             ></div>
-            <Row justify="end">
+            <Row justify="space-between">
+              <Text>
+                <small>
+                  {item.readingTime?.text}
+                </small>
+              </Text>
               <Text type="secondary">
                 <small>
                   <TimeAgo value={item.publishedAt} showTime={false} direction="horizontal" />
@@ -90,7 +95,7 @@ export const ResourceListPage = React.memo(props => {
               </Text>
             </Row>
             <Title level={3} style={{ fontSize: 16, marginTop: 12 }} ellipsis={{ rows: 2 }}>{item.title}</Title>
-            <Paragraph type="secondary" ellipsis={{ rows: 4 }}>{item.brief}</Paragraph>
+            <Paragraph ellipsis={{ rows: 4 }}>{item.brief}</Paragraph>
           </Card>
         </List.Item>}
       />

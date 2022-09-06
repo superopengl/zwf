@@ -27,6 +27,7 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
       'keywords',
       'title',
       'brief',
+      'readingTime',
       'createdAt',
       'updatedAt',
       'imageBase64',
