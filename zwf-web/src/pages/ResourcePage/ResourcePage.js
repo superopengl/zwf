@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, Typography, Space, Divider, Tag, Row, PageHeader, Image } from 'antd';
+import { Skeleton, Typography, Space, Divider, Tag, Row, PageHeader, Image, Button, BackTop } from 'antd';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { finalize } from 'rxjs/operators';
@@ -7,13 +7,14 @@ import { getPublishedResourcePage$ } from 'services/resourcePageService';
 import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { TimeAgo } from 'components/TimeAgo';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { LeftOutlined, UpOutlined } from '@ant-design/icons';
 const { Paragraph, Title, Text } = Typography;
 
 
 const LayoutStyled = styled.div`
-  margin: 48px auto 120px auto;
-  padding: 3rem 1rem;
+  margin: 0 auto 120px auto;
+  padding: 2rem 1rem;
   max-width: 1000px;
 
   .head-image {
@@ -31,6 +32,7 @@ export const ResourcePage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState();
   const [documentTitle, setDocumentTitle] = useDocumentTitle();
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     const sub$ = getPublishedResourcePage$(id)
@@ -44,26 +46,32 @@ export const ResourcePage = (props) => {
     return () => sub$.unsubscribe();
   }, []);
 
+  const handleBackToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth"
+    });
+  }
+
   // const keywords = (page.keywords ?? '').split(/\s/).map((w, i) => <Tag key={i}>{w}</Tag>)
 
   return <Loading loading={loading}>
     {page ? <LayoutStyled>
-      <PageHeader
-        title={<Title style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>{page.title}</Title>}
-        ghost
-      >
-        <Text type="secondary">
-          <small>
-            <TimeAgo value={page.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
-          </small>
-        </Text>
-        <Divider />
-        <div className='head-image'>
-          <Image preview={false} src={page.imageBase64} alt="picture" />
-        </div>
+      <Button type="text" icon={<LeftOutlined />} style={{ color: '#4B5B76' }} onClick={() => navigate('/resource')}>Back</Button>
+      {page.readingTime?.text && <Paragraph style={{ textAlign: 'center', margin: '0 auto' }}>
+        {page.readingTime?.text}
+      </Paragraph>}
+      <Title style={{ textAlign: 'center', margin: '2rem auto' }}>{page.title}</Title>
+      <Paragraph type="secondary" level={5} style={{ textAlign: 'center', margin: '2rem auto' }}>
+        <TimeAgo value={page.publishedAt} showTime={false} prefix="By ZeeWorkflow Team, " direction="horizontal" />
+      </Paragraph>
+      <Image preview={false} src={page.imageBase64} width="100%" alt="picture" style={{ borderRadius: 4, marginBottom: '2rem' }} />
+      <Paragraph>
         <RawHtmlDisplay value={page.html} />
-      </PageHeader>
-
+      </Paragraph>
+      {/* <Row justify='center'>
+        <Button icon={<UpOutlined />} style={{ justifyContent: 'center' }} onClick={handleBackToTop}>Back to Top</Button>
+      </Row> */}
     </LayoutStyled > : <Skeleton />}
   </Loading>
 };

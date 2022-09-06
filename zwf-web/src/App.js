@@ -53,6 +53,7 @@ const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
 const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
 const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
+const ResourceEditListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
 
 const localeDic = {
   'en-US': {
@@ -172,7 +173,7 @@ export const App = React.memo(() => {
                 <Route path="/config" element={<ConfigListPage />} />
                 <Route path="/org" element={<OrgListPage />} />
                 <Route path="/support" element={<SupportListPage />} />
-                <Route path="/manage/resource" element={<ResourceListPage />} />
+                <Route path="/manage/resource" element={<ResourceEditListPage />} />
                 <Route path="/manage/resource/new" element={<ResourceEditPage />} />
                 <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
                 <Route path="/revenue" element={<RevenuePage />} />

@@ -6,10 +6,11 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assert } from '../utils/assert';
 import { htmlToText } from 'html-to-text';
 import { db } from '../db';
+const readingTime = require('reading-time');
 
-function getBrief(html: string): string {
+function getWords(html: string): string {
   const text = htmlToText(html);
-  return text.substring(0, 200);
+  return text;
 }
 
 export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
@@ -61,6 +62,7 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
       'keywords',
       'title',
       'brief',
+      'readingTime',
       'createdAt',
       'updatedAt',
       'imageBase64',
@@ -82,7 +84,9 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
   page = Object.assign(page || {}, req.body);
 
   if (html) {
-    page.brief = getBrief(html);
+    const words = getWords(html);
+    page.brief = words.substring(0, 200);
+    page.readingTime = readingTime(words);
   }
 
   await db.getRepository(ResourcePage).save(page);
