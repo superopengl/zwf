@@ -1,2 +1,4 @@
 export const notes=`
-show readingTime on resource list page`
+background light effect
+change font family
+clean up`
