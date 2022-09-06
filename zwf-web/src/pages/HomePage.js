@@ -1,5 +1,5 @@
 // import 'App.css';
-import {HomeCarouselArea} from 'components/homeAreas/HomeCarouselArea';
+import { HomeCarouselArea } from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import React from 'react';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
@@ -10,8 +10,9 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import styled from 'styled-components';
 import HomeFooter from 'components/HomeFooter';
 import { ajax } from 'rxjs/ajax';
-import { HomeFeaturesArea } from 'components/homeAreas/HomeFeaturesArea';
+import { HomeFeatureListArea } from 'components/homeAreas/HomeFeatureListArea';
 import { HomeContactUsArea } from 'components/homeAreas/HomeContactUsArea';
+import { HomeKeyFeatureArea } from 'components/homeAreas/HomeKeyFeatureArea';
 
 smoothscroll.polyfill();
 
@@ -41,16 +42,18 @@ export const HomePage = (props) => {
     {/* <section>
       <HomeFeatureArea />
     </section> */}
-    <section><HomeServiceArea /></section>
+    <section>
+      <HomeKeyFeatureArea />
+    </section>
     <section id="pricing">
       <HomePricingArea />
     </section>
     <section id="features">
-      <HomeFeaturesArea />
+      <HomeFeatureListArea />
     </section>
     <section id="contactus">
       <HomeContactUsArea />
-    </section>    
+    </section>
     {/* <section><HomeContactArea bgColor="#0a425e"></HomeContactArea></section> */}
     {/* <section><HomeSearchArea /></section> */}
     {/* <section>
