@@ -129,7 +129,7 @@ export const HomeKeyFeatureArea = props => {
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
-            <Image src="/images/feature-doc-sign.svg" preview={false} />
+            <Image src="/images/feature-task-template.svg" preview={false} />
           </Col>
         </Row>
         <Row gutter={[48, 24]} justify='center'>
