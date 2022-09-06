@@ -15,7 +15,7 @@ const ContainerStyled = styled.div`
 margin: 0 auto 0 auto;
 // padding: 1rem;
 width: 100%;
-background-color: #ffffff;
+// background-color: #ffffff;
 `;
 
 
@@ -46,18 +46,6 @@ padding: 1rem;
   text-align: center;
 }
 
-.poster-patterns {
-background-image: url("images/logo-tile.png");
-  background-repeat: repeat;
-  background-size: 120px;
-  opacity: 0.1;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-}
-
 
 
 `;
@@ -66,8 +54,7 @@ const CatchPicture = styled.div`
 min-width: 200px;
 min-height: 200px;
 // background-image: linear-gradient(135deg, #37AFD2, #37AFD2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
-background: radial-gradient(closest-side, transparent 0%, white 100%), 
-                 linear-gradient(45deg, #b5f5ec, #37AFD2 100%);
+// background: radial-gradient(closest-side, transparent 0%, white 100%), linear-gradient(45deg, #b5f5ec, #37AFD2 100%);
 padding: 80px;
 `;
 
@@ -89,7 +76,7 @@ export const HomeCarouselArea = () => {
         <Row justify="center" align="middle" gutter={[40, 40]}>
           <Col {...span}>
             <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: '40px auto' }}>
-              <Title style={{fontSize: 'clamp(20px, 2vw, 36px)', fontWeight: 800}}>
+              <Title style={{fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800}}>
                 <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
               <Paragraph>
