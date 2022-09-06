@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Col, Row, Space, Button } from 'antd';
+import { Card, Typography, Col, Row, Space, Button, Image } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
@@ -40,7 +40,8 @@ width: 100%;
 
 const InnerContainer = styled.div`
 width: 100%;
-background-color:  #F1F2F5;
+// background-color:  #F1F2F5;
+background-image: linear-gradient(5deg, #F1F2F5, #F1F2F5 50%, #ffffff 50%, #ffffff 100%);
 padding-top: 3rem;
 .price-card {
   max-width: 400px;
@@ -67,8 +68,10 @@ export const HomePricingArea = props => {
       <InnerContainer>
         <Title style={{ color: '#0FBFC4', textAlign: 'center', fontWeight: 700, fontSize: 18, lineHeight: 1.5, margin: 0 }}>Only One Plan !</Title>
         <Title style={{ textAlign: 'center', fontWeight: 800, fontSize: 36, lineHeight: 1, margin: 0 }}>We get tired of multiple plans</Title>
-        <Row>
-          <Col flex="auto"></Col>
+        <Row align='end' gutter={20} style={{alignItems: 'flex-end'}}>
+          <Col flex="auto" style={{textAlign: 'right'}}>
+            <Image src="/images/price-card-left.svg" preview={false} />
+          </Col>
           <Col flex="none" style={{ position: 'relative', top: 48 }}>
             <div className='price-card'>
               <Space direction='vertical' style={{ width: '100%', justifyContent: 'center', alignItems: 'center' }}>
@@ -90,7 +93,10 @@ export const HomePricingArea = props => {
               <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }}>Join Now</Button>
             </div>
           </Col>
-          <Col flex="auto"></Col>
+          <Col flex="auto">
+            <Image src="/images/price-card-right.svg" preview={false} />
+
+          </Col>
         </Row>
       </InnerContainer>
     </Container>
