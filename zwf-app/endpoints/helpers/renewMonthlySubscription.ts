@@ -6,20 +6,23 @@ import * as moment from 'moment';
 import { EmailTemplateType } from '../../src/types/EmailTemplateType';
 import { SysLog } from '../../src/entity/SysLog';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
-import { purchaseNewSubscriptionWithPrimaryCard } from '../../src/utils/purchaseNewSubscriptionWithPrimaryCard';
-import { v4 as uuidv4 } from 'uuid';
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
+import { assert } from '../../src/utils/assert';
+import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
+import { newSubscriptionBlock } from './newSubscriptionBlock';
 
 export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionInformation) {
-  const { orgId, seats, promotionCode, subscriptionId, headBlockId, unitPrice } = subInfo;
-  try {
-    await purchaseNewSubscriptionWithPrimaryCard({
-      orgId,
-      seats,
-      promotionCode,
-    });
+  const { subscriptionId, headBlockId, type } = subInfo;
+  assert(type === SubscriptionBlockType.Monthly, 500, 'Not a monthly subscription');
 
-    await sendSubscriptionEmail(db.manager, EmailTemplateType.SubscriptionAutoRenewSuccessful, subInfo);
+  try {
+    await db.transaction(async m => {
+      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+
+      await paySubscriptionBlock(m, block, { auto: true, real: true });
+
+      await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, block);
+    });
   } catch (e) {
     await sendSubscriptionEmail(db.manager, EmailTemplateType.SubscriptionAutoRenewFailed, subInfo);
 
@@ -33,17 +36,7 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
     // Grant an overdue subscription block
     await db.manager.transaction(async (m) => {
-      const block = new SubscriptionBlock();
-      block.id = uuidv4();
-      block.orgId = orgId;
-      block.subscriptionId = subscriptionId;
-      block.type = SubscriptionBlockType.OverduePeacePeriod;
-      block.parentBlockId = headBlockId;
-      block.startedAt = now.toDate();
-      block.endingAt = now.add(1, 'month').add(-1, 'day').endOf('day').toDate();
-      block.seats = seats;
-      block.unitPrice = unitPrice;
-      block.promotionCode = promotionCode;
+      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.OverduePeacePeriod, 'continuously');
 
       await m.save(block);
       await m.update(SubscriptionBlock, { id: headBlockId }, { endedAt: now.toDate() });

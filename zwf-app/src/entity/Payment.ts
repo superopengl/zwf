@@ -42,9 +42,6 @@ export class Payment {
   @Column('jsonb', { nullable: true })
   rawResponse: object;
 
-  @Column()
-  status: PaymentStatus;
-
   @Column({ nullable: true })
   paidAt?: Date;
 
@@ -53,8 +50,4 @@ export class Payment {
 
   @Column('jsonb', { nullable: true })
   geo: object;
-
-  @OneToOne(() => SubscriptionBlock, block => block.payment , { onDelete: 'CASCADE' })
-  @JoinColumn()
-  subscriptionBlock: SubscriptionBlock;
 }

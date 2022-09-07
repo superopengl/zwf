@@ -1,20 +1,25 @@
-import { db } from '../../src/db';
 import { EmailTemplateType } from '../../src/types/EmailTemplateType';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
-import { purchaseNewSubscriptionWithPrimaryCard } from '../../src/utils/purchaseNewSubscriptionWithPrimaryCard';
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { terminateSubscription } from "./terminateSubscription";
+import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
+import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
+import { assert } from 'console';
+import { db } from '../../src/db';
+import { newSubscriptionBlock } from './newSubscriptionBlock';
 
 export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInformation) {
-  const { orgId, seats, promotionCode, type, subscriptionId, headBlockId } = subInfo;
-  try {
-    await purchaseNewSubscriptionWithPrimaryCard({
-      orgId,
-      seats,
-      promotionCode,
-    });
+  const { type } = subInfo;
+  assert(type === SubscriptionBlockType.Trial, 500, 'Not a trial subscription');
 
-    await sendSubscriptionEmail(db.manager, EmailTemplateType.SubscriptionAutoRenewSuccessful, subInfo);
+  try {
+    await db.transaction(async m => {
+      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+
+      await paySubscriptionBlock(m, block, { auto: true, real: true });
+
+      await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, block);
+    });
   } catch (e) {
     await terminateSubscription(subInfo, e);
   }

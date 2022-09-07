@@ -7,7 +7,6 @@ import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { calcNewSubscriptionPaymentInfo } from '../utils/calcNewSubscriptionPaymentInfo';
 import * as _ from 'lodash';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
@@ -16,6 +15,12 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { purchaseNewSubscriptionWithPrimaryCard } from '../utils/purchaseNewSubscriptionWithPrimaryCard';
 import { db } from '../db';
 import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
+import { paySubscriptionBlock } from '../utils/paySubscriptionBlock';
+import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
+import { getCurrentPricePerSeat } from '../utils/getCurrentPricePerSeat';
+import moment = require('moment');
+import { refundCurrentSubscriptionBlock } from '../utils/refundCurrentSubscriptionBlock';
+import { newSubscriptionBlock } from '../../endpoints/helpers/newSubscriptionBlock';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await db.getRepository(SubscriptionBlock).find({
@@ -102,7 +107,26 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
-  const result = await calcNewSubscriptionPaymentInfo(db.manager, orgId, seats, promotionCode);
+  const now = moment();
+
+  let result;
+  await db.transaction(async m => {
+    const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
+    const refundable = await refundCurrentSubscriptionBlock(m, subInfo, { real: false });
+
+    const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
+
+    const paymentInfo = await paySubscriptionBlock(m, block, { real: false });
+
+    result = {
+      ...paymentInfo,
+      refundable,
+      minSeats: subInfo.occupiedSeats,
+      seatsBefore: subInfo.seats,
+      seatsAfter: seats,
+    };
+  });
+
   res.json(result);
 });
 
