@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { HomeFeatureListArea } from 'components/homeAreas/HomeFeatureListArea';
 import { HomeContactUsArea } from 'components/homeAreas/HomeContactUsArea';
 import { HomeKeyFeatureArea } from 'components/homeAreas/HomeKeyFeatureArea';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 smoothscroll.polyfill();
 
@@ -20,15 +21,22 @@ const Container = styled.div`
 const scrollToElement = (selector) => {
   document.querySelector(selector)?.scrollIntoView({
     behavior: 'smooth',
-    block: "start",
-    inline: "nearest"
+    block: "center",
+    inline: "center"
   });
 }
 
 
 export const HomePage = (props) => {
+  const { hash } = useLocation();
 
   useDocumentTitle('All in one task doc management');
+
+  React.useEffect(() => {
+    if (hash) {
+      scrollToElement(hash);
+    }
+  }, [hash]);
 
   return <Container>
     <section>
