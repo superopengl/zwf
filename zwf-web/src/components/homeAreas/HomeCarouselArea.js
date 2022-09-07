@@ -46,8 +46,29 @@ padding: 1rem;
   text-align: center;
 }
 
+.light2 {
+  position: absolute;
+  width: 332.39px;
+  height: 232.9px;
+  right: 200px;
+  top: 168.86px;
 
+  background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.4) 12.79%, rgba(55, 212, 207, 0.4) 56.4%);
+  filter: blur(147px);
+  transform: rotate(-31.89deg);
+}
 
+.light1 {
+  position: absolute;
+  width: 184.65px;
+  height: 159.8px;
+  right: 0px;
+  top: 161.4px;
+
+  background: rgba(0, 61, 182, 0.8);
+  filter: blur(400px);
+  transform: rotate(-135deg);
+}
 `;
 
 const CatchPicture = styled.div`
@@ -71,12 +92,12 @@ export const HomeCarouselArea = () => {
 
   return (
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
-      <PosterContainer style={{ position: 'relative'}}>
+      <PosterContainer style={{ position: 'relative' }}>
         {/* <div className="poster-patterns" /> */}
         <Row justify="center" align="middle" gutter={[40, 40]}>
           <Col {...span}>
             <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: '40px auto' }}>
-              <Title style={{fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800}}>
+              <Title style={{ fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800 }}>
                 <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
               <Paragraph>
@@ -85,12 +106,14 @@ export const HomeCarouselArea = () => {
               <OrgRegisterInput />
             </Space>
           </Col>
-          <Col {...span}>
+          <Col {...span} style={{ position: 'relative' }}>
+            <div className="light1"></div>
+            <div className="light2"></div>
             <CatchPicture>
-              <div style={{padding: 10, position: 'relative'}}>
-                <div style={{backgroundColor: '#0FBFC4', width: 150, height: 150, borderRadius: 8, position: 'absolute', left:0, bottom : 0}}></div>
-                <div style={{backgroundColor: '#FF7D00', width: 150, height: 150, borderRadius: 8, position: 'absolute', right:0, top : 0}}></div>
-                <Image src="/images/catchPicture.png" style={{opacity: 0.95}} preview={false}/>
+              <div style={{ padding: 10, position: 'relative' }}>
+                <div style={{ backgroundColor: '#0FBFC4', width: 150, height: 150, borderRadius: 8, position: 'absolute', left: 0, bottom: 0 }}></div>
+                <div style={{ backgroundColor: '#FF7D00', width: 150, height: 150, borderRadius: 8, position: 'absolute', right: 0, top: 0 }}></div>
+                <Image src="/images/catchPicture.png" style={{ opacity: 0.95 }} preview={false} />
               </div>
             </CatchPicture>
           </Col>
