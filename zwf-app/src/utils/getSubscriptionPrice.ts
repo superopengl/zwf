@@ -1,4 +1,4 @@
 
 export function getSubscriptionPrice() {
-  return 49;
+  return 39;
 }
