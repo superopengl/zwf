@@ -83,6 +83,7 @@
     "typeorm": "0.3.7",
     "uniqolor": "^1.0.1",
     "uuid": "^8.3.0",
+    "validator": "^13.7.0",
     "voucher-code-generator": "^1.1.1",
     "yamljs": "^0.3.0"
   }

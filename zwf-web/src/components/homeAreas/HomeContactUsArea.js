@@ -9,6 +9,9 @@ import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
 import { OrgRegisterModal } from 'components/OrgRegisterModal';
+import { submitContact$ } from 'services/contactService';
+import { finalize } from 'rxjs/operators';
+import { notify } from 'util/notify';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -66,18 +69,18 @@ label {
 
 
 export const HomeContactUsArea = props => {
-  const [visible, setVisible] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
+  const [form] = Form.useForm();
 
-
-  const handleShowModal = (e) => {
-    e.stopPropagation();
-    setVisible(true);
+  const handleSubmit = values => {
+    setLoading(true);
+    submitContact$(values).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(() => {
+      notify.success('Successfully submitted contact', 'Thank you for contacting ZeeWorkflow. We will reply you soon.');
+      form.resetFields();
+    });
   }
-
-  const handleHideModal = () => {
-    setVisible(false);
-  }
-
   return (
     <Container>
       <InnerContainer>
@@ -110,29 +113,27 @@ export const HomeContactUsArea = props => {
                   layout="vertical"
                   requiredMark={false}
                   style={{ width: '100%' }}
+                  disabled={loading}
+                  onFinish={handleSubmit}
+                  form={form}
                 >
                   <Form.Item name="name" label="Name" required rules={[{ required: true, max: 100 }]}>
-                    <Input size="large" placeholder="Your name" />
+                    <Input placeholder="Your name" autocomplete="name" disabled={loading} allowClear/>
                   </Form.Item>
                   <Form.Item name="email" label="Email" required rules={[{ required: true, max: 120, type: 'email' }]}>
-                    <Input size="large" placeholder="Email address" />
+                    <Input placeholder="Email address" autocomplete="email" disabled={loading} allowClear/>
                   </Form.Item>
-                  <Form.Item name="body" label="Name" required rules={[{ required: true, max: 100 }]}>
-                    <Input.TextArea size="large" rows={4} placeholder="Your question" />
+                  <Form.Item name="body" label="Name" required rules={[{ required: true, max: 1000 }]}>
+                    <Input.TextArea autoSize={{ minRows: 4, maxRows: 15 }} showCount maxLength={1000} placeholder="Your question" disabled={loading} allowClear/>
                   </Form.Item>
                   <Form.Item>
-                    <Button type="primary" size="large" block htmlType="submit" >Submit</Button>
+                    <Button type="primary" size="large" block htmlType="submit" loading={loading}>Submit</Button>
                   </Form.Item>
                 </Form>
               </Col>
             </Row>
           </Col>
         </Row>
-        <OrgRegisterModal
-          visible={visible}
-          onOk={handleHideModal}
-          onCancel={handleHideModal}
-        />
       </InnerContainer>
     </Container>
   )
