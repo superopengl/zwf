@@ -20,7 +20,7 @@ import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { getCurrentPricePerSeat } from '../utils/getCurrentPricePerSeat';
 import moment = require('moment');
 import { refundCurrentSubscriptionBlock } from '../utils/refundCurrentSubscriptionBlock';
-import { newSubscriptionBlock } from '../../endpoints/helpers/newSubscriptionBlock';
+import { newSubscriptionBlock } from '../../endpoints/helpers/createSubscriptionBlock';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await db.getRepository(SubscriptionBlock).find({

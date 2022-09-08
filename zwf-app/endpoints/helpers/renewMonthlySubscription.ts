@@ -9,7 +9,7 @@ import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCur
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { assert } from '../../src/utils/assert';
 import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
-import { newSubscriptionBlock } from './newSubscriptionBlock';
+import { newSubscriptionBlock } from './createSubscriptionBlock';
 
 export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { subscriptionId, headBlockId, type } = subInfo;

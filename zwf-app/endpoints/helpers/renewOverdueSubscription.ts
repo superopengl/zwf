@@ -6,7 +6,7 @@ import { terminateSubscription } from "./terminateSubscription";
 import { EntityManager } from 'typeorm';
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
-import { newSubscriptionBlock } from './newSubscriptionBlock';
+import { newSubscriptionBlock } from './createSubscriptionBlock';
 import { SubscriptionBlock } from '../../src/entity/SubscriptionBlock';
 import { assert } from '../../src/utils/assert';
 
