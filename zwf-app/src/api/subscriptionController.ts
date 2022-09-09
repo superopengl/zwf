@@ -1,3 +1,4 @@
+import { SubscriptionPurchasePreviewInfo } from '../services/payment/SubscriptionPurchasePreviewInfo';
 import { PaymentStatus } from './../types/PaymentStatus';
 import { SubscriptionBlock } from './../entity/SubscriptionBlock';
 
@@ -14,12 +15,16 @@ import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSub
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
 import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
-import { paySubscriptionBlock } from '../utils/paySubscriptionBlock';
+import { purchaseSubscriptionBlock, purchasePreview } from '../services/payment/paySubscriptionBlock';
+import { renewSubscription } from "../services/payment/renewSubscription";
+import { handlePreviewSubscriptionBlockPayment } from "../services/payment/handlePreviewSubscriptionBlockPayment";
 import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { getCurrentPricePerSeat } from '../utils/getCurrentPricePerSeat';
 import moment = require('moment');
-import { refundCurrentSubscriptionBlock } from '../utils/refundCurrentSubscriptionBlock';
-import { createSubscriptionBlock } from '../../endpoints/helpers/createSubscriptionBlock';
+import { calcRefundableCurrentSubscriptionBlock } from '../services/payment/calcRefundableCurrentSubscriptionBlock';
+import { createSubscriptionBlock } from '../services/payment/createSubscriptionBlock';
+import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
+import { SubscriptionStartingMode } from '../types/SubscriptionStartingMode';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await db.getRepository(SubscriptionBlock).find({
@@ -95,14 +100,7 @@ export const purchaseSubscription = handlerWrapper(async (req, res) => {
 
   await db.manager.transaction(async m => {
     const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
-
-    await refundCurrentSubscriptionBlock(m, subInfo, { real: true });
-
-    const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
-    block.seats = seats;
-    block.promotionCode = promotionCode;
-
-    await paySubscriptionBlock(m, block, { geoInfo, real: true });
+    await renewSubscription(m, subInfo, SubscriptionStartingMode.Rightaway, { geoInfo, auto: false });
   });
 
   res.json();
@@ -112,24 +110,16 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
-  const now = moment();
 
-  let result;
+  let result: SubscriptionPurchasePreviewInfo;
   await db.transaction(async m => {
     const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
-    const refundable = await refundCurrentSubscriptionBlock(m, subInfo, { real: false });
 
-    const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
-
-    const paymentInfo = await paySubscriptionBlock(m, block, { real: false });
-
-    result = {
-      ...paymentInfo,
-      refundable,
-      minSeats: subInfo.occupiedSeats,
-      seatsBefore: subInfo.seats,
-      seatsAfter: seats,
-    };
+    const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Rightaway);
+    block.seats = seats;
+    block.promotionCode = promotionCode;
+  
+    return await handlePreviewSubscriptionBlockPayment(m, block);
   });
 
   res.json(result);

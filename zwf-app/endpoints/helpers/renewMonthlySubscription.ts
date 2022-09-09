@@ -8,8 +8,9 @@ import { SysLog } from '../../src/entity/SysLog';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { assert } from '../../src/utils/assert';
-import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
-import { createSubscriptionBlock } from './createSubscriptionBlock';
+import { renewSubscription } from "../../src/services/payment/renewSubscription";
+import { createSubscriptionBlock } from '../../src/services/payment/createSubscriptionBlock';
+import { SubscriptionStartingMode } from '../../src/types/SubscriptionStartingMode';
 
 export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { subscriptionId, headBlockId, type } = subInfo;
@@ -17,11 +18,9 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
   try {
     await db.transaction(async m => {
-      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+      const newMonthlyBlock = await renewSubscription(m, subInfo, SubscriptionStartingMode.Continuously, {auto: true});
 
-      await paySubscriptionBlock(m, block, { auto: true, real: true });
-
-      await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, block);
+      await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, newMonthlyBlock);
     });
   } catch (e) {
     await sendSubscriptionEmail(db.manager, EmailTemplateType.SubscriptionAutoRenewFailed, subInfo);
@@ -36,7 +35,7 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
     // Grant an overdue subscription block
     await db.manager.transaction(async (m) => {
-      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.OverduePeacePeriod, 'continuously');
+      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.OverduePeacePeriod, SubscriptionStartingMode.Continuously);
 
       await m.save(block);
       await m.update(SubscriptionBlock, { id: headBlockId }, { endedAt: now.toDate() });
