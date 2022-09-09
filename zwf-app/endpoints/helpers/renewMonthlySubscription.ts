@@ -9,7 +9,7 @@ import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCur
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { assert } from '../../src/utils/assert';
 import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
-import { newSubscriptionBlock } from './createSubscriptionBlock';
+import { createSubscriptionBlock } from './createSubscriptionBlock';
 
 export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { subscriptionId, headBlockId, type } = subInfo;
@@ -17,7 +17,7 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
   try {
     await db.transaction(async m => {
-      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
 
       await paySubscriptionBlock(m, block, { auto: true, real: true });
 
@@ -36,7 +36,7 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
     // Grant an overdue subscription block
     await db.manager.transaction(async (m) => {
-      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.OverduePeacePeriod, 'continuously');
+      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.OverduePeacePeriod, 'continuously');
 
       await m.save(block);
       await m.update(SubscriptionBlock, { id: headBlockId }, { endedAt: now.toDate() });
