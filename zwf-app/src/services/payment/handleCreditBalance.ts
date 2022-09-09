@@ -17,12 +17,12 @@ export async function handleCreditBalance(m: EntityManager, orgId: string, payme
     return;
   }
 
-  assert(deduction < 0, 500, 'deductionAmount must be a negative number');
+  assert(deduction > 0, 500, 'deduction cannot be a negative number');
 
   const deductCreditTransaction = new CreditTransaction();
   deductCreditTransaction.orgId = orgId;
   deductCreditTransaction.type = 'deduct';
   deductCreditTransaction.paymentId = paymentId;
-  deductCreditTransaction.amount = deduction;
+  deductCreditTransaction.amount = -1 * deduction;
   await m.save(deductCreditTransaction);
 }
