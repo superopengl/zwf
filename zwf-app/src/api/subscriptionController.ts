@@ -12,7 +12,6 @@ import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { purchaseNewSubscriptionWithPrimaryCard } from '../utils/purchaseNewSubscriptionWithPrimaryCard';
 import { db } from '../db';
 import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
 import { paySubscriptionBlock } from '../utils/paySubscriptionBlock';
@@ -94,11 +93,17 @@ export const purchaseSubscription = handlerWrapper(async (req, res) => {
 
   const geoInfo = await getRequestGeoInfo(req);
 
-  await purchaseNewSubscriptionWithPrimaryCard({
-    orgId,
-    seats,
-    promotionCode
-  }, geoInfo);
+  await db.manager.transaction(async m => {
+    const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
+
+    await refundCurrentSubscriptionBlock(m, subInfo, { real: true });
+
+    const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
+    block.seats = seats;
+    block.promotionCode = promotionCode;
+
+    await paySubscriptionBlock(m, block, { geoInfo, real: true });
+  });
 
   res.json();
 });

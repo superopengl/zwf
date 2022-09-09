@@ -21,7 +21,7 @@ export class OrgPromotionCode {
   endingAt: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  percentage: number;
+  percentageOff: number;
 
   @Column('uuid')
   createdBy: string;

@@ -43,8 +43,8 @@ export async function paySubscriptionBlock(m: EntityManager, block: Subscription
       .getOne();
 
     if (promotion) {
-      promotionDiscountPercentage = Math.abs(promotion.percentage);
-      assert(promotionDiscountPercentage < 1, 500, `Invalid promotion percentage by promotionCode ${promotionCode}`);
+      promotionDiscountPercentage = Math.abs(promotion.percentageOff);
+      assert(promotionDiscountPercentage < 1, 500, `Invalid promotion percentageOff by promotionCode ${promotionCode}`);
       isValidPromotionCode = true;
     }
   }

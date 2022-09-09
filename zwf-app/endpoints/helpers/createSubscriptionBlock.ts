@@ -4,6 +4,7 @@ import { getCurrentPricePerSeat } from '../../src/utils/getCurrentPricePerSeat';
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
+import { calcSubscriptionBlockEnding } from '../../src/utils/calcSubscriptionBlockEnding';
 
 export function createSubscriptionBlock(subInfo: OrgCurrentSubscriptionInformation, type: SubscriptionBlockType, startingMode: 'continuously' | 'rightaway') {
   const { orgId, seats, promotionCode, subscriptionId, headBlockId, endingAt } = subInfo;
@@ -19,12 +20,13 @@ export function createSubscriptionBlock(subInfo: OrgCurrentSubscriptionInformati
   block.type = type;
   if (startingMode === 'continuously') {
     block.startedAt = endingAt;
-    block.endingAt = moment(endingAt).add(1, 'month').add(-1, 'day').endOf('day').toDate();
+    block.endingAt = calcSubscriptionBlockEnding(block.startedAt);
   } else if (startingMode === 'rightaway') {
     const now = moment();
     block.startedAt = now.toDate();
-    block.endingAt = now.add(1, 'month').add(-1, 'day').endOf('day').toDate();
+    block.endingAt = calcSubscriptionBlockEnding(now);
   }
 
   return block;
 }
+
