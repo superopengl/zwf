@@ -3,12 +3,11 @@ import { EmailTemplateType } from '../../src/types/EmailTemplateType';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { terminateSubscription } from "./terminateSubscription";
-import { EntityManager } from 'typeorm';
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import { payOverduedSubscription } from "../../src/services/payment/payOverduedSubscription";
 import { assert } from '../../src/utils/assert';
 
-export async function renewOverdueSubscription(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation) {
+export async function renewOverdueSubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { type } = subInfo;
   assert(type === SubscriptionBlockType.OverduePeacePeriod, 500, 'Not an overdue subscription');
 

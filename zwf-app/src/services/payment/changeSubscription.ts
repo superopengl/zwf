@@ -10,8 +10,12 @@ import { handlePurchaseSubscriptionBlock } from './handlePurchaseSubscriptionBlo
 export async function changeSubscription(
   m: EntityManager,
   subInfo: OrgCurrentSubscriptionInformation,
-  geoInfo?: any
+  seats: number,
+  promotionCode: string,
+  geoInfo: any
 ): Promise<SubscriptionBlock> {
   const newMonthlyBlock = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Rightaway);
+  newMonthlyBlock.seats = seats;
+  newMonthlyBlock.promotionCode = promotionCode;
   return await handlePurchaseSubscriptionBlock(m, subInfo, newMonthlyBlock, { geoInfo, auto: false });
 }

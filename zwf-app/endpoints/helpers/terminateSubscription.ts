@@ -19,7 +19,7 @@ export async function terminateSubscription(subInfo: OrgCurrentSubscriptionInfor
     console.log(`Disabled subscriptions for orgs ${orgId}`);
 
     // Ends subscription head blocks
-    await m.update(SubscriptionBlock, { id: headBlockId, }, { endedAt: () => `CURRENT_DATE` });
+    await m.update(SubscriptionBlock, { id: headBlockId, }, { endedAt: () => `NOW()` });
 
     // Compose email requests
     const orgInfo = await m.findOneBy(OrgBasicInformation, { id: orgId });

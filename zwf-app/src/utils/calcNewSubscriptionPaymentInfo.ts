@@ -46,7 +46,7 @@ export async function calcNewSubscriptionPaymentInfo(
     const promotion = await m.getRepository(OrgPromotionCode)
       .createQueryBuilder()
       .where({ code: promotionCode })
-      .andWhere(`"endingAt" > CURRENT_DATE`)
+      .andWhere(`"endingAt" > NOW()`)
       .getOne();
 
     if (promotion) {

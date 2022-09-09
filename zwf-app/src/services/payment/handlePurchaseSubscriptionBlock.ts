@@ -1,13 +1,13 @@
-import { SubscriptionBlock } from './../entity/SubscriptionBlock';
-import { OrgCurrentSubscriptionInformation } from './../entity/views/OrgCurrentSubscriptionInformation';
-import { SubscriptionBlockType } from './../types/SubscriptionBlockType';
+import { SubscriptionBlock } from '../../entity/SubscriptionBlock';
+import { OrgCurrentSubscriptionInformation } from '../../entity/views/OrgCurrentSubscriptionInformation';
+import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { EntityManager } from 'typeorm';
-import { Subscription } from '../entity/Subscription';
+import { Subscription } from '../../entity/Subscription';
 import { v4 as uuidv4 } from 'uuid';
-import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../services/stripeService';
-import { Payment } from '../entity/Payment';
+import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../../services/stripeService';
+import { Payment } from '../../entity/Payment';
 import moment = require('moment');
-import { handlePreviewSubscriptionBlockPayment } from './handlePreviewSubscriptionBlockPayment';
+import { calcSubscriptionBlockPayment } from './calcSubscriptionBlockPayment';
 import { handleCreditBalance } from "./handleCreditBalance";
 
 
@@ -17,7 +17,7 @@ export async function handlePurchaseSubscriptionBlock(
   block: SubscriptionBlock,
   options: { geoInfo?: any; auto?: boolean; } = null
 ): Promise<SubscriptionBlock> {
-  const previewInfo = await handlePreviewSubscriptionBlockPayment(m, subInfo, block);
+  const previewInfo = await calcSubscriptionBlockPayment(m, subInfo, block);
 
   const { subscriptionId, headBlockId, orgId } = subInfo;
   const { deduction, payable, paymentMethodId, stripePaymentMethodId, refundable } = previewInfo;
