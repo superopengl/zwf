@@ -4,14 +4,14 @@ import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { EntityManager } from 'typeorm';
 import { Subscription } from '../../entity/Subscription';
 import { v4 as uuidv4 } from 'uuid';
-import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../../services/stripeService';
+import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../stripeService';
 import { Payment } from '../../entity/Payment';
 import moment = require('moment');
 import { calcSubscriptionBlockPayment } from './calcSubscriptionBlockPayment';
 import { handleCreditBalance } from "./handleCreditBalance";
 
 
-export async function handlePurchaseSubscriptionBlock(
+export async function purchaseSubscriptionBlock(
   m: EntityManager,
   subInfo: OrgCurrentSubscriptionInformation,
   block: SubscriptionBlock,

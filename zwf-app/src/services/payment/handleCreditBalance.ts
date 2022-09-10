@@ -4,25 +4,29 @@ import { CreditTransaction } from '../../entity/CreditTransaction';
 
 
 export async function handleCreditBalance(m: EntityManager, orgId: string, paymentId: string, refundable: number, deduction: number) {
-  if (refundable) {
+  assert(deduction >= 0, 500, 'deduction cannot be a negative number');
+  assert(refundable >= 0, 500, 'refundable cannot be a negative number');
+
+  const list: CreditTransaction[] = [];
+  if (refundable > 0) {
     // Refund first
     const refundCreditTransaction = new CreditTransaction();
     refundCreditTransaction.orgId = orgId;
     refundCreditTransaction.type = 'refund';
     refundCreditTransaction.amount = refundable;
-    await m.save(refundCreditTransaction);
+    list.push(refundCreditTransaction);
   }
 
-  if (deduction === 0) {
-    return;
+  if (deduction > 0) {
+    const deductCreditTransaction = new CreditTransaction();
+    deductCreditTransaction.orgId = orgId;
+    deductCreditTransaction.type = 'deduct';
+    deductCreditTransaction.paymentId = paymentId;
+    deductCreditTransaction.amount = -1 * deduction;
+    list.push(deductCreditTransaction);
   }
 
-  assert(deduction > 0, 500, 'deduction cannot be a negative number');
-
-  const deductCreditTransaction = new CreditTransaction();
-  deductCreditTransaction.orgId = orgId;
-  deductCreditTransaction.type = 'deduct';
-  deductCreditTransaction.paymentId = paymentId;
-  deductCreditTransaction.amount = -1 * deduction;
-  await m.save(deductCreditTransaction);
+  if (list.length) {
+    await m.save(list);
+  }
 }
