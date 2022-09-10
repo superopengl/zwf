@@ -4,10 +4,10 @@ import { SubscriptionStartingMode } from '../../types/SubscriptionStartingMode';
 import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { EntityManager } from 'typeorm';
 import { createSubscriptionBlock } from './createSubscriptionBlock';
-import { purchaseSubscriptionBlock } from './purchaseSubscriptionBlock';
+import { payAndChainHeadBlock } from './payAndChainHeadBlock';
 
 
-export async function changeSubscription(
+export async function changeSubscriptionRightaway(
   m: EntityManager,
   subInfo: OrgCurrentSubscriptionInformation,
   seats: number,
@@ -17,5 +17,5 @@ export async function changeSubscription(
   const newMonthlyBlock = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Rightaway);
   newMonthlyBlock.seats = seats;
   newMonthlyBlock.promotionCode = promotionCode;
-  return await purchaseSubscriptionBlock(m, subInfo, newMonthlyBlock, { geoInfo, auto: false });
+  return await payAndChainHeadBlock(m, subInfo, newMonthlyBlock, { geoInfo, auto: false });
 }

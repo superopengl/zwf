@@ -8,7 +8,7 @@ import { SysLog } from '../../src/entity/SysLog';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { assert } from '../../src/utils/assert';
-import { renewSubscription } from "../../src/services/payment/renewSubscription";
+import { extendSubscriptionOneMonth } from "../../src/services/payment/extendSubscriptionOneMonth";
 import { createSubscriptionBlock } from '../../src/services/payment/createSubscriptionBlock';
 import { SubscriptionStartingMode } from '../../src/types/SubscriptionStartingMode';
 
@@ -18,7 +18,7 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
   try {
     await db.transaction(async m => {
-      const newMonthlyBlock = await renewSubscription(m, subInfo);
+      const newMonthlyBlock = await extendSubscriptionOneMonth(m, subInfo);
 
       await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, newMonthlyBlock);
     });
