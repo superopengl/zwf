@@ -12,7 +12,8 @@ export async function getDiscountInfoFromPromotionCode(m: EntityManager, promoti
       .andWhere(`"endingAt" > NOW()`)
       .getOne();
 
-    if (promotion) {
+    
+      if (promotion) {
       promotionDiscountPercentage = promotion.percentageOff;
       assert(0 < promotionDiscountPercentage && promotionDiscountPercentage < 1, 500, `Invalid promotion percentageOff by promotionCode ${promotionCode}`);
       isValidPromotionCode = true;
