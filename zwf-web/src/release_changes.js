@@ -1,2 +1,2 @@
 export const notes=`
-fix rich text editor focus issue`
+route blog page by title`
