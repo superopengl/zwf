@@ -9,6 +9,8 @@ import { HomeFeatureListArea } from 'components/homeAreas/HomeFeatureListArea';
 import { HomeContactUsArea } from 'components/homeAreas/HomeContactUsArea';
 import { HomeKeyFeatureArea } from 'components/homeAreas/HomeKeyFeatureArea';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { of } from 'rxjs';
+import { delay } from 'rxjs/operators';
 
 smoothscroll.polyfill();
 
@@ -34,7 +36,8 @@ export const HomePage = (props) => {
 
   React.useEffect(() => {
     if (hash) {
-      scrollToElement(hash);
+      const $sub = of(null).pipe(delay(300)).subscribe(() => scrollToElement(hash));
+      return () => $sub.unsubscribe();
     }
   }, [hash]);
 
