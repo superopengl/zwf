@@ -13,13 +13,13 @@ import { getDiscountInfoFromPromotionCode } from './getDiscountInfoFromPromotion
 
 
 export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation, block: SubscriptionBlock): Promise<SubscriptionPurchasePreviewInfo> {
-  const { seats, promotionCode, pricePerSeat, orgId } = block;
+  const { seats, promotionCode, seatPrice, orgId } = block;
 
   assert(!block.paymentId, 500, `The block (${block.id}) has been paid and cannot be paid again.`);
   assert(block.type !== SubscriptionBlockType.Trial, 500, `Cannot pay for a trial subscription block`);
 
   const { promotionDiscountPercentage, isValidPromotionCode } = await getDiscountInfoFromPromotionCode(m, promotionCode);
-  const fullPriceBeforeDiscount = seats * pricePerSeat;
+  const fullPriceBeforeDiscount = seats * seatPrice;
   const fullPriceAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * fullPriceBeforeDiscount, 2);
 
   let refundable = 0;
@@ -48,7 +48,7 @@ export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: Or
   const { id: paymentMethodId, stripePaymentMethodId } = primaryPaymentMethod;
 
   return {
-    pricePerSeat,
+    seatPrice,
     refundable,
     fullPriceBeforeDiscount,
     fullPriceAfterDiscount,
