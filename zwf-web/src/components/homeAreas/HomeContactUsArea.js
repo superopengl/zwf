@@ -126,8 +126,8 @@ export const HomeContactUsArea = props => {
                   <Form.Item name="body" label="Name" required rules={[{ required: true, max: 1000 }]}>
                     <Input.TextArea autoSize={{ minRows: 4, maxRows: 15 }} showCount maxLength={1000} placeholder="Your question" disabled={loading} allowClear/>
                   </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" size="large" block htmlType="submit" loading={loading}>Submit</Button>
+                  <Form.Item style={{textAlign: 'right'}}>
+                    <Button type="primary" size="large" htmlType="submit" loading={loading}>Submit</Button>
                   </Form.Item>
                 </Form>
               </Col>
