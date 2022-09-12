@@ -38,7 +38,7 @@ export const GoogleSsoButton = props => {
     } else if (type === 'login') {
       ssoGoogleLogin$(tokenId)
         .subscribe(user => loginWithUser(user),
-          err => notify.error('Failed to log in with Google')
+          err => notify.error('Failed to log in with Google. You may need to be invited by an agent.')
         );
     } else {
       throw new Error(`Unsupported type ${type}`);
