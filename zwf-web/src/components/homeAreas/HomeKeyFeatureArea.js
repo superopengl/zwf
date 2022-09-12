@@ -34,6 +34,19 @@ h2 {
 .ant-row {
   margin: 5rem auto;
 }
+
+.ant-col {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+}
+
+div.ant-typography {
+  font-size: 16px;
+  max-width: 600px;
+}
 `;
 
 
@@ -52,16 +65,16 @@ export const HomeKeyFeatureArea = () => {
       <InnerContainer>
         <Title style={{ textAlign: 'center' }}>Key Features</Title>
         <Row gutter={[48, 24]} justify='center'>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          <Col {...span}>
             <Title level={2}><Text style={{ color: '#0FBFC4' }}>Task</Text> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Col {...span} >
             <Image src="/images/feature-task-template.svg" preview={false} />
           </Col>
         </Row>
         <Row gutter={[24, 24]} justify='center'>
-          <Col span={24} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
+          <Col span={24}>
             <Title level={2}><Text style={{ color: '#0051D9' }}>Doc</Text> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
@@ -70,29 +83,29 @@ export const HomeKeyFeatureArea = () => {
           </Col>
         </Row>
         <Row gutter={[48, 24]} justify='center'>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          <Col {...span}>
             <Title level={2}>Doc <Text style={{ color: '#F77234' }}>Sign</Text></Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Col {...span}>
             <Image src="/images/feature-doc-sign.svg" preview={false} />
           </Col>
         </Row>
         <Row gutter={[48, 24]} justify='center'>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Col {...span}>
             <Image src="/images/feature-timeline.svg" preview={false} />
           </Col>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+          <Col {...span}>
             <Title level={2}><Text style={{ color: '#0FBFC4' }}>Timeline</Text></Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
         </Row>
         <Row gutter={[24, 24]} justify='center'>
-          <Col span={24} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
+          <Col span={24}>
             <Title level={2}>Task management</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Col span={24}>
             <Image src="/images/feature-task-management.svg" preview={false} />
           </Col>
         </Row>
