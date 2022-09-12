@@ -23,6 +23,7 @@ width: 100%;
 const PosterContainer = styled.div`
 // background-repeat: no-repeat;
 // background-size: cover;
+margin-top: 3rem;
 position: relative;
 // background-position: center;
 // background-image: url("images/logo.svg");
@@ -94,7 +95,7 @@ export const HomeCarouselArea = () => {
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
       <PosterContainer style={{ position: 'relative' }}>
         {/* <div className="poster-patterns" /> */}
-        <Row justify="center" align="middle" gutter={[40, 40]}>
+        <Row justify="center" align="middle" gutter={[0, 32]}>
           <Col {...span}>
             <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: '40px auto' }}>
               <Title style={{ fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800 }}>
@@ -106,16 +107,10 @@ export const HomeCarouselArea = () => {
               <OrgRegisterInput />
             </Space>
           </Col>
-          <Col {...span} style={{ position: 'relative' }}>
+          <Col {...span} style={{ position: 'relative', paddingRight: 32 }}>
             <div className="light1"></div>
             <div className="light2"></div>
-            <CatchPicture>
-              <div style={{ padding: 10, position: 'relative' }}>
-                <div style={{ backgroundColor: '#0FBFC4', width: 150, height: 150, borderRadius: 8, position: 'absolute', left: 0, bottom: 0 }}></div>
-                <div style={{ backgroundColor: '#FF7D00', width: 150, height: 150, borderRadius: 8, position: 'absolute', right: 0, top: 0 }}></div>
-                <Image src="/images/catchPicture.png" style={{ opacity: 0.95 }} preview={false} />
-              </div>
-            </CatchPicture>
+            <Image src="/images/landingpage-image.svg" width="100%" preview={false} />
           </Col>
         </Row>
       </PosterContainer>
