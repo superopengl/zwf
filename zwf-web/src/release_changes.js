@@ -1,2 +1,3 @@
 export const notes=`
-change logo`
+column rename
+refine email templates`
