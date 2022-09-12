@@ -1,2 +1,2 @@
 export const notes=`
-justify resource page`
+fix hash navigation`
