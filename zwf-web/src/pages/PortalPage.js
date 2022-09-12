@@ -9,6 +9,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
 import { OrgRegisterModal } from 'components/OrgRegisterModal';
+import { useWindowScrollPosition } from "rooks";
 
 const { Text } = Typography;
 
@@ -18,7 +19,11 @@ const StyledLayoutPage = styled(Layout)`
 position: relative;
 
 .ant-layout-header {
-  background-color: white;
+  background: #ffffffee;
+  box-shadow: 0px 5.99376px 23.975px rgba(0, 18, 77, 0.1);
+  position: sticky !important;
+  top: 0;
+  z-index: 100;
 }
 
 .ant-tabs-nav {
@@ -40,7 +45,10 @@ export const PortalPage = () => {
 
   const navigate = useNavigate();
   const [visible, setVisible] = React.useState(false);
+  const position = useWindowScrollPosition(); 
   const context = React.useContext(GlobalContext);
+
+  console.log(position); 
 
   const { role } = context;
   const isGuest = role === 'guest';

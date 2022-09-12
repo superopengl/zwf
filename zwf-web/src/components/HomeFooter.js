@@ -86,19 +86,19 @@ const HomeFooter = () => (
               <Title level={3}>Explore</Title>
               <Row style={{ position: 'relative', left: -16 }}>
                 <Col>
-                  <Button type="text" block>Key features</Button>
+                  <Button type="link" href="/#features" block>Key features</Button>
                 </Col>
                 <Col>
                   <Divider type="vertical" />
                 </Col>
                 <Col>
-                  <Button type="text" block>Pricing</Button>
+                  <Button type="link" href="/#pricing" block>Pricing</Button>
                 </Col>
                 <Col>
                   <Divider type="vertical" />
                 </Col>
                 <Col>
-                  <Button type="text" block>Q&A</Button>
+                  <Button type="link" href="/#qa" block>Q&A</Button>
                 </Col>
               </Row>
             </Col>
