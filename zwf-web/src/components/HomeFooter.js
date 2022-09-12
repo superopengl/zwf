@@ -79,52 +79,62 @@ const span = {
 const HomeFooter = () => (
   <FooterStyled>
     <section>
-      <Row justify="center" style={{ paddingBottom: '2rem' }} gutter={[48, 24]}>
-        <Col {...span}>
-          <Title level={3}>Unlock the Possibilities by Register Now</Title>
-          <OrgRegisterInput />
-        </Col>
+      <Row justify="center" style={{ paddingBottom: '2rem' }} gutter={[8, 16]}>
         <Col flex="auto">
-          <Row  gutter={[48, 24]}>
+          <Row gutter={[48, 24]}>
             <Col>
               <Title level={3}>Explore</Title>
-              <Space direction='vertical' style={{ position: 'relative', left: -16 }}>
-                <Button type="text" block>Key features</Button>
-                <Button type="text" block>Pricing</Button>
-                <Button type="text" block>Q&A</Button>
-              </Space>
-            </Col>
-            <Col flex="auto">
-              <Title level={3}>Contact Us</Title>
-              <Space direction='vertical' style={{ position: 'relative', left: -16 }}>
-                <TextLink href="mailto:customersupport@zeeworkflow.com.au">
-                  <Button type="text" block>customersupport@zeeworkflow.com.au</Button>
-                </TextLink>
-              </Space>
+              <Row style={{ position: 'relative', left: -16 }}>
+                <Col>
+                  <Button type="text" block>Key features</Button>
+                </Col>
+                <Col>
+                  <Divider type="vertical" />
+                </Col>
+                <Col>
+                  <Button type="text" block>Pricing</Button>
+                </Col>
+                <Col>
+                  <Divider type="vertical" />
+                </Col>
+                <Col>
+                  <Button type="text" block>Q&A</Button>
+                </Col>
+              </Row>
             </Col>
           </Row>
 
+        </Col>
+        <Col {...span}>
+          <Title level={3}>Unlock the Possibilities by Register Now</Title>
+          <OrgRegisterInput />
         </Col>
       </Row>
     </section>
     <Row style={{ borderTop: '1px solid #D6DBE333' }}></Row>
     <section>
-      <Row style={{ paddingTop: '2rem' }} align="middle" gutter={[48, 24]}>
+      <Row style={{ paddingTop: '2rem' }} align="middle" gutter={[8, 16]}>
         <Col {...span}>
           <Link to="/">
             <Image src="/images/logo-horizontal-blue.png" preview={false} height={32} />
           </Link>
         </Col>
         <Col flex="auto">
-          <Space style={{ width: '100%' }}>
-            <Text>©{new Date().getFullYear()} ZeeWorkflow</Text>
-            <p style={{ display: 'none' }}>Version {gitVersion}</p>
-            <a href="/privacy_policy" target="_blank"><Button type="text" >Privacy Policy</Button></a>
-            <a href="/terms_and_conditions" target="_blank"><Button type="text" >Terms & Conditions</Button></a>
-          </Space>
+          <Row gutter={[24, 16]} align="middle">
+            <Col>
+              <Text style={{ fontSize: 14, marginRight: 16 }}>©{new Date().getFullYear()} ZeeWorkflow</Text>
+            </Col>
+            <Col>
+              <Button type="link" href="/privacy_policy" target="_blank">Privacy Policy</Button>
+            </Col>
+            <Col>
+              <Button type="link" href="/terms_and_conditions" target="_blank">Terms & Conditions</Button>
+            </Col>
+          </Row>
         </Col>
       </Row>
     </section>
+    <p style={{ display: 'none' }}>Version {gitVersion}</p>
   </FooterStyled >
 );
 
