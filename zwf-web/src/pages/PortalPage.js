@@ -61,7 +61,7 @@ export const PortalPage = () => {
     <Layout.Header>
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
-          <Image src="/images/logo-horizontal-blue.png" preview={false} height={32} />
+          <Image src="/images/logo-text-dark.svg" preview={false} height={32} />
         </Link>
         <Row gutter={30} align="middle">
           <Col>

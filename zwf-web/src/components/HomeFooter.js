@@ -116,7 +116,7 @@ const HomeFooter = () => (
       <Row style={{ paddingTop: '2rem' }} align="middle" gutter={[8, 16]}>
         <Col {...span}>
           <Link to="/">
-            <Image src="/images/logo-horizontal-blue.png" preview={false} height={32} />
+            <Image src="/images/logo-text-light.svg" preview={false} height={32} />
           </Link>
         </Col>
         <Col flex="auto">
