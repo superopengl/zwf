@@ -83,7 +83,7 @@ export const ResourcePagePictureUpload = React.memo((props) => {
         disabled={loading}
         width="100%"
       >
-        {value ? <AntdImage src={value} alt="picture" preview={false} /> : uploadButton}
+        {value ? <AntdImage src={value} alt="picture" preview={false} width="100%" /> : uploadButton}
       </Upload>
       {value && <Button type="link" icon={<DeleteOutlined />} danger onClick={handleDelete} >delete</Button>}
     </Container>
