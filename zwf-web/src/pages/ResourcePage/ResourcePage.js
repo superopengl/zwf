@@ -27,7 +27,7 @@ const LayoutStyled = styled.div`
 export const ResourcePage = (props) => {
 
   const params = useParams();
-  const { id } = params;
+  const { key } = params;
 
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState();
@@ -35,7 +35,7 @@ export const ResourcePage = (props) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const sub$ = getPublishedResourcePage$(id)
+    const sub$ = getPublishedResourcePage$(key)
       .pipe(
         finalize(() => setLoading(false))
       )

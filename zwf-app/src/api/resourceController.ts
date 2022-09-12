@@ -26,6 +26,7 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
       'publishedAt',
       'keywords',
       'title',
+      'titleKey',
       'brief',
       'readingTime',
       'createdAt',
@@ -39,12 +40,10 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
 
 
 export const getPublishedResourcePage = handlerWrapper(async (req, res) => {
-  const { id } = req.params;
-  const page = await db.getRepository(ResourcePage).findOne({
-    where: {
-      id,
-      publishedAt: Not(IsNull())
-    }
+  const { key } = req.params;
+  const page = await db.getRepository(ResourcePage).findOneBy({
+    titleKey: key,
+    publishedAt: Not(IsNull())
   });
   assert(page, 404);
 
@@ -62,6 +61,7 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
       'publishedAt',
       'keywords',
       'title',
+      'titleKey',
       'brief',
       'readingTime',
       'createdAt',
@@ -79,7 +79,7 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
 
   let page: ResourcePage = null;
   if (id) {
-    page = await db.getRepository(ResourcePage).findOne({where: {id}});
+    page = await db.getRepository(ResourcePage).findOne({ where: { id } });
   }
 
   page = Object.assign(page || {}, req.body);
@@ -98,7 +98,7 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
 export const getEditResourcePage = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { id } = req.params;
-  const page = await db.getRepository(ResourcePage).findOne({where: {id}});
+  const page = await db.getRepository(ResourcePage).findOne({ where: { id } });
   assert(page, 404);
 
   res.json(page);
