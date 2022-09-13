@@ -41,7 +41,7 @@ export class SubscriptionBlock {
   startedAt: Date;
 
   @Column({default: false})
-  isLast: boolean;
+  isLast?: boolean;
 
   @Column({ nullable: true })
   endedAt?: Date;
