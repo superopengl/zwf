@@ -7,4 +7,3 @@ zwf-web/build
 zwf-app/src/_assets/keys/localhost.crt
 zwf-app/src/_assets/keys/localhost.key
 .pnpm-debug.log
-zwf-web/public/tinymce
