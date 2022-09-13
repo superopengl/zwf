@@ -14,7 +14,6 @@ const { Text, Paragraph, Title, Link: TextLink } = Typography;
 
 const Container = styled.div`
   margin: 0 auto;
-  padding: 1rem 1rem 3rem;
   width: 100%;
   max-width: 1200px;
 
