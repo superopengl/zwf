@@ -70,6 +70,7 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         orgId: 'fake-orgId',
         type: SubscriptionBlockType.Monthly,
         seats: 3,
+        isLast: false,
         seatPrice: 39,
         startedAt: moment().toDate(),
         startingMode: SubscriptionStartingMode.Continuously,
