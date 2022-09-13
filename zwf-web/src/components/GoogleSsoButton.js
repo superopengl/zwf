@@ -7,11 +7,12 @@ import { ssoGoogleRegisterOrg$, ssoGoogleLogin$ } from 'services/authService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
+import { finalize } from 'rxjs/operators';
 
 export const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
   const { setUser } = context;
-  const { render, type } = props;
+  const { render, type, onStart, onEnd } = props;
   const navigate = useNavigate();
 
   const loginWithUser = (user) => {
@@ -30,13 +31,21 @@ export const GoogleSsoButton = props => {
       return;
     }
 
+    onStart();
+
     if (type === 'register') {
       ssoGoogleRegisterOrg$(tokenId)
+        .pipe(
+          finalize(() => onEnd())
+        )
         .subscribe((user) => loginWithUser(user),
           err => notify.error('Failed to register with Google')
         );
     } else if (type === 'login') {
       ssoGoogleLogin$(tokenId)
+        .pipe(
+          finalize(() => onEnd())
+        )
         .subscribe(user => loginWithUser(user),
           err => notify.error('Failed to log in with Google. You may need to be invited by an agent.')
         );
@@ -60,8 +69,12 @@ export const GoogleSsoButton = props => {
 }
 
 GoogleSsoButton.propTypes = {
-  type: PropTypes.oneOf(['register', 'login'])
+  type: PropTypes.oneOf(['register', 'login']),
+  onStart: PropTypes.func,
+  onEnd: PropTypes.func,
 };
 
 GoogleSsoButton.defaultProps = {
+  onStart: () => { },
+  onEnd: () => { },
 };

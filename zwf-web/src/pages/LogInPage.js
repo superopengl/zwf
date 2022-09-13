@@ -9,6 +9,7 @@ import { GoogleSsoButton } from 'components/GoogleSsoButton';
 import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
 import HomeFooter from 'components/HomeFooter';
+import { Loading } from 'components/Loading';
 
 
 const LayoutStyled = styled(Layout)`
@@ -37,40 +38,49 @@ const LogoContainer = styled.div`
 const { Title } = Typography;
 const LogInPage = props => {
 
+  const [loading, setLoading] = React.useState(false);
+
   useDocumentTitle('User login');
 
   return (
     <LayoutStyled>
-      <Layout.Content style={{padding: '3rem 1rem'}}>
+      <Layout.Content style={{ padding: '3rem 1rem' }}>
         <LogoContainer><Logo /></LogoContainer>
         <Title level={3}>Login</Title>
-      <ContainerStyled>
-        <LogInPanel />
-        <Form.Item>
-          <Link to="/forgot_password">
-            <Button block type="link">Forgot password</Button>
-          </Link>
-          {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-          <Link to="/signup"><Button block type="link">Not a user? Sign up now!</Button></Link>
-        </Form.Item>
-        <Divider>or</Divider>
-          <GoogleSsoButton
-            type="login"
-            render={
-              renderProps => (
-                <Button
-                  block
-                  type="secondary"
-                  size="large"
-                  icon={<Icon component={GoogleLogoSvg} />}
-                  // icon={<GoogleOutlined />}
-                  style={{ marginTop: '1.5rem' }}
-                  onClick={renderProps.onClick}
-                  disabled={renderProps.disabled}
-                >Continue with Google</Button>
-              )}
-          />
-      </ContainerStyled>
+        <ContainerStyled>
+          <Loading loading={loading}>
+            <LogInPanel />
+            <Form.Item>
+              <Link to="/forgot_password">
+                <Button block type="link">Forgot password</Button>
+              </Link>
+              {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
+              <Link to="/signup"><Button block type="link">Not a user? Sign up now!</Button></Link>
+            </Form.Item>
+            <Divider>or</Divider>
+            <GoogleSsoButton
+              type="login"
+              onStart={() => setLoading(true)}
+              onEnd={() => setLoading(false)}
+              render={
+                renderProps => (
+                  <Button
+                    block
+                    type="secondary"
+                    size="large"
+                    icon={<Icon component={GoogleLogoSvg} />}
+                    // icon={<GoogleOutlined />}
+                    style={{ marginTop: '1.5rem' }}
+                    onClick={() => {
+                      setLoading(true);
+                      renderProps.onClick()
+                    }}
+                    disabled={renderProps.disabled}
+                  >Continue with Google</Button>
+                )}
+            />
+          </Loading>
+        </ContainerStyled>
       </Layout.Content>
       <HomeFooter />
     </LayoutStyled>

@@ -37,6 +37,7 @@ async function handleAutoRenewPayments() {
     .createQueryBuilder()
     .where({ enabled: true })
     .andWhere('"endingAt" <= NOW()')
+    .andWhere('"isLast" = FALSE')
     .getMany();
 
   for (const subInfo of list) {
