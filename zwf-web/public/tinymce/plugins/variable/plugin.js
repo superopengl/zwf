@@ -188,7 +188,7 @@ tinymce.PluginManager.add('variable', function (editor) {
      */
     function addVariable(value) {
         var htmlVariable = createHTMLVariable(value);
-        // editor.selection.setContent(htmlVariable);
+        editor.selection.setContent(htmlVariable);
     }
 
     function isVariable(element) {
