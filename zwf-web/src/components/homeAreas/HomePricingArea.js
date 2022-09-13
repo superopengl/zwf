@@ -121,7 +121,7 @@ export const HomePricingArea = props => {
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> All the features we have
               </Paragraph>
               <Paragraph>
-                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> 15 days free trial
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> 14 days free trial
               </Paragraph>
               <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Monthly auto renew payment

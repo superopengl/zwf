@@ -49,6 +49,10 @@ export class SubscriptionBlock {
   @Column('uuid', { nullable: true })
   paymentId?: string;
 
+  @OneToOne(() => Payment, payment => payment.subscriptionBlock)
+  @JoinColumn()
+  payment: Payment;
+
   @ManyToOne(() => Subscription, subscription => subscription.blocks, { onDelete: 'CASCADE' })
   subscription?: Subscription;
 }
