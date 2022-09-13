@@ -7,18 +7,21 @@ import { resetPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { finalize } from 'rxjs/operators';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import HomeFooter from 'components/HomeFooter';
 
 const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  // background-color: #ffffff;
-  height: 100%;
+margin: 0 auto;
+padding: 0;
+background-color: #ffffff;
+text-align: center;
+min-height: 100%;
 `;
 
-const ContainerStyled = styled.div`
-  margin: 2rem auto;
-  padding: 2rem 1rem;
+const ContainerStyled = styled(Layout.Content)`
+  padding: 3rem 1rem;
   text-align: center;
-  max-width: 360px;
+  max-width: 400px;
+  margin: 0 auto;
 `;
 
 const LogoContainer = styled.div`
@@ -88,6 +91,7 @@ const ResetPasswordPage = props => {
       {/* <Divider /> */}
       <Link to="/"><Button block type="link">Go to home page</Button></Link>
     </ContainerStyled>
+    <HomeFooter />
   </LayoutStyled>
 }
 

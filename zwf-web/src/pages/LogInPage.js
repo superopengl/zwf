@@ -8,13 +8,15 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import { GoogleSsoButton } from 'components/GoogleSsoButton';
 import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
+import HomeFooter from 'components/HomeFooter';
 
 
 const LayoutStyled = styled(Layout)`
-margin: 3rem auto 0 auto;
-// padding: 3rem auto 1rem;
-// background-color: #ffffff;
+margin: 0 auto;
+padding: 0;
+background-color: #ffffff;
 text-align: center;
+min-height: 100%;
 `;
 
 const ContainerStyled = styled.div`
@@ -39,9 +41,9 @@ const LogInPage = props => {
 
   return (
     <LayoutStyled>
+      <Layout.Content style={{padding: '3rem 1rem'}}>
         <LogoContainer><Logo /></LogoContainer>
         <Title level={3}>Login</Title>
-
       <ContainerStyled>
         <LogInPanel />
         <Form.Item>
@@ -69,6 +71,8 @@ const LogInPage = props => {
               )}
           />
       </ContainerStyled>
+      </Layout.Content>
+      <HomeFooter />
     </LayoutStyled>
   );
 }
