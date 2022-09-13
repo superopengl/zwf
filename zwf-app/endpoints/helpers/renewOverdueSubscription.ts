@@ -2,7 +2,7 @@ import { db } from '../../src/db';
 import { EmailTemplateType } from '../../src/types/EmailTemplateType';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
-import { terminateSubscription } from "./terminateSubscription";
+import { terminateSubscription } from "../../src/utils/terminateSubscription";
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import { payOverduedSubscription } from "../../src/services/payment/payOverduedSubscription";
 import { assert } from '../../src/utils/assert';

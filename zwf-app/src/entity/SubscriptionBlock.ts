@@ -40,6 +40,9 @@ export class SubscriptionBlock {
   @Column()
   startedAt: Date;
 
+  @Column({default: false})
+  isToTerminate: boolean;
+
   @Column({ nullable: true })
   endedAt?: Date;
 
