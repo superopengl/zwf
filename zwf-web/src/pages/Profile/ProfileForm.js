@@ -64,12 +64,12 @@ const ProfileForm = (props) => {
       <Form.Item label="Surname" name="surname" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="Surname" autoComplete="family-name" allowClear={true} maxLength="100" />
       </Form.Item>
-      <Form.Item label="Language" name="locale"
+      {/* <Form.Item label="Language" name="locale"
         rules={[{ required: true, whitespace: true, max: 200, message: ' ' }]}
         help="Requires refreshing page to pick up the change."
       >
         <LocaleSelector />
-      </Form.Item>
+      </Form.Item> */}
       <Form.Item style={{ marginTop: '1rem' }}>
         <Button block type="primary" htmlType="submit" disabled={sending}>Save</Button>
       </Form.Item>
