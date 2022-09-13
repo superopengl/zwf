@@ -15,6 +15,8 @@ import { getDiscountInfoFromPromotionCode } from './getDiscountInfoFromPromotion
 export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation, block: SubscriptionBlock): Promise<SubscriptionPurchasePreviewInfo> {
   const { seats, promotionCode, seatPrice, orgId } = block;
 
+  assert(!isNaN(seats), 500, 'seats is not a number');
+  assert(seats > 0, 500, 'seats must be greater than 0');
   assert(!block.paymentId, 500, `The block (${block.id}) has been paid and cannot be paid again.`);
   assert(block.type !== SubscriptionBlockType.Trial, 500, `Cannot pay for a trial subscription block`);
 
@@ -44,8 +46,8 @@ export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: Or
   const creditBalanceAfter = creditBalanceBefore + refundable - deduction;
 
   const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { where: { orgId, primary: true } });
-  assert(primaryPaymentMethod, 500, 'Primary payment method not found');
-  const { id: paymentMethodId, stripePaymentMethodId } = primaryPaymentMethod;
+  const paymentMethodId = primaryPaymentMethod?.id;
+  const stripePaymentMethodId = primaryPaymentMethod?.stripePaymentMethodId;
 
   return {
     seatPrice,
