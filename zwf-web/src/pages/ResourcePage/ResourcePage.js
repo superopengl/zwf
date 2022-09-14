@@ -13,8 +13,8 @@ const { Paragraph, Title, Text } = Typography;
 
 
 const LayoutStyled = styled.div`
-  margin: 0 auto 120px auto;
-  padding: 2rem 1rem;
+  margin: 0 auto;
+  padding: 3rem 1rem;
   max-width: 700px;
 
   .head-image {
