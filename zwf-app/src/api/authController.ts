@@ -29,7 +29,6 @@ import { UserInformation } from '../entity/views/UserInformation';
 import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
-import { info } from 'console';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -311,7 +310,7 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
 
   await db.manager.transaction(async m => {
-    const { user, newlyCreated } = await ensureClientOrGuestUser(m, email);
+    const { user, newlyCreated } = await ensureClientOrGuestUser(m, email, orgId);
     const orgClient = new OrgClient();
     orgClient.orgId = orgId;
     orgClient.userId = user.id;
@@ -319,26 +318,7 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
     await m.insert(OrgClient, orgClient);
     const org = await m.findOneBy(Org, { id: orgId });
 
-    if (newlyCreated) {
-      const resetPasswordToken = uuidv4();
-      user.resetPasswordToken = resetPasswordToken;
-      user.status = UserStatus.ResetPassword;
-      await m.save(user);
-
-      const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-
-      await sendEmail({
-        to: email,
-        template: EmailTemplateType.InviteNewClientUser,
-        vars: {
-          toWhom: getEmailRecipientName(user),
-          email,
-          url,
-          org: org.name,
-        },
-        shouldBcc: false
-      });
-    } else {
+    if (!newlyCreated) {
       await sendEmail({
         to: email,
         template: EmailTemplateType.InviteClientUser,
