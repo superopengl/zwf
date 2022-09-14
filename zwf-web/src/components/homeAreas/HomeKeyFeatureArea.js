@@ -20,11 +20,14 @@ width: 100%;
 
 const InnerContainer = styled.div`
 width: 100%;
-max-width: 800px;
+// max-width: 800px;
 // background-color:  #F1F2F5;
 // background-image: linear-gradient(5deg, #F1F2F5, #F1F2F5 50%, #ffffff 50%, #ffffff 100%);
 padding: 3rem 1rem 1rem;
 margin: 0 auto;
+display: flex;
+flex-direction: column;
+align-items: center;
 
 h2 {
   font-size:24px;
@@ -64,7 +67,7 @@ export const HomeKeyFeatureArea = () => {
     <Container>
       <InnerContainer>
         <Title style={{ textAlign: 'center' }}>Key Features</Title>
-        <Row gutter={[48, 24]} justify='center'>
+        <Row gutter={[48, 24]} justify='center' style={{maxWidth: 800}}>
           <Col {...span}>
             <Title level={2}><Text style={{ color: '#0FBFC4' }}>Task</Text> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
@@ -78,11 +81,11 @@ export const HomeKeyFeatureArea = () => {
             <Title level={2}><Text style={{ color: '#0051D9' }}>Doc</Text> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
+          <Col span={24} style={{ display: 'flex', justifyContent: 'center', minWidth: 600, maxWidth: 1000 }}>
             <Image src="/images/feature-doc-template.svg" preview={false} />
           </Col>
         </Row>
-        <Row gutter={[48, 24]} justify='center'>
+        <Row gutter={[48, 24]} justify='center' style={{maxWidth: 800}}>
           <Col {...span}>
             <Title level={2}>Doc <Text style={{ color: '#F77234' }}>Sign</Text></Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
@@ -105,7 +108,7 @@ export const HomeKeyFeatureArea = () => {
             <Title level={2}>Task management</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col span={24}>
+          <Col span={24}  style={{ display: 'flex', justifyContent: 'center', minWidth: 600, maxWidth: 1000 }}>
             <Image src="/images/feature-task-management.svg" preview={false} />
           </Col>
         </Row>
