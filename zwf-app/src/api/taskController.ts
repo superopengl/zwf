@@ -100,9 +100,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   if (isClient) {
     const taskField = file.field;
     const { value } = taskField;
-    const fileItem = value.find(x => x.fileId === fileId);
-
-    fileItem.lastClientReadAt = getUtcNow();
+    value.lastClientReadAt = getUtcNow();
     await db.getRepository(TaskField).save(taskField);
   }
 
