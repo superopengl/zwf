@@ -42,10 +42,6 @@ padding: 1rem;
 // padding-top: 40px;
 // display: block;
 
-.ant-typography {
-  // color: rgba(255,255,255,1);
-  text-align: center;
-}
 
 .light2 {
   position: absolute;
@@ -54,8 +50,8 @@ padding: 1rem;
   left: 122.65px;
   top: 205.57px;
   
-  background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.4) 12.79%, rgba(55, 212, 207, 0.4) 56.4%);
-  filter: blur(219.522px);
+  background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.5) 12.79%, rgba(55, 212, 207, 0.5) 56.4%);
+  filter: blur(119.522px);
   transform: rotate(-31.89deg);
   
 }
@@ -89,8 +85,8 @@ export const HomeCarouselArea = () => {
       <PosterContainer style={{ position: 'relative' }}>
         {/* <div className="poster-patterns" /> */}
         <Row justify="center" align="middle" gutter={[0, 32]}>
-          <Col {...span}>
-            <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center', width: '100%', margin: '40px auto' }}>
+          <Col>
+            <Space direction="vertical" style={{ maxWidth: 500, margin: '40px auto' }}>
               <Title style={{ fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800 }}>
                 <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
@@ -100,7 +96,7 @@ export const HomeCarouselArea = () => {
               <OrgRegisterInput />
             </Space>
           </Col>
-          <Col {...span} style={{ position: 'relative', paddingRight: 32 }}>
+          <Col style={{ position: 'relative', paddingRight: 32 }}>
             <div className="light1"></div>
             <div className="light2"></div>
             <Image src="/images/landingpage-image.svg" width="100%" preview={false} />

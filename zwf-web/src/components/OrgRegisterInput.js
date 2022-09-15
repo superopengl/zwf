@@ -34,15 +34,13 @@ export const OrgRegisterInput = React.memo(props => {
 
 
   return <Space>
-    <StyledInput
+    {/* <StyledInput
       prefix={<MailOutlined style={{color: 'rgba(0, 0, 0, 0.3)'}} />}
       size="large"
       readOnly={true}
       placeholder="Email"
       onClick={handleShowModal}
-      // enterButton="Try it Now"
-      // onSearch={handleShowModal}
-    />
+    /> */}
     <Button type="primary" size="large" onClick={handleShowModal} style={{color: '#ffffff'}}>Try it Now</Button>
     <OrgRegisterModal
       visible={visible}

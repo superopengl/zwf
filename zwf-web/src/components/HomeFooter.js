@@ -18,7 +18,7 @@ text-align: center;
 font-size: 0.8rem;
 color: #aaaaaa;
 background-color: #13161B;
-padding: 2rem 1rem;
+padding: 1em 1rem;
 // position: absolute;
 // bottom: 0;
 // left: 0;
@@ -31,11 +31,11 @@ section {
 }
 
 h3.ant-typography {
-  color: #ffffff;
+  color: #BCC4D0;
   font-size: 14px;
   text-align: left;
   margin-bottom: 18px;
-  font-weight: 700;
+  font-weight: 300;
 }
 
 .ant-col {
@@ -46,7 +46,7 @@ h3.ant-typography {
 }
 
 .ant-btn, .ant-typography {
-  color: #D6DBE3BB;
+  color: #FFFFFF;
   text-align: left;
 }
 
@@ -79,7 +79,7 @@ const span = {
 const HomeFooter = () => (
   <FooterStyled>
     <section>
-      <Row justify="center" style={{ paddingBottom: '2rem' }} gutter={[8, 16]}>
+      <Row justify="center" style={{paddingTop: '1rem', paddingBottom: '1rem' }} gutter={[8, 16]}>
         <Col flex="auto">
           <Row gutter={[48, 24]}>
             <Col>
@@ -113,10 +113,10 @@ const HomeFooter = () => (
     </section>
     <Row style={{ borderTop: '1px solid #D6DBE333' }}></Row>
     <section>
-      <Row style={{ paddingTop: '2rem' }} align="middle" gutter={[8, 16]}>
+      <Row style={{ paddingTop: '1rem' }} align="middle" gutter={[8, 16]}>
         <Col {...span}>
           <Link to="/">
-            <Image src="/images/logo-text-light.svg" preview={false} height={32} />
+            <Image src="/images/logo-text-light.svg" preview={false} height={24} />
           </Link>
         </Col>
         <Col flex="auto">
