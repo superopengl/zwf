@@ -1,10 +1,11 @@
 import React from 'react';
-import { Typography, Input, Button, Space } from 'antd';
+import { Typography, Input, Button, Space, Grid } from 'antd';
 import { OrgRegisterModal } from './OrgRegisterModal';
 import { MailOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
 const { Text } = Typography;
+const {useBreakpoint} = Grid;
 
 
 const StyledInput = styled(Input)`

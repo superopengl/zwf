@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Col, Row, Space, Button, Image } from 'antd';
+import { Card, Typography, Col, Row, Space, Button, Image, Grid } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
@@ -43,7 +43,7 @@ const InnerContainer = styled.div`
 width: 100%;
 background-color:  #F6F7F9;
 // background-image: linear-gradient(5deg, #F1F2F5, #F1F2F5 50%, #ffffff 50%, #ffffff 100%);
-padding-top: 6rem;
+padding: 6rem 1rem 0;
 .price-card {
   max-width: 400px;
   width: calc(100vw - 2rem);
@@ -67,7 +67,7 @@ padding-top: 6rem;
 
 export const HomePricingArea = props => {
   const [visible, setVisible] = React.useState(false);
-
+  const screens = Grid.useBreakpoint();
 
   const handleShowModal = (e) => {
     e.stopPropagation();
@@ -90,15 +90,14 @@ export const HomePricingArea = props => {
             wrap={false}
             style={{ alignItems: 'flex-end' }}
           >
-            <Col flex="auto" style={{ textAlign: 'right', width: 400 }}
-            >
+            {!screens.xs && <Col flex="auto" style={{ textAlign: 'right', width: 400 }}>
               <Image src="/images/price-card-left.svg" preview={false} />
-            </Col>
+            </Col>}
             <Col
               style={{ position: 'relative', top: 48, display: 'flex', justifyContent: 'center', minWidth: 360 }}
             >
               <div className='price-card'>
-                <Space direction='horizontal' align="end" style={{ width: '100%', justifyContent: 'center'}}>
+                <Space direction='horizontal' align="end" style={{ width: '100%', justifyContent: 'center' }}>
                   <Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text>
                   <Space><Text style={{ color: '#ffffff', fontSize: 36, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}> <small>/Month</small></Text></Space>
                 </Space>
@@ -119,16 +118,13 @@ export const HomePricingArea = props => {
                 </Paragraph>
                 <Paragraph>
                   <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> No long term contract bound
-                </Paragraph>                
+                </Paragraph>
                 <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} >Join Now</Button>
               </div>
             </Col>
-            <Col flex="auto"
-              style={{ textAlign: 'left',width: 400 }}
-            >
+            {!screens.xs && <Col flex="auto" style={{ textAlign: 'left', width: 400 }}>
               <Image src="/images/price-card-right.svg" preview={false} />
-
-            </Col>
+            </Col>}
           </Row>
         </Row>
         <OrgRegisterModal
