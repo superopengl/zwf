@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Button, Row, Col, Image, Layout, Space, Typography } from 'antd';
+import { Button, Row, Col, Image, Layout, Space, Typography, Grid, Divider } from 'antd';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
 import styled from 'styled-components';
@@ -10,6 +10,8 @@ import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
 import { OrgRegisterModal } from 'components/OrgRegisterModal';
 import { useWindowScrollPosition } from "rooks";
+import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
+import { Drawer } from 'antd';
 
 const { Text } = Typography;
 
@@ -21,11 +23,12 @@ min-height: 100%;
 background: #ffffff;
 
 .ant-layout-header {
-  background: #ffffffee;
+  background: #ffffff;
   box-shadow: 0px 5.99376px 23.975px rgba(0, 18, 77, 0.1);
   position: sticky !important;
   top: 0;
   z-index: 100;
+  padding: 0 1rem;
 }
 
 .ant-tabs-nav {
@@ -43,56 +46,67 @@ background: #ffffff;
 `;
 
 
+
 export const PortalPage = () => {
 
   const navigate = useNavigate();
-  const [visible, setVisible] = React.useState(false);
+  const [orgRegisterVisible, setOrgRegisterVisible] = React.useState(false);
+  const [modalMenuVisible, setModalMenuVisible] = React.useState(false);
   // const position = useWindowScrollPosition(); 
   const context = React.useContext(GlobalContext);
+  const screens = Grid.useBreakpoint();
 
 
   const { role } = context;
   const isGuest = role === 'guest';
+  const isWideScreen = screens.xxl || screens.xl || screens.lg;
 
   const handleMenuChange = (path) => {
     navigate(path);
+    setModalMenuVisible(false);
   }
 
-  const handleShowModal = () => {
-    setVisible(true);
+  const handleShowRegisterModal = () => {
+    setOrgRegisterVisible(true);
+    setModalMenuVisible(false);
   }
 
-  const handleHideModal = () => {
-    setVisible(false);
+  const handleHideRegisterModal = () => {
+    setOrgRegisterVisible(false);
+    setModalMenuVisible(false);
   }
 
   return <StyledLayoutPage>
-    <Layout.Header>
+    <Layout.Header >
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
           <Image src="/images/logo-text-dark.svg" preview={false} height={32} />
         </Link>
-        <Row gutter={30} align="middle">
-          <Col>
+
+        <Row gutter={(screens.xxl || screens.xl || screens.lg || screens.md) ? 30 : 16} align="middle">
+          {(screens.xxl || screens.xl || screens.lg) && <Col>
             <Tabs defaultActiveKey="/" onChange={handleMenuChange}>
               <Tabs.TabPane tab="Home" key="/"></Tabs.TabPane>
               <Tabs.TabPane tab="Resources" key="/resource"></Tabs.TabPane>
               <Tabs.TabPane tab="Pricing" key="/#pricing"></Tabs.TabPane>
               <Tabs.TabPane tab="Contact Us" key="/#contactus"></Tabs.TabPane>
             </Tabs>
-          </Col>
-          {isGuest && <Col>
+          </Col>}
+          {(screens.xxl || screens.xl || screens.lg || screens.md || screens.sm) && isGuest && <Col>
             <Link to="/login">
               <Button type="primary" ghost>Log in</Button>
             </Link>
           </Col>}
-          {isGuest && <Col>
-            <Button type="primary" onClick={handleShowModal}>Try it Now</Button>
+          {isGuest && ((screens.xxl || screens.xl || screens.lg || screens.md || screens.sm)) && <Col>
+            <Button type="primary" onClick={handleShowRegisterModal}>Try it Now</Button>
           </Col>}
           {!isGuest && <Col>
             <Link to="/task">
               <Button type="primary">Go to App</Button>
             </Link>
+          </Col>}
+          {!(screens.xxl || screens.xl || screens.lg) && <Col>
+            <Button icon={<MenuOutlined />} onClick={() => setModalMenuVisible(x => !x)} />
           </Col>}
         </Row>
       </Space>
@@ -102,10 +116,36 @@ export const PortalPage = () => {
     </Layout.Content>
     <HomeFooter />
     <OrgRegisterModal
-      visible={visible}
-      onOk={handleHideModal}
-      onCancel={handleHideModal}
+      visible={orgRegisterVisible}
+      onOk={handleHideRegisterModal}
+      onCancel={handleHideRegisterModal}
     />
+    <Drawer
+      title={<Image src="/images/logo-text-dark.svg" preview={false} height={24} />}
+      extra={<Button type="text" size="large" icon={<CloseOutlined />} onClick={() => setModalMenuVisible(false)}/>}
+      visible={modalMenuVisible}
+      onClose={() => setModalMenuVisible(false)}
+      closable={false}
+      destroyOnClose={true}
+      maskClosable={true}
+      headerStyle={{padding: 16, paddingRight: 4}}
+      footerStyle={{border: 'none', marginBottom: '4rem'}}
+      footer={
+        <Space direction="vertical" style={{ width: '100%' }} size="middle">
+          {isGuest && <Button type="primary" block size="large" onClick={handleShowRegisterModal}>Try it Now</Button>}
+          {isGuest && <Button type="link" block size="large" onClick={() => handleMenuChange('/login')}>Login</Button>}
+          {!isGuest && <Button type="primary" block size="large" onClick={() => handleMenuChange('/task')}>Go to App</Button>}
+        </Space>
+      }
+    >
+      <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Button type="text" block size="large" onClick={() => handleMenuChange('/')}>Home</Button>
+        <Button type="text" block size="large" onClick={() => handleMenuChange('/resource')}>Resources</Button>
+        <Button type="text" block size="large" onClick={() => handleMenuChange('/#pricing')}>Pricing</Button>
+        <Button type="text" block size="large" onClick={() => handleMenuChange('/#contactus')}>Contact Us</Button>
+      </Space>
+    </Drawer>
+
   </StyledLayoutPage>
 }
 
