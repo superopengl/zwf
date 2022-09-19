@@ -83,49 +83,42 @@ export const HomePricingArea = props => {
       <InnerContainer justify='center'>
         <Title style={{ color: '#0FBFC4', textAlign: 'center', fontWeight: 700, fontSize: 18, lineHeight: 2, margin: 0 }}>We get tired of multiple plans!</Title>
         <Title style={{ textAlign: 'center', fontWeight: 800, margin: 0 }}>Hassle-Free with <Text style={{ color: '#0FBFC4' }}>Just one plan</Text></Title>
-        <Row justify='center'>
-          <Row align='end'
-            justify='center'
-            gutter={20}
-            wrap={false}
-            style={{ alignItems: 'flex-end' }}
+        <Row justify='center'
+          style={{
+            backgroundImage: screens.xs ? 'none': 'url("/images/pricing-section-background.svg")',
+            backgroundRepeat: 'no-repeat',
+            backgroundPosition: 'bottom',
+          }}
+        >
+          <Col
+            style={{ position: 'relative', top: 80, display: 'flex', justifyContent: 'center', minWidth: 360 }}
           >
-            {!screens.xs && <Col flex="auto" style={{ textAlign: 'right'}}>
-              <Image src="/images/price-card-left.svg" preview={false} width={400}/>
-            </Col>}
-            <Col
-              style={{ position: 'relative', top: 48, display: 'flex', justifyContent: 'center', minWidth: 360 }}
-            >
-              <div className='price-card'>
-                <Space direction='horizontal' align="end" style={{ width: '100%', justifyContent: 'center' }}>
-                  <Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text>
-                  <Space><Text style={{ color: '#ffffff', fontSize: 36, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}> <small>/Month</small></Text></Space>
-                </Space>
-                <Paragraph style={{ fontSize: 16, marginTop: '1rem' }}>
-                  Description description description description description description description description description description description description description description
-                </Paragraph>
-                <Paragraph>
-                  <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> 14 days free trial
-                </Paragraph>
-                <Paragraph>
-                  <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> All the features included
-                </Paragraph>
-                <Paragraph>
-                  <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Coming-up features always included
-                </Paragraph>
-                <Paragraph>
-                  <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Monthly auto renew payment
-                </Paragraph>
-                <Paragraph>
-                  <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> No long term contract bound
-                </Paragraph>
-                <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} >Join Now</Button>
-              </div>
-            </Col>
-            {!screens.xs && <Col flex="auto" style={{ textAlign: 'left'}}>
-              <Image src="/images/price-card-right.svg" preview={false} width={400} />
-            </Col>}
-          </Row>
+            <div className='price-card'>
+              <Space direction='horizontal' align="end" style={{ width: '100%', justifyContent: 'center' }}>
+                <Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text>
+                <Space><Text style={{ color: '#ffffff', fontSize: 36, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}> <small>/Month</small></Text></Space>
+              </Space>
+              <Paragraph style={{ fontSize: 16, marginTop: '1rem' }}>
+                Description description description description description description description description description description description description description description
+              </Paragraph>
+              <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> 14 days free trial
+              </Paragraph>
+              <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> All the features included
+              </Paragraph>
+              <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Coming-up features always included
+              </Paragraph>
+              <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Monthly auto renew payment
+              </Paragraph>
+              <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> No long term contract bound
+              </Paragraph>
+              <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} >Join Now</Button>
+            </div>
+          </Col>
         </Row>
         <OrgRegisterModal
           visible={visible}
