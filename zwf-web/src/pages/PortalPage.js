@@ -106,7 +106,7 @@ export const PortalPage = () => {
             </Link>
           </Col>}
           {!(screens.xxl || screens.xl || screens.lg) && <Col>
-            <Button icon={<MenuOutlined />} onClick={() => setModalMenuVisible(x => !x)} />
+            <Button size="large" icon={<MenuOutlined />} onClick={() => setModalMenuVisible(x => !x)} />
           </Col>}
         </Row>
       </Space>
@@ -127,6 +127,7 @@ export const PortalPage = () => {
       onClose={() => setModalMenuVisible(false)}
       closable={false}
       destroyOnClose={true}
+      width={280}
       maskClosable={true}
       headerStyle={{padding: 16, paddingRight: 4}}
       footerStyle={{border: 'none', marginBottom: '4rem'}}
