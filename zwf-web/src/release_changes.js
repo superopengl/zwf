@@ -1,2 +1,2 @@
 export const notes=`
-only show version detection after login`
+refine ui`
