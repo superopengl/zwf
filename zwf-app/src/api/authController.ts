@@ -29,6 +29,7 @@ import { UserInformation } from '../entity/views/UserInformation';
 import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
+import { UserLoginType } from '../types/UserLoginType';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -355,13 +356,13 @@ export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
   assert(user, 404, 'User not found');
 
   await db.getRepository(User).update({ id: user.id }, {
-    loginType: 'google',
+    loginType: UserLoginType.Google,
     lastLoggedInAt: getUtcNow(),
   });
 
   attachJwtCookie(user, res);
 
-  emitUserAuditLog(user.id, 'login', { type: 'google' });
+  emitUserAuditLog(user.id, 'login', { type: UserLoginType.Google });
 
   res.json(sanitizeUser(user));
 });

@@ -1,3 +1,4 @@
+import { UserLoginType } from './../types/UserLoginType';
 import { Tag } from './Tag';
 import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne, Unique } from 'typeorm';
 import { Role } from '../types/Role';
@@ -23,8 +24,8 @@ export class User {
   @Index({ unique: true })
   emailHash!: string;
 
-  @Column({ default: 'local' })
-  loginType: string;
+  @Column({ default: UserLoginType.Local })
+  loginType: UserLoginType;
 
   @Column()
   secret!: string;

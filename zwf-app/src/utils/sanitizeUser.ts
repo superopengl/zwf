@@ -10,6 +10,7 @@ export function sanitizeUser(user: UserInformation) {
     'orgId',
     'email',
     'givenName',
+    'loginType',
     'surname',
     'avatarFileId',
     'avatarColorHex',
