@@ -20,7 +20,7 @@ import { BsBell } from 'react-icons/bs';
 import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { VersionMismatchAlert } from 'components/showVersionMismatchAlert';
+import { VersionMismatchAlert } from "components/VersionMismatchAlert";
 
 const { Link: LinkText } = Typography;
 
