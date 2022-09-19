@@ -88,6 +88,7 @@ export const HomePricingArea = props => {
             backgroundImage: screens.xs ? 'none': 'url("/images/pricing-section-background.svg")',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'bottom',
+            margin: '0 -1rem',
           }}
         >
           <Col
