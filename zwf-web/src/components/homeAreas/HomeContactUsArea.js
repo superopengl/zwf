@@ -76,8 +76,6 @@ export const HomeContactUsArea = props => {
 
   const showDecorationPicture = screens.lg || screens.xl || screens.xxl;
 
-  console.log(screens);
-
   const handleSubmit = values => {
     setLoading(true);
     submitContact$(values).pipe(

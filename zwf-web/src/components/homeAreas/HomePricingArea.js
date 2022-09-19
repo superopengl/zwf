@@ -90,8 +90,8 @@ export const HomePricingArea = props => {
             wrap={false}
             style={{ alignItems: 'flex-end' }}
           >
-            {!screens.xs && <Col flex="auto" style={{ textAlign: 'right', width: 400 }}>
-              <Image src="/images/price-card-left.svg" preview={false} />
+            {!screens.xs && <Col flex="auto" style={{ textAlign: 'right'}}>
+              <Image src="/images/price-card-left.svg" preview={false} width={400}/>
             </Col>}
             <Col
               style={{ position: 'relative', top: 48, display: 'flex', justifyContent: 'center', minWidth: 360 }}
@@ -122,8 +122,8 @@ export const HomePricingArea = props => {
                 <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} >Join Now</Button>
               </div>
             </Col>
-            {!screens.xs && <Col flex="auto" style={{ textAlign: 'left', width: 400 }}>
-              <Image src="/images/price-card-right.svg" preview={false} />
+            {!screens.xs && <Col flex="auto" style={{ textAlign: 'left'}}>
+              <Image src="/images/price-card-right.svg" preview={false} width={400} />
             </Col>}
           </Row>
         </Row>

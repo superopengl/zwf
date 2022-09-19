@@ -52,9 +52,8 @@ padding: 1rem;
   // border: 1px solid red;
   
   background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.5) 12.79%, rgba(55, 212, 207, 0.5) 56.4%);
-  filter: blur(clamp(60px, 20vw, 120px));
+  filter: blur(clamp(80px, 20vw, 120px));
   transform: rotate(-31.89deg);
-  
 }
 
 .light1 {
@@ -66,7 +65,7 @@ padding: 1rem;
   // border: 1px solid blue;
   
   background: rgba(0, 61, 182, 0.8);
-  filter: blur(clamp(150px, 20vw, 300px));
+  filter: blur(clamp(200px, 20vw, 300px));
   transform: rotate(-135deg);
 }
 `;
@@ -89,7 +88,7 @@ export const HomeCarouselArea = () => {
         <Row justify="center" align="middle" gutter={[0, 32]}>
           <Col>
             <Space direction="vertical" style={{ maxWidth: 500, margin: '40px auto' }}>
-              <Title style={{ fontSize: 'clamp(24px, 3vw, 36px)', fontWeight: 800 }}>
+              <Title style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 800 }}>
                 <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
               <Paragraph>
