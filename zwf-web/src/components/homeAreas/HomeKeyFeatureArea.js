@@ -81,7 +81,7 @@ export const HomeKeyFeatureArea = () => {
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span} >
-            <Image src="/images/feature-task-template.svg" preview={false}  style={{padding: '0 1rem'}}/>
+            <Image src="/images/feature-task-template.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>
         </Row>
         <Row gutter={[24, 24]} justify='center'>
@@ -93,7 +93,7 @@ export const HomeKeyFeatureArea = () => {
             <Image src="/images/feature-doc-template.svg" preview={false} />
           </Col>}
           {!isWide && <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
-            <Image src="/images/feature-doc-template-narrow.svg" preview={false}  style={{padding: '0 1rem'}}/>
+            <Image src="/images/feature-doc-template-narrow.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>}
         </Row>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
@@ -102,18 +102,18 @@ export const HomeKeyFeatureArea = () => {
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span}>
-            <Image src="/images/feature-doc-sign.svg" preview={false} style={{padding: '0 1rem'}}/>
+            <Image src="/images/feature-doc-sign.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>
         </Row>
-          <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800, flexDirection: screens.lg ? 'row' : 'column-reverse' }}>
-            <Col {...span}>
-              <Image src="/images/feature-timeline.svg" preview={false}  style={{padding: '0 1rem'}} />
-            </Col>
-            <Col {...span}>
-              <Title level={2}><Text style={{ color: '#0FBFC4' }}>Timeline</Text></Title>
-              <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
-            </Col>
-          </Row>
+        <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800, flexDirection: screens.lg ? 'row' : 'column-reverse' }}>
+          <Col {...span}>
+            <Image src="/images/feature-timeline.svg" preview={false} style={{ padding: '0 1rem' }} />
+          </Col>
+          <Col {...span}>
+            <Title level={2}><Text style={{ color: '#0FBFC4' }}>Timeline</Text></Title>
+            <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
+          </Col>
+        </Row>
         <div justify='center' style={{ width: '100%', height: 'clamp(3rem, 7vw, 8rem)', backgroundImage: 'linear-gradient(to top left, #F6F7F9, #F6F7F9 50%, #ffffff 50%, #ffffff 100%)' }}>
         </div>
         <Row gutter={[24, 24]} justify='center' style={{ width: '100%', backgroundColor: '#F6F7F9' }}>
@@ -121,9 +121,18 @@ export const HomeKeyFeatureArea = () => {
             <Title level={2}>Task management</Title>
             <Paragraph style={{ width: 600 }}>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col flex="auto" style={{ alignItems: screens.md ? 'center': 'end', position: 'relative' }}>
-            <Image src="/images/feature-task-management.svg" preview={false} style={{minWidth: 800, maxWidth: 1000 }} />
-            <Image src="/images/feature-task-management-overflow.svg" preview={false} style={{position: 'absolute', left: screens.lg ? -500 : -400, bottom: -50, width: 'clamp(400px, 50vw, 500px)'}}/>
+          <Col flex="auto" style={{
+            alignItems: 'center',
+            backgroundImage: 'url("/images/feature-task-management.svg")',
+            backgroundPosition: screens.md ? 'center' : 'right bottom',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: screens.md ? 'contain' : 'cover',
+            height: 450,
+          }}>
+            {/* <Image src="/images/feature-task-management.svg" preview={false} style={{minWidth: 800, maxWidth: 1000 }} /> */}
+            <div style={{display: 'flex', alignItems: 'start', width: '100%', maxWidth: 1000, margin: '0 auto'}}>
+              <Image src="/images/feature-task-management-overflow.svg" preview={false} width={460} style={{ position: 'relative', top: 120 }} />
+            </div>
           </Col>
         </Row>
       </InnerContainer>
