@@ -59,10 +59,10 @@ const StyledTable = styled(Table)`
 
 .current-item {
   .ant-table-cell:first-child {
-    border-left-color: #37AFD2;
+    border-left-color: #0FBFC4;
   }  
   .ant-table-cell {
-    background-color: #37AFD222;
+    background-color: #0FBFC422;
   }
 }
 `;

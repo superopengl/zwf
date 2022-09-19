@@ -29,7 +29,7 @@ const LayoutStyled = styled.div`
   }
 
   .published-page {
-    border-left: 4px solid #37AFD2;
+    border-left: 4px solid #0FBFC4;
   }
 
   .unpublished-page {

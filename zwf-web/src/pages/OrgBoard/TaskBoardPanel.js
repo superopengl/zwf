@@ -34,7 +34,7 @@ const COLUMN_DEFS = [
     status: 'in_progress',
     label: 'In Progress',
     bgColor: '#F1F2F5',
-    hoverColor: '#37AFD2',
+    hoverColor: '#0FBFC4',
   },
   {
     status: 'action_required',

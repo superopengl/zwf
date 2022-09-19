@@ -10,7 +10,7 @@ const statusDefs = {
   },
   'in_progress': {
     label: 'In Progress',
-    color: '#37AFD2',
+    color: '#0FBFC4',
   },
   'action_required': {
     label: 'Action Required',

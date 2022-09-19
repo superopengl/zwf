@@ -22,7 +22,7 @@ border-radius: 12px;
 align-items: center;
 justify-content: center;
 border: none;
-background-color:  #37AFD2bb;
+background-color:  #0FBFC4bb;
 color: white;
 // box-shadow: 1px 1px 5px #222222;
 box-shadow: 0 5px 10px rgba(0,0,0,0.3);
@@ -30,15 +30,15 @@ box-shadow: 0 5px 10px rgba(0,0,0,0.3);
 
 &:focus,&:hover,&:active {
 color: white;
-background-color: #37AFD2;
+background-color: #0FBFC4;
 // border: 1px solid white;
 }
 `;
 
 const StyledCard = styled(Card)`
 box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-border-radius: 16px;
-// background-color: #37AFD2;
+border-radius: 4px;
+// background-color: #0FBFC4;
 width: 400px;
 // max-height: calc(100vh - 400px);
 
@@ -55,9 +55,8 @@ export const SupportAffix = () => {
   const [list, setList] = React.useState([]);
   const context = React.useContext(GlobalContext);
 
-  const { givenName, surname } = context.user ?? {};
-  const name = `${givenName || ''} ${surname || ''}`.trim();
-  const cheerName = `Hi ${name || 'there'}`.trim();
+  const { givenName } = context.user ?? {};
+  const cheerName = givenName?.trim() || 'Hi There';
 
   // Eventsource subscription
   React.useEffect(() => {
@@ -120,12 +119,12 @@ export const SupportAffix = () => {
         {visible &&
           <StyledCard
             title={<>
-              <Title>{cheerName} 👋</Title>
-              <Paragraph type="secondary">
+              <Title>👋 {cheerName}</Title>
+              <Paragraph type="secondary" style={{color: '#FFFFFF'}}>
                 Ask us anything, or share your feedback.
               </Paragraph>
             </>}
-            headStyle={{ backgroundColor: '#37AFD2' }}
+            headStyle={{ backgroundColor: '#0FBFC4' }}
             bodyStyle={{ padding: 0 }}
           >
             <div style={{ height: '50vh', minHeight: 200, maxHeight: 600 }}>

@@ -29,7 +29,7 @@ position: relative;
 
   .docItem:after {
     content: "click to view";
-    color: #37AFD2;
+    color: #0FBFC4;
   }
 }
 `;

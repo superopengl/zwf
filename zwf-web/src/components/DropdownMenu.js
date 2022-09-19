@@ -6,7 +6,7 @@ import { CaretDownOutlined, SettingOutlined } from '@ant-design/icons';
 
 const StyledDropdown = styled(Dropdown)`
 .ant-dropdown-menu-item:hover {
-  background-color: #37AFD2 !important;
+  background-color: #0FBFC4 !important;
 }
 `
 

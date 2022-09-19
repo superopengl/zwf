@@ -51,7 +51,7 @@ const TAB_DEFS = [
   {
     label: 'In progress',
     description: 'These are the cases that are being proceeded by your agents. No immidiate action is required from your side at the moment.',
-    badgeColor: '#37AFD2',
+    badgeColor: '#0FBFC4',
     filter: item => {
       return item.status === 'in_progress'
     }

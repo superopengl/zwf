@@ -14,7 +14,7 @@ const definitions = [
   {
     label: 'In Progress',
     value: 'in_progress',
-    color: '#37AFD2',
+    color: '#0FBFC4',
   },
   {
     label: 'Action Required',

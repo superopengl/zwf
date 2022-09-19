@@ -16,19 +16,19 @@ const Container = styled.div`
   margin: 0 auto;
   width: 100%;
   max-width: 1200px;
-  padding: 3rem 1rem;
+  padding: 1rem;
   
   .ant-row {
-    margin-top: 24px;
+    // margin-top: 24px;
   }
 
   .ant-card {
     box-shadow: 0px 0px 16px rgba(0, 26, 31, 0.08);
     border-radius: 8px;
     &:hover {
-      background-color: #0FBFC411;
-      transform: scale(1.03);
-      transition: all 0.05s ease-in-out; 
+      // background-color: #0FBFC411;
+      // transform: scale(1.03);
+      // transition: all 0.05s ease-in-out; 
     }
   }
 
@@ -92,10 +92,10 @@ export const ResourceListPage = React.memo(props => {
 
   return <Container justify='center'>
     {/* <Title>Resource Library</Title> */}
-    <Row justify="center" style={{ padding: '0 16px' }}>
+    <Row justify="center">
       <Image src="/images/resource-list-poster.svg" alt="Resource list page poster" preview={false} />
     </Row>
-    <Row>
+    <Row style={{marginTop: 24}}>
       <List
         size="small"
         grid={{
@@ -111,7 +111,7 @@ export const ResourceListPage = React.memo(props => {
         dataSource={shouldShowSkelenton ? placeholderList : list}
         style={{ width: '100%' }}
         loading={loading}
-        renderItem={item => <List.Item>
+        renderItem={item => <List.Item style={{padding: 0}}>
           {shouldShowSkelenton ? <SkeletonCard /> : <Card
             bordered={false}
             hoverable

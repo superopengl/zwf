@@ -50,7 +50,7 @@ export const InviteClientModal = props => {
     visible={visible}
     onCancel={handleCancel}
     onOk={onOk}
-    title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#37AFD2' }} />Invite Client</Space>}
+    title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#0FBFC4' }} />Invite Client</Space>}
     closable
     destroyOnClose={true}
     maskClosable

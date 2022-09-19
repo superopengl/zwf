@@ -117,7 +117,7 @@ export const HomePricingArea = props => {
               <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> No long term contract bound
               </Paragraph>
-              <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} >Join Now</Button>
+              <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} ><strong>Join Now</strong></Button>
             </div>
           </Col>
         </Row>

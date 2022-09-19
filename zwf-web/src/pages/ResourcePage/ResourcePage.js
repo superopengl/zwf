@@ -14,7 +14,7 @@ const { useBreakpoint } = Grid;
 
 const LayoutStyled = styled.div`
   margin: 0 auto;
-  padding: 3rem 1rem;
+  padding: 1rem 1rem 3rem;
   max-width: 700px;
 
   .head-image {
@@ -78,7 +78,7 @@ export const ResourcePage = (props) => {
         </Col>
 
       </Row>
-      <Paragraph style={{ fontSize: 16, textAlign: 'justify' }}>
+      <Paragraph style={{ fontSize: 16, textAlign: 'left' }}>
         <RawHtmlDisplay value={page.html} />
       </Paragraph>
       {/* <Row justify='center'>

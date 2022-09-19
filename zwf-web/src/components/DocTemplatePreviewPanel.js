@@ -23,7 +23,7 @@ const PreviewDocContainer = styled(Card)`
 // padding: 0;
 // margin-top: 20px;
 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-// border-color: #37AFD2;
+// border-color: #0FBFC4;
 `;
 
 
