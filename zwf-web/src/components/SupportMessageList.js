@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { css } from '@emotion/css'
 import PropTypes from 'prop-types';
 import { TimeAgo } from './TimeAgo';
+import { RawHtmlDisplay } from './RawHtmlDisplay';
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -48,9 +49,9 @@ const ChatMessage = React.memo(props => {
           // marginBottom: 4,
           // color: isMe ? '#000000cc !important' : 'normal',
           backgroundColor: isMe ? '#0FBFC4aa' : 'rgb(236, 236, 236)',
-          borderRadius: 12
+          borderRadius: 12,
         }}>
-        {message}
+          <RawHtmlDisplay value={message}/>
       </Card>
       <Text type="secondary">
         <TimeAgo value={createdAt} accurate={false} showTime={false} />
