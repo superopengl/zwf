@@ -32,3 +32,8 @@ DevNotes:
     1. The org owner manually fix the primary payment method and 
     2. the owned amount is paid successfully (one month)
     3. a new monthly purchase is successfully.
+
+
+```shell
+docker builder prune
+```
