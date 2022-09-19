@@ -1,2 +1,2 @@
 export const notes=`
-more ui refine`
+fix homepage`
