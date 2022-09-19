@@ -1,2 +1,2 @@
 export const notes=`
-responsive refine`
+more ui refine`
