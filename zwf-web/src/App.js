@@ -19,6 +19,8 @@ import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
+import { Alert } from 'antd';
+import { VersionMismatchAlert } from 'components/showVersionMismatchAlert';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -136,6 +138,7 @@ export const App = React.memo(() => {
       <ConfigProvider locale={antdLocale}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
+            <VersionMismatchAlert />
             <Routes>
               <Route path={'/'} element={<PortalPage />} >
                 <Route index element={<HomePage />} />
