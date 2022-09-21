@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Divider } from 'antd';
+import { Typography, Divider, Layout } from 'antd';
 import { Logo } from 'components/Logo';
+import HomeFooter from 'components/HomeFooter';
 const ContainerStyled = styled.div`
 padding: 2rem 1rem;
 margin: 1rem auto;
@@ -19,7 +20,7 @@ h3 {
 }
 `;
 const { Title } = Typography;
-const PrivacyPolicyPage = () => (
+const PrivacyPolicyPage = () => <Layout>
   <ContainerStyled>
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
     <Title style={{ textAlign: 'center' }}>Techseeding Pty Ltd - Privacy Policy</Title>
@@ -105,8 +106,9 @@ sent. Please refer to your Internet browser's instructions or help screens to le
     <p>This policy represents our policy at Aug 2020. We may change this privacy policy from time to time.</p>
 
   </ContainerStyled>
+  <HomeFooter/>
+  </Layout>
 
-);
 
 PrivacyPolicyPage.propTypes = {};
 
