@@ -85,7 +85,7 @@ export const PortalPage = () => {
 
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
-          <Image src="/images/logo-text-dark.svg" preview={false} height={32} />
+          <Image src="/images/logo-full-primary.svg" preview={false} height={40} />
         </Link>
 
         <Row gutter={(screens.xxl || screens.xl || screens.lg || screens.md) ? 30 : 16} align="middle">
@@ -126,7 +126,7 @@ export const PortalPage = () => {
       onCancel={handleHideRegisterModal}
     />
     <Drawer
-      title={<Image src="/images/logo-text-dark.svg" preview={false} height={24} />}
+      title={<Image src="/images/logo-full-primary.svg" preview={false} height={24} />}
       extra={<Button type="text" size="large" icon={<CloseOutlined />} onClick={() => setModalMenuVisible(false)}/>}
       visible={modalMenuVisible}
       onClose={() => setModalMenuVisible(false)}

@@ -26,7 +26,7 @@ const PosterContainer = styled.div`
 margin-top: 3rem;
 position: relative;
 // background-position: center;
-// background-image: url("images/logo.svg");
+// background-image: url("images/logo-primary.svg");
 // background-repeat: repeat;
 // background-color: #0FBFC4;
 // background-size: 120px;

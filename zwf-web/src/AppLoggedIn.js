@@ -231,7 +231,7 @@ export const AppLoggedIn = React.memo(() => {
       <VersionMismatchAlert />
       <Layout style={{ borderBottom: '1px solid #E3E6EB' }}>
         <Layout.Sider width={220} style={{ paddingLeft: 24, paddingRight: 24 }}>
-          <Image src="/images/logo-text-dark.svg" preview={false} width={140} />
+          <Image src="/images/logo-full-primary.svg" preview={false} width={140} />
         </Layout.Sider>
         <Layout.Content style={{ paddingLeft: 24, paddingRight: 24 }}>
           <Row justify="space-between" gutter={16}>
