@@ -23,7 +23,7 @@ const Container = styled.div`
 const scrollToElement = (selector) => {
   document.querySelector(selector)?.scrollIntoView({
     behavior: 'smooth',
-    block: "nearest",
+    block: "start",
     inline: "center"
   });
 }
