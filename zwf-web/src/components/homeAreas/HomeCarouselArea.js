@@ -85,7 +85,7 @@ export const HomeCarouselArea = () => {
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
       <PosterContainer style={{ position: 'relative' }}>
         {/* <div className="poster-patterns" /> */}
-        <Row justify="center" align="middle" gutter={[0, 32]}>
+        <Row justify="center" align="middle" gutter={[64, 32]}>
           <Col style={{padding: '0 32px'}}>
             <Space direction="vertical" style={{ maxWidth: 500, margin: '40px auto' }}>
               <Title style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 800 }}>
@@ -97,10 +97,12 @@ export const HomeCarouselArea = () => {
               <OrgRegisterInput />
             </Space>
           </Col>
-          <Col style={{ position: 'relative', paddingRight: 32 }}>
+          <Col style={{ position: 'relative', padding: '0 64px' }}>
             <div className="light1"></div>
             <div className="light2"></div>
             <Image src="/images/landingpage-image.svg" width="100%" preview={false} />
+            <Image src="/images/landingpage-view.png" width="110%" preview={false} style={{position: 'absolute', left: '-9%', bottom: '7%'}}/>
+            <Image src="/images/landingpage-flyman.svg" width="50%" preview={false} style={{position: 'absolute', left: '-10%', bottom: '-15%'}} />
           </Col>
         </Row>
       </PosterContainer>
