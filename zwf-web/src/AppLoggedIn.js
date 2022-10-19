@@ -228,7 +228,6 @@ export const AppLoggedIn = React.memo(() => {
       width: '100%',
       padding: 0,
     }}>
-      <VersionMismatchAlert />
       <Layout style={{ borderBottom: '1px solid #E3E6EB' }}>
         <Layout.Sider width={220} style={{ paddingLeft: 24, paddingRight: 24 }}>
           <Image src="/images/logo-full-primary.svg" preview={false} width={140} />
@@ -286,6 +285,7 @@ export const AppLoggedIn = React.memo(() => {
       </Layout>
     </Layout>
     {!isSystem && <SupportAffix />}
+    <VersionMismatchAlert />
   </StyledNewLayout>
 })
 

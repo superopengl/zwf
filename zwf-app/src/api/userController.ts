@@ -1,3 +1,5 @@
+import { getUtcNow } from './../utils/getUtcNow';
+import { LicenseTicket } from './../entity/LicenseTicket';
 import { db } from './../db';
 import { UserInformation } from './../entity/views/UserInformation';
 import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
@@ -188,6 +190,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await db.transaction(async m => {
       await m.getRepository(User).softDelete(id);
       await m.getRepository(UserProfile).delete(profileId);
+      await m.getRepository(LicenseTicket).update({userId: id, voidedAt: null}, {voidedAt: getUtcNow()});
     });
   }
 

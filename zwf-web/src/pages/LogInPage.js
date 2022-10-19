@@ -55,7 +55,7 @@ const LogInPage = props => {
                 <Button block type="link">Forgot password</Button>
               </Link>
               {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-              <Link to="/signup"><Button block type="link">Not a user? Sign up now!</Button></Link>
+              <Link to="/signup/org"><Button block type="link">Not joined yet? Register org now!</Button></Link>
             </Form.Item>
             <Divider>or</Divider>
             <GoogleSsoButton

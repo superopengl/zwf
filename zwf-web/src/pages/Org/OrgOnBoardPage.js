@@ -13,7 +13,7 @@ const Container = styled.div`
   height: 100%;
   padding: 0;
   margin: 0;
-  // background-color: #f3f3f3;
+  background-color: #ffffff;
 `;
 
 const InnerContainer = styled.div`

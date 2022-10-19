@@ -1,17 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Layout } from 'antd';
-import { Logo } from 'components/Logo';
-import { GlobalContext } from 'contexts/GlobalContext';
-import SignUpForm from 'components/SignUpForm';
-import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
-import { Steps, Button, message, Space, Alert, Form, Input, Typography } from 'antd';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { isValidABN, isValidACN } from "abnacn-validator";
-import * as tfn from 'tfn';
+import { Steps, Button, Form, Input, Typography } from 'antd';
+import { isValidABN } from "abnacn-validator";
 import { createMyOrg$, getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
-import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import { CountrySelector } from 'components/CountrySelector';
 

@@ -6,13 +6,13 @@ import { User } from '../entity/User';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
-import { createOrgSubscriptionWithTrial } from '../utils/createOrgSubscriptionWithTrial';
 import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { assert } from '../utils/assert';
+import { createNewTicketForUser } from '../utils/createNewTicketForUser';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -34,9 +34,9 @@ export const saveOrgProfile = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   assert(orgId, 400, 'orgId not found');
 
-  const orgInDb = await db.getRepository(Org).findOneBy({id: orgId });
+  const orgInDb = await db.getRepository(Org).findOneBy({ id: orgId });
 
-  const org = {...orgInDb, ...req.body, orgId};
+  const org = { ...orgInDb, ...req.body, orgId };
 
   await db.getRepository(Org).save(org);
 
@@ -47,12 +47,10 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const userId = getUserIdFromReq(req);
   const { name, businessName, country, address, tel, abn } = req.body;
-  const userEnitty = await db.getRepository(User).findOne({ where: { id: userId } });
 
-  const isFirstSave = !userEnitty.orgId;
+  const orgId = uuidv4();
 
   const org = new Org();
-  const orgId = isFirstSave ? uuidv4() : userEnitty.orgId;
   org.id = orgId;
   org.name = name?.trim();
   org.businessName = businessName?.trim();
@@ -61,16 +59,17 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
+  const ticket = createNewTicketForUser(userId, orgId);
+
   await db.transaction(async m => {
+    const userEnitty = await m.findOneBy(User, { id: userId });
 
-    if (isFirstSave) {
-      userEnitty.orgId = orgId;
-      userEnitty.orgOwner = true;
-      await m.save(userEnitty);
-    }
+    assert(!userEnitty.orgId, 400, 'The org has been initialized');
+    
+    userEnitty.orgId = orgId;
+    userEnitty.orgOwner = true;
 
-    await m.save(org);
-    await createOrgSubscriptionWithTrial(m, orgId);
+    await m.save([org, userEnitty, ticket]);
   });
 
   res.json();

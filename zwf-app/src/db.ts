@@ -1,3 +1,4 @@
+import { LicenseTicket } from './entity/LicenseTicket';
 import { RecurringInformation } from './entity/views/RecurringInformation';
 import { SystemConfig } from './entity/SystemConfig';
 import { TaskFileMetaInformation } from './entity/views/TaskFileMetaInformation';
@@ -48,6 +49,7 @@ import * as dotenv from 'dotenv';
 import { SubscriptionEndingNotificationEmailInformation } from './entity/views/SubscriptionEndingNotificationEmailInformation';
 import { SubscriptionBlock } from './entity/SubscriptionBlock';
 import { Contact } from './entity/Contact';
+import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 dotenv.config();
 
 const views = [
@@ -209,6 +211,7 @@ export const db = new DataSource({
     SupportUserLastAccess,
     EmailSentOutTask,
     SystemConfig,
+    LicenseTicket,
     // Views below
     TaskInformation,
     UserInformation,
@@ -226,6 +229,7 @@ export const db = new DataSource({
     RecurringInformation,
     ReceiptInformation,
     SubscriptionEndingNotificationEmailInformation,
+    LicenseTicketUsageInformation,
   ],
 });
 

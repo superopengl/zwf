@@ -4,6 +4,7 @@ import { UserStatus } from '../types/UserStatus';
 import { sendEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { EmailTemplateType } from '../types/EmailTemplateType';
+import { createNewTicketForUser } from './createNewTicketForUser';
 
 
 export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user, profile) {
@@ -11,9 +12,9 @@ export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user, pr
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  await m.save(profile);
-  user.profile = profile;
-  await m.save(user);
+  const ticket = createNewTicketForUser(user.id, user.orgId);
+
+  await m.save([profile, user, ticket]);
 
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   const email = profile.email;
