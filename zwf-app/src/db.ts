@@ -7,7 +7,6 @@ import { SupportInformation } from './entity/views/SupportInformation';
 import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
 import { Payment } from './entity/Payment';
-import { Subscription } from './entity/Subscription';
 import { EmailLog } from './entity/EmailLog';
 import { Message } from './entity/Message';
 import { DocTemplate } from './entity/DocTemplate';
@@ -24,7 +23,6 @@ import { File } from './entity/File';
 import { DataSource } from 'typeorm';
 import { initializeConfig } from './utils/initializeConfig';
 import { redisCache } from './services/redisCache';
-import { OrgCurrentSubscriptionInformation } from './entity/views/OrgCurrentSubscriptionInformation';
 import { OrgBasicInformation } from './entity/views/OrgBasicInformation';
 import { OrgPaymentMethod } from './entity/OrgPaymentMethod';
 import { CreditTransaction } from './entity/CreditTransaction';
@@ -46,8 +44,6 @@ import { ReceiptInformation } from './entity/views/ReceiptInformation';
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
-import { SubscriptionEndingNotificationEmailInformation } from './entity/views/SubscriptionEndingNotificationEmailInformation';
-import { SubscriptionBlock } from './entity/SubscriptionBlock';
 import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 dotenv.config();
@@ -194,8 +190,6 @@ export const db = new DataSource({
     DocTemplate,
     EmailLog,
     Message,
-    Subscription,
-    SubscriptionBlock,
     Payment,
     OrgPaymentMethod,
     ResourcePage,
@@ -217,7 +211,6 @@ export const db = new DataSource({
     UserInformation,
     OrgClientStatInformation,
     OrgMemberInformation,
-    OrgCurrentSubscriptionInformation,
     SupportUserUnreadInformation,
     TaskTrackingInformation,
     OrgClientInformation,
@@ -228,7 +221,6 @@ export const db = new DataSource({
     TaskFileInformation,
     RecurringInformation,
     ReceiptInformation,
-    SubscriptionEndingNotificationEmailInformation,
     LicenseTicketUsageInformation,
   ],
 });

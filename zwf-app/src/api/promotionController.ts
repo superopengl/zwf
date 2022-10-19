@@ -8,7 +8,6 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import * as moment from 'moment';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import * as voucherCodes from 'voucher-code-generator';
-import { Subscription } from '../entity/Subscription';
 import { Org } from '../entity/Org';
 import { db } from '../db';
 

@@ -1,14 +1,9 @@
 import { LicenseTicket } from '../LicenseTicket';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
-import { SubscriptionStatus } from '../../types/SubscriptionStatus';
-import { Subscription } from '../Subscription';
-import { Payment } from '../Payment';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
-import { UserStatus } from '../../types/UserStatus';
-import { UserLoginType } from '../../types/UserLoginType';
 
 
 @ViewEntity({
@@ -29,7 +24,7 @@ import { UserLoginType } from '../../types/UserLoginType';
       't."createdAt" as "ticketFrom"',
       't."voidedAt" as "ticketTo"',
       'CASE WHEN t."voidedAt" IS NULL THEN TRUE ELSE FALSE END as "ticketAlive"',
-      `EXTRACT(DAY FROM CURRENT_TIMESTAMP - o."createdAt") + 1 as "nowFromOrgCreated"`,
+      `EXTRACT(DAY FROM CURRENT_TIMESTAMP - o."createdAt") + 1 as "trialDays"`,
       `GREATEST(t."createdAt", o."createdAt" + '14 days'::interval) as "chargeFrom"`
     ]),
   dependsOn: [User, UserProfile, Org, LicenseTicket]
@@ -70,7 +65,7 @@ export class LicenseTicketUsageInformation {
   ticketAlive: boolean;
 
   @ViewColumn()
-  nowFromOrgCreated: number;
+  trialDays: number;
 
   @ViewColumn()
   chargeFrom: Date;

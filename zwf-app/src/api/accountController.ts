@@ -4,23 +4,22 @@ import { v4 as uuidv4 } from 'uuid';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { CreditTransaction } from '../entity/CreditTransaction';
-import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getCreditBalance } from '../utils/getCreditBalance';
 
 
 const getAccountForOrg = async (orgId) => {
 
-  const subscription = await db.getRepository(OrgCurrentSubscriptionInformation).findOne({ where: {orgId} });
+  // const subscription = await db.getRepository(OrgCurrentSubscriptionInformation).findOne({ where: {orgId} });
 
-  const credit = await getCreditBalance(db.manager, orgId);
+  // const credit = await getCreditBalance(db.manager, orgId);
 
-  const result = {
-    subscription,
-    credit
-  };
+  // const result = {
+  //   subscription,
+  //   credit
+  // };
 
-  return result;
+  return null;
 };
 
 export const getAccount = handlerWrapper(async (req, res) => {

@@ -3,7 +3,6 @@ import * as handlebars from 'handlebars';
 import { Stream } from 'stream';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
@@ -16,8 +15,8 @@ function getPaymentMethodName(cardLast4: string) {
 }
 
 function getSubscriptionDescription(receipt: ReceiptInformation) {
-  const start = moment(receipt.startedAt).format('D MMM YYYY');
-  const end = moment(receipt.endingAt).format('D MMM YYYY');
+  const start = null // moment(receipt.startedAt).format('D MMM YYYY');
+  const end = null // moment(receipt.endingAt).format('D MMM YYYY');
 
   return `ZeeWorkflow subscription (${start} - ${end})`;
 }

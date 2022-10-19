@@ -19,7 +19,6 @@ import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Payment } from '../entity/Payment';
-import { Subscription } from '../entity/Subscription';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { Role } from '../types/Role';
 import { searchOrgClients } from '../utils/searchOrgClients';
@@ -277,7 +276,6 @@ export const listUserCreditHistory = handlerWrapper(async (req, res) => {
     .leftJoin(q => q.from(User, 'u'), 'u', 'uc."referredUserId" = u.id')
     .leftJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
     .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
-    .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('uc."createdAt"', 'DESC')
     .select([
       'uc."createdAt" as "createdAt"',
@@ -286,7 +284,6 @@ export const listUserCreditHistory = handlerWrapper(async (req, res) => {
       'uc.type as "creditType"',
       'p.email as "referredUserEmail"',
       'py.id as "paymentId"',
-      'sub.type as type'
     ])
     .execute();
   res.json(list);

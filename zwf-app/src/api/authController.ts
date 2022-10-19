@@ -21,7 +21,6 @@ import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSendingEmail';
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';

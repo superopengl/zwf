@@ -1,13 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Generated } from 'typeorm';
-import { PaymentStatus } from '../types/PaymentStatus';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Generated } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
-import { CreditTransaction } from './CreditTransaction';
-import { Subscription } from './Subscription';
-import { SubscriptionBlock } from "./SubscriptionBlock";
 
 @Entity()
-@Index(['orgId', 'createdAt'])
-@Index(['subscriptionId', 'paidAt'])
+@Index(['orgId', 'periodFrom'])
+@Index(['orgId', 'paidAt'])
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -16,22 +12,24 @@ export class Payment {
   @Generated('increment')
   seqId: number;
 
-  @CreateDateColumn()
-  createdAt?: Date;
-
   @Column('uuid')
   @Index()
   orgId: string;
 
-  @Column('uuid')
+  @Column()
   @Index()
-  subscriptionId: string;
+  periodFrom: Date;
 
-  @Column('uuid', {nullable: true})
-  subscriptionBlockId: string;
+  @Column()
+  @Index()
+  periodTo: Date;
 
-  @OneToOne(() => SubscriptionBlock, block => block.payment)
-  subscriptionBlock?: SubscriptionBlock;
+  @Column({ nullable: true })
+  @Index()
+  paidAt?: Date;
+
+  @Column({default: false})
+  succeeded: boolean;
 
   @Column('uuid', { nullable: true })
   creditTransactionId: string;
@@ -44,13 +42,4 @@ export class Payment {
 
   @Column('jsonb', { nullable: true })
   rawResponse: object;
-
-  @Column({ nullable: true })
-  paidAt?: Date;
-
-  @Column({ default: false })
-  auto: boolean;
-
-  @Column('jsonb', { nullable: true })
-  geo: object;
 }
