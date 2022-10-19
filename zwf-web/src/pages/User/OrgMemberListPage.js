@@ -12,9 +12,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import DropdownMenu from 'components/DropdownMenu';
 import loadable from '@loadable/component'
-import { getMyCurrentSubscription$ } from 'services/subscriptionService';
 import { listOrgMembers$ } from 'services/memberService';
-import { combineLatest } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { UserNameCard } from 'components/UserNameCard';
 
@@ -29,7 +27,6 @@ const OrgMemberListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
-  const [subscription, setSubscription] = React.useState();
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
@@ -101,11 +98,10 @@ const OrgMemberListPage = () => {
 
   const loadList = () => {
     setLoading(true);
-    return combineLatest([listOrgMembers$(), getMyCurrentSubscription$()]).pipe(
+    return listOrgMembers$().pipe(
       finalize(() => setLoading(false))
-    ).subscribe(([members, subscription]) => {
+    ).subscribe(members => {
       setList(members);
-      setSubscription(subscription);
     })
   }
 
@@ -215,14 +211,12 @@ const OrgMemberListPage = () => {
         backIcon={false}
         title={"Team & Member Accounts"}
         extra={[
-          subscription ? <span key="buy-more">{subscription.seats - subscription.occupiedSeats} licenses left - <Button type="link" onClick={() => handleBuyLicense()} style={{ paddingLeft: 0 }}>Buy more</Button></span> : null,
           <Button
             key="add"
             type="primary"
             ghost
             onClick={() => handleNewUser()}
-            icon={<UserAddOutlined />}
-            disabled={!subscription || subscription.occupiedSeats >= subscription.seats}>
+            icon={<UserAddOutlined />}>
             Add Member
           </Button>
         ].filter(x => !!x)}
