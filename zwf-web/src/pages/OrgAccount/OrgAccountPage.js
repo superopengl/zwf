@@ -3,11 +3,9 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
-import { subscriptionDef } from 'def/subscriptionDef';
-import { SubscriptionCard } from 'components/SubscriptionCard';
 import { getMyCurrentSubscription, listMySubscriptionHistory } from 'services/subscriptionService';
 import MoneyAmount from 'components/MoneyAmount';
-import { getMyAccount, listMyCreditHistory } from 'services/accountService';
+import { getMyAccount } from 'services/accountService';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
@@ -18,7 +16,6 @@ import { from } from 'rxjs';
 import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
-const CreditHistoryListModal = loadable(() => import('./CreditHistoryListDrawer'));
 
 const { Paragraph, Text, Title, Link: TextLink } = Typography;
 
@@ -93,11 +90,6 @@ const OrgAccountPage = (props) => {
     }
   }, []);
 
-  const handleFetchMyCreditHistoryList = async () => {
-    const data = await listMyCreditHistory();
-    return (data || []).filter(x => x.amount);
-  }
-
   const currentPlanKey = currentSubscription?.currentType || 'trial';
   const isCurrentFree = currentPlanKey === 'trial';
 
@@ -162,23 +154,6 @@ const OrgAccountPage = (props) => {
             </Space>
             <OrgSubscriptionHistoryPanel data={subscriptionHistory} />
           </Card>
-          <Card
-            bordered={false}
-            title="Credits"
-            extra={
-              <Title><MoneyAmount type="success" value={account.credit} /></Title>
-            }
-          >
-            <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: "flex-start" }}>
-              <Paragraph type="secondary">
-                Credits are by refund from previous unfinished subsccription when you choose to change subscription.
-              </Paragraph>
-
-              <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
-                Credit History
-              </Button>
-            </Space>
-          </Card>
           <OrgPaymentMethodPanel />
         </Space>
       </Loading>
@@ -198,11 +173,6 @@ const OrgAccountPage = (props) => {
           onLoading={loading => setPaymentLoading(loading)}
         />
       </Modal>
-      <CreditHistoryListModal
-        visible={creditHistoryVisible}
-        onOk={() => setCreditHistoryVisible(false)}
-        onFetch={handleFetchMyCreditHistoryList}
-      />
     </ContainerStyled>
   );
 };

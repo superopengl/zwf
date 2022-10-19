@@ -25,7 +25,6 @@ import { initializeConfig } from './utils/initializeConfig';
 import { redisCache } from './services/redisCache';
 import { OrgBasicInformation } from './entity/views/OrgBasicInformation';
 import { OrgPaymentMethod } from './entity/OrgPaymentMethod';
-import { CreditTransaction } from './entity/CreditTransaction';
 import { OrgPromotionCode } from './entity/OrgPromotionCode';
 import { TaskInformation } from './entity/views/TaskInformation';
 import { UserInformation } from './entity/views/UserInformation';
@@ -193,7 +192,6 @@ export const db = new DataSource({
     Payment,
     OrgPaymentMethod,
     ResourcePage,
-    CreditTransaction,
     OrgPromotionCode,
     SupportMessage,
     Contact,
