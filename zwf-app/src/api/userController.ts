@@ -5,7 +5,7 @@ import { UserInformation } from './../entity/views/UserInformation';
 import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
 import { Tag } from '../entity/Tag';
 
-import { Not, In } from 'typeorm';
+import { Not, In, IsNull } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
@@ -30,7 +30,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
 
   const repo = db.getRepository(User);
   const { user: { id } } = req as any;
-  const user = await repo.findOne({where: {id}});
+  const user = await repo.findOne({ where: { id } });
   assert(password && newPassword && user.secret === computeUserSecret(password, user.salt), 400, 'Invalid password');
 
   const newSalt = uuidv4();
@@ -188,7 +188,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await db.transaction(async m => {
       await m.getRepository(User).softDelete(id);
       await m.getRepository(UserProfile).delete(profileId);
-      await m.getRepository(LicenseTicket).update({userId: id, voidedAt: null}, {voidedAt: getUtcNow()});
+      await m.getRepository(LicenseTicket).update({ userId: id, voidedAt: IsNull() }, { voidedAt: getUtcNow() });
     });
   }
 

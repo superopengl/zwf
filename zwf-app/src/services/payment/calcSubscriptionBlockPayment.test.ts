@@ -8,7 +8,7 @@ import { assert } from '../../utils/assert';
 import { OrgPromotionCode } from '../../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../../entity/OrgPaymentMethod';
 import * as _ from 'lodash';
-import { calcSubscriptionBlockPayment } from './calcSubscriptionBlockPayment';
+import { calcBillingAmountForPayment } from './calcBillingAmountForPayment';
 import { getDiscountInfoFromPromotionCode } from './getDiscountInfoFromPromotionCode';
 import { calcRefundableCurrentSubscriptionBlock } from './calcRefundableCurrentSubscriptionBlock';
 import { createSubscriptionBlock } from './createSubscriptionBlock';
@@ -69,7 +69,7 @@ describe('calcSubscriptionBlockPayment', () => {
         ...monthlyContinuouslyBlock,
         type: SubscriptionBlockType.Trial,
       }
-      await expect(calcSubscriptionBlockPayment(m, subInfo, trialBlock)).rejects.toThrow();
+      await expect(calcBillingAmountForPayment(m, subInfo, trialBlock)).rejects.toThrow();
     })
   })
 
@@ -80,7 +80,7 @@ describe('calcSubscriptionBlockPayment', () => {
         (getDiscountInfoFromPromotionCode as any).mockResolvedValue({ promotionDiscountPercentage: 0, isValidPromotionCode: false });
         (calcRefundableCurrentSubscriptionBlock as any).mockResolvedValue(0);
         (getCreditBalance as any).mockResolvedValue(0);
-        const result = await calcSubscriptionBlockPayment(m, subInfo, monthlyContinuouslyBlock);
+        const result = await calcBillingAmountForPayment(m, subInfo, monthlyContinuouslyBlock);
 
         expect(result).toEqual({
           seatPrice: 39,
@@ -104,7 +104,7 @@ describe('calcSubscriptionBlockPayment', () => {
         (getDiscountInfoFromPromotionCode as any).mockResolvedValue({ promotionDiscountPercentage: 0.13, isValidPromotionCode: true });
         (calcRefundableCurrentSubscriptionBlock as any).mockResolvedValue(0);
         (getCreditBalance as any).mockResolvedValue(0);
-        const result = await calcSubscriptionBlockPayment(m, subInfo, monthlyContinuouslyBlock);
+        const result = await calcBillingAmountForPayment(m, subInfo, monthlyContinuouslyBlock);
 
         expect(result).toEqual({
           seatPrice: 39,
@@ -133,7 +133,7 @@ describe('calcSubscriptionBlockPayment', () => {
           ...monthlyContinuouslyBlock,
           startingMode: SubscriptionStartingMode.Continuously,
         }
-        const result = await calcSubscriptionBlockPayment(m, subInfo, block);
+        const result = await calcBillingAmountForPayment(m, subInfo, block);
         expect(result).toEqual({
           seatPrice: 39,
           refundable: 0,
@@ -163,7 +163,7 @@ describe('calcSubscriptionBlockPayment', () => {
           ...monthlyContinuouslyBlock,
           startingMode: SubscriptionStartingMode.Continuously,
         }
-        const result = await calcSubscriptionBlockPayment(m, subInfo, block);
+        const result = await calcBillingAmountForPayment(m, subInfo, block);
         expect(result).toEqual({
           seatPrice: 39,
           refundable: 0,
@@ -193,7 +193,7 @@ describe('calcSubscriptionBlockPayment', () => {
           ...monthlyContinuouslyBlock,
           startingMode: SubscriptionStartingMode.Rightaway,
         }
-        const result = await calcSubscriptionBlockPayment(m, subInfo, block);
+        const result = await calcBillingAmountForPayment(m, subInfo, block);
         expect(result).toEqual({
           seatPrice: 39,
           refundable: 333.3,
@@ -221,7 +221,7 @@ describe('calcSubscriptionBlockPayment', () => {
           ...monthlyContinuouslyBlock,
           startingMode: SubscriptionStartingMode.Rightaway,
         }
-        const result = await calcSubscriptionBlockPayment(m, subInfo, block);
+        const result = await calcBillingAmountForPayment(m, subInfo, block);
         expect(result).toEqual({
           seatPrice: 39,
           refundable: 100,
@@ -249,7 +249,7 @@ describe('calcSubscriptionBlockPayment', () => {
           ...monthlyContinuouslyBlock,
           startingMode: SubscriptionStartingMode.Rightaway,
         }
-        const result = await calcSubscriptionBlockPayment(m, subInfo, block);
+        const result = await calcBillingAmountForPayment(m, subInfo, block);
         expect(result).toEqual({
           seatPrice: 39,
           refundable: 10.9,

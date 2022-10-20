@@ -9,7 +9,7 @@ import { Role } from '../../types/Role';
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(LicenseTicket, 't')
-    .innerJoin(User, 'u', 't."orgId" = u."orgId" AND t."userId" = u.id')
+    .innerJoin(q => q.from(User, 'u').withDeleted(), 'u', 't."orgId" = u."orgId" AND t."userId" = u.id')
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
     .select([
@@ -24,8 +24,6 @@ import { Role } from '../../types/Role';
       't."createdAt" as "ticketFrom"',
       't."voidedAt" as "ticketTo"',
       'CASE WHEN t."voidedAt" IS NULL THEN TRUE ELSE FALSE END as "ticketAlive"',
-      `EXTRACT(DAY FROM CURRENT_TIMESTAMP - o."createdAt") + 1 as "trialDays"`,
-      `GREATEST(t."createdAt", o."createdAt" + '14 days'::interval) as "chargeFrom"`
     ]),
   dependsOn: [User, UserProfile, Org, LicenseTicket]
 })
@@ -39,6 +37,9 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   userId: string;
+
+  @ViewColumn()
+  type: string;
 
   @ViewColumn()
   orgName: string;
@@ -63,10 +64,4 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   ticketAlive: boolean;
-
-  @ViewColumn()
-  trialDays: number;
-
-  @ViewColumn()
-  chargeFrom: Date;
 }

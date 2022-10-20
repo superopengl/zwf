@@ -13,7 +13,7 @@ export * from './configController';
 export * from './orgController';
 export * from './orgPaymentMethodController';
 export * from './accountController';
-export * from './subscriptionController';
+export * from './billingController';
 export * from './promotionController';
 export * from './smartSearchController';
 export * from './tagController';

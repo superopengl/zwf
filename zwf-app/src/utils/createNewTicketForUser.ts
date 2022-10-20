@@ -9,6 +9,6 @@ export function createNewTicketForUser(userId: string, orgId: string) {
   const ticket = new LicenseTicket();
   ticket.orgId = orgId;
   ticket.userId = userId;
-  ticket.unitPrice = getCurrentPricePerSeat();
   return ticket;
 }
+

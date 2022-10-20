@@ -6,8 +6,7 @@ import { EmailRequest } from '../../src/types/EmailRequest';
 import { getEmailRecipientName } from '../../src/utils/getEmailRecipientName';
 import { UserInformation } from '../../src/entity/views/UserInformation';
 import { Role } from '../../src/types/Role';
-import { SubscriptionBlock } from '../../src/entity/SubscriptionBlock';
-import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
+import { Payment } from '../../src/entity/Payment';
 
 async function getOrgAdminUsers(m: EntityManager, orgId: string) {
   const users = await m.getRepository(UserInformation).find({
@@ -24,8 +23,8 @@ async function getOrgAdminUsers(m: EntityManager, orgId: string) {
   return users;
 }
 
-export async function sendSubscriptionEmail(m: EntityManager, emailTemplate: EmailTemplateType, info: SubscriptionBlock | OrgCurrentSubscriptionInformation) {
-  const { orgId, endingAt } = info;
+export async function sendPaymentEmail(m: EntityManager, emailTemplate: EmailTemplateType, payment: Payment) {
+  const { orgId, periodTo } = payment;
   const adminUsers = await getOrgAdminUsers(m, orgId);
   const emailRequests = adminUsers.map(user => {
     const req: EmailRequest = {
@@ -34,7 +33,7 @@ export async function sendSubscriptionEmail(m: EntityManager, emailTemplate: Ema
       shouldBcc: true,
       vars: {
         toWhom: getEmailRecipientName(user),
-        endDate: moment(endingAt).format('D MMM YYYY')
+        endDate: moment(periodTo).format('D MMM YYYY')
       }
     };
     return req;

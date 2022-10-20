@@ -28,18 +28,21 @@ export class Payment {
   @Index()
   paidAt?: Date;
 
-  @Column({default: false})
+  @Column({ default: false })
   succeeded: boolean;
 
-  @Column('uuid', { nullable: true })
-  creditTransactionId: string;
-
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   amount: number;
 
-  @Column('uuid')
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true})
+  payable: number;
+
+  @Column('uuid', { nullable: true })
   orgPaymentMethodId: string;
 
   @Column('jsonb', { nullable: true })
   rawResponse: object;
+
+  @Column({nullable: true})
+  promotionCode: string;
 }

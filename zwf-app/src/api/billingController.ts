@@ -7,32 +7,25 @@ import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
-import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
-import { calcSubscriptionBlockPayment } from "../services/payment/calcSubscriptionBlockPayment";
-import { createSubscriptionBlock } from '../services/payment/createSubscriptionBlock';
-import { SubscriptionStartingMode } from '../types/SubscriptionStartingMode';
-import { changeSubscriptionRightaway } from '../services/payment/changeSubscriptionRightaway';
 
-async function getUserSubscriptionHistory(orgId) {
-  const list = null;
-  // await db.getRepository(SubscriptionBlock).find({
-  //   where: {
-  //     orgId
-  //   },
-  //   order: {
-  //     startedAt: 'ASC',
-  //   },
-  //   relations: ['payment']
-  // })
+async function getOrgPaymentHistory(orgId) {
+  const list = db.getRepository(ReceiptInformation).find({
+    where: {
+      orgId
+    },
+    order: {
+      periodFrom: 'ASC',
+    },
+  });
 
   return list;
 }
 
-export const listMySubscriptionHistory = handlerWrapper(async (req, res) => {
+export const listMyPayments = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
 
-  const list = await getUserSubscriptionHistory(orgId);
+  const list = await getOrgPaymentHistory(orgId);
 
   res.json(list);
 });
@@ -41,25 +34,20 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const { id } = req.params;
 
-  const list = await getUserSubscriptionHistory(id);
+  const list = await getOrgPaymentHistory(id);
 
   res.json(list);
 });
 
-export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
+export const downloadReceipt = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  const receipt = await db.getRepository(ReceiptInformation).findOne({
-    where: {
-      paymentId: id,
-      orgId,
-    }
-  });
-  assert(receipt, 404);
+  const payment = await db.getRepository(ReceiptInformation).findOneBy({ paymentId: id, orgId });
+  assert(payment, 404);
 
-  const { pdfStream, fileName } = await generateReceiptPdfStream(receipt);
+  const { pdfStream, fileName } = await generateReceiptPdfStream(payment);
 
   res.set('Cache-Control', `public, max-age=36536000, immutable`);
   res.attachment(fileName);
@@ -67,15 +55,6 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   // pdfStream.pipe(res);
 });
 
-export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const orgId = getOrgIdFromReq(req);
-  assert(orgId, 400, 'orgId not found');
-
-  const subscription = null; ///await db.getRepository(OrgCurrentSubscriptionInformation).findOneBy({ orgId });
-
-  res.json(subscription);
-});
 
 export const purchaseSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -106,7 +85,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   //   const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Rightaway);
   //   block.seats = seats || 0;
   //   block.promotionCode = promotionCode;
-  
+
   //   result = await calcSubscriptionBlockPayment(m, subInfo, block);
   // });
 
