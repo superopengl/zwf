@@ -1117,7 +1117,13 @@ paths:
       operationId: listMyPayments
       responses:
         200:
-          description: OK          
+          description: OK        
+  /payment/usages/search:
+    post:
+      operationId: searchTicketUsage
+      responses:
+        200:
+          description: OK                
   /payment/:id/receipt:
     get:
       operationId: downloadReceipt

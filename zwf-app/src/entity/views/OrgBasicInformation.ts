@@ -1,3 +1,4 @@
+import { OrgPromotionCode } from './../OrgPromotionCode';
 import { ViewEntity, ViewColumn, DataSource, PrimaryColumn } from 'typeorm';
 import { Org } from '../Org';
 import { User } from '../User';
@@ -19,9 +20,16 @@ import { Payment } from '../Payment';
         '"orgId"',
         '"periodTo"',
       ]), 'm', 'o.id = m."orgId"')
+    .leftJoin(q => q
+      .from(OrgPromotionCode, 'y')
+      .where(`y.active IS TRUE`)
+      , 'y', 'y."orgId" = o.id')
     .select([
       'o.id as id',
       'o.name as name',
+      `o."createdAt" as "createdAt"`,
+      `o."trialEndsTill" as "trialEndsTill"`,
+      `o."trialEndsTill" > NOW() as "isInTrial"`,
       'o."businessName" as "businessName"',
       'o.tel as tel',
       'u.id as "adminUserId"',
@@ -30,8 +38,10 @@ import { Payment } from '../Payment';
       'p."surname" as "surname"',
       'm.id as "lastPaymentId"',
       `m."periodTo" + '1 month'::interval - '1 day'::interval as "nextPaymentAt"`,
+      'y."code" as "activePromotinCode"',
+      'COALESCE(y."percentageOff", 0) as "promotionPercentageOff"',
     ]),
-  dependsOn: [User, UserProfile]
+  dependsOn: [Org, User, UserProfile, Payment, OrgPromotionCode]
 })
 export class OrgBasicInformation {
   @ViewColumn()
@@ -40,6 +50,15 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   name: string;
+
+  @ViewColumn()
+  createdAt: Date;
+
+  @ViewColumn()
+  trialEndsTill: Date;
+
+  @ViewColumn()
+  isInTrial: boolean;
 
   @ViewColumn()
   businessName: string;
@@ -64,5 +83,11 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   nextPaymentAt: Date;
+
+  @ViewColumn()
+  activePromotinCode: string;
+
+  @ViewColumn()
+  promotionPercentageOff: number;
 }
 

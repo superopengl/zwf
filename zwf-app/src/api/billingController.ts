@@ -1,4 +1,5 @@
-import { SubscriptionPurchasePreviewInfo } from '../services/payment/SubscriptionPurchasePreviewInfo';
+import { getUtcNow } from './../utils/getUtcNow';
+import { PaymentRollupInfo } from '../services/payment/PaymentRollupInfo';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -7,6 +8,7 @@ import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
+import { rollupTicketUsageInPeriod } from '../services/payment/rollupTicketUsageInPeriod';
 
 async function getOrgPaymentHistory(orgId) {
   const list = db.getRepository(ReceiptInformation).find({
@@ -26,6 +28,19 @@ export const listMyPayments = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
 
   const list = await getOrgPaymentHistory(orgId);
+
+  res.json(list);
+});
+
+export const searchTicketUsage = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const orgId = getOrgIdFromReq(req);
+  const { from, to } = req.body;
+  assert(from, 400, 'from date is not specified');
+  const periodFrom = from;
+  const periodTo = to ?? getUtcNow();
+
+  const list = await rollupTicketUsageInPeriod(db.manager, orgId, periodFrom, periodTo);
 
   res.json(list);
 });
@@ -78,7 +93,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
 
-  let result: SubscriptionPurchasePreviewInfo;
+  let result: PaymentRollupInfo;
   // await db.transaction(async m => {
   //   const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
 

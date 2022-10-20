@@ -11,6 +11,10 @@ export function listMyPayments$() {
   return httpGet$(`/payment`);
 }
 
+export function searchMyTicketUsage$(from, to) {
+  return httpPost$(`/payment/usages/search`, { from, to });
+}
+
 export async function listUserSubscriptionHistory(userId) {
   return httpGet(`/user/${userId}/subscription`);
 }

@@ -12,7 +12,7 @@ import * as moment from 'moment-timezone';
 import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
 import { from } from 'rxjs';
 import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
-import { listMyPayments$ } from 'services/subscriptionService';
+import { listMyPayments$, searchMyTicketUsage$ } from 'services/subscriptionService';
 import { finalize } from 'rxjs/operators';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
@@ -61,6 +61,12 @@ const OrgAccountPage = (props) => {
     const sub$ = listMyPayments$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(data => setBillingHistory(data));
+
+    const x$ = searchMyTicketUsage$(moment().toDate(), moment().add(17, 'day').toDate()).subscribe(d => {
+      debugger;
+      const ok = d;
+    });
+
     return () => {
       sub$.unsubscribe();
     }

@@ -17,6 +17,9 @@ export class Payment {
   orgId: string;
 
   @Column()
+  type: 'trial' | 'monthly';
+
+  @Column()
   @Index()
   periodFrom: Date;
 
