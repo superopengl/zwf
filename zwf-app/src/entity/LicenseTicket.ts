@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 'typeorm';
+import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
@@ -20,4 +21,16 @@ export class LicenseTicket {
   @Column('uuid')
   @Index()
   userId: string;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer() })
+  unitFullPrice: number;
+
+  @Column()
+  type: 'trial' | 'paid';
+
+  @Column({nullable: true})
+  promotionCode: string;
+
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), default: 0 })
+  percentageOff: number;
 }

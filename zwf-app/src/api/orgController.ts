@@ -58,18 +58,19 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
-  const ticket = createNewTicketForUser(userId, orgId);
   const payment = createTrialZeroPayment(org);
-
+  
   await db.transaction(async m => {
     const userEnitty = await m.findOneBy(User, { id: userId });
-
+    
     assert(!userEnitty.orgId, 400, 'The org has been initialized');
+    await m.save(org);
+    const ticket = await createNewTicketForUser(m, userId, orgId);
 
     userEnitty.orgId = orgId;
     userEnitty.orgOwner = true;
 
-    await m.save([org, userEnitty, ticket, payment]);
+    await m.save([userEnitty, ticket, payment]);
   });
 
   res.json();

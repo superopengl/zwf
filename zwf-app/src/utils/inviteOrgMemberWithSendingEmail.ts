@@ -1,3 +1,4 @@
+import { db } from './../db';
 import { EntityManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
@@ -12,7 +13,7 @@ export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user, pr
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const ticket = createNewTicketForUser(user.id, user.orgId);
+  const ticket = await createNewTicketForUser(m, user.id, user.orgId);
 
   await m.save([profile, user, ticket]);
 

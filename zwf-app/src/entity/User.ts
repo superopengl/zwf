@@ -7,7 +7,6 @@ import { Org } from './Org';
 import { UserProfile } from './UserProfile';
 
 @Entity()
-@Index('user_unique_email', { synchronize: false })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -15,13 +14,8 @@ export class User {
   @CreateDateColumn()
   createdAt: Date;
 
-  // @Index('user_email_unique', { unique: true })
-  /**
-   * The unique index of user_email_unique will be created by migration script,
-   * as TypeOrm doesn't support case insensitive index.
-   */
   @Column()
-  @Index({ unique: true })
+  @Index({ unique: true , where: '"deletedAt" IS NULL'})
   emailHash!: string;
 
   @Column({ default: UserLoginType.Local })
