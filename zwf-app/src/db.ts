@@ -98,7 +98,7 @@ async function syncDatabaseSchema(connection: DataSource) {
    * so as to let typeorm always create fresh views when app starts up.
    */
 
-  // await dropAllViewsAndMatviews();
+  await dropAllViewsAndMatviews();
 
   await connection.synchronize(false);
   await connection.runMigrations();

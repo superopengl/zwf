@@ -10,6 +10,8 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { assert } from '../utils/assert';
 import { createNewTicketForUser } from '../utils/createNewTicketForUser';
 import { getUtcNow } from '../utils/getUtcNow';
+import { Payment } from '../entity/Payment';
+import moment = require('moment');
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -46,10 +48,10 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   const { name, businessName, country, address, tel, abn } = req.body;
 
   const orgId = uuidv4();
+  const now = getUtcNow();
 
   const org = new Org();
   org.id = orgId;
-  org.createdAt = getUtcNow();
   org.name = name?.trim();
   org.businessName = businessName?.trim();
   org.country = country;
@@ -59,15 +61,25 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
 
   await db.transaction(async m => {
     const userEnitty = await m.findOneBy(User, { id: userId });
-    
+
     assert(!userEnitty.orgId, 400, 'The org has been initialized');
     await m.save(org);
-    const ticket = await createNewTicketForUser(m, userId, orgId);
-
     userEnitty.orgId = orgId;
     userEnitty.orgOwner = true;
+    
+    const ticket = await createNewTicketForUser(m, userId, orgId);
+    const savedOrg = await m.findOneBy(Org, { id: orgId });
+    const payment = new Payment();
+    payment.orgId = orgId;
+    payment.type = 'trial';
+    payment.periodFrom = savedOrg.createdAt;
+    payment.periodTo = savedOrg.trialEndsTill;
+    payment.succeeded = true;
+    payment.paidAt = now;
+    payment.amount = 0;
+    payment.payable = 0;
 
-    await m.save([userEnitty, ticket]);
+    await m.save([userEnitty, ticket, payment]);
   });
 
   res.json();

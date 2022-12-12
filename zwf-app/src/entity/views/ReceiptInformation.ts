@@ -8,7 +8,6 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Payment, 'p')
     .where('p."succeeded" IS TRUE')
-    .andWhere(`p.type != 'trial'`)
     .innerJoin(OrgBasicInformation, 'org', 'p."orgId" = org.id')
     .leftJoin(OrgPaymentMethod, 'm', 'p."orgPaymentMethodId" = m.id')
     .leftJoin(OrgPromotionCode, 'x', 'x.code = p."promotionCode"')
@@ -17,6 +16,8 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
       'p."orgId" as "orgId"',
+      'p."type" as "type"',
+      'p."periodDays" as "periodDays"',
       'org."ownerEmail" as email',
       'p."periodFrom" as "periodFrom"',
       'p."periodTo" as "periodTo"',
@@ -41,6 +42,12 @@ export class ReceiptInformation {
   @ViewColumn()
   orgId: string;
 
+  @ViewColumn()
+  type: string;
+
+  @ViewColumn()
+  periodDays: string;
+  
   @ViewColumn()
   email: string;
 

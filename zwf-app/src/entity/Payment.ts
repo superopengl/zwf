@@ -1,9 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, Generated } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Generated, CreateDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
-@Index(['orgId', 'periodFrom'])
-@Index(['orgId', 'paidAt'])
+@Index(['orgId', 'periodTo'], {unique: true, where: '"periodTo" IS NOT NULL'})
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -12,6 +11,9 @@ export class Payment {
   @Generated('increment')
   seqId: number;
 
+  @CreateDateColumn()
+  createdAt: Date;
+
   @Column('uuid')
   @Index()
   orgId: string;
@@ -19,13 +21,16 @@ export class Payment {
   @Column()
   type: 'trial' | 'monthly';
 
-  @Column()
+  @Column('date')
   @Index()
   periodFrom: Date;
 
-  @Column()
+  @Column('date')
   @Index()
   periodTo: Date;
+
+  @Column({type: 'smallint', generatedType:'STORED', asExpression: `EXTRACT(DAY FROM "periodTo"::timestamp - "periodFrom"::timestamp) + 1`})
+  periodDays: number;
 
   @Column({ nullable: true })
   @Index()

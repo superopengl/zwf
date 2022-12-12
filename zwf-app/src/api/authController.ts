@@ -29,7 +29,6 @@ import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
 import { UserLoginType } from '../types/UserLoginType';
-import { createNewTicketForUser } from '../utils/createNewTicketForUser';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);

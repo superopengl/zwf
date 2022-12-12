@@ -32,7 +32,7 @@ export class Org {
   @Column({ nullable: true })
   stripeCustomerId?: string;
 
-  @Column({ generatedType:'STORED', asExpression: `"createdAt" + '14 days'::interval`})
+  @Column({type: 'date', generatedType:'STORED', asExpression: `"createdAt" + '13 days'::interval`}) // 14 days
   trialEndsTill: Date;
 }
 
