@@ -5,13 +5,13 @@ import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { generateReceiptPdfStream } from '../services/receiptService';
-import { ReceiptInformation } from '../entity/views/ReceiptInformation';
+import { OrgSubscriptionPeriodHistoryInformation } from '../entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
 import { rollupTicketUsageInPeriod } from '../services/payment/rollupTicketUsageInPeriod';
 
 async function getOrgPaymentHistory(orgId) {
-  const list = db.getRepository(ReceiptInformation).find({
+  const list = db.getRepository(OrgSubscriptionPeriodHistoryInformation).find({
     where: {
       orgId
     },
@@ -23,7 +23,7 @@ async function getOrgPaymentHistory(orgId) {
   return list;
 }
 
-export const listMyPayments = handlerWrapper(async (req, res) => {
+export const listMySubscriptions = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
 
@@ -56,13 +56,13 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
 
 export const downloadReceipt = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { id } = req.params;
+  const { paymentId } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  const payment = await db.getRepository(ReceiptInformation).findOneBy({ paymentId: id, orgId });
-  assert(payment, 404);
+  const period = await db.getRepository(OrgSubscriptionPeriodHistoryInformation).findOneBy({ paymentId, orgId });
+  assert(period, 404);
 
-  const { pdfStream, fileName } = await generateReceiptPdfStream(payment);
+  const { pdfStream, fileName } = await generateReceiptPdfStream(period);
 
   res.set('Cache-Control', `public, max-age=36536000, immutable`);
   res.attachment(fileName);

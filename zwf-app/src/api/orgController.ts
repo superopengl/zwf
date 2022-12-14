@@ -61,10 +61,12 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.abn = abn?.trim();
 
   const period = new OrgSubscriptionPeriod()
+  period.id = uuidv4();
   period.periodFrom = now;
   period.periodTo = moment(now).add(13, 'days').toDate();
   period.orgId = orgId;
   period.type = 'trial';
+  period.unitFullPrice = 0;
 
   const ticket = createNewTicketForUser(userId, period);
 

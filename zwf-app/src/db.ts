@@ -39,7 +39,7 @@ import { TaskTracking } from './entity/TaskTracking';
 import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
 import { OrgClientInformation } from './entity/views/OrgClientInformation';
-import { ReceiptInformation } from './entity/views/ReceiptInformation';
+import { OrgSubscriptionPeriodHistoryInformation } from './entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
@@ -220,7 +220,7 @@ export const db = new DataSource({
     TaskFileMetaInformation,
     TaskFileInformation,
     RecurringInformation,
-    ReceiptInformation,
+    OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,
   ],
 });
