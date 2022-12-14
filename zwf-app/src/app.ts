@@ -14,6 +14,7 @@ import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
 import * as serveStatic from 'serve-static';
 import { taskDirectLinkHanlder } from './api/taskDirectLinkHanlder';
+import { clearJwtCookie } from './utils/jwt';
 
 
 function errorHandler(err, req, res, next) {
@@ -118,6 +119,7 @@ export function createAppInstance() {
     const r = req.query.r as string;
     const returnUrlParam = r ? `?r=${encodeURIComponent(r)}` : '';
     const url = `/api/v1/auth/r/${token}` + returnUrlParam;
+    clearJwtCookie(res);
     res.redirect(url);
   });
 
