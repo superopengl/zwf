@@ -21,7 +21,7 @@ function getQuery(q: SelectQueryBuilder<any>, params) {
       't."ticketTo" as "ticketTo"',
       't."type" as "type"',
       't."unitFullPrice" as "unitFullPrice"',
-      't."percentageOff" as "percentageOff"',
+      't."promotionUnitPrice" as "promotionUnitPrice"',
       ':periodFrom::timestamp as "periodFrom"',
       ':periodTo::timestamp as "periodTo"',
       'GREATEST(t."ticketFrom", :periodFrom)::timestamp as "chargeFrom"',
@@ -48,7 +48,7 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, orgId: string,
       , 's')
     .select([
       `ROUND(SUM(s."unitFullPrice" * s."chargeDays" / s."periodDays"), 2) as amount`,
-      `ROUND(SUM((s."unitFullPrice" * s."chargeDays" / s."periodDays") * (1 - COALESCE(s."percentageOff", 0))), 2) as payable`,
+      `ROUND(SUM(s."promotionUnitPrice" * s."chargeDays" / s."periodDays"), 2) as payable`,
       `EXTRACT(DAY FROM :periodTo::timestamp - :periodFrom::timestamp) as "periodDays"`,
     ])
     .getRawOne();

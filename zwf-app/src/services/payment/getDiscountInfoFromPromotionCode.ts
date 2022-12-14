@@ -3,7 +3,7 @@ import { assert } from '../../utils/assert';
 import { OrgPromotionCode } from '../../entity/OrgPromotionCode';
 
 export async function getDiscountInfoFromPromotionCode(m: EntityManager, promotionCode: string) {
-  let promotionDiscountPercentage = 0;
+  let promotionUnitPrice = 0;
   let isValidPromotionCode = false;
   if (promotionCode) {
     const promotion = await m.getRepository(OrgPromotionCode)
@@ -12,12 +12,12 @@ export async function getDiscountInfoFromPromotionCode(m: EntityManager, promoti
       .andWhere(`"endingAt" > NOW()`)
       .getOne();
 
-    
-      if (promotion) {
-      promotionDiscountPercentage = promotion.percentageOff;
-      assert(0 < promotionDiscountPercentage && promotionDiscountPercentage < 1, 500, `Invalid promotion percentageOff by promotionCode ${promotionCode}`);
+
+    if (promotion) {
+      promotionUnitPrice = promotion.promotionUnitPrice;
+      assert(promotionUnitPrice >= 0, 500, `${promotionUnitPrice} is an invalid promotionUnitPrice by promotionCode ${promotionCode}`);
       isValidPromotionCode = true;
     }
   }
-  return { promotionDiscountPercentage, isValidPromotionCode };
+  return { promotionUnitPrice, isValidPromotionCode };
 }

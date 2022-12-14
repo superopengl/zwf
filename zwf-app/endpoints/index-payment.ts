@@ -53,9 +53,8 @@ async function upgradeTrialTicketsWhenDue() {
         `o."name" as "orgName"`,
         `t."userId" as "userId"`,
         `o."activePromotinCode" as "promotionCode"`,
-        `o."promotionPercentageOff" as "percentageOff"`,
+        `o."promotionUnitPrice" as "promotionUnitPrice"`,
         `o."createdAt" as "orgCreatedAt"`,
-        `o."trialEndsTill" as "trialEndsTill"`,
       ])
       .execute();
 
@@ -79,7 +78,7 @@ async function upgradeTrialTicketsWhenDue() {
         ticket.unitFullPrice = getCurrentUnitPricePerTicket();
         ticket.type = 'paid';
         ticket.promotionCode = x.promotionCode;
-        ticket.percentageOff = x.percentageOff;
+        ticket.promotionUnitPrice = x.promotionUnitPrice;
         return ticket;
       });
 

@@ -1,3 +1,4 @@
+import { OrgSubscriptionPeriod } from './../OrgSubscriptionPeriod';
 import { LicenseTicket } from '../LicenseTicket';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { User } from '../User';
@@ -9,6 +10,7 @@ import { Role } from '../../types/Role';
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(LicenseTicket, 't')
+    .innerJoin(OrgSubscriptionPeriod, 'm', 'm.id = t."periodId"')
     .innerJoin(q => q.from(User, 'u').withDeleted(), 'u', 't."orgId" = u."orgId" AND t."userId" = u.id')
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
@@ -16,9 +18,9 @@ import { Role } from '../../types/Role';
       't.id as "ticketId"',
       't."orgId" as "orgId"',
       't."userId" as "userId"',
-      't."type" as "type"',
-      't."unitFullPrice" as "unitFullPrice"',
-      't."percentageOff" as "percentageOff"',
+      'm."type" as "type"',
+      'm."unitFullPrice" as "unitFullPrice"',
+      'm."promotionUnitPrice" as "promotionUnitPrice"',
       'o.name as "orgName"',
       'p.email as email',
       'p."givenName" as "givenName"',
@@ -28,7 +30,7 @@ import { Role } from '../../types/Role';
       't."voidedAt" as "ticketTo"',
       'CASE WHEN t."voidedAt" IS NULL THEN TRUE ELSE FALSE END as "ticketAlive"',
     ]),
-  dependsOn: [User, UserProfile, Org, LicenseTicket]
+  dependsOn: [User, UserProfile, Org, LicenseTicket, OrgSubscriptionPeriod]
 })
 export class LicenseTicketUsageInformation {
   @ViewColumn()
@@ -48,7 +50,7 @@ export class LicenseTicketUsageInformation {
   unitFullPrice: number;
 
   @ViewColumn()
-  percentageOff: number;
+  promotionUnitPrice: number;
 
   @ViewColumn()
   orgName: string;

@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn, OneToMany, JoinColumn, OneToOne, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, OneToMany, Unique } from 'typeorm';
 
 @Entity()
 export class Org {
@@ -31,9 +31,6 @@ export class Org {
 
   @Column({ nullable: true })
   stripeCustomerId?: string;
-
-  @Column({type: 'date', generatedType:'STORED', asExpression: `"createdAt" + '13 days'::interval`}) // 14 days
-  trialEndsTill: Date;
 }
 
 

@@ -1,3 +1,4 @@
+import { OrgSubscriptionPeriod } from './../OrgSubscriptionPeriod';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { Payment } from '../Payment';
 import { OrgBasicInformation } from '../views/OrgBasicInformation';
@@ -7,29 +8,29 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Payment, 'p')
-    .where('p."succeeded" IS TRUE')
+    .innerJoin(OrgSubscriptionPeriod, 's', 's."paymentId" = p.id')
     .innerJoin(OrgBasicInformation, 'org', 'p."orgId" = org.id')
     .leftJoin(OrgPaymentMethod, 'm', 'p."orgPaymentMethodId" = m.id')
-    .leftJoin(OrgPromotionCode, 'x', 'x.code = p."promotionCode"')
-    .orderBy('p."periodFrom"', 'ASC')
+    .leftJoin(OrgPromotionCode, 'x', 'x.code = s."promotionCode"')
+    .orderBy('s."periodTo"', 'ASC')
     .select([
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
       'p."orgId" as "orgId"',
-      'p."type" as "type"',
-      'p."periodDays" as "periodDays"',
+      's."type" as "type"',
+      's."periodDays" as "periodDays"',
       'org."ownerEmail" as email',
-      'p."periodFrom" as "periodFrom"',
-      'p."periodTo" as "periodTo"',
+      's."periodFrom" as "periodFrom"',
+      's."periodTo" as "periodTo"',
       'p.amount as amount',
       `to_char(p."paidAt", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
       'p."paidAt" as "issuedAt"',
       'p.payable as payable',
       'm."cardLast4" as "cardLast4"',
       'x.code as "promotionCode"',
-      'x."percentageOff" as "discountPercentage"'
+      'x."promotionUnitPrice" as "promotionUnitPrice"'
     ]),
-  dependsOn: [Payment, OrgPaymentMethod, OrgBasicInformation]
+  dependsOn: [Payment, OrgPaymentMethod, OrgBasicInformation, OrgSubscriptionPeriod, OrgPromotionCode]
 })
 export class ReceiptInformation {
   @ViewColumn()
@@ -76,5 +77,5 @@ export class ReceiptInformation {
   promotionCode: string;
 
   @ViewColumn()
-  discountPercentage: number;
+  promotionUnitPrice: number;
 }

@@ -2,7 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, Generated, CreateDateCol
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
-@Index(['orgId', 'periodTo'], {unique: true, where: '"periodTo" IS NOT NULL'})
+@Index(['orgId', 'createdAt'])
 export class Payment {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -18,26 +18,13 @@ export class Payment {
   @Index()
   orgId: string;
 
-  @Column()
-  type: 'trial' | 'monthly';
-
-  @Column('date')
+  @Column('uuid')
   @Index()
-  periodFrom: Date;
-
-  @Column('date')
-  @Index()
-  periodTo: Date;
-
-  @Column({type: 'smallint', generatedType:'STORED', asExpression: `EXTRACT(DAY FROM "periodTo"::timestamp - "periodFrom"::timestamp) + 1`})
-  periodDays: number;
+  periodId: string;
 
   @Column({ nullable: true })
   @Index()
   paidAt?: Date;
-
-  @Column({ default: false })
-  succeeded: boolean;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   amount: number;
@@ -50,7 +37,4 @@ export class Payment {
 
   @Column('jsonb', { nullable: true })
   rawResponse: object;
-
-  @Column({nullable: true})
-  promotionCode: string;
 }
