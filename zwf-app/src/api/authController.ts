@@ -29,6 +29,7 @@ import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
 import { UserLoginType } from '../types/UserLoginType';
+import { sendInviteOrgMemberEmail } from '../utils/sendInviteOrgMemberEmail';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -258,6 +259,23 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
 
   await db.transaction(async m => {
     await inviteOrgMemberWithSendingEmail(m, user, profile);
+  });
+
+  res.json();
+});
+
+export const reinviteOrgMember = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { email } = req.body;
+  const orgId = getOrgIdFromReq(req);
+
+  await db.transaction(async m => {
+    const existingUser = await getActiveUserInformation(email);
+    assert(existingUser?.orgId === orgId, 400, `User doesn't exist`);
+    const resetPasswordToken = uuidv4();
+    await m.update(User, { id: existingUser.id }, { resetPasswordToken });
+    existingUser.resetPasswordToken = resetPasswordToken;
+    await sendInviteOrgMemberEmail(existingUser, email);
   });
 
   res.json();

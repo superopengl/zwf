@@ -18,15 +18,18 @@ export class OrgSubscriptionPeriod {
   @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `EXTRACT(DAY FROM "periodTo"::timestamp - "periodFrom"::timestamp) + 1` })
   periodDays: number;
 
+  @Column({nullable: true})
+  billingDate: Date;
+
   @Column('uuid')
   orgId: string;
 
-  @Column()
+  @Column({default: 'monthly'})
   type: 'trial' | 'monthly';
 
   @Column('uuid', { nullable: true })
   @Index()
-  parentSubscriptionId: string;
+  previousPeriodId: string;
 
   @OneToOne(() => Payment, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
   @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })

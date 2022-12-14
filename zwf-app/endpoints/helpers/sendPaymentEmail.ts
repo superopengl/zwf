@@ -1,3 +1,4 @@
+import { OrgSubscriptionPeriod } from './../../src/entity/OrgSubscriptionPeriod';
 import { EntityManager } from 'typeorm';
 import * as moment from 'moment';
 import { enqueueEmailInBulk } from '../../src/services/emailService';
@@ -6,7 +7,6 @@ import { EmailRequest } from '../../src/types/EmailRequest';
 import { getEmailRecipientName } from '../../src/utils/getEmailRecipientName';
 import { UserInformation } from '../../src/entity/views/UserInformation';
 import { Role } from '../../src/types/Role';
-import { Payment } from '../../src/entity/Payment';
 
 async function getOrgAdminUsers(m: EntityManager, orgId: string) {
   const users = await m.getRepository(UserInformation).find({
@@ -23,8 +23,8 @@ async function getOrgAdminUsers(m: EntityManager, orgId: string) {
   return users;
 }
 
-export async function sendPaymentEmail(m: EntityManager, emailTemplate: EmailTemplateType, payment: Payment) {
-  const { orgId, periodTo } = payment;
+export async function sendPaymentEmail(m: EntityManager, emailTemplate: EmailTemplateType, period: OrgSubscriptionPeriod) {
+  const { orgId, periodTo } = period;
   const adminUsers = await getOrgAdminUsers(m, orgId);
   const emailRequests = adminUsers.map(user => {
     const req: EmailRequest = {

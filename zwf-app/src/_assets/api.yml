@@ -172,6 +172,14 @@ paths:
       responses:
         200:
           description: OK
+  /auth/reinvite/member:
+    post:
+      operationId: reinviteOrgMember
+      # security:
+      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK          
   /auth/invite/client:
     post:
       operationId: inviteClientToOrg

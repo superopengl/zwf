@@ -1,55 +1,25 @@
 import { LicenseTicketUsageInformation } from './../../entity/views/LicenseTicketUsageInformation';
 import { EntityManager, SelectQueryBuilder } from 'typeorm';
+import { OrgSubscriptionPeriod } from '../../entity/OrgSubscriptionPeriod';
 
 
-function getQuery(q: SelectQueryBuilder<any>, params) {
+function getQuery(q: SelectQueryBuilder<any>, period: OrgSubscriptionPeriod) {
   return q
     .from(LicenseTicketUsageInformation, 't')
-    .where(`t."orgId" = :orgId`, params)
-    .andWhere(`(t."ticketTo" > :periodFrom OR t."ticketTo" IS NULL)`, params)
-    .andWhere(`t."ticketFrom" <= :periodTo`, params)
-    .select([
-      't."ticketId" as "ticketId"',
-      't."orgId" as "orgId"',
-      't."userId" as "userId"',
-      't."orgName" as "orgName"',
-      't.email as email',
-      't."givenName" as "givenName"',
-      't.surname as surname',
-      't.role as role',
-      't."ticketFrom" as "ticketFrom"',
-      't."ticketTo" as "ticketTo"',
-      't."type" as "type"',
-      't."unitFullPrice" as "unitFullPrice"',
-      't."promotionUnitPrice" as "promotionUnitPrice"',
-      ':periodFrom::timestamp as "periodFrom"',
-      ':periodTo::timestamp as "periodTo"',
-      'GREATEST(t."ticketFrom", :periodFrom)::timestamp as "chargeFrom"',
-      'COALESCE(LEAST(t."ticketTo", :periodTo), :periodTo)::timestamp as "chargeTo"',
-    ]);
+    .where(`t."periodId" = :periodId`, { periodId: period.id })
+    .andWhere(`t.type != 'trial'`)
 }
 
-export async function rollupTicketUsageInPeriod(m: EntityManager, orgId: string, periodFrom: Date, periodTo: Date) {
-  const params = {
-    orgId,
-    periodFrom,
-    periodTo
-  };
+export async function rollupTicketUsageInPeriod(m: EntityManager, period: OrgSubscriptionPeriod) {
 
-  const data = await getQuery(m.createQueryBuilder(), params).execute();
+  const data = await getQuery(m.createQueryBuilder(), period).execute();
   const stats = await m.createQueryBuilder()
     .from(q => q
-      .from(sq => getQuery(sq, params), 'sub')
-      .select([
-        '*',
-        'EXTRACT(DAY FROM "chargeTo" - "chargeFrom") as "chargeDays"',
-        'EXTRACT(DAY FROM "periodTo" - "periodFrom") as "periodDays"',
-      ])
+      .from(sq => getQuery(sq, period), 'sub')
       , 's')
     .select([
-      `ROUND(SUM(s."unitFullPrice" * s."chargeDays" / s."periodDays"), 2) as amount`,
-      `ROUND(SUM(s."promotionUnitPrice" * s."chargeDays" / s."periodDays"), 2) as payable`,
-      `EXTRACT(DAY FROM :periodTo::timestamp - :periodFrom::timestamp) as "periodDays"`,
+      `ROUND(SUM(s."unitFullPrice" * s."usedDays" / s."periodDays"), 2) as amount`,
+      `ROUND(SUM(s."promotionUnitPrice" * s."usedDays" / s."periodDays"), 2) as payable`,
     ])
     .getRawOne();
 
@@ -57,6 +27,6 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, orgId: string,
     data,
     amount: +stats.amount || 0,
     payable: +stats.payable || 0,
-    periodDays: +stats.periodDays || 0,
+    periodDays: +period.periodDays,
   };
 }
