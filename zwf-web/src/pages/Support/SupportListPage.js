@@ -9,7 +9,7 @@ import {
 
 import { Space } from 'antd';
 import { deleteUser, setUserTags } from 'services/userService';
-import { impersonate$ } from 'services/authService';
+import { impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -92,7 +92,7 @@ const SupportListPage = () => {
       title: 'User',
       fixed: 'left',
       render: (_, item) => <Space>
-        <UserNameCard userId={item.userId} searchText={queryInfo.text}/>
+        <UserNameCard userId={item.userId} searchText={queryInfo.text} />
         <Badge count={item.unreadCount} showZero={false} />
       </Space>
     },
@@ -127,6 +127,10 @@ const SupportListPage = () => {
               {
                 menu: 'Impersonate',
                 onClick: () => handleImpersonante(item)
+              },
+              {
+                menu: 'Resend invite',
+                onClick: () => handleResendInvite(item)
               }
             ]}
           />
@@ -134,6 +138,26 @@ const SupportListPage = () => {
       },
     },
   ].filter(x => !!x);
+
+
+  const handleResendInvite = (user) => {
+    switch (user.role) {
+      case 'admin':
+      case 'agent':
+
+        reinviteMember$(user.email, true).subscribe(() => {
+          Modal.success({
+            title: 'Resent invite',
+            content: <>Has resent an invite email to email <Text code>{user.email}</Text></>
+          });
+        });
+        break;
+      case 'client':
+        throw new Error('Not implemented yet')
+      default:
+        throw new Error('Not implemented yet')
+    }
+  }
 
   const loadList = () => {
     setLoading(true);
@@ -265,10 +289,10 @@ const SupportListPage = () => {
           style={{ marginTop: 20 }}
           rowClassName={item => {
             const classNames = [];
-            if(item === currentUser) {
+            if (item === currentUser) {
               classNames.push('current-item');
             }
-            if(item.unreadCount) {
+            if (item.unreadCount) {
               classNames.push('pending-reply');
             }
             return classNames.join(' ');

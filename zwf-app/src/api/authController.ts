@@ -265,13 +265,14 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
 });
 
 export const reinviteOrgMember = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system', 'admin');
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
+  const role = getRoleFromReq(req);
 
   await db.transaction(async m => {
     const existingUser = await getActiveUserInformation(email);
-    assert(existingUser?.orgId === orgId, 400, `User doesn't exist`);
+    assert(role === Role.System || existingUser?.orgId === orgId, 400, `User doesn't exist`);
     const resetPasswordToken = uuidv4();
     await m.update(User, { id: existingUser.id }, { resetPasswordToken });
     existingUser.resetPasswordToken = resetPasswordToken;
