@@ -41,6 +41,14 @@ const LayoutStyled = styled.div`
 
 const TAB_DEFS = [
   {
+    label: 'In progress',
+    description: 'These are the cases that are being proceeded by your agents. No immidiate action is required from your side at the moment.',
+    badgeColor: '#0FBFC4',
+    filter: item => {
+      return item.status === 'in_progress' || item.status === 'todo'
+    }
+  },
+  {
     label: 'Action required',
     default: true,
     badgeColor: null,
@@ -48,14 +56,7 @@ const TAB_DEFS = [
     description: 'These cases requires your actions by either filling the form, upload required files, or reply messages from the agents',
     filter: item => item.status === 'action_required'
   },
-  {
-    label: 'In progress',
-    description: 'These are the cases that are being proceeded by your agents. No immidiate action is required from your side at the moment.',
-    badgeColor: '#0FBFC4',
-    filter: item => {
-      return item.status === 'in_progress'
-    }
-  },
+
   {
     badgeColor: '#2da44e',
     label: 'Completed',

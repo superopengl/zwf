@@ -1,6 +1,9 @@
 import { httpGet$, httpGet, httpPost, request, httpPost$ } from './http';
 
 export async function downloadReceipt(paymentId) {
+  if(!paymentId) {
+    throw new Error('paymentId is null');
+  }
   const path = `/subscription/receipt/${paymentId}`;
   const data = await request('GET', path, null, null, 'blob');
   const fileUrl = URL.createObjectURL(data);

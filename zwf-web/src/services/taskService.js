@@ -49,23 +49,23 @@ export function createNewTask$(payload) {
 }
 
 export function listClientTask$() {
-  return httpGet$('task');
+  return httpGet$('/task');
 }
 
 export function searchTask$(query) {
-  return httpPost$('task/search', query);
+  return httpPost$('/task/search', query);
 }
 
 export function updateTaskTags$(id, tags) {
-  return httpPost$(`task/${id}/tags`, { tags });
+  return httpPost$(`/task/${id}/tags`, { tags });
 }
 
 export function renameTask$(id, name) {
-  return httpPost$(`task/${id}/rename`, { name });
+  return httpPost$(`/task/${id}/rename`, { name });
 }
 
 export function assignTask$(taskId, agentId) {
-  return httpPost$(`task/${taskId}/assign`, { agentId });
+  return httpPost$(`/task/${taskId}/assign`, { agentId });
 }
 
 export function getTaskHistory$(taskId) {
@@ -74,19 +74,19 @@ export function getTaskHistory$(taskId) {
 
 export function notifyTask$(taskId, msg) {
   const message = msg?.trim();
-  return httpPost$(`task/${taskId}/notify`, { message });
+  return httpPost$(`/task/${taskId}/notify`, { message });
 }
 
 export async function listTaskComments(taskId) {
-  return httpGet(`task/${taskId}/comment`);
+  return httpGet(`/task/${taskId}/comment`);
 }
 
 export async function addTaskComment(taskId, content) {
-  return httpPost(`task/${taskId}/comment`, { content });
+  return httpPost(`/task/${taskId}/comment`, { content });
 }
 
 export function listTaskTrackings$(taskId) {
-  return httpGet$(`task/${taskId}/tracking`);
+  return httpGet$(`/task/${taskId}/tracking`);
 }
 
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
