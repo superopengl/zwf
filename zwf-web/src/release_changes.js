@@ -1,2 +1,2 @@
 export const notes=`
-update release notes`
+able to reinvite admins`
