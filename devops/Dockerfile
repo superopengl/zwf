@@ -64,6 +64,7 @@ RUN pnpm install --prefer-offline
 
 WORKDIR /usr/portal/app
 RUN pnpm install --prefer-offline
+RUN ls node_modules
     # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     # && mkdir -p /home/pptruser/Downloads \
     # && chown -R pptruser:pptruser /home/pptruser \
@@ -83,7 +84,6 @@ ENV NODE_OPTIONS=--max_old_space_size=4096
 # Build app
 COPY ./zwf-app /usr/portal/app
 RUN pnpm run build:prod
-RUN pnpm prune --production
 # RUN /usr/local/bin/node-prune
 
 ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
@@ -95,6 +95,8 @@ ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GB
 WORKDIR /usr/portal/web
 COPY ./zwf-web /usr/portal/web
 RUN pnpm run compile:prod
+
+RUN pnpm prune --production
 
 # Copy web to app/www
 RUN cp -rf /usr/portal/web/build /usr/portal/app/www
