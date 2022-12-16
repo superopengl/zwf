@@ -1,4 +1,2 @@
 export const notes=`
-update release notes
-lint
-clean up`
+update release notes`
