@@ -38,7 +38,7 @@ RUN apt-get install libfontconfig1 libfontconfig1-dev
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm@6 typescript
+RUN npm install -g pnpm@6
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
@@ -53,17 +53,17 @@ COPY ./zwf-web/pnpm-lock.yaml /usr/portal/web/
 COPY ./zwf-app/pnpm-lock.yaml /usr/portal/app/
 
 WORKDIR /usr/portal/web
-RUN pnpm fetch --prod
+RUN pnpm fetch
 
 WORKDIR /usr/portal/app
-RUN pnpm fetch --prod
+RUN pnpm fetch
 
 
 WORKDIR /usr/portal/web
-RUN pnpm install -r --offline --prod
+RUN pnpm install -r --offline
 
 WORKDIR /usr/portal/app
-RUN pnpm install -r --offline --prod
+RUN pnpm install -r --offline
     # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     # && mkdir -p /home/pptruser/Downloads \
     # && chown -R pptruser:pptruser /home/pptruser \
