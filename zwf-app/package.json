@@ -1,5 +1,5 @@
 {
-  "name": "zwf-app",
+  "name": "@zwf/app",
   "version": "1.0.0",
   "description": "ZWF server",
   "main": "src/index.js",
