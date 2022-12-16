@@ -1,3 +1,2 @@
 export const notes=`
-update release notes
-fix tracking`
+update release notes`
