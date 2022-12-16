@@ -1,2 +1,6 @@
 export const notes=`
-able to reinvite admins`
+refine more
+refine payment calculation
+add "latest" property
+wording fix
+client can see TODO tasks`
