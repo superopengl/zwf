@@ -47,30 +47,6 @@ RUN npm install -g pnpm@6
 # RUN curl -sfL https://install.goreleaser.com/github.com/tj/node-prune.sh | sh -s -- -b /usr/local/bin
 
 EXPOSE 80
-# Install dependencies
-WORKDIR /usr/portal
-COPY ./zwf-web/pnpm-lock.yaml /usr/portal/web/
-COPY ./zwf-app/pnpm-lock.yaml /usr/portal/app/
-
-WORKDIR /usr/portal/web
-RUN pnpm fetch
-
-WORKDIR /usr/portal/app
-RUN pnpm fetch
-
-
-WORKDIR /usr/portal/web
-RUN pnpm install --prefer-offline
-
-WORKDIR /usr/portal/app
-RUN pnpm install --prefer-offline
-RUN ls node_modules
-    # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    # && mkdir -p /home/pptruser/Downloads \
-    # && chown -R pptruser:pptruser /home/pptruser \
-    # && chown -R pptruser:pptruser /node_modules \
-    # && chown -R pptruser:pptruser /package.json \
-    # && chown -R pptruser:pptruser /package-lock.json
 
 # Env vars in build time
 ARG NODE_ENV
@@ -80,23 +56,32 @@ ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
 # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
-
-# Build app
-COPY ./zwf-app /usr/portal/app
-RUN pnpm run build:prod
-# RUN /usr/local/bin/node-prune
-
 ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
 ENV REACT_APP_ZWF_API_DOMAIN_NAME=
 ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
 ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
+WORKDIR /usr/portal/app
+COPY ./zwf-app/pnpm-lock.yaml ./
+RUN pnpm fetch
+
+WORKDIR /usr/portal/web
+COPY ./zwf-web/pnpm-lock.yaml ./
+RUN pnpm fetch
+
+# Build app
+WORKDIR /usr/portal/app
+COPY ./zwf-app ./
+RUN pnpm install --offline
+RUN pnpm run build:prod
+
+
 # Build web
 WORKDIR /usr/portal/web
-COPY ./zwf-web /usr/portal/web
+COPY ./zwf-web ./
+RUN pnpm install --offline
 RUN pnpm run compile:prod
 
-RUN pnpm prune --production
 
 # Copy web to app/www
 RUN cp -rf /usr/portal/web/build /usr/portal/app/www
@@ -109,6 +94,4 @@ WORKDIR /usr/portal/app
 
 # USER pptruser
 
-# CMD node index.js
 CMD node index.js
-
