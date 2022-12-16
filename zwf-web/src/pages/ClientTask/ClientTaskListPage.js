@@ -41,7 +41,7 @@ const LayoutStyled = styled.div`
 
 const TAB_DEFS = [
   {
-    label: 'In progress',
+    label: 'Pending',
     description: 'These are the cases that are being proceeded by your agents. No immidiate action is required from your side at the moment.',
     badgeColor: '#0FBFC4',
     filter: item => {
