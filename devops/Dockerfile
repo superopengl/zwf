@@ -60,10 +60,10 @@ RUN pnpm fetch
 
 
 WORKDIR /usr/portal/web
-RUN pnpm install -r --offline
+RUN pnpm install --prefer-offline
 
 WORKDIR /usr/portal/app
-RUN pnpm install -r --offline
+RUN pnpm install --prefer-offline
     # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     # && mkdir -p /home/pptruser/Downloads \
     # && chown -R pptruser:pptruser /home/pptruser \
