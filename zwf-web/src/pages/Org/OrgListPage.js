@@ -84,16 +84,17 @@ const OrgListPage = () => {
       render: (value) => value
     },
     {
-      title: 'Next pay / trial end',
-      dataIndex: 'subscription',
+      title: 'Period',
       render: (value, item) => <Space>
-        <TimeAgo value={item.periodTo} showTime={false} />
+        <TimeAgo value={item.periodFrom} />
+        -
+        <TimeAgo value={item.periodTo} />
       </Space>
     },
     {
       // title: 'Action',
       // fixed: 'right',
-      // width: 200,
+      width: 80,
       align: 'right',
       fixed: 'right',
       render: (text, org) => {

@@ -14,13 +14,8 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
     .leftJoin(UserProfile, 'p', `u."profileId" = p.id`)
     .leftJoin(q => q
       .from(OrgSubscriptionPeriod, 'm')
-      .where(`"periodTo" > NOW()`)
-      .orderBy('"orgId"')
-      .addOrderBy('"periodTo"', 'ASC')
-      .distinctOn([
-        '"orgId"',
-        '"periodTo"',
-      ]), 'm', 'o.id = m."orgId"')
+      .where(`latest IS TRUE`)
+      , 'm', 'o.id = m."orgId"')
     .leftJoin(q => q
       .from(OrgPromotionCode, 'y')
       .where(`y.active IS TRUE`)
