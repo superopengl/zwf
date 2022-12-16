@@ -19,6 +19,7 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       's."periodFrom" as "periodFrom"',
       's."periodTo" as "periodTo"',
       's."periodDays" as "periodDays"',
+      's."latest" as "latest"',
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
       'p.amount as amount',
@@ -51,6 +52,9 @@ export class OrgSubscriptionPeriodHistoryInformation {
 
   @ViewColumn()
   periodDays: string;
+
+  @ViewColumn()
+  latest: boolean;
 
   @ViewColumn()
   paymentId: string;
