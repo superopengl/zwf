@@ -20,7 +20,7 @@ import { Role } from '../../types/Role';
       't."periodId" as "periodId"',
       'm."type" as "type"',
       'm."unitFullPrice" as "unitFullPrice"',
-      'm."promotionUnitPrice" as "promotionUnitPrice"',
+      'COALESCE(m."promotionUnitPrice", m."unitFullPrice") as "realUnitPrice"',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
@@ -54,7 +54,7 @@ export class LicenseTicketUsageInformation {
   unitFullPrice: number;
 
   @ViewColumn()
-  promotionUnitPrice: number;
+  realUnitPrice: number;
 
   @ViewColumn()
   email: string;

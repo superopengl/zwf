@@ -15,5 +15,6 @@ export function sanitizeUser(user: UserInformation) {
     'avatarFileId',
     'avatarColorHex',
     'subscriptionAlive',
+    'suspended',
   ]);
 }

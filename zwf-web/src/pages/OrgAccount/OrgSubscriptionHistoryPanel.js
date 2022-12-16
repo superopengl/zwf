@@ -40,7 +40,7 @@ export const OrgSubscriptionHistoryPanel = (props) => {
           <TimeAgo value={item.periodFrom} showAgo={false} accurate={false} />
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {!item.endedAt && moment(item.periodFrom).isBefore() && moment(item.periodTo).isAfter() && <Tag>current</Tag>}
+          {item.latest && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
