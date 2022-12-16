@@ -2,6 +2,8 @@
   "name": "@zwf/web",
   "version": "0.1.0",
   "private": true,
+  "author": "jshao@zeeworkflow.com",
+  "license": "MIT",
   "dependencies": {
     "@ant-design/charts": "^1.2.14",
     "@ant-design/icons": "^4.7.0",

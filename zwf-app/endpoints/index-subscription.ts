@@ -34,7 +34,7 @@ async function chargeLastSubscriptionIfDue() {
       logProgress('Handling payment', payingPeriod);
 
       let shouldExtend = true;
-      if(payingPeriod.type !== 'trial') {
+      if (payingPeriod.type !== 'trial') {
         shouldExtend = await checkoutSubscriptionPeriod(m, payingPeriod);
       }
 
@@ -46,11 +46,11 @@ async function chargeLastSubscriptionIfDue() {
         await suspendOrg(m, payingPeriod);
       }
     });
-  } while (payingPeriod)
+  } while (payingPeriod);
 }
 
 function logProgress(message: string, period: OrgSubscriptionPeriod) {
-  const msg = `${message} 
+  const msg = `${message}
   org     : ${period.orgId}
   periodId: ${period.id} (${period.type})
   period  : ${moment(period.periodFrom).toISOString()} - ${moment(period.periodTo).toISOString()} (${period.periodDays} days)

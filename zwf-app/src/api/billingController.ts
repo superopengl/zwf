@@ -40,7 +40,7 @@ export const searchTicketUsage = handlerWrapper(async (req, res) => {
   const periodFrom = from;
   const periodTo = to ?? getUtcNow();
 
-  const list = [] // await rollupTicketUsageInPeriod(db.manager, orgId, periodFrom, periodTo);
+  const list = []; // await rollupTicketUsageInPeriod(db.manager, orgId, periodFrom, periodTo);
 
   res.json(list);
 });

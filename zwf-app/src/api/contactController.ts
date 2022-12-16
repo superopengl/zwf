@@ -3,7 +3,7 @@ import { db } from '../db';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getReqUser } from '../utils/getReqUser';
-import {isEmail} from 'validator';
+import { isEmail } from 'validator';
 import { Contact } from '../entity/Contact';
 import { sleep } from '../utils/sleep';
 import { sendEmail } from '../services/emailService';

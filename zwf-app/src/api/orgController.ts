@@ -1,4 +1,4 @@
-import { OrgSubscriptionPeriod } from "./../entity/OrgSubscriptionPeriod";
+import { OrgSubscriptionPeriod } from './../entity/OrgSubscriptionPeriod';
 import { db } from './../db';
 import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
@@ -60,7 +60,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
-  const period = new OrgSubscriptionPeriod()
+  const period = new OrgSubscriptionPeriod();
   period.id = uuidv4();
   period.periodFrom = now;
   period.periodTo = moment(now).add(13, 'days').toDate();
@@ -77,7 +77,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     await m.save(org);
     userEnitty.orgId = orgId;
     userEnitty.orgOwner = true;
-    
+
     await m.save([userEnitty, period, ticket]);
   });
 

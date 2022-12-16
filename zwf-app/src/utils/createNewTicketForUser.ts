@@ -1,4 +1,4 @@
-import { OrgSubscriptionPeriod } from "./../entity/OrgSubscriptionPeriod";
+import { OrgSubscriptionPeriod } from './../entity/OrgSubscriptionPeriod';
 import { LicenseTicket } from '../entity/LicenseTicket';
 import { assert } from './assert';
 

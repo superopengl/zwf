@@ -24,7 +24,7 @@ function main() {
     process.exit(0);
   } else {
     console.error('ts-node new-user.ts <email> <password> <salt>');
-    process.exit(1)
+    process.exit(1);
   }
 }
 

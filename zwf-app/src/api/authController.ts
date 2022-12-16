@@ -89,7 +89,7 @@ async function createNewLocalOrgAdmin(payload): Promise<{ user: User; profile: U
     if (!exists) {
       await m.save([profile, user]);
     }
-  })
+  });
 
   return { user, profile, exists };
 }
