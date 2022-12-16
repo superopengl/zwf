@@ -29,10 +29,11 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
       'o.id as id',
       'o.name as name',
       `o."createdAt" as "createdAt"`,
-      `CASE WHEN m.type = 'trial' THEN TRUE ELSE FALSE END as "isInTrial"`,
+      `m.type as "type"`,
       'o."businessName" as "businessName"',
       'o.tel as tel',
       'o.suspended as suspended',
+      'o.testing as testing',
       'u.id as "adminUserId"',
       'p.email as "ownerEmail"',
       'p."givenName" as "givenName"',
@@ -58,7 +59,7 @@ export class OrgBasicInformation {
   createdAt: Date;
 
   @ViewColumn()
-  isInTrial: boolean;
+  type: string;
 
   @ViewColumn()
   businessName: string;
@@ -68,6 +69,9 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   suspended: boolean;
+
+  @ViewColumn()
+  testing: boolean;
 
   @ViewColumn()
   adminUserId: string;

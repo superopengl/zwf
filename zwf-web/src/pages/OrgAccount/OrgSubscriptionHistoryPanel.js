@@ -33,31 +33,33 @@ export const OrgSubscriptionHistoryPanel = (props) => {
 
   const columnDef = [
     {
-      title: 'Period from',
+      title: 'Type',
       align: 'left',
       render: (value, item) => {
-        return <Space>
-          <TimeAgo value={item.periodFrom} showAgo={false} accurate={false} />
-          {/* <DoubleRightOutlined /> */}
-          {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {item.latest && <Tag>current</Tag>}
-          {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
-          {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
-        </Space>
-      }
-    },
-    {
-      title: 'End',
-      align: 'left',
-      render: (value, item) => {
-        return item.periodTo ? <TimeAgo value={item.periodTo} showAgo={false} accurate={false} /> : null;
+        return item.type === 'trial' ? 'Trial' : 'Monthly';
       }
     },
     {
       title: 'Days',
       align: 'center',
       render: (value, item) => {
-        return item.periodTo ? <Text>{item.periodDays}</Text> : 'on-going';
+        return item.periodDays;
+      }
+    },
+    {
+      title: 'Period',
+      align: 'left',
+      render: (value, item) => {
+        return <Space>
+          <TimeAgo value={item.periodFrom} showAgo={false} accurate={false} />
+          -
+          <TimeAgo value={item.periodTo} showAgo={false} accurate={false} />
+          {/* <DoubleRightOutlined /> */}
+          {/* {item.recurring && <Tag>auto renew</Tag>} */}
+          {item.latest && <Tag>current</Tag>}
+          {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
+          {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
+        </Space>
       }
     },
     {
@@ -69,10 +71,14 @@ export const OrgSubscriptionHistoryPanel = (props) => {
           return 'Free trial'
         }
 
+        if(!item.paymentId) {
+          return 'Pending'
+        }
+
         const { payable, issuedAt, paymentId } = item;
         return <Row align="middle">
           <Col span={8}>
-            <MoneyAmount value={payable} />
+          <MoneyAmount value={payable} />
           </Col>
           <Col span={8}>
             <TimeAgo value={issuedAt} showAgo={false} accurate={false} />

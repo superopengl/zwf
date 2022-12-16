@@ -55,7 +55,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     sysLog.level = 'autopay_falied';
     sysLog.message = 'Recurring auto pay failed';
     sysLog.req = {
-      pendingPayment: period,
+      targetPeriod: period,
       error: e
     };
     await m.save(sysLog);
