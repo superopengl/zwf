@@ -49,14 +49,21 @@ RUN npm install -g pnpm@6
 EXPOSE 80
 # Install dependencies
 WORKDIR /usr/portal
-COPY ./zwf-web/package.json /usr/portal/web/
-COPY ./zwf-app/package.json /usr/portal/app/
+COPY ./zwf-web/pnpm-lock.yaml /usr/portal/web/
+COPY ./zwf-app/pnpm-lock.yaml /usr/portal/app/
 
 WORKDIR /usr/portal/web
-RUN pnpm install
+RUN pnpm fetch --prod
 
 WORKDIR /usr/portal/app
-RUN pnpm install
+RUN pnpm fetch --prod
+
+
+WORKDIR /usr/portal/web
+RUN pnpm install -r --offline --prod
+
+WORKDIR /usr/portal/app
+RUN pnpm install -r --offline --prod
     # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
     # && mkdir -p /home/pptruser/Downloads \
     # && chown -R pptruser:pptruser /home/pptruser \
