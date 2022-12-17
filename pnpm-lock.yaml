@@ -296,9 +296,6 @@ importers:
   zwf-web/build/tinymce:
     specifiers: {}
 
-  zwf-web/public/tinymce:
-    specifiers: {}
-
 packages:
 
   /@amap/amap-jsapi-loader/1.0.1:
