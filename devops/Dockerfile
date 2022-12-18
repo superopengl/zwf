@@ -38,7 +38,7 @@ RUN apt-get install libfontconfig1 libfontconfig1-dev
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm@6
+RUN npm install -g pnpm@7
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
@@ -49,35 +49,42 @@ RUN npm install -g pnpm@6
 EXPOSE 80
 # Install dependencies
 WORKDIR /usr/portal
-COPY ./zwf-web/package.json /usr/portal/web/
-COPY ./zwf-app/package.json /usr/portal/app/
-
-WORKDIR /usr/portal/web
-RUN pnpm install
+COPY ./zwf-web/pnpm-lock.yaml ./web/
+COPY ./zwf-app/pnpm-lock.yaml ./app/
+COPY ./zwf-web/package.json ./web/
+COPY ./zwf-app/package.json ./app/
 
 WORKDIR /usr/portal/app
-RUN pnpm install
-    # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    # && mkdir -p /home/pptruser/Downloads \
-    # && chown -R pptruser:pptruser /home/pptruser \
-    # && chown -R pptruser:pptruser /node_modules \
-    # && chown -R pptruser:pptruser /package.json \
-    # && chown -R pptruser:pptruser /package-lock.json
+RUN pnpm fetch
+WORKDIR /usr/portal/web
+RUN pnpm fetch
 
-# Env vars in build time
-ARG NODE_ENV
-ARG REACT_APP_GIT_HASH
-ENV TZ=utc
-ENV GIT_HASH=$REACT_APP_GIT_HASH
-ENV GENERATE_SOURCEMAP=false
-ENV NODE_OPTIONS=--max_old_space_size=4096
-# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+# WORKDIR /usr/portal/web
+# RUN pnpm install
+
+# WORKDIR /usr/portal/app
+# RUN pnpm install
+#     # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+#     # && mkdir -p /home/pptruser/Downloads \
+#     # && chown -R pptruser:pptruser /home/pptruser \
+#     # && chown -R pptruser:pptruser /node_modules \
+#     # && chown -R pptruser:pptruser /package.json \
+#     # && chown -R pptruser:pptruser /package-lock.json
+
+# # Env vars in build time
+# ARG NODE_ENV
+# ARG REACT_APP_GIT_HASH
+# ENV TZ=utc
+# ENV GIT_HASH=$REACT_APP_GIT_HASH
+# ENV GENERATE_SOURCEMAP=false
+# ENV NODE_OPTIONS=--max_old_space_size=4096
+# # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 # Build app
-COPY ./zwf-app /usr/portal/app
-RUN pnpm run build:prod
-RUN pnpm prune --production
-# RUN /usr/local/bin/node-prune
+WORKDIR /usr/portal/app
+COPY ./zwf-app .
+RUN pnpm install --offline
+RUN pnpm build:prod
 
 ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
 ENV REACT_APP_ZWF_API_DOMAIN_NAME=
@@ -86,8 +93,9 @@ ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GB
 
 # Build web
 WORKDIR /usr/portal/web
-COPY ./zwf-web /usr/portal/web
-RUN pnpm run compile:prod
+COPY ./zwf-web .
+RUN pnpm install --offline
+RUN pnpm compile:prod
 
 # Copy web to app/www
 RUN cp -rf /usr/portal/web/build /usr/portal/app/www
@@ -95,11 +103,11 @@ RUN rm -rf /usr/portal/web
 
 # RUN npm uninstall -g pnpm
 
-# Start the portal website
-WORKDIR /usr/portal/app
+# # Start the portal website
+# WORKDIR /usr/portal/app
 
-# USER pptruser
+# # USER pptruser
 
-# CMD node index.js
+# # CMD node index.js
 CMD node index.js
 
