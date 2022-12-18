@@ -12,7 +12,7 @@ export async function sendInviteOrgMemberEmail(user: User | UserInformation, ema
   user.status = UserStatus.ResetPassword;
   assert(resetPasswordToken, 500, 'resetPasswordToken is not set yet');
 
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.ZWF_API_DOMAIN_NAME}/app/r/${resetPasswordToken}/`;
   await sendEmail({
     to: email,
     template: EmailTemplateType.InviteOrgMember,

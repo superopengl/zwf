@@ -15,7 +15,7 @@ export async function inviteClientToOrgWithSendingEmail(m: EntityManager, user, 
   user.profile = profile;
   await m.save(user);
 
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.ZWF_API_DOMAIN_NAME}/app/r/${resetPasswordToken}/`;
   const email = profile.email;
   await sendEmail({
     to: email,

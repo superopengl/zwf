@@ -90,7 +90,7 @@ export function listTaskTrackings$(taskId) {
 }
 
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
-  return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
+  return `${API_DOMAIN_NAME}/app/t/${taskDeepLinkId}/`;
 }
 
 export function subscribeTaskFieldsChange(taskId) {

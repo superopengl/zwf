@@ -96,8 +96,9 @@
     "watch": "npm-watch",
     "g": "npx generate-react-cli component --",
     "p": "npx generate-react-cli component -- --type=page",
-    "upload": " aws s3 sync build s3://zwf-web/",
+    "upload": " aws s3 sync build s3://zwf-web-spa/",
     "analyze": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=true craco build && source-map-explorer 'build/static/js/*.js'",
+    "release": "pnpm compile:prod && pnpm upload && pnpm flush",
     "postinstall": "node ./bin/build-tinymce"
   },
   "eslintConfig": {

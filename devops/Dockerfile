@@ -38,7 +38,7 @@ RUN apt-get install libfontconfig1 libfontconfig1-dev
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm@6
+RUN npm install -g pnpm
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
@@ -64,29 +64,31 @@ ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GB
 WORKDIR /usr/portal
 COPY ./pnpm-lock.yaml ./
 RUN pnpm fetch
-RUN pnpm i -r --offline
 
-# Build app
-WORKDIR /usr/portal/app
-COPY ./zwf-app ./
-RUN pnpm run build:prod
+COPY ./zwf-app /usr/portal/app
+COPY ./zwf-web /usr/portal/web
+# RUN pnpm install -r --offline
 
-
-# Build web
-WORKDIR /usr/portal/web
-COPY ./zwf-web ./
-RUN pnpm run compile:prod
+# # Build app
+# WORKDIR /usr/portal/app
+# # COPY ./zwf-app ./
+# RUN pnpm run build:prod
 
 
-# Copy web to app/www
-RUN cp -rf /usr/portal/web/build /usr/portal/app/www
-RUN rm -rf /usr/portal/web
+# # Build web
+# WORKDIR /usr/portal/web
+# # COPY ./zwf-web ./
+# RUN pnpm run compile:prod
 
-# RUN npm uninstall -g pnpm
+# # Copy web to app/www
+# RUN cp -rf /usr/portal/web/build /usr/portal/app/www
+# RUN rm -rf /usr/portal/web
 
-# Start the portal website
-WORKDIR /usr/portal/app
+# # RUN npm uninstall -g pnpm
 
-# USER pptruser
+# # Start the portal website
+# WORKDIR /usr/portal/app
 
-CMD node index.js
+# # USER pptruser
+
+# CMD node index.js

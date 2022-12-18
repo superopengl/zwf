@@ -112,9 +112,9 @@ export function createAppInstance() {
   connectSwaggerRoutes(app, `${__dirname}/_assets/api.yml`);
 
 
-  app.get('/healthcheck', (req, res) => res.send('OK'));
+  app.get('/app/healthcheck', (req, res) => res.send('OK'));
 
-  app.get('/r/:token', (req, res) => {
+  app.get('/app/r/:token', (req, res) => {
     const { token } = req.params;
     const r = req.query.r as string;
     const returnUrlParam = r ? `?r=${encodeURIComponent(r)}` : '';
@@ -123,7 +123,7 @@ export function createAppInstance() {
     res.redirect(url);
   });
 
-  app.get('/t/:token', taskDirectLinkHanlder);
+  app.get('/app/t/:token', taskDirectLinkHanlder);
 
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));

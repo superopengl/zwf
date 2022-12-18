@@ -123,7 +123,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
   } else {
     const { resetPasswordToken } = user;
 
-    const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+    const url = `${process.env.ZWF_API_DOMAIN_NAME}/app/r/${resetPasswordToken}/`;
     await sendEmail({
       template: EmailTemplateType.WelcomeOrg,
       to: email,
@@ -151,7 +151,7 @@ async function setUserToResetPasswordStatus(userId: string, returnUrl: string) {
   user.status = UserStatus.ResetPassword;
 
   const returnUrlParam = returnUrl ? `?r=${encodeURIComponent(returnUrl)}` : '';
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/` + returnUrlParam;
+  const url = `${process.env.ZWF_API_DOMAIN_NAME}/app/r/${resetPasswordToken}/` + returnUrlParam;
   await sendEmail({
     to: user.profile.email,
     template: EmailTemplateType.SetPassword,

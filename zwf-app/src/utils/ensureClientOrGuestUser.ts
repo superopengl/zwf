@@ -33,7 +33,7 @@ export async function ensureClientOrGuestUser(m: EntityManager, email: string, o
     user.status = UserStatus.ResetPassword;
     await m.save(user);
 
-    const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+    const url = `${process.env.ZWF_API_DOMAIN_NAME}/app/r/${resetPasswordToken}/`;
 
     const org = await m.findOneBy(Org, {id: orgId});
 

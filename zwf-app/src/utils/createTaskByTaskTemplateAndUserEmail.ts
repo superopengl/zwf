@@ -123,7 +123,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
   //     toWhom: getEmailRecipientName(user),
   //     orgName: org.name,
   //     taskName: task.name,
-  //     directUrl: `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`
+  //     directUrl: `${process.env.ZWF_API_DOMAIN_NAME}/app/t/${task.deepLinkId}`
   //   },
   // });
 
