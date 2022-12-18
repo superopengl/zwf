@@ -36,12 +36,6 @@ const AboutModal = (props) => {
         </a> | <a href="/disclaimer" target="_blank">
           <FormattedMessage id="menu.disclaimer" />
         </a></Paragraph>
-      {/* <Divider />
-      <Link href="https://www.techseeding.com.au" target="_blank">
-        Technical solution by TECHSEEDING PTY LTD.
-        <br />https://www.techseeding.com.au
-      <div style={{ marginTop: 5 }}><img src="https://www.techseeding.com.au/logo-bw.png" width="120px" height="auto" alt="Techseeding logo"></img></div>
-      </Link> */}
     </Modal>
   );
 };

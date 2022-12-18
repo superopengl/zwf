@@ -23,7 +23,7 @@ const { Title } = Typography;
 const TermAndConditionPage = () => <Layout>
   <ContainerStyled>
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
-    <Title style={{ textAlign: 'center' }}>Techseeding Pty Ltd - Terms and Conditions</Title>
+    <Title style={{ textAlign: 'center' }}>ZeeWorkflow Pty Ltd - Terms and Conditions</Title>
     <Title level={2}>1. Scope</Title>
       <p>These general terms apply to all professional relationships between ZeeWorkflow and its Client, notwithstanding any Client’s general terms even if more recent, unless explicitly accepted, totally or partially, in writing by ZeeWorkflow.</p>
       <p>In case of contradiction between the Engagement Letter and the General Terms, the Engagement Letter shall prevail.</p>

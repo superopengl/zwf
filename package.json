@@ -18,6 +18,6 @@
     "release:notes": "echo $\"export const notes=\\`\"> zwf-web/src/release_changes.js && git log $(git describe --tags --abbrev=0 @^)..@ --pretty=format:\"%s\" >> zwf-web/src/release_changes.js && echo \"\\`\" >> zwf-web/src/release_changes.js",
     "release": "pnpm release:notes && git commit -am 'update release notes' && pnpm release:tag && pnpm docker:build && pnpm docker:push && pnpm ecs:update && pnpm flush"
   },
-  "author": "mr.shaojun@gmail.com",
+  "author": "jshao@zeeworkflow.com",
   "license": "MIT"
 }
