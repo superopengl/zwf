@@ -61,13 +61,12 @@ ENV REACT_APP_ZWF_API_DOMAIN_NAME=
 ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
 ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
-WORKDIR /usr/portal
+WORKDIR /usr/portal/app
 COPY ./pnpm-lock.yaml ./
 RUN pnpm fetch
 
-COPY ./zwf-app /usr/portal/app
-COPY ./zwf-web /usr/portal/web
-# RUN pnpm install -r --offline
+COPY . ./
+RUN pnpm install --offline
 
 # # Build app
 # WORKDIR /usr/portal/app
@@ -84,11 +83,11 @@ COPY ./zwf-web /usr/portal/web
 # RUN cp -rf /usr/portal/web/build /usr/portal/app/www
 # RUN rm -rf /usr/portal/web
 
-# # RUN npm uninstall -g pnpm
+RUN npm uninstall -g pnpm
 
 # # Start the portal website
 # WORKDIR /usr/portal/app
 
 # # USER pptruser
 
-# CMD node index.js
+CMD node index.js
