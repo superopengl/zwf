@@ -133,7 +133,30 @@ export const App = React.memo(() => {
 
   return (
     <GlobalContext.Provider value={contextValue}>
-      <ConfigProvider locale={antdLocale}>
+      <ConfigProvider 
+        theme={{
+          components: {
+            Divider: {
+            }
+          },
+          token: {
+            colorPrimary: '#0FBFC4',
+            colorInfo: '#0FBFC4',
+            colorWarning: '#F7BA1E',
+            colorLink: '#0FBFC4',
+            colorSuccess: '#00B42A',
+            colorError:'#F53F3F',
+            borderRadius: 4,
+            colorTextBase: '#4B5B76',
+            colorTextSecondary: '#97A3B7',
+            fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+            fontSizeHeading1: 32,
+            fontSizeHeading2: 28,
+            fontSizeHeading3: 22,
+            fontSizeHeading4: 18,
+          }
+        }}
+        locale={antdLocale}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Routes>
