@@ -16,7 +16,7 @@ import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { AiFillCalendar } from 'react-icons/ai';
-import { BsBell } from 'react-icons/bs';
+import { FaFileInvoiceDollar } from 'react-icons/fa';
 import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
@@ -144,11 +144,17 @@ const ROUTES = [
         roles: ['system'],
       },
       {
-        key: '/account',
-        label: 'Subscription & Billings',
-        icon: <CreditCardFilled />,
+        key: '/invoices',
+        label: 'Invoices',
+        icon: <Icon component={FaFileInvoiceDollar} />,
         roles: ['admin'],
       },
+      {
+        key: '/payment_methods',
+        label: 'Paymnent Methods',
+        icon: <CreditCardFilled />,
+        roles: ['admin'],
+      },      
       {
         key: '/tags',
         label: <FormattedMessage id="menu.tags" />,

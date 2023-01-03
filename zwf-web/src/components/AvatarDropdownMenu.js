@@ -15,6 +15,7 @@ import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { QuestionCircleFilled } from '@ant-design/icons';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
@@ -56,10 +57,22 @@ export const AvatarDropdownMenu = React.memo(props => {
   }
 
   const handleLogout = () => {
-    logout$().subscribe(() => {
-      // reactLocalStorage.clear();
-      setUser(null);
-      goToHomePage();
+    Modal.confirm({
+      icon: <QuestionCircleFilled/>,
+      title: 'Are you sure you want to log out?',
+      okText: 'Logout',
+      okButtonProps: {
+        danger: true,
+        type: 'primary',
+      },
+      autoFocusButton: 'cancel',
+      onOk: () => {
+        logout$().subscribe(() => {
+          // reactLocalStorage.clear();
+          setUser(null);
+          goToHomePage();
+        });
+      }
     });
   };
 
@@ -68,37 +81,82 @@ export const AvatarDropdownMenu = React.memo(props => {
   const isAgent = role === 'agent';
   const isClient = role === 'client';
 
-  const avatarMenu = <StyledMenu>
-    <Menu.Item key="email" disabled={true}>
-      <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
-    </Menu.Item>
-    <Menu.Divider />
-    <Link to="/">
-      <Menu.Item key="home">
-        <FormattedMessage id="menu.home" />
-      </Menu.Item>
-    </Link>
-    <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
-      <FormattedMessage id="menu.profile" />
-    </Menu.Item>
-    {loginType === 'local' && <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
-      <FormattedMessage id="menu.changePassword" />
-    </Menu.Item>}
-    {isAdmin && <Menu.Divider />}
-    {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
-      Organization Profile
-    </Menu.Item>}
-    {isAdmin && <Menu.Item key="subscription_billing" onClick={() => navigate('/account')}>
-      Subscription & Billings
-    </Menu.Item>}
-    <Menu.Divider />
-    <Menu.Item key="logout" danger onClick={handleLogout}>
-      <FormattedMessage id="menu.logout" />
-    </Menu.Item>
-  </StyledMenu>
+  const handleMenuItemClick = e => {
+    const { key } = e;
+    switch (key) {
+      case 'home':
+        goToHomePage();
+        break;
+      case 'profile':
+        setProfileVisible(true);
+        break;
+      case 'change_password':
+        setChangePasswordVisible(true);
+        break;
+      case 'org_profile':
+        setOrgProfileVisible(true);
+        break;
+      case 'invoices':
+        navigate('/invoices');
+        break;
+      case 'logout':
+        handleLogout();
+        break;
+      default:
+        throw new Error(`Unsupported key ${key}`);
+    }
+  };
+
+  const menu = {
+    items: [
+      {
+        key: 'email',
+        disabled: true,
+        label: <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
+      },
+      {
+        key: 'divider',
+        type: 'divider',
+      },
+      {
+        key: 'home',
+        label: <FormattedMessage id="menu.home" />,
+      },
+      {
+        key: 'profile',
+        label: <FormattedMessage id="menu.profile" />
+      },
+      loginType === 'local' ? {
+        key: 'change_password',
+        label: <FormattedMessage id="menu.changePassword" />
+      } : null,
+      isAdmin ? {
+        key: 'divider2',
+        type: 'divider'
+      } : null,
+      isAdmin ? {
+        key: 'org_profile',
+        label: 'Org Profile'
+      } : null,
+      isAdmin ? {
+        key: 'invoices',
+        label: 'Invoices'
+      } : null,
+      {
+        key: 'divider',
+        type: 'divider',
+      },
+      {
+        key: 'logout',
+        danger: true,
+        label: <FormattedMessage id="menu.logout" />
+      }
+    ].filter(x => !!x),
+    onClick: handleMenuItemClick,
+  }
 
   return <div style={props.style}>
-    <Dropdown menu={avatarMenu} trigger={['click']}>
+    <Dropdown menu={menu} trigger={['click']}>
       <a onClick={e => e.preventDefault()}>
         {/* <Avatar size={40}
       icon={<UserOutlined style={{ fontSize: 20 }} />}

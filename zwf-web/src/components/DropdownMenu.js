@@ -22,7 +22,10 @@ const DropdownMenu = (props) => {
 
   const items = config.map((x, i) => {
     if (x.menu === '-') {
-      return <Divider key={i} />
+      return {
+        key: i,
+        type: 'divider',
+      }
     }
     return {
       key: i,
