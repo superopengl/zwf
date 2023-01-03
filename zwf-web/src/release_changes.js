@@ -1,2 +1,2 @@
 export const notes=`
-refine ignore files`
+clean up`
