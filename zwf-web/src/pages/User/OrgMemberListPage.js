@@ -248,7 +248,7 @@ const OrgMemberListPage = () => {
       </PageHeader>
 
       <Modal
-        visible={setPasswordVisible}
+        open={setPasswordVisible}
         destroyOnClose={true}
         maskClosable={false}
         onOk={() => setSetPasswordVisible(false)}
@@ -270,7 +270,7 @@ const OrgMemberListPage = () => {
         </Form>
       </Modal>
       <Modal
-        visible={inviteVisible}
+        open={inviteVisible}
         destroyOnClose={true}
         maskClosable={false}
         onOk={() => setInviteVisible(false)}
@@ -299,7 +299,7 @@ const OrgMemberListPage = () => {
         </Form>
       </Modal>
       <Drawer
-        visible={profileModalVisible}
+        open={profileModalVisible}
         destroyOnClose={true}
         maskClosable={true}
         title="User Profile"
@@ -312,7 +312,7 @@ const OrgMemberListPage = () => {
         {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
       </Drawer>
       <Modal
-        visible={modalVisible}
+        open={modalVisible}
         closable={!paymentLoading}
         maskClosable={false}
         title="Buy licenses"

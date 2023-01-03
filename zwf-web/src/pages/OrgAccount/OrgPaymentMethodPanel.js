@@ -120,7 +120,7 @@ const OrgPaymentMethodPanel = () => {
         />
       </Card>
       <Modal
-        visible={modalVisible}
+        open={modalVisible}
         closable={!paymentLoading}
         maskClosable={false}
         title="Add Payment Method"

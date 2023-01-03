@@ -9,7 +9,7 @@ const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
   const { user, setUser } = context;
 
-  const { visible, onOk } = props;
+  const { onOk } = props;
 
   const handlePostSave = async () => {
     const updatedUser = await getAuthUser();
@@ -26,8 +26,6 @@ const ProfileModal = props => {
       destroyOnClose={true}
       footer={null}
       width={360}
-      visible={visible}
-      onOk={onOk}
       {...props}>
       <ProfileForm user={user} onOk={handlePostSave} />
     </Modal>

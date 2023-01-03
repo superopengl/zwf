@@ -40,7 +40,7 @@ export const CreateNewButton = React.memo(props => {
 
   return <>
     <Dropdown.Button
-      overlay={menu}
+      menu={menu}
       size={size}
       onClick={handleCreateTask}
       trigger="click"

@@ -120,7 +120,7 @@ const PromotionListPanel = (props) => {
         />
       </Space>
       <Drawer
-        visible={modalVisible}
+        open={modalVisible}
         destroyOnClose={true}
         maskClosable={true}
         onClose={() => setModalVisible(false)}

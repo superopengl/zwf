@@ -122,10 +122,10 @@ export const HomeContactUsArea = props => {
                   form={form}
                 >
                   <Form.Item name="name" label="Name" required rules={[{ required: true, max: 100 }]}>
-                    <Input placeholder="Your name" autocomplete="name" disabled={loading} allowClear/>
+                    <Input placeholder="Your name" autoComplete="name" disabled={loading} allowClear/>
                   </Form.Item>
                   <Form.Item name="email" label="Email" required rules={[{ required: true, max: 120, type: 'email' }]}>
-                    <Input placeholder="Email address" autocomplete="email" disabled={loading} allowClear/>
+                    <Input placeholder="Email address" autoComplete="email" disabled={loading} allowClear/>
                   </Form.Item>
                   <Form.Item name="body" label="Name" required rules={[{ required: true, max: 1000 }]}>
                     <Input.TextArea autoSize={{ minRows: 4, maxRows: 15 }} showCount maxLength={1000} placeholder="Your question" disabled={loading} allowClear/>

@@ -6,7 +6,7 @@ import { App } from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
-console.log(process.env);
+console.log('env', process.env);
 
 const container = document.getElementById('root');
 // const root = createRoot(container);

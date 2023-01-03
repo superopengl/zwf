@@ -284,7 +284,7 @@ const OrgListPage = () => {
         />
       </Space>
       <Drawer
-        visible={promotionCodeDrawerVisible}
+        open={promotionCodeDrawerVisible}
         destroyOnClose={true}
         maskClosable={true}
         title={<>{currentOrg?.name} - Promotion Codes</>}

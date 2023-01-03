@@ -38,7 +38,7 @@ const DropdownMenu = (props) => {
   return (
     <StyledDropdown
       disabled={disabled}
-      overlay={menu}
+      menu={menu}
       placement="bottomRight"
       trigger="click"
       onClick={e => e.stopPropagation()}

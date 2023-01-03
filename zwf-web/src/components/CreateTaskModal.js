@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 export const CreateTaskModal = React.memo(props => {
   const { visible, onOk, onCancel, taskTemplateId, client } = props;
   return <Modal
-    visible={visible}
+    open={visible}
     title={<><TaskIcon /> Create New Task</>}
     icon={<TaskIcon />}
     closable={true}
