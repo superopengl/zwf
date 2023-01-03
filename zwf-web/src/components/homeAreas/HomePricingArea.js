@@ -95,10 +95,10 @@ export const HomePricingArea = props => {
             style={{ position: 'relative', top: 80, display: 'flex', justifyContent: 'center', minWidth: 360 }}
           >
             <div className='price-card'>
-              <Space direction='horizontal' align="end" style={{ width: '100%', justifyContent: 'center' }}>
-                <Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text>
-                <Space><Text style={{ color: '#ffffff', fontSize: 36, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}> <small>/Month</small></Text></Space>
-              </Space>
+              <Row justify="space-between">
+                <Col span={12}><Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text></Col>
+                <Col span={12}><Space><Text style={{ color: '#ffffff', fontSize: 36, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}> <small>/Month</small></Text></Space></Col>
+              </Row>
               <Paragraph style={{ fontSize: 16, marginTop: '1rem' }}>
                 Description description description description description description description description description description description description description description
               </Paragraph>
