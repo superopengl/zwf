@@ -1,5 +1,5 @@
 import React from 'react';
-// import { createRoot } from 'react-dom/client';
+import { createRoot } from 'react-dom/client';
 import ReactDOM from 'react-dom';
 import './index.less';
 import { App } from './App';
@@ -9,16 +9,16 @@ import reportWebVitals from './reportWebVitals';
 console.log('env', process.env);
 
 const container = document.getElementById('root');
-// const root = createRoot(container);
-// root.render(<App />);
+const root = createRoot(container);
+root.render(<App />);
 
-ReactDOM.render(
-  // <React.StrictMode>
-  <App />
-  // </React.StrictMode>
-  ,
-  container
-);
+// ReactDOM.render(
+//   // <React.StrictMode>
+//   <App />
+//   // </React.StrictMode>
+//   ,
+//   container
+// );
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
