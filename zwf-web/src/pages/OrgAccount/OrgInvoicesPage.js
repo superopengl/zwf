@@ -1,19 +1,12 @@
-import { Card, Button, Modal, PageHeader, Typography, Row, Col } from 'antd';
+import { Typography, Row, Col } from 'antd';
 import React from 'react';
-
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
-import MoneyAmount from 'components/MoneyAmount';
-import { getAuthUser } from 'services/authService';
-import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
-import { FormattedMessage } from 'react-intl';
-import * as moment from 'moment-timezone';
 import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
-import { from } from 'rxjs';
-import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
-import { listMySubscriptions$, searchMyTicketUsage$ } from 'services/subscriptionService';
+import { listMySubscriptions$ } from 'services/subscriptionService';
 import { finalize } from 'rxjs/operators';
+import { PageContainer } from '@ant-design/pro-components';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -75,16 +68,16 @@ const OrgInvoicesPage = (props) => {
 
   return (
     <ContainerStyled>
-      <PageHeader
-        backIcon={false}
-        title="Invoices"
-        width="100%"
+      <PageContainer
+        header={{
+          title: 'Invoices',
+        }}
       >
       <Loading loading={loading} style={{ width: '100%' }}>
           <OrgSubscriptionHistoryPanel data={billingHistory} />
           </Loading>
 
-      </PageHeader>
+      </PageContainer>
     </ContainerStyled>
   );
 };

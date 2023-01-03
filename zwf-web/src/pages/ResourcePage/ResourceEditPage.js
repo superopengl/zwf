@@ -1,24 +1,16 @@
-import { Button, Typography, PageHeader, Row, Col, Skeleton, message, Affix } from 'antd';
+import { Button, Typography, Row, Col, Skeleton } from 'antd';
 import { useParams } from "react-router-dom";
 import React from 'react';
-import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { ResourceEditorPanel } from './ResourceEditorPanel';
-import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import Icon, { SaveFilled } from '@ant-design/icons';
-import { VscOpenPreview } from 'react-icons/vsc';
-import { MdOpenInNew } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
-import { notify } from 'util/notify';
-import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
-import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { DocTemplateIcon, ResourcePageIcon } from 'components/entityIcon';
-import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
+import { ResourcePageIcon } from 'components/entityIcon';
 import { ClickToEditInput } from 'components/ClickToEditInput';
-import { getEditResourcePage$, getPublishedResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
+import { getEditResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
 import { useDebouncedValue } from "rooks";
+import { PageContainer } from '@ant-design/pro-components';
 
 import { SavingAffix } from 'components/SavingAffix';
 
@@ -105,27 +97,30 @@ export const ResourceEditPage = React.memo((props) => {
   const canPublish = page?.html?.trim().length > 0;
   return <LayoutStyled>
     <Loading loading={loading}>
-      <PageHeader
+      <PageContainer
         ghost
-        backIcon={false}
         style={{ maxWidth: 900, margin: '0 auto' }}
-        title={<Row align="middle" wrap={false}>
-          <Col>
-            <ResourcePageIcon />
-          </Col>
-          <Col flex={1}>
-            <ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />
-          </Col>
-        </Row>}
-        extra={debouncedPage
-          ? <Button
-            type="primary"
-            ghost={!!debouncedPage.publishedAt}
-            onClick={handleTogglePublish}
-            disabled={!canPublish}>
-            {debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}
-          </Button>
-          : <Skeleton.Button />}
+        header={{
+          title: <Row align="middle" wrap={false}>
+            <Col>
+              <ResourcePageIcon />
+            </Col>
+            <Col flex={1}>
+              <ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />
+            </Col>
+          </Row>,
+          extra: [
+            debouncedPage
+              ? <Button
+                type="primary"
+                ghost={!!debouncedPage.publishedAt}
+                onClick={handleTogglePublish}
+                disabled={!canPublish}>
+                {debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}
+              </Button>
+              : <Skeleton.Button />
+          ]
+        }}
       >
         <div style={{ position: 'relative' }}>
           {!loading && <ResourceEditorPanel
@@ -134,7 +129,7 @@ export const ResourceEditPage = React.memo((props) => {
             debug={debugMode}
           />}
         </div>
-      </PageHeader>
+      </PageContainer>
     </Loading>
     {saving && <SavingAffix />}
   </LayoutStyled>

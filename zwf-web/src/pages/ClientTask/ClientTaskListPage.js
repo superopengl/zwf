@@ -1,16 +1,12 @@
-import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOutlined, SyncOutlined, UpOutlined } from '@ant-design/icons';
-import { Button, Layout, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, PageHeader, Select, Input } from 'antd';
-import Text from 'antd/lib/typography/Text';
+import { ClearOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Space, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, Select, Input } from 'antd';
 import React from 'react';
+import { PageContainer } from '@ant-design/pro-components';
 
-import { saveTask, listClientTask$ } from '../../services/taskService';
+import { listClientTask$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { TaskDraggableCard } from '../../components/TaskDraggableCard';
-import { Loading } from 'components/Loading';
 import { TaskClientCard } from 'components/TaskClientCard';
-import DropdownMenu from 'components/DropdownMenu';
 import { orderBy, uniq } from 'lodash';
-import { GrAscend, GrDescend } from 'react-icons/gr';
 import { useLocalstorageState } from 'rooks';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import Icon from '@ant-design/icons';
@@ -93,10 +89,10 @@ export const ClientTaskListPage = () => {
   const load$ = () => {
     setLoading(true);
     return listClientTask$()
-    .subscribe(data => {
-      setAllList(data);
-      setLoading(false);
-    });
+      .subscribe(data => {
+        setAllList(data);
+        setLoading(false);
+      });
   }
 
   React.useEffect(() => {
@@ -128,19 +124,19 @@ export const ClientTaskListPage = () => {
   const sortOptions = React.useMemo(() => [
     {
       value: '-updatedAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (newest)<Icon component={ImSortAmountDesc } /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (newest)<Icon component={ImSortAmountDesc} /></Space>,
     },
     {
       value: '+updatedAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (oldest)<Icon component={ImSortAmountAsc } /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (oldest)<Icon component={ImSortAmountAsc} /></Space>,
     },
     {
       value: '-createdAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (newest)<Icon component={ImSortAmountDesc } /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (newest)<Icon component={ImSortAmountDesc} /></Space>,
     },
     {
       value: '+createdAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (oldest)<Icon component={ImSortAmountAsc } /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (oldest)<Icon component={ImSortAmountAsc} /></Space>,
     },
 
   ], []);
@@ -156,41 +152,42 @@ export const ClientTaskListPage = () => {
 
   return (
     <LayoutStyled>
-      <PageHeader
-        title="All Cases"
-        backIcon={false}
-        loading={loading}
-        extra={[
-          <Button key="refresh"
-          icon={<SyncOutlined />}
-          onClick={() => load$()}
-          type="link">Refresh</Button>,
-          <Button key="clear"
-            icon={<ClearOutlined />}
-            onClick={() => setQuery({ ...TASK_FILTER_DEFAULT, tab: query.tab })}
-            type="link">Reset filters</Button>,
-          <Input.Search
-            key="search"
-            placeholder='Search text'
-            style={{ width: 200 }}
-            value={searchText}
-            onChange={e => setSearchText(e.target.value)}
-            onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
-            maxLength={200}
-            allowClear />,
-          <Select key="org"
-            options={orgOptions}
-            value={query.org}
-            onSelect={org => setQuery({ ...query, org })}
-            dropdownMatchSelectWidth={false}
-            style={{ width: 200 }} />,
-          <Select key="sort"
-            value={query.order}
-            options={sortOptions}
-            onSelect={order => setQuery({ ...query, order })}
-            dropdownMatchSelectWidth={false}
-            style={{ width: 200 }} />,
-        ]}
+      <PageContainer
+        header={{
+          title: "All Cases",
+          loading,
+          extra: [
+            <Button key="refresh"
+              icon={<SyncOutlined />}
+              onClick={() => load$()}
+              type="link">Refresh</Button>,
+            <Button key="clear"
+              icon={<ClearOutlined />}
+              onClick={() => setQuery({ ...TASK_FILTER_DEFAULT, tab: query.tab })}
+              type="link">Reset filters</Button>,
+            <Input.Search
+              key="search"
+              placeholder='Search text'
+              style={{ width: 200 }}
+              value={searchText}
+              onChange={e => setSearchText(e.target.value)}
+              onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
+              maxLength={200}
+              allowClear />,
+            <Select key="org"
+              options={orgOptions}
+              value={query.org}
+              onSelect={org => setQuery({ ...query, org })}
+              dropdownMatchSelectWidth={false}
+              style={{ width: 200 }} />,
+            <Select key="sort"
+              value={query.order}
+              options={sortOptions}
+              onSelect={order => setQuery({ ...query, order })}
+              dropdownMatchSelectWidth={false}
+              style={{ width: 200 }} />,
+          ]
+        }}
       >
         <Tabs tabPosition={screens.md ? 'left' : 'top'}
           size="small"
@@ -233,7 +230,7 @@ export const ClientTaskListPage = () => {
             </Tabs.TabPane>
           })}
         </Tabs>
-      </PageHeader>
+      </PageContainer>
     </LayoutStyled>
   )
 }

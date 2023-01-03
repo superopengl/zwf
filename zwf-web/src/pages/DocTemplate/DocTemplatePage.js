@@ -1,5 +1,4 @@
-import { Button, Layout, PageHeader, Row, Col, Typography } from 'antd';
-
+import { Button, Layout, Row, Col, Typography } from 'antd';
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
@@ -19,6 +18,7 @@ import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewMo
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
+import { PageContainer } from '@ant-design/pro-components';
 const { Paragraph, Text } = Typography
 
 
@@ -105,23 +105,25 @@ export const DocTemplatePage = (props) => {
     <Loading loading={loading}>
       <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
         <Layout.Content style={{ overflowY: 'auto' }}>
-          <PageHeader
-            backIcon={<LeftOutlined />}
+          <PageContainer
             style={{ maxWidth: 900, margin: '0 auto' }}
-            title={<Row align="middle" wrap={false} style={{ height: 46 }}>
-              <Col>
-                <DocTemplateIcon />
-              </Col>
-              <Col flex={1}>
-                <ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />
-              </Col>
-            </Row>}
-            onBack={goBack}
-            extra={[
-              <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={VscOpenPreview} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-              <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew} />} onClick={handlePopPreview}>Preview</Button>,
-              <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
-            ]}
+            header={{
+              backIcon: <LeftOutlined />,
+              onBack: goBack,
+              title: <Row align="middle" wrap={false} style={{ height: 46 }}>
+                <Col>
+                  <DocTemplateIcon />
+                </Col>
+                <Col flex={1}>
+                  <ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />
+                </Col>
+              </Row>,
+              extra: [
+                <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={VscOpenPreview} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
+                <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew} />} onClick={handlePopPreview}>Preview</Button>,
+                <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+              ]
+            }}
           >
             <Paragraph type="secondary">
               The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field with name "Client Name". The variable replacement is <Text strong>case sensitive</Text>. So please make sure the variables specified in this doc template content are aligned with the field names when <Link to="/task_template">design task templates</Link>.
@@ -131,7 +133,7 @@ export const DocTemplatePage = (props) => {
               onChange={html => docTemplate.html = html}
               debug={debugMode}
             />}
-          </PageHeader>
+          </PageContainer>
         </Layout.Content>
         <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30, backgroundColor: 'transparent' }}>
           <DocTemplatePreviewPanel

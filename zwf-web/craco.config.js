@@ -1,17 +1,15 @@
-const { getThemeVariables } = require('antd/dist/theme');
+const { theme } = require('antd');
 const CracoLessPlugin = require('craco-less');
+const { defaultAlgorithm, defaultSeed } = theme;
 
-const darkTheme = getThemeVariables({
-  dark: false, // Enable dark mode
-  compact: false, // Enable compact mode
-});
+const mapToken = defaultAlgorithm(defaultSeed);
 
 /**
  * https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less
  */
 
 const modifyVars = {
-  ...darkTheme,
+  ...mapToken,
   '@primary-color': '#0FBFC4',// '#0FBFC4', // rgb(19,194,194)
   '@info-color': '#0FBFC4',
   '@warning-color': '#F7BA1E',

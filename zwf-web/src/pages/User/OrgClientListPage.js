@@ -1,24 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Drawer, PageHeader, Descriptions, List } from 'antd';
+import { Typography, Button, Table, Input, Drawer, Descriptions } from 'antd';
 import {
-  SyncOutlined, QuestionOutlined,
+  SyncOutlined,
   SearchOutlined,
-  ClearOutlined,
   PlusOutlined,
-  TagOutlined,
-  TagsOutlined,
   UserAddOutlined,
   PhoneOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { deleteUser, setPasswordForUser, setUserTags, setUserTags$, searchOrgClientUsers$ } from 'services/userService';
-import { impersonate$ } from 'services/authService';
-import { GlobalContext } from 'contexts/GlobalContext';
-import ProfileForm from 'pages/Profile/ProfileForm';
+import { setUserTags$, searchOrgClientUsers$ } from 'services/userService';
 import { TagSelect } from 'components/TagSelect';
-import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskStatusTag } from 'components/TaskStatusTag';
@@ -29,6 +22,7 @@ import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
 import { UserAvatar } from 'components/UserAvatar';
 import { CreateTaskModal } from 'components/CreateTaskModal';
+import { PageContainer } from '@ant-design/pro-components';
 
 
 const { Text } = Typography;
@@ -234,13 +228,14 @@ const OrgClientListPage = () => {
 
   return (
     <ContainerStyled>
-      <PageHeader
-        backIcon={false}
-        title={"Clients"}
-        extra={[
-          <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}>Refresh</Button>,
-          <Button key="invite" icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
-        ]}
+      <PageContainer
+        header={{
+          title: 'Clients',
+          extra: [
+            <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}>Refresh</Button>,
+            <Button key="invite" icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
+          ]
+        }}
       >
         <Table columns={columnDef}
           dataSource={list}
@@ -266,7 +261,7 @@ const OrgClientListPage = () => {
             }
           }}
         />
-      </PageHeader>
+      </PageContainer>
       <Drawer
         open={profileModalVisible}
         destroyOnClose={true}

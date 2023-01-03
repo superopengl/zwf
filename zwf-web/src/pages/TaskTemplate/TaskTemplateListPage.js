@@ -3,9 +3,9 @@ import {
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  PlusOutlined, SearchOutlined
+  PlusOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip, Radio, PageHeader } from 'antd';
+import { Button, Card, List, Modal, Space, Typography, Tooltip, Radio } from 'antd';
 import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -13,7 +13,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { cloneTaskTemplate$, deleteTaskTemplate$, listTaskTemplate$ } from 'services/taskTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
+import { TaskTemplateIcon } from '../../components/entityIcon';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
@@ -21,6 +21,7 @@ import { HiViewList } from 'react-icons/hi';
 import { CreateTaskModal } from 'components/CreateTaskModal';
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { finalize, switchMap } from 'rxjs/operators';
+import { PageContainer } from '@ant-design/pro-components';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -129,26 +130,27 @@ export const TaskTemplateListPage = props => {
 
   return (
     <LayoutStyled>
-      <PageHeader
-        title="Task Templates"
-        backIcon={false}
-        extra={[
-          <Radio.Group
-            key="view"
-            optionType="button"
-            buttonStyle="solid"
-            defaultValue={viewMode}
-            onChange={e => setViewMode(e.target.value)}
-          >
-            <Radio.Button value="grid">
-              <Icon component={BiGridAlt} />
-            </Radio.Button>
-            <Radio.Button value="list">
-              <Icon component={HiViewList} />
-            </Radio.Button>
-          </Radio.Group>,
-          <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
-        ]}
+      <PageContainer
+        header={{
+          title: 'Task Templates',
+          extra: [
+            <Radio.Group
+              key="view"
+              optionType="button"
+              buttonStyle="solid"
+              defaultValue={viewMode}
+              onChange={e => setViewMode(e.target.value)}
+            >
+              <Radio.Button value="grid">
+                <Icon component={BiGridAlt} />
+              </Radio.Button>
+              <Radio.Button value="list">
+                <Icon component={HiViewList} />
+              </Radio.Button>
+            </Radio.Group>,
+            <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
+          ]
+        }}
       >
         <List
           size="small"
@@ -245,7 +247,7 @@ export const TaskTemplateListPage = props => {
             </Card>
           </List.Item>}
         />
-      </PageHeader>
+      </PageContainer>
       <Modal
         open={!!previewTaskTemplate}
         onOk={() => setPreviewTaskTemplate(null)}
