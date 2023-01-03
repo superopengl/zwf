@@ -18,7 +18,7 @@ width: 100%;
 text-align: center;
 font-size: 0.8rem;
 color: #aaaaaa;
-background-color: #13161B;
+background-color: #13161B !important;
 padding: 1em 1rem 4rem;
 // position: absolute;
 // bottom: 0;
