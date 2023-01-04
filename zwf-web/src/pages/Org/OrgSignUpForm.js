@@ -29,7 +29,7 @@ const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  width: 100%;
+  // width: 100%;
 
   .ant-typography {
     // color: rgba(255,255,255,0.8);

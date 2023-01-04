@@ -14,6 +14,7 @@ import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppLoggedIn } from 'AppLoggedIn';
+import { AppLoggedInPage } from 'AppLoggedInPage';
 import { PortalPage } from 'pages/PortalPage';
 import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
@@ -137,6 +138,9 @@ export const App = React.memo(() => {
         theme={{
           components: {
             Divider: {
+            },
+            Typography: {
+              fontWeightStrong: 800,
             }
           },
           token: {
@@ -148,8 +152,10 @@ export const App = React.memo(() => {
             colorError:'#F53F3F',
             borderRadius: 4,
             colorTextBase: '#4B5B76',
+            colorText: '#4B5B76',
             colorTextSecondary: '#97A3B7',
             fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+            colorTextHeading: '#1C222B',
             fontSizeHeading1: 32,
             fontSizeHeading2: 28,
             fontSizeHeading3: 22,
@@ -174,7 +180,7 @@ export const App = React.memo(() => {
               {isAdmin && <Route path="/onboard" element={<OrgOnBoardPage />} />}
               {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
 
-              {!isGuest && <Route path="/" element={<AppLoggedIn />} >
+              {!isGuest && <Route path="/" element={<AppLoggedInPage />} >
                 {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
                 {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
                 {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}

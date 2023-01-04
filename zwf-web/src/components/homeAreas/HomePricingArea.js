@@ -82,7 +82,7 @@ export const HomePricingArea = props => {
     <Container>
       <InnerContainer justify='center'>
         <Title style={{ color: '#0FBFC4', textAlign: 'center', fontWeight: 700, fontSize: 18, lineHeight: 2, margin: 0 }}>We get tired of multiple plans!</Title>
-        <Title style={{ textAlign: 'center', fontWeight: 800, margin: 0 }}>Hassle-Free with <Text style={{ color: '#0FBFC4' }}>Just one plan</Text></Title>
+        <Title style={{ textAlign: 'center', fontWeight: 800, margin: 0 }}>Hassle-Free with <span style={{ color: '#0FBFC4' }}>Just one plan</span></Title>
         <Row justify='center'
           style={{
             backgroundImage: screens.xs ? 'none': 'url("/images/pricing-section-background.svg")',

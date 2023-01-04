@@ -19,14 +19,18 @@ const modifyVars = {
   // '@highlight-color': '#cf222e',
   '@font-size-base': '14px',
   '@table-font-size': '12px',
+
   '@layout-body-background': '#ffffff',
   '@layout-header-background': '#ffffff',
   '@layout-sider-background-light': '#F1F2F5',
+
   '@label-color': '#97A3B7',
+
   '@btn-font-size-lg': '14px',
   '@height-base': '32px',
   '@height-lg': '40px',
   '@height-sm': '28px',
+
   '@border-radius-base': '4px',
   '@text-color': '#4B5B76',
   '@text-color-secondary': '#97A3B7',
@@ -52,7 +56,7 @@ module.exports = {
           // modifyVars,
           lessOptions: {
             javascriptEnabled: true,
-            modifyVars,
+            // modifyVars,
           }
         }
       },
