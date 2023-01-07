@@ -1,0 +1,98 @@
+{
+  "name": "web",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "^4.2.2",
+    "@craco/craco": "^5.6.4",
+    "@react-hook/window-size": "^3.0.7",
+    "@testing-library/jest-dom": "^4.2.4",
+    "abbreviate": "^0.0.3",
+    "abnacn-validator": "^0.0.5",
+    "antd": "^4.6.2",
+    "axios": "^0.19.2",
+    "bizcharts": "^4.0.14",
+    "craco-less": "^1.16.0",
+    "file-saver": "^2.0.2",
+    "form-data": "^3.0.0",
+    "history": "^5.0.0",
+    "javascript-time-ago": "^2.0.13",
+    "lodash": "^4.17.15",
+    "markdown-it": "^11.0.1",
+    "mgr-pdf-viewer-react": "^1.0.3",
+    "moment": "^2.25.3",
+    "moment-timezone": "^0.5.32",
+    "object-hash": "^2.0.3",
+    "query-string": "^6.13.1",
+    "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.0.0",
+    "react-chat-elements": "^10.10.2",
+    "react-dom": "^16.13.1",
+    "react-file-icon": "^1.0.0",
+    "react-google-login": "^5.1.21",
+    "react-highlight-words": "^0.16.0",
+    "react-icons": "^4.1.0",
+    "react-image-lightbox": "^5.1.1",
+    "react-infinite-scroller": "^1.2.4",
+    "react-markdown-editor-lite": "^1.2.2",
+    "react-multi-carousel": "^2.5.5",
+    "react-responsive": "^8.1.0",
+    "react-router-dom": "^5.2.0",
+    "react-router-hash-link": "^2.0.0",
+    "react-scripts": "3.4.1",
+    "react-step-wizard": "^5.3.5",
+    "react-time-ago": "^6.0.1",
+    "react-to-print": "^2.9.0",
+    "reactjs-localstorage": "^1.0.1",
+    "rxjs": "^6.6.3",
+    "styled-components": "^5.1.0",
+    "tfn": "^1.0.0",
+    "uniqolor": "^1.0.1",
+    "validator": "^13.1.1"
+  },
+  "scripts": {
+    "start": "cross-env PORT=6003 REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",
+    "build": "npm run clean && cross-env CLIENT_ENV=development GENERATE_SOURCEMAP=true craco build",
+    "build:prod": "npm run clean && npm run compile",
+    "compile": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=false REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco build",
+    "compile:prod": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=false craco build",
+    "clean": "rm -rf build",
+    "test": "craco test",
+    "eject": "react-scripts eject",
+    "dev": "yarn && yarn build && yarn start",
+    "watched": "nodemon -w src --ext js --exec npm run build",
+    "watch": "npm-watch",
+    "g": "npx generate-react-cli component --",
+    "p": "npx generate-react-cli component -- --type=page",
+    "upload": " aws s3 sync build s3://fln-web/"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "babel-plugin-import": "^1.13.0",
+    "cross-env": "^7.0.2",
+    "nodemon": "^2.0.4",
+    "prop-types": "^15.7.2"
+  },
+  "watch": {
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "js,jsx"
+    }
+  }
+}
