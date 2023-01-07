@@ -11,7 +11,7 @@ export const saveContact = handlerWrapper(async (req, res) => {
 
   await sendEmail({
     template: 'contact',
-    to: 'info@filedin.io',
+    to: 'techseeding2020@gmail.com',
     vars: {
       name,
       company,

@@ -8,7 +8,7 @@ import * as path from 'path';
 import { logError } from '../utils/logger';
 
 let emailerInstance = null;
-export const SYSTEM_EMAIL_SENDER = 'AU Accounting Office <info@filedin.io>';
+export const SYSTEM_EMAIL_SENDER = 'Filedin <techseeding2020@gmail.com>';
 
 function getEmailer() {
   if (!emailerInstance) {
@@ -80,7 +80,7 @@ export class EmailRequest {
 //     Destination: {
 //       CcAddresses: [],
 //       ToAddresses: [req.to],
-//       BccAddresses: req.shouldBcc ? ['info@filedin.io'] : []
+//       BccAddresses: req.shouldBcc ? ['techseeding2020@gmail.com'] : []
 //     },
 //     Message: {
 //       Body: {
@@ -98,8 +98,8 @@ export class EmailRequest {
 //         Data: template.subject
 //       }
 //     },
-//     Source: 'AU Accounting Office <info@filedin.io>',
-//     ReplyToAddresses: ['AU Accounting Office <info@filedin.io>'],
+//     Source: 'Filedin <techseeding2020@gmail.com>',
+//     ReplyToAddresses: ['Filedin <techseeding2020@gmail.com>'],
 //   };
 
 //   const sesRequest = ses.sendEmail(params).promise();
