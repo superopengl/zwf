@@ -680,3 +680,46 @@ paths:
       responses:
         200:
           description: OK
+  /email_template:
+    get:
+      operationId: listEmailTemplate
+      responses:
+        200:
+          description: OK
+  /email_template/:locale/:key:
+    post:
+      operationId: saveEmailTemplate
+      parameters:
+        - name: locale
+          in: path
+          type: string
+          required: true
+        - name: key
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /email_template/signature:
+    get:
+      operationId: getEmailTemplateSignature
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveEmailTemplateSignature
+      responses:
+        200:
+          description: OK
+  /config:
+    get:
+      operationId: listConfig
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveConfig
+      responses:
+        200:
+          description: OK

@@ -1,7 +1,7 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, ManyToOne } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
-
+import { Org } from './Org';
 
 @Entity()
 @Index('user_email_unique', { synchronize: false })
@@ -57,5 +57,8 @@ export class User {
   @Index('user_resetPasswordToken_unique', { unique: true })
   @Column({ type: 'uuid', nullable: true })
   resetPasswordToken?: string;
+
+  @ManyToOne(() => Org, org => org.users, {nullable: true})
+  org: Org;
 }
 
