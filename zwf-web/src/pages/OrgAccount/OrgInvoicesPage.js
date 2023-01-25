@@ -55,11 +55,6 @@ const OrgInvoicesPage = (props) => {
       finalize(() => setLoading(false))
     ).subscribe(data => setBillingHistory(data));
 
-    // const x$ = searchMyTicketUsage$(moment().toDate(), moment().add(17, 'day').toDate()).subscribe(d => {
-    //   debugger;
-    //   const ok = d;
-    // });
-
     return () => {
       sub$.unsubscribe();
     }
@@ -67,18 +62,15 @@ const OrgInvoicesPage = (props) => {
 
 
   return (
-    <ContainerStyled>
-      <PageContainer
-        header={{
-          title: 'Invoices',
-        }}
-      >
-      <Loading loading={loading} style={{ width: '100%' }}>
-          <OrgSubscriptionHistoryPanel data={billingHistory} />
-          </Loading>
-
-      </PageContainer>
-    </ContainerStyled>
+    <PageContainer
+      loading={loading}
+      fixedHeader
+      header={{
+        title: 'Invoices',
+      }}
+    >
+      <OrgSubscriptionHistoryPanel data={billingHistory} />
+    </PageContainer>
   );
 };
 
