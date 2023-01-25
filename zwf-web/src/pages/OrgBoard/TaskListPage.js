@@ -1,4 +1,4 @@
-import { Button, Row, Space, Pagination, Radio, Tooltip, Alert, Typography, Card } from 'antd';
+import { Button, Row, Space, Pagination, Radio, Tooltip, Alert, Typography, Card, Segmented } from 'antd';
 import React from 'react';
 import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
@@ -121,6 +121,19 @@ const TaskListPage = () => {
               </Radio.Button>
             </Tooltip>
           </Radio.Group>,
+          <Segmented key="views"
+            value={viewMode}
+            onChange={setViewMode}
+            options={[
+              {
+                icon: <Icon component={HiOutlineViewBoards} />,
+                value: 'board'
+              },
+              {
+                icon: <Icon component={HiOutlineViewList} />,
+                value: 'list'
+              },
+            ]} />,
           <Tooltip key="filter" title="Filter">
             <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
           </Tooltip>,

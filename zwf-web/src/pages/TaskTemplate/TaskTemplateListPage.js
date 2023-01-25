@@ -5,7 +5,7 @@ import {
   EyeOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Typography, Tooltip, Radio } from 'antd';
+import { Button, Card, List, Modal, Space, Typography, Tooltip, Radio, Segmented } from 'antd';
 import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -133,20 +133,19 @@ export const TaskTemplateListPage = props => {
       header={{
         title: 'Task Templates',
         extra: [
-          <Radio.Group
-            key="view"
-            optionType="button"
-            buttonStyle="solid"
-            defaultValue={viewMode}
-            onChange={e => setViewMode(e.target.value)}
-          >
-            <Radio.Button value="grid">
-              <Icon component={BiGridAlt} />
-            </Radio.Button>
-            <Radio.Button value="list">
-              <Icon component={HiViewList} />
-            </Radio.Button>
-          </Radio.Group>,
+          <Segmented key="views"
+            onChange={setViewMode}
+            value={viewMode}
+            options={[
+              {
+                icon: <Icon component={BiGridAlt} />,
+                value: 'grid'
+              },
+              {
+                icon: <Icon component={HiViewList} />,
+                value: 'list'
+              },
+            ]} />,
           <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
         ]
       }}
