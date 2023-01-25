@@ -27,10 +27,9 @@ const TagsSettingPage = () => {
   const handleLoadTaskTags = () => listTags$()
 
   return (
-    <Container>
       <PageContainer
         header={{
-          title: 'Tag Management'
+          title: 'Tag Management',
         }}
       >
         <TagListPanel
@@ -40,7 +39,6 @@ const TagsSettingPage = () => {
           showColor={true}
         />
       </PageContainer>
-    </Container>
   );
 };
 
