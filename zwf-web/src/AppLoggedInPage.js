@@ -178,6 +178,7 @@ export const AppLoggedInPage = React.memo(() => {
   }
 
   const canCreateNew = role === 'admin' || role === 'agent';
+  const isSystem = role === 'system';
 
   return <StyledContainer>
     <ProLayout
@@ -237,6 +238,8 @@ export const AppLoggedInPage = React.memo(() => {
 fdasf
       </PageContainer> */}
     </ProLayout>
+    {!isSystem && <SupportAffix />}
+
   </StyledContainer>
 })
 
