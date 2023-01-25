@@ -9,7 +9,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate$ } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
@@ -74,7 +74,7 @@ const EMPTY_TASK_TEMPLATE = {
 
 export const TaskTemplatePage = props => {
   const params = useParams();
-  const {id: routeParamId} = params;
+  const { id: routeParamId } = params;
   const initTaskTemplateId = routeParamId;
   const isNew = !routeParamId;
 
@@ -139,35 +139,32 @@ export const TaskTemplatePage = props => {
   return (
     // <PageContainer>
 
-    <LayoutStyled>
-      <PageContainer
-        style={{ margin: 0, overflow: 'hidden' }}
-        fixedHeader
-        loading={loading}
-        ghost={true}
-        header={{
-          backIcon: <LeftOutlined />,
-          title: <Row align="middle" wrap={false} style={{ height: 46 }}>
-            <Col><TaskTemplateIcon /></Col>
-            <Col flex={1}>
-              <ClickToEditInput placeholder={isNew ? 'New Task Template' : "Task template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />,
-            </Col>
-          </Row>,
-          onBack: goBack,
-          extra: [
-            <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew } />} onClick={() => setPreview(true)}>Preview</Button>,
-            <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
-          ]
-        }}
-      >
-        {taskTemplate && <TaskTemplateEditorPanel
-          ref={formRef}
-          value={taskTemplate}
-          onChange={setTaskTemplate}
-          debug={debugMode}
-        />}
-      </PageContainer>
-
+    <PageContainer
+      style={{ margin: 0, overflow: 'hidden' }}
+      fixedHeader
+      loading={loading}
+      ghost={true}
+      header={{
+        backIcon: <LeftOutlined />,
+        title: <Row align="middle" wrap={false} style={{ height: 46 }}>
+          <Col><TaskTemplateIcon /></Col>
+          <Col flex={1}>
+            <ClickToEditInput placeholder={isNew ? 'New Task Template' : "Task template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />,
+          </Col>
+        </Row>,
+        onBack: goBack,
+        extra: [
+          <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew} />} onClick={() => setPreview(true)}>Preview</Button>,
+          <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+        ]
+      }}
+    >
+      {taskTemplate && <TaskTemplateEditorPanel
+        ref={formRef}
+        value={taskTemplate}
+        onChange={setTaskTemplate}
+        debug={debugMode}
+      />}
 
       <StyledModal
         open={preview}
@@ -202,10 +199,8 @@ export const TaskTemplatePage = props => {
             </Card>
           </Col>
         </Row>
-
       </StyledModal>
-    </LayoutStyled >
-    // </PageContainer>
+    </PageContainer>
 
   );
 };
