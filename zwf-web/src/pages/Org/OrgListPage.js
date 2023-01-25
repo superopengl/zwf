@@ -4,7 +4,8 @@ import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge } from 'ant
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  ClearOutlined} from '@ant-design/icons';
+  ClearOutlined
+} from '@ant-design/icons';
 
 import { Space } from 'antd';
 import { deleteUser, setUserTags } from 'services/userService';
@@ -12,7 +13,7 @@ import { impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
-import {HighlightingText} from 'components/HighlightingText';
+import { HighlightingText } from 'components/HighlightingText';
 import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
@@ -123,13 +124,11 @@ const OrgListPage = () => {
   const loadList = () => {
     setLoading(true);
 
-    return listOrgs$().subscribe(
-      list => setList(list),
-      () => { },
-      () => {
-        setLoading(false);
-      }
-    );
+    return listOrgs$().subscribe({
+      next: list => setList(list),
+      error: () => { },
+      complete: () => setLoading(false),
+    });
   }
 
   React.useEffect(() => {
