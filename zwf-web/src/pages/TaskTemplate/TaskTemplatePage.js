@@ -170,7 +170,7 @@ export const TaskTemplatePage = props => {
 
 
       <StyledModal
-        visible={preview}
+        open={preview}
         onOk={() => setPreview(false)}
         onCancel={() => setPreview(false)}
         closable={false}

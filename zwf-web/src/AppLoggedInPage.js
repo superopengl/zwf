@@ -19,7 +19,7 @@ import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { VersionMismatchAlert } from "components/VersionMismatchAlert";
-import { ProLayout } from '@ant-design/pro-components';
+import { ProLayout , PageContainer} from '@ant-design/pro-components';
 import { Divider } from 'antd';
 const { Link: LinkText } = Typography;
 
@@ -132,6 +132,7 @@ const ROUTES = [
         path: '/payment_methods',
         name: 'Paymnent Methods',
         icon: <CreditCardFilled />,
+        component: './pages/OrgAccount/OrgPaymentMethodPage',
         roles: ['admin'],
       },
       {
@@ -150,32 +151,6 @@ const ROUTES = [
   },
 ];
 
-
-
-const NavMenu = props => {
-  const { items, size } = props;
-  const navigate = useNavigate();
-
-  const components = [];
-  let index = 0;
-  for (const group of items) {
-    components.push(<div className="menu-group" key={index++}>{group.label}</div>)
-    for (const item of group.children) {
-      components.push(<Button
-        key={index++}
-        className="menu-button"
-        size={size}
-        block
-        icon={item.icon}
-        type="text"
-        onClick={() => navigate(item.key)}>
-        <span>{item.label}</span>
-      </Button>)
-    }
-  }
-
-  return <Space direction="vertical" style={{ width: '100%', padding: 8 }}>{components}</Space>;
-}
 
 const FooterMenuItem = props => {
   const { children, href } = props;
@@ -202,7 +177,6 @@ export const AppLoggedInPage = React.memo(() => {
     return null;
   }
 
-  const isSystem = role === 'system';
   const canCreateNew = role === 'admin' || role === 'agent';
 
   return <StyledContainer>
@@ -253,6 +227,15 @@ export const AppLoggedInPage = React.memo(() => {
       }}
     >
       <Outlet />
+      {/* <PageContainer
+            // loading={loading}
+            fixedHeader
+            header={{
+              title: 'Payment Methods',
+            }}
+      >
+fdasf
+      </PageContainer> */}
     </ProLayout>
   </StyledContainer>
 })
