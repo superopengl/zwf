@@ -16,7 +16,7 @@ import { isRole } from '../utils/isRole';
 import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'agent', 'admin');
   const orgId = getOrgIdFromReq(req);
 
   const { id, name, description, docTemplateIds, fields } = req.body;
