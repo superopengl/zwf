@@ -7,45 +7,13 @@ import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
 import { listMySubscriptions$ } from 'services/subscriptionService';
 import { finalize } from 'rxjs/operators';
 import { PageContainer } from '@ant-design/pro-components';
+import {OrgPaymentMethodPanel} from './OrgPaymentMethodPanel';
 
-const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
 const { Paragraph, Text, Title, Link: TextLink } = Typography;
 
 
-const ContainerStyled = styled.div`
-  margin: 0 auto;
-  width: 100%;
-  max-width: 1200px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-contents: center;
-
-
-  .ant-spin-nested-loading {
-    width: 100%;
-  }
-
-  // .ant-divider {
-  //   margin: 20px 0 8px;
-  // }
-`;
-
-
-const StyledRow = styled(Row)`
-  // margin-top: 20px;
-  // margin-left: auto;
-  // margin-right: auto;
-`;
-
-const StyledCol = styled(Col)`
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-`;
-
-const OrgInvoicesPage = (props) => {
+const OrgSubscriptionPage = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [billingHistory, setBillingHistory] = React.useState([]);
@@ -66,16 +34,31 @@ const OrgInvoicesPage = (props) => {
       loading={loading}
       fixedHeader
       header={{
-        title: 'Invoices',
+        title: 'Subscription',
+      }}
+      tabList={[
+        {
+          tab: 'Invoices',
+          key: 'invoices',
+          children: <OrgSubscriptionHistoryPanel data={billingHistory} />
+        },
+        {
+          tab: 'Payment Methods',
+          key: 'payment_methods',
+          children: <OrgPaymentMethodPanel />
+        }
+      ]}
+      tabProps={{
+        hideAdd: true
       }}
     >
-      <OrgSubscriptionHistoryPanel data={billingHistory} />
+      
     </PageContainer>
   );
 };
 
-OrgInvoicesPage.propTypes = {};
+OrgSubscriptionPage.propTypes = {};
 
-OrgInvoicesPage.defaultProps = {};
+OrgSubscriptionPage.defaultProps = {};
 
-export default OrgInvoicesPage;
+export default OrgSubscriptionPage;

@@ -123,16 +123,9 @@ const ROUTES = [
         roles: ['system'],
       },
       {
-        path: '/invoices',
-        name: 'Invoices',
-        icon: <Icon component={FaFileInvoiceDollar} />,
-        roles: ['admin'],
-      },
-      {
-        path: '/payment_methods',
-        name: 'Paymnent Methods',
+        path: '/subscription',
+        name: 'Subscription',
         icon: <CreditCardFilled />,
-        component: './pages/OrgAccount/OrgPaymentMethodPage',
         roles: ['admin'],
       },
       {
@@ -228,15 +221,6 @@ export const AppLoggedInPage = React.memo(() => {
       }}
     >
       <Outlet />
-      {/* <PageContainer
-            // loading={loading}
-            fixedHeader
-            header={{
-              title: 'Payment Methods',
-            }}
-      >
-fdasf
-      </PageContainer> */}
     </ProLayout>
     {!isSystem && <SupportAffix />}
 
