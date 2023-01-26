@@ -93,7 +93,7 @@ const StripeCardPaymentForm = (props) => {
     <form onSubmit={handleSubmit}>
       {/* <Text>Please input card information</Text> */}
       {/* <label>Card Number <CardNumberElement /></label> */}
-      <Row gutter={[10, 10]} style={{ marginBottom: 10 }}>
+      <Row gutter={[10, 10]} style={{ marginBottom: 24 }}>
         <Col {...{ xs: 24, sm: 16, md: 14, lg: 14, xl: 14, xxl: 14 }}>
           <CardNumberElement
             onChange={handleCardNumberChange}

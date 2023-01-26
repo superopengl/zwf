@@ -134,6 +134,7 @@ export const OrgPaymentMethodPanel = () => {
         width={460}
         onOk={hideModal}
         onCancel={hideModal}
+        bodyStyle={{paddingTop: 24}}
       >
         <Loading loading={paymentLoading}>
           <StripeCardPaymentWidget
@@ -141,7 +142,6 @@ export const OrgPaymentMethodPanel = () => {
             onLoading={loading => setPaymentLoading(loading)}
             buttonText="Add this card"
           />
-
         </Loading>
       </Modal>
     </Container>
