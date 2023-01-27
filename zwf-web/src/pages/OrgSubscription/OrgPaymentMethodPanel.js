@@ -40,6 +40,7 @@ export const OrgPaymentMethodPanel = () => {
 
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
+  const [modal, contextHolder] = Modal.useModal();
 
   const load$ = () => {
     setLoading(true);
@@ -70,7 +71,7 @@ export const OrgPaymentMethodPanel = () => {
   }
 
   const handleDelete = (item) => {
-    Modal.confirm({
+    modal.confirm({
       title: 'Remove payment method',
       content: <>Delete card <Text code>{item.cardLast4}</Text>?</>,
       closable: true,
@@ -83,12 +84,15 @@ export const OrgPaymentMethodPanel = () => {
       okText: 'Yes, delete it',
       okButtonProps: {
         danger: true
+      },
+      cancelButtonProps: {
+        type: 'text'
       }
     })
   }
 
   const handleSetPrimary = (item) => {
-    Modal.confirm({
+    modal.confirm({
       title: 'Set primary payment method',
       content: <>Set card <Text code>{item.cardLast4}</Text> as primary payment method for future payment?</>,
       closable: true,
@@ -101,6 +105,9 @@ export const OrgPaymentMethodPanel = () => {
       okText: 'Yes, use this',
       okButtonProps: {
         type: 'primary'
+      },
+      cancelButtonProps: {
+        type: 'text'
       }
     })
   }
@@ -120,8 +127,8 @@ export const OrgPaymentMethodPanel = () => {
             subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
             extra={item.primary ? [
             ] : [
-              <Button key="primary" type="link" size="small" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,
-              <Button key="delete" type="text" size="small" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
+              <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,
+              <Button key="delete" type="text" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
             ]}
           >
             <Descriptions colon={false} labelStyle={{ opacity: 0.6 }}>
@@ -150,6 +157,7 @@ export const OrgPaymentMethodPanel = () => {
           />
         </Loading>
       </Modal>
+      {contextHolder}
     </Container>
   );
 };

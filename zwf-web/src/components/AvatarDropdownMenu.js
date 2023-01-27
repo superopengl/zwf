@@ -45,6 +45,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   const [ppVisible, setPpVisible] = React.useState(false);
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const navigate = useNavigate();
+  const [modal, contextHolder] = Modal.useModal();
 
   const { email, avatarFileId, loginType } = user ?? {};
 
@@ -57,7 +58,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   }
 
   const handleLogout = () => {
-    Modal.confirm({
+    modal.confirm({
       icon: <QuestionCircleFilled/>,
       title: 'Are you sure you want to log out?',
       okText: 'Logout',
@@ -72,6 +73,9 @@ export const AvatarDropdownMenu = React.memo(props => {
           setUser(null);
           goToHomePage();
         });
+      },
+      cancelButtonProps: {
+        type: 'text'
       }
     });
   };
@@ -218,5 +222,6 @@ export const AvatarDropdownMenu = React.memo(props => {
     >
       <OrgProfileForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
+    {contextHolder}
   </div>
 });
