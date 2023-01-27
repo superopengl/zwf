@@ -174,8 +174,8 @@ export const App = React.memo(() => {
               {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
               {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
               {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
-              {isAdmin && <Route path="/onboard" element={<OrgOnBoardPage />} />}
               {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
+              <Route path="/onboard" element={<OrgOnBoardPage />} />
 
               {!isGuest && <Route path="/" element={<AppLoggedInPage />} >
                 {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
