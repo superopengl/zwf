@@ -1,4 +1,7 @@
 export const notes=`
-styling fix
-padding tweak
-combine invoice and payment method to one page`
+modal usage fix
+clean up
+fix initial org creation bug
+fix modal usage
+fix create org page footer
+upgrade antd`
