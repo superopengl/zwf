@@ -6,6 +6,7 @@ import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import HomeFooter from 'components/HomeFooter';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -44,23 +45,17 @@ const LayoutStyled = styled(Layout)`
 const OrgSignUpPage = (props) => {
   const navigate = useNavigate();
   useDocumentTitle('Join by creating org')
-  return (
-    <GlobalContext.Consumer>{
-      () => {
+  return <LayoutStyled>
+    <PageContainer>
+      <div className="poster-patterns" />
+      <ContainerStyled>
+        <Logo />
+        <OrgSignUpForm onOk={() => navigate('/')} />
+      </ContainerStyled>
+    </PageContainer>
+    <HomeFooter />
 
-        return <LayoutStyled>
-          <PageContainer>
-            <div className="poster-patterns" />
-            <ContainerStyled>
-              <Logo />
-              <OrgSignUpForm onOk={() => navigate('/')} />
-            </ContainerStyled>
-          </PageContainer>
-        </LayoutStyled>;
-      }
-    }</GlobalContext.Consumer>
-
-  );
+  </LayoutStyled>
 }
 
 OrgSignUpPage.propTypes = {};
