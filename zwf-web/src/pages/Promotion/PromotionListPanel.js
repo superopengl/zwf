@@ -10,8 +10,9 @@ import { listPromotions$, savePromotion$, newPromotionCode$ } from 'services/pro
 import { TimeAgo } from 'components/TimeAgo';
 import { DatePicker } from 'antd';
 import PropTypes from 'prop-types';
-import {ClickToCopyTooltip} from 'components/ClickToCopyTooltip';
+import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
 import { compareDates } from 'util/compareDates';
+import { finalize } from 'rxjs';
 
 const { Text, Paragraph } = Typography;
 
@@ -66,18 +67,17 @@ const PromotionListPanel = (props) => {
     },
   ];
 
-  const loadList = () => {
+  const loadList$ = () => {
     setLoading(true);
 
-    return listPromotions$(org.id).subscribe(
-      list => setList(list),
-    ).add(() => {
-      setLoading(false);
-    });
+    return listPromotions$(org.id)
+      .pipe(
+        finalize(() => setLoading(false))
+      ).subscribe(list => setList(list));
   }
 
   React.useEffect(() => {
-    const load$ = loadList();
+    const load$ = loadList$();
     return () => {
       load$.unsubscribe();
     }
@@ -97,7 +97,7 @@ const PromotionListPanel = (props) => {
     };
     savePromotion$(payload).subscribe(() => {
       setModalVisible(false);
-      loadList();
+      loadList$();
     });
   }
 
@@ -144,8 +144,8 @@ const PromotionListPanel = (props) => {
               step={1}
               addonBefore="$"
               precision={2}
-              // formatter={value => `$ ${value}`}
-              // parser={value => +(value.replace('$ ', ''))}
+            // formatter={value => `$ ${value}`}
+            // parser={value => +(value.replace('$ ', ''))}
             />
           </Form.Item>
           <Form.Item label="End" name="endingAt" rules={[{ required: true, type: 'date', whitespace: true }]}>
