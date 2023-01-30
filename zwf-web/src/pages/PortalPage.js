@@ -87,12 +87,28 @@ export const PortalPage = () => {
 
         <Row gutter={(screens.xxl || screens.xl || screens.lg || screens.md) ? 30 : 16} align="middle">
           {(screens.xxl || screens.xl || screens.lg) && <Col>
-            <Tabs defaultActiveKey="/" onChange={handleMenuChange}>
-              <Tabs.TabPane tab="Home" key="/"></Tabs.TabPane>
-              <Tabs.TabPane tab="Resources" key="/resource"></Tabs.TabPane>
-              <Tabs.TabPane tab="Pricing" key="/#pricing"></Tabs.TabPane>
-              <Tabs.TabPane tab="Contact Us" key="/#contactus"></Tabs.TabPane>
-            </Tabs>
+            <Tabs
+              defaultActiveKey="/"
+              onChange={handleMenuChange}
+              items={[
+                {
+                  key: '/',
+                  label: 'Home'
+                },
+                {
+                  key: '/resource',
+                  label: 'Resources'
+                },
+                {
+                  key: '/#pricing',
+                  label: 'Pricing'
+                },
+                {
+                  key: '/#contactus',
+                  label: 'Contact Us'
+                },
+              ]}
+            />
           </Col>}
           {(screens.xxl || screens.xl || screens.lg || screens.md || screens.sm) && isGuest && <Col>
             <Link to="/login">
@@ -124,15 +140,15 @@ export const PortalPage = () => {
     />
     <Drawer
       title={<Image src="/images/logo-full-primary.svg" preview={false} height={24} />}
-      extra={<Button type="text" size="large" icon={<CloseOutlined />} onClick={() => setModalMenuVisible(false)}/>}
+      extra={<Button type="text" size="large" icon={<CloseOutlined />} onClick={() => setModalMenuVisible(false)} />}
       open={modalMenuVisible}
       onClose={() => setModalMenuVisible(false)}
       closable={false}
       destroyOnClose={true}
       width={280}
       maskClosable={true}
-      headerStyle={{padding: 16, paddingRight: 4}}
-      footerStyle={{border: 'none', marginBottom: '4rem'}}
+      headerStyle={{ padding: 16, paddingRight: 4 }}
+      footerStyle={{ border: 'none', marginBottom: '4rem' }}
       footer={
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
           {isGuest && <Button type="primary" block size="large" onClick={handleShowRegisterModal}>Try it Now</Button>}
