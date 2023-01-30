@@ -83,8 +83,8 @@ ProfileForm.propTypes = {
     id: PropTypes.string.isRequired,
     avatar: PropTypes.string,
     email: PropTypes.string.isRequired,
-    givenName: PropTypes.string.isRequired,
-    surname: PropTypes.string.isRequired,
+    givenName: PropTypes.string,
+    surname: PropTypes.string,
     locale: PropTypes.string
   }).isRequired,
   initial: PropTypes.bool
