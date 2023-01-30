@@ -86,7 +86,9 @@ export const HomeCarouselArea = () => {
       <PosterContainer style={{ position: 'relative' }}>
         {/* <div className="poster-patterns" /> */}
         <Row justify="center" align="middle" gutter={[64, 32]}>
-          <Col style={{padding: '0 32px'}}>
+          <Col 
+          // style={{padding: '0 32px'}}
+          >
             <Space direction="vertical" style={{ maxWidth: 500, margin: '40px auto' }}>
               <Title style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 800 }}>
                 <span style={{ color: '#0FBFC4' }}>All in one system</span> for file, doc, job, task, e-sign, CMS, and workflow management.
@@ -97,7 +99,9 @@ export const HomeCarouselArea = () => {
               <OrgRegisterInput />
             </Space>
           </Col>
-          <Col style={{ position: 'relative', padding: '0 64px' }}>
+          <Col 
+          style={{ position: 'relative' }}
+          >
             <div className="light1"></div>
             <div className="light2"></div>
             <Image src="/images/landingpage-image.svg" width="100%" preview={false} />
