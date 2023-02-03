@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, Switch, Row, Input, Col, Select, Form, Typography, Button, Modal, Divider } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { OptionsBuilder } from './OptionsBuilder';
-import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
+import { TaskTemplateWidgetDef } from 'util/TaskTemplateWidgetDef';
 import PropTypes from 'prop-types';
 import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
 import { VarTag } from 'components/VarTag';

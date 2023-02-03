@@ -3,6 +3,7 @@ import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
 import { Card } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
+import Field from '@ant-design/pro-field';
 
 const style = {
   // border: '1px dashed gray',
@@ -75,15 +76,15 @@ export const FieldItem = (props) => {
   })
   const opacity = isDragging ? 0 : 1
   drag(drop(ref))
+
   return <ProCard ref={ref}
     data-handler-id={handlerId}
-    title={name}
+    title={<>{name} ({type}: {index} {isDragging ? 'dragging': ''})</>}
     size="small"
     bordered
+    hoverable
     style={{ ...style, opacity }}>
-    <div  >
-      {type} {id} {name}
-    </div>
+      <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
   </ProCard>
 }
 
