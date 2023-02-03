@@ -34,7 +34,7 @@ export const FieldListEditable = props => {
     backgroundColor = 'transparent'
   }
 
-  const handleMove = React.useCallback((dragIndex, hoverIndex) => {
+  const handleDragging = React.useCallback((dragIndex, hoverIndex) => {
     setList((prevList) =>
       update(prevList, {
         $splice: [
@@ -43,13 +43,17 @@ export const FieldListEditable = props => {
         ],
       }),
     )
-  }, [])
+  }, []);
+
+  const handleDrop = () => {
+    onChange(list);
+  };
 
   return (
-    <Card ref={drop} style={{ ...style, backgroundColor }} bodyStyle={{backgroundColor}}>
+    <Card ref={drop} style={{ ...style, backgroundColor }} bodyStyle={{ backgroundColor }}>
       <Row gutter={[10, 10]}>
         {list.map((field, i) => <Col key={field.name} span={24}>
-          <FieldItem value={field} index={i} onMove={handleMove}/>
+          <FieldItem value={field} index={i} onDragging={handleDragging} onDrop={handleDrop} />
         </Col>)}
       </Row>
     </Card>
