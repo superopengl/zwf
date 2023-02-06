@@ -3,6 +3,16 @@ import { Card, Space } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
+import styled from 'styled-components';
+
+const StyledCard = styled(Card)`
+border: 1px dashed red,
+margin-bottom: 8px;
+
+&:hover {
+  border: 1px dashed #0FBFC4,
+}
+`;
 
 const style = {
   border: '1px dashed gray',
@@ -38,7 +48,9 @@ export const FieldControlItem = (props) => {
   const opacity = isDragging ? 0.2 : 1;
   const background = isDragging ? 'transparent' : 'white';
 
-  return <Card size="small" ref={drag} bodyStyle={{ padding: '0.5rem 0.5rem', opacity }} style={{border,  background, marginBottom: 8}} hoverable>
+  return <Card size="small" ref={drag} bodyStyle={{ padding: '0.5rem 0.5rem', opacity }} 
+  style={{border,  background, marginBottom: 8}} 
+  hoverable>
     <Space size="small">
       <Icon component={() => icon} />
       {label}

@@ -7,6 +7,14 @@ import Field from '@ant-design/pro-field';
 import React from 'react';
 import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
+import { FieldEditPanel } from './FieldEditPanel';
+import styled from 'styled-components';
+
+const StyledCard = styled(ProCard)`
+&:hover {
+  border: 1px solid #0FBFC4;
+}
+`;
 
 const style = {
   // border: '1px dashed gray',
@@ -20,7 +28,7 @@ export const FieldEditableItem = (props) => {
   const { value, index, onDragging, onDrop } = props;
   const { id, name, type } = value;
 
-  const [collapsed, setCollapsed] = React.useState(true);
+  const [editPanelOpen, setEditPanelOpen] = React.useState(false);
 
 
   const ref = useRef(null)
@@ -73,6 +81,8 @@ export const FieldEditableItem = (props) => {
   const [{ isDragging }, drag, preview] = useDrag({
     type: 'field',
     item: () => {
+      setEditPanelOpen(false);
+      console.log('begin')
       return { id, index }
     },
     end: (item, monitor) => {
@@ -80,56 +90,35 @@ export const FieldEditableItem = (props) => {
       if (item && dropResult) {
         onDrop();
       }
+      setEditPanelOpen(true);
+      console.log('end')
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   })
-  const opacity = isDragging ? 0 : 1
+  const opacity = isDragging ? 0.6 : 1;
+
+  React.useEffect(() => {
+    setEditPanelOpen(!isDragging);
+  }, [isDragging]);
   drag(drop(ref))
 
-  return <ProCard ref={ref}
-    data-handler-id={handlerId}
-    title={<>{name} ({type}: {index} {isDragging ? 'dragging' : ''})</>}
-    size="small"
-    bordered
-    hoverable
-    extra={[
-      <Button key="delete" danger type="text" icon={<DeleteOutlined />}></Button>,
-      <Tooltip
-        key="edit"
-        placement="rightTop"
-        color="white"
-        trigger="click"
-        title={<div style={{ padding: '1rem' }}>
-          <Form
-            // labelCol={{ span: 8 }}
-            // wrapperCol={{ span: 16 }}
-            layout="vertical"
-            autoComplete="off"
-          >
-            <Form.Item name="name" label="Field Name" valuePropName="checked" required>
-              <Input allowClear />
-            </Form.Item>
-            <Form.Item name="required" label="Required" valuePropName="checked">
-              <Switch />
-            </Form.Item>
-            <Form.Item name="official" label="Official only" valuePropName="checked">
-              <Switch />
-            </Form.Item>
-            <Form.Item name="description" label="Description" valuePropName="checked">
-              <Input.TextArea allowClear showCount maxLength={200} autoSize={{ minRows: 3 }} />
-            </Form.Item>
-          </Form>
-        </div>}
-      >
-        <Button type="link" icon={<EditOutlined />}></Button>
-      </Tooltip>
-    ]
-    }
-    style={{ ...style, opacity }}>
-    <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
-  </ProCard>
+  return <FieldEditPanel trigger="hover" open={editPanelOpen} onOpenChange={setEditPanelOpen}>
+    <StyledCard
+      ref={ref}
+      data-handler-id={handlerId}
+      title={<>{name} ({type}: {index} {isDragging ? 'dragging' : ''})</>}
+      size="small"
+      bordered
+      hoverable
+      token={{
+        border: '1px solid red'
+      }}
+      style={{ ...style, opacity }}>
+      <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
+    </StyledCard>
+  </FieldEditPanel>
 }
 
 
