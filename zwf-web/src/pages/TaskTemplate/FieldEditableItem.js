@@ -13,8 +13,25 @@ import styled from 'styled-components';
 const StyledCard = styled(ProCard)`
 &:hover {
   border: 1px solid #0FBFC4;
+
+  .itemHolder {
+    background-color: #f0f0f0;
+
+  }
 }
 `;
+
+const StyledHolder = styled(ProCard)`
+height: 100%;
+
+.ant-pro-card-body {
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+`;
+
 
 const style = {
   // border: '1px dashed gray',
@@ -25,8 +42,8 @@ const style = {
 }
 
 export const FieldEditableItem = (props) => {
-  const { value, index, onDragging, onDrop } = props;
-  const { id, name, type } = value;
+  const { value: field, index, onDragging, onDrop } = props;
+  const { id, name, type } = field;
 
   const [editPanelOpen, setEditPanelOpen] = React.useState(false);
 
@@ -82,7 +99,6 @@ export const FieldEditableItem = (props) => {
     type: 'field',
     item: () => {
       setEditPanelOpen(false);
-      console.log('begin')
       return { id, index }
     },
     end: (item, monitor) => {
@@ -91,7 +107,6 @@ export const FieldEditableItem = (props) => {
         onDrop();
       }
       setEditPanelOpen(true);
-      console.log('end')
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -104,19 +119,27 @@ export const FieldEditableItem = (props) => {
   }, [isDragging]);
   drag(drop(ref))
 
-  return <FieldEditPanel trigger="hover" open={editPanelOpen} onOpenChange={setEditPanelOpen}>
+  const handleFieldChange = (values) => {
+    console.log(values);
+  }
+
+  return <FieldEditPanel trigger="click" open={editPanelOpen} onOpenChange={setEditPanelOpen} field={field} onChange={handleFieldChange}>
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}
-      title={<>{name} ({type}: {index} {isDragging ? 'dragging' : ''})</>}
       size="small"
       bordered
       hoverable
-      token={{
-        border: '1px solid red'
-      }}
+      split="vertical"
       style={{ ...style, opacity }}>
-      <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
+      <StyledHolder colSpan="22px" className="itemHolder" >
+        <HolderOutlined />
+      </StyledHolder>
+      <ProCard
+        title={<>{name} ({type}: {index} {isDragging ? 'dragging' : ''})</>}
+      >
+        <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
+      </ProCard>
     </StyledCard>
   </FieldEditPanel>
 }
