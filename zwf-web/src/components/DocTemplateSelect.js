@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Select, Row, Alert } from 'antd';
+import { Typography, Select, Row, Space } from 'antd';
 import { Loading } from './Loading';
 import * as _ from 'lodash';
 import { listDocTemplate$ } from 'services/docTemplateService';
@@ -42,9 +42,10 @@ const DocTemplateSelect = props => {
     const $sub = listDocTemplate$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(allDocTemps => {
-    setDocTemplateOptions(_.sortBy(allDocTemps, ['name']));
-
+      setDocTemplateOptions(_.sortBy(allDocTemps, ['name']));
     });
+
+    return () => $sub.unsubscribe();
   }, []);
 
   React.useEffect(() => {
@@ -63,6 +64,8 @@ const DocTemplateSelect = props => {
     onChange(selectedValue);
   }
 
+  console.log(docTemplateOptions)
+
   return <Loading loading={loading}>
     <StyledSelect
       mode={isMultiple ? "multiple" : null}
@@ -71,13 +74,9 @@ const DocTemplateSelect = props => {
       placeholder={placeholder}
       value={value}
       onChange={handleChange}
-    >
-      {docTemplateOptions.map((x, i) => (<Select.Option key={i} value={x.id}>
-        <DocTemplateIcon />
-        {x.name}
-      </Select.Option>))}
-    </StyledSelect>
-    {showVariables && allRefFields.length > 0 && <Paragraph type="secondary" style={{marginTop: 8}}>
+      options={docTemplateOptions.map(x => ({ label: <Space><DocTemplateIcon />{x.name}</Space>, value: x.id }))}
+    />
+    {showVariables && allRefFields.length > 0 && <Paragraph type="secondary" style={{ marginTop: 8 }}>
       This doc template references fields {allRefFields.map(v => <VarTag key={v}>{v}</VarTag>)}.
     </Paragraph>}
   </Loading>

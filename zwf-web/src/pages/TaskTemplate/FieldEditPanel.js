@@ -9,6 +9,7 @@ import Icon from '@ant-design/icons';
 import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from './formBuilder/OptionsBuilder';
+import DocTemplateSelect from 'components/DocTemplateSelect';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -34,6 +35,7 @@ export const FieldEditPanel = (props) => {
   return <Tooltip
     {...others}
     open={open}
+    zIndex={200}
     placement="rightTop"
     color="white"
     trigger={trigger}
@@ -58,6 +60,13 @@ export const FieldEditPanel = (props) => {
           <Form.Item name="name" label="Field Name" required>
             <Input allowClear />
           </Form.Item>
+          {field.type === 'autodoc' && <Form.Item
+            label="Doc Template"
+            name={['value', 'docTemplateId']}
+            rules={[{ required: true, message: ' ' }]}
+          >
+            <DocTemplateSelect showVariables={true} isMultiple={false} />
+          </Form.Item>}
           <Form.Item name="required" label="Required" valuePropName="checked">
             <Switch />
           </Form.Item>
