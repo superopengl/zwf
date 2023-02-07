@@ -74,7 +74,7 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
         submitButtonProps: {
           block: true
         },
-        // render: () => null
+        render: () => null
       }}
     />
     {/* <Divider />

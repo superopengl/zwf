@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography, Divider } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { catchError } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
