@@ -1,5 +1,5 @@
 
-import { Space, Skeleton, Tooltip } from 'antd';
+import { Space, Skeleton, Tooltip, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { getUserNameCardInfo$ } from 'services/userService';
@@ -42,16 +42,19 @@ export const UserNameCard = React.memo((props) => {
     </Space>
   }
 
-  const contentComponent = <Space size="small">
-    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
-    {(showName || showEmail) && <UserDisplayName
+  const contentComponent = <Row size="small" wrap={false} gutter={8} align="top">
+    <Col>
+      <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
+    </Col>
+    {(showName || showEmail) && <Col flex="auto"><UserDisplayName
       surname={data.surname}
       givenName={data.givenName}
       email={data.email}
       searchText={searchText}
       showEmail={showEmail}
-    />}
-  </Space>
+    />
+    </Col>}
+  </Row>
 
 
   return showTooltip ?
