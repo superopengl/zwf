@@ -14,19 +14,11 @@
     background-color: #FFFFFF;
   }
 
-  .colored-divider {
-    width: 100%;
-    height: 20px;
-    background: linear-gradient(89.79deg, #12c2c3 3.35%, #0FBFC4 107.33%);
-    -webkit-print-color-adjust: exact !important;
-    color-adjust: exact !important;
-  }
-
   .inner-footer {
     width: 100%;
     color: #FFFFFF;
     background-color: #062638;
-    border-radius: 0px 0px 12px 12px;
+    border-radius: 0px 0px 4px 4px;
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
@@ -61,7 +53,7 @@
   }
 
   .contact-body {
-    border-radius: 12px;
+    border-radius: 4px;
     background-color: #e6fffc;
     color: #4B5B76;
   }

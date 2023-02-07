@@ -12,12 +12,12 @@
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-button align="left" background-color="#F77234" color="#FFFFFF" padding="20px 0" inner-padding="16px 36px" border-radius="8px" font-size="18px" href="{{url}}">
+        <mj-button align="left" background-color="#14C9C9" color="#FFFFFF" padding="20px 0" inner-padding="16px 36px" border-radius="4px" font-size="18px" href="{{url}}">
           Login
         </mj-button>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
+        <mj-text align="left" font-size="20px" font-weight="400">
           Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
         </mj-text>
       </mj-column>
