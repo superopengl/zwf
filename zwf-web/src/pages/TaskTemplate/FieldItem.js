@@ -1,29 +1,57 @@
 import PropTypes from 'prop-types';
 import { Typography } from 'antd';
 import React from 'react';
-import { TaskTemplateFieldControlDef } from 'util/TaskTemplateFieldControlDef';
+import { createFormItemSchema, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
+import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
+import Field from '@ant-design/pro-field';
+import styled from 'styled-components';
+import {EyeInvisibleOutlined} from '@ant-design/icons';
+import { Tooltip } from 'antd';
 
+const {Text} = Typography;
 
-const controlMap = new Map(TaskTemplateFieldControlDef.map(x => [x.type, x]));
+const Container = styled.div`
+position: relative;
+
+.ant-form-item {
+  margin-bottom: 0 !important;
+}
+
+.mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+`;
 
 export const FieldItem = (props) => {
-  const { type, ...otherProps } = props;
+  const { field } = props;
 
-  const controlDef = controlMap.get(type);
+  const controlDef = TaskTemplateFieldControlDefMap.get(field.type);
 
-  if(!controlDef) {
-    throw new Error(`Unknown control type ${type}`);
-  }
+  return <Container>
+    {/* <BetaSchemaForm
+      layoutType='Form'
+      columns={[fieldSchema]}
+      submitter={{
+        render: () => null
+      }}
+    /> */}
+    {/* <Field valueType="jsonCode" text={JSON.stringify(field)} /> */}
+    {/* <Field valueType="jsonCode" text={JSON.stringify(fieldSchema)} /> */}
+    <controlDef.control {...controlDef.fieldProps} placeholder={field.name} options={field.options} autoFocus={false}/>
+    <Text type="secondary">{field.description}</Text>
+    {/* <div className="mask"></div> */}
+  </Container>
 
-  const Element = controlDef.control;
-  const fieldProps = controlDef.fieldProps;
-
-  return <Element  {...fieldProps} {...otherProps} />
+  // return <controlDef.control  {...fieldProps} {...otherProps} help={otherProps.description} />
 }
 
 
 FieldItem.propTypes = {
-  type: PropTypes.string.isRequired,
+  field: PropTypes.object.isRequired,
 };
 
 FieldItem.defaultProps = {

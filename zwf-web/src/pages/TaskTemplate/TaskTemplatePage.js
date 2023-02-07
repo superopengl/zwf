@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Card, Tag, Segmented } from 'antd';
+import { Row, Col, Modal, Button, Card, Typography, Segmented } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
@@ -21,8 +21,10 @@ import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { FieldListEditable } from './FieldListEditable';
 import Field from '@ant-design/pro-field';
+import { ProCard } from '@ant-design/pro-components';
+import { Input } from 'antd';
 
-
+const { Paragraph } = Typography;
 
 const EMPTY_TASK_TEMPLATE = {
   name: 'Tax return',
@@ -145,6 +147,10 @@ export const TaskTemplatePage = () => {
     setTaskTemplate(pre => ({ ...pre, fields }));
   }
 
+  const handleDescriptionChange = (e) => {
+    setTaskTemplate(pre => ({ ...pre, description: e.target.value }));
+  }
+
   return (
     // <PageContainer>
 
@@ -173,47 +179,54 @@ export const TaskTemplatePage = () => {
         onChange={setTaskTemplate}
         debug={debugMode}
       />} */}
-      <Field valueType="jsonCode" text={JSON.stringify(taskTemplate?.fields)} />
-      <Divider />
-      <Row>
-
-      </Row>
       <DndProvider backend={HTML5Backend}>
-        <Row gutter={[20, 20]} wrap={false}>
-          <Col flex="240px">
-            {/* Control list column */}
-            {TaskTemplateFieldControlDef.map((d, i) => <FieldControlItem
-              key={i}
-              icon={d.icon}
-              label={d.label}
-              type={d.type}
-              onDropDone={() => handleAddControl(d.type)}
-            />)}
-          </Col>
-          <Col flex="1 1 200px">
-            {/* Field list column*/}
-            <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
-          </Col>
-          <Col flex="1 1 200px">
-            {/* Preview column */}
-            <Card
-              title={<>Preview - {previewMode}</>}
-              type='inner'
-              extra={<Segmented options={[
-                'agent',
-                'client'
-              ]}
-                onChange={setPreviewMode} />}
-            >
 
+        <ProCard ghost gutter={[40, 0]}>
+          <ProCard colSpan={12} direction="column" ghost>
+            <ProCard title="Edit description" ghost>
+              <Input.TextArea placeholder='task description' maxLength={1000} showCount allowClear
+                autoSize={{ minRows: 3 }}
+                onChange={handleDescriptionChange}
+              />
+            </ProCard>
+            <ProCard gutter={[20, 20]} title="Edit fields" ghost>
+              <ProCard colSpan={"210px"} direction="column" layout="center" ghost>
+                {TaskTemplateFieldControlDef.map((d, i) => <FieldControlItem
+                  key={i}
+                  icon={d.icon}
+                  label={d.label}
+                  type={d.type}
+                  onDropDone={() => handleAddControl(d.type)}
+                />)}
+              </ProCard>
+              <ProCard ghost style={{ height: '100%' }} layout="center">
+                <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
+              </ProCard>
+            </ProCard>
+          </ProCard>
+          <ProCard colSpan={12} ghost direction="column">
+            <ProCard
+              title={<>Preview - {previewMode}</>}
+              // type='inner'
+              extra={<Segmented
+                options={['agent', 'client']}
+                onChange={setPreviewMode} />}
+              layout="center"
+              // bordered
+              direction="column"
+            // ghost
+            >
               <TaskTemplatePreviewPanel
                 value={taskTemplate}
                 debug={debugMode}
-                type={previewMode}
+                mode={previewMode}
               />
-            </Card>
-          </Col>
-        </Row>
+            </ProCard>
+          </ProCard>
+        </ProCard>
+
+        <Divider />
+        <Field valueType="jsonCode" text={JSON.stringify(taskTemplate)} />
       </DndProvider>
     </PageContainer>
 

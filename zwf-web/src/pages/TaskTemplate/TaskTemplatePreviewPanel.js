@@ -1,4 +1,4 @@
-import { Typography, Divider } from 'antd';
+import { Typography, Divider , Alert} from 'antd';
 import React from 'react';
 
 import styled from 'styled-components';
@@ -6,12 +6,14 @@ import PropTypes from 'prop-types';
 import { TaskFormWidget } from 'components/TaskFormWidget';
 import { TaskSchemaRenderer } from 'components/TaskSchemaRenderer';
 
-const { Title } = Typography;
+const { Title, Paragraph } = Typography;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
-  // max-width: 600px;
-  // background-color: #ffffff;
+  min-width: 300px;
+  max-width: 600px;
+  background-color: #ffffff;
+  padding: 2rem;
   // height: calc(100vh - 64px);
   // height: 100%;
 `;
@@ -19,7 +21,7 @@ const Container = styled.div`
 
 export const TaskTemplatePreviewPanel = props => {
 
-  const { value: taskTemplate, type } = props;
+  const { value: taskTemplate, mode } = props;
 
   if (!taskTemplate) {
     return null;
@@ -28,8 +30,8 @@ export const TaskTemplatePreviewPanel = props => {
   return (
     <Container style={props.style}>
       <Title level={3}>{taskTemplate.name}</Title>
-      <p type="secondary">{taskTemplate.description}</p>
-      <Divider style={{ marginTop: 4 }} />
+      <Alert type="info" description={taskTemplate.description} showIcon />
+      {/* <Divider style={{ marginTop: 4 }} /> */}
       {/* <TaskFormWidget
         fields={taskTemplate.fields}
         type={type}
@@ -37,7 +39,7 @@ export const TaskTemplatePreviewPanel = props => {
       /> */}
       <TaskSchemaRenderer
         fields={taskTemplate.fields}
-        mode={type}
+        mode={mode}
       />
     </Container >
   );
@@ -45,11 +47,11 @@ export const TaskTemplatePreviewPanel = props => {
 
 TaskTemplatePreviewPanel.propTypes = {
   value: PropTypes.object,
-  type: PropTypes.oneOf(['client', 'agent']).isRequired,
+  mode: PropTypes.oneOf(['client', 'agent']).isRequired,
 };
 
 TaskTemplatePreviewPanel.defaultProps = {
-  type: 'client',
+  mode: 'agent',
 };
 
 export default TaskTemplatePreviewPanel;

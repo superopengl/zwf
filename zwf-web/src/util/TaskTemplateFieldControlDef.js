@@ -7,13 +7,14 @@ import {
   FaCalendarAlt,
 } from 'react-icons/fa';
 import { MdOutlineFormatColorText } from 'react-icons/md'
-import {RxSwitch} from 'react-icons/rx';
-import {BsCloudUpload} from 'react-icons/bs';
+import { RxSwitch } from 'react-icons/rx';
+import { BsCloudUpload } from 'react-icons/bs';
 import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
-import { Upload } from 'antd';
+import { Tooltip, Space } from 'antd';
 import { AutoDocInput } from 'components/AutoDocInput';
+import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
 import {
   ProForm,
   ProFormCheckbox,
@@ -34,7 +35,7 @@ import {
 } from '@ant-design/pro-components';
 
 export const createFieldItemSchema = (controlType, name) => {
-  const controlDef = TaskTemplateFieldControlDef.find(x => x.type === controlType);
+  const controlDef = TaskTemplateFieldControlDefMap.get(controlType);
   if (!controlDef) {
     throw new Error(`Unknown control type ${controlType}`);
   }
@@ -47,6 +48,34 @@ export const createFieldItemSchema = (controlType, name) => {
     description: '',
     options
   }
+}
+
+export function createFormItemSchema(field, mode) {
+  const controlDef = TaskTemplateFieldControlDefMap.get(field.type);
+  if (!controlDef) {
+    throw new Error(`Unknown control type ${field.type}`);
+  }
+  return {
+    title: mode === 'agent' && field.official ? <Space style={{margin: 0}}>{field.name}<Tooltip title="Official only field. Client cannot see."> <EyeInvisibleFilled /></Tooltip></Space> : field.name,
+    dataIndex: field.name,
+    initialValue: field.value,
+    formItemProps: {
+      help: field.description,
+      rules: [{ required: field.required, whitespace: true }]
+    },
+    fieldProps: {
+      ...controlDef.fieldProps,
+      placeholder: field.name,
+      options: field.options,
+    },
+    renderFormItem: (schema, config, form) => <controlDef.control />,
+  };
+}
+
+export function generateSchemaFromColumns(fields, mode = 'agent' | 'client') {
+  return fields
+    .filter(f => mode === 'agent' || !f.official)
+    .map(f => createFormItemSchema(f, mode));
 }
 
 export const TaskTemplateFieldControlDef = Object.freeze([
@@ -163,7 +192,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     widget: TaskFileUploader,
     fieldProps: {
     },
-    renderFormItem: (schema, config, form) => <TaskFileUploader />,
     control: TaskFileUploader,
   },
   {
@@ -172,7 +200,8 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     icon: <FilePdfFilled />,
     fieldProps: {
     },
-    renderFormItem: (schema, config, form) => <AutoDocInput />,
     control: AutoDocInput,
   },
 ]);
+
+export const TaskTemplateFieldControlDefMap = new Map(TaskTemplateFieldControlDef.map(x => [x.type, x]));

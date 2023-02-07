@@ -36,7 +36,7 @@ export const FieldEditPanel = (props) => {
     placement="rightTop"
     color="white"
     trigger={trigger}
-    overlayInnerStyle={{ width: 300 }}
+    overlayInnerStyle={{ width: 300,}}
     title={<div style={{ padding: '1rem' }}>
       {deleting ? <>
         <Paragraph><Text type="danger"><DeleteOutlined /></Text> Are you sure you want to delete field <Text strong>{field.name}</Text>?</Paragraph>
@@ -44,7 +44,8 @@ export const FieldEditPanel = (props) => {
           <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>
           <Button type="primary" danger onClick={onDelete}>Yes, delete</Button>
         </Space>
-      </> : <><Form
+      </> : <>
+      <Form
         layout="vertical"
         initialValues={field}
         onValuesChange={handleValuesChange}
