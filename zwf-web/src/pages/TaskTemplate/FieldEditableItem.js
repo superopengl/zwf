@@ -1,21 +1,25 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Card, Tooltip, Form, Switch, Input, Button } from 'antd';
+import { Card, Tooltip, Form, Switch, Input, Button, Typography } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
-import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
+import { DeleteOutlined, LockFilled, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { FieldEditPanel } from './FieldEditPanel';
 import styled from 'styled-components';
+import { FieldItem } from './FieldItem';
+
+const { Text } = Typography
 
 const StyledCard = styled(ProCard)`
+cursor: move;
 &:hover {
   border: 1px solid #0FBFC4;
 
   .itemHolder {
-    background-color: #f0f0f0;
+    background-color: #0FBFC444;
 
   }
 }
@@ -23,29 +27,27 @@ const StyledCard = styled(ProCard)`
 
 const StyledHolder = styled(ProCard)`
 height: 100%;
+background-color: #f0f0f0;
 
 .ant-pro-card-body {
   padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
+  font-weight: 900;
+  font-size: 20px;
 }
 `;
 
 
-const style = {
-  // border: '1px dashed gray',
-  // padding: '0.5rem 1rem',
-  // marginBottom: '.5rem',
-  // backgroundColor: 'white',
-  cursor: 'move',
-}
+
 
 export const FieldEditableItem = (props) => {
-  const { value: field, index, onDragging, onDrop } = props;
+  const { field, index, onDragging, onChange, onDrop } = props;
   const { id, name, type } = field;
 
   const [editPanelOpen, setEditPanelOpen] = React.useState(false);
+  const [fieldItem, setFieldItem] = React.useState(field);
 
 
   const ref = useRef(null)
@@ -112,7 +114,7 @@ export const FieldEditableItem = (props) => {
       isDragging: monitor.isDragging(),
     }),
   })
-  const opacity = isDragging ? 0.6 : 1;
+  const opacity = isDragging ? 0 : 1;
 
   React.useEffect(() => {
     setEditPanelOpen(!isDragging);
@@ -120,10 +122,14 @@ export const FieldEditableItem = (props) => {
   drag(drop(ref))
 
   const handleFieldChange = (values) => {
-    console.log(values);
+    setFieldItem(values);
   }
 
-  return <FieldEditPanel trigger="click" open={editPanelOpen} onOpenChange={setEditPanelOpen} field={field} onChange={handleFieldChange}>
+  const style = editPanelOpen ? {
+    borderColor: '#0FBFC4',
+  } : null
+
+  return <FieldEditPanel trigger="click" open={editPanelOpen} onOpenChange={setEditPanelOpen} field={fieldItem} onChange={handleFieldChange}>
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}
@@ -132,13 +138,15 @@ export const FieldEditableItem = (props) => {
       hoverable
       split="vertical"
       style={{ ...style, opacity }}>
-      <StyledHolder colSpan="22px" className="itemHolder" >
+      <StyledHolder colSpan="22px" className="itemHolder">
         <HolderOutlined />
       </StyledHolder>
       <ProCard
-        title={<>{name} ({type}: {index} {isDragging ? 'dragging' : ''})</>}
+        title={<>{fieldItem.required && <Text type="danger">* </Text>}{fieldItem.name}</>}
+        extra={fieldItem.official ? <Tooltip title="Official only field"><LockFilled /></Tooltip> : null}
       >
-        <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
+        {/* <Field valueType={fieldItem.type || 'text'} text={['open', 'closed']} mode="edit" /> */}
+        <FieldItem type={fieldItem.type} options={fieldItem.options} />
       </ProCard>
     </StyledCard>
   </FieldEditPanel>
@@ -147,7 +155,12 @@ export const FieldEditableItem = (props) => {
 
 FieldEditableItem.propTypes = {
   index: PropTypes.number.isRequired,
-  value: PropTypes.object.isRequired,
+  field: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    required: PropTypes.bool,
+    official: PropTypes.bool,
+    description: PropTypes.string,
+  }),
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onDragging: PropTypes.func.isRequired,
@@ -155,6 +168,7 @@ FieldEditableItem.propTypes = {
 };
 
 FieldEditableItem.defaultProps = {
+  field: {},
   onChange: () => { },
   onDelete: () => { },
   onDragging: () => { },

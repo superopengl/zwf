@@ -15,40 +15,14 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
 import { of } from 'rxjs';
 import { Divider } from 'antd';
-import { createFieldItemSchema, TaskTemplateControlDef } from 'util/TaskTemplateControlDef';
+import { createFieldItemSchema, TaskTemplateFieldControlDef } from 'util/TaskTemplateFieldControlDef';
 import { FieldControlItem } from './FieldControlItem';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
 import { FieldListEditable } from './FieldListEditable';
 import Field from '@ant-design/pro-field';
 
-const LayoutStyled = styled.div`
-  margin: 0 auto;
-  // background-color: #ffff00;
-  // height: calc(100vh - 64px);
-  // height: calc(100vh - 48px - 48px);
-  overflow: hidden;
-  max-width: 1000px;
 
-  .ant-page-header-content {
-    padding-top: 30px;
-  }
-
-  .ant-page-header-heading-left {
-    flex: 1;
-
-    .ant-page-header-heading-title {
-      flex: 1;
-    }
-  }
-`;
-
-const StyledModal = styled(Modal)`
-.ant-modal-content {
-  background-color: transparent;
-  box-shadow: none;
-}
-`;
 
 const EMPTY_TASK_TEMPLATE = {
   name: 'Tax return',
@@ -79,7 +53,7 @@ const EMPTY_TASK_TEMPLATE = {
   ]
 };
 
-export const TaskTemplatePage = props => {
+export const TaskTemplatePage = () => {
   const params = useParams();
   const { id: routeParamId } = params;
   const initTaskTemplateId = routeParamId;
@@ -89,7 +63,6 @@ export const TaskTemplatePage = props => {
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
-  const formRef = React.useRef();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -144,16 +117,14 @@ export const TaskTemplatePage = props => {
   }
 
   const handleAddControl = (controlType) => {
-    const newField = createFieldItemSchema(controlType);
     setTaskTemplate(pre => {
+      const name = getUniqueNewFieldName(pre?.fields);
+      const newField = createFieldItemSchema(controlType, name);
       return {
         ...pre,
         fields: [
           ...pre?.fields,
-          {
-            ...newField,
-            name: getUniqueNewFieldName(pre?.fields)
-          }
+          newField,
         ]
       };
     });
@@ -211,7 +182,7 @@ export const TaskTemplatePage = props => {
         <Row gutter={[20, 20]} wrap={false}>
           <Col flex="240px">
             {/* Control list column */}
-            {TaskTemplateControlDef.map((d, i) => <FieldControlItem
+            {TaskTemplateFieldControlDef.map((d, i) => <FieldControlItem
               key={i}
               icon={d.icon}
               label={d.label}
