@@ -33,7 +33,7 @@ const EMPTY_TASK_TEMPLATE = {
     {
       name: 'Unnamed field',
       description: '',
-      type: 'input',
+      type: 'text',
       required: true
     },
     // {
@@ -155,7 +155,7 @@ export const TaskTemplatePage = () => {
     // <PageContainer>
 
     <PageContainer
-      style={{ margin: 0, overflow: 'hidden' }}
+      // style={{ margin: 0, overflow: 'hidden' }}
       fixedHeader
       loading={loading}
       ghost={true}
@@ -180,12 +180,12 @@ export const TaskTemplatePage = () => {
         debug={debugMode}
       />} */}
       <DndProvider backend={HTML5Backend}>
-
         <ProCard ghost gutter={[40, 0]}>
           <ProCard colSpan={12} direction="column" ghost>
             <ProCard title="Edit description" ghost>
               <Input.TextArea placeholder='task description' maxLength={1000} showCount allowClear
                 autoSize={{ minRows: 3 }}
+                value={taskTemplate?.description}
                 onChange={handleDescriptionChange}
               />
             </ProCard>
@@ -225,8 +225,8 @@ export const TaskTemplatePage = () => {
           </ProCard>
         </ProCard>
 
-        <Divider />
-        <Field valueType="jsonCode" text={JSON.stringify(taskTemplate)} />
+        {/* <Divider />
+        <Field valueType="jsonCode" text={JSON.stringify(taskTemplate)} /> */}
       </DndProvider>
     </PageContainer>
 

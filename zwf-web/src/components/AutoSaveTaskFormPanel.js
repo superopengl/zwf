@@ -6,10 +6,11 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';
 import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
+import { TaskSchemaRenderer } from './TaskSchemaRenderer';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
-  const { value: task, type, onSavingChange } = props;
+  const { value: task, mode, onSavingChange } = props;
 
   const [fields, setFields] = React.useState(task?.fields);
   const [changedFields, setChangedFields] = React.useState({});
@@ -75,14 +76,14 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, []);
 
   const handleSignDoc = () => {
-    
+
   }
 
   return (<>
     {isClient && <TaskDocRequireSignBar value={task} onChange={handleSignDoc} />}
-    <TaskFormWidget
+    <TaskSchemaRenderer
       fields={fields}
-      type={type}
+      mode={mode}
       ref={ref}
       onChange={handleTaskFieldsValueChange}
       disabled={disabled}
@@ -97,13 +98,13 @@ AutoSaveTaskFormPanel.propTypes = {
     fields: PropTypes.array.isRequired,
     docs: PropTypes.array,
   }).isRequired,
-  type: PropTypes.oneOf(['client', 'agent']).isRequired,
+  mode: PropTypes.oneOf(['client', 'agent']).isRequired,
   // onChange: PropTypes.func,
   onSavingChange: PropTypes.func,
 };
 
 AutoSaveTaskFormPanel.defaultProps = {
-  type: 'client',
+  mode: 'client',
   onSavingChange: saving => { },
 };
 
