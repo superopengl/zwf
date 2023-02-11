@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Avatar, Tooltip, Form, Switch, Input, Button, Modal, Typography, Space } from 'antd';
+import { Avatar, Tooltip, Form, Switch, Input, Button, Drawer, Typography, Space } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
@@ -35,20 +35,20 @@ export const FieldEditFloatPanel = (props) => {
   return <Tooltip
     {...others}
     // open={open}
-    arrow={false}
-    align={{offset: [24, 0]}}
+    // arrow={false}
+    align={{ offset: [24, 0] }}
     zIndex={200}
     placement="rightTop"
     color="white"
     trigger={trigger}
-    overlayInnerStyle={{ width: 400, }}
+    overlayInnerStyle={{ width: 400 }}
     title={<div style={{ padding: '1rem' }}>
       {deleting ? <>
-        <Space align='start'>
+        <Space align='center'>
           <Avatar icon={<Icon component={DeleteOutlined} />} style={{ backgroundColor: '#F53F3F' }} />
-          <Paragraph>Are you sure you want to delete field <Text strong>{field.name}</Text>?</Paragraph>
+          <Paragraph style={{margin: 0}}>Are you sure you want to delete field <Text strong>{field.name}</Text>?</Paragraph>
         </Space>
-        <Space style={{ width: '100%', justifyContent: 'end' }}>
+        <Space style={{ width: '100%', marginTop: 30, justifyContent: 'end' }}>
           <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>
           <Button type="primary" danger onClick={onDelete}>Yes, delete</Button>
         </Space>

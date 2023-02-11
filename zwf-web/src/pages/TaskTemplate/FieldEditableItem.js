@@ -99,9 +99,14 @@ export const FieldEditableItem = (props) => {
       isDragging: monitor.isDragging(),
     }),
   })
-  const opacity = isDragging ? 0 : 1;
   drag(drop(ref))
 
+  const style = isDragging ? {
+    border: '1px dashed #0FBFC4',
+    background: 'transparent',
+    cursor: 'grabbing',
+    opacity: isDragging ? 0 : 1,
+  } : null;
 
   const handleClick = () => {
     setFocused(true);
@@ -118,7 +123,6 @@ export const FieldEditableItem = (props) => {
     trigger="click"
     onChange={onChange}
     onDelete={onDelete}
-    // open={focused}
     onOpenChange={handleEditPanelOpenChange}
   >
     <StyledCard
@@ -126,10 +130,10 @@ export const FieldEditableItem = (props) => {
       data-handler-id={handlerId}
       size="small"
       bordered
-      hoverable
+      hoverable={false}
       // split="vertical"
       onClick={handleClick}
-      style={{ opacity, borderColor: editing ? "#0FBFC4" : undefined}}
+      style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined}}
       bodyStyle={{ padding: 0 }}>
       <ProCard
         title={<Space>

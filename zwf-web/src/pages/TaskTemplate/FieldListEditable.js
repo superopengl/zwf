@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import { Row, Col, Card, Typography } from 'antd';
 import { FieldEditableItem } from './FieldEditableItem';
 import update from 'immutability-helper'
+import { v4 as uuidv4 } from 'uuid';
+
 const { Paragraph } = Typography;
 
 const style = {
@@ -17,7 +19,10 @@ export const FieldListEditable = props => {
   const [list, setList] = React.useState(fields);
 
   React.useEffect(() => {
-    setList(fields)
+    setList(fields.map((f, i) => ({
+      id: i,
+      ...f,
+    })))
   }, [fields]);
 
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -47,24 +52,32 @@ export const FieldListEditable = props => {
     )
   }, []);
 
+  const handleOnChange = () => {
+    const changedFields = list.map(f => {
+      const {id, ...cleanedField} = f;
+      return cleanedField;
+    })
+    onChange(changedFields);
+  }
+
   const handleDrop = () => {
-    onChange(list);
+    handleOnChange(list);
   };
 
-  const handleFieldChange = (index, changedField) => {
-    list[index] = changedField;
-    onChange([...list]);
+  const handleFieldChange = (index, newValues) => {
+    list[index] = newValues;
+    handleOnChange([...list]);
   }
 
   const handleDelete = (index) => {
     list.splice(index, 1);
-    onChange([...list]);
+    handleOnChange([...list]);
   }
 
   return (
     <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[8, 8]}>
-        {list.map((field, i) => <Col key={field.name} span={24}>
+        {list.map((field, i) => <Col key={field.id} span={24}>
           <FieldEditableItem field={field}
             onSelect={() => onSelect(field)}
             index={i}
