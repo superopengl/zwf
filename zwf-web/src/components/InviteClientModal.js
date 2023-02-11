@@ -4,7 +4,7 @@ import { TagsOutlined, UserAddOutlined } from '@ant-design/icons';
 import { inviteClient$ } from 'services/authService';
 
 export const InviteClientModal = props => {
-  const { visible, onOk, onCancel } = props;
+  const { open, onOk, onCancel } = props;
   const shouldAnother = React.useRef(false);
   const hasInvited = React.useRef(false);
   const ref = React.useRef();
@@ -12,7 +12,7 @@ export const InviteClientModal = props => {
   React.useEffect(() => {
     shouldAnother.current = false;
     hasInvited.current = false;
-  }, [visible]);
+  }, [open]);
 
   const handleInvite = () => {
     shouldAnother.current = false;
@@ -47,7 +47,7 @@ export const InviteClientModal = props => {
   }
 
   return <Modal
-  open={visible}
+    open={open}
     onCancel={handleCancel}
     onOk={onOk}
     title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#0FBFC4' }} />Invite Client</Space>}
@@ -75,22 +75,3 @@ export const InviteClientModal = props => {
   </Modal>
 };
 
-//   const modalRef = Modal.info({
-//     title: <>Set tags</>,
-//     content: <Content onClose={() => modalRef.destroy()} />,
-//     afterClose: () => {
-//     },
-//     icon: <TagsOutlined />,
-//     closable: true,
-//     maskClosable: true,
-//     destroyOnClose: true,
-//     focusTriggerAfterClose: true,
-//     okButtonProps: {
-//       style: {
-//         display: 'none'
-//       }
-//     },
-//   });
-
-//   return modalRef;
-// }

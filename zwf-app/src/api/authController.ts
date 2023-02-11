@@ -293,10 +293,13 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
     orgClient.orgId = orgId;
     orgClient.userId = user.id;
 
-    await m.insert(OrgClient, orgClient);
+    await m.save(OrgClient, orgClient);
     const org = await m.findOneBy(Org, { id: orgId });
 
-    if (!newlyCreated) {
+    if (!newlyCreated && user.role === Role.Client) {
+      /**
+       * Exisitng ZeeWorkflow user (client account), but first time to be served by this org.
+       */
       await sendEmail({
         to: email,
         template: EmailTemplateType.InviteClientUser,
