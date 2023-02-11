@@ -7,7 +7,7 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Thanks for registering ZeeWorkflow! It looks like this email address has been registered.
         </mj-text>
       </mj-column>
@@ -17,7 +17,7 @@
         </mj-button>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
         </mj-text>
       </mj-column>

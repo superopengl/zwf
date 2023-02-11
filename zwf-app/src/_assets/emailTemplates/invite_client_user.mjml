@@ -7,7 +7,7 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           You are invited and to be served by the orgnization <strong>{{org}}</strong> in ZeeWorkflow. <strong>{{org}}</strong> will contact you in near future when necessary.
         </mj-text>
       </mj-column>

@@ -7,32 +7,32 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {{toWhom}}, subscription successful</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, subscription successful</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Thank you very much for using ZeeWorkflow!
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Your organization's current subscription of {{seats}} seats starts from {{startDate}} and will end on {{endDate}}.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           As long as the primary payment method you specified is valid, the subscription will be renewed automatically. Please notice that, to avoid any impact by invalid payment method or payment failure, system will renew the subscrition from 7 days before the ongoing subscription ends.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Please find the billing information detail as attached.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Should you have any questions about this task, please contact us.
         </mj-text>
       </mj-column>

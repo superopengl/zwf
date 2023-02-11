@@ -7,27 +7,27 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {{toWhom}}, the renew payment failed</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, the renew payment failed</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Your current subscription will expire after {{endDate}} if the primary payment method is still unavailable.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Please go back to ZeeWorkflow and check the primary payment method to make sure it's valid, so that system can automatically renew the subscription.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           If the primary payment method is still unavailable after {{endDate}}, your organization's current subscription of {{seats}} seats will end. To keep on your business smoothly, please go back to ZeeWorkflow and fix the primary payment method as soon.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Should you have any questions about this task, please contact us.
         </mj-text>
       </mj-column>

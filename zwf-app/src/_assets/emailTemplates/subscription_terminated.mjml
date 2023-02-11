@@ -7,22 +7,22 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {{toWhom}}, subscription was terminated</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, subscription was terminated</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Your organization's subscription has been terminated. 
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           To keep on your business smoothly, please login ZeeWorkflow by the owner account (this email address {{email}}), and setup the primary payment method to resume the subscription.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           Should you have any questions about this task, please contact us.
         </mj-text>
       </mj-column>

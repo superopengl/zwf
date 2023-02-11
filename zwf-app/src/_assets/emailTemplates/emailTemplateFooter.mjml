@@ -13,25 +13,25 @@
 
 <mj-section css-class="inner-footer" padding="38px 60px">
   <mj-column width="100%" padding="0">
-    <mj-image align="center" src="https://zeeworkflow.com/images/logo-full-primary.png" alt="ZeeWorkflow logo" title="ZeeWorkflow logo" width="120px"></mj-image>
+    <mj-image align="center" src="https://zeeworkflow.com/images/logo-full-primary.png" alt="ZeeWorkflow logo" title="ZeeWorkflow logo" width="140px"></mj-image>
   </mj-column>
   <mj-column width="100%">
-    <mj-text align="center" color="#FFFFFF" font-size="14px" padding="0px 0 10px" line-height="17px">
+    <mj-text align="center" color="#BCC4D0" font-size="14px" padding="0px 0 10px" line-height="17px">
       <a target="_blank" href="{{website}}">{{website}}</a>
     </mj-text>
   </mj-column>
   <mj-column width="100%">
-    <mj-text align="center" color="#FFFFFF" font-size="14px" padding="20px 0 10px" line-height="17px">
+    <mj-text align="center" color="#BCC4D0" font-size="14px" padding="20px 0 10px" line-height="17px">
       You have received this email at <a href="mailto:{{email}}">{{email}}</a> because you are registering or have signed up for ZeeWorkflow.
     </mj-text>
   </mj-column>
   <mj-column width="120px" padding-top="20px">
-    <mj-text color="#FFFFFF" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
+    <mj-text color="#BCC4D0" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
       <a href="https://zeeworkflow.com" target="_blank">Contact Us</a>
     </mj-text>
   </mj-column>
   <mj-column width="120px" padding-top="20px">
-    <mj-text color="#FFFFFF" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
+    <mj-text color="#BCC4D0" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
       <a target="_blank" href="https://zeeworkflow.com/resource">Resources</a>
     </mj-text>
   </mj-column>
