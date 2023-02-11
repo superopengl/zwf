@@ -4,7 +4,9 @@ import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge } from 'ant
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  ClearOutlined
+  ClearOutlined,
+  CheckCircleFilled,
+  CheckOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
@@ -29,6 +31,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
 import { MdMessage } from 'react-icons/md';
 import { useLocalstorageState } from 'rooks';
+import { RoleTag } from 'components/RoleTag';
 
 
 const { Text } = Typography;
@@ -86,6 +89,7 @@ const SupportListPage = () => {
   const [list, setList] = React.useState([]);
   const eventSource$ = React.useRef(new Subject());
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
+  const [modal, contextHolder] = Modal.useModal();
 
   const columnDef = [
     {
@@ -97,16 +101,21 @@ const SupportListPage = () => {
       </Space>
     },
     {
-      title: 'Role',
-      dataIndex: 'role',
-      width: 140,
-      render: (role, item) => <Text strong={item.orgOwner}>{role}</Text>
-    },
-    {
       title: 'Org',
       dataIndex: 'orgName',
       render: (value) => <HighlightingText search={queryInfo.text} value={value} />,
     },
+    {
+      title: 'Role',
+      dataIndex: 'role',
+      render: (role, item) => <RoleTag role={item.role} />
+    },
+    {
+      title: 'Owner',
+      dataIndex: 'orgOwner',
+      render: (isOrgOwner, item) => isOrgOwner ? <Text strong><CheckOutlined/></Text> : null
+    },
+
     {
       title: 'Last Contact At',
       dataIndex: 'lastMessageAt',
@@ -124,10 +133,10 @@ const SupportListPage = () => {
                 menu: 'Chat',
                 onClick: () => handleChatWith(item)
               },
-              {
+              item.role !== 'guest' ? {
                 menu: 'Impersonate',
                 onClick: () => handleImpersonante(item)
-              },
+              } : null,
               {
                 menu: 'Resend invite',
                 onClick: () => handleResendInvite(item)
@@ -146,7 +155,7 @@ const SupportListPage = () => {
       case 'agent':
 
         reinviteMember$(user.email, true).subscribe(() => {
-          Modal.success({
+          modal.success({
             title: 'Resent invite',
             content: <>Has resent an invite email to email <Text code>{user.email}</Text></>
           });
@@ -229,7 +238,7 @@ const SupportListPage = () => {
   }
 
   const handleImpersonante = async (user) => {
-    Modal.confirm({
+    modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
       content: <>To impersonate user <Text code>{user.email}</Text>?</>,
@@ -318,6 +327,7 @@ const SupportListPage = () => {
           }}
         />
       </Space>
+      {contextHolder}
       <SupportReplyDrawer
         title={currentUser ? <UserNameCard userId={currentUser.userId} /> : null}
         userId={currentUser?.userId}

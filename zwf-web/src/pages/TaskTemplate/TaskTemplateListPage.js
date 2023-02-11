@@ -5,7 +5,7 @@ import {
   EyeOutlined,
   PlusOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Typography, Tooltip, Radio, Segmented } from 'antd';
+import { Button, Card, List, Modal, Space, Typography, Tooltip, Row, Col, Segmented } from 'antd';
 import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -22,25 +22,15 @@ import { CreateTaskModal } from 'components/CreateTaskModal';
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { finalize, switchMap } from 'rxjs/operators';
 import { PageContainer } from '@ant-design/pro-components';
+import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
 
-const LayoutStyled = styled.div`
-  margin: 0 auto 0 auto;
-  // background-color: #ffffff;
-  // height: calc(100vh - 64px);
-  height: 100%;
-
-  .ant-list-item {
-    padding-left: 0;
-    padding-right: 0;
-  }
-`;
 
 
 
-export const TaskTemplateListPage = props => {
+export const TaskTemplateListPage = () => {
   const [list, setList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [filteredList, setFilteredList] = React.useState([]);
@@ -49,6 +39,8 @@ export const TaskTemplateListPage = props => {
   const [viewMode, setViewMode] = React.useState('grid');
   const [currentTaskTemplateId, setCurrentTaskTemplateId] = React.useState(null);
   const [modalVisible, setModalVisible] = React.useState(false)
+  const [previewMode, setPreviewMode] = React.useState('agent');
+
   const navigate = useNavigate();
 
   const loadList = async () => {
@@ -119,14 +111,30 @@ export const TaskTemplateListPage = props => {
       })
   }
 
-  const handleSearchFilter = (text) => {
-    setSearchText(text);
-  }
 
   const handleCreateTask = (item) => {
     setCurrentTaskTemplateId(item.id);
     setModalVisible(true);
   }
+
+  const dataSource = filteredList.map(item => ({
+    data: item,
+    title: item.name,
+    avatar: <TaskTemplateIcon />,
+    description: <>balah</>,
+    content: <>
+      <Row gutter={[8, 8]}>
+        <Col>
+          <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
+        </Col>
+        <Col>
+          <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
+        </Col>
+      </Row>
+      <DocTemplateListPanel value={item.docs} style={{ margin: '12px -12px 0' }} bordered={false} />
+    </>
+  }))
+
 
   return (
     <PageContainer
@@ -150,8 +158,31 @@ export const TaskTemplateListPage = props => {
         ]
       }}
     >
-      <List
-        size="small"
+      <ProList
+        headerTitle=" "
+        onRow={(row) => {
+          return {
+            onMouseEnter: () => {
+            },
+            onClick: () => {
+              handleEdit(row.data)
+            },
+          };
+        }}
+        onItem={(row) => {
+          return {
+            onMouseEnter: () => {
+            },
+            onClick: () => {
+              handleEdit(row.data)
+            },
+          };
+        }}
+        ghost={viewMode === 'grid'}
+        rowKey="name"
+        dataSource={dataSource}
+        showActions="hover"
+        showExtra="hover"
         grid={viewMode === 'grid' ? {
           gutter: [24, 24],
           xs: 1,
@@ -160,67 +191,45 @@ export const TaskTemplateListPage = props => {
           lg: 2,
           xl: 3,
           xxl: 4
-        } : {
-          gutter: [12, 12],
-          column: 1
-        }}
-        dataSource={filteredList}
-        loading={loading}
-        locale={{
-          emptyText: <div style={{ margin: '30px auto' }}>
-            <Paragraph type="secondary">
-              There is no task template. Let's start creating one!
-            </Paragraph>
-            <Link to="/task_template/new">Create new task template</Link>
-          </div>
-        }}
-        renderItem={item => <List.Item>
-          <Card
-            // size="small"
-            bordered={true}
-            hoverable
-            // type="inner"
-            title={<>
-              <TaskTemplateIcon />
-              <Text>{item.name}</Text>
-              {/* <Input bordered={false} value={item.name} /> */}
-              {/* <HighlightingText search={searchText} value={item.name} /> */}
-            </>}
-            onClick={() => handleEdit(item)}
-            extra={<Space size="small">
-              <Tooltip title="Create task with this task template">
+        } : null}
+        metas={{
+          title: {},
+          subTitle: {},
+          type: {},
+          avatar: {},
+          content: {},
+          actions: {
+            render: (text, row) => [
+              <Tooltip title="Create task with this task template" key="new">
                 <Button icon={<PlusOutlined />} type="text"
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleCreateTask(item)
+                    handleCreateTask(row.data)
                   }}></Button>
-              </Tooltip>
+              </Tooltip>,
               <DropdownMenu
                 config={[
                   {
                     icon: <EditOutlined />,
                     menu: 'Edit',
-                    onClick: () => handleEdit(item)
+                    onClick: () => handleEdit(row.data)
                   },
                   {
                     icon: <PlusOutlined />,
                     menu: 'Create task',
-                    onClick: () => handleCreateTask(item),
+                    onClick: () => handleCreateTask(row.data),
                   },
-                  // {
-                  //   menu: '-'
-                  // },
                   {
                     icon: <EyeOutlined />,
                     menu: 'Preview',
                     onClick: () => {
-                      setPreviewTaskTemplate(item);
+                      setPreviewTaskTemplate(row.data);
                     }
                   },
                   {
                     icon: <CopyOutlined />,
                     menu: 'Clone',
-                    onClick: () => handleClone(item)
+                    onClick: () => handleClone(row.data)
                   },
                   {
                     menu: '-'
@@ -228,22 +237,13 @@ export const TaskTemplateListPage = props => {
                   {
                     icon: <Text type="danger"><DeleteOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
-                    onClick: () => handleDelete(item)
+                    onClick: () => handleDelete(row.data)
                   },
-
                 ].filter(x => !!x)}
-              /></Space>}
-            bodyStyle={{ paddingTop: 16 }}
-          >
-            {/* <Paragraph>{item.description}</Paragraph> */}
-            {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-            <Space direction="vertical">
-              <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-              <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-            </Space>
-            <DocTemplateListPanel value={item.docs} style={{ margin: '12px -12px 0' }} bordered={false} />
-          </Card>
-        </List.Item>}
+              />
+            ],
+          },
+        }}
       />
       <Modal
         open={!!previewTaskTemplate}
@@ -252,11 +252,14 @@ export const TaskTemplateListPage = props => {
         closable
         destroyOnClose
         maskClosable
+        title={<Segmented
+          options={['agent', 'client']}
+          onChange={setPreviewMode} />}
         footer={null}
       >
         <TaskTemplatePreviewPanel
           value={previewTaskTemplate}
-          type="agent"
+          mode={previewMode}
         />
       </Modal>
       <CreateTaskModal

@@ -2,7 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Dropdown, Menu, Button, Divider } from 'antd';
 import styled from 'styled-components';
-import { CaretDownOutlined, SettingOutlined } from '@ant-design/icons';
+import Icon, { CaretDownOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import {IoEllipsisHorizontal} from 'react-icons/io5';
 
 const StyledDropdown = styled(Dropdown)`
 .ant-dropdown-menu-item:hover {
@@ -20,7 +21,7 @@ const DropdownMenu = (props) => {
     item?.onClick();
   }
 
-  const items = config.map((x, i) => {
+  const items = config.filter(x => !!x).map((x, i) => {
     if (x.menu === '-') {
       return {
         key: i,
@@ -41,8 +42,9 @@ const DropdownMenu = (props) => {
       placement="bottomRight"
       trigger="click"
     >
-      <Button icon={<SettingOutlined />} style={{ paddingLeft: 8, paddingRight: 8 }}>
-        <CaretDownOutlined />
+      <Button type="text" icon={<Icon component={IoEllipsisHorizontal} />} >
+        {/* <CaretDownOutlined /> */}
+        {/* <EllipsisOutlined/> */}
       </Button>
     </StyledDropdown>
   );

@@ -133,6 +133,8 @@ export const OrgPaymentMethodPanel = () => {
               **** **** **** {item.cardLast4}
             </Text>}
             subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
+            style={{borderColor: item.primary ? '#0FBFC4' : undefined}}
+            bordered
             extra={item.primary ? [
             ] : [
               <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,

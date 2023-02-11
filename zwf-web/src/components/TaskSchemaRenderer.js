@@ -35,7 +35,7 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   const context = React.useContext(GlobalContext);
   const role = context.role;
 
-  fields.sort((a, b) => a.ordinal - b.ordinal);
+  // fields.sort((a, b) => a.ordinal - b.ordinal);
 
   const fieldSchema = React.useMemo(() => {
     const schema = generateSchemaFromColumns(fields, mode);
@@ -54,7 +54,7 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
     onSubmit(values);
   }
 
-  console.log(fieldSchema)
+  // console.log(fieldSchema)
 
   return <Container>
     <BetaSchemaForm
@@ -62,7 +62,7 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
       formRef={ref}
       columns={fieldSchema}
       onValuesChange={handleFormValueChange}
-      onFinish={handleSubmit}
+      // onFinish={handleSubmit}
       submitter={{
         searchConfig: {
           resetText: 'Reset',

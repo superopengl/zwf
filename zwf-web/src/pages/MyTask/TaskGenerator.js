@@ -116,31 +116,30 @@ export const TaskGenerator = React.memo(props => {
             value={clientInfo?.email} />
           <StyledDescription value="Choose a task template to begin with." />
           <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-          {taskTemplate?.docs.length > 0 && <>
+          {/* {taskTemplate?.docs.length > 0 && <>
             <StyledDescription value="Associated docs that will be auto-generated based on the form fields." />
             <DocTemplateListPanel value={taskTemplate.docs} />
-          </>}
-          <StyledDescription value="Input a meaningful task name. This name will appear in the emails to the client." />
+          </>} */}
+          {/* <StyledDescription value="Input a meaningful task name. This name will appear in the emails to the client." />
           <Input style={{ height: 50 }}
             placeholder="Task name"
             onPressEnter={handleNameEnter}
             value={taskName}
-            onChange={e => setTaskName(e.target.value)} />
+            onChange={e => setTaskName(e.target.value)} /> */}
         </Space>
-        <Divider style={{ margin: '10px 0' }} />
+        {/* <Divider style={{ margin: '10px 0' }} /> */}
         {/* <Button block icon={<LeftOutlined />} disabled={current === 0} onClick={() => setCurrent(x => x - 1)}></Button> */}
         {/* <Button block icon={<RightOutlined />} disable={current === steps.length - 1} onClick={() => setCurrent(x => x + 1)}></Button> */}
         <Row justify='space-between'>
           <Button type="text" onClick={props.onCancel}>Cancel</Button>
           <Space>
-            <Button type="primary"
+            {/* <Button type="primary"
               disabled={!clientInfo || !taskTemplate || !taskName}
-              onClick={handleCreateEmptyTask}>Create Empty Task</Button>
-            <Button type="primary" ghost
-              disabled={!clientInfo || !taskTemplate || !taskName}
+              onClick={handleCreateEmptyTask}>Create Empty Task</Button> */}
+            <Button type="primary" 
+              disabled={!clientInfo || !taskTemplate}
               onClick={handleCreateAndEdit}
-              icon={<RightOutlined />}
-            >Create Task & Edit</Button>
+            >Create Task</Button>
           </Space>
         </Row>
       </Space>
