@@ -194,14 +194,14 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     },
     control: TaskFileUploader,
   },
-  {
-    type: 'autodoc',
-    label: 'Doc template (PDF)',
-    icon: <FilePdfFilled />,
-    fieldProps: {
-    },
-    control: AutoDocInput,
-  },
+  // {
+  //   type: 'autodoc',
+  //   label: 'Doc template (PDF)',
+  //   icon: <FilePdfFilled />,
+  //   fieldProps: {
+  //   },
+  //   control: AutoDocInput,
+  // },
 ]);
 
 export const TaskTemplateFieldControlDefMap = new Map(TaskTemplateFieldControlDef.map(x => [x.type, x]));
