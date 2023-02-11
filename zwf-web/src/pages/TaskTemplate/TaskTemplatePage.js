@@ -15,7 +15,7 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
 import { of } from 'rxjs';
 import { Divider } from 'antd';
-import { createFieldItemSchema, TaskTemplateFieldControlDef } from 'util/TaskTemplateFieldControlDef';
+import { createFieldItemSchema, TaskTemplateFieldControlDef, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
 import { FieldControlItem } from './FieldControlItem';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -24,6 +24,15 @@ import Field from '@ant-design/pro-field';
 import { ProCard } from '@ant-design/pro-components';
 import { Input } from 'antd';
 import { FieldEditPanel } from './FieldEditPanel';
+
+const StyledPageContainer = styled(PageContainer)`
+.field-control-column {
+
+  .ant-pro-card-col:first-child {
+    padding-inline: 0 !important;
+  }
+}
+`;
 
 const { Paragraph } = Typography;
 
@@ -124,8 +133,9 @@ export const TaskTemplatePage = () => {
 
   const handleAddControl = (controlType) => {
     setTaskTemplate(pre => {
-      const name = getUniqueNewFieldName(pre?.fields);
+      const name = getUniqueNewFieldName(pre.fields, controlType);
       const newField = createFieldItemSchema(controlType, name);
+      newField.id = pre.fields.length;
       return {
         ...pre,
         fields: [
@@ -136,12 +146,15 @@ export const TaskTemplatePage = () => {
     });
   }
 
-  const getUniqueNewFieldName = (allFields) => {
+  const getUniqueNewFieldName = (allFields, newControlType) => {
     const existingNames = new Set(allFields.map(f => f.name));
+    const controlDef = TaskTemplateFieldControlDefMap.get(newControlType);
+    const fieldBaseName = controlDef.label;
+
     let number = allFields?.length || 0;
-    let name = `Field ${number}`;
+    let name = null;
     do {
-      name = `Field ${number}`;
+      name = `${fieldBaseName} ${number}`;
       number++;
     } while (existingNames.has(name));
     return name;
@@ -164,9 +177,10 @@ export const TaskTemplatePage = () => {
   }
 
   return (<>
-    <PageContainer
+    <StyledPageContainer
       loading={loading}
       ghost={true}
+      style={{ maxWidth: 1000, margin: '0 auto' }}
       header={{
         backIcon: <LeftOutlined />,
         title: <Row align="middle" wrap={false} style={{ height: 46 }}>
@@ -191,20 +205,20 @@ export const TaskTemplatePage = () => {
               onChange={handleDescriptionChange}
             />
           </ProCard>
-          <ProCard gutter={[20, 20]} title="Edit fields" ghost>
-            <ProCard colSpan={"200px"} direction="column" layout="center" ghost>
-              {TaskTemplateFieldControlDef.map((d, i) => <FieldControlItem
-                key={i}
-                icon={d.icon}
-                label={d.label}
-                type={d.type}
-                onDropDone={() => handleAddControl(d.type)}
+          <ProCard gutter={[20, 20]} title="Edit fields" ghost className="field-control-column">
+            <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
+              {TaskTemplateFieldControlDef.map(c => <FieldControlItem
+                key={c.type}
+                icon={c.icon}
+                label={c.label}
+                type={c.type}
+                onDropDone={() => handleAddControl(c.type)}
               />)}
             </ProCard>
-            <ProCard colSpan={"auto"} ghost style={{ }} bodyStyle={{ padding: 0 }} layout="center">
+            <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
               <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} onSelect={setCurrentField} />
             </ProCard>
-            <ProCard colSpan="400px" ghost layout="center" direction='column'>
+            <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
               {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}
             </ProCard>
 
@@ -228,7 +242,7 @@ export const TaskTemplatePage = () => {
           mode={previewMode}
         />
       </Drawer>
-    </PageContainer>
+    </StyledPageContainer>
   </>
   );
 };
