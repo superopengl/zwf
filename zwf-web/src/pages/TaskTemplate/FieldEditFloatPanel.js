@@ -16,7 +16,7 @@ const { Text, Title, Paragraph } = Typography;
 
 export const FieldEditFloatPanel = (props) => {
   const { field, onChange, trigger, children, onDelete, ...others } = props;
-  const [deleting, setDeleting] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(field.type === 'divider');
 
   // React.useEffect(() => {
   //   if (open) {
@@ -49,7 +49,7 @@ export const FieldEditFloatPanel = (props) => {
           <Paragraph style={{margin: 0}}>Are you sure you want to delete field <Text strong>{field.name}</Text>?</Paragraph>
         </Space>
         <Space style={{ width: '100%', marginTop: 30, justifyContent: 'end' }}>
-          <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>
+          {field.type !== 'divider' && <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>}
           <Button type="primary" danger onClick={onDelete}>Yes, delete</Button>
         </Space>
       </> : <>
@@ -72,9 +72,9 @@ export const FieldEditFloatPanel = (props) => {
           <Form.Item name="name" label="Field name" required>
             <Input />
           </Form.Item>
-          <Form.Item name="required" label="Required" valuePropName="checked">
+          {field.type !== 'instruction' && <Form.Item name="required" label="Required" valuePropName="checked">
             <Switch />
-          </Form.Item>
+          </Form.Item>}
           <Form.Item name="official" label="Official only" valuePropName="checked">
             <Switch />
           </Form.Item>

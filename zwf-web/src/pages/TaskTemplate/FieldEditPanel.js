@@ -16,7 +16,7 @@ const { Text, Title, Paragraph } = Typography;
 
 export const FieldEditPanel = (props) => {
   const { field, onChange, onDelete, open, ...others } = props;
-  const [deleting, setDeleting] = React.useState(false);
+  const [deleting, setDeleting] = React.useState(field.type === 'divider');
 
   React.useEffect(() => {
     if (open) {
