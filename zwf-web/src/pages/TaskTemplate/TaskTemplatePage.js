@@ -13,7 +13,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
-import { PageHeaderContainer } from 'components/PagePathContainer';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { of } from 'rxjs';
 import { Divider } from 'antd';
 import { createFieldItemSchema, TaskTemplateFieldControlDef, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
