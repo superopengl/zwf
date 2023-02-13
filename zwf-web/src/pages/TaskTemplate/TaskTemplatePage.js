@@ -29,6 +29,7 @@ import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 
 const Container = styled.div`
 max-width: 1000px;
+width: 100%;
 margin: 0 auto;
 
 .ant-breadcrumb {
@@ -46,8 +47,7 @@ margin: 0 auto;
 const { Paragraph } = Typography;
 
 const EMPTY_TASK_TEMPLATE = {
-  name: 'Tax return',
-  description: 'Please fill in the information as complete as possible.',
+  name: 'New form template',
   fields: [
     {
       name: 'Unnamed field',
@@ -125,6 +125,7 @@ export const TaskTemplatePage = () => {
 
     saveTaskTemplate$(entity).subscribe(() => {
       notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
+      navigate('/task_template')
     });
   }
 
@@ -224,7 +225,7 @@ export const TaskTemplatePage = () => {
             />)}
             <Col span={24}>
               <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>
-                <small>Drag control to right panel to add new field.</small>
+                Drag control to right panel to add new field.
               </Paragraph>
             </Col>
           </ProCard>
