@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 const { Text } = Typography;
 
 
-export const PagePathContainer = React.memo((props) => {
+export const PageHeaderContainer = React.memo((props) => {
   const { breadcrumb, children, icon, title, extra, ...others } = props;
   const navigate = useNavigate();
 
@@ -43,7 +43,7 @@ export const PagePathContainer = React.memo((props) => {
   </>
 });
 
-PagePathContainer.propTypes = {
+PageHeaderContainer.propTypes = {
   breadcrumb: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string.isRequired,
     path: PropTypes.string,
@@ -54,6 +54,6 @@ PagePathContainer.propTypes = {
   extra: PropTypes.array,
 };
 
-PagePathContainer.defaultProps = {
+PageHeaderContainer.defaultProps = {
 };
 
