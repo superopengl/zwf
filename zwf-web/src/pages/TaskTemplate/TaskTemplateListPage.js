@@ -155,7 +155,7 @@ export const TaskTemplateListPage = () => {
                 value: 'list'
               },
             ]} />,
-          <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
+          <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Form Template</Button>
         ]
       }}
     >

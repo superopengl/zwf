@@ -81,7 +81,7 @@ const RecurringEditModal = (props) => {
         <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
           <ClientSelect style={{ width: '100%' }} valueProp="id" />
         </Form.Item>
-        <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
+        <Form.Item label="Form Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
           <TaskTemplateSelect />
         </Form.Item>
         <Form.Item

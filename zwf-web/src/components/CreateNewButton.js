@@ -36,7 +36,7 @@ export const CreateNewButton = React.memo(props => {
   const menu = {
     items: [{
       key: 'task_template',
-      label: <><TaskTemplateIcon />Create Task Template</>
+      label: <><TaskTemplateIcon />Create Form Template</>
     },{
       key: 'doc_template',
       label: <><DocTemplateIcon />Create Doc Template</>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Drawer, Typography, Segmented, Layout } from 'antd';
+import { Row, Col, Modal, Button, Drawer, Typography, Segmented, Breadcrumb } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
@@ -13,6 +13,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
+import { PagePathContainer } from 'components/PagePathContainer';
 import { of } from 'rxjs';
 import { Divider } from 'antd';
 import { createFieldItemSchema, TaskTemplateFieldControlDef, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
@@ -24,8 +25,16 @@ import Field from '@ant-design/pro-field';
 import { ProCard } from '@ant-design/pro-components';
 import { Input } from 'antd';
 import { FieldEditPanel } from './FieldEditPanel';
+import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 
-const StyledPageContainer = styled(PageContainer)`
+const Container = styled.div`
+max-width: 1000px;
+margin: 0 auto;
+
+.ant-breadcrumb {
+  padding: 1rem 40px 0;
+}
+
 .field-control-column {
 
   .ant-pro-card-col:first-child {
@@ -75,7 +84,7 @@ export const TaskTemplatePage = () => {
   const [openPreview, setOpenPreview] = React.useState(false);
   const [affixContainer, setAffixContainer] = React.useState(null);
   const [currentField, setCurrentField] = React.useState();
-  const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
+  const [taskTemplateName, setTaskTemplateName] = React.useState('New Form Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
   const navigate = useNavigate();
@@ -176,52 +185,54 @@ export const TaskTemplatePage = () => {
 
   }
 
-  return (<>
-    <StyledPageContainer
+  return (<Container>
+    <PagePathContainer
+      breadcrumb={[
+        {
+          name: 'Templates'
+        },
+        {
+          path: '/task_template',
+          name: 'Form Template',
+          // menu: [
+          //   'hi',
+          //   'hi2'
+          // ]
+        },
+        {
+          name: taskTemplateName
+        }
+      ]}
       loading={loading}
       ghost={true}
-      style={{ maxWidth: 1000, margin: '0 auto' }}
-      header={{
-        backIcon: <LeftOutlined />,
-        title: <Row align="middle" wrap={false} style={{ height: 46 }}>
-          <Col><TaskTemplateIcon /></Col>
-          <Col flex={1}>
-            <ClickToEditInput placeholder={isNew ? 'New Task Template' : "Task template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />,
-          </Col>
-        </Row>,
-        onBack: goBack,
-        extra: [
-          <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
-          <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
-        ]
-      }}
+      icon={<TaskTemplateIcon />}
+      title={<ClickToEditInput placeholder={isNew ? 'New Form Template' : "Form template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />}
+      extra={[
+        <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
+        <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+      ]}
     >
       <DndProvider backend={HTML5Backend}>
-        <ProCard colSpan={12} direction="column" ghost>
-          <ProCard title="Edit description" ghost>
-            <Input.TextArea placeholder='task description' maxLength={1000} showCount allowClear
-              autoSize={{ minRows: 3 }}
-              value={taskTemplate?.description}
-              onChange={handleDescriptionChange}
-            />
+        <ProCard gutter={[20, 20]} ghost className="field-control-column">
+          <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
+            {TaskTemplateFieldControlDef.map(c => <FieldControlItem
+              key={c.type}
+              icon={c.icon}
+              label={c.label}
+              type={c.type}
+              onDropDone={() => handleAddControl(c.type)}
+            />)}
+            <Col span={24}>
+              <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>
+                <small>Drag control to right panel to add new field.</small>
+              </Paragraph>
+            </Col>
           </ProCard>
-          <ProCard gutter={[20, 20]} title="Edit fields" ghost className="field-control-column">
-            <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
-              {TaskTemplateFieldControlDef.map(c => <FieldControlItem
-                key={c.type}
-                icon={c.icon}
-                label={c.label}
-                type={c.type}
-                onDropDone={() => handleAddControl(c.type)}
-              />)}
-            </ProCard>
-            <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
-              <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} onSelect={setCurrentField} />
-            </ProCard>
-            <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
-              {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}
-            </ProCard>
-
+          <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
+            <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} onSelect={setCurrentField} />
+          </ProCard>
+          <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
+            {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}
           </ProCard>
         </ProCard>
       </DndProvider>
@@ -242,8 +253,8 @@ export const TaskTemplatePage = () => {
           mode={previewMode}
         />
       </Drawer>
-    </StyledPageContainer>
-  </>
+    </PagePathContainer>
+  </Container>
   );
 };
 

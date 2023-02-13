@@ -118,7 +118,7 @@ export const FieldEditableItem = (props) => {
 
   // useOutsideClick(ref, handleClickOutside);
 
-  return <FieldEditFloatPanel 
+  return <FieldEditFloatPanel
     field={field}
     trigger="click"
     onChange={onChange}
@@ -133,20 +133,9 @@ export const FieldEditableItem = (props) => {
       hoverable={false}
       // split="vertical"
       onClick={handleClick}
-      style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined}}
+      style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined, padding: 6 }}
       bodyStyle={{ padding: 0 }}>
-      <ProCard
-        title={field.type === 'divider' ? null : <Space>
-          {field.required && <Text type="danger">*</Text>}
-          {field.name}
-          {field.official && <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip>}
-        </Space>}
-      // extra={field.official ? <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip> : null}
-      >
-        {/* <Field valueType={field.type || 'text'} text={['open', 'closed']} mode="edit" /> */}
-        <FieldItem field={field} />
-        {/* {field.description && <Paragraph type="secondary">{field.description}</Paragraph>} */}
-      </ProCard>
+      <FieldItem field={field} />
     </StyledCard>
   </FieldEditFloatPanel>
 }
