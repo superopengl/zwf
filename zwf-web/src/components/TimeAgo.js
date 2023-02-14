@@ -16,7 +16,7 @@ const StyledSpace = styled(Space)`
 
 .ant-space-item {
   margin-bottom: 0 !important;
-  line-height: 15px;
+  // line-height: 15px;
 }
 `
 
