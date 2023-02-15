@@ -1,25 +1,29 @@
-import { Skeleton, Space, Steps, Timeline } from 'antd';
+import { Skeleton, Space, Typography, Timeline } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { getTaskHistory$ } from 'services/taskService';
+import { getTaskLog$ } from 'services/taskService';
 import styled from 'styled-components';
 import { finalize } from 'rxjs/operators';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 
-const Container = styled.div`
+const {Text} = Typography
 
+const Container = styled.div`
+.capitalized {
+  text-transform: capitalize;
+}
 `;
 
-export const TaskHistoryPanel = React.memo((props) => {
+export const TaskLogPanel = React.memo((props) => {
   const { taskId } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
-    const sub$ = getTaskHistory$(taskId).pipe(
+    const sub$ = getTaskLog$(taskId).pipe(
       finalize(() => setLoading(false))
     ).subscribe(setList);
     return () => sub$.unsubscribe()
@@ -30,19 +34,21 @@ export const TaskHistoryPanel = React.memo((props) => {
   }
 
   return <Container>
-    <Timeline mode="left">
-      {list.map(x => <Timeline.Item key={x.id} label={<TimeAgo value={x.createdAt} direction="horizontal" accurate={false}/>}>
-        {x.action}
-        {/* <UserNameCard userId={x.userId} /> */}
-      </Timeline.Item>)}
-    </Timeline>
+    <Timeline
+      items={list.map(x => ({
+        children: <Space direction="vertical">
+          <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} />
+          <Text strong className="capitalized">{x.action}</Text>
+        </Space>
+      }))}
+    />
   </Container>
 });
 
-TaskHistoryPanel.propTypes = {
+TaskLogPanel.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-TaskHistoryPanel.defaultProps = {
+TaskLogPanel.defaultProps = {
 };
 

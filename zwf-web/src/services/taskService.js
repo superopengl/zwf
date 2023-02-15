@@ -68,8 +68,8 @@ export function assignTask$(taskId, agentId) {
   return httpPost$(`/task/${taskId}/assign`, { agentId });
 }
 
-export function getTaskHistory$(taskId) {
-  return httpGet$(`/task/${taskId}/history`);
+export function getTaskLog$(taskId) {
+  return httpGet$(`/task/${taskId}/log`);
 }
 
 export function notifyTask$(taskId, msg) {
@@ -77,16 +77,8 @@ export function notifyTask$(taskId, msg) {
   return httpPost$(`/task/${taskId}/notify`, { message });
 }
 
-export async function listTaskComments(taskId) {
-  return httpGet(`/task/${taskId}/comment`);
-}
-
-export async function addTaskComment(taskId, content) {
-  return httpPost(`/task/${taskId}/comment`, { content });
-}
-
-export function listTaskTrackings$(taskId) {
-  return httpGet$(`/task/${taskId}/tracking`);
+export function listTaskComment$(taskId) {
+  return httpGet$(`/task/${taskId}/comment`);
 }
 
 export function getTaskDeepLinkUrl(taskDeepLinkId) {

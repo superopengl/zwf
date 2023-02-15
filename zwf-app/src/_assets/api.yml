@@ -768,9 +768,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/history:
+  /task/{id}/log:
     get:
-      operationId: getTaskHistory
+      operationId: getTaskLog
       parameters:
         - name: id
           in: path
@@ -780,9 +780,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/tracking:
+  /task/{id}/comment:
     get:
-      operationId: listTaskTrackings
+      operationId: listTaskComment
       parameters:
         - name: id
           in: path
