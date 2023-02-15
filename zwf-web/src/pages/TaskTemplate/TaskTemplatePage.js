@@ -219,7 +219,9 @@ export const TaskTemplatePage = () => {
               icon={c.icon}
               label={c.label}
               type={c.type}
-              onDropDone={() => handleAddControl(c.type)}
+              onDropStart={() => handleAddControl(c.type)}
+              // onDropDone={() => handleAddControl(c.type)}
+              index={taskTemplate?.fields.length}
             />)}
             <Col span={24}>
               <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>

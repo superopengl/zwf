@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
+import { useDrag, useDrop, useDragDropManager } from 'react-dnd'
 import PropTypes from 'prop-types';
 import { Card, Tooltip, Form, Switch, Input, Space, Typography } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
@@ -11,6 +11,7 @@ import styled from 'styled-components';
 import { FieldItem } from './FieldItem';
 import { useOutsideClick } from "rooks";
 import { FieldEditFloatPanel } from './FieldEditFloatPanel';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Text } = Typography
 
@@ -30,6 +31,18 @@ export const FieldEditableItem = (props) => {
 
   const [focused, setFocused] = React.useState(false);
   const [editing, setEditing] = React.useState(open);
+  const [isControlDragging, setDragging] = React.useState(false);
+
+  const dragDropManager = useDragDropManager()
+
+  const handleStateChange = () => {
+    const dragging = dragDropManager.getMonitor().isDragging();
+    if(!dragging) {
+      setDragging(false);
+    }
+  }
+
+  dragDropManager.getMonitor().subscribeToStateChange(handleStateChange);
 
   React.useEffect(() => {
     if (focused) {
@@ -49,6 +62,7 @@ export const FieldEditableItem = (props) => {
       if (!ref.current) {
         return
       }
+      setDragging(item.id === id);
       const dragIndex = item.index
       const hoverIndex = index
       // Don't replace items with themselves
@@ -91,6 +105,7 @@ export const FieldEditableItem = (props) => {
     },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult()
+      setDragging(false);
       if (item && dropResult) {
         onDrop();
       }
@@ -101,11 +116,11 @@ export const FieldEditableItem = (props) => {
   })
   drag(drop(ref))
 
-  const style = isDragging ? {
+  const dragging = isDragging || isControlDragging;
+  const style = dragging ? {
     border: '1px dashed #0FBFC4',
     background: 'transparent',
     cursor: 'grabbing',
-    opacity: isDragging ? 0 : 1,
   } : null;
 
   const handleClick = () => {
@@ -126,6 +141,7 @@ export const FieldEditableItem = (props) => {
     open={editing}
     onOpenChange={handleEditPanelOpenChange}
   >
+    {/* <DebugJsonPanel value={isControlDragging} /> */}
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}
@@ -134,9 +150,9 @@ export const FieldEditableItem = (props) => {
       hoverable={false}
       // split="vertical"
       onClick={handleClick}
-      style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined, padding: 6 }}
-      bodyStyle={{ padding: 0 }}>
-      <FieldItem field={field} />
+      style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined, opacity: isDragging ? 0 : 1, padding: 6 }}
+      bodyStyle={{ padding: 0, opacity: dragging ? 0 : 1 }}>
+      <FieldItem field={field}  />
     </StyledCard>
   </FieldEditFloatPanel>
 }

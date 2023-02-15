@@ -27,14 +27,18 @@ export const FieldListEditable = props => {
     })))
   }, [fields]);
 
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
-    accept: 'field-control',
-    drop: () => ({ name: 'Dustbin' }),
-    collect: (monitor) => ({
-      isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
-    }),
-  }))
+  // const [{ canDrop, isOver }, drop] = useDrop(() => ({
+  //   accept: 'field',
+  //   // accept: 'field-control',
+  //   drop: () => ({ name: 'Dustbin' }),
+  //   collect: (monitor) => ({
+  //     isOver: monitor.isOver(),
+  //     canDrop: monitor.canDrop(),
+  //   }),
+  // }))
+  const canDrop = false;
+  const isOver = false;
+
   const isActive = canDrop && isOver
   let backgroundColor = '#ffffff';
   if (isActive) {
@@ -79,12 +83,14 @@ export const FieldListEditable = props => {
   const isEmpty = !list?.length;
 
   return (
-    <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
+    <div 
+    // ref={drop} 
+    style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[8, 8]} justify="center">
         {/* <DebugJsonPanel value={list} /> */}
         {isEmpty ?
           <Empty description="No field defined. Drag control from the left panel to here to add new field." image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          : list.map((field, i) => <Col key={field.id} span={24}>
+          : list.map((field, i) => !field ? <>NULL</> : <Col key={field.id} span={24}>
             <FieldEditableItem field={field}
               index={i}
               open={i === 0}
