@@ -140,7 +140,7 @@ export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
 });
 
 
-export const createNewTaskTracking = handlerWrapper(async (req, res) => {
+export const addTaskComment = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
 

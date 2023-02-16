@@ -185,7 +185,7 @@ const OrgTaskPage = React.memo((props) => {
           </Col>
         </Row>
       </PageContainer>}
-      {task && <TaskTrackingDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+      {task && <TaskTrackingDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       {task && <TaskFieldsEditorModal
         task={task}
         visible={editFieldVisible}

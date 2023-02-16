@@ -69,22 +69,22 @@ const ClientTaskPage = (props) => {
         }}
       >
         <Row gutter={40} wrap={false}>
-          <Col span={16}>
+          <Col span={12}>
             <Card size="large">
               <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
             </Card>
           </Col>
-          <Col span={8} >
+          <Col span={12} >
             <Card
               bordered={false}
               title="Interactions & Messages"
               size="large"
-              bodyStyle={{ height: 'calc(100vh - 380px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px' }}
-              actions={[
-                <div style={{ paddingLeft: 24, paddingRight: 24, width: '100%' }}>
-                  <TaskMessageForm key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
-                </div>
-              ]}
+              bodyStyle={{ overflowX: 'hidden', overflowY: 'auto' }}
+              // actions={[
+              //   <div style={{ paddingLeft: 24, paddingRight: 24, width: '100%' }}>
+              //     <TaskMessageForm key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
+              //   </div>
+              // ]}
             >
               <TaskCommentPanel taskId={task.id} />
             </Card>

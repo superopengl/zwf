@@ -7,8 +7,8 @@ export function subscribeTaskTracking(taskId) {
   return es;
 }
 
-export function createNewTaskTracking$(taskId, message) {
-  return httpPost$(`task/${taskId}/tracking`, { message });
+export function addTaskComment$(taskId, message) {
+  return httpPost$(`task/${taskId}/comment`, { message });
 }
 
 export function nudgeTrackingAccess$(taskId) {

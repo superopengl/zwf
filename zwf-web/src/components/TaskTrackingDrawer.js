@@ -13,7 +13,7 @@ import { TaskLogPanel } from './TaskLogPanel';
 
 
 export const TaskTrackingDrawer = React.memo((props) => {
-  const { taskId, visible, onClose, width } = props;
+  const { taskId, userId, visible, onClose, width } = props;
   const context = React.useContext(GlobalContext);
 
   const { user } = context;
@@ -33,20 +33,20 @@ export const TaskTrackingDrawer = React.memo((props) => {
     maskClosable
     width={width}
     // bodyStyle={{ padding: 0 }}
-    footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
+    // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <UserNameCard userId={user.id} size={64} />
+    <UserNameCard userId={userId} size={64} fontSize={20} />
     <Tabs
       destroyInactiveTabPane={true}
       items={[
         {
           key: 'log',
-          label: <><HistoryOutlined /> Log</>,
+          label: <div style={{paddingRight: 16}}><HistoryOutlined /> Log</div>,
           children: <TaskLogPanel taskId={taskId} />
         },
         {
           key: 'comment',
-          label: <><CommentOutlined /> Comment</>,
+          label: <div style={{paddingRight: 16}}><CommentOutlined /> Comment</div>,
           children: <TaskCommentPanel taskId={taskId} />
         }
       ]}
@@ -56,6 +56,7 @@ export const TaskTrackingDrawer = React.memo((props) => {
 
 TaskTrackingDrawer.propTypes = {
   taskId: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired,
   width: PropTypes.number,
   visible: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
