@@ -202,10 +202,11 @@ export const TaskTemplatePage = () => {
           name: taskTemplateName
         }
       ]}
+      onBack={() => navigate('/task_template')}
       loading={loading}
       ghost={true}
       icon={<TaskTemplateIcon />}
-      title={<ClickToEditInput placeholder={isNew ? 'New Form Template' : "Form template name"} value={taskTemplateName} size={24} onChange={handleRename} maxLength={100} />}
+      title={<ClickToEditInput placeholder={isNew ? 'New Form Template' : "Form template name"} value={taskTemplateName} size={22} onChange={handleRename} maxLength={100} />}
       extra={[
         <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
