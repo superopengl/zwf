@@ -60,11 +60,7 @@ export const FieldListEditable = props => {
   }, []);
 
   const handleOnChange = () => {
-    const changedFields = list.map(f => {
-      const { id, ...cleanedField } = f;
-      return cleanedField;
-    })
-    onChange(changedFields);
+    onChange(list);
   }
 
   const handleDrop = () => {
