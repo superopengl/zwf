@@ -34,6 +34,7 @@ import {
   ProFormUploadDragger,
 } from '@ant-design/pro-components';
 import { Divider } from 'antd';
+import { v4 as uuidv4 } from 'uuid';
 
 export const createFieldItemSchema = (controlType, name) => {
   const controlDef = TaskTemplateFieldControlDefMap.get(controlType);
@@ -44,6 +45,7 @@ export const createFieldItemSchema = (controlType, name) => {
   const options = type === 'select' || type === 'radio' ? ['Option 1', 'Option 2'] : undefined;
 
   return {
+    id: uuidv4(),
     type,
     name,
     description: '',
@@ -58,7 +60,7 @@ export function createFormItemSchema(field, mode) {
   }
   return {
     title: field.type === 'divider' ? null : mode === 'agent' && field.official ? <Tooltip title="Official only field. Client cannot see."><a>{field.name} <EyeInvisibleFilled /></a></Tooltip> : field.name,
-    dataIndex: field.name,
+    dataIndex: field.id,
     initialValue: field.value,
     formItemProps: {
       ...field.formItemProps,
