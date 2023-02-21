@@ -13,6 +13,7 @@ import { DocTemplateIcon } from '../../components/entityIcon';
 import { useNavigate, Link } from 'react-router-dom';
 import { finalize, switchMap, tap } from 'rxjs/operators';
 import { notify } from 'util/notify';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -106,14 +107,20 @@ export const DocTemplateListPage = props => {
   }
 
   return (<>
-      <PageContainer
+      <PageHeaderContainer
+      breadcrumb={[
+        {
+          name: 'Templates'
+        },
+        {
+          name: 'Doc Template',
+        },
+      ]}
       loading={loading}
-      header={{
-        title: 'Doc Templates',
-        extra: [
-          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
-        ]
-      }}
+      title='Doc Templates'
+      extra={[
+        <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+      ]}
       >
         <List
           size="small"
@@ -183,7 +190,7 @@ export const DocTemplateListPage = props => {
             </Card>
           </List.Item>}
         />
-      </PageContainer>
+      </PageHeaderContainer>
   </>
   );
 };

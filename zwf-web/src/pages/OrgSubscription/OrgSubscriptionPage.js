@@ -2,15 +2,22 @@ import React from 'react';
 import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
 import { PageContainer } from '@ant-design/pro-components';
 import {OrgPaymentMethodPanel} from './OrgPaymentMethodPanel';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const OrgSubscriptionPage = () => {
 
   return (
-    <PageContainer
+    <PageHeaderContainer
+    breadcrumb={[
+      {
+        name: 'Others'
+      },
+      {
+        name: 'Subscription',
+      },
+    ]}
       fixedHeader
-      header={{
-        title: 'Subscription',
-      }}
+      title='Subscription & Billings'
       tabList={[
         {
           tab: 'Invoices',
@@ -28,7 +35,7 @@ const OrgSubscriptionPage = () => {
       }}
     >
       
-    </PageContainer>
+    </PageHeaderContainer>
   );
 };
 

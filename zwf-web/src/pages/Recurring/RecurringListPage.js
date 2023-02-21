@@ -12,6 +12,7 @@ import { listRecurring$, deleteRecurring, runRecurring } from 'services/recurrin
 import RecurringEditModal from './RecurringEditModal';
 import { notify } from 'util/notify';
 import { UserNameCard } from 'components/UserNameCard';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Title, Link: TextLink } = Typography;
 
@@ -27,11 +28,6 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const LayoutStyled = styled.div`
-  margin: 0 auto 0 auto;
-  // background-color: #ffffff;
-  height: 100%;
-`;
 
 
 const StyledDrawer = styled(Drawer)`
@@ -87,7 +83,7 @@ const RecurringListPage = (props) => {
       title: 'Client',
       dataIndex: 'userId',
       onFilter: (value, record) => record.agentId === value,
-      render: (value, record) => <UserNameCard userId={value}/>
+      render: (value, record) => <UserNameCard userId={value} />
     },
     {
       title: 'Frequency',
@@ -221,39 +217,45 @@ const RecurringListPage = (props) => {
   }
 
   return (
-    <LayoutStyled>
+    <PageHeaderContainer
+      breadcrumb={[
+        {
+          name: 'Tasks'
+        },
+        {
+          name: 'Scheduler',
+        },
+      ]}
+      loading={loading}
+      title="Scheduler"
+      extra={[
 
-      <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Scheduler</Button>
-        </Space>
-
-        <Table columns={columnDef}
-          dataSource={list}
-          size="small"
-          scroll={{
-            x: 'max-content'
-          }}
-          rowKey="id"
-          loading={loading}
-          pagination={false}
-          // pagination={queryInfo}
-          // onChange={handleTableChange}
-          onRow={(record) => ({
-            onDoubleClick: () => {
-              setCurrentId(record.id);
-              setFormVisible(true);
-            }
-          })}
-        />
-      </Space>
-
+        <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Scheduler</Button>
+      ]}
+    >
+      <Table columns={columnDef}
+        dataSource={list}
+        size="small"
+        scroll={{
+          x: 'max-content'
+        }}
+        rowKey="id"
+        pagination={false}
+        // pagination={queryInfo}
+        // onChange={handleTableChange}
+        onRow={(record) => ({
+          onDoubleClick: () => {
+            setCurrentId(record.id);
+            setFormVisible(true);
+          }
+        })}
+      />
       <RecurringEditModal id={currentId}
         visible={formVisible}
         onOk={handleEditOnOk}
         onCancel={() => setFormVisible(false)}
       />
-    </LayoutStyled >
+    </PageHeaderContainer>
 
   );
 };

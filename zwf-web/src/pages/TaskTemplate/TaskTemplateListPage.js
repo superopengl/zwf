@@ -24,6 +24,7 @@ import { finalize, switchMap } from 'rxjs/operators';
 import { PageContainer } from '@ant-design/pro-components';
 import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -147,26 +148,32 @@ export const TaskTemplateListPage = () => {
 
 
   return (
-    <PageContainer
-      header={{
-        title: 'Task Templates',
-        extra: [
-          <Segmented key="views"
-            onChange={setViewMode}
-            value={viewMode}
-            options={[
-              {
-                icon: <Icon component={BiGridAlt} />,
-                value: 'grid'
-              },
-              {
-                icon: <Icon component={HiViewList} />,
-                value: 'list'
-              },
-            ]} />,
-          <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Form Template</Button>
-        ]
-      }}
+    <PageHeaderContainer
+    breadcrumb={[
+      {
+        name: 'Templates'
+      },
+      {
+        name: 'Form Template',
+      }
+    ]}
+      title='Form Template'
+      extra={[
+        <Segmented key="views"
+          onChange={setViewMode}
+          value={viewMode}
+          options={[
+            {
+              icon: <Icon component={BiGridAlt} />,
+              value: 'grid'
+            },
+            {
+              icon: <Icon component={HiViewList} />,
+              value: 'list'
+            },
+          ]} />,
+        <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Form Template</Button>
+      ]}
     >
       <ProList
         headerTitle=" "
@@ -187,6 +194,14 @@ export const TaskTemplateListPage = () => {
               handleEdit(row.data)
             },
           };
+        }}
+        locale={{
+          emptyText: <div style={{ margin: '30px auto' }}>
+            <Paragraph type="secondary">
+              There is no form template. Let's start creating one!
+            </Paragraph>
+            <Link to="/task_template/new">Create new form template</Link>
+          </div>
         }}
         ghost={viewMode === 'grid'}
         rowKey="id"
@@ -279,7 +294,7 @@ export const TaskTemplateListPage = () => {
         onCancel={() => setModalVisible(false)}
         onOk={() => setModalVisible(false)}
       />
-    </PageContainer>
+    </PageHeaderContainer>
   );
 };
 

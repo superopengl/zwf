@@ -32,9 +32,7 @@ max-width: 1000px;
 width: 100%;
 margin: 0 auto;
 
-.ant-breadcrumb {
-  padding: 1rem 40px 0;
-}
+
 
 .field-control-column {
 
@@ -116,6 +114,11 @@ export const TaskTemplatePage = () => {
 
   const handleSave = () => {
     // await formRef.current.validateFields();
+
+    if(!taskTemplate.fields?.length) {
+      notify.error("Cannot Save", "This form template fields not defined.")
+      return;
+    }
 
     const entity = {
       ...taskTemplate,

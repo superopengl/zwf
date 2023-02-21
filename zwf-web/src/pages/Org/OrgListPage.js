@@ -18,12 +18,11 @@ import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
 import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 
 const { Text, Paragraph } = Typography;
 
-const ContainerStyled = styled.div`
-`;
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -239,24 +238,26 @@ const OrgListPage = () => {
   }
 
   return (
-    <ContainerStyled>
+    <PageHeaderContainer
+      title="Orgs Management"
+      extra={[
+        <Input.Search
+          key="search"
+          placeholder="Search name or email"
+          enterButton={<SearchOutlined />}
+          onSearch={value => handleSearch(value)}
+          onPressEnter={e => handleSearch(e.target.value)}
+          onChange={e => handleSearchTextChange(e.target.value)}
+          loading={loading}
+          value={queryInfo?.text}
+          allowClear
+        />,
+        <Button key="clear" onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>,
+        <Button key="refresh" onClick={() => loadList()} icon={<SyncOutlined />}></Button>
+      ]}
+    >
+
       <Space direction="vertical" style={{ width: '100%' }}>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Input.Search
-            placeholder="Search name or email"
-            enterButton={<SearchOutlined />}
-            onSearch={value => handleSearch(value)}
-            onPressEnter={e => handleSearch(e.target.value)}
-            onChange={e => handleSearchTextChange(e.target.value)}
-            loading={loading}
-            value={queryInfo?.text}
-            allowClear
-          />
-          <Space>
-            <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-          </Space>
-        </Space>
         {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
         <Table columns={columnDef}
           dataSource={list}
@@ -300,7 +301,7 @@ const OrgListPage = () => {
         }} />}
       </Drawer>
       {contextHolder}
-    </ContainerStyled>
+    </PageHeaderContainer>
 
   );
 };
