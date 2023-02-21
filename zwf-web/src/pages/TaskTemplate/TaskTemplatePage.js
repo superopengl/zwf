@@ -250,7 +250,7 @@ export const TaskTemplatePage = () => {
         open={openPreview}
         onClose={() => setOpenPreview(false)}
         maskClosable
-        width="50%"
+        width={500}
         extra={<Segmented
           options={['agent', 'client']}
           onChange={setPreviewMode} />}
