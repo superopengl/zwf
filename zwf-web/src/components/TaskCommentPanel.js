@@ -36,6 +36,10 @@ const StyledList = styled(ProList)`
     }
   }
 }
+
+.ant-list-empty-text {
+  display: none;
+}
 `
 
 const containerCss = css({
@@ -109,6 +113,7 @@ export const TaskCommentPanel = React.memo((props) => {
         subTitle: <TimeAgo value={item.createdAt} showTime={false} />,
         description: item.info,
       }))}
+      locale={{emptyText: <></>}}
       metas={{
         avatar: {},
         title: {},
