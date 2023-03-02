@@ -114,6 +114,15 @@ export const HomeKeyFeatureArea = () => {
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
         </Row>
+        <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
+          <Col {...span}>
+            <Title level={2}><span style={{ color: '#0FBFC4' }}>Client Portal</span></Title>
+            <Paragraph>Task management desocription. Task management description. Task management description. Task management description. </Paragraph>
+          </Col>
+          <Col {...span}>
+            <Image src="/images/feature-client-portal.svg" preview={false} style={{ padding: '0 1rem' }} />
+          </Col>
+        </Row>
         <div justify='center' style={{ width: '100%', height: 'clamp(3rem, 7vw, 8rem)', backgroundImage: 'linear-gradient(to top left, #F6F7F9, #F6F7F9 50%, #ffffff 50%, #ffffff 100%)' }}>
         </div>
         <Row gutter={[24, 24]} justify='center' style={{ width: '100%', backgroundColor: '#F6F7F9' }}>
