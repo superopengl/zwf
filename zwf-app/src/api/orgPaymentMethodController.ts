@@ -55,7 +55,7 @@ export const setOrgPrimaryPaymentMethod = handlerWrapper(async (req, res) => {
 export const listOrgPaymentMethods = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const list = await db.getRepository(OrgPaymentMethod).find({ where: { orgId } });
+  const list = await db.getRepository(OrgPaymentMethod).find({ where: { orgId }, order: {createdAt: 'ASC'} });
   res.json(list);
 });
 
