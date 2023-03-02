@@ -36,11 +36,17 @@ import {
 import { Divider } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 
-export const createFieldItemSchema = (controlType, name) => {
-  const controlDef = TaskTemplateFieldControlDefMap.get(controlType);
+const getControleDefOrDefault = (controlType)  => {
+  let controlDef = TaskTemplateFieldControlDefMap.get(controlType);
   if (!controlDef) {
-    throw new Error(`Unknown control type ${controlType}`);
+    console.error(`Unknown control type ${controlType}. Fail back to textarea`);
+    controlDef =  TaskTemplateFieldControlDefMap.get('textarea');
   }
+  return controlDef;;
+}
+
+export const createFieldItemSchema = (controlType, name) => {
+  const controlDef = getControleDefOrDefault(controlType);
   const { type } = controlDef;
   const options = type === 'select' || type === 'radio' ? ['Option 1', 'Option 2'] : undefined;
 
@@ -54,10 +60,7 @@ export const createFieldItemSchema = (controlType, name) => {
 }
 
 export function createFormItemSchema(field, mode) {
-  const controlDef = TaskTemplateFieldControlDefMap.get(field.type);
-  if (!controlDef) {
-    throw new Error(`Unknown control type ${field.type}`);
-  }
+  const controlDef = getControleDefOrDefault(field.type);
   return {
     title: field.type === 'divider' ? null : mode === 'agent' && field.official ? <Tooltip title="Official only field. Client cannot see."><a>{field.name} <EyeInvisibleFilled /></a></Tooltip> : field.name,
     dataIndex: field.id,
