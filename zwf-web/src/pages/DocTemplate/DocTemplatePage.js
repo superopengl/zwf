@@ -1,11 +1,11 @@
-import { Button, Layout, Row, Col, Typography } from 'antd';
+import {List, Button, Layout, Row, Col, Input, Typography, Modal } from 'antd';
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { DocTemplateEditorPanel } from './DocTemplateEditorPanel';
 import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
+import Icon, { DeleteOutlined, EyeOutlined, QuestionCircleOutlined, QuestionOutlined, SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,6 +20,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { ProCard } from '@ant-design/pro-components';
+import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { renameFieldInDocTemplateBody } from 'util/renameFieldInDocTemplateBody';
+import DocTemplateRenameFieldInput from './DocTemplateRenameFieldInput';
 const { Paragraph, Text } = Typography
 
 
@@ -36,8 +41,14 @@ const LayoutStyled = styled(Layout)`
       flex: 1;
     }
   }
-
 `;
+
+const StyledList = styled(List)`
+.ant-list-item {
+  padding-left: 0;
+  padding-right: 0;
+}
+`
 
 const EMPTY_DOC_TEMPLATE = {
   name: 'New doc template',
@@ -57,6 +68,9 @@ export const DocTemplatePage = (props) => {
   const [docTemplate, setDocTemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
   const [previewSider, setPreviewSider] = React.useState(false);
   const [docTemplateName, setDocTemplateName] = React.useState('New Doc Template');
+  const [html, setHtml] = React.useState(docTemplate.html);
+  const [modal, contextHolder] = Modal.useModal();
+
   const navigate = useNavigate();
   const debugMode = false;
 
@@ -69,6 +83,7 @@ export const DocTemplatePage = (props) => {
       .subscribe(d => {
         setDocTemplate(d);
         setDocTemplateName(d.name);
+        setHtml(d.html);
       });
     return () => subscription$.unsubscribe();
   }, []);
@@ -102,6 +117,34 @@ export const DocTemplatePage = (props) => {
     }
   }
 
+  const showHelp = () => {
+    modal.info({
+      title: 'How to insert fields?',
+      closable: true,
+      content: <Paragraph type="secondary">
+        The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field with name "Client Name". The variable replacement is <Text strong>case sensitive</Text>. So please make sure the variables specified in this doc template content are aligned with the field names when <Link to="/task_template">design task templates</Link>.
+      </Paragraph>
+    })
+  }
+
+  const fieldNames = React.useMemo(() => {
+    docTemplate.html = html
+    const {vars} = extractVarsFromDocTemplateBody(html);
+    return vars;
+  }, [html]);
+
+  const handleRenameField = (oldName, newName) => {
+    if(oldName.trim() !== newName.trim()) {
+      const newHtml = renameFieldInDocTemplateBody(html, oldName, newName);
+      setHtml(newHtml);
+    }
+  }
+
+  const handleDeleteField = (fieldName) => {
+    const newHtml = renameFieldInDocTemplateBody(html, fieldName, '');
+    setHtml(newHtml);
+  }
+
   return <LayoutStyled>
     <Loading loading={loading}>
       <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
@@ -120,23 +163,40 @@ export const DocTemplatePage = (props) => {
                 name: docTemplateName
               }
             ]}
+            loading={loading}
             icon={<DocTemplateIcon />}
             onBack={goBack}
             title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
             extra={[
-              <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={VscOpenPreview} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-              <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew} />} onClick={handlePopPreview}>Preview</Button>,
+              <Button key="help" icon={<QuestionCircleOutlined />} onClick={() => showHelp()} />,
+              <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >
-            <Paragraph type="secondary">
-              The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field with name "Client Name". The variable replacement is <Text strong>case sensitive</Text>. So please make sure the variables specified in this doc template content are aligned with the field names when <Link to="/task_template">design task templates</Link>.
-            </Paragraph>
-            {!loading && <DocTemplateEditorPanel
-              value={docTemplate.html}
-              onChange={html => docTemplate.html = html}
-              debug={debugMode}
-            />}
+            {contextHolder}
+            {!loading && <ProCard gutter={[20, 20]} ghost >
+              <ProCard colSpan={"auto"} ghost layout="center" direction='column'>
+                <DocTemplateEditorPanel
+                  value={html}
+                  onChange={setHtml}
+                  debug={debugMode}
+                />
+              </ProCard>
+              <ProCard colSpan={"400px"} title='Fields'>
+                <Paragraph type="secondary">All fields in the doc template are list here</Paragraph>
+                <StyledList 
+                  dataSource={fieldNames}
+                  size="small"
+                  locale={{emptyText: 'No fields created'}}
+                  renderItem={fieldName => <List.Item>
+                      <DocTemplateRenameFieldInput value={fieldName} 
+                      onChange={newName => handleRenameField(fieldName, newName)} 
+                      onDelete={() => handleDeleteField(fieldName)}
+                      />
+                  </List.Item>}
+                />
+              </ProCard>
+            </ProCard>}
           </PageHeaderContainer>
         </Layout.Content>
         <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30, backgroundColor: 'transparent' }}>
