@@ -45,14 +45,16 @@ export const RichTextInput = React.memo((props) => {
         // apiKey='3bmfxh7ddj07yqd2q0zicz9kckvcshqd1dwypp5tws9snpam'
         tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.js'}
         onInit={(evt, editor) => editorRef.current = editor}
-        initialValue={initValue}
+        // initialValue={initValue}
+        value={value}
         onEditorChange={onChange}
         init={{
-          height: 'calc(100vh - 340px)',
-          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize variable',
+          // height: 'calc(100vh - 240px)',
+          height: 800,
+          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize',
           menubar: false, //'file edit view insert format tools table tc help',
           toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | table',
-          toolbar_sticky: true,
+          toolbar_sticky: false,
           content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
             cursor: default;
             background-color: #0FBFC433;
@@ -69,7 +71,7 @@ export const RichTextInput = React.memo((props) => {
           toolbar_mode: 'wrap',
           branding: false,
           elementpath: false,
-          statusbar: true,
+          statusbar: false,
           // contextmenu: 'table',
           variable_class: "editor-variable",
           paste_data_images: true,
