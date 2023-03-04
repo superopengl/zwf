@@ -28,10 +28,6 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
-
-
-
-
 export const TaskTemplateListPage = () => {
   const [list, setList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
@@ -126,14 +122,6 @@ export const TaskTemplateListPage = () => {
     avatar: <TaskTemplateIcon />,
     description: <>balah</>,
     content: <>
-      {/* <Row gutter={[8, 8]}>
-        <Col>
-          <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-        </Col>
-        <Col>
-          <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-        </Col>
-      </Row> */}
       <Descriptions size="small">
         <Descriptions.Item label="created" span={12}>
           <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
@@ -142,7 +130,6 @@ export const TaskTemplateListPage = () => {
           <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
         </Descriptions.Item>
       </Descriptions>
-      {/* <DocTemplateListPanel value={item.docs} style={{ margin: '12px -12px 0' }} bordered={false} /> */}
     </>
   }))
 
