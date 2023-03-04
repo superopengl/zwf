@@ -19,15 +19,9 @@ import { Descriptions } from 'antd';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
-const LayoutStyled = styled.div`
-  margin: 0 auto 0 auto;
-  // background-color: #ffffff;
-  // height: calc(100vh - 64px);
-  height: 100%;
-
-  .ant-list-item {
-    padding-left: 0;
-    padding-right: 0;
+const Container = styled.div`
+  .ant-pro-table-list-toolbar {
+    display: none;
   }
 `;
 
@@ -129,7 +123,7 @@ export const DocTemplateListPage = props => {
   </>
   }));
 
-  return (<>
+  return (<Container>
       <PageHeaderContainer
       breadcrumb={[
         {
@@ -212,7 +206,7 @@ export const DocTemplateListPage = props => {
 
         />
       </PageHeaderContainer>
-  </>
+  </Container>
   );
 };
 
