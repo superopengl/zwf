@@ -1,4 +1,4 @@
-import {List, Button, Layout, Row, Col, Input, Typography, Modal } from 'antd';
+import { List, Button, Layout, Row, Col, Drawer, Typography, Modal } from 'antd';
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
@@ -25,12 +25,14 @@ import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateB
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { renameFieldInDocTemplateBody } from 'util/renameFieldInDocTemplateBody';
 import DocTemplateRenameFieldInput from './DocTemplateRenameFieldInput';
+import { RichTextInput } from 'components/RichTextInput';
 const { Paragraph, Text } = Typography
 
 
-const LayoutStyled = styled(Layout)`
+const Container = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
+  max-width: 1200px;
   // height: calc(100vh - 64px);
   height: 100%;
 
@@ -104,7 +106,8 @@ export const DocTemplatePage = (props) => {
   }
 
   const handlePopPreview = () => {
-    showDocTemplatePreviewModal(docTemplate, { allowTest: true });
+    // showDocTemplatePreviewModal(docTemplate, { allowTest: true });
+    setPreviewSider(true)
   }
 
   const handleRename = (newName) => {
@@ -129,12 +132,12 @@ export const DocTemplatePage = (props) => {
 
   const fieldNames = React.useMemo(() => {
     docTemplate.html = html
-    const {vars} = extractVarsFromDocTemplateBody(html);
+    const { vars } = extractVarsFromDocTemplateBody(html);
     return vars;
   }, [html]);
 
   const handleRenameField = (oldName, newName) => {
-    if(oldName.trim() !== newName.trim()) {
+    if (oldName.trim() !== newName.trim()) {
       const newHtml = renameFieldInDocTemplateBody(html, oldName, newName);
       setHtml(newHtml);
     }
@@ -145,71 +148,69 @@ export const DocTemplatePage = (props) => {
     setHtml(newHtml);
   }
 
-  return <LayoutStyled>
-    <Loading loading={loading}>
-      <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
-        <Layout.Content style={{ overflowY: 'auto' }}>
-          <PageHeaderContainer
-            style={{ maxWidth: 900, margin: '0 auto' }}
-            breadcrumb={[
-              {
-                name: 'Templates'
-              },
-              {
-                path: '/doc_template',
-                name: 'Doc Template',
-              },
-              {
-                name: docTemplateName
-              }
-            ]}
-            loading={loading}
-            icon={<DocTemplateIcon />}
-            onBack={goBack}
-            title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
-            extra={[
-              <Button key="help" icon={<QuestionCircleOutlined />} onClick={() => showHelp()} />,
-              <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
-              <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
-            ]}
-          >
-            {contextHolder}
-            {!loading && <ProCard gutter={[20, 20]} ghost >
-              <ProCard colSpan={"auto"} ghost layout="center" direction='column'>
-                <DocTemplateEditorPanel
-                  value={html}
-                  onChange={setHtml}
-                  debug={debugMode}
-                />
-              </ProCard>
-              <ProCard colSpan={"400px"} title='Fields'>
-                <Paragraph type="secondary">All fields in the doc template are list here</Paragraph>
-                <StyledList 
-                  dataSource={fieldNames}
-                  size="small"
-                  locale={{emptyText: 'No fields created'}}
-                  renderItem={fieldName => <List.Item>
-                      <DocTemplateRenameFieldInput value={fieldName} 
-                      onChange={newName => handleRenameField(fieldName, newName)} 
-                      onDelete={() => handleDeleteField(fieldName)}
-                      />
-                  </List.Item>}
-                />
-              </ProCard>
-            </ProCard>}
-          </PageHeaderContainer>
-        </Layout.Content>
-        <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30, backgroundColor: 'transparent' }}>
-          <DocTemplatePreviewPanel
-            value={docTemplate}
-            debug={debugMode}
-            type="agent"
-            allowTest={true}
+  return <Container>
+    <PageHeaderContainer
+      style={{ maxWidth: 900, margin: '0 auto' }}
+      breadcrumb={[
+        {
+          name: 'Templates'
+        },
+        {
+          path: '/doc_template',
+          name: 'Doc Template',
+        },
+        {
+          name: docTemplateName
+        }
+      ]}
+      loading={loading}
+      icon={<DocTemplateIcon />}
+      onBack={goBack}
+      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
+      extra={[
+        <Button key="help" icon={<QuestionCircleOutlined />} onClick={() => showHelp()} />,
+        <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
+        <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+      ]}
+    >
+      {contextHolder}
+      {!loading && <ProCard  ghost >
+        <ProCard colSpan={"auto"} ghost layout="center" direction='column' style={{paddingRight: 20}}>
+          <RichTextInput value={html} onChange={setHtml} />
+        </ProCard>
+        <ProCard colSpan={"300px"} title='Fields'>
+          <Paragraph type="secondary">All fields in the doc template are list here</Paragraph>
+          <StyledList
+            dataSource={fieldNames}
+            size="small"
+            locale={{ emptyText: 'No fields created' }}
+            renderItem={fieldName => <List.Item>
+              <DocTemplateRenameFieldInput value={fieldName}
+                onChange={newName => handleRenameField(fieldName, newName)}
+                onDelete={() => handleDeleteField(fieldName)}
+              />
+            </List.Item>}
           />
-        </Layout.Sider>
-      </Layout>
-    </Loading>
-  </LayoutStyled >
+        </ProCard>
+      </ProCard>}
+    </PageHeaderContainer>
+    <Drawer
+      title="Preview"
+      closable
+      maskClosable
+      destroyOnClose
+      open={previewSider}
+      onClose={() => setPreviewSider(false)}
+      width={700}
+    >
+      <DocTemplatePreviewPanel
+        value={docTemplate}
+        debug={debugMode}
+        type="agent"
+        allowTest={true}
+      />
+    </Drawer>
+  </Container >
 };
 
 DocTemplatePage.propTypes = {};
