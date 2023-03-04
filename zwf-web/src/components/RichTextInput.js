@@ -40,10 +40,9 @@ export const RichTextInput = React.memo((props) => {
   return (
     <>
       {!ready && <Skeleton active ></Skeleton>}
-
       <TinymceReact
         // apiKey='3bmfxh7ddj07yqd2q0zicz9kckvcshqd1dwypp5tws9snpam'
-        tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.js'}
+        tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
         onInit={(evt, editor) => editorRef.current = editor}
         // initialValue={initValue}
         value={value}
@@ -58,13 +57,13 @@ export const RichTextInput = React.memo((props) => {
           content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
             cursor: default;
             background-color: #0FBFC433;
-            border: 1px solid #0FBFC4;
+            border: 1px solid #red;
             // color: #FFFFFF;
             border-radius: 3px;
             padding: 1px 6px;
             font-weight: 400;
             font-style: normal;
-            font-size: 85%;
+            // font-size: 85%;
             line-height: 1.2;
             font-family: monospace;
           }`,
@@ -95,6 +94,8 @@ export const RichTextInput = React.memo((props) => {
           //   progress(100);
           // },
           placeholder,
+          min_height: 842,
+          // min_height: 'calc(100vh - 240px)',
           ...editorConfig
         }}
       />

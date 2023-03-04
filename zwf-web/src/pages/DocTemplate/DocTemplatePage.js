@@ -1,4 +1,4 @@
-import { List, Button, Layout, Row, Col, Drawer, Typography, Modal } from 'antd';
+import { List, Button, Layout, Row, Col, Drawer, Typography, Modal, Card } from 'antd';
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
@@ -32,7 +32,7 @@ const { Paragraph, Text } = Typography
 const Container = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
-  max-width: 1200px;
+  max-width: 1000px;
   // height: calc(100vh - 64px);
   height: 100%;
 
@@ -101,6 +101,7 @@ export const DocTemplatePage = (props) => {
     };
 
     saveDocTemplate$(entity).subscribe(() => {
+      goBack();
       notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
     });
   }
@@ -174,25 +175,29 @@ export const DocTemplatePage = (props) => {
       ]}
     >
       {contextHolder}
-      {!loading && <ProCard  ghost >
-        <ProCard colSpan={"auto"} ghost layout="center" direction='column' style={{paddingRight: 20}}>
+      {!loading && <Row gutter={20} wrap={false}>
+        <Col flex={"620px"}>
           <RichTextInput value={html} onChange={setHtml} />
-        </ProCard>
-        <ProCard colSpan={"300px"} title='Fields'>
-          <Paragraph type="secondary">All fields in the doc template are list here</Paragraph>
-          <StyledList
-            dataSource={fieldNames}
-            size="small"
-            locale={{ emptyText: 'No fields created' }}
-            renderItem={fieldName => <List.Item>
-              <DocTemplateRenameFieldInput value={fieldName}
-                onChange={newName => handleRenameField(fieldName, newName)}
-                onDelete={() => handleDeleteField(fieldName)}
-              />
-            </List.Item>}
-          />
-        </ProCard>
-      </ProCard>}
+        </Col>
+        <Col flex="auto">
+          <Card
+            title="Fields"
+          >
+            <Paragraph type="secondary">All fields in the doc template are list here</Paragraph>
+            <StyledList
+              dataSource={fieldNames}
+              size="small"
+              locale={{ emptyText: 'No fields created' }}
+              renderItem={fieldName => <List.Item>
+                <DocTemplateRenameFieldInput value={fieldName}
+                  onChange={newName => handleRenameField(fieldName, newName)}
+                  onDelete={() => handleDeleteField(fieldName)}
+                />
+              </List.Item>}
+            />
+          </Card>
+        </Col>
+      </Row>}
     </PageHeaderContainer>
     <Drawer
       title="Preview"

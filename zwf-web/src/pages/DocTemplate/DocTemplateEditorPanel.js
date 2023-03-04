@@ -7,10 +7,10 @@ import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Ra
 import { RichTextInput } from 'components/RichTextInput';
 
 const Container = styled.div`
-  margin: 0 auto 0 auto;
+  // margin: 0 auto 0 auto;
   // padding-top: 20px;
   // background-color: red;
-  height: calc(100vh - 220px);
+  // height: calc(100vh - 220px);
   // height: 100%;
 `;
 
