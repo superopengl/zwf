@@ -5,10 +5,12 @@ import { Loading } from 'components/Loading';
 import { CloseCircleFilled, CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
-import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
+import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
 import { PageContainer, ProCard, ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
+import { switchMap } from 'rxjs';
+import { useAddPaymentMethodModal } from 'components/useAddPaymentMethodModal';
 
 const { Text, Paragraph } = Typography;
 
@@ -41,6 +43,7 @@ export const OrgPaymentMethodPanel = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
+  const [openAddPaymentModal, modalContextHolder] = useAddPaymentMethodModal();
 
   const load$ = () => {
     setLoading(true);
@@ -56,18 +59,10 @@ export const OrgPaymentMethodPanel = () => {
     }
   }, []);
 
-  const handleSavePayment = async (stripePaymentMethodId) => {
-    await saveOrgPaymentMethod(stripePaymentMethodId);
-    setModalVisible(false);
-    load$();
-  }
-
-  const hideModal = () => {
-    setModalVisible(false);
-  }
-
   const handleAddNew = () => {
-    setModalVisible(true);
+    openAddPaymentModal(() => {
+      load$();
+    });
   }
 
   const handleDelete = (item) => {
@@ -147,27 +142,8 @@ export const OrgPaymentMethodPanel = () => {
           </ProCard>
         </List.Item>}
       />
-      <Modal
-        open={modalVisible}
-        closable={!paymentLoading}
-        maskClosable={false}
-        title="Add Payment Method"
-        destroyOnClose
-        footer={null}
-        width={460}
-        onOk={hideModal}
-        onCancel={hideModal}
-        bodyStyle={{ paddingTop: 24 }}
-      >
-        <Loading loading={paymentLoading}>
-          <StripeCardPaymentWidget
-            onOk={handleSavePayment}
-            onLoading={loading => setPaymentLoading(loading)}
-            buttonText="Add this card"
-          />
-        </Loading>
-      </Modal>
       {contextHolder}
+      {modalContextHolder}
     </Container>
   );
 };

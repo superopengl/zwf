@@ -8,7 +8,7 @@ import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
-import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
+import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
 import { Descriptions } from 'antd';
 import styled from 'styled-components';
 
