@@ -16,6 +16,7 @@ import { notify } from 'util/notify';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
+import {useCloneDocTemplateModal} from './useCloneDocTemplateModal';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -34,6 +35,8 @@ export const DocTemplateListPage = props => {
   const [loading, setLoading] = React.useState(true);
   const [drawerVisible, setDrawerVisible] = React.useState(false);
   const [currentId, setCurrentId] = React.useState();
+  const [cloneOpen, setCloneOpen] = React.useState(false);
+  const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -92,39 +95,40 @@ export const DocTemplateListPage = props => {
     navigate('/doc_template/new');
   }
 
-
-  const handlePreview = () => {
+  const handleClone = docTemplate => {
+    cloneAction({
+      targetId: docTemplate.id,
+      name: `Clone - ${docTemplate.name}`,
+      onOk: () => {
+        setLoading(true);
+        listDocTemplate$().pipe(
+          finalize(() => setLoading(false)),
+        ).subscribe(list => {
+          setList(list);
+        });
+      }
+    })
   }
 
-  const handleClone = item => {
-    cloneDocTemplate$(item.id).pipe(
-      tap(cloned => notify.success('Cloned task', <>Successfully cloned doc template. The new doc template is  <TextLink target="_blank" href={`/doc_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20)),
-      switchMap(() => listDocTemplate$()),
-      finalize(() => setLoading(false)),
-    ).subscribe(list => {
-      setList(list);
-    });
-  }
-
-  const dataSource = filteredList.map(item =>({
+  const dataSource = filteredList.map(item => ({
     id: item.id,
     data: item,
     title: item.name,
     avatar: <DocTemplateIcon />,
     content: <>
-    <Descriptions size="small">
-      <Descriptions.Item label="created" span={12}>
-        <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
-      </Descriptions.Item>
-      <Descriptions.Item label="updated" span={12}>
-        <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
-      </Descriptions.Item>
-    </Descriptions>
-  </>
+      <Descriptions size="small">
+        <Descriptions.Item label="created" span={12}>
+          <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
+        </Descriptions.Item>
+        <Descriptions.Item label="updated" span={12}>
+          <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
+        </Descriptions.Item>
+      </Descriptions>
+    </>
   }));
 
   return (<Container>
-      <PageHeaderContainer
+    <PageHeaderContainer
       breadcrumb={[
         {
           name: 'Templates'
@@ -138,74 +142,75 @@ export const DocTemplateListPage = props => {
       extra={[
         <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
       ]}
-      >
-        <ProList
+    >
+      <ProList
         headerTitle=" "
         grid={{
-            gutter: [24, 24],
-            xs: 1,
-            sm: 1,
-            md: 1,
-            lg: 2,
-            xl: 3,
-            xxl: 4
-          }}
-          ghost
-          dataSource={dataSource}
-          loading={loading}
-          locale={{
-            emptyText: <div style={{ margin: '30px auto' }}>
-              <Paragraph type="secondary">
-                There is no doc template. Let's start creating one!
-              </Paragraph>
-              <Link to="/doc_template/new">Create new doc template</Link>
-            </div>
-          }}
-          onItem={(row) => {
-            return {
-              onMouseEnter: () => {
-              },
-              onClick: () => {
-                handleEdit(row.data)
-              },
-            };
-          }}
-          metas={{
-            title: {},
-            subTitle: {},
-            type: {},
-            avatar: {},
-            content: {},
-            actions: {
-              render: (text, row) => [
-                <DropdownMenu
-                  key="others"
-                  config={[
-                    {
-                      icon: <EditOutlined />,
-                      menu: 'Edit',
-                      onClick: () => handleEdit(row.data)
-                    },
-                    {
-                      icon: <CopyOutlined />,
-                      menu: 'Clone',
-                      onClick: () => handleClone(row.data)
-                    },
-                    {
-                      menu: '-'
-                    },
-                    {
-                      icon: <Text type="danger"><DeleteOutlined /></Text>,
-                      menu: <Text type="danger">Delete</Text>,
-                      onClick: () => handleDelete(row.data)
-                    }]}
-                />
-              ],
+          gutter: [24, 24],
+          xs: 1,
+          sm: 1,
+          md: 1,
+          lg: 2,
+          xl: 3,
+          xxl: 4
+        }}
+        ghost
+        dataSource={dataSource}
+        loading={loading}
+        locale={{
+          emptyText: <div style={{ margin: '30px auto' }}>
+            <Paragraph type="secondary">
+              There is no doc template. Let's start creating one!
+            </Paragraph>
+            <Link to="/doc_template/new">Create new doc template</Link>
+          </div>
+        }}
+        onItem={(row) => {
+          return {
+            onMouseEnter: () => {
             },
-          }}
+            onClick: () => {
+              handleEdit(row.data)
+            },
+          };
+        }}
+        metas={{
+          title: {},
+          subTitle: {},
+          type: {},
+          avatar: {},
+          content: {},
+          actions: {
+            render: (text, row) => [
+              <DropdownMenu
+                key="others"
+                config={[
+                  {
+                    icon: <EditOutlined />,
+                    menu: 'Edit',
+                    onClick: () => handleEdit(row.data)
+                  },
+                  {
+                    icon: <CopyOutlined />,
+                    menu: 'Clone',
+                    onClick: () => handleClone(row.data)
+                  },
+                  {
+                    menu: '-'
+                  },
+                  {
+                    icon: <Text type="danger"><DeleteOutlined /></Text>,
+                    menu: <Text type="danger">Delete</Text>,
+                    onClick: () => handleDelete(row.data)
+                  }]}
+              />
+            ],
+          },
+        }}
 
-        />
-      </PageHeaderContainer>
+      />
+    </PageHeaderContainer>
+    {cloneContextHolder}
   </Container>
   );
 };
