@@ -33,7 +33,7 @@ export const GlobalNotificationBar = () => {
       className: 'global-notification-bar',
       content: <Space>
         To ensure the success of your business, please <Link strong onClick={handleAddPaymentMethod}>add a payment method</Link> as soon as possible, as none has been specified.
-        <Button ghost onClick={handleAddPaymentMethod}>Add Payment Method</Button>
+        <Button type="primary" onClick={handleAddPaymentMethod}>Add Payment Method</Button>
       </Space>,
       duration: 0,
     })
