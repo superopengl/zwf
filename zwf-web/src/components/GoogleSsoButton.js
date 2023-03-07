@@ -7,7 +7,7 @@ import { ssoGoogleRegisterOrg$, ssoGoogleLogin$ } from 'services/authService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
-import { finalize } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 
 export const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
@@ -20,8 +20,7 @@ export const GoogleSsoButton = props => {
       throw new Error('User is null');
     }
     setUser(user);
-    const isAdminFirstLogin = user.role === 'admin' && !user.orgId;
-    navigate(isAdminFirstLogin ? '/onboard' : '/task');
+    navigate('/task');
   }
 
   const handleGoogleSso = (response) => {
@@ -36,19 +35,15 @@ export const GoogleSsoButton = props => {
     if (type === 'register') {
       ssoGoogleRegisterOrg$(tokenId)
         .pipe(
+          catchError(err => notify.error('Failed to register with Google')),
           finalize(() => onEnd())
-        )
-        .subscribe((user) => loginWithUser(user),
-          err => notify.error('Failed to register with Google')
-        );
+        ).subscribe((user) => loginWithUser(user));
     } else if (type === 'login') {
       ssoGoogleLogin$(tokenId)
         .pipe(
+          catchError(err => notify.error('Failed to log in with Google. You may need to be invited by an agent.')),
           finalize(() => onEnd())
-        )
-        .subscribe(user => loginWithUser(user),
-          err => notify.error('Failed to log in with Google. You may need to be invited by an agent.')
-        );
+        ).subscribe(user => loginWithUser(user));
     } else {
       throw new Error(`Unsupported type ${type}`);
     }

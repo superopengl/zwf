@@ -22,8 +22,8 @@ import { assertRole } from '../utils/assertRole';
 const CONTACT_EVENT_TYPE = 'contact';
 
 export const getMySupport = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
   const userId = getUserIdFromReq(req);
+  assert(userId, 404);
 
   const list = await db.getRepository(SupportMessage).find({
     where: {
@@ -98,10 +98,11 @@ export const getUserSupport = handlerWrapper(async (req, res) => {
 });
 
 export const createSupportMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'agent', 'client');
   const { capturedUrl, message, replyToUserId } = req.body;
   assert(message, 404, `Invalid contact information`);
   const userId = getUserIdFromReq(req);
+  assert(userId, 404);
+
   const role = getRoleFromReq(req);
 
   const sm = new SupportMessage();
@@ -151,9 +152,10 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
 });
 
 export const subscribeSupportMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'agent', 'client');
-  const role = getRoleFromReq(req);
   const userId = getUserIdFromReq(req);
+  assert(userId, 404)
+  
+  const role = getRoleFromReq(req);
   const isSystem = role === Role.System;
 
   // const { user: { id: userId } } = req as any;

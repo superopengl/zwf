@@ -19,7 +19,7 @@ import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { VersionMismatchAlert } from "components/VersionMismatchAlert";
-import { ProLayout , PageContainer} from '@ant-design/pro-components';
+import { ProLayout, PageContainer } from '@ant-design/pro-components';
 import { Divider } from 'antd';
 import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
 const { Link: LinkText } = Typography;
@@ -162,6 +162,12 @@ export const AppLoggedInPage = React.memo(() => {
 
   const { user, role } = context;
 
+  React.useEffect(() => {
+    if (user.role === 'admin' && !user.orgId) {
+      navigate('/onboard')
+    }
+  }, []);
+
   const routes = React.useMemo(() => ROUTES.map(g => ({
     ...g,
     routes: g.routes.filter(x => !x.roles || x.roles.includes(role))
@@ -228,7 +234,7 @@ export const AppLoggedInPage = React.memo(() => {
       <Outlet />
     </ProLayout>
     {!isSystem && <SupportAffix />}
-    {!isSystem && <GlobalNotificationBar/>}
+    {!isSystem && <GlobalNotificationBar />}
   </StyledContainer>
 })
 

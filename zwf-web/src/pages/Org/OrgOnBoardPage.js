@@ -1,14 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { Typography } from 'antd';
+import { Typography, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import OrgProfileForm from './OrgProfileForm';
 import { getAuthUser$ } from 'services/authService';
+import { SupportAffix } from 'components/SupportAffix';
+import HomeFooter from 'components/HomeFooter';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Title } = Typography;
 
-const Container = styled.div`
+const Container = styled(Layout)`
   width: 100%;
   height: 100%;
   padding: 0;
@@ -17,7 +20,7 @@ const Container = styled.div`
 `;
 
 const InnerContainer = styled.div`
-  margin: 0 auto;
+  margin: 2rem auto;
   padding: 2rem 1rem;
   text-align: center;
   max-width: 400px;
@@ -29,22 +32,28 @@ const InnerContainer = styled.div`
 
 const OrgOnBoardPage = (props) => {
   const navigate = useNavigate();
+  const { setUser } = React.useContext(GlobalContext);
 
   const handleAfterOrgCreated = () => {
-    getAuthUser$().subscribe(() => {
-      navigate('/task');
+    getAuthUser$().subscribe((user) => {
+      setUser(user);
+      navigate('/');
     });
   }
 
 
   return <Container>
-    <InnerContainer>
-      <Logo />
-      <Title level={2} style={{ margin: '2rem auto' }}>
-        Organization Profile
-      </Title>
-      <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
-    </InnerContainer>
+    <Layout.Content>
+      <InnerContainer>
+        <Logo />
+        <Title level={2} style={{ margin: '2rem auto' }}>
+          Organization Profile
+        </Title>
+        <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
+      </InnerContainer>
+    </Layout.Content>
+      <HomeFooter />
+    <SupportAffix />
   </Container>
 }
 
