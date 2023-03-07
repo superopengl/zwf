@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Input, Button, Space, Grid } from 'antd';
-import { useOrgRegisterModal } from './OrgRegisterModal';
+import { useOrgRegisterModal } from './useOrgRegisterModal';
 import { MailOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 

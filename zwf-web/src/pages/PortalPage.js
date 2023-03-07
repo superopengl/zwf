@@ -8,7 +8,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import smoothscroll from 'smoothscroll-polyfill';
 import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
-import { OrgRegisterModal, useOrgRegisterModal } from 'components/OrgRegisterModal';
+import { OrgRegisterModal, useOrgRegisterModal } from 'components/useOrgRegisterModal';
 import { useWindowScrollPosition } from "rooks";
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
