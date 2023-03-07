@@ -3,10 +3,10 @@ import React from 'react';
 
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
-import { downloadReceipt } from 'services/subscriptionService';
+import { downloadReceipt } from 'services/billingService';
 import MoneyAmount from 'components/MoneyAmount';
 import { finalize } from 'rxjs/operators';
-import { listMySubscriptions$ } from 'services/subscriptionService';
+import { listMySubscriptions$ } from 'services/billingService';
 
 export const OrgSubscriptionHistoryPanel = () => {
   const [list, setList] = React.useState([]);

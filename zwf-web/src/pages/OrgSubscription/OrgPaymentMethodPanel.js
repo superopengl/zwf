@@ -142,8 +142,8 @@ export const OrgPaymentMethodPanel = () => {
           </ProCard>
         </List.Item>}
       />
-      {contextHolder}
-      {modalContextHolder}
+      <>{contextHolder}</>
+      <>{modalContextHolder}</>
     </Container>
   );
 };

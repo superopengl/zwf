@@ -44,8 +44,8 @@ export const useOrgRegisterModal = () => {
   }
 
   return [open, <>
-    <div key="1">{formContextHolder}</div>
-    <div key="2">{successContextHolder}</div>
+    <div>{formContextHolder}</div>
+    <div>{successContextHolder}</div>
   </>];
 
 };

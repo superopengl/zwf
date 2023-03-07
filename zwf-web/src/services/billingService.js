@@ -1,4 +1,4 @@
-import { httpGet$, httpGet, httpPost, request, httpPost$ } from './http';
+import { httpGet$, httpGet, request } from './http';
 
 export async function downloadReceipt(paymentId) {
   if(!paymentId) {
@@ -14,8 +14,16 @@ export function listMySubscriptions$() {
   return httpGet$(`/subscription`);
 }
 
-export function searchMyTicketUsage$(from, to) {
-  return httpPost$(`/subscription/usages/search`, { from, to });
+export function getCurrentPeriod$() {
+  return httpGet$(`/subscription/period/current`);
+}
+
+export function getSiblingPeriod$(periodId, direction) {
+  return httpGet$(`/subscription/period/${periodId}/${direction}`);
+}
+
+export function getPeriodUsage$(periodId) {
+  return httpGet$(`/subscription/period/${periodId}/usage`);
 }
 
 export async function listUserSubscriptionHistory(userId) {

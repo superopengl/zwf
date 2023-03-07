@@ -2,6 +2,7 @@ import React from 'react';
 import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
 import { PageContainer } from '@ant-design/pro-components';
 import {OrgPaymentMethodPanel} from './OrgPaymentMethodPanel';
+import {OrgLicenseUsagePanel} from './OrgLicenseUsagePanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const OrgSubscriptionPage = () => {
@@ -19,6 +20,11 @@ const OrgSubscriptionPage = () => {
       fixedHeader
       title='Subscription & Billings'
       tabList={[
+        {
+          tab: 'Usage',
+          key: 'usage',
+          children: <OrgLicenseUsagePanel />
+        },
         {
           tab: 'Invoices',
           key: 'invoices',

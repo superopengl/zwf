@@ -41,6 +41,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     payment.rawResponse = stripeRawResponse;
 
     period.paymentId = payment.id;
+    period.checkoutDate = payment.paidAt;
 
     await m.save([payment, period]);
 
