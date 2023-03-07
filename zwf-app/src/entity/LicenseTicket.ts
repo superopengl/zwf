@@ -3,16 +3,18 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-@Index('single_alive_ticket', ['userId'], {unique: true, where: `"voidedAt" IS NULL`})
 export class LicenseTicket {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
   @CreateDateColumn()
-  createdAt: Date;
+  ticketFrom: Date;
 
-  @Column({nullable: true})
-  voidedAt: Date;
+  @Column()
+  ticketTo: Date;
+
+  @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `EXTRACT(DAY FROM "ticketTo"::timestamp - "ticketFrom"::timestamp) + 1` })
+  usedDays: number;
 
   @Column('uuid')
   periodId: string;

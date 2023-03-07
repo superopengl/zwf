@@ -12,27 +12,28 @@ import { v4 as uuidv4 } from 'uuid';
 import { getOrgActivePromotionCode } from './getOrgActivePromotionCode';
 
 export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSubscriptionPeriod) {
-  console.log(`Charging subscription period ${period.id} for org ${period.orgId}`);
+  const { id: periodId, orgId } = period;
+  console.log(`Charging subscription period ${periodId} for org ${orgId}`);
 
   try {
 
-    const alivePromotionCode = await getOrgActivePromotionCode(m, period.orgId);
+    const alivePromotionCode = await getOrgActivePromotionCode(m, orgId);
     period.promotionCode = alivePromotionCode?.code;
     period.promotionUnitPrice = alivePromotionCode?.promotionUnitPrice;
     await m.save(period); // Have to save before calculating amout from view.
 
-    const calcResult = await calcBillingAmountForPeriod(m, period);
+    const billingInfo = await calcBillingAmountForPeriod(m, period);
 
-    const { amount, payable, paymentMethodId, stripePaymentMethodId } = calcResult;
+    const { amount, payable, paymentMethodId, stripePaymentMethodId } = billingInfo;
 
     // Call stripe to pay
-    const stripeCustomerId = await getOrgStripeCustomerId(m, period.orgId);
+    const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
     const stripeRawResponse = await chargeStripeForCardPayment(payable, stripeCustomerId, stripePaymentMethodId, true);
 
     const payment = new Payment();
     payment.id = uuidv4();
-    payment.orgId = period.orgId;
-    payment.periodId = period.id;
+    payment.orgId = orgId;
+    payment.periodId = periodId;
     payment.paidAt = getUtcNow();
     payment.amount = amount;
     payment.payable = payable;
@@ -44,11 +45,11 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     await m.save([payment, period]);
 
     await sendPaymentEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, period);
-    console.log('Successfully handled auto payments for org', period.orgId);
+    console.log('Successfully handled auto payments for org', orgId);
 
     return true;
   } catch (e) {
-    await terminatePlan(period.orgId);
+    await terminatePlan(orgId);
     await sendPaymentEmail(m, EmailTemplateType.SubscriptionAutoRenewFailed, period);
 
     const sysLog = new SysLog();

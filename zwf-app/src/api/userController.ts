@@ -188,7 +188,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await db.transaction(async m => {
       await m.getRepository(User).softDelete(id);
       await m.getRepository(UserProfile).delete(profileId);
-      await m.getRepository(LicenseTicket).update({ userId: id, voidedAt: IsNull() }, { voidedAt: getUtcNow() });
+      await m.getRepository(LicenseTicket).update({ userId: id, ticketTo: IsNull() }, { ticketTo: getUtcNow() });
     });
   }
 
