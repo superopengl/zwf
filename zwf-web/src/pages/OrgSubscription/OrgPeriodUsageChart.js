@@ -26,12 +26,12 @@ justify-content: center;
 `
 
 const convertToDate = (m) => {
-  return moment(m).format('MMM DD YYYY');
+  return moment(m).format('DD/MMM');
 }
 
 export const OrgPeriodUsageChart = React.memo((props) => {
 
-  const { id: periodId, periodFrom, periodTo } = props.period;
+  const { id: periodId, periodFrom, periodTo, periodDays } = props.period;
 
   const [loading, setLoading] = React.useState(true);
 
@@ -50,11 +50,16 @@ export const OrgPeriodUsageChart = React.memo((props) => {
 
   }, [periodId]);
 
+  const rangeFrom = moment(periodFrom).startOf('day');
+
   const formatData = (list) => {
     let userCounter = 0;
     return list.map(x => ({
       user: getUserDisplayName(x.email, x.givenName, x.surname) || `Deleted user ${++userCounter}`,
-      usage: [moment(x.ticketFrom).startOf('day').valueOf(), moment(x.ticketTo).endOf('day').valueOf()],
+      usage: [
+        moment(x.ticketFrom).startOf('day').diff(rangeFrom, 'days'),
+        moment(x.ticketTo).endOf('day').diff(rangeFrom, 'days') + 1
+      ],
       raw: x,
     }))
   }
@@ -76,11 +81,27 @@ export const OrgPeriodUsageChart = React.memo((props) => {
     yField: 'user',
     legend: false,
     xAxis: {
-      min: moment(periodFrom).startOf('day').valueOf(),
-      max: moment(periodTo).endOf('day').valueOf(),
+      min: 0,
+      max: periodDays,
+      // minLimit: 0,
+      // maxLimit: 31,
+      grid: {
+
+        line: {
+          style: {
+            lineDash: [2, 2]
+            
+          }
+        },
+      },
+      tickInterval: 1,
       label: {
         formatter: (text, item, index) => {
-          return moment(text, 'x').format('MMM DD YYYY')
+          if (index === 0 || index === periodDays - 1) {
+            return moment(+text).format('MMM D YYYY')
+          } else {
+            return moment(+text).format('D')
+          }
         }
       }
     },
@@ -88,6 +109,13 @@ export const OrgPeriodUsageChart = React.memo((props) => {
     color: '#0FBFC4',
     width: 700,
     maxBarWidth: 8,
+    meta: {
+      usage: {
+        min: 0, //rangeFrom,
+        max: periodDays, //rangeTo,
+        // range: [rangeFrom, rangeTo]
+      }
+    },
     tooltip: {
       customContent: (text, item, index) => {
         const rawData = item?.[0]?.data?.raw;
@@ -97,7 +125,7 @@ export const OrgPeriodUsageChart = React.memo((props) => {
       }
     },
     label: {
-      position: 'right',
+      position: 'top',
       formatter: (item, other) => {
         return item.raw.ticketDays;
       },
@@ -112,7 +140,7 @@ export const OrgPeriodUsageChart = React.memo((props) => {
   return (
     <Loading loading={loading} >
       <Bar {...config} />
-      {/* <DebugJsonPanel value={list} /> */}
+      <DebugJsonPanel value={list} />
     </Loading>
   );
 });
