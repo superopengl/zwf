@@ -118,9 +118,17 @@ export const OrgLicenseUsagePanel = () => {
             <ProCard title="Billing period">
               <ClockCircleOutlined /> {moment(period.periodFrom).format('MMM DD YYYY')} - <ClockCircleOutlined /> {moment(period.periodTo).format('MMM DD YYYY')} ({period.periodDays} days)
             </ProCard>
-            <ProCard title="Payment" extra={period.payment && <Button type="link" icon={<DownloadOutlined/>} onClick={() => handleDownloadInvoice(period.payment.id)}>Download Invoice</Button>}>
+            {/* <DebugJsonPanel value={period} /> */}
+            <ProCard title="Payment" extra={period.payment && <Button type="link" icon={<DownloadOutlined />} onClick={() => handleDownloadInvoice(period.payment.id)}>Download Invoice</Button>}>
               {period.type === 'trial' ? '14 Day Free Trial' :
-                !period.payment ? <>Pending Payment. The subsequent automatic deduction is scheduled for <Text strong><ClockCircleOutlined /> {moment(period.periodTo).format('MMM DD YYYY')}</Text>. Please kindly ensure that the primary payment method is valid and has enough balance.</> : <>
+                !period.payment ? <>
+                  <Paragraph>
+                    Pending Payment. The subsequent automatic deduction is scheduled after <Text strong>
+                      <ClockCircleOutlined /> {moment(period.periodTo).format('MMM DD YYYY')}
+                    </Text>.
+                    Please kindly ensure that the primary payment method is valid and has enough balance.
+                  </Paragraph>
+                </> : <>
                   <Row wrap={false} gutter={20} justify="space-between">
                     <Col span={8}>
                       <MoneyAmount value={period.payment?.payable} strong style={{ fontSize: 32, whiteSpace: 'nowrap' }} />
@@ -145,7 +153,6 @@ export const OrgLicenseUsagePanel = () => {
                       </Descriptions>
                     </Col>
                   </Row>
-                  {/* <DebugJsonPanel value={period} /> */}
                 </>}
             </ProCard>
             <ProCard title="Usage" extra={<Tooltip title="How the payment amount is calculated based on the usage">
