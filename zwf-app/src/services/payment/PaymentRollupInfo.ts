@@ -4,4 +4,5 @@ export type PaymentRollupInfo = {
   payable: number;
   paymentMethodId: string;
   stripePaymentMethodId: string;
+  cardLast4: string;
 };
