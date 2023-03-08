@@ -37,8 +37,8 @@ const PromotionListPanel = (props) => {
       title: 'Code',
       dataIndex: 'code',
       fixed: 'left',
-      render: (value) => <ClickToCopyTooltip value={value}>
-        <Text strong type="success" style={{ fontSize: 18 }}>{value}</Text>
+      render: (value, item) => <ClickToCopyTooltip value={value}>
+        <Text strong type={item.active ? "success" : 'secondary'} delete={!item.active} style={{ fontSize: 18 }}>{value}</Text>
       </ClickToCopyTooltip>
     },
     {

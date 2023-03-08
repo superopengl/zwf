@@ -4,7 +4,7 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 @Entity()
 @Check(`0 <= "promotionUnitPrice"`)
-@Index('single_code_per_org', ['orgId', 'code'], {unique: true, where: 'active IS TRUE'})
+@Index('single_code_per_org', ['orgId', 'active'], {unique: true, where: 'active IS TRUE'})
 export class OrgPromotionCode {
   @PrimaryColumn()
   code: string;
