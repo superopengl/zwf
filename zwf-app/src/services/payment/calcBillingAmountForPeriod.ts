@@ -11,11 +11,12 @@ export async function calcBillingAmountForPeriod(m: EntityManager, period: OrgSu
   const primaryPaymentMethod = await m.findOneOrFail(OrgPaymentMethod, { where: { orgId, primary: true } });
   const { id: paymentMethodId, cardLast4, stripePaymentMethodId } = primaryPaymentMethod;
 
-  const { amount, payable } = await rollupTicketUsageInPeriod(m, period);
+  const { amount, payable, periodDays, payableDays } = await rollupTicketUsageInPeriod(m, period);
 
   return {
     amount,
     payable,
+    payableDays,
     paymentMethodId,
     stripePaymentMethodId,
     cardLast4,

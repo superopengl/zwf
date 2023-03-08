@@ -35,9 +35,12 @@ export class Payment {
   @Column('uuid', { nullable: true })
   orgPaymentMethodId: string;
 
-  @Column('jsonb', { nullable: true })
+  @Column('jsonb', { nullable: true, select: false })
   rawResponse: object;
 
   @Column({nullable: true})
   cardLast4: string;
+
+  @Column({nullable: true})
+  payableDays: number;
 }
