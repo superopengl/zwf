@@ -1,3 +1,4 @@
+import { OrgSubscriptionPeriod } from './../entity/OrgSubscriptionPeriod';
 
 import { ResourcePage } from '../entity/ResourcePage';
 import { assert } from '../utils/assert';
@@ -29,7 +30,7 @@ export const listPromotionCode = handlerWrapper(async (req, res) => {
 
 export const savePromotion = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const { code, promotionUnitPrice, endingAt, orgId } = req.body;
+  const { code, promotionUnitPrice, endingAt, orgId, applyNow } = req.body;
   assert(0 <= promotionUnitPrice, 400, `promotionUnitPrice cannot be minus number`);
   assert(endingAt && moment(endingAt).isAfter(), 400, 'endingAt must be a future date');
 
@@ -43,6 +44,12 @@ export const savePromotion = handlerWrapper(async (req, res) => {
   await db.manager.transaction(async m => {
     await m.update(OrgPromotionCode, { orgId }, { active: false });
     await m.save(promotion);
+    if (applyNow) {
+      const currentPeriod = await m.findOneBy(OrgSubscriptionPeriod, { orgId, tail: true });
+      currentPeriod.promotionCode = promotion.code;
+      currentPeriod.promotionUnitPrice = promotion.promotionUnitPrice;
+      m.save(currentPeriod);
+    }
   });
 
   res.json();
