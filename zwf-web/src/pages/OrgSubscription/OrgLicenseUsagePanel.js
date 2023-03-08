@@ -2,7 +2,7 @@ import { Card, Button, Modal, Space, Typography, Tag, List, Tooltip, Row, Col } 
 import React from 'react';
 
 import { Loading } from 'components/Loading';
-import { CloseCircleFilled, CloseOutlined, LeftOutlined, PlusOutlined, QuestionCircleOutlined, RightOutlined } from '@ant-design/icons';
+import { ClockCircleFilled, ClockCircleOutlined, CloseCircleFilled, CloseOutlined, LeftOutlined, PlusOutlined, QuestionCircleOutlined, RightOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
@@ -110,7 +110,7 @@ export const OrgLicenseUsagePanel = () => {
         <Col flex="auto">
           <ProCard gutter={[20, 20]} ghost direction='column'>
             <ProCard title="Billing period">
-              {moment(period.periodFrom).format('MMM DD YYYY')} - {moment(period.periodTo).format('MMM DD YYYY')} ({period.periodDays} days)
+              <ClockCircleOutlined/> {moment(period.periodFrom).format('MMM DD YYYY')} - <ClockCircleOutlined/> {moment(period.periodTo).format('MMM DD YYYY')} ({period.periodDays} days)
             </ProCard>
             <ProCard title="Payment">
               {period.type === 'trial' ? '14 Day Free Trial' :
