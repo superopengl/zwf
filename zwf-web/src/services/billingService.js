@@ -1,16 +1,21 @@
+import { from, tap } from 'rxjs';
 import { httpGet$, httpGet, request } from './http';
 
-export async function downloadReceipt(paymentId) {
-  if(!paymentId) {
+export function downloadReceipt$(paymentId) {
+  if (!paymentId) {
     throw new Error('paymentId is null');
   }
   const path = `/subscription/receipt/${paymentId}`;
-  const data = await request('GET', path, null, null, 'blob');
-  const fileUrl = URL.createObjectURL(data);
-  window.open(fileUrl);
+  return from(request('GET', path, null, null, 'blob'))
+    .pipe(
+      tap(data => {
+        const fileUrl = URL.createObjectURL(data);
+        window.open(fileUrl);
+      })
+    );
 }
 
-export function listMySubscriptions$() {
+export function listMyInvoices$() {
   return httpGet$(`/subscription`);
 }
 

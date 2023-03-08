@@ -23,7 +23,7 @@ function getVarBag(receipt: OrgSubscriptionPeriodHistoryInformation): {[key: str
   const subscriptionPrice = +receipt.payable || 0;
   return {
     receiptNumber: receipt.receiptNumber,
-    date: moment(receipt.issuedAt).format('D MMM YYYY'),
+    date: moment(receipt.checkoutDate).format('D MMM YYYY'),
     subscriptionDescription: getSubscriptionDescription(receipt),
     subscriptionPrice: subscriptionPrice.toFixed(2),
     paymentMethod: getPaymentMethodName(receipt.cardLast4),

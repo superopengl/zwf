@@ -54,7 +54,7 @@ export const OrgPeriodUsageChart = React.memo((props) => {
     let userCounter = 0;
     return list.map(x => ({
       user: getUserDisplayName(x.email, x.givenName, x.surname) || `Deleted user ${++userCounter}`,
-      usage: [moment(x.ticketFrom).valueOf(), moment(x.ticketTo).valueOf()],
+      usage: [moment(x.ticketFrom).startOf('day').valueOf(), moment(x.ticketTo).endOf('day').valueOf()],
       raw: x,
     }))
   }
@@ -76,8 +76,8 @@ export const OrgPeriodUsageChart = React.memo((props) => {
     yField: 'user',
     legend: false,
     xAxis: {
-      min: moment(periodFrom).valueOf(),
-      max: moment(periodTo).valueOf(),
+      min: moment(periodFrom).startOf('day').valueOf(),
+      max: moment(periodTo).endOf('day').valueOf(),
       label: {
         formatter: (text, item, index) => {
           return moment(text, 'x').format('MMM DD YYYY')

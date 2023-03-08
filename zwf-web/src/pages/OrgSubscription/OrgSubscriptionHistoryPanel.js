@@ -3,17 +3,17 @@ import React from 'react';
 
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
-import { downloadReceipt } from 'services/billingService';
+import { downloadReceipt$ } from 'services/billingService';
 import MoneyAmount from 'components/MoneyAmount';
 import { finalize } from 'rxjs/operators';
-import { listMySubscriptions$ } from 'services/billingService';
+import { listMyInvoices$ } from 'services/billingService';
 
 export const OrgSubscriptionHistoryPanel = () => {
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    const sub$ = listMySubscriptions$().pipe(
+    const sub$ = listMyInvoices$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(data => setList(data));
 
@@ -22,25 +22,11 @@ export const OrgSubscriptionHistoryPanel = () => {
     }
   }, []);
 
-  const handleReceipt = async (paymentId) => {
-    await downloadReceipt(paymentId);
+  const handleDownloadInvoice = (paymentId) => {
+    downloadReceipt$(paymentId).subscribe();
   }
 
   const columns = [
-    {
-      title: 'Type',
-      align: 'left',
-      render: (value, item) => {
-        return item.type === 'trial' ? 'Trial' : 'Monthly';
-      }
-    },
-    {
-      title: 'Days',
-      align: 'center',
-      render: (value, item) => {
-        return item.periodDays;
-      }
-    },
     {
       title: 'Period',
       align: 'left',
@@ -51,37 +37,46 @@ export const OrgSubscriptionHistoryPanel = () => {
           <TimeAgo value={item.periodTo} showAgo={false} accurate={false} />
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {item.latest && <Tag>current</Tag>}
+          {item.tail && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
       }
     },
     {
+      title: 'Type',
+      align: 'left',
+      render: (value, item) => {
+        return item.type === 'trial' ? 'Free Trial' : 'Monthly';
+      }
+    },
+    {
+      title: 'Paid at',
+      align: 'left',
+      render: (value, item) => {
+        return <TimeAgo value={item.checkoutDate} showAgo={false} accurate={false} />
+      }
+    },
+    {
+      title: 'Days',
+      align: 'right',
+      render: (value, item) => {
+        return item.checkoutDate ? item.periodDays : null;
+      }
+    },
+    {
+      title: 'Amount',
+      align: 'right',
+      render: (value, item) => {
+        return item.checkoutDate ? <MoneyAmount value={item.payable} /> : null;
+      }
+    },
+
+    {
       title: 'Billing',
       align: 'center',
-      width: 370,
       render: (value, item) => {
-        if(item.type === 'trial') {
-          return 'Free trial'
-        }
-
-        if(!item.paymentId) {
-          return 'Pending'
-        }
-
-        const { payable, issuedAt, paymentId } = item;
-        return <Row align="middle">
-          <Col span={8}>
-          <MoneyAmount value={payable} />
-          </Col>
-          <Col span={8}>
-            <TimeAgo value={issuedAt} showAgo={false} accurate={false} />
-          </Col>
-          <Col span={8}>
-            <Button type="link" size="small" onClick={() => handleReceipt(paymentId)} icon={<DownloadOutlined />}>Receipt</Button>
-          </Col>
-        </Row>
+        return item.checkoutDate ? <Button type="link" size="small" onClick={() => handleDownloadInvoice(item.paymentId)} icon={<DownloadOutlined />}>Invoice</Button> : null;
       }
     },
   ];

@@ -37,7 +37,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     payment.id = uuidv4();
     payment.orgId = orgId;
     payment.periodId = periodId;
-    payment.paidAt = getUtcNow();
+    payment.checkoutDate = getUtcNow();
     payment.amount = amount;
     payment.payable = payable;
     payment.orgPaymentMethodId = paymentMethodId;
@@ -46,7 +46,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     payment.rawResponse = stripeRawResponse;
 
     period.paymentId = payment.id;
-    period.checkoutDate = payment.paidAt;
+    period.checkoutDate = payment.checkoutDate;
 
     await m.save([payment, period]);
 
