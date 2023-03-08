@@ -1,11 +1,11 @@
 import { from, tap } from 'rxjs';
 import { httpGet$, httpGet, request } from './http';
 
-export function downloadReceipt$(paymentId) {
+export function downloadInvoice$(paymentId) {
   if (!paymentId) {
     throw new Error('paymentId is null');
   }
-  const path = `/subscription/receipt/${paymentId}`;
+  const path = `/subscription/invoice/${paymentId}`;
   return from(request('GET', path, null, null, 'blob'))
     .pipe(
       tap(data => {

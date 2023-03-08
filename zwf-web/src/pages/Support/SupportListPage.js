@@ -283,7 +283,7 @@ const SupportListPage = () => {
     <PageHeaderContainer
       loading={loading}
       ghost={true}
-      title='Users & Supports'
+      title='Users & Support'
       extra={[
         <Input.Search
           key="search"

@@ -23,7 +23,7 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
       'p.amount as amount',
-      `to_char(p."checkoutDate", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
+      `to_char(p."checkoutDate", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "invoiceNumber"`,
       'p."checkoutDate" as "checkoutDate"',
       'p.payable as payable',
       'org."ownerEmail" as email',
@@ -66,7 +66,7 @@ export class OrgSubscriptionPeriodHistoryInformation {
   amount: number;
 
   @ViewColumn()
-  receiptNumber: string;
+  invoiceNumber: string;
 
   @ViewColumn()
   checkoutDate: Date;
