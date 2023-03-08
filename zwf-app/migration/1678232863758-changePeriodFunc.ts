@@ -9,7 +9,7 @@ export class changePeriodFunc1678232863758 implements MigrationInterface {
     
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`
-CREATE OR REPLACE FUNCTION zwf.shift_org_subscription_history(org_id uuid, offset_days integer)
+CREATE OR REPLACE FUNCTION zwf.shift_org_subscription_history(org_id uuid)
 RETURNS void
 LANGUAGE plpgsql
 AS $$
@@ -22,7 +22,7 @@ begin
     raise exception 'org_id cannot be null';
     end if;
 
-    time_offset := make_interval(days => offset_days);
+    time_offset := make_interval(months => -1);
         
     update
     zwf.org_subscription_period
