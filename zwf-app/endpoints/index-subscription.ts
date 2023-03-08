@@ -18,40 +18,46 @@ import { Org } from '../src/entity/Org';
 const JOB_NAME = 'daily-subscription-check';
 
 async function chargeLastSubscriptionPriodIfDue() {
-  let duePeriod: OrgSubscriptionPeriod;
+  const duePeriods = await db.manager.getRepository(OrgSubscriptionPeriod)
+    .createQueryBuilder()
+    .where(`tail IS TRUE`)
+    .andWhere('"periodTo"::date <= NOW()::date')
+    .getMany();
+
+  if (!duePeriods.length) {
+    console.log('No due period found');
+    return;
+  }
+
   let counter = 0;
-  do {
+  for (const duePeriod of duePeriods) {
     counter++;
     await db.transaction(async m => {
-      duePeriod = await m.getRepository(OrgSubscriptionPeriod)
-        .createQueryBuilder()
-        .where(`"checkoutDate" IS NULL`)
-        .andWhere('"periodTo"::date <= NOW()::date')
-        .getOne();
+      logProgress('Renew period'.bgCyan, counter, duePeriod);
 
-      if (!duePeriod) {
-        return;
-      }
-      logProgress('Handling payment'.bgCyan, counter, duePeriod);
+      try {
+        const canRenew = duePeriod.type === 'trial' || await checkoutDueSubscriptionPeriod(m, duePeriod);
 
-      const checkoutSuccess = await checkoutDueSubscriptionPeriod(m, duePeriod);
-
-      if (checkoutSuccess) {
-        const newPeriod = await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
-        logProgress('Created new period'.bgGreen, counter, newPeriod);
-      } else {
-        logProgress('Failed to pay. Suspending org'.bgRed, counter, duePeriod);
-        await suspendOrg(m, duePeriod);
+        if (canRenew) {
+          const newPeriod = await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
+          logProgress('Created new period'.bgGreen, counter, newPeriod);
+        } else {
+          logProgress('Failed to renew. Suspending org'.bgRed, counter, duePeriod);
+          await suspendOrg(m, duePeriod);
+        }
+      } catch (err) {
+        logProgress(err.message.red, counter, duePeriod);
       }
     });
-  } while (duePeriod)
+  }
 }
 
 function logProgress(message: string, index: number, period: OrgSubscriptionPeriod) {
+  const days = period.periodDays ?? moment(period.periodTo).diff(moment(period.periodFrom), 'days');
   const msg = `
 [${index}] ${message} 
-    periodId: ${period.id}    orgId ${period.orgId}
-    period  : ${moment(period.periodFrom).toISOString()} - ${moment(period.periodTo).toISOString()} (${period.periodDays} days)
+    periodId: ${period.id} (seq ${period.seq})   orgId ${period.orgId}
+    period  : ${moment(period.periodFrom).toISOString()} - ${moment(period.periodTo).toISOString()} (${days} days)
 `;
   console.log(msg);
 }
@@ -81,7 +87,6 @@ async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, prev
   newPeriod.periodTo = moment(newPeriod.periodFrom).add(1, 'month').add(-1, 'day').toDate();
   newPeriod.seq = seq + 1;
   newPeriod.unitFullPrice = getCurrentUnitPricePerTicket();
-  await m.save(newPeriod);
 
   // 2. Issue new tickets for users
   const users = await m.getRepository(User).find({
@@ -103,11 +108,13 @@ async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, prev
     return ticket;
   });
 
-  await m.save([...newTickets]);
+  previousPeriod.tail = false;
+  await m.update(OrgSubscriptionPeriod, { id: previousPeriod.id, tail: true }, { tail: false });
+  await m.save([newPeriod, ...newTickets]);
 
   // 3. Enable users and org if they are suspended.
-  await m.update(User, { orgId }, { suspended: false });
-  await m.update(Org, { id: orgId }, { suspended: false });
+  await m.update(User, { orgId, suspended: true }, { suspended: false });
+  await m.update(Org, { id: orgId, suspended: true }, { suspended: false });
 
   return newPeriod;
 }

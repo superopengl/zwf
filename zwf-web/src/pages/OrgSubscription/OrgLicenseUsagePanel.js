@@ -2,7 +2,7 @@ import { Card, Button, Modal, Space, Typography, Tag, List, Tooltip, Row, Col } 
 import React from 'react';
 
 import { Loading } from 'components/Loading';
-import { CloseCircleFilled, CloseOutlined, LeftOutlined, PlusOutlined, RightOutlined } from '@ant-design/icons';
+import { CloseCircleFilled, CloseOutlined, LeftOutlined, PlusOutlined, QuestionCircleOutlined, RightOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
@@ -32,6 +32,7 @@ export const OrgLicenseUsagePanel = () => {
   const [period, setPeriod] = React.useState();
   const [hasPrevious, setHasPrevious] = React.useState(true);
   const [hasNext, setHasNext] = React.useState(true);
+  const [helpModal, contextHolder] = Modal.useModal();
 
   React.useEffect(() => {
     const sub$ = getCurrentPeriod();
@@ -47,6 +48,7 @@ export const OrgLicenseUsagePanel = () => {
       .subscribe((period) => {
         setPeriod(period)
         setHasNext(false);
+        setHasPrevious(period.type !== 'trial');
       })
     return sub$;
   }
@@ -57,18 +59,36 @@ export const OrgLicenseUsagePanel = () => {
       .pipe(
         finalize(() => setLoading(false))
       )
-      .subscribe(siblingPeriodId => {
-        const hasSibling = !!siblingPeriodId;
+      .subscribe(siblingPeriod => {
+        const hasSibling = !!siblingPeriod;
         if (direction === 'previous') {
           setHasPrevious(hasSibling);
+          if (hasSibling) {
+            setHasNext(true);
+          }
         } else if (direction === 'next') {
           setHasNext(hasSibling)
+          if (hasSibling) {
+            setHasPrevious(true);
+          }
         }
         if (hasSibling) {
-          setPeriod(siblingPeriodId);
+          setPeriod(siblingPeriod);
+        }
+        if(siblingPeriod?.type === 'trial') {
+          setHasPrevious(false);
         }
       })
     return sub$;
+  }
+
+  const handleShowHelp = () => {
+    helpModal.info({
+      title: 'How the payment amount is calculated based on the usage',
+      closable: true,
+      maskClosable: true,
+
+    })
   }
 
   if (!period) {
@@ -77,12 +97,11 @@ export const OrgLicenseUsagePanel = () => {
 
   return (
     <Container>
-      <Row wrap={false} style={{ width: '100%' }} align="middle" gutter={20}>
-        <Col>
+      <Row wrap={false} style={{ width: '100%' }} align="start" gutter={20}>
+        <Col style={{paddingTop: 10}}>
           <Tooltip title={hasPrevious ? 'Previous billing period' : 'No more previous period'}>
-            <Button shape="circle"
-              type="primary"
-              ghost
+            <Button 
+              type="text"
               onClick={() => getSiblingPeriod('previous')} icon={<LeftOutlined />} size="large"
               disabled={!hasPrevious}
             />
@@ -94,27 +113,29 @@ export const OrgLicenseUsagePanel = () => {
               {moment(period.periodFrom).format('MMM DD YYYY')} - {moment(period.periodTo).format('MMM DD YYYY')} ({period.periodDays} days)
             </ProCard>
             <ProCard title="Payment">
-              {period.type !== 'trial' ? '14 Day Free Trial' :
+              {period.type === 'trial' ? '14 Day Free Trial' :
                 !period.payment ? <>Pending Payment. The subsequent automatic deduction is scheduled for <Text strong>{moment(period.periodTo).format('MMM DD YYYY')}</Text>. Please kindly ensure that the primary payment method is valid and has enough balance.</> : <>
                   <DebugJsonPanel value={period.payment} />
-              </>}
+                </>}
+            </ProCard>
+            <ProCard title="Usage" extra={<Tooltip title="How the payment amount is calculated based on the usage">
+              <Button icon={<QuestionCircleOutlined />} type="link" onClick={handleShowHelp} />
+            </Tooltip>}>
+              <OrgPeriodUsageChart period={period} />
+            </ProCard>
           </ProCard>
-          <ProCard title="Usage">
-            <OrgPeriodUsageChart period={period} />
-          </ProCard>
-        </ProCard>
-      </Col>
-      <Col>
-        <Tooltip title={hasNext ? 'Next billing period' : 'No more next period'}>
-          <Button shape="circle"
-            type="primary"
-            ghost
-            onClick={() => getSiblingPeriod('next')} icon={<RightOutlined />} size="large"
-            disabled={!hasNext}
-          />
-        </Tooltip>
-      </Col>
-    </Row>
+        </Col>
+        <Col style={{paddingTop: 10}}>
+          <Tooltip title={hasNext ? 'Next billing period' : 'No more next period'}>
+            <Button 
+              type="text"
+              onClick={() => getSiblingPeriod('next')} icon={<RightOutlined />} size="large"
+              disabled={!hasNext}
+            />
+          </Tooltip>
+        </Col>
+      </Row>
+      {contextHolder}
     </Container >
   );
 };
