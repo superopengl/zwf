@@ -19,7 +19,7 @@ export class OrgSubscriptionPeriod {
   @Column()
   periodTo: Date;
 
-  @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `EXTRACT(DAY FROM "periodTo"::timestamp - "periodFrom"::timestamp) + 1` })
+  @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `DATE("periodTo") - DATE("periodFrom") + 1` })
   periodDays: number;
 
   @Column({ nullable: true })
