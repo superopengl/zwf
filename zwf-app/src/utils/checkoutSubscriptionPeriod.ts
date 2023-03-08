@@ -9,7 +9,6 @@ import { sendPaymentEmail } from '../../endpoints/helpers/sendPaymentEmail';
 import { terminatePlan } from './terminatePlan';
 import { OrgSubscriptionPeriod } from '../entity/OrgSubscriptionPeriod';
 import { v4 as uuidv4 } from 'uuid';
-import { getOrgActivePromotionCode } from './getOrgActivePromotionCode';
 import { assert } from './assert';
 
 export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSubscriptionPeriod) {
@@ -19,12 +18,6 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
   console.log(`Charging subscription period ${periodId} for org ${orgId}`);
 
   try {
-
-    const alivePromotionCode = await getOrgActivePromotionCode(m, orgId);
-    period.promotionCode = alivePromotionCode?.code;
-    period.promotionUnitPrice = alivePromotionCode?.promotionUnitPrice;
-    await m.save(period); // Have to save before calculating amout from view.
-
     const billingInfo = await calcBillingAmountForPeriod(m, period);
 
     const { amount, payable, payableDays, paymentMethodId, stripePaymentMethodId, cardLast4 } = billingInfo;
