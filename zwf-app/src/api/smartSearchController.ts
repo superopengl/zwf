@@ -13,7 +13,7 @@ import { DocTemplate } from '../entity/DocTemplate';
 import { db } from '../db';
 
 export const smartSearchTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { text } = req.body;
   assert(text, 400);
   const orgId = getOrgIdFromReq(req);
@@ -40,7 +40,7 @@ export const smartSearchTask = handlerWrapper(async (req, res) => {
 });
 
 export const smartSearchTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { text } = req.body;
   assert(text, 400);
   const orgId = getOrgIdFromReq(req);
@@ -65,7 +65,7 @@ export const smartSearchTaskTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const smartSearchDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { text } = req.body;
   assert(text, 400);
   const orgId = getOrgIdFromReq(req);
@@ -90,7 +90,7 @@ export const smartSearchDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const smartSearchClient = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { text } = req.body;
   assert(text, 400);
   const orgId = getOrgIdFromReq(req);

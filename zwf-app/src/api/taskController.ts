@@ -38,7 +38,7 @@ import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client');
+  assertRole(req,[ 'admin', 'client']);
   const { id, taskTemplateId, clientEmail, taskName } = req.body;
   const creatorId = getUserIdFromReq(req);
 
@@ -50,7 +50,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
 const TASK_CONTENT_EVENT_TYPE = 'task.content';
 
 export const subscribeTaskContent = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'client', 'guest');
+  // assertRole(req,[ 'admin', 'agent', 'client', 'guest']);
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   const { id } = req.params;
@@ -82,7 +82,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
 export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assert(getUserIdFromReq(req), 404);
 
-  assertRole(req, 'system', 'admin', 'client', 'agent');
+  assertRole(req,[ 'system', 'admin', 'client', 'agent']);
   const { fileId } = req.params;
   const role = getRoleFromReq(req);
   const isClient = role === Role.Client;
@@ -110,7 +110,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
 });
 
 export const signTaskFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req,[ 'client']);
   const { fileId } = req.params;
 
   const file = await db.getRepository(File).findOne({
@@ -150,7 +150,7 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
 });
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { fields } = req.body;
   const { id } = req.params;
 
@@ -190,7 +190,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
 });
 
 export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { fields } = req.body;
   const { id } = req.params;
   const role = getRoleFromReq(req);
@@ -251,7 +251,7 @@ const defaultSearch: ISearchTaskQuery = {
 };
 
 export const searchTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
   const { text, status, page, assignee, orderDirection, orderField, dueDateRange, taskTemplateId, portfolioId, clientId } = option;
@@ -309,7 +309,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
 });
 
 export const listMyTasks = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req,[ 'client']);
   const userId = getUserIdFromReq(req);
 
   const list = await db.getRepository(TaskInformation).find({
@@ -334,7 +334,7 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
 
 
 export const getTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { id } = req.params;
   const role = getRoleFromReq(req);
 
@@ -382,7 +382,7 @@ export const getTask = handlerWrapper(async (req, res) => {
 });
 
 export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { file } = (req as any).files;
   assert(file, 400, 'No file to upload');
   const { name, data, mimetype, md5 } = file;
@@ -428,7 +428,7 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
 });
 
 export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { deepLinkId } = req.params;
   const role = getRoleFromReq(req);
   let query: any = { deepLinkId };
@@ -463,7 +463,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
 });
 
 export const updateTaskTags = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const { tags: tagIds } = req.body;
 
@@ -483,7 +483,7 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
 });
 
 export const updateTaskName = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const { name } = req.body;
   const orgId = getOrgIdFromReq(req);
@@ -497,7 +497,7 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
 });
 
 export const assignTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const { agentId } = req.body;
   const orgId = getOrgIdFromReq(req);
@@ -512,7 +512,7 @@ export const assignTask = handlerWrapper(async (req, res) => {
 });
 
 export const changeTaskStatus = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id, status } = req.params;
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
@@ -531,7 +531,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
 });
 
 export const notifyTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
@@ -562,7 +562,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 });
 
 export const getTaskLog = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { id } = req.params;
   let query: any = { taskId: id, action: Not(TaskActionType.Chat) };
   const role = getRoleFromReq(req);

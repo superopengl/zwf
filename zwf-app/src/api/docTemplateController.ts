@@ -25,7 +25,7 @@ function extractVariables(html: string) {
 }
 
 export const saveDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
 
   const { id, name, description, html } = req.body;
   assert(name, 400, 'name is empty');
@@ -45,7 +45,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const listDocTemplates = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
 
   const list = await db.getRepository(DocTemplate).find({
@@ -69,7 +69,7 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
 });
 
 export const getDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client', 'agent');
+  assertRole(req,[ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
   const docTemplate = await db.getRepository(DocTemplate).findOne({ where: query });
@@ -79,7 +79,7 @@ export const getDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const deleteDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   await db.getRepository(DocTemplate).delete({ id, orgId });
@@ -88,7 +88,7 @@ export const deleteDocTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const renameDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { name } = req.body;
   assert(name, 400, 'name is empty');
   const { id } = req.params;
@@ -112,7 +112,7 @@ async function getUniqueCopyName(m: EntityManager, orgId: string, preferredName:
 }
 
 export const cloneDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const { name } = req.body;
   const preferredName = name?.trim();

@@ -4,7 +4,7 @@ import { getOrgIdFromReq } from './getOrgIdFromReq';
 import { getRoleFromReq } from './getRoleFromReq';
 
 
-export function assertRole(req, ...roles) {
+export function assertRole(req, roles, options = { ignoreSuspendCheck: false }) {
   assert(req?.user, 401, 'Session timeout');
   if (roles && roles.length) {
     const reqRole = getRoleFromReq(req);
@@ -15,7 +15,7 @@ export function assertRole(req, ...roles) {
         case Role.Admin:
         case Role.Agent:
           // Org members must have orgId.
-          canAccess = reqRole === allowedRole && !!reqOrgId;
+          canAccess = reqRole === allowedRole && !!reqOrgId && (options.ignoreSuspendCheck || !req.user.suspended);
           break;
         case Role.System:
         case Role.Client:

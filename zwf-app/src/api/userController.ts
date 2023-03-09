@@ -24,7 +24,7 @@ import { searchOrgClients } from '../utils/searchOrgClients';
 import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 
 export const changePassword = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
+  assertRole(req,[ 'admin', 'agent', 'member']);
   const { password, newPassword } = req.body;
   validatePasswordStrength(newPassword);
 
@@ -43,7 +43,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
 });
 
 export const getUserBrief = handlerWrapper(async (req, res) => {
-  assertRole(req, Role.System, Role.Admin, Role.Agent, Role.Client);
+  assertRole(req,[ Role.System, Role.Admin, Role.Agent, Role.Client]);
   const { id } = req.params;
 
   const data = await db.getRepository(UserInformation).findOne({
@@ -62,7 +62,7 @@ export const getUserBrief = handlerWrapper(async (req, res) => {
 });
 
 export const saveProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, Role.System, Role.Admin, Role.Agent, Role.Client);
+  assertRole(req,[ Role.System, Role.Admin, Role.Agent, Role.Client]);
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
   const repo = db.getRepository(User);
@@ -118,14 +118,14 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 });
 
 export const listOrgMembers = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'agent');
+  assertRole(req,[ 'system', 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
   const list = await db.getRepository(OrgMemberInformation).find({ where: { orgId } });
   res.json(list);
 });
 
 export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'agent');
+  assertRole(req,[ 'system', 'admin', 'agent']);
 
   const orgId = getOrgIdFromReq(req);
 
@@ -153,7 +153,7 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
 const BUILTIN_SYSTEM_ADMIN_EMIAL_HASH = computeEmailHash('admin@zeeworkflow.com');
 
 export const listAllUsers = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
 
   const list = await db.getRepository(UserProfile)
     .createQueryBuilder('p')
@@ -170,7 +170,7 @@ export const listAllUsers = handlerWrapper(async (req, res) => {
 });
 
 export const deleteUser = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req,[ 'system', 'admin']);
   const { id } = req.params;
 
   const repo = db.getRepository(User);
@@ -207,7 +207,7 @@ export const deleteUser = handlerWrapper(async (req, res) => {
 });
 
 export const setUserTags = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const { id } = req.params;
 
   const { tags: tagIds } = req.body;
@@ -227,7 +227,7 @@ export const setUserTags = handlerWrapper(async (req, res) => {
 });
 
 export const setUserRole = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   const { role } = req.body;
@@ -245,7 +245,7 @@ export const setUserRole = handlerWrapper(async (req, res) => {
 });
 
 export const setUserPassword = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { id } = req.params;
   const { password } = req.body;
   assert(password, 404, 'Invalid password');

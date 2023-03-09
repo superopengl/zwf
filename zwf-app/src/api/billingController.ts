@@ -27,7 +27,7 @@ async function getOrgPaymentHistory(orgId) {
 }
 
 export const listMyInvoices = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
 
   const list = await getOrgPaymentHistory(orgId);
@@ -36,7 +36,7 @@ export const listMyInvoices = handlerWrapper(async (req, res) => {
 });
 
 export const getCurrentPeriod = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
 
   const currentPeriod = await db.getRepository(OrgSubscriptionPeriod).findOne({
@@ -53,7 +53,7 @@ export const getCurrentPeriod = handlerWrapper(async (req, res) => {
 });
 
 export const getSiblingPeriod = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const { periodId, direction } = req.params;
 
@@ -100,7 +100,7 @@ export const getSiblingPeriod = handlerWrapper(async (req, res) => {
 });
 
 export const getPeriodUsage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
 
   const { periodId } = req.params;
@@ -126,7 +126,7 @@ export const getPeriodUsage = handlerWrapper(async (req, res) => {
 });
 
 export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { id } = req.params;
 
   const list = await getOrgPaymentHistory(id);
@@ -135,7 +135,7 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
 });
 
 export const downloadInvoice = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const { paymentId } = req.params;
   const orgId = getOrgIdFromReq(req);
 

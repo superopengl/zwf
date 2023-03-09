@@ -22,14 +22,14 @@ function generatePromotionCode() {
 }
 
 export const listPromotionCode = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { orgId } = req.params;
   const list = await db.getRepository(OrgPromotionCode).findBy({ orgId });
   res.json(list);
 });
 
 export const savePromotion = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { code, promotionUnitPrice, endingAt, orgId, applyNow } = req.body;
   assert(0 <= promotionUnitPrice, 400, `promotionUnitPrice cannot be minus number`);
   assert(endingAt && moment(endingAt).isAfter(), 400, 'endingAt must be a future date');
@@ -56,7 +56,7 @@ export const savePromotion = handlerWrapper(async (req, res) => {
 });
 
 export const newPromotionCode = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
 
   let code;
   let existing;

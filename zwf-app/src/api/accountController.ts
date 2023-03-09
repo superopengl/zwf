@@ -7,7 +7,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 
 export const getAccount = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { id } = req.params;
   const result = null //await getAccountForOrg(id);
 

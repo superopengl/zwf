@@ -51,7 +51,7 @@ export const getPublishedResourcePage = handlerWrapper(async (req, res) => {
 });
 
 export const listAllResourcePages = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const list = await db.getRepository(ResourcePage).find({
     order: {
       createdAt: 'DESC'
@@ -74,7 +74,7 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
 });
 
 export const saveResourcePage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { id, html } = req.body;
 
   let page: ResourcePage = null;
@@ -96,7 +96,7 @@ export const saveResourcePage = handlerWrapper(async (req, res) => {
 });
 
 export const getEditResourcePage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { id } = req.params;
   const page = await db.getRepository(ResourcePage).findOne({ where: { id } });
   assert(page, 404);
@@ -105,7 +105,7 @@ export const getEditResourcePage = handlerWrapper(async (req, res) => {
 });
 
 export const deleteResourcePage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { id } = req.params;
   await db.getRepository(ResourcePage).delete(id);
 

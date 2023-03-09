@@ -92,7 +92,7 @@ async function listMessageForAdmin(pagenation, unreadOnly) {
 }
 
 export const listMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { user: { id, role } } = req as any;
   const { page, size, unreadOnly } = req.body;
   assert(page >= 0 && size > 0, 400, 'Invalid page and size parameter');
@@ -121,7 +121,7 @@ export const listMessage = handlerWrapper(async (req, res) => {
 });
 
 export const getMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { id } = req.params;
   const { user: { id: userId, role } } = req as any;
   const repo = db.getRepository(Message);
@@ -156,7 +156,7 @@ export const getMessage = handlerWrapper(async (req, res) => {
 });
 
 export const getMessageUnreadCount = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { user: { role, id } } = req as any;
 
   const info = await db.manager
