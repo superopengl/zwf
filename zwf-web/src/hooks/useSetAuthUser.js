@@ -23,7 +23,7 @@ export const useSetAuthUser = () => {
             'Account is suspended',
             <>
               <Paragraph>Your account and your organization's account have been suspended. </Paragraph>
-              <Paragraph>Kindly contact your organization owner, who should have received emails containing guidelines on how to settle the outstanding bill and remove the suspension.</Paragraph>
+              <Paragraph>Please contact your organization's administrators, as they should have received an email containing instructions on how to settle the outstanding bill and reactivate the accounts.</Paragraph>
             </>,
             0
           )
