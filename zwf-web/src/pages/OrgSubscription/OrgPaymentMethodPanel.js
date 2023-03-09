@@ -1,4 +1,4 @@
-import { Card, Button, Modal, Space, Typography, Tag, List, Descriptions, Row } from 'antd';
+import { Card, Button, Modal, Space, Typography, Tag, List, Descriptions, Row, Col } from 'antd';
 import React from 'react';
 
 import { Loading } from 'components/Loading';
@@ -11,6 +11,8 @@ import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import { switchMap } from 'rxjs';
 import { useAddPaymentMethodModal } from 'components/useAddPaymentMethodModal';
+import Visa from "react-pay-icons/lib/Visa";
+import Mastercard from "react-pay-icons/lib/Mastercard";
 
 const { Text, Paragraph } = Typography;
 
@@ -127,18 +129,28 @@ export const OrgPaymentMethodPanel = () => {
             title={<Text strong={item.primary} style={{ fontSize: 18 }}>
               **** **** **** {item.cardLast4}
             </Text>}
-            subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
-            style={{borderColor: item.primary ? '#0FBFC4' : undefined}}
+            // subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
+            style={{ borderColor: item.primary ? '#0FBFC4' : undefined }}
             bordered
             extra={item.primary ? [
+              <Tag key="tag" color="#0FBFC4">Primary</Tag>
             ] : [
               <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,
               <Button key="delete" type="text" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
             ]}
           >
-            <Descriptions colon={false} labelStyle={{ opacity: 0.6 }}>
-              <Descriptions.Item label="Expiry">{item.cardExpiry}</Descriptions.Item>
-            </Descriptions>
+            <Row wrap={false} justify="space-between" align="top">
+              <Col>
+                <Descriptions colon={false}>
+                  <Descriptions.Item label="Expiry">{item.cardExpiry}</Descriptions.Item>
+                </Descriptions>
+              </Col>
+              <Col>
+                {item.cardBrand === 'visa' ? <Visa style={{ marginRight: 8, width: 60 }} /> :
+                  item.cardBrand === 'master' ? <Mastercard style={{ marginRight: 8, width: 60 }} /> :
+                    item.cardBrand}
+              </Col>
+            </Row>
           </ProCard>
         </List.Item>}
       />
