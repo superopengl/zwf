@@ -1,13 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import { Typography, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import OrgProfileForm from './OrgProfileForm';
 import { getAuthUser$ } from 'services/authService';
 import { SupportAffix } from 'components/SupportAffix';
 import HomeFooter from 'components/HomeFooter';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const { Title } = Typography;
 
@@ -31,13 +30,11 @@ const InnerContainer = styled.div`
 
 
 const OrgOnBoardPage = (props) => {
-  const navigate = useNavigate();
-  const { setUser } = React.useContext(GlobalContext);
+  const setAuthUser = useSetAuthUser();
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe((user) => {
-      setUser(user);
-      navigate('/');
+      setAuthUser(user);
     });
   }
 
