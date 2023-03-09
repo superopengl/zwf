@@ -1,6 +1,6 @@
 import { BehaviorSubject, of, Subject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
-import { httpGet, httpGet$, httpPost, httpPost$, httpDelete } from './http';
+import { filter, tap, delay, switchMap } from 'rxjs/operators';
+import { httpGet, httpGet$, httpPost, httpPost$, httpDelete$ } from './http';
 
 export async function changePassword(password, newPassword) {
   return httpPost(`user/change_password`, { password, newPassword });
@@ -14,8 +14,8 @@ export async function listAllUsers() {
   return httpGet(`user`);
 }
 
-export async function deleteUser(id) {
-  return httpDelete(`user/${id}`);
+export function deleteUser$(id) {
+  return httpDelete$(`user/${id}`);
 }
 
 export async function setPasswordForUser(id, password) {

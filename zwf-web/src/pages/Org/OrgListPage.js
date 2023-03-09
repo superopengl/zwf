@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { deleteUser, setUserTags } from 'services/userService';
+import { setUserTags } from 'services/userService';
 import { impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -181,25 +181,6 @@ const OrgListPage = () => {
     // } catch {
     //   setLoading(false);
     // }
-  }
-
-  const handleDelete = async (e, item) => {
-    e.stopPropagation();
-    const { id, email } = item;
-    modal.confirm({
-      title: <>Delete user</>,
-      content: <>Delete user <Text code>{email}</Text>?</>,
-      onOk: async () => {
-        setLoading(true);
-        await deleteUser(id);
-        await searchByQueryInfo(queryInfo);
-      },
-      maskClosable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete it!'
-    });
   }
 
   const handleImpersonante = async (org) => {

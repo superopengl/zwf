@@ -11,7 +11,6 @@ import {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { deleteUser, setUserTags } from 'services/userService';
 import { impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
