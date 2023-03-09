@@ -1,12 +1,10 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, OneToOne, Check } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, OneToOne, Check, Generated } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Payment } from './Payment';
 
 
 @Entity()
-@Check(`0 < "seq"`)
-@Index('idx_orgId_periodTo', ['orgId', 'periodTo'])
-@Index('idx_orgId_seq_unique', ['orgId', 'seq'], { unique: true })
+@Index('idx_orgId_seq', ['orgId', 'seq'])
 @Index('idx_orgId_not_checkedout_unique', ['orgId', 'checkoutDate'], { unique: true, where: '"checkoutDate" IS NULL' })
 @Index('idx_orgId_tail_unique', ['orgId', 'tail'], { unique: true, where: 'tail IS TRUE' })
 export class OrgSubscriptionPeriod {
@@ -23,13 +21,13 @@ export class OrgSubscriptionPeriod {
   periodDays: number;
 
   @Column({ nullable: true })
-  @Index()
   checkoutDate: Date;
 
   @Column('uuid')
   orgId: string;
 
-  @Column('int', {default: 1})
+  @Column()
+  @Generated('increment')
   seq: number;
 
   @Column({ default: 'monthly' })
@@ -43,7 +41,6 @@ export class OrgSubscriptionPeriod {
   payment: Payment;
 
   @Column('uuid', { nullable: true })
-  @Index()
   paymentId: string;
 
   @Column({ nullable: true })
@@ -55,3 +52,4 @@ export class OrgSubscriptionPeriod {
   @Column({ default: true })
   tail: boolean;
 }
+

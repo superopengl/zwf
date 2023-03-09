@@ -86,7 +86,6 @@ async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, prev
   newPeriod.type = 'monthly';
   newPeriod.periodFrom = previousPeriod.periodTo < now ? now : previousPeriod.periodTo;
   newPeriod.periodTo = moment(newPeriod.periodFrom).add(1, 'month').add(-1, 'day').toDate();
-  newPeriod.seq = seq + 1;
   newPeriod.unitFullPrice = getCurrentUnitPricePerTicket();
 
   const alivePromotionCode = await getOrgActivePromotionCode(m, orgId);
