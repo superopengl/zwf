@@ -1127,6 +1127,29 @@ paths:
       responses:
         200:
           description: OK        
+  /subscription/resurge/:code:
+    get:
+      operationId: getOrgResurgingInfo
+      parameters:
+        - name: code
+          in: path
+          type: string
+          format: uuid
+          required: true      
+      responses:
+        200:
+          description: OK          
+    post:
+      operationId: resurgeOrg
+      parameters:
+        - name: code
+          in: path
+          type: string
+          format: uuid
+          required: true      
+      responses:
+        200:
+          description: OK                
   /subscription/period/current:
     get:
       operationId: getCurrentPeriod

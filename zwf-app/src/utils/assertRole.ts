@@ -5,10 +5,11 @@ import { getRoleFromReq } from './getRoleFromReq';
 
 
 export function assertRole(req, roles, options = { ignoreSuspendCheck: false }) {
-  assert(req?.user, 401, 'Session timeout');
-  const beingSuspended = req.user.suspended;
+  const reqRole = getRoleFromReq(req);
+  assert(req?.user || reqRole === Role.Guest, 401, 'Session timeout');
+
+  const beingSuspended = req.user?.suspended;
   if (roles && roles.length) {
-    const reqRole = getRoleFromReq(req);
     const reqOrgId = getOrgIdFromReq(req);
     let canAccess = false;
     for (const allowedRole of roles) {

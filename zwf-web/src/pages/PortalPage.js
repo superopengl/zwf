@@ -66,8 +66,9 @@ export const PortalPage = () => {
   const [openModal, contextHolder] = useOrgRegisterModal();
 
 
-  const { role } = context;
+  const { role, user } = context;
   const isGuest = role === 'guest';
+  const beingSuspended = user?.suspended;
   const isWideScreen = screens.xxl || screens.xl || screens.lg;
 
   const handleMenuChange = (path) => {
@@ -124,7 +125,7 @@ export const PortalPage = () => {
           {isGuest && ((screens.xxl || screens.xl || screens.lg || screens.md || screens.sm)) && <Col>
             <Button type="primary" onClick={handleShowRegisterModal}>Try it Now</Button>
           </Col>}
-          {!isGuest && <Col>
+          {!isGuest && !beingSuspended && <Col>
             <Link to="/task">
               <Button type="primary">Go to App</Button>
             </Link>
@@ -155,7 +156,7 @@ export const PortalPage = () => {
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
           {isGuest && <Button type="primary" block size="large" onClick={handleShowRegisterModal}>Try it Now</Button>}
           {isGuest && <Button type="link" block size="large" onClick={() => handleMenuChange('/login')}>Login</Button>}
-          {!isGuest && <Button type="primary" block size="large" onClick={() => handleMenuChange('/task')}>Go to App</Button>}
+          {!isGuest && !beingSuspended && <Button type="primary" block size="large" onClick={() => handleMenuChange('/task')}>Go to App</Button>}
         </Space>
       }
     >

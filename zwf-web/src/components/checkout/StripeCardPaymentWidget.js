@@ -10,7 +10,7 @@ import { getPaymentMethodSecret } from 'services/orgPaymentMethodService';
 
 const StripeCardPaymentForm = (props) => {
 
-  const { onOk, onLoading, buttonText } = props;
+  const { onOk, onLoading, buttonText, onClientSecret } = props;
   const [loading, setLoading] = React.useState(false);
   const [cardNumberComplete, setCardNumberComplete] = React.useState(false);
   const [cardExpiryComplete, setCardExpiryComplete] = React.useState(false);
@@ -24,11 +24,6 @@ const StripeCardPaymentForm = (props) => {
 
   const isInfoComplete = stripe && elements && cardNumberComplete && cardExpiryComplete && cardCvcComplete;
 
-  const getClientSecret = async () => {
-    const result = await getPaymentMethodSecret();
-    return result.clientSecret;
-  }
-
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -40,7 +35,8 @@ const StripeCardPaymentForm = (props) => {
       setLoading(true);
       const cardNumberElement = elements.getElement('cardNumber');
 
-      const clientSecret = await getClientSecret();
+      debugger;
+      const clientSecret = await onClientSecret();
 
       // Use your card Element with other Stripe.js APIs
       const rawResponse = await stripe.confirmCardSetup(clientSecret,
@@ -138,13 +134,14 @@ const StripeCardPaymentForm = (props) => {
 }
 
 const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeCardPaymentForm onOk={props.onOk} onLoading={props.onLoading} buttonText={props.buttonText} />
+  <StripeCardPaymentForm onOk={props.onOk} onLoading={props.onLoading} buttonText={props.buttonText} onClientSecret={props.onClientSecret} />
 </Elements>)
 
 
 StripeCardPaymentWidget.propTypes = {
   onOk: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
+  onClientSecret: PropTypes.func.isRequired,
   buttonText: PropTypes.string,
 };
 
