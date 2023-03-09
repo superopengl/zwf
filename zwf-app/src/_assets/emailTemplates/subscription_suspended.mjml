@@ -1,0 +1,43 @@
+<mjml>
+  <mj-head>
+    <mj-title>Organization accounts have been suspended</mj-title>
+    <mj-include path="./emailTemplateHeader.mjml" />
+  </mj-head>
+  <mj-body css-class="content">
+    <mj-include path="./emailTemplateTitle.mjml" />
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, we apologize for the inconvenience, but your account has been suspended.</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          Your organization's accounts have been suspended because of either an unpaid outstanding bill or an issue with the primary payment method specified in ZeeWorkflow.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          To ensure uninterrupted business operations, kindly click on the button below to settle the outstanding amount and reactivate your subscription.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-button align="left" background-color="#14C9C9" color="#FFFFFF" padding="20px 0" inner-padding="16px 36px" border-radius="4px" font-size="18px" href="{{url}}">
+          Reactivate
+        </mj-button>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
+        </mj-text>
+      </mj-column>      
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          If you have any queries, please don't hesitate to get in touch with us.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./emailTemplateFooter.mjml" />
+  </mj-body>
+</mjml>
