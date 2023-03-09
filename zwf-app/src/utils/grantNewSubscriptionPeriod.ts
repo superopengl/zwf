@@ -54,7 +54,7 @@ export async function grantNewSubscriptionPeriod(m: EntityManager, previousPerio
 
   // 3. Enable users and org if they are suspended.
   await m.update(User, { orgId, suspended: true }, { suspended: false });
-  await m.update(Org, { id: orgId, suspended: true }, { suspended: false, resurgingCode: uuidv4() });
+  await m.update(Org, { id: orgId, suspended: true }, { suspended: false, resurgingCode: null });
 
   return newPeriod;
 }
