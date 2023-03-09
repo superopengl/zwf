@@ -125,15 +125,6 @@ export const getPeriodUsage = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'system']);
-  const { id } = req.params;
-
-  const list = await getOrgPaymentHistory(id);
-
-  res.json(list);
-});
-
 export const downloadInvoice = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin']);
   const { paymentId } = req.params;
