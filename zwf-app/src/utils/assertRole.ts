@@ -6,6 +6,7 @@ import { getRoleFromReq } from './getRoleFromReq';
 
 export function assertRole(req, roles, options = { ignoreSuspendCheck: false }) {
   assert(req?.user, 401, 'Session timeout');
+  const beingSuspended = req.user.suspended;
   if (roles && roles.length) {
     const reqRole = getRoleFromReq(req);
     const reqOrgId = getOrgIdFromReq(req);
@@ -15,7 +16,7 @@ export function assertRole(req, roles, options = { ignoreSuspendCheck: false }) 
         case Role.Admin:
         case Role.Agent:
           // Org members must have orgId.
-          canAccess = reqRole === allowedRole && !!reqOrgId && (options.ignoreSuspendCheck || !req.user.suspended);
+          canAccess = reqRole === allowedRole && !!reqOrgId && (options.ignoreSuspendCheck || !beingSuspended);
           break;
         case Role.System:
         case Role.Client:
@@ -31,6 +32,7 @@ export function assertRole(req, roles, options = { ignoreSuspendCheck: false }) 
       }
     }
 
+    assert(!beingSuspended, 403, `The organization has been suspended. Please get in touch with your organization's owner to request for it to be unlocked.`);
     assert(canAccess, 403, `Invalid permission ('${reqRole}' is to access '${roles.join()}')`);
   }
 }
