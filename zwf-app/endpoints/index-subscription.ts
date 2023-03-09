@@ -1,3 +1,4 @@
+import { EmailTemplateType } from './../src/types/EmailTemplateType';
 import { OrgSubscriptionPeriodHistoryInformation } from './../src/entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { OrgPromotionCode } from '../src/entity/OrgPromotionCode';
 import { OrgBasicInformation } from '../src/entity/views/OrgBasicInformation';
@@ -12,6 +13,11 @@ import { OrgSubscriptionPeriod } from '../src/entity/OrgSubscriptionPeriod';
 import { User } from '../src/entity/User';
 import { Org } from '../src/entity/Org';
 import { grantNewSubscriptionPeriod } from '../src/utils/grantNewSubscriptionPeriod';
+import { v4 as uuidv4 } from 'uuid';
+import { getOrgAdminUsers } from './helpers/getOrgAdminUsers';
+import { EmailRequest } from '../src/types/EmailRequest';
+import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
+import { enqueueEmailInBulk } from '../src/services/emailService';
 
 const JOB_NAME = 'daily-subscription-check';
 
@@ -62,13 +68,31 @@ function logProgress(message: string, index: number, period: OrgSubscriptionPeri
 
 async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const { orgId } = period;
+  const resurgingCode = uuidv4();
+  
   await m.update(LicenseTicket, {
     periodId: period.id,
   }, {
     ticketTo: () => `NOW()`
   });
   await m.update(User, { orgId }, { suspended: true });
-  await m.update(Org, { id: orgId }, { suspended: true });
+  await m.update(Org, { id: orgId }, { suspended: true, resurgingCode });
+
+  const adminUsers = await getOrgAdminUsers(m, orgId);
+  const emailRequests = adminUsers.map(user => {
+    const ret: EmailRequest = {
+      to: user.email,
+      template: EmailTemplateType.SubscriptionSuspended,
+      shouldBcc: true,
+      vars: {
+        toWhom: getEmailRecipientName(user),
+        url: `${process.env.ZWF_API_DOMAIN_NAME}/resurge/${resurgingCode}`
+      }
+    };
+    return ret;
+  });
+
+  await enqueueEmailInBulk(m, emailRequests);
 }
 
 start(JOB_NAME, async () => {
