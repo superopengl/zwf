@@ -6,7 +6,6 @@ import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../services/
 import { SysLog } from '../entity/SysLog';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { sendPaymentEmail } from '../../endpoints/helpers/sendPaymentEmail';
-import { terminatePlan } from './terminatePlan';
 import { OrgSubscriptionPeriod } from '../entity/OrgSubscriptionPeriod';
 import { v4 as uuidv4 } from 'uuid';
 import { assert } from './assert';
@@ -48,7 +47,6 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
 
     return true;
   } catch (e) {
-    await terminatePlan(orgId);
     await sendPaymentEmail(m, EmailTemplateType.SubscriptionAutoRenewFailed, period);
 
     const sysLog = new SysLog();
