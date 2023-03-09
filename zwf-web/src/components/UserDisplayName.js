@@ -1,13 +1,19 @@
 import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {HighlightingText} from './HighlightingText';
+import { HighlightingText } from './HighlightingText';
 import { getUserDisplayName } from '../util/getUserDisplayName';
+import styled from 'styled-components';
 
-const { Text } = Typography;
+const Container = styled.div`
+display: flex;
+flex-direction: column;
+`;
+
+const { Text, Link: TextLink } = Typography;
 
 export const UserDisplayName = (props) => {
-  const { email, size, givenName, surname, searchText, showEmail } = props;
+  const { email, size, givenName, surname, searchText, showEmail, type } = props;
 
   const displayName = React.useMemo(() => {
     return getUserDisplayName(email, givenName, surname);
@@ -15,16 +21,17 @@ export const UserDisplayName = (props) => {
     email, givenName, surname
   ]);
 
+  const Element = type === 'link' ? TextLink : Text;
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column'}}>
-        {/* <HighlightingText value={displayName} search={searchText} /> */}
-        <Text ellipsis={true} style={{ maxWidth: "100%", fontSize: size }}>
-          <HighlightingText value={displayName} search={searchText} />
-          </Text>
-      {showEmail && <Text ellipsis={true} style={{ margin: 0, lineHeight: 1.1,  maxWidth: '100%', fontSize: size }} type="secondary"><small>
+    <Container>
+      <Element ellipsis={true} style={{ maxWidth: "100%", fontSize: size }} type={type}>
+        <HighlightingText value={displayName} search={searchText} />
+      </Element>
+      {showEmail && <Element ellipsis={true} style={{ margin: 0, lineHeight: 1.1, maxWidth: '100%', fontSize: size }} type={type || "secondary"}><small>
         <HighlightingText value={email} search={searchText} />
-      </small></Text>}
-    </div>
+      </small></Element>}
+    </Container>
   )
 };
 
@@ -35,6 +42,7 @@ UserDisplayName.propTypes = {
   searchText: PropTypes.string,
   showEmail: PropTypes.bool,
   size: PropTypes.number,
+  type: PropTypes.oneOf(['link']),
 };
 
 UserDisplayName.defaultProps = {
