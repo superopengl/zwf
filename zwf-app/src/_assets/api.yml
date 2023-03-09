@@ -230,12 +230,6 @@ paths:
       responses:
         200:
           description: OK          
-  /user:
-    get:
-      operationId: listAllUsers
-      responses:
-        200:
-          description: OK
   /user/:id:
     delete:
       operationId: deleteUser
