@@ -6,7 +6,10 @@ import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useEle
 import { CreditCardOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
 import { getPaymentMethodSecret } from 'services/orgPaymentMethodService';
+import { Checkbox, Typography } from 'antd';
+import { Divider } from 'antd';
 
+const {Link: TextLink} = Typography;
 
 const StripeCardPaymentForm = (props) => {
 
@@ -15,6 +18,7 @@ const StripeCardPaymentForm = (props) => {
   const [cardNumberComplete, setCardNumberComplete] = React.useState(false);
   const [cardExpiryComplete, setCardExpiryComplete] = React.useState(false);
   const [cardCvcComplete, setCardCvcComplete] = React.useState(false);
+  const [agreed, setAgreed] = React.useState(false);
   const stripe = useStripe();
   const elements = useElements();
 
@@ -35,7 +39,6 @@ const StripeCardPaymentForm = (props) => {
       setLoading(true);
       const cardNumberElement = elements.getElement('cardNumber');
 
-      debugger;
       const clientSecret = await onClientSecret();
 
       // Use your card Element with other Stripe.js APIs
@@ -92,49 +95,60 @@ const StripeCardPaymentForm = (props) => {
     <form onSubmit={handleSubmit}>
       {/* <Text>Please input card information</Text> */}
       {/* <label>Card Number <CardNumberElement /></label> */}
-      <Row gutter={[10, 10]} style={{ marginBottom: 24 }}>
+      <Row gutter={[10, 20]} style={{ marginBottom: 24 }}>
+        <Col span={24}>
+          <Checkbox onClick={e => setAgreed(e.target.checked)}>
+            I confirm that I have read and agreed to the <TextLink href="/terms_and_conditions" target="_blank" onClick={e => e.stopPropagation()}>Terms and Conditions</TextLink>, and have authorized the use of this card as the primary method for future subscription auto-renewal.
+          </Checkbox>
+        </Col>
         <Col {...{ xs: 24, sm: 16, md: 14, lg: 14, xl: 14, xxl: 14 }}>
-            <CardNumberElement
-              onChange={handleCardNumberChange}
-              options={{
-                ...options,
-                placeholder: '1234 1234 1234 1234',
-              }}
-            />
+          <CardNumberElement
+            onChange={handleCardNumberChange}
+            options={{
+              ...options,
+              placeholder: '1234 1234 1234 1234',
+            }}
+          />
         </Col>
         <Col {...{ xs: 12, sm: 4, md: 6, lg: 6, xl: 6, xxl: 6 }}>
-            <CardExpiryElement
-              onChange={handleCardExpiryChange}
-              options={{
-                ...options,
-                placeholder: 'MM / YY'
-              }}
-            />
+          <CardExpiryElement
+            onChange={handleCardExpiryChange}
+            options={{
+              ...options,
+              placeholder: 'MM / YY'
+            }}
+          />
         </Col>
         <Col {...{ xs: 12, sm: 4, md: 4, lg: 4, xl: 4, xxl: 4 }}>
-            <CardCvcElement
-              onChange={handleCardCvcChange}
-              options={{
-                ...options,
-                placeholder: 'CVC'
-              }}
-            />
+          <CardCvcElement
+            onChange={handleCardCvcChange}
+            options={{
+              ...options,
+              placeholder: 'CVC'
+            }}
+          />
         </Col>
         <Col span={24}>
           <Button type="primary" size="large" htmlType="submit"
             icon={<CreditCardOutlined />}
             block
-            disabled={loading || !isInfoComplete} loading={loading}>
+            disabled={!agreed || loading || !isInfoComplete} loading={loading}>
             {buttonText}
           </Button>
         </Col>
+
       </Row>
     </form>
   )
 }
 
 const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeCardPaymentForm onOk={props.onOk} onLoading={props.onLoading} buttonText={props.buttonText} onClientSecret={props.onClientSecret} />
+  <StripeCardPaymentForm
+    onOk={props.onOk}
+    onLoading={props.onLoading}
+    buttonText={props.buttonText}
+    onClientSecret={props.onClientSecret}
+  />
 </Elements>)
 
 
@@ -146,7 +160,7 @@ StripeCardPaymentWidget.propTypes = {
 };
 
 StripeCardPaymentWidget.defaultProps = {
-  buttonText: 'Checkout'
+  buttonText: 'Checkout',
 };
 
 export default StripeCardPaymentWidget;

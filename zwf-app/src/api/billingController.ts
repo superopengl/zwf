@@ -14,9 +14,10 @@ import { db } from '../db';
 import { LessThan, MoreThan } from 'typeorm';
 import { Org } from '../entity/Org';
 import { checkoutSubscriptionPeriod } from '../utils/checkoutSubscriptionPeriod';
-import { createNewPendingCheckoutSubscriptionPeriod } from '../utils/createNewPendingCheckoutSubscriptionPeriod';
+import { grantNewSubscriptionPeriod } from '../utils/grantNewSubscriptionPeriod';
 import { calcBillingAmountForPeriod } from '../services/payment/calcBillingAmountForPeriod';
 import { getStripeClientSecretForOrg } from '../services/stripeService';
+import { saveNewPaymentMethod } from '../utils/saveNewPaymentMethod';
 
 async function getOrgPaymentHistory(orgId) {
   const list = db.getRepository(OrgSubscriptionPeriodHistoryInformation).find({
@@ -39,14 +40,8 @@ export const getOrgResurgingInfo = handlerWrapper(async (req, res) => {
   let result
   await db.manager.transaction(async m => {
     const org = await db.manager.findOneByOrFail(Org, { resurgingCode: code, suspended: true });
-    const duePeriod = await m.getRepository(OrgSubscriptionPeriod)
-      .createQueryBuilder()
-      .where(`"orgId" = :orgId`, { orgId: org.id })
-      .andWhere(`"paymentId" IS NULL`)
-      .andWhere(`tail IS TRUE`)
-      .andWhere('"periodTo"::date <= NOW()::date')
-      .getOneOrFail();
-    
+    const duePeriod = await getDuePeriodOrFail(m, org.id);
+
     const billingInfo = await calcBillingAmountForPeriod(m, duePeriod);
     const clientSecret = await getStripeClientSecretForOrg(m, org.id);
 
@@ -66,20 +61,19 @@ export const resurgeOrg = handlerWrapper(async (req, res) => {
   const { code } = req.params;
   assert(code, 400, 'Missing code');
 
-  const org = await db.manager.findOneBy(Org, { resurgingCode: code, suspended: true });
-  assert(org, 404);
+  const { stripePaymentMethodId } = req.body;
+
 
   await db.manager.transaction(async m => {
-    const duePeriod = await m.getRepository(OrgSubscriptionPeriod)
-      .createQueryBuilder()
-      .where(`"orgId" = :orgId`, { orgId: org.id })
-      .andWhere(`"paymentId" IS NULL`)
-      .andWhere(`tail IS TRUE`)
-      .andWhere('"periodTo"::date <= NOW()::date')
-      .getOneOrFail();
-    const canRenew = await checkoutSubscriptionPeriod(m, duePeriod);
-    if (canRenew) {
-      await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
+    const org = await db.manager.findOneByOrFail(Org, { resurgingCode: code, suspended: true });
+    const orgId = org.id;
+    const duePeriod = await getDuePeriodOrFail(m, orgId);
+
+    await saveNewPaymentMethod(m, orgId, stripePaymentMethodId, true);
+
+    const renewSucceeded = await checkoutSubscriptionPeriod(m, duePeriod);
+    if (renewSucceeded) {
+      await grantNewSubscriptionPeriod(m, duePeriod);
     } else {
       throw new Error(`Failed to resurge the organization. Please contact customer support.`);
     }
@@ -203,4 +197,15 @@ export const downloadInvoice = handlerWrapper(async (req, res) => {
   // pdfStream.pipe(res);
 });
 
+
+async function getDuePeriodOrFail(m, orgId: string) {
+  assert(orgId, 500, 'orgId must be specified');
+  return await m.getRepository(OrgSubscriptionPeriod)
+    .createQueryBuilder()
+    .where(`"orgId" = :orgId`, { orgId })
+    .andWhere(`"paymentId" IS NULL`)
+    .andWhere(`tail IS TRUE`)
+    .andWhere('"periodTo"::date <= NOW()::date')
+    .getOneOrFail();
+}
 
