@@ -171,21 +171,21 @@
 
 				{{#if promotionCode}}
 				<tr class="item">
-					<td>Full unit price per person-month</td>
+					<td>Full plan price (per person-month)</td>
 
-					<td style="text-decoration:line-through;">$ {{unitFullPrice}}</td>
+					<td style="text-decoration:line-through;">$ {{planFullPrice}}</td>
 				</tr>
 
 				<tr class="item">
-					<td>Promotion unit price ({{promotionCode}})</td>
+					<td>Promotion plan price ({{promotionCode}})</td>
 
-					<td>$ {{promotionUnitPrice}}</td>
+					<td>$ {{promotionPlanPrice}}</td>
 				</tr>
 				{{else}}
 				<tr class="item">
-					<td>Full unit price (per person-month)</td>
+					<td>Full plan price (per person-month)</td>
 
-					<td>$ {{unitFullPrice}}</td>
+					<td>$ {{planFullPrice}}</td>
 				</tr>
 
 				{{/if}}

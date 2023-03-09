@@ -38,7 +38,7 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
       `m."periodTo" as "periodTo"`,
       `m."periodDays" as "periodDays"`,
       'y."code" as "activePromotinCode"',
-      'COALESCE(y."promotionUnitPrice", 0) as "promotionUnitPrice"',
+      'COALESCE(y."promotionPlanPrice", 0) as "promotionPlanPrice"',
     ]),
   dependsOn: [Org, User, UserProfile, OrgPromotionCode, OrgSubscriptionPeriod]
 })
@@ -96,6 +96,6 @@ export class OrgBasicInformation {
   activePromotinCode: string;
 
   @ViewColumn()
-  promotionUnitPrice: number;
+  promotionPlanPrice: number;
 }
 

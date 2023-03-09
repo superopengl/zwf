@@ -83,7 +83,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   period.checkoutDate = now;
   period.orgId = orgId;
   period.type = 'trial';
-  period.unitFullPrice = 0;
+  period.planFullPrice = 0;
 
   const ticket = createNewTicketForUser(userId, period);
 

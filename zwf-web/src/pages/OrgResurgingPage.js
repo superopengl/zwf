@@ -118,11 +118,11 @@ const OrgResurgingPage = () => {
               <Descriptions.Item label="Billing Unit">
                 {billingInfo.payableDays}
               </Descriptions.Item>
-              <Descriptions.Item label="Unit price">
-                <MoneyAmount value={period.unitFullPrice} delete={period.promotionCode} postfix="/ mo" />
+              <Descriptions.Item label="Plan price">
+                <MoneyAmount value={period.planFullPrice} delete={period.promotionCode} postfix="/ mo" />
               </Descriptions.Item>
-              {period.promotionCode && <Descriptions.Item label="Unit price (after discount)">
-                <MoneyAmount value={period.promotionUnitPrice} postfix="/ mo" />
+              {period.promotionCode && <Descriptions.Item label="Plan price (after discount)">
+                <MoneyAmount value={period.promotionPlanPrice} postfix="/ mo" />
               </Descriptions.Item>}
               <Descriptions.Item label="Due amount (GST included)">
                 <MoneyAmount value={billingInfo.payable} style={{ fontSize: 30 }} strong />

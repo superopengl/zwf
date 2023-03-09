@@ -34,7 +34,7 @@ export class OrgSubscriptionPeriod {
   type: 'trial' | 'monthly';
 
   @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  unitFullPrice: number;
+  planFullPrice: number;
 
   @OneToOne(() => Payment, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
   @JoinColumn({ name: 'paymentId', referencedColumnName: 'id' })
@@ -47,7 +47,7 @@ export class OrgSubscriptionPeriod {
   promotionCode: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
-  promotionUnitPrice: number;
+  promotionPlanPrice: number;
 
   @Column({ default: true })
   tail: boolean;

@@ -123,7 +123,7 @@ export const OrgLicenseUsagePanel = () => {
                     showIcon
                     type="success"
                     message="Discount eligiable"
-                    description={<>Congratulations! Your organization is eligible for a discounted rate of <MoneyAmount value={period.promotionUnitPrice} strong underline /> per person-month, as opposed to the regular price of  <MoneyAmount value={period.unitFullPrice} delete />.</>} />}
+                    description={<>Congratulations! Your organization is eligible for a discounted rate of <MoneyAmount value={period.promotionPlanPrice} strong underline /> per person-month, as opposed to the regular price of  <MoneyAmount value={period.planFullPrice} delete />.</>} />}
                 </> : <>
                   <Row wrap={false} gutter={20} justify="space-between">
                     <Col span={8}>
@@ -146,13 +146,13 @@ export const OrgLicenseUsagePanel = () => {
                             {period.promotionCode && <MoneyAmount value={period.payment.payable} strong />}
                           </Space>
                         </Descriptions.Item>
-                        <Descriptions.Item label="Unit price">
+                        <Descriptions.Item label="Plan price">
                           <Space>
-                            <MoneyAmount value={period.unitFullPrice} delete={period.promotionCode} postfix="/ mo" />
-                            {period.promotionCode && <MoneyAmount value={period.promotionUnitPrice} strong postfix="/ mo" />}
+                            <MoneyAmount value={period.planFullPrice} delete={period.promotionCode} postfix="/ mo" />
+                            {period.promotionCode && <MoneyAmount value={period.promotionPlanPrice} strong postfix="/ mo" />}
                           </Space>
                         </Descriptions.Item>
-                        <Descriptions.Item label="Used person-days">
+                        <Descriptions.Item label="Used units (person-days)">
                           {period.payment.payableDays}
                         </Descriptions.Item>
                       </Descriptions>

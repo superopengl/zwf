@@ -22,11 +22,11 @@ export async function grantNewSubscriptionPeriod(m: EntityManager, previousPerio
   newPeriod.type = 'monthly';
   newPeriod.periodFrom = previousPeriod.periodTo < now ? now : previousPeriod.periodTo;
   newPeriod.periodTo = moment(newPeriod.periodFrom).add(1, 'month').add(-1, 'day').toDate();
-  newPeriod.unitFullPrice = getCurrentUnitPricePerTicket();
+  newPeriod.planFullPrice = getCurrentUnitPricePerTicket();
 
   const alivePromotionCode = await getOrgActivePromotionCode(m, orgId);
   newPeriod.promotionCode = alivePromotionCode?.code;
-  newPeriod.promotionUnitPrice = alivePromotionCode?.promotionUnitPrice;
+  newPeriod.promotionPlanPrice = alivePromotionCode?.promotionPlanPrice;
 
   // 2. Issue new tickets for users
   const users = await m.getRepository(User).find({
