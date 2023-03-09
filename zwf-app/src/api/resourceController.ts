@@ -26,7 +26,7 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
       'publishedAt',
       'keywords',
       'title',
-      'titleKey',
+      // 'titleKey',
       'brief',
       'readingTime',
       'createdAt',
@@ -40,9 +40,9 @@ export const listPublishedResourcePages = handlerWrapper(async (req, res) => {
 
 
 export const getPublishedResourcePage = handlerWrapper(async (req, res) => {
-  const { key } = req.params;
+  const { id } = req.params;
   const page = await db.getRepository(ResourcePage).findOneBy({
-    titleKey: key,
+    id,
     publishedAt: Not(IsNull())
   });
   assert(page, 404);
@@ -61,7 +61,7 @@ export const listAllResourcePages = handlerWrapper(async (req, res) => {
       'publishedAt',
       'keywords',
       'title',
-      'titleKey',
+      // 'titleKey',
       'brief',
       'readingTime',
       'createdAt',
