@@ -12,7 +12,7 @@ export async function sendPaymentCompletedEmail(m: EntityManager,
   period: OrgSubscriptionPeriod,
   invoiceInfo: { fileName: string, url: string }
 ) {
-  const { orgId, periodTo } = period;
+  const { orgId, periodFrom, periodTo, periodDays } = period;
   const adminUsers = await getOrgAdminUsers(m, orgId);
   const emailRequests = adminUsers.map(user => {
     const req: EmailRequest = {
@@ -21,7 +21,9 @@ export async function sendPaymentCompletedEmail(m: EntityManager,
       shouldBcc: true,
       vars: {
         toWhom: getEmailRecipientName(user),
-        endDate: moment(periodTo).format('D MMM YYYY')
+        periodFrom: moment(periodFrom).format('D MMM YYYY'),
+        periodTo: moment(periodTo).format('D MMM YYYY'),
+        periodDays: periodDays,
       },
       attachments: [
         { filename: invoiceInfo.fileName, path: invoiceInfo.url }

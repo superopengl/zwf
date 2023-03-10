@@ -1,5 +1,6 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, Generated, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, Generated, CreateDateColumn, JoinColumn, OneToOne } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
+import { File } from './File';
 
 @Entity()
 @Index(['orgId', 'createdAt'])
@@ -29,7 +30,7 @@ export class Payment {
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   amount: number;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true})
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   payable: number;
 
   @Column('uuid', { nullable: true })
@@ -38,9 +39,16 @@ export class Payment {
   @Column('jsonb', { nullable: true, select: false })
   rawResponse: object;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   cardLast4: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   payableDays: number;
+
+  @Column({ nullable: true })
+  invoiceFileId: string;
+
+  @OneToOne(() => File, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'invoiceFileId', referencedColumnName: 'id' })
+  invoiceFile: File;
 }

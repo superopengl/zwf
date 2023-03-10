@@ -84,8 +84,8 @@ export const OrgLicenseUsagePanel = () => {
   }
 
 
-  const handleDownloadInvoice = (paymentId) => {
-    downloadInvoice$(paymentId).subscribe();
+  const getInvoiceUrl = (invoiceFileId) => {
+   return invoiceFileId ? `${process.env.REACT_APP_ZWF_API_DOMAIN_NAME}/blob/${invoiceFileId}` : null;
   }
 
   if (!period) {
@@ -110,7 +110,7 @@ export const OrgLicenseUsagePanel = () => {
               <ClockCircleOutlined /> {moment(period.periodFrom).format('MMM DD YYYY')} - <ClockCircleOutlined /> {moment(period.periodTo).format('MMM DD YYYY')} ({period.periodDays} days)
             </ProCard>
             {/* <DebugJsonPanel value={period} /> */}
-            <ProCard title="Payment" extra={period.payment && <Button type="link" icon={<DownloadOutlined />} onClick={() => handleDownloadInvoice(period.payment.id)}>Download Invoice</Button>}>
+            <ProCard title="Payment" extra={period.payment && <Button type="link" target="_blank" icon={<DownloadOutlined />} href={getInvoiceUrl(period.payment.invoiceFileId)}>Download Invoice</Button>}>
               {period.type === 'trial' ? '14 Day Free Trial' :
                 !period.payment ? <>
                   <Paragraph>
