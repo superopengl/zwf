@@ -2,7 +2,7 @@ import React from 'react';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { useNavigate } from 'react-router-dom';
 import { logout$ } from 'services/authService';
-import { Dropdown, Modal } from 'antd';
+import { Dropdown, Modal, Typography } from 'antd';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import AboutModal from 'pages/About/AboutModal';
 import loadable from '@loadable/component'
@@ -13,6 +13,7 @@ import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
+const {Text} = Typography;
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
 
@@ -69,6 +70,8 @@ export const AvatarDropdownMenu = React.memo(props => {
   const handleMenuItemClick = e => {
     const { key } = e;
     switch (key) {
+      case 'email':
+        break;
       case 'home':
         goToHomePage();
         break;
@@ -96,8 +99,8 @@ export const AvatarDropdownMenu = React.memo(props => {
     items: [
       {
         key: 'email',
-        disabled: true,
-        label: <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
+        // disabled: true,
+        label: <Text style={{ fontSize: 14, margin: 0 }}>{email}</Text>
       },
       {
         key: 'divider',
