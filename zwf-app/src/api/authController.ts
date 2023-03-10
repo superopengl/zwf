@@ -38,8 +38,7 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
   if (user) {
     const email = user.email;
     user = await getActiveUserInformation(email);
-    assert(user, 400, 'User not found');
-    if (user.suspended) {
+    if (!user || user.suspended) {
       clearJwtCookie(res);
       user = null;
     } else {
