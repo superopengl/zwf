@@ -17,6 +17,7 @@ export const useSetAuthUser = () => {
     if (user) {
       const { suspended } = user;
       if (suspended) {
+        // When org/account is suspended.
         setUser(null);
         logout$().subscribe(() => {
           notify.error(
@@ -31,6 +32,7 @@ export const useSetAuthUser = () => {
         return;
       }
     }
+
     setUser(user);
   }
 
