@@ -20,6 +20,7 @@ export const useOrgRegisterSuccessfullyModal = () => {
       destroyOnClose: true,
       onOk,
       onCancel,
+      autoFocusButton: 'ok',
     })
   }
 
