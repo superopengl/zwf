@@ -53,6 +53,9 @@ const OrgListPage = () => {
       title: 'Name',
       dataIndex: 'name',
       fixed: 'left',
+      sorter: {
+        compare: (a, b) =>  a?.name?.localeCompare(b.name)
+      },
       render: (text, item) => <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
     },
     // {
@@ -63,6 +66,9 @@ const OrgListPage = () => {
     {
       title: 'Business Name',
       dataIndex: 'businessName',
+      sorter: {
+        compare: (a, b) =>  a?.businessName?.localeCompare(b.businessName)
+      },
       render: (value) => value
     },
     {
@@ -78,14 +84,15 @@ const OrgListPage = () => {
     {
       title: 'Owner User',
       render: (_, org) => <Tooltip title="Click to impersonate">
-        <TextLink onClick={() => handleImpersonante(org)}>
-          <UserNameCard userId={org.ownerUserId} type="link"/>
-        </TextLink>
+          <UserNameCard userId={org.ownerUserId} type="link" onClick={() => handleImpersonante(org)}/>
         </Tooltip>
     },
     {
       title: 'Type',
       dataIndex: 'type',
+      sorter: {
+        compare: (a, b) =>  a?.type?.localeCompare(b.type)
+      },
       render: (value) => value
     },
     {
