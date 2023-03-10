@@ -6,11 +6,10 @@ import {
   FaDotCircle,
   FaCalendarAlt,
 } from 'react-icons/fa';
-import { AiOutlineFieldNumber } from 'react-icons/ai'
-import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
+import React from 'react';
+import { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
-import { Upload } from 'antd';
 import { AutoDocInput } from 'components/AutoDocInput';
 
 export const TaskTemplateWidgetDef = Object.freeze([
