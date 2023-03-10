@@ -229,7 +229,7 @@ export const App = React.memo(() => {
           <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
             We use cookies to improve your experiences on our website.
           </CookieConsent>
-          <DebugJsonPanel value={user} />
+          {/* <DebugJsonPanel value={user} /> */}
         </IntlProvider>
       </ConfigProvider>
     </GlobalContext.Provider>
