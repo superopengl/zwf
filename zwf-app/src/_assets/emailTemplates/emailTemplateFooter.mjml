@@ -27,7 +27,7 @@
   </mj-column>
   <mj-column width="120px" padding-top="20px">
     <mj-text color="#BCC4D0" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
-      <a href="https://zeeworkflow.com" target="_blank">Contact Us</a>
+      <a href="https://zeeworkflow.com/#contactus" target="_blank">Contact Us</a>
     </mj-text>
   </mj-column>
   <mj-column width="120px" padding-top="20px">
