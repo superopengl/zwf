@@ -69,7 +69,7 @@ function logProgress(message: string, index: number, period: OrgSubscriptionPeri
 async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const { orgId } = period;
   const resurgingCode = uuidv4();
-  
+
   await m.update(LicenseTicket, {
     periodId: period.id,
   }, {
@@ -86,7 +86,7 @@ async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
       shouldBcc: true,
       vars: {
         toWhom: getEmailRecipientName(user),
-        url: `${process.env.ZWF_API_DOMAIN_NAME}/resurge/${resurgingCode}`
+        url: `${process.env.ZWF_WEB_DOMAIN_NAME}/resurge/${resurgingCode}`
       }
     };
     return ret;

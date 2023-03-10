@@ -37,10 +37,16 @@ export const getOrgResurgingInfo = handlerWrapper(async (req, res) => {
   const { code } = req.params;
   assert(code, 400, 'Missing code');
 
-  let result
+  let result = null;
   await db.manager.transaction(async m => {
-    const org = await db.manager.findOneByOrFail(Org, { resurgingCode: code, suspended: true });
-    const duePeriod = await getDuePeriodOrFail(m, org.id);
+    const org = await db.manager.findOneBy(Org, { resurgingCode: code, suspended: true });
+    if(!org) {
+      return;
+    }
+    const duePeriod = await getDuePeriod(m, org.id);
+    if(!duePeriod) {
+      return;
+    }
 
     const billingInfo = await calcBillingAmountForPeriod(m, duePeriod);
     const clientSecret = await getStripeClientSecretForOrg(m, org.id);
@@ -67,7 +73,7 @@ export const resurgeOrg = handlerWrapper(async (req, res) => {
   await db.manager.transaction(async m => {
     const org = await db.manager.findOneByOrFail(Org, { resurgingCode: code, suspended: true });
     const orgId = org.id;
-    const duePeriod = await getDuePeriodOrFail(m, orgId);
+    const duePeriod = await getDuePeriod(m, orgId);
 
     await saveNewPaymentMethod(m, orgId, stripePaymentMethodId, true);
 
@@ -198,7 +204,7 @@ export const downloadInvoice = handlerWrapper(async (req, res) => {
 });
 
 
-async function getDuePeriodOrFail(m, orgId: string) {
+async function getDuePeriod(m, orgId: string) {
   assert(orgId, 500, 'orgId must be specified');
   return await m.getRepository(OrgSubscriptionPeriod)
     .createQueryBuilder()
@@ -206,6 +212,6 @@ async function getDuePeriodOrFail(m, orgId: string) {
     .andWhere(`"paymentId" IS NULL`)
     .andWhere(`tail IS TRUE`)
     .andWhere('"periodTo"::date <= NOW()::date')
-    .getOneOrFail();
+    .getOne();
 }
 

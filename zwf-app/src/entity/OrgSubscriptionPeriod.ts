@@ -5,6 +5,7 @@ import { Payment } from './Payment';
 
 @Entity()
 @Index('idx_orgId_seq', ['orgId', 'seq'])
+@Index('idx_orgId_periodFrom', ['orgId', 'periodFrom'])
 @Index('idx_orgId_not_checkedout_unique', ['orgId', 'checkoutDate'], { unique: true, where: '"checkoutDate" IS NULL' })
 @Index('idx_orgId_tail_unique', ['orgId', 'tail'], { unique: true, where: 'tail IS TRUE' })
 export class OrgSubscriptionPeriod {
