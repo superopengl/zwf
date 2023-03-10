@@ -7,12 +7,6 @@ import { forgotPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { ForgotPasswordPanel } from './ForgotPasswordPanel';
 import HomeFooter from 'components/HomeFooter';
-const ContainerStyled = styled(Layout.Content)`
-  padding: 3rem 1rem;
-  margin: 0 auto;
-  text-align: center;
-  max-width: 400px;
-`;
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto;
@@ -20,6 +14,16 @@ padding: 0;
 background-color: #ffffff;
 text-align: center;
 min-height: 100%;
+`;
+
+const ContainerStyled = styled.div`
+margin: 1rem auto;
+padding: 2rem 3rem;
+text-align: center;
+max-width: 400px;
+// background-color: #ffffff;
+border: 1px solid #E3E6EB;
+border-radius: 8px;
 `;
 
 const LogoContainer = styled.div`
@@ -35,15 +39,17 @@ const ForgotPasswordPage = props => {
   }
 
   return <LayoutStyled>
-    <ContainerStyled>
+    <Layout.Content style={{ padding: '3rem 1rem' }}>
       <LogoContainer><Logo /></LogoContainer>
       <Title level={2}>Forgot Password</Title>
-      <ForgotPasswordPanel onFinish={() => navigate('/')} />
-      <Form.Item >
-        <Button block type="link" onClick={() => goBack()}>Cancel</Button>
-      </Form.Item>
-    </ContainerStyled>
-    <HomeFooter/>
+      <ContainerStyled>
+        <ForgotPasswordPanel onFinish={() => navigate('/')} />
+        <Form.Item >
+          <Button block type="link" onClick={() => goBack()}>Cancel</Button>
+        </Form.Item>
+      </ContainerStyled>
+    </Layout.Content>
+    <HomeFooter />
   </LayoutStyled>;
 }
 

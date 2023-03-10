@@ -15,6 +15,7 @@ import { Role } from '../../types/Role';
       'u.role as role',
       'u."orgName" as "orgName"',
       'u."orgOwner" as "orgOwner"',
+      'u."createdAt" as "createdAt"',
       'u."orgId" as "orgId"',
       'COALESCE(r.count, 0) as "unreadCount"',
     ]),
@@ -24,6 +25,9 @@ export class SupportInformation {
   @ViewColumn()
   @PrimaryColumn()
   userId: string;
+
+  @ViewColumn()
+  createdAt: Date;
 
   @ViewColumn()
   email: string;

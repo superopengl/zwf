@@ -29,6 +29,7 @@ import { UserLoginType } from '../../types/UserLoginType';
       'u.role as role',
       'o.name as "orgName"',
       'u.id as id',
+      'u."createdAt" as "createdAt"',
       'o.id as "orgId"',
       'u."orgOwner" as "orgOwner"',
       'p.id as "profileId"',
@@ -56,6 +57,9 @@ export class UserInformation {
 
   @ViewColumn()
   resetPasswordToken: string;
+
+  @ViewColumn()
+  createdAt: Date;
 
   @ViewColumn()
   suspended: boolean;

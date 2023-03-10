@@ -28,7 +28,7 @@ justify-content: center;
 
 const ContainerStyled = styled.div`
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 0 1rem;
   text-align: center;
   // width: 100%;
 
@@ -65,9 +65,6 @@ const OrgSignUpForm = (props) => {
   return (
     <ContainerStyled>
       <Loading loading={loading}>
-        <Title level={2}>
-          <FormattedMessage id="menu.signUpOrg" />
-        </Title>
         <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ email: props.value }}>
           <Form.Item>
             <Text>

@@ -1,12 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Typography } from 'antd';
 import { Logo } from 'components/Logo';
-import { GlobalContext } from 'contexts/GlobalContext';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import HomeFooter from 'components/HomeFooter';
+import { useOrgRegisterSuccessfullyModal } from 'components/useOrgRegisterSuccessfullyModal';
+
+const { Title } = Typography;
+
 
 const PageContainer = styled.div`
   width: 100%;
@@ -29,32 +32,47 @@ const PageContainer = styled.div`
 `;
 
 const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  max-width: 420px;
-  // background-color: #ffffff;
+margin: 1rem auto;
+padding: 2rem 3rem;
+text-align: center;
+max-width: 460px;
+// background-color: #ffffff;
+border: 1px solid #E3E6EB;
+border-radius: 8px;
 `;
 
 
 const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  // background-color: rgba(19,194,194,0.1);
+margin: 0 auto;
+padding: 0;
+background-color: #ffffff;
+text-align: center;
+min-height: 100%;
 `;
 
 const OrgSignUpPage = (props) => {
   const navigate = useNavigate();
+  const [openSuccessModal, successContextHolder] = useOrgRegisterSuccessfullyModal()
   useDocumentTitle('Join by creating org')
-  return <LayoutStyled>
-    <PageContainer>
-      <div className="poster-patterns" />
-      <ContainerStyled>
-        <Logo />
-        <OrgSignUpForm onOk={() => navigate('/')} />
-      </ContainerStyled>
-    </PageContainer>
-    <HomeFooter />
 
+  const handleOk = (email) => {
+    openSuccessModal({
+      email,
+      onOk: () => navigate('/'),
+      onCancel: () => navigate('/'),
+    })
+  }
+
+  return <LayoutStyled>
+    <Layout.Content style={{ padding: '3rem 1rem' }}>
+      <Logo />
+      <Title level={2}>New Organization</Title>
+      <ContainerStyled>
+        <OrgSignUpForm onOk={handleOk} />
+      </ContainerStyled>
+    </Layout.Content>
+    <HomeFooter />
+    {successContextHolder}
   </LayoutStyled>
 }
 
