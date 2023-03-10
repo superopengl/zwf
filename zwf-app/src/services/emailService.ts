@@ -144,7 +144,7 @@ export async function sendEmailForUserId(userId: string, template: EmailTemplate
 }
 
 export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailRequest[]) {
-  const defaultFrom = 'noreply@zeeworkflow.com';
+  const defaultFrom = SYSTEM_EMAIL_SENDER;
   const entities: EmailSentOutTask[] = [];
   for (const req of emailRequests) {
     const { to, template } = req;

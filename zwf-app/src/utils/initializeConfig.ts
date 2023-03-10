@@ -1,10 +1,11 @@
+import { SYSTEM_EMAIL_SENDER, SYSTEM_EMAIL_BCC } from './constant';
 import { db } from '../db';
 import { SystemConfig } from '../entity/SystemConfig';
 
 export async function initializeConfig() {
   const noreply = new SystemConfig();
   noreply.key = 'email.sender.noreply';
-  noreply.value = 'noreply@zeeworkflow.com';
+  noreply.value = SYSTEM_EMAIL_SENDER;
 
   const contacat = new SystemConfig();
   contacat.key = 'email.contact.recipient';
@@ -12,7 +13,7 @@ export async function initializeConfig() {
 
   const bcc = new SystemConfig();
   bcc.key = 'email.sender.bcc';
-  bcc.value = 'noreply@zeeworkflow.com';
+  bcc.value = SYSTEM_EMAIL_BCC;
 
   const entities = [
     noreply,
