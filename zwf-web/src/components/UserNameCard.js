@@ -42,7 +42,7 @@ export const UserNameCard = React.memo((props) => {
     </Space>
   }
 
-  const contentComponent = <Row size="small" wrap={false} gutter={8} align="top">
+  const contentComponent = <Row size="small" wrap={false} gutter={8} align="top" onClick={props.onClick}>
     {showAvatar && <Col>
       <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
     </Col>}
