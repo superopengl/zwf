@@ -1,7 +1,6 @@
+import React from 'react';
 import {
-  FaTextWidth,
   FaAlignLeft,
-  FaCheckSquare,
   FaChevronCircleDown,
   FaDotCircle,
   FaCalendarAlt,
@@ -9,29 +8,18 @@ import {
 import { MdOutlineFormatColorText } from 'react-icons/md'
 import { RxSwitch } from 'react-icons/rx';
 import { BsCloudUpload } from 'react-icons/bs';
-import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { FieldNumberOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
-import { DateInput } from 'components/DateInput';
-import { Tooltip, Input } from 'antd';
-import { AutoDocInput } from 'components/AutoDocInput';
-import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
+import { Tooltip } from 'antd';
+import { EyeInvisibleFilled } from '@ant-design/icons';
 import {
-  ProForm,
-  ProFormCheckbox,
   ProFormDigit,
-  ProFormDigitRange,
-  ProFormGroup,
   ProFormRadio,
-  ProFormRate,
-  ProFormSegmented,
   ProFormSelect,
-  ProFormSlider,
   ProFormSwitch,
   ProFormText,
   ProFormTextArea,
   ProFormDateTimePicker,
-  ProFormUploadButton,
-  ProFormUploadDragger,
 } from '@ant-design/pro-components';
 import { Divider } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
