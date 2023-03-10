@@ -26,6 +26,7 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       'p."checkoutDate" as "checkoutDate"',
       'p.payable as payable',
       'p."payableDays" as "payableDays"',
+      'p."invoiceFileId" as "invoiceFileId"',
       'org."ownerEmail" as email',
       'm."cardLast4" as "cardLast4"',
       's."planFullPrice" as "planFullPrice"',
@@ -93,4 +94,7 @@ export class OrgSubscriptionPeriodHistoryInformation {
 
   @ViewColumn()
   payableDays: number;
+
+  @ViewColumn()
+  invoiceFileId: string;
 }

@@ -116,10 +116,7 @@ export function createAppInstance() {
 
   app.get('/healthcheck', (req, res) => res.send('OK'));
 
-
-  if (!isProd) {
-    app.get('/blob/:id', getPublicFileStream);
-  }
+  app.get('/blob/:id', getPublicFileStream);
 
   app.get('/r/:token', (req, res) => {
     const { token } = req.params;
