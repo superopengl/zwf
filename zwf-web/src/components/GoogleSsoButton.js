@@ -19,7 +19,12 @@ export const GoogleSsoButton = props => {
       throw new Error('User is null');
     }
     setAuthUser(user);
-    navigate('/task');
+    if (user.role === 'admin' && !user.orgId) {
+      // When org isn't initialized.
+      navigate('/onboard')
+    } else {
+      navigate('/task');
+    }
   }
 
   const handleGoogleSso = (response) => {

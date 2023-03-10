@@ -7,6 +7,7 @@ import { getAuthUser$ } from 'services/authService';
 import { SupportAffix } from 'components/SupportAffix';
 import HomeFooter from 'components/HomeFooter';
 import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useNavigate } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -31,10 +32,12 @@ const InnerContainer = styled.div`
 
 const OrgOnBoardPage = (props) => {
   const setAuthUser = useSetAuthUser();
+  const navigate = useNavigate();
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe((user) => {
       setAuthUser(user);
+      navigate('/task');
     });
   }
 

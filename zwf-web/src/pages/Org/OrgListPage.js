@@ -23,7 +23,7 @@ import { GiDominoMask } from 'react-icons/gi';
 import Icon from '@ant-design/icons';
 import { UserNameCard } from 'components/UserNameCard';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
+const { Text, Link: TextLink } = Typography;
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -41,17 +41,12 @@ const OrgListPage = () => {
   const [promotionCodeDrawerVisible, setPromotionCodeDrawerVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
-  const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentOrg, setCurrentOrg] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
   const [modal, contextHolder] = Modal.useModal();
-  const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
-  const handleTagChange = async (user, tags) => {
-    await setUserTags(user.id, tags);
-  }
 
   const columnDef = [
     {
@@ -171,7 +166,7 @@ const OrgListPage = () => {
     await loadList(newQueryInfo);
   }
 
-  const searchByQueryInfo = async (queryInfo) => {
+  const searchByQueryInfo = async () => {
     // try {
     //   setLoading(true);
     //   const resp = await searchOrgMemberUsers(queryInfo);
@@ -205,9 +200,6 @@ const OrgListPage = () => {
     })
   }
 
-  const handleOpenBilling = (org) => {
-    setCurrentOrg(org);
-  }
 
   const handleOpenPromotionCode = (org) => {
     setCurrentOrg(org);
