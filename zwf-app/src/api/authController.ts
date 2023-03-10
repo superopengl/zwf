@@ -1,3 +1,4 @@
+import { filter } from 'rxjs';
 import { db } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 
@@ -30,6 +31,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
 import { UserLoginType } from '../types/UserLoginType';
 import { sendInviteOrgMemberEmail } from '../utils/sendInviteOrgMemberEmail';
+import { isEmail } from 'validator';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -251,20 +253,28 @@ export const impersonate = handlerWrapper(async (req, res) => {
 
 export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin']);
-  const { email } = req.body;
+  const { emails: emailStrings } = req.body;
+  const emails = emailStrings?.split(',').map(x => x.trim()).filter(x => !!x);
+  
+  assert(emails?.length, 400, 'No email address found');;
+  assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
+
   const orgId = getOrgIdFromReq(req);
-  const existingUser = await getActiveUserInformation(email);
-  assert(!existingUser, 400, 'User already exists');
 
-  const { user, profile } = createUserAndProfileEntity({
-    email,
-    orgId,
-    role: Role.Agent
-  });
+  for (const email of emails) {
+    const existingUser = await getActiveUserInformation(email);
+    if (!existingUser) {
+      const { user, profile } = createUserAndProfileEntity({
+        email,
+        orgId,
+        role: Role.Agent
+      });
 
-  await db.transaction(async m => {
-    await inviteOrgMemberWithSendingEmail(m, user, profile);
-  });
+      await db.transaction(async m => {
+        await inviteOrgMemberWithSendingEmail(m, user, profile);
+      });
+    }
+  }
 
   res.json();
 });
@@ -289,34 +299,40 @@ export const reinviteOrgMember = handlerWrapper(async (req, res) => {
 
 export const inviteClientToOrg = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { email } = req.body;
+  const { emails: emailStrings } = req.body;
+  const emails = emailStrings?.split(',').map(x => x.trim()).filter(x => !!x);
+  assert(emails?.length, 400, 'No email address found');;
+  assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
   const orgId = getOrgIdFromReq(req);
 
-  await db.manager.transaction(async m => {
-    const { user, newlyCreated } = await ensureClientOrGuestUser(m, email, orgId);
-    const orgClient = new OrgClient();
-    orgClient.orgId = orgId;
-    orgClient.userId = user.id;
+  for (const email of emails) {
+    await db.manager.transaction(async m => {
+      const { user, newlyCreated } = await ensureClientOrGuestUser(m, email, orgId);
+      const orgClient = new OrgClient();
+      orgClient.orgId = orgId;
+      orgClient.userId = user.id;
 
-    await m.save(OrgClient, orgClient);
-    const org = await m.findOneBy(Org, { id: orgId });
+      await m.save(OrgClient, orgClient);
+      const org = await m.findOneBy(Org, { id: orgId });
 
-    if (!newlyCreated && user.role === Role.Client) {
-      /**
-       * Exisitng ZeeWorkflow user (client account), but first time to be served by this org.
-       */
-      await sendEmail({
-        to: email,
-        template: EmailTemplateType.InviteClientUser,
-        vars: {
-          toWhom: getEmailRecipientName(user),
-          email,
-          org: org.name,
-        },
-        shouldBcc: false
-      });
-    }
-  });
+      if (!newlyCreated && user.role === Role.Client) {
+        /**
+         * Exisitng ZeeWorkflow user (client account), but first time to be served by this org.
+         */
+        await sendEmail({
+          to: email,
+          template: EmailTemplateType.InviteClientUser,
+          vars: {
+            toWhom: getEmailRecipientName(user),
+            email,
+            org: org.name,
+          },
+          shouldBcc: false
+        });
+      }
+    });
+  }
+
 
   res.json();
 });

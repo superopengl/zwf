@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Drawer, Select } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Drawer, Select , Row} from 'antd';
 import {
   UserAddOutlined, QuestionOutlined
 } from '@ant-design/icons';
@@ -17,6 +17,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { Loading } from 'components/Loading';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -191,15 +192,14 @@ const OrgMemberListPage = () => {
   }
 
   const handleInviteUser = async values => {
-    const { email } = values;
-    inviteMember$(email).subscribe(() => {
+    const { emails } = values;
+    setLoading(true);
+    inviteMember$(emails).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(() => {
       setInviteVisible(false);
       loadList();
     });
-  }
-
-  const handleBuyLicense = () => {
-    setModalVisible(true);
   }
 
   const handlePaymentOk = async () => {
@@ -282,16 +282,25 @@ const OrgMemberListPage = () => {
         maskClosable={false}
         onOk={() => setInviteVisible(false)}
         onCancel={() => setInviteVisible(false)}
-        title={<>Invite Member</>}
+        title={<>Add Members</>}
         footer={null}
-        width={500}
+        // width={500}
       >
         <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
-        <Form layout="vertical" onFinish={handleInviteUser}>
-          <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-            <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
-          </Form.Item>
-          {/* <Form.Item label="Role" name="role" help="Admin can define task template, doc template, and see subscription, payment and agent metrics information.">
+        {/* <Paragraph>Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"</Paragraph> */}
+        <Loading loading={loading} >
+          <Form layout="vertical" onFinish={handleInviteUser}>
+            <Form.Item label="Emails"
+              extra='Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"'
+              name="emails" rules={[{ required: true, whitespace: true, max: 1000 }]}>
+              <Input.TextArea placeholder="andy@zeeworkflow.com, bob@zeeworkflow.com"
+                autoSize={{ minRows: 3 }}
+                allowClear={true}
+                maxLength="1000"
+                autoFocus={true}
+                disabled={loading} />
+            </Form.Item>
+            {/* <Form.Item label="Role" name="role" help="Admin can define task template, doc template, and see subscription, payment and agent metrics information.">
             <Radio.Group defaultValue="agent" disabled={loading} optionType="button" buttonStyle="solid">act
               <Radio.Button value="admin">Admin</Radio.Button>
               <Radio.Button value="agent">Agent</Radio.Button>
@@ -300,10 +309,14 @@ const OrgMemberListPage = () => {
           <Form.Item label="Tags" name="tags">
             <TagSelect tags={tags} onSave={saveUserTag} />
           </Form.Item> */}
-          <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>
-          </Form.Item>
-        </Form>
+            <Form.Item>
+              <Row justify="end">
+              <Button type="primary" htmlType="submit" disabled={loading}>Invite</Button>
+
+              </Row>
+            </Form.Item>
+          </Form>
+        </Loading>
       </Modal>
       <Drawer
         open={profileModalVisible}

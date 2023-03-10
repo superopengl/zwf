@@ -1,40 +1,34 @@
 import React from 'react';
-import { Modal, Space, Avatar, Button, Form, Input } from 'antd';
+import { Modal, Space, Avatar, Button, Form, Input, Typography } from 'antd';
 import { TagsOutlined, UserAddOutlined } from '@ant-design/icons';
 import { inviteClient$ } from 'services/authService';
+import { finalize } from 'rxjs';
+import { Loading } from 'components/Loading';
+const { Text, Paragraph } = Typography;
 
 export const InviteClientModal = props => {
   const { open, onOk, onCancel } = props;
-  const shouldAnother = React.useRef(false);
   const hasInvited = React.useRef(false);
   const ref = React.useRef();
+  const [loading, setLoading] = React.useState(false);
 
   React.useEffect(() => {
-    shouldAnother.current = false;
     hasInvited.current = false;
   }, [open]);
 
   const handleInvite = () => {
-    shouldAnother.current = false;
-    ref.current.submit();
-  }
-
-  const handleInviteAndAnother = () => {
-    shouldAnother.current = true;
     ref.current.submit();
   }
 
   const handleFormSubmit = (values) => {
-    const { email } = values;
-    inviteClient$(email).subscribe(() => {
+    const { emails } = values;
+    setLoading(true)
+    inviteClient$(emails).pipe(
+      finalize(() => setLoading(false)),
+    ).subscribe(() => {
       hasInvited.current = true;
-      if (shouldAnother.current) {
-        // Create another
-        ref.current.resetFields();
-      } else {
-        // Close the modal
-        onOk();
-      }
+      // Close the modal
+      onOk();
     })
   }
 
@@ -54,24 +48,29 @@ export const InviteClientModal = props => {
     closable
     destroyOnClose={true}
     maskClosable
-    footer={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
-      <Button type="text" onClick={handleCancel}>Cancel</Button>
-      <Space>
-
-        <Button type="primary" onClick={handleInviteAndAnother}>Invite & Another</Button>
-        <Button type="primary" onClick={handleInvite}>Invite</Button>
-      </Space>
+    footer={<Space style={{ width: '100%', justifyContent: 'end' }}>
+      <Button type="text" onClick={handleCancel} disabled={loading}>Cancel</Button>
+      <Button type="primary" onClick={handleInvite} disabled={loading}>Invite</Button>
     </Space>}
   >
-    <Form
-      ref={ref}
-      layout="vertical"
-      onFinish={handleFormSubmit}
-    >
-      <Form.Item name="email" label="Client email address" rules={[{ required: true, whitespace: false, type: 'email' }]}>
-        <Input autoFocus allowClear placeholder="Client's email address" />
-      </Form.Item>
-    </Form>
+    <Loading loading={loading} >
+      <Form
+        ref={ref}
+        layout="vertical"
+        onFinish={handleFormSubmit}
+      >
+        <Form.Item name="emails" label="Client email addresses" 
+        extra='Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"'
+        rules={[{ required: true, whitespace: true, max: 1000 }]}>
+          <Input.TextArea placeholder="andy@zeeworkflow.com, bob@zeeworkflow.com"
+            autoSize={{ minRows: 3 }}
+            allowClear={true}
+            maxLength="1000"
+            autoFocus={true}
+            disabled={loading} />
+        </Form.Item>
+      </Form>
+    </Loading>
   </Modal>
 };
 
