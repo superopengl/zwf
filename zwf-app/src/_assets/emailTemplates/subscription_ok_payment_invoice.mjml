@@ -1,19 +1,19 @@
 <mjml>
   <mj-head>
-    <mj-title>Subscription renew payment failed</mj-title>
+    <mj-title>Invoice of successful payment</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, the auto renew payment successfully</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, the payment has been successfully processed.</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          Your current subscription has been extened to {{endDate}}.
+           Your payment has been received for the billing cycle from {{periodFrom}} to {{periodTo}}, which covers a total of {{periodDays}} days. Thank you for your payment!
         </mj-text>
       </mj-column>
       <mj-column width="100%">
