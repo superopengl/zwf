@@ -126,10 +126,10 @@ export const AvatarDropdownMenu = React.memo(props => {
         key: 'org_profile',
         label: 'Org Profile'
       } : null,
-      isAdmin ? {
-        key: 'invoices',
-        label: 'Invoices'
-      } : null,
+      // isAdmin ? {
+      //   key: 'invoices',
+      //   label: 'Invoices'
+      // } : null,
       {
         key: 'divider3',
         type: 'divider',
