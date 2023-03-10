@@ -70,11 +70,6 @@ async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const { orgId } = period;
   const resurgingCode = uuidv4();
 
-  await m.update(LicenseTicket, {
-    periodId: period.id,
-  }, {
-    ticketTo: () => `NOW()`
-  });
   await m.update(User, { orgId }, { suspended: true });
   await m.update(Org, { id: orgId }, { suspended: true, resurgingCode });
 

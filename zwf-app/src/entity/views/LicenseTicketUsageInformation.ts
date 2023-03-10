@@ -30,11 +30,9 @@ import { Role } from '../../types/Role';
       'm."periodTo" as "periodTo"',
       't."ticketFrom" as "ticketFrom"',
       't."ticketTo" as "ticketTo"',
-      't."ticketFrom" as "billingFrom"',
-      'LEAST(now(), t."ticketTo") as "billingTo"',
       // 'EXTRACT(DAY FROM t."ticketFrom"::timestamp - m."periodFrom"::timestamp) as "billingFrom"',
       // 'EXTRACT(DAY FROM LEAST(now(), t."ticketTo")::timestamp - m."periodFrom"::timestamp) + 1 as "billingTo"',
-      'EXTRACT(DAY FROM LEAST(now(), t."ticketTo")::timestamp - "ticketFrom"::timestamp) + 1 as "usedDays"',
+      // 'EXTRACT(DAY FROM LEAST(now(), t."ticketTo")::timestamp - "ticketFrom"::timestamp) + 1 as "usedDays"',
       't."ticketDays" as "ticketDays"',
       'm."periodDays" as "periodDays"'
     ]),
@@ -86,15 +84,6 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   ticketTo: Date;
-
-  @ViewColumn()
-  billingFrom: Date;
-
-  @ViewColumn()
-  billingTo: Date;
-
-  @ViewColumn()
-  usedDays: number;
 
   @ViewColumn()
   ticketDays: number;
