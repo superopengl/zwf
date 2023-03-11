@@ -1,5 +1,11 @@
 import * as _ from 'lodash';
 
+const varNameValidator = /^[a-z][a-z0-9_\-\. ]*$/i;
+
+function validateVarName(name) {
+  return true || varNameValidator.test(name)
+}
+
 export const extractVarsFromDocTemplateBody = (html) => {
   if (!html) {
     return {
@@ -8,15 +14,14 @@ export const extractVarsFromDocTemplateBody = (html) => {
     };
   }
   const regex = /\{\{([^\}]+)\}\}/ig;
-  const varNameValidator = /^[a-z][a-z0-9_\-\. ]*$/i;
 
   const vars = new Set();
   const invalidVars = new Set();
 
   let match;
   while ((match = regex.exec(html))) {
-    const name = match[1];
-    if (true || varNameValidator.test(name)) {
+    const name = match[1]?.replace(/&nbsp;/g, ' ')?.trim();
+    if (name && validateVarName(name)) {
       vars.add(name);
     } else {
       invalidVars.add(name);
