@@ -1,9 +1,8 @@
 import React from 'react';
-import { GlobalContext } from './contexts/GlobalContext';
 import Icon, {
   SettingOutlined, BankOutlined, TagFilled, CreditCardFilled
 } from '@ant-design/icons';
-import { Space, Typography, Row, Col, Alert, notification, Button, Image, message } from 'antd';
+import { Space, Typography, Button, Image } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
@@ -14,16 +13,15 @@ import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { AiFillCalendar } from 'react-icons/ai';
-import { FaFileInvoiceDollar } from 'react-icons/fa';
 import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
-import { VersionMismatchAlert } from "components/VersionMismatchAlert";
-import { ProLayout, PageContainer } from '@ant-design/pro-components';
-import { Divider } from 'antd';
+import { ProLayout } from '@ant-design/pro-components';
 import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAssertUser } from 'hooks/useAssertUser';
+import { useAuthUser } from 'hooks/useAuthUser';
+import { useRole } from 'hooks/useRole';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -160,15 +158,15 @@ const FooterMenuItem = props => {
 export const AppLoggedInPage = React.memo(() => {
   useAssertRole(['client', 'agent', 'admin', 'system'])
   useAssertUser(user => user?.suspended !== true)
-  const context = React.useContext(GlobalContext);
-  const { role } = context;
+
+  const [user] = useAuthUser();
+  const role = useRole();
 
   const [pathname, setPathname] = React.useState(role === 'system' ? '/sysboard' : '/task');
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const { user } = context;
-    if (user.role === 'admin' && !user.orgId) {
+    if (role === 'admin' && !user.orgId) {
       navigate('/onboard')
     }
   }, []);
@@ -179,7 +177,7 @@ export const AppLoggedInPage = React.memo(() => {
   })).filter(g => g.routes.length > 0), [role]);
 
 
-  if (!context.user) {
+  if (!user) {
     return null;
   }
 

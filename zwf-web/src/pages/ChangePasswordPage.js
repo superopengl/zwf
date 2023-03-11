@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Layout, Typography, Input, Button, Form } from 'antd';
 import { changePassword } from 'services/userService';
 import { notify } from 'util/notify';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const ContainerStyled = styled.div`
   margin: 4rem auto 2rem auto;
@@ -25,8 +25,7 @@ const { Title, Text } = Typography;
 const ChangePasswordPage = props => {
 
   const [sending, setSending] = React.useState(false);
-  const context = React.useContext(GlobalContext);
-  const { user } = context;
+  const [user] = useAuthUser();
   const navigate = useNavigate();
 
 

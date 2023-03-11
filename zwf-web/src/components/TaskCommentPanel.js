@@ -1,22 +1,18 @@
-import { MessageFilled } from '@ant-design/icons';
-import { Timeline, Space, Typography, Card, Button, Row, Col } from 'antd';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
-import ScrollToBottom, { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
+import ScrollToBottom, {  } from 'react-scroll-to-bottom';
 import { listTaskComment$, } from 'services/taskService';
 import { nudgeTrackingAccess$ } from 'services/taskTrackingService';
 import { subscribeTaskTracking } from "services/taskTrackingService";
 import * as moment from 'moment';
 import { css } from '@emotion/css'
-import { TaskTrackingTimeline } from './TaskTrackingTimeline';
-import { Loading } from './Loading';
 import { ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { TaskMessageForm } from './TaskMessageForm';
-import { LikeOutlined, MessageOutlined, StarOutlined } from '@ant-design/icons';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const StyledList = styled(ProList)`
 .ant-pro-card-body {
@@ -62,9 +58,9 @@ export const TaskCommentPanel = React.memo((props) => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const context = React.useContext(GlobalContext);
+  const [user] = useAuthUser();
 
-  const myUserId = context.user.id;
+  const myUserId = user?.id;
   const isMe = (userId) => userId === myUserId;
 
   // React.useEffect(() => {

@@ -1,26 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography, Divider, Tooltip } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
-import { PageContainer } from '@ant-design/pro-components';
 import { catchError } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, EditOutlined, FileAddOutlined, LeftOutlined, LinkOutlined, MessageOutlined, ShareAltOutlined } from '@ant-design/icons';
-import Icon from '@ant-design/icons';
-import { AiOutlineHistory } from 'react-icons/ai';
-import { FaSignature } from 'react-icons/fa';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, EditOutlined, FileAddOutlined, MessageOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskLogAndCommentTrackingDrawer } from 'components/TaskLogAndCommentTrackingDrawer';
 import { SavingAffix } from 'components/SavingAffix';
-import { RiInsertRowBottom } from 'react-icons/ri';
 import { TaskFieldsEditorModal } from 'components/TaskFieldsEditorModal';
 import { showCompleteTaskModal } from 'components/showCompleteTaskModal';
 import { showRequireActionModal } from 'components/showRequireActionModal';
@@ -29,7 +23,6 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 
-const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -74,7 +67,6 @@ const OrgTaskPage = React.memo((props) => {
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
-  const context = React.useContext(GlobalContext);
   const navigate = useNavigate();
 
   React.useEffect(() => {

@@ -8,7 +8,7 @@ import { notify } from 'util/notify';
 import { finalize } from 'rxjs/operators';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import HomeFooter from 'components/HomeFooter';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 import { GoogleSsoButton } from 'components/GoogleSsoButton';
 import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
@@ -40,7 +40,7 @@ const ActivateAccountPage = props => {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const setAuthUser = useSetAuthUser();
+  const [user, setAuthUser] = useAuthUser();
 
   const handleSubmit = values => {
     if (loading) {

@@ -7,12 +7,12 @@ import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import { catchError, finalize } from 'rxjs/operators';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 export const GoogleSsoButton = props => {
   const { render, type, onStart, onEnd } = props;
   const navigate = useNavigate();
-  const setAuthUser = useSetAuthUser();
+  const [user, setAuthUser] = useAuthUser();
 
   const loginWithUser = (user) => {
     if (!user) {

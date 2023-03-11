@@ -1,14 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Form, Divider, Space, Tooltip } from 'antd';
-import FormBuilder from 'antd-form-builder'
-import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
-import { createFormSchemaFromFields, generateFormSchemaFromFields } from 'util/createFormSchemaFromFields';
-import { GlobalContext } from '../contexts/GlobalContext';
-import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
+import { Typography } from 'antd';
+import { BetaSchemaForm } from '@ant-design/pro-components';
 import { generateSchemaFromColumns } from 'util/TaskTemplateFieldControlDef';
 import styled from 'styled-components';
-import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
+import { useRole } from 'hooks/useRole';
 
 const Container = styled.div`
 .ant-form-item {
@@ -31,8 +27,8 @@ const { Title, Text, Paragraph } = Typography;
 export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
   const { fields, mode, onChange, disabled, onSubmit } = props;
-  const context = React.useContext(GlobalContext);
-  const role = context.role;
+  const role = useRole();
+
 
   // fields.sort((a, b) => a.ordinal - b.ordinal);
 

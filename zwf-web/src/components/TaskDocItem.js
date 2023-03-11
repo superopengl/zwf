@@ -2,24 +2,14 @@ import React from 'react';
 import styled from 'styled-components';
 
 import PropTypes from 'prop-types';
-import { Typography, Space, List, Tooltip, Tag, Avatar, Button, Checkbox, Row, Col } from 'antd';
-import { FileIcon } from './FileIcon';
-import { TimeAgo } from './TimeAgo';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { CheckOutlined, CheckSquareOutlined, BorderOutlined } from '@ant-design/icons'
+import { Typography, Space, Tooltip, Avatar, Button, Row, Col } from 'antd';
 import _ from 'lodash';
 import Icon, { DeleteOutlined } from '@ant-design/icons';
-import { BsPatchCheck } from 'react-icons/bs';
 import { showSignTaskFileModal } from './showSignTaskFileModal';
-import { FaFileSignature } from 'react-icons/fa';
-import { getTaskDocDownloadUrl } from "services/taskService";
-import { ConfirmDeleteButton } from './ConfirmDeleteButton';
-import { finalize } from 'rxjs/operators';
-import DropdownMenu from './DropdownMenu';
-import { MdBrightnessAuto } from 'react-icons/md';
 import { Modal } from 'antd';
 import { FaSignature } from 'react-icons/fa';
 import { TaskFileName } from './TaskFileName';
+import { useRole } from 'hooks/useRole';
 
 const { Link, Text } = Typography;
 
@@ -46,8 +36,7 @@ padding: 4px 0;
 
 export const TaskDocItem = React.memo(props => {
   const { value: taskFile, showIcon, style, showCreatedAt, strong, onChange, onDelete, disabled } = props;
-  const context = React.useContext(GlobalContext);
-  const { user, role } = context;
+  const role = useRole();
 
   const isClient = role === 'client';
   const isOrg = role === 'agent' || role === 'admin';

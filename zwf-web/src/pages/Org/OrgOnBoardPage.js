@@ -6,7 +6,7 @@ import OrgProfileForm from './OrgProfileForm';
 import { getAuthUser$ } from 'services/authService';
 import { SupportAffix } from 'components/SupportAffix';
 import HomeFooter from 'components/HomeFooter';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 import { useNavigate } from 'react-router-dom';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAssertUser } from 'hooks/useAssertUser';
@@ -33,10 +33,11 @@ const InnerContainer = styled.div`
 
 
 const OrgOnBoardPage = (props) => {
-  const setAuthUser = useSetAuthUser();
-  const navigate = useNavigate();
   useAssertRole(['admin']);
   useAssertUser(user => !user.orgId);
+
+  const navigate = useNavigate();
+  const [user, setAuthUser] = useAuthUser();
   
 
   const handleAfterOrgCreated = () => {

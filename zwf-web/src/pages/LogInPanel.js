@@ -5,7 +5,7 @@ import isEmail from 'validator/es/lib/isEmail';
 import { login$ } from 'services/authService';
 import { delay, finalize, filter, tap, map } from 'rxjs/operators';
 import PropTypes from 'prop-types';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 
 export const LogInPanel = props => {
@@ -16,7 +16,7 @@ export const LogInPanel = props => {
 
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
-  const setAuthUser = useSetAuthUser();
+  const [user, setAuthUser] = useAuthUser();
 
   const validateName = async (rule, value) => {
     const isValid = value && isEmail(value);

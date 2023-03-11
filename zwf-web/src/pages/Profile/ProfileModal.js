@@ -1,15 +1,12 @@
 import React from 'react';
 
 import ProfileForm from '../Profile/ProfileForm';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { Modal } from 'antd';
 import { getAuthUser$ } from 'services/authService';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const ProfileModal = props => {
-  const context = React.useContext(GlobalContext);
-  const { user } = context;
-  const setAuthUser = useSetAuthUser();
+  const [user, setAuthUser] = useAuthUser();
 
   const { onOk } = props;
 

@@ -2,17 +2,15 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Form, Divider } from 'antd';
 import FormBuilder from 'antd-form-builder'
-import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { createFormSchemaFromFields } from 'util/createFormSchemaFromFields';
-import { GlobalContext } from '../contexts/GlobalContext';
+import { useRole } from 'hooks/useRole';
 
 const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
   const { fields, type, onChange, disabled } = props;
-  const context = React.useContext(GlobalContext);
-  const role = context.role;
+  const role = useRole();
 
   fields.sort((a, b) => a.ordinal - b.ordinal);
 

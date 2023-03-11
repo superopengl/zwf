@@ -1,26 +1,17 @@
 // import 'App.css';
-import { Button, Row, Col, Image, Layout, Space, Typography, Grid, Divider } from 'antd';
+import { Button, Row, Col, Image, Layout, Space, Typography, Grid } from 'antd';
 import HomeFooter from 'components/HomeFooter';
 import React from 'react';
 import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
-import { GlobalContext } from 'contexts/GlobalContext';
 import smoothscroll from 'smoothscroll-polyfill';
 import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
-import { OrgRegisterModal, useOrgRegisterModal } from 'hooks/useOrgRegisterModal';
-import { useWindowScrollPosition } from "rooks";
+import { useOrgRegisterModal } from 'hooks/useOrgRegisterModal';
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
-import {
-  PageContainer,
-  ProCard,
-  ProConfigProvider,
-  ProLayout,
-  SettingDrawer,
-} from '@ant-design/pro-components';
-
-const { Text } = Typography;
+import { useAuthUser } from 'hooks/useAuthUser';
+import { useRole } from 'hooks/useRole';
 
 smoothscroll.polyfill();
 
@@ -61,12 +52,11 @@ export const PortalPage = () => {
   const navigate = useNavigate();
   const [modalMenuVisible, setModalMenuVisible] = React.useState(false);
   // const position = useWindowScrollPosition(); 
-  const context = React.useContext(GlobalContext);
+  const [user] = useAuthUser();
+  const role = useRole();
   const screens = Grid.useBreakpoint();
   const [openModal, contextHolder] = useOrgRegisterModal();
 
-
-  const { role, user } = context;
   const isGuest = role === 'guest';
   const beingSuspended = user?.suspended;
   const isWideScreen = screens.xxl || screens.xl || screens.lg;

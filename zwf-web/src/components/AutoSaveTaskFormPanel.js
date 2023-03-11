@@ -2,11 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from './TaskFormWidget';
 import { updateTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } from 'services/taskService';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';
 import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
 import { TaskSchemaRenderer } from './TaskSchemaRenderer';
+import { useAuthUser } from 'hooks/useAuthUser';
+import { useRole } from 'hooks/useRole';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
@@ -16,11 +17,9 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const [changedFields, setChangedFields] = React.useState({});
   const [aggregatedChangedFields] = useDebouncedValue(changedFields, 1000);
   const [disabled, setDisabled] = React.useState(false);
-  const context = React.useContext(GlobalContext);
-  // const [bufferedChangedFields, setBu]
+  const role = useRole();
   const ref = React.useRef();
 
-  const role = context.role;
   const isClient = role === 'client';
 
   React.useEffect(() => {
