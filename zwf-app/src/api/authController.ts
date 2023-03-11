@@ -189,19 +189,19 @@ export const forgotPassword = handlerWrapper(async (req, res) => {
 export const resetPassword = handlerWrapper(async (req, res) => {
   const { token, password } = req.body;
   validatePasswordStrength(password);
-  
+
   const user = await db.manager.getRepository(User).findOneByOrFail({
     resetPasswordToken: token,
     status: UserStatus.ResetPassword
   });
-  
+
   const salt = uuidv4();
   const secret = computeUserSecret(password, salt);
   user.secret = secret;
   user.salt = salt;
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
-  if(user.role === Role.Guest) {
+  if (user.role === Role.Guest) {
     user.role = Role.Client;
   }
 
@@ -223,7 +223,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.ZWF_WEB_DOMAIN_NAME}/reset_password?token=${token}` + (r ? `&r=${encodeURIComponent(r)}` : '');
+  const url = `${process.env.ZWF_WEB_DOMAIN_NAME}/activate?token=${token}` + (r ? `&r=${encodeURIComponent(r)}` : '');
   res.redirect(url);
 });
 
@@ -345,19 +345,27 @@ async function decodeEmailFromGoogleToken(token) {
 }
 
 export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
-  await sleep(1500);
-
   const { token, referralCode } = req.body;
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  const user = await getActiveUserInformation(email);
+  let user = await getActiveUserInformation(email);
 
   assert(user, 404, 'User not found');
 
   await db.getRepository(User).update({ id: user.id }, {
     loginType: UserLoginType.Google,
     lastLoggedInAt: getUtcNow(),
+    resetPasswordToken: null,
+    status: UserStatus.Enabled,
+    role: user.role === Role.Guest ? Role.Client : user.role
   });
+
+  await db.getRepository(UserProfile).update({ id: user.profileId }, {
+    givenName,
+    surname,
+  });
+
+  user = await getActiveUserInformation(email);
 
   attachJwtCookie(user, res);
 

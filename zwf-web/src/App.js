@@ -24,7 +24,7 @@ import { DebugJsonPanel } from 'components/DebugJsonPanel';
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
-const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
+const ActivateAccountPage = loadable(() => import('pages/ActivateAccountApage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const OrgResurgingPage = loadable(() => import('pages/OrgResurgingPage'));
@@ -157,7 +157,7 @@ export const App = React.memo(() => {
         {isGuest && <Route path="/login" element={<LogInPage />} />}
         {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
         {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
-        {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
+        {isGuest && <Route path="/activate" element={<ActivateAccountPage />} />}
         {isGuest && <Route path="/resurge/:code" element={<OrgResurgingPage />} />}
         {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
         {isAdmin && !user?.orgId && <Route path="/onboard" element={<OrgOnBoardPage />} />}

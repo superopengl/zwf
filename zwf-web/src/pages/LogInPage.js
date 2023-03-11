@@ -66,7 +66,7 @@ const LogInPage = props => {
                 renderProps => (
                   <Button
                     block
-                    type="secondary"
+                    // type="secondary"
                     size="large"
                     icon={<Icon component={GoogleLogoSvg} />}
                     // icon={<GoogleOutlined />}

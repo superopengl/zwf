@@ -188,7 +188,7 @@ paths:
       responses:
         200:
           description: OK
-  /auth/reset_password:
+  /auth/set_password:
     post:
       operationId: resetPassword
       responses:
