@@ -82,7 +82,7 @@ const ActivateAccountApage = props => {
       <ProCard gutter={[20, 20]} direction="row" split='horizontal' bordered>
         <ProCard title="Google SSO">
           <Paragraph>
-            I received the invitation using a Google or Google Workspace account and I would like to proceed with single sign-on (SSO)
+            I received the invitation using a Google account and I would like to proceed with single sign-on (SSO)
           </Paragraph>
           {/* <Divider /> */}
           <GoogleSsoButton
@@ -109,7 +109,7 @@ const ActivateAccountApage = props => {
         </ProCard>
         <ProCard title="Local account">
           <Paragraph>
-            Using email and password to log in, please ensure that you have set a password. If you have a Google or Google Workspace account associated with your email address, we recommend using above Google SSO.
+            Using email and password to log in, please ensure that you have set a password. If you have a Google account associated with your email address, we recommend using above Google SSO.
           </Paragraph>
           <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }}>
             <Form.Item label="Password (at least 8 letters)" name="password" rules={[{ required: true, min: 8, message: ' ' }]}>
