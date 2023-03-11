@@ -1,4 +1,5 @@
 import { Typography } from 'antd';
+import { useAssertRole } from 'hooks/useAssertRole';
 import React from 'react';
 
 import styled from 'styled-components';
@@ -17,6 +18,7 @@ const LayoutStyled = styled.div`
 
 
 const SystemBoardPage = props => {
+  useAssertRole(['system']);
   const [loading, setLoading] = React.useState(true);
 
   const loadList = async () => {

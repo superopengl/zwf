@@ -13,6 +13,7 @@ import { finalize } from 'rxjs/operators';
 import { deleteResourcePage$, listAllResourcePages$, saveResourcePage$ } from 'services/resourcePageService';
 import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -40,7 +41,8 @@ const LayoutStyled = styled.div`
 
 export const ResourceEditListPage = props => {
 
-
+  useAssertRole(['system']);
+  
   const [list, setList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');

@@ -25,6 +25,7 @@ import Field from '@ant-design/pro-field';
 import { ProCard } from '@ant-design/pro-components';
 import { Input } from 'antd';
 import { FieldEditPanel } from './FieldEditPanel';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const Container = styled.div`
 max-width: 1000px;
@@ -73,6 +74,7 @@ const EMPTY_TASK_TEMPLATE = {
 };
 
 export const TaskTemplatePage = () => {
+  useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id: routeParamId } = params;
   const initTaskTemplateId = routeParamId;
@@ -114,7 +116,7 @@ export const TaskTemplatePage = () => {
   const handleSave = () => {
     // await formRef.current.validateFields();
 
-    if(!taskTemplate.fields?.length) {
+    if (!taskTemplate.fields?.length) {
       notify.error("Cannot Save", "This form template fields not defined.")
       return;
     }

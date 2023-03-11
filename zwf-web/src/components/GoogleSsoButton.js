@@ -19,16 +19,19 @@ export const GoogleSsoButton = props => {
       throw new Error('User is null');
     }
     setAuthUser(user);
-    if (user.role === 'admin' && !user.orgId) {
+    const {role} = user;
+    if (role === 'admin' && !user.orgId) {
       // When org isn't initialized.
       navigate('/onboard')
+    } else if (role === 'system') {
+      navigate('/sysboard');
     } else {
       navigate('/task');
     }
   }
 
   const handleGoogleSso = (response) => {
-    console.log('Google sso', response);
+    // console.log('Google SSO', response);
     const { tokenId, error } = response;
     if (error || !tokenId) {
       return;

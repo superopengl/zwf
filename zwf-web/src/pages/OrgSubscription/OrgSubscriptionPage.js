@@ -4,9 +4,10 @@ import { PageContainer } from '@ant-design/pro-components';
 import {OrgPaymentMethodPanel} from './OrgPaymentMethodPanel';
 import {OrgLicenseUsagePanel} from './OrgLicenseUsagePanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const OrgSubscriptionPage = () => {
-
+  useAssertRole(['admin']);
   return (
     <PageHeaderContainer
     breadcrumb={[

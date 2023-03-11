@@ -22,6 +22,8 @@ import { VersionMismatchAlert } from "components/VersionMismatchAlert";
 import { ProLayout, PageContainer } from '@ant-design/pro-components';
 import { Divider } from 'antd';
 import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
+import { useAssertRole } from 'hooks/useAssertRole';
+import { useAssertUser } from 'hooks/useAssertUser';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -156,11 +158,14 @@ const FooterMenuItem = props => {
 }
 
 export const AppLoggedInPage = React.memo(() => {
+  useAssertRole(['client', 'agent', 'admin', 'system'])
+  useAssertUser(user => user?.suspended !== true)
   const context = React.useContext(GlobalContext);
-  const [pathname, setPathname] = React.useState('/task');
+  const { role } = context;
+
+  const [pathname, setPathname] = React.useState(role === 'system' ? '/sysboard' : '/task');
   const navigate = useNavigate();
 
-  const { role } = context;
   React.useEffect(() => {
     const { user } = context;
     if (user.role === 'admin' && !user.orgId) {

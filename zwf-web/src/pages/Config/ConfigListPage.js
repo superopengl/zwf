@@ -8,6 +8,7 @@ import {
 import { Space } from 'antd';
 import { listConfig, saveConfig } from 'services/configService';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Title } = Typography;
 
@@ -29,7 +30,7 @@ const NEW_ITEM = Object.freeze({
 });
 
 const ConfigListPage = () => {
-
+  useAssertRole(['system'])
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([{ ...NEW_ITEM }]);
 
@@ -118,17 +119,17 @@ const ConfigListPage = () => {
   }
 
   return (
-      <PageHeaderContainer
-        title="System Configurations"
-      >
-          <Table columns={columnDef}
-            dataSource={list}
-            size="small"
-            rowKey="key"
-            loading={loading}
-            pagination={false}
-          />
-      </PageHeaderContainer>
+    <PageHeaderContainer
+      title="System Configurations"
+    >
+      <Table columns={columnDef}
+        dataSource={list}
+        size="small"
+        rowKey="key"
+        loading={loading}
+        pagination={false}
+      />
+    </PageHeaderContainer>
   );
 };
 

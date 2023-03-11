@@ -8,6 +8,8 @@ import { SupportAffix } from 'components/SupportAffix';
 import HomeFooter from 'components/HomeFooter';
 import { useSetAuthUser } from 'hooks/useSetAuthUser';
 import { useNavigate } from 'react-router-dom';
+import { useAssertRole } from 'hooks/useAssertRole';
+import { useAssertUser } from 'hooks/useAssertUser';
 
 const { Title } = Typography;
 
@@ -33,10 +35,14 @@ const InnerContainer = styled.div`
 const OrgOnBoardPage = (props) => {
   const setAuthUser = useSetAuthUser();
   const navigate = useNavigate();
+  useAssertRole(['admin']);
+  useAssertUser(user => !user.orgId);
+  
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe((user) => {
       setAuthUser(user);
+      debugger;
       navigate('/task');
     });
   }
@@ -52,7 +58,7 @@ const OrgOnBoardPage = (props) => {
         <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
       </InnerContainer>
     </Layout.Content>
-      <HomeFooter />
+    <HomeFooter />
     <SupportAffix />
   </Container>
 }

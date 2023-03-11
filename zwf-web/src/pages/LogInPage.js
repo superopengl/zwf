@@ -10,6 +10,7 @@ import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
 import HomeFooter from 'components/HomeFooter';
 import { Loading } from 'components/Loading';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 
 const LayoutStyled = styled(Layout)`
@@ -38,6 +39,7 @@ const LogoContainer = styled.div`
 const { Title } = Typography;
 const LogInPage = props => {
 
+  useAssertRole(['guest']);
   const [loading, setLoading] = React.useState(false);
 
   useDocumentTitle('User login');

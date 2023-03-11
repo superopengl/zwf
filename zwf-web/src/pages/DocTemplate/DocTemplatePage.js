@@ -22,6 +22,7 @@ import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
 import ReactRouterPrompt from "react-router-prompt";
 import { DOC_TEMPLATE_DEFAULT_HTML_BODY } from './DocTemplateDefaultBody';
 import { normalizeVarsInDocTemplateHtml } from 'util/normalizeVarsInDocTemplateHtml';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Paragraph, Text } = Typography
 
@@ -57,7 +58,7 @@ const EMPTY_DOC_TEMPLATE = {
 
 
 export const DocTemplatePage = (props) => {
-
+  useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id: routeParamId } = params;
   const initDocTemplateId = routeParamId;

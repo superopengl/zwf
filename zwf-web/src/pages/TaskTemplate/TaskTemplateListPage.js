@@ -25,6 +25,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -35,6 +36,7 @@ const Container = styled.div`
 `;
 
 export const TaskTemplateListPage = () => {
+  useAssertRole(['admin', 'agent']);
   const [list, setList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [filteredList, setFilteredList] = React.useState([]);

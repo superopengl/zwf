@@ -5,11 +5,12 @@ import RevenueChart from 'components/charts/RevenueChart';
 import { Loading } from 'components/Loading';
 import { getRevenueChartData } from 'services/revenueService';
 import { SyncOutlined } from '@ant-design/icons';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text, Paragraph } = Typography;
 
 const RevenuePage = () => {
-
+  useAssertRole(['system']);
   const [loading, setLoading] = React.useState(true);
   const [data, setData] = React.useState([]);
   const [period, setPeriod] = React.useState('month');

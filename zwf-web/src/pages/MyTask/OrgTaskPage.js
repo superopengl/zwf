@@ -27,6 +27,7 @@ import { showRequireActionModal } from 'components/showRequireActionModal';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text, Paragraph } = Typography;
 
@@ -63,6 +64,7 @@ border-radius:4px;
 
 
 const OrgTaskPage = React.memo((props) => {
+  useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id } = params;
 

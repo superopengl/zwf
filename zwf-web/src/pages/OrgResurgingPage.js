@@ -15,6 +15,7 @@ import MoneyAmount from 'components/MoneyAmount';
 import { Divider } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import ProSkeleton from '@ant-design/pro-skeleton';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const ContainerStyled = styled.div`
 padding: 2rem 1rem 4rem;
@@ -48,6 +49,7 @@ h3 {
 `;
 const { Title, Text, Paragraph } = Typography;
 const OrgResurgingPage = () => {
+  useAssertRole(['guest']);
   const params = useParams();
   const { code } = params;
   const [loading, setLoading] = React.useState(true);

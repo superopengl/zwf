@@ -8,6 +8,7 @@ import { searchMyTaskTracking$ } from 'services/taskTrackingService';
 import { TaskTrackingTimeline } from 'components/TaskTrackingTimeline';
 import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
 import { css } from '@emotion/css'
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -60,6 +61,7 @@ const containerCss = css({
 });
 
 export const ClientTrackingListPage = () => {
+  useAssertRole(['client']);
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(1);
   const [list, setList] = React.useState([]);

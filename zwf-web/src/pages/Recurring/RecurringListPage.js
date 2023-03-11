@@ -13,6 +13,7 @@ import RecurringEditModal from './RecurringEditModal';
 import { notify } from 'util/notify';
 import { UserNameCard } from 'components/UserNameCard';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Title, Link: TextLink } = Typography;
 
@@ -56,7 +57,7 @@ td {
 `;
 
 const RecurringListPage = (props) => {
-
+  useAssertRole(['admin', 'agent']);
   const [loading, setLoading] = React.useState(true);
   const [formVisible, setFormVisible] = React.useState(false);
   const [list, setList] = React.useState([]);

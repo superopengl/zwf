@@ -7,6 +7,7 @@ import { forgotPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { ForgotPasswordPanel } from './ForgotPasswordPanel';
 import HomeFooter from 'components/HomeFooter';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto;
@@ -32,6 +33,7 @@ const LogoContainer = styled.div`
 
 const { Title } = Typography;
 const ForgotPasswordPage = props => {
+  useAssertRole(['guest']);
   const navigate = useNavigate();
 
   const goBack = () => {
