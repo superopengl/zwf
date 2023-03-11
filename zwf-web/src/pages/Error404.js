@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Result, Button } from 'antd';
-const Error404 = props => {
+export const Error404 = props => {
   const navigate = useNavigate();
   const handleGoHome = () => {
     navigate('/');
@@ -19,4 +19,3 @@ Error404.propTypes = {};
 
 Error404.defaultProps = {};
 
-export default Error404;

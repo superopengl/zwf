@@ -19,9 +19,7 @@ import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { RouteByRole } from 'components/RouteByRole';
-import Error404 from 'pages/Error404';
+import { Error404 } from 'pages/Error404';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -169,18 +167,18 @@ export const App = React.memo(() => {
           <Route path="/task" element={isSystem ? <SystemBoardPage /> : isClient ? <ClientTaskListPage /> : <OrgTaskListPage />} />
           <Route path="/task/:id" element={isClient ? <ClientTaskPage /> : (isAdmin || isAgent) ? <OrgTaskPage /> : <Navigate to="/" />} />
           <Route path="/activity" element={isClient ? <ClientTrackingListPage /> : <Navigate to="/" />} />
-          <Route path="/doc_template" element={(isAdmin || isAgent) ?<DocTemplateListPage />: <Navigate to="/" />} />
-          <Route path="/doc_template/new" element={(isAdmin || isAgent) ?<DocTemplatePage />: <Navigate to="/" />} />
-          <Route path="/doc_template/:id" element={(isAdmin || isAgent) ?<DocTemplatePage />: <Navigate to="/" />} />
-          <Route path="/task_template" element={(isAdmin || isAgent) ?<TaskTemplateListPage />: <Navigate to="/" />} />
-          <Route path="/task_template/new" element={(isAdmin || isAgent) ?<TaskTemplatePage />: <Navigate to="/" />} />
-          <Route path="/task_template/:id" element={(isAdmin || isAgent) ?<TaskTemplatePage />: <Navigate to="/" />} />
+          <Route path="/doc_template" element={(isAdmin || isAgent) ? <DocTemplateListPage /> : <Navigate to="/" />} />
+          <Route path="/doc_template/new" element={(isAdmin || isAgent) ? <DocTemplatePage /> : <Navigate to="/" />} />
+          <Route path="/doc_template/:id" element={(isAdmin || isAgent) ? <DocTemplatePage /> : <Navigate to="/" />} />
+          <Route path="/task_template" element={(isAdmin || isAgent) ? <TaskTemplateListPage /> : <Navigate to="/" />} />
+          <Route path="/task_template/new" element={(isAdmin || isAgent) ? <TaskTemplatePage /> : <Navigate to="/" />} />
+          <Route path="/task_template/:id" element={(isAdmin || isAgent) ? <TaskTemplatePage /> : <Navigate to="/" />} />
           <Route path="/scheduler" element={(isAdmin || isAgent) ? <RecurringListPage /> : <Navigate to="/" />} />
           <Route path="/client" element={(isAdmin || isAgent) ? <OrgClientListPage /> : <Navigate to="/" />} />
           <Route path="/tags" element={(isAdmin || isAgent) ? <TagsSettingPage /> : <Navigate to="/" />} />
           <Route path="/subscription" element={(isAdmin || isAgent) ? <OrgSubscriptionPage /> : <Navigate to="/" />} />
           <Route path="/team" element={(isAdmin || isAgent) ? <OrgMemberListPage /> : <Navigate to="/" />} />
-          <Route path="/config" element={isSystem ?<ConfigListPage /> : <Navigate to="/" />} />
+          <Route path="/config" element={isSystem ? <ConfigListPage /> : <Navigate to="/" />} />
           <Route path="/org" element={isSystem ? <OrgListPage /> : <Navigate to="/" />} />
           <Route path="/support" element={isSystem ? <SupportListPage /> : <Navigate to="/" />} />
           <Route path="/manage/resource" element={isSystem ? <ResourceEditListPage /> : <Navigate to="/" />} />
