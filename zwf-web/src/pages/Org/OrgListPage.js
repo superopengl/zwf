@@ -4,7 +4,8 @@ import { Typography, Button, Table, Input, Modal, Row, Tooltip, Drawer, Badge } 
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  ClearOutlined
+  ClearOutlined,
+  CheckOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
@@ -22,6 +23,27 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { GiDominoMask } from 'react-icons/gi';
 import Icon from '@ant-design/icons';
 import { UserNameCard } from 'components/UserNameCard';
+
+const Container = styled.div`
+
+.ant-table-tbody {
+  .ant-table-cell:first-child {
+    border-left: 4px solid #0FBFC4;
+  }
+}
+
+.org-suspended {
+  .ant-table-cell:first-child {
+    border-left-color: #F53F3F;
+  }
+}
+
+.org-trial {
+  .ant-table-cell:first-child {
+    border-left-color: transparent;
+  }
+}
+`
 
 const { Text, Link: TextLink } = Typography;
 
@@ -102,6 +124,11 @@ const OrgListPage = () => {
         -
         <TimeAgo value={item.periodTo} accurate={false}/>
       </Space>
+    },
+    {
+      title: 'Suspended',
+      dataIndex: 'suspended',
+      render: (value, item) => value && <CheckOutlined />
     },
     {
       // title: 'Action',
@@ -226,6 +253,7 @@ const OrgListPage = () => {
   }
 
   return (
+    <Container>
     <PageHeaderContainer
       title="Org Management"
       extra={[
@@ -256,6 +284,7 @@ const OrgListPage = () => {
           rowKey="id"
           loading={loading}
           style={{ marginTop: 20 }}
+          rowClassName={item => item.suspended ? 'org-suspended' : item.type === 'trial'  ? 'org-trial' : null}
           pagination={{
             current: queryInfo.current,
             pageSize: queryInfo.size,
@@ -290,6 +319,7 @@ const OrgListPage = () => {
       </Drawer>
       {contextHolder}
     </PageHeaderContainer>
+    </Container>
   );
 };
 
