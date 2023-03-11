@@ -20,6 +20,8 @@ import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { RouteByRole } from 'components/RouteByRole';
+import Error404 from 'pages/Error404';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -154,40 +156,40 @@ export const App = React.memo(() => {
         </Route>
         <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
         <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
-        {isGuest && <Route path="/login" element={<LogInPage />} />}
-        {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
-        {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
-        {isGuest && <Route path="/activate" element={<ActivateAccountPage />} />}
-        {isGuest && <Route path="/resurge/:code" element={<OrgResurgingPage />} />}
-        {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
-        {isAdmin && !user?.orgId && <Route path="/onboard" element={<OrgOnBoardPage />} />}
+        <Route path="/login" element={isGuest ? <LogInPage /> : <Navigate to="/" />} />
+        <Route path="/signup/org" element={isGuest ? <OrgSignUpPage /> : <Navigate to="/" />} />
+        <Route path="/forgot_password" element={isGuest ? <ForgotPasswordPage /> : <Navigate to="/" />} />
+        <Route path="/activate" element={isGuest ? <ActivateAccountPage /> : <Navigate to="/" />} />
+        <Route path="/resurge/:code" element={isGuest ? <OrgResurgingPage /> : <Navigate to="/" />} />
+        <Route path="/task/direct/:token" element={!isSystem ? <TaskDirectPage /> : <Navigate to="/" />} />
+        <Route path="/onboard" element={isAdmin && !user?.orgId ? <OrgOnBoardPage /> : <Navigate to="/" />} />
 
-        {!isGuest && !beingSuspended && <Route path="/" element={<AppLoggedInPage />} >
-          {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
-          {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
-          {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}
-          {isClient && <Route path="/task/:id" element={<ClientTaskPage />} />}
-          {(isAdmin || isAgent) && <Route path="/task/:id" element={<OrgTaskPage />} />}
-          {isClient && <Route path="/activity" element={<ClientTrackingListPage />} />}
-          <Route path="/doc_template" element={<DocTemplateListPage />} />
-          <Route path="/doc_template/new" element={<DocTemplatePage />} />
-          <Route path="/doc_template/:id" element={<DocTemplatePage />} />
-          <Route path="/task_template" element={<TaskTemplateListPage />} />
-          <Route path="/task_template/new" element={<TaskTemplatePage />} />
-          <Route path="/task_template/:id" element={<TaskTemplatePage />} />
-          <Route path="/scheduler" element={<RecurringListPage />} />
-          <Route path="/client" element={<OrgClientListPage />} />
-          <Route path="/tags" element={<TagsSettingPage />} />
-          <Route path="/subscription" element={<OrgSubscriptionPage />} />
-          <Route path="/team" element={<OrgMemberListPage />} />
-          <Route path="/config" element={<ConfigListPage />} />
-          <Route path="/org" element={<OrgListPage />} />
-          <Route path="/support" element={<SupportListPage />} />
-          <Route path="/manage/resource" element={<ResourceEditListPage />} />
-          <Route path="/manage/resource/new" element={<ResourceEditPage />} />
-          <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
-          <Route path="/revenue" element={<RevenuePage />} />
-        </Route>}
+
+        <Route path="/" element={!isGuest && !beingSuspended ? <AppLoggedInPage /> : <PortalPage />} >
+          <Route path="/task" element={isSystem ? <SystemBoardPage /> : isClient ? <ClientTaskListPage /> : <OrgTaskListPage />} />
+          <Route path="/task/:id" element={isClient ? <ClientTaskPage /> : (isAdmin || isAgent) ? <OrgTaskPage /> : <Navigate to="/" />} />
+          <Route path="/activity" element={isClient ? <ClientTrackingListPage /> : <Navigate to="/" />} />
+          <Route path="/doc_template" element={(isAdmin || isAgent) ?<DocTemplateListPage />: <Navigate to="/" />} />
+          <Route path="/doc_template/new" element={(isAdmin || isAgent) ?<DocTemplatePage />: <Navigate to="/" />} />
+          <Route path="/doc_template/:id" element={(isAdmin || isAgent) ?<DocTemplatePage />: <Navigate to="/" />} />
+          <Route path="/task_template" element={(isAdmin || isAgent) ?<TaskTemplateListPage />: <Navigate to="/" />} />
+          <Route path="/task_template/new" element={(isAdmin || isAgent) ?<TaskTemplatePage />: <Navigate to="/" />} />
+          <Route path="/task_template/:id" element={(isAdmin || isAgent) ?<TaskTemplatePage />: <Navigate to="/" />} />
+          <Route path="/scheduler" element={(isAdmin || isAgent) ? <RecurringListPage /> : <Navigate to="/" />} />
+          <Route path="/client" element={(isAdmin || isAgent) ? <OrgClientListPage /> : <Navigate to="/" />} />
+          <Route path="/tags" element={(isAdmin || isAgent) ? <TagsSettingPage /> : <Navigate to="/" />} />
+          <Route path="/subscription" element={(isAdmin || isAgent) ? <OrgSubscriptionPage /> : <Navigate to="/" />} />
+          <Route path="/team" element={(isAdmin || isAgent) ? <OrgMemberListPage /> : <Navigate to="/" />} />
+          <Route path="/config" element={isSystem ?<ConfigListPage /> : <Navigate to="/" />} />
+          <Route path="/org" element={isSystem ? <OrgListPage /> : <Navigate to="/" />} />
+          <Route path="/support" element={isSystem ? <SupportListPage /> : <Navigate to="/" />} />
+          <Route path="/manage/resource" element={isSystem ? <ResourceEditListPage /> : <Navigate to="/" />} />
+          <Route path="/manage/resource/new" element={isSystem ? <ResourceEditPage /> : <Navigate to="/" />} />
+          <Route path="/manage/resource/:id" element={isSystem ? <ResourceEditPage /> : <Navigate to="/" />} />
+          <Route path="/revenue" element={isSystem ? <RevenuePage /> : <Navigate to="/" />} />
+        </Route>
+
+        <Route path="/404" element={<Error404 />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     )
