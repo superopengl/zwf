@@ -1,9 +1,7 @@
 import React from 'react';
-import { Form, Typography, Input, Alert, Switch } from 'antd';
-import { isEmpty } from 'lodash';
+import { Form, Typography, Input } from 'antd';
 import PropTypes from 'prop-types';
 import { TaskTemplateFieldsEditor } from './TaskTemplateFieldsEditor';
-import DocTemplateSelect from 'components/DocTemplateSelect';
 import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
 // import { EditTitleInput } from 'components/EditTitleInput';
 // import arrayMove from 'array-move';
