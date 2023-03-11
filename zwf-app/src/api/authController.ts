@@ -106,8 +106,6 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
 
   assert(email, 400, 'email is required');
 
-  await sleep(1500);
-
   const { user, exists } = await createNewLocalOrgAdmin({
     email,
     orgId: null, // Don't set orgId at the moment. Org will be created when this user's first login.
@@ -375,8 +373,6 @@ export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
 });
 
 export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
-  await sleep(1000);
-
   const { token, referralCode } = req.body;
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 

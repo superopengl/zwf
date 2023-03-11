@@ -5,13 +5,14 @@ import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
 import { UserLoginType } from '../../types/UserLoginType';
+import { OrgBasicInformation } from './OrgBasicInformation';
 
 
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(User, 'u')
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
-    .leftJoin(Org, 'o', 'o.id = u."orgId"')
+    .leftJoin(OrgBasicInformation, 'o', 'o.id = u."orgId"')
     // .leftJoin(OrgCurrentSubscriptionInformation, 's', 's."orgId" = u."orgId"')
     // .leftJoin(LicenseTicket, 't', 't."orgId" = u."orgId" AND t."userId" = u.id')
     .leftJoin(q => q
@@ -37,7 +38,7 @@ import { UserLoginType } from '../../types/UserLoginType';
       'u."emailHash" as "emailHash"',
       'u."loginType" as "loginType"',
       'u."resetPasswordToken" as "resetPasswordToken"',
-      'u.suspended as suspended',
+      'u.suspended OR o."periodTo" < NOW() as suspended',
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
       'tg.tags as tags',
