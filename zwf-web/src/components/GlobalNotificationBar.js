@@ -1,7 +1,7 @@
 import React from 'react';
 import { message, Typography, Button, Space } from 'antd';
 import { listOrgPaymentMethods$ } from 'services/orgPaymentMethodService';
-import { useAddPaymentMethodModal } from './useAddPaymentMethodModal';
+import { useAddPaymentMethodModal } from '../hooks/useAddPaymentMethodModal';
 import { delay } from 'rxjs';
 
 const { Link } = Typography;

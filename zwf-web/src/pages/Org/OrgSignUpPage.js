@@ -6,7 +6,7 @@ import { Logo } from 'components/Logo';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import HomeFooter from 'components/HomeFooter';
-import { useOrgRegisterSuccessfullyModal } from 'components/useOrgRegisterSuccessfullyModal';
+import { useOrgRegisterSuccessfullyModal } from 'hooks/useOrgRegisterSuccessfullyModal';
 
 const { Title } = Typography;
 
