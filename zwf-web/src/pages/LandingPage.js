@@ -20,7 +20,7 @@ export const LandingPage = () => {
       case 'client':
         navigate('/task');
         break;
-      case 'admin':
+      case 'system':
         navigate('/sysboard');
         break;
       default:

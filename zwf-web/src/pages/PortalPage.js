@@ -116,7 +116,7 @@ export const PortalPage = () => {
             <Button type="primary" onClick={handleShowRegisterModal}>Try it Now</Button>
           </Col>}
           {!isGuest && !beingSuspended && <Col>
-            <Link to="/task">
+            <Link to="/landing">
               <Button type="primary">Go to App</Button>
             </Link>
           </Col>}
@@ -146,7 +146,7 @@ export const PortalPage = () => {
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
           {isGuest && <Button type="primary" block size="large" onClick={handleShowRegisterModal}>Try it Now</Button>}
           {isGuest && <Button type="link" block size="large" onClick={() => handleMenuChange('/login')}>Login</Button>}
-          {!isGuest && !beingSuspended && <Button type="primary" block size="large" onClick={() => handleMenuChange('/task')}>Go to App</Button>}
+          {!isGuest && !beingSuspended && <Button type="primary" block size="large" onClick={() => handleMenuChange('/landing')}>Go to App</Button>}
         </Space>
       }
     >
