@@ -42,6 +42,8 @@ import { OrgBasicInformation } from './OrgBasicInformation';
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
       'tg.tags as tags',
+      'o.type as "currentPlanType"',
+      'o."periodTo" as "currentPeriodTo"'
     ]),
   dependsOn: [User, UserProfile, Org]
 })
@@ -100,4 +102,10 @@ export class UserInformation {
 
   @ViewColumn()
   tags: string[];
+
+  @ViewColumn()
+  currentPlanType: 'trial' | 'monthly';
+
+  @ViewColumn()
+  currentPeriodTo: Date;
 }
