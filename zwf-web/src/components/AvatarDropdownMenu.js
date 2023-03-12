@@ -13,7 +13,7 @@ import { QuestionCircleFilled } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useRole } from 'hooks/useRole';
 
-const {Text} = Typography;
+const { Text } = Typography;
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
 
@@ -41,7 +41,7 @@ export const AvatarDropdownMenu = React.memo(props => {
 
   const handleLogout = () => {
     modal.confirm({
-      icon: <QuestionCircleFilled/>,
+      icon: <QuestionCircleFilled />,
       title: 'Are you sure you want to log out?',
       okText: 'Logout',
       okButtonProps: {

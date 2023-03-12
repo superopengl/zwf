@@ -57,7 +57,7 @@ const ActivateAccountPage = props => {
         finalize(() => setLoading(false))
       )
       .subscribe(user => {
-        setAuthUser(user);
+        setAuthUser(user, '/landing');
         notify.success('Successfully set password');
         // navigate('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
       });
