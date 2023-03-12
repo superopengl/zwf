@@ -41,7 +41,6 @@ export const GoogleSsoButton = props => {
         if (!user) {
           throw new Error('User is null');
         }
-        debugger;
         setAuthUser(user, '/landing');
       });
 

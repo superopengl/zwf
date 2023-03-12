@@ -32,11 +32,7 @@ export const SupportReplyDrawer = React.memo((props) => {
 
   React.useEffect(() => {
     const sub$ = eventSource.pipe(
-      // tap(e => {
-      //   debugger;
-      // }),
       filter(e => {
-        // debugger;
         return e.userId === userId
       })
     ).subscribe(event => {
