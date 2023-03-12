@@ -21,6 +21,8 @@ const containerCss = css({
 const StyledList = styled(List)`
 .ant-list-item {
   border: none;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 padding-left: 16px;
@@ -47,8 +49,8 @@ const ChatMessage = React.memo(props => {
         style={{
           // marginLeft: 40,
           // marginBottom: 4,
-          // color: isMe ? '#000000cc !important' : 'normal',
-          backgroundColor: isMe ? '#0FBFC4aa' : 'rgb(236, 236, 236)',
+          // color: isMe ? '#FFFFFFcc !important' : 'normal',
+          backgroundColor: isMe ? '#F7BA1EAA' : 'rgb(236, 236, 236)',
           borderRadius: 12,
         }}>
           <RawHtmlDisplay value={message}/>
