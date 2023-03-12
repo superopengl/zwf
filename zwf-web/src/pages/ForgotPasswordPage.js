@@ -8,6 +8,7 @@ import { notify } from 'util/notify';
 import { ForgotPasswordPanel } from './ForgotPasswordPanel';
 import HomeFooter from 'components/HomeFooter';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { ProCard } from '@ant-design/pro-components';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto;
@@ -15,16 +16,6 @@ padding: 0;
 background-color: #ffffff;
 text-align: center;
 min-height: 100%;
-`;
-
-const ContainerStyled = styled.div`
-margin: 1rem auto;
-padding: 2rem 3rem;
-text-align: center;
-max-width: 400px;
-// background-color: #ffffff;
-border: 1px solid #E3E6EB;
-border-radius: 8px;
 `;
 
 const LogoContainer = styled.div`
@@ -44,12 +35,12 @@ const ForgotPasswordPage = props => {
     <Layout.Content style={{ padding: '3rem 1rem' }}>
       <LogoContainer><Logo /></LogoContainer>
       <Title level={2}>Forgot Password</Title>
-      <ContainerStyled>
+      <ProCard bordered style={{margin: '0 auto', maxWidth: 380}}>
         <ForgotPasswordPanel onFinish={() => navigate('/')} />
         {/* <Form.Item >
           <Button block type="link" onClick={() => goBack()}>Cancel</Button>
         </Form.Item> */}
-      </ContainerStyled>
+      </ProCard>
     </Layout.Content>
     <HomeFooter />
   </LayoutStyled>;
