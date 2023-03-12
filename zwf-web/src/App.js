@@ -3,7 +3,7 @@ import React from 'react';
 import { BrowserRouter, createBrowserRouter, createRoutesFromElements, Routes, Route, RouterProvider } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
-import { Subject } from 'rxjs';
+import { finalize, Subject } from 'rxjs';
 import { ConfigProvider, Row } from 'antd';
 import loadable from '@loadable/component'
 import { IntlProvider } from "react-intl";
@@ -20,6 +20,7 @@ import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { Error404 } from 'pages/Error404';
+import { LandingPage } from 'pages/LandingPage';
 
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
@@ -72,24 +73,8 @@ export const App = React.memo(() => {
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
   const event$ = React.useRef(new Subject()).current;
-
-  // const globalContextValue = {
-  //   event$,
-  //   role: 'guest',
-  //   user,
-  //   setUser,
-  //   // members,
-  //   // setMembers,
-  //   setLoading,
-  //   setLocale: locale => {
-  //     reactLocalStorage.set('locale', locale);
-  //     setLocale(locale);
-  //   },
-  // }
-
   const contextValueRef = React.useRef({
     event$,
-    role: 'guest',
     user,
     setUser,
     setLoading,
@@ -99,19 +84,21 @@ export const App = React.memo(() => {
     },
   });
 
-
   React.useEffect(() => {
-    const sub$ = getAuthUser$().subscribe(user => {
-      setUser(user);
-      setLoading(false);
-    })
+    const sub$ = getAuthUser$()
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(user => {
+        setUser(user)
+      })
     return () => sub$.unsubscribe()
   }, []);
 
   React.useEffect(() => {
-    if (user !== contextValueRef.current.user) {
-      contextValueRef.current.user = user;
-      contextValueRef.current.role = user?.role || 'guest';
+    const context = contextValueRef.current;
+    if (user !== context.user) {
+      context.user = user;
     }
   }, [user]);
 
@@ -123,6 +110,8 @@ export const App = React.memo(() => {
     </Row>
   }
 
+  debugger;
+  
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
@@ -137,10 +126,12 @@ export const App = React.memo(() => {
         <Route path="/task/direct/:token" element={<TaskDirectPage />} />
         <Route path="/onboard" element={<OrgOnBoardPage />} />
 
+        <Route path="/landing" element={<LandingPage />} />
+
         <Route path="/" element={<AppLoggedInPage />} >
           <Route path="/sysboard" element={<SystemBoardPage />} />
           <Route path="/task" element={<TaskListPage />} />
-          <Route path="/task/:id" element={<TaskPage /> } />
+          <Route path="/task/:id" element={<TaskPage />} />
           <Route path="/activity" element={<ClientTrackingListPage />} />
           <Route path="/doc_template" element={<DocTemplateListPage />} />
           <Route path="/doc_template/new" element={<DocTemplatePage />} />

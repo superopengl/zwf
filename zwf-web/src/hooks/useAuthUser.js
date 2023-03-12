@@ -1,29 +1,35 @@
 import { GlobalContext } from 'contexts/GlobalContext';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { message, Typography } from 'antd';
+import { Typography } from 'antd';
 import { logout$ } from 'services/authService';
 import { notify } from 'util/notify';
+import { useNavigate } from 'react-router-dom';
 
 const { Paragraph } = Typography;
 
 export const useAuthUser = () => {
   const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
+  const [shouldNavigate, setShouldNavigate] = React.useState(false);
+  const routePathRef = React.useRef(null);
+  const { setUser } = context;
 
-  const { user } = context;
+  React.useEffect(() => {
+    if (routePathRef.current) {
+      navigate(routePathRef.current);
+      routePathRef.current = null;
+    }
+  }, [routePathRef.current]);
 
-  const updateContextUser = (user) => {
-    context.user = user;
-    context.role = user?.role ?? 'guest';;
-  }
+  const setAuthUser = (updatedUser, pathAfter = null) => {
+    routePathRef.current = pathAfter ?? null;
+    setShouldNavigate(true);
 
-  const setAuthUser = (user) => {
-    if (user) {
-      const { suspended } = user;
+    if (updatedUser) {
+      const { suspended } = updatedUser;
       if (suspended) {
         // When org/account is suspended.
-        updateContextUser(null);
+        setUser(null);
         logout$().subscribe(() => {
           notify.error(
             'Account has been suspended',
@@ -36,17 +42,11 @@ export const useAuthUser = () => {
         });
         return;
       }
-
-      if (user?.role === 'admin' && !user.orgId) {
-        updateContextUser(user);
-        navigate('/onboard')
-        return;
-      }
     }
 
-    updateContextUser(user);
+    setUser(updatedUser);
   }
 
-  return [user, setAuthUser];
+  return [context.user, setAuthUser];
 }
 

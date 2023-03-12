@@ -34,18 +34,11 @@ export const LogInPanel = props => {
 
     login$(values.name, values.password)
       .pipe(
-        finalize(() => setLoading(false)),
         filter(u => !!u),
-        tap(user => setAuthUser(user)),
-        // delay(100),
-        map(u => u.role)
+        finalize(() => setLoading(false)),
       )
-      .subscribe(role => {
-        if (role === 'system') {
-          navigate(returnUrl || '/support')
-        } else {
-          navigate('/task');
-        }
+      .subscribe(user => {
+        setAuthUser(user, '/landing')
       })
   }
 
