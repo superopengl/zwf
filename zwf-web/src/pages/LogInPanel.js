@@ -36,8 +36,7 @@ export const LogInPanel = props => {
       .pipe(
         filter(u => !!u),
         finalize(() => setLoading(false)),
-      )
-      .subscribe(user => {
+      ).subscribe(user => {
         setAuthUser(user, '/landing')
       })
   }
