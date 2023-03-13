@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Row, Tooltip, Drawer, Badge } from 'antd';
+import { Typography, Button, Table, Input, Modal, Row, Tooltip, Drawer, Badge, Space } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -8,7 +8,6 @@ import {
   CheckOutlined
 } from '@ant-design/icons';
 
-import { Space } from 'antd';
 import { impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -22,6 +21,9 @@ import { GiDominoMask } from 'react-icons/gi';
 import Icon from '@ant-design/icons';
 import { UserNameCard } from 'components/UserNameCard';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
+import { BsKeyFill } from 'react-icons/bs';
+import { IoKeyOutline } from 'react-icons/io5';
 
 const Container = styled.div`
 
@@ -77,13 +79,11 @@ const OrgListPage = () => {
       sorter: {
         compare: (a, b) => a?.name?.localeCompare(b.name)
       },
-      render: (text, item) => <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
+      render: (text, item) => <Space>
+      <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
+      <ClickToCopyTooltip name="Org ID" value={item.id}><Icon component={IoKeyOutline}/></ClickToCopyTooltip>
+      </Space>
     },
-    // {
-    //   title: 'ID',
-    //   dataIndex: 'id',
-    //   render: (value, item) => <Text code>{value}</Text>,
-    // },
     {
       title: 'Business Name',
       dataIndex: 'businessName',
@@ -91,11 +91,6 @@ const OrgListPage = () => {
         compare: (a, b) => a?.businessName?.localeCompare(b.businessName)
       },
       render: (value) => value
-    },
-    {
-      title: 'Org',
-      dataIndex: 'id',
-      render: (value) => value && <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
     },
     {
       title: 'Tel',

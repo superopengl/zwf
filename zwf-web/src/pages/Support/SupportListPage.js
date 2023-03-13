@@ -28,7 +28,10 @@ import { Tooltip } from 'antd';
 import { GiDominoMask } from 'react-icons/gi';
 import { compareDates } from 'util/compareDates';
 import { useAssertRole } from 'hooks/useAssertRole';
-
+import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
+import { BsKeyFill } from 'react-icons/bs';
+import { HiOutlineKey } from 'react-icons/hi';
+import { IoKeyOutline } from 'react-icons/io5';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -93,17 +96,12 @@ const SupportListPage = () => {
       title: 'User',
       fixed: 'left',
       render: (_, item) => <Space>
+        <ClickToCopyTooltip name="User ID" value={item.userId}><Icon component={IoKeyOutline} /></ClickToCopyTooltip>
         <Tooltip title="Click to open messages">
           <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link" onClick={() => handleChatWith(item)} />
         </Tooltip>
-
         <Badge count={item.unreadCount} showZero={false} />
       </Space >
-    },
-    {
-      title: 'User Id',
-      dataIndex: 'userId',
-      render: (value) => <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
     },
     {
       title: 'Org',
@@ -111,16 +109,19 @@ const SupportListPage = () => {
       sorter: {
         compare: (a, b) => a?.orgName?.localeCompare(b.orgName)
       },
-      render: (value) => <HighlightingText search={queryInfo.text} value={value} />,
+      render: (value, item) => item.orgId && <Space>
+        <ClickToCopyTooltip name="Org ID" value={item.orgId}><Icon component={IoKeyOutline} /></ClickToCopyTooltip>
+        <HighlightingText search={queryInfo.text} value={value} />
+      </Space> 
     },
-    {
-      title: 'Org',
-      dataIndex: 'orgId',
-      sorter: {
-        compare: (a, b) => a?.orgId?.localeCompare(b.orgId)
-      },
-      render: (value) => value && <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
-    },
+    // {
+    //   title: 'Org',
+    //   dataIndex: 'orgId',
+    //   sorter: {
+    //     compare: (a, b) => a?.orgId?.localeCompare(b.orgId)
+    //   },
+    //   render: (value) => value && <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
+    // },
     {
       title: 'Role',
       dataIndex: 'role',
