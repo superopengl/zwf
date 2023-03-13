@@ -7,22 +7,30 @@ import { useAuthUser } from 'hooks/useAuthUser';
 import moment from 'moment';
 import { notify } from 'util/notify';
 import { notification } from 'antd';
+import { useRole } from 'hooks/useRole';
 
 const { Link, Paragraph, Text } = Typography;
 
-const PAYMENT_METHOD_NOT_SPECIFIED_KEY= 'Payment method not specified';
+const PAYMENT_METHOD_NOT_SPECIFIED_KEY = 'Payment method not specified';
 export const GlobalNotificationBar = () => {
   const [openAddPaymentModal, modalContextHolder] = useAddPaymentMethodModal();
   const [user] = useAuthUser();
+  const role = useRole();
+  const { suspended, currentPlanType, currentPeriodTo } = user;
+  const periodTo = moment(currentPeriodTo);
 
-  const shouldTimeToPrompt = (periodTo) => {
-    return periodTo.add(-7, 'days').isBefore();
+  const shouldPromptBeforeDays = (beforeDays = 3) => {
+    return periodTo.add(-beforeDays, 'days').isBefore();
   }
 
+  const source$ = of(null).pipe(
+    filter(() => role === 'admin'),
+    filter(() => shouldPromptBeforeDays()),
+    delay(5000),
+  )
+
   React.useEffect(() => {
-    const { suspended, currentPlanType, currentPeriodTo, role } = user;
-    const periodTo = moment(currentPeriodTo);
-    const trialPeriodCheck$ = of(null).pipe(
+    const trialPeriodCheck$ = source$.pipe(
       filter(() => currentPlanType === 'trial'),
       tap(() => {
         notify.info(
@@ -37,7 +45,7 @@ export const GlobalNotificationBar = () => {
       })
     );
 
-    const paymentMethodCheck$ = of(null).pipe(
+    const paymentMethodCheck$ = source$.pipe(
       switchMap(() => listOrgPaymentMethods$()),
       filter(list => !list?.length),
       tap(() => {
@@ -53,11 +61,7 @@ export const GlobalNotificationBar = () => {
       })
     );
 
-    const sub$ = forkJoin([trialPeriodCheck$, paymentMethodCheck$]).pipe(
-      filter(() => role === 'admin'),
-      filter(() => shouldTimeToPrompt(periodTo)),
-      delay(5000),
-    ).subscribe();
+    const sub$ = forkJoin([trialPeriodCheck$, paymentMethodCheck$]).subscribe();
 
     return () => sub$.unsubscribe();
   }, [user]);
