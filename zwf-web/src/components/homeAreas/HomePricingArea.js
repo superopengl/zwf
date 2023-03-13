@@ -95,7 +95,7 @@ export const HomePricingArea = props => {
                 <Col><Text style={{ color: '#ffffff', fontSize: 40, lineHeight: 1.4, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}></Text></Col>
                 <Col>
                   <small>/Month</small><br />
-                  <small>GST Inc.</small>
+                  <small>Incl GST</small>
                 </Col>
               </Row>
               <Paragraph style={{ fontSize: 16, marginTop: '1rem' }}>

@@ -138,7 +138,7 @@ const OrgResurgingPage = () => {
               {period.promotionCode && <Descriptions.Item label="Plan price (after discount)">
                 <MoneyAmount value={period.promotionPlanPrice} postfix="/ mo" />
               </Descriptions.Item>}
-              <Descriptions.Item label="Due amount (GST inc.)">
+              <Descriptions.Item label="Due amount (Incl GST)">
                 <MoneyAmount value={billingInfo.payable} style={{ fontSize: 30 }} strong />
               </Descriptions.Item>
             </Descriptions>
