@@ -26,8 +26,8 @@ export const useAuthUser = () => {
       const { suspended } = updatedUser;
       if (suspended) {
         // When org/account is suspended.
-        setUser(null);
         logout$().subscribe(() => {
+          setUser(null);
           notify.error(
             'Account has been suspended',
             <>

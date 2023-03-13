@@ -23,11 +23,11 @@ export const authMiddleware = async (req, res, next) => {
         }
 
         user = existingUser;
+        attachJwtCookie(user, res);
       }
 
       nudgeUser(user.id);
       req.user = Object.freeze(user);
-      attachJwtCookie(user, res);
     } else {
       // Guest user (hasn't logged in)
       // req.user = null;

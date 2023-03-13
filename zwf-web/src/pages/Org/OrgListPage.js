@@ -24,6 +24,8 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
 import { BsKeyFill } from 'react-icons/bs';
 import { IoKeyOutline } from 'react-icons/io5';
+import { useAuthUser } from 'hooks/useAuthUser';
+import { useLocalstorageState } from 'rooks';
 
 const Container = styled.div`
 
@@ -68,8 +70,9 @@ const OrgListPage = () => {
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
   const [modal, contextHolder] = Modal.useModal();
+  const [user, setAuthUser] = useAuthUser();
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
-
+  const [impersonated, setImpersonated] = useLocalstorageState('impersonated');
 
   const columnDef = [
     {
@@ -80,8 +83,8 @@ const OrgListPage = () => {
         compare: (a, b) => a?.name?.localeCompare(b.name)
       },
       render: (text, item) => <Space>
-      <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
-      <ClickToCopyTooltip name="Org ID" value={item.id}><Icon component={IoKeyOutline}/></ClickToCopyTooltip>
+        <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
+        <ClickToCopyTooltip name="Org ID" value={item.id}><Icon component={IoKeyOutline} /></ClickToCopyTooltip>
       </Space>
     },
     {
@@ -219,10 +222,11 @@ const OrgListPage = () => {
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
-        impersonate$(org.ownerEmail)
-          .subscribe(() => {
-            reactLocalStorage.clear();
-            window.location = '/';
+        impersonate$(org.ownerUserId)
+          .subscribe(impersonatedUser => {
+            setAuthUser(impersonatedUser, '/landing');
+            setImpersonated(true);
+            // reactLocalStorage.clear();
           });
       }
     })

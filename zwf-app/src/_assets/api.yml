@@ -164,6 +164,14 @@ paths:
       responses:
         200:
           description: OK
+  /auth/unimpersonate:
+    post:
+      operationId: unimpersonate
+      # security:
+      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK          
   /auth/invite/member:
     post:
       operationId: inviteOrgMember

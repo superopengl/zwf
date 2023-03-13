@@ -23,6 +23,8 @@ import { useAssertUser } from 'hooks/useAssertUser';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useRole } from 'hooks/useRole';
 import { useAssertOrgHasOnBoard } from 'hooks/useAssertOrgHasOnBoard';
+import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -161,6 +163,8 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
 
+  useDocumentTitle();
+
   const [user] = useAuthUser();
   const role = useRole();
 
@@ -191,7 +195,7 @@ export const AppLoggedInPage = React.memo(() => {
           colorTextMenu: '#1C222B'
         }
       }}
-      logo={<Image src="/images/logo-full-primary.png" preview={false} width={150} />}
+      logo={<Image src="/images/logo-full-primary.png" preview={false} width={150} onClick={() => navigate('/')} />}
       title={"ZeeWorkflow"}
       actionsRender={() => [
         canCreateNew ? <Space key="search">
@@ -235,6 +239,7 @@ export const AppLoggedInPage = React.memo(() => {
     </ProLayout>
     {!isSystem && <SupportAffix />}
     {isAdmin && <GlobalNotificationBar />}
+    {!isSystem &&<UnimpersonatedFloatButton />}
   </StyledContainer>
 })
 

@@ -1,4 +1,3 @@
-import { filter } from 'rxjs';
 import { db } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 
@@ -26,12 +25,12 @@ import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSen
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 import { UserInformation } from '../entity/views/UserInformation';
-import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
 import { UserLoginType } from '../types/UserLoginType';
 import { sendInviteOrgMemberEmail } from '../utils/sendInviteOrgMemberEmail';
 import { isEmail } from 'validator';
+import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -227,24 +226,33 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
 export const impersonate = handlerWrapper(async (req, res) => {
   assertRole(req, ['system', 'admin']);
-  const { email } = req.body;
-  assert(email, 400, 'Invalid email');
+  const { id } = req.body;
+  assert(id, 400, 'Id not provided');
+
   const role = getRoleFromReq(req);
-  const loginUser = (req as any).user;
+  const loginUserId = getUserIdFromReq(req);
+  const orgId = role === Role.System ? undefined : getOrgIdFromReq(req);
 
-  const user = await getActiveUserInformation(email);
-  assert(user, 404, 'User not found');
+  const user = await db.getRepository(UserInformation).findOneByOrFail({ id, orgId });
 
-  if (role === Role.Admin) {
-    const orgId = getOrgIdFromReq(req);
-    assert(user.orgId === orgId, 404, 'User not found');
-  }
+  attachJwtCookie(user, res, loginUserId);
 
-  attachJwtCookie(user, res);
-
-  emitUserAuditLog(user.id, 'is-impersonated', { by: loginUser.id });
+  emitUserAuditLog(user.id, 'is-impersonated', { by: loginUserId });
 
   res.json(sanitizeUser(user));
+});
+
+export const unimpersonate = handlerWrapper(async (req, res) => {
+  assertRole(req, ['client', 'agent', 'admin']);
+
+  const { impersonatedBy } = (req as any).user;
+
+  assert(impersonatedBy, 400, 'Cannot umimpersonate user');
+
+  const systemUser = await db.getRepository(UserInformation).findOneByOrFail({ id: impersonatedBy, role: Role.System });
+  attachJwtCookie(systemUser, res);
+
+  res.json(sanitizeUser(systemUser));
 });
 
 export const inviteOrgMember = handlerWrapper(async (req, res) => {
