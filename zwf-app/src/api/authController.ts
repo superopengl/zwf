@@ -16,7 +16,7 @@ import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { emitUserAuditLog } from '../utils/emitUserAuditLog';
-import { sanitizeUser } from '../utils/sanitizeUser';
+import { sanitizeUserForResponse } from '../utils/sanitizeUserForResponse';
 import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
@@ -36,15 +36,19 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
   clearJwtCookie(res);
 
+  let currentUserInfo;
   if (user) {
-    const email = user.email;
-    user = await getActiveUserInformation(email);
-    if (user.suspended) {
-      attachJwtCookie(user, res);
-      user = null;
+    const { email } = user;
+    currentUserInfo = await getActiveUserInformation(email);
+    if (currentUserInfo.suspended) {
+      clearJwtCookie(res);
+      currentUserInfo = null;
+    } else {
+      currentUserInfo.impersonatedBy = user.impersonatedBy;
+      attachJwtCookie(res, currentUserInfo);
     }
   }
-  res.json(user);
+  res.json(sanitizeUserForResponse(currentUserInfo));
 });
 
 export const login = handlerWrapper(async (req, res) => {
@@ -66,11 +70,11 @@ export const login = handlerWrapper(async (req, res) => {
 
   await db.getRepository(User).save(user);
 
-  attachJwtCookie(userInfo, res);
+  attachJwtCookie(res, userInfo);
 
   emitUserAuditLog(user.id, 'login', { type: 'local' });
 
-  res.json(sanitizeUser(userInfo));
+  res.json(sanitizeUserForResponse(userInfo));
 });
 
 export const logout = handlerWrapper(async (req, res) => {
@@ -205,9 +209,9 @@ export const resetPassword = handlerWrapper(async (req, res) => {
   await db.manager.save(user);
   const userInfo = await db.getRepository(UserInformation).findOneByOrFail({ id: user.id });
 
-  attachJwtCookie(userInfo, res);
+  attachJwtCookie(res, userInfo);
 
-  res.json(sanitizeUser(userInfo));
+  res.json(sanitizeUserForResponse(userInfo));
 });
 
 export const retrievePassword = handlerWrapper(async (req, res) => {
@@ -230,16 +234,17 @@ export const impersonate = handlerWrapper(async (req, res) => {
   assert(id, 400, 'Id not provided');
 
   const role = getRoleFromReq(req);
-  const loginUserId = getUserIdFromReq(req);
+  const systemUserId = getUserIdFromReq(req);
   const orgId = role === Role.System ? undefined : getOrgIdFromReq(req);
 
-  const user = await db.getRepository(UserInformation).findOneByOrFail({ id, orgId });
+  const userInfo = await db.getRepository(UserInformation).findOneByOrFail({ id, orgId });
 
-  attachJwtCookie(user, res, loginUserId);
+  (userInfo as any).impersonatedBy = systemUserId;
+  attachJwtCookie(res, userInfo);
 
-  emitUserAuditLog(user.id, 'is-impersonated', { by: loginUserId });
+  emitUserAuditLog(userInfo.id, 'is-impersonated', { by: systemUserId });
 
-  res.json(sanitizeUser(user));
+  res.json(sanitizeUserForResponse(userInfo));
 });
 
 export const unimpersonate = handlerWrapper(async (req, res) => {
@@ -250,9 +255,9 @@ export const unimpersonate = handlerWrapper(async (req, res) => {
   assert(impersonatedBy, 400, 'Cannot umimpersonate user');
 
   const systemUser = await db.getRepository(UserInformation).findOneByOrFail({ id: impersonatedBy, role: Role.System });
-  attachJwtCookie(systemUser, res);
+  attachJwtCookie(res, systemUser);
 
-  res.json(sanitizeUser(systemUser));
+  res.json(sanitizeUserForResponse(systemUser));
 });
 
 export const inviteOrgMember = handlerWrapper(async (req, res) => {
@@ -373,11 +378,11 @@ export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
 
   user = await getActiveUserInformation(email);
 
-  attachJwtCookie(user, res);
+  attachJwtCookie(res, user);
 
   emitUserAuditLog(user.id, 'login', { type: UserLoginType.Google });
 
-  res.json(sanitizeUser(user));
+  res.json(sanitizeUserForResponse(user));
 });
 
 export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
@@ -429,9 +434,8 @@ export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
     shouldBcc: false
   });
 
-
-  attachJwtCookie(user, res);
+  attachJwtCookie(res, user);
 
   emitUserAuditLog(user.id, 'signup', { type: 'google' });
-  res.json(sanitizeUser(user));
+  res.json(sanitizeUserForResponse(user));
 });

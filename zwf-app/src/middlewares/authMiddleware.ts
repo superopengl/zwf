@@ -1,5 +1,5 @@
 
-import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
+import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie, nudgeJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
 import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 import { nudgeUser } from '../utils/nudgeUser';
@@ -8,7 +8,7 @@ export const authMiddleware = async (req, res, next) => {
 
   try {
     let user = verifyJwtFromCookie(req);
-    
+
     if (user) {
       // Logged in users
       const { expires } = user;
@@ -28,8 +28,11 @@ export const authMiddleware = async (req, res, next) => {
           return;
         } else {
           user = existingUser;
-          attachJwtCookie(user, res);
+          attachJwtCookie(res, user);
         }
+      } else {
+        // WHen cookie is still valid, slide its expiry
+        nudgeJwtCookie(req, res);
       }
 
       nudgeUser(user.id);
