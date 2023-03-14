@@ -28,7 +28,7 @@
       </mj-column>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          After opening ZeeWorkflow, you can follow the instructions on the page to complete the process, like setting password. This email address will be used as your account in ZeeWorkflow.
+          Once you open ZeeWorkflow, you can follow the instructions on the page to complete the process, which includes setting up a password. This email address will be used as your account in ZeeWorkflow.
         </mj-text>
       </mj-column>
     </mj-section>
