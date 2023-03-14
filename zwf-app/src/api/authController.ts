@@ -263,7 +263,7 @@ export const unimpersonate = handlerWrapper(async (req, res) => {
 export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin']);
   const { emails: emailStrings } = req.body;
-  const emails = emailStrings?.split(',').map(x => x.trim()).filter(x => !!x);
+  const emails = emailStrings?.split(/[,\n]/).map(x => x.trim()).filter(x => !!x);
 
   assert(emails?.length, 400, 'No email address found');;
   assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
@@ -309,7 +309,7 @@ export const reinviteOrgMember = handlerWrapper(async (req, res) => {
 export const inviteClientToOrg = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { emails: emailStrings } = req.body;
-  const emails = emailStrings?.split(',').map(x => x.trim()).filter(x => !!x);
+  const emails = emailStrings?.split(/[,\n]/).map(x => x.trim()).filter(x => !!x);
   assert(emails?.length, 400, 'No email address found');;
   assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
   const orgId = getOrgIdFromReq(req);
