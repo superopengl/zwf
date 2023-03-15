@@ -2,12 +2,9 @@ import { Drawer, Button } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { listTaskComment$ } from 'services/taskService';
-import { TaskCommentPanel } from './TaskCommentPanel';
-import { TaskMessageForm } from './TaskMessageForm';
-import { getMySupport$, getUserSupport$, subscribeUserSupportMessage, sendContact$ } from 'services/supportService';
+import { getUserSupport$, sendContact$ } from 'services/supportService';
 import { SupportMessageList } from 'components/SupportMessageList';
-import { catchError, filter, finalize, tap } from 'rxjs/operators';
+import { filter, finalize } from 'rxjs/operators';
 import { SupportMessageInput } from './SupportMessageInput';
 import { SyncOutlined } from '@ant-design/icons';
 
