@@ -32,6 +32,7 @@ import { BsKeyFill } from 'react-icons/bs';
 import { HiOutlineKey } from 'react-icons/hi';
 import { IoKeyOutline } from 'react-icons/io5';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { useSubscribeZevent } from "hooks/useSubscribeZevent";
 
 const { Text, Link: TextLink } = Typography;
 
@@ -87,10 +88,21 @@ const SupportListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
-  const eventSource$ = React.useRef(new Subject());
   const [user, setAuthUser] = useAuthUser();
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
   const [modal, contextHolder] = Modal.useModal();
+
+  useSubscribeZevent( zevent => {
+    const { userId, payload } = zevent;
+    setList(list => {
+      const item = list.find(x => x.userId === userId);
+      if (item) {
+        item.unreadCount += payload.by === userId ? 1 : 0;
+        return [...list];
+      }
+      return list;
+    })
+  }, []);
 
   const columnDef = [
     {
@@ -113,7 +125,7 @@ const SupportListPage = () => {
       render: (value, item) => item.orgId && <Space>
         <ClickToCopyTooltip name="Org ID" value={item.orgId}><Icon component={IoKeyOutline} /></ClickToCopyTooltip>
         <HighlightingText search={queryInfo.text} value={value} />
-      </Space> 
+      </Space>
     },
     // {
     //   title: 'Org',
@@ -220,26 +232,29 @@ const SupportListPage = () => {
     }
   }, [queryInfo]);
 
-  // Subscribe message events
-  React.useEffect(() => {
-    const es = subscribeSupportMessage();
-    es.onmessage = (e) => {
-      const event = JSON.parse(e.data);
-      eventSource$.current.next(event);
-      setList(list => {
-        const item = list.find(x => x.userId === event.userId);
-        if (item) {
-          item.unreadCount += event.by === event.userId ? 1 : 0;
-          return [...list];
-        }
-        return list;
-      })
-    }
 
-    return () => {
-      es?.close()
-    }
-  }, []);
+
+
+  // // Subscribe message events
+  // React.useEffect(() => {
+  //   const es = subscribeSupportMessage();
+  //   es.onmessage = (e) => {
+  //     const event = JSON.parse(e.data);
+  //     eventSource$.current.next(event);
+  //     setList(list => {
+  //       const item = list.find(x => x.userId === event.userId);
+  //       if (item) {
+  //         item.unreadCount += event.by === event.userId ? 1 : 0;
+  //         return [...list];
+  //       }
+  //       return list;
+  //     })
+  //   }
+
+  //   return () => {
+  //     es?.close()
+  //   }
+  // }, []);
 
   const updateQueryInfo = (queryInfo) => {
     setQueryInfo(queryInfo);
@@ -371,7 +386,6 @@ const SupportListPage = () => {
         userId={currentUser?.userId}
         visible={chatVisible}
         onClose={() => setChatVisible(false)}
-        eventSource={eventSource$.current}
       />
       <Drawer
         title="Tracking"

@@ -7,6 +7,7 @@ import { SupportMessageList } from 'components/SupportMessageList';
 import { filter, finalize } from 'rxjs/operators';
 import { SupportMessageInput } from './SupportMessageInput';
 import { SyncOutlined } from '@ant-design/icons';
+import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
 
 
 
@@ -14,6 +15,14 @@ export const SupportReplyDrawer = React.memo((props) => {
   const { title, userId, visible, onClose, eventSource } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
+
+  useSubscribeZevent(zevent => {
+    if(zevent.userId === userId) {
+      setList(list => {
+        return [...list, zevent.payload]
+      });
+    }
+  }, [userId]);
 
   React.useEffect(() => {
     if (!userId) {
@@ -26,20 +35,6 @@ export const SupportReplyDrawer = React.memo((props) => {
     }
 
   }, [userId, visible]);
-
-  React.useEffect(() => {
-    const sub$ = eventSource.pipe(
-      filter(e => {
-        return e.userId === userId
-      })
-    ).subscribe(event => {
-      setList(list => {
-        return [...(list ?? []), event]
-      });
-    });
-
-    return () => sub$.unsubscribe()
-  }, [userId]);
 
   const load$ = () => {
     setLoading(true)

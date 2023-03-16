@@ -111,7 +111,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
       .orIgnore()
       .execute();
 
-    await logTaskCreated(m, task.id, creatorId);
+    await logTaskCreated(m, task, creatorId);
   });
 
   // const org = await db.getRepository(Org).findOne({ where: { id: task.orgId } });

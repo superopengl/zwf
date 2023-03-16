@@ -9,6 +9,7 @@ import { SupportMessageInput } from './SupportMessageInput';
 import { sendContact$ } from 'services/supportService';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
 
 
 const { Paragraph, Title } = Typography;
@@ -48,28 +49,16 @@ export const SupportAffix = () => {
   const [loading, setLoading] = React.useState(true);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [list, setList] = React.useState([]);
-
   const [user] = useAuthUser();
 
   const cheerName = user?.givenName?.trim() || 'Hi There';
 
-  // Eventsource subscription
-  React.useEffect(() => {
-    const eventSource = subscribeSupportMessage();
-    eventSource.onmessage = (e) => {
-      const event = JSON.parse(e.data);
-      setList(list => {
-        return [...(list ?? []), event]
-      });
-      // Has to use a ref to get the latest value of visible,
-      // because it's closured by the onmessage callback function.
-      if (!visibleRef.current) {
-        setUnreadCount(x => x + 1);
-      }
-    }
-
-    return () => {
-      eventSource?.close();
+  useSubscribeZevent(zevent => {
+    setList(list => {
+      return [...list, zevent.payload]
+    })
+    if (!visibleRef.current) {
+      setUnreadCount(x => x + 1);
     }
   }, []);
 

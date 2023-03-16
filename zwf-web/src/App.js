@@ -22,6 +22,7 @@ import { Navigate } from 'react-router-dom';
 import { Error404 } from 'pages/Error404';
 import { LandingPage } from 'pages/LandingPage';
 import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
+import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
 
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
@@ -73,9 +74,9 @@ export const App = React.memo(() => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
-  const event$ = React.useRef(new Subject()).current;
+  const zeventBus$ = useEstablishZeventStream();
   const contextValueRef = React.useRef({
-    event$,
+    zeventBus$,
     user,
     setUser,
     setLoading,

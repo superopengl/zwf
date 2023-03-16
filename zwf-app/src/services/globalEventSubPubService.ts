@@ -3,13 +3,9 @@ import { Subject, Subscription, Observable } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
 import * as redis from 'redis';
 import * as _ from 'lodash';
+import { Zevent } from '../types/Zevent';
 
 const redisUrl = process.env.REDIS_URL;
-
-type Event = {
-  type: string,
-  payload: any
-};
 
 class RedisPubService {
   private publisher = null;
@@ -18,7 +14,7 @@ class RedisPubService {
     this.publisher = redis.createClient(redisUrl);
   }
 
-  public publish(event: Event) {
+  public publish(event: Zevent) {
     if (!event) return;
     const data = _.isString(event) ? event : JSON.stringify(event);
     // console.log('Event subscriber channel', 'with data:', data, event);
@@ -28,7 +24,7 @@ class RedisPubService {
 
 class RedisSubService {
   private subscriber = null;
-  private eventSubject$ = new Subject<Event>();
+  private eventSubject$ = new Subject<Zevent>();
 
   constructor(private channelName) {
     this.subscriber = redis.createClient(redisUrl);
@@ -42,7 +38,7 @@ class RedisSubService {
     this.subscriber.subscribe(this.channelName);
   }
 
-  public getObservable(): Observable<Event> {
+  public getObservable(): Observable<Zevent> {
     return this.eventSubject$;
   }
 }
@@ -64,11 +60,8 @@ class RedisRealtimePriceSubService extends RedisSubService {
 const globalPublisher = new RedisRealtimePricePubService();
 const golbalSubscriber = new RedisRealtimePriceSubService();
 
-export const publishEvent = (type: string, payload: any) => {
-  globalPublisher.publish({
-    type,
-    payload,
-  });
+export const publishEvent = (event: Zevent) => {
+  globalPublisher.publish(event);
 };
 
 export const getEventChannel = (type: string): Observable<any> => {
@@ -76,6 +69,13 @@ export const getEventChannel = (type: string): Observable<any> => {
     .pipe(
       filter(x => x.type === type),
       map(x => x.payload)
+    );
+};
+
+export const getEventSource$ = (filterFunc: (event: Zevent) => boolean): Observable<any> => {
+  return golbalSubscriber.getObservable()
+    .pipe(
+      filter(filterFunc),
     );
 };
 
