@@ -45,12 +45,6 @@ paths:
       responses:
         200:
           description: OK
-  /support/sse:
-    get:
-      operationId: subscribeSupportMessage
-      responses:
-        200:
-          description: OK
   /support/{userId}:
     get:
       operationId: getUserSupport

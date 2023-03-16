@@ -19,12 +19,6 @@ export function sendContact$(message, capturedUrl, replyToUserId) {
   return httpPost$(`/support`, { message, capturedUrl, replyToUserId });
 }
 
-export function subscribeSupportMessage() {
-  const url = `${API_BASE_URL}/support/sse`;
-  const es = new EventSource(url, { withCredentials: true });
-  return es;
-}
-
 export function getUserSupport$(userId) {
   return httpGet$(`/support/${userId}`);
 }

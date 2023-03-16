@@ -150,32 +150,3 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
   res.json();
 });
 
-export const subscribeSupportMessage = handlerWrapper(async (req, res) => {
-  const userId = getUserIdFromReq(req);
-  assert(userId, 404)
-  
-  const role = getRoleFromReq(req);
-  const isSystem = role === Role.System;
-
-  // const { user: { id: userId } } = req as any;
-  const isProd = process.env.NODE_ENV === 'prod';
-  if (!isProd) {
-    res.setHeader('Access-Control-Allow-Origin', process.env.ZWF_WEB_DOMAIN_NAME);
-  }
-  res.sse();
-
-  const channelSubscription$ = getEventChannel(CONTACT_EVENT_TYPE)
-    .pipe(
-      // System subscribe all contact events. Other users only subscribe themselves'
-      filter(x => isSystem || x?.userId === userId)
-    )
-    .subscribe((event) => {
-      res.write(`data: ${JSON.stringify(event)}\n\n`);
-      (res as any).flush();
-    });
-
-  res.on('close', () => {
-    channelSubscription$.unsubscribe();
-    res.end();
-  });
-});
