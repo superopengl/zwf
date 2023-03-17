@@ -53,14 +53,14 @@ const ROUTES = [
         path: '/task',
         name: <FormattedMessage id="menu.tasks" />,
         icon: <Icon component={MdDashboard} />,
-        roles: ['admin', 'agent', 'client'],
+        roles: ['admin', 'agent'],
       },
-      {
-        path: '/activity',
-        name: 'Interactions & Messages',
-        icon: <Icon component={AiOutlineHistory} />,
-        roles: ['client'],
-      },
+      // {
+      //   path: '/activity',
+      //   name: 'Interactions & Messages',
+      //   icon: <Icon component={AiOutlineHistory} />,
+      //   roles: ['client'],
+      // },
       {
         path: '/scheduler',
         name: <FormattedMessage id="menu.scheduler" />,
@@ -197,13 +197,13 @@ export const AppLoggedInPage = React.memo(() => {
         }
       }}
       logo={<Image src="/images/logo-full-primary.png" preview={false} width={150} onClick={() => navigate('/')} />}
-      title={"ZeeWorkflow"}
+      title={""}
       actionsRender={() => [
         canCreateNew ? <Space key="search" size="large">
           <SmartSearch />
           <CreateNewButton />
         </Space> : null,
-        isSystem ? null : <NotificationButton key="notification"/>,
+        isSystem ? null : <NotificationButton key="notification" />,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
       headerTitleRender={() => {
@@ -212,12 +212,13 @@ export const AppLoggedInPage = React.memo(() => {
       location={{ pathname }}
       route={{ routes }}
       // fixSiderbar={true}
-      layout='mix'
+      layout={role === 'client' ? 'top' : 'mix'}
       // splitMenus={true}
       siderWidth={210}
       menu={{
         type: 'group',
       }}
+      suppressSiderWhenMenuEmpty={true}
       // headerRender={false}
       menuItemRender={(item, dom) => (
         <div
@@ -241,7 +242,7 @@ export const AppLoggedInPage = React.memo(() => {
     </ProLayout>
     {!isSystem && <SupportAffix />}
     {isAdmin && <GlobalNotificationBar />}
-    {!isSystem &&<UnimpersonatedFloatButton />}
+    {!isSystem && <UnimpersonatedFloatButton />}
   </StyledContainer>
 })
 

@@ -1,5 +1,5 @@
 import { ClearOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Space, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, Select, Input } from 'antd';
+import { Button, Space, Typography, Row, Col, Tabs, Grid, Alert, Badge, Tooltip, Select, Input, Card, Tag, Checkbox, ConfigProvider } from 'antd';
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 
@@ -11,17 +11,25 @@ import { useLocalstorageState } from 'rooks';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import Icon from '@ant-design/icons';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { ProTable, TableDropdown } from '@ant-design/pro-components';
+import { ProList } from '@ant-design/pro-components';
+import { useNavigate } from 'react-router-dom';
+import { TaskIcon } from 'components/entityIcon';
+import { Descriptions } from 'antd';
+import { TimeAgo } from 'components/TimeAgo';
+import { HighlightingText } from 'components/HighlightingText';
+import CheckboxButton from 'components/CheckboxButton';
 
-const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
-
+const { CheckableTag } = Tag;
+const { Paragraph } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
   // margin-left: -16px;
   // background-color: #ffffff;
   height: 100%;
-  max-width: 1500px;
+  max-width: 1200px;
 
   .ant-tabs-tab-btn {
     width: 100%;
@@ -36,46 +44,13 @@ const LayoutStyled = styled.div`
 
 `;
 
-const TAB_DEFS = [
-  {
-    label: 'Pending',
-    description: 'These are the cases that are being proceeded by your agents. No immidiate action is required from your side at the moment.',
-    badgeColor: '#0FBFC4',
-    filter: item => {
-      return item.status === 'in_progress' || item.status === 'todo'
-    }
-  },
-  {
-    label: 'Action required',
-    default: true,
-    badgeColor: null,
-    alertType: 'warning',
-    description: 'These cases requires your actions by either filling the form, upload required files, or reply messages from the agents',
-    filter: item => item.status === 'action_required'
-  },
-
-  {
-    badgeColor: '#2da44e',
-    label: 'Completed',
-    description: 'The cases that have been completed.',
-    filter: item => {
-      return item.status === 'done'
-    }
-  },
-  {
-    label: 'All cases',
-    badgeColor: '#bbbbbb',
-    description: 'All the cases, including all completed cases, in progress cases, and action required cases.',
-    filter: item => true,
-  },
-];
 
 const CLIENT_TASK_FILTER_KEY = 'client.tasks.filter';
 const TASK_FILTER_DEFAULT = {
   text: '',
   org: '',
   order: '-updatedAt',
-  tab: 'Action required',
+  status: ['in_progress', 'action-required', 'done'],
 };
 
 
@@ -86,7 +61,7 @@ export const ClientTaskListPage = () => {
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
   const [query, setQuery] = useLocalstorageState(CLIENT_TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
-  const screens = useBreakpoint();
+  const navigate = useNavigate();
 
   const load$ = () => {
     setLoading(true);
@@ -120,8 +95,39 @@ export const ClientTaskListPage = () => {
       const field = order.substring(1);
       result = orderBy(result, [field], [direction]);
     }
-    setFilteredList(result);
+
+    const formatted = result.map(item => ({
+      id: item.id,
+      data: item,
+      title: <HighlightingText value={item.name} search={query.text} />,
+      avatar: <TaskIcon />,
+      content: <>
+        <Descriptions size="small" column={2}>
+          <Descriptions.Item label="created">
+            <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
+          </Descriptions.Item>
+          <Descriptions.Item label="updated">
+            <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
+          </Descriptions.Item>
+        </Descriptions>
+      </>
+    }))
+    setFilteredList(formatted);
   }, [allList, query]);
+
+  const handleToggleStatus = (status) => {
+    let queryStatus = query.status ?? [];
+    if (isFilteringStatus(status)) {
+      queryStatus = queryStatus.filter(s => s !== status);
+    } else {
+      queryStatus.push(status);
+    }
+    setQuery(q => ({ ...q, status: queryStatus }));
+  }
+
+  const isFilteringStatus = (status) => {
+    return query.status?.includes(status);
+  }
 
   const sortOptions = React.useMemo(() => [
     {
@@ -156,42 +162,112 @@ export const ClientTaskListPage = () => {
     <LayoutStyled>
       <PageContainer
         header={{
-          title: "All Cases",
+          title: "All My Cases",
           loading,
           extra: [
             <Button key="refresh"
               icon={<SyncOutlined />}
               onClick={() => load$()}
-              type="link">Refresh</Button>,
-            <Button key="clear"
-              icon={<ClearOutlined />}
-              onClick={() => setQuery({ ...TASK_FILTER_DEFAULT, tab: query.tab })}
-              type="link">Reset filters</Button>,
-            <Input.Search
-              key="search"
-              placeholder='Search text'
-              style={{ width: 200 }}
-              value={searchText}
-              onChange={e => setSearchText(e.target.value)}
-              onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
-              maxLength={200}
-              allowClear />,
-            <Select key="org"
-              options={orgOptions}
-              value={query.org}
-              onSelect={org => setQuery({ ...query, org })}
-              dropdownMatchSelectWidth={false}
-              style={{ width: 200 }} />,
-            <Select key="sort"
-              value={query.order}
-              options={sortOptions}
-              onSelect={order => setQuery({ ...query, order })}
-              dropdownMatchSelectWidth={false}
-              style={{ width: 200 }} />,
+              type="link">Refresh</Button>
           ]
         }}
       >
-        <Tabs tabPosition={screens.md ? 'left' : 'top'}
+          <Row gutter={[12,24]}>
+            <Col>
+              <CheckboxButton value={isFilteringStatus('in_progress')} onChange={() => handleToggleStatus('in_progress')}>Pending</CheckboxButton>
+            </Col>
+            <Col>
+              <CheckboxButton danger value={isFilteringStatus('action_required')} onChange={() => handleToggleStatus('action_required')}>Action Required</CheckboxButton>
+            </Col>
+            <Col>
+              <ConfigProvider
+                theme={{
+                  token: {
+                    colorPrimary: '#00B42A'
+                  }
+                }}
+              >
+                <CheckboxButton value={isFilteringStatus('done')} type="primary" onChange={() => handleToggleStatus('done')}>Completed</CheckboxButton>
+              </ConfigProvider>
+            </Col>
+
+            <Col>
+              <Input.Search
+                key="search"
+                placeholder='Search text'
+                style={{ width: 200 }}
+                value={query.text}
+                onChange={e => setQuery({ ...query, text: e.target.value.toLowerCase() })}
+                onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
+                maxLength={200}
+                allowClear />
+
+            </Col>
+            <Col>
+              <Select key="org"
+                options={orgOptions}
+                value={query.org}
+                onSelect={org => setQuery({ ...query, org })}
+                dropdownMatchSelectWidth={false}
+                style={{ width: 200 }} />
+            </Col>
+            <Col>
+              <Select key="sort"
+                value={query.order}
+                options={sortOptions}
+                onSelect={order => setQuery({ ...query, order })}
+                dropdownMatchSelectWidth={false}
+                style={{ width: 200 }} />
+            </Col>
+            <Col>
+              <Button key="clear"
+                icon={<ClearOutlined />}
+                onClick={() => setQuery({ ...TASK_FILTER_DEFAULT })}
+                type="link"
+              >Reset filters</Button>
+            </Col>
+          </Row>
+        <ProList
+          headerTitle=" "
+          grid={{
+            gutter: [24, 24],
+            xs: 1,
+            sm: 1,
+            md: 1,
+            lg: 2,
+            xl: 2,
+            xxl: 2
+          }}
+          ghost
+          dataSource={filteredList}
+          loading={loading}
+          locale={{
+            emptyText: <div style={{ margin: '30px auto' }}>
+              <Paragraph type="secondary">
+                No active tasks.
+              </Paragraph>
+            </div>
+          }}
+          onItem={(item) => {
+            return {
+              onMouseEnter: () => {
+              },
+              onClick: () => {
+                navigate(`/task/${item.id}`);
+              },
+            };
+          }}
+          metas={{
+            title: {},
+            subTitle: {},
+            type: {},
+            avatar: {},
+            content: {},
+          }}
+
+        />
+
+        {/* <Tabs tabPosition={screens.md ? 'left' : 'top'}
           size="small"
           type="line"
           // animated={{inkBar: true, tabPane: true}}
@@ -231,7 +307,7 @@ export const ClientTaskListPage = () => {
               />
             </Tabs.TabPane>
           })}
-        </Tabs>
+        </Tabs> */}
       </PageContainer>
     </LayoutStyled>
   )
