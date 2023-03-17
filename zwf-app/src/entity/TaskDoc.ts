@@ -11,13 +11,13 @@ export class TaskDoc {
   @Column()
   name: string;
 
-  @CreateDateColumn()
+  @CreateDateColumn({select: false})
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({select: false})
   updatedAt: Date;
 
-  @DeleteDateColumn()
+  @DeleteDateColumn({select: false})
   deletedAt: Date;
 
   @Column()
@@ -26,13 +26,13 @@ export class TaskDoc {
   @Column({ default: false })
   requiresSign: boolean;
 
-  @Column('uuid', { nullable: true })
+  @Column('uuid', { nullable: true, select: false })
   signedBy: string;
 
   @Column({ nullable: true })
   signedAt: Date;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   esign: string;
 
   @Column('uuid')
@@ -42,7 +42,7 @@ export class TaskDoc {
   task: Task;
 
   @Column('uuid', { nullable: true })
-  fildId: string;
+  fileId: string;
 
   @OneToOne(() => File, file => file.taskDoc, { eager: false, onDelete: 'CASCADE' })
   file: File;
@@ -53,12 +53,12 @@ export class TaskDoc {
   @Column('uuid', { nullable: true })
   docTemplateId: string;// For 'autogen' type only
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, select: false })
   generatedAt: Date; // For 'autogen' type only
 
-  @Column('uuid', { nullable: true })
+  @Column('uuid', { nullable: true, select: false })
   generatedBy: string; // For 'autogen' type only
 
-  @Column('jsonb', { nullable: true })
+  @Column('jsonb', { nullable: true, select: false })
   generatedWithFieldValues?: { [key: string]: any }; // For 'autogen' type only
 }

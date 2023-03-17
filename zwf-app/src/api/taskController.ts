@@ -36,6 +36,7 @@ import { uploadToS3 } from '../utils/uploadToS3';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
 import { EmailTemplateType } from '../types/EmailTemplateType';
+import { TaskDoc } from '../entity/TaskDoc';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
@@ -329,7 +330,6 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
     select: [
       'id',
       'name',
-      'description',
       'status',
       'orgName',
       'taskTemplateName',
@@ -350,7 +350,8 @@ export const getTask = handlerWrapper(async (req, res) => {
   let query: any;
   let relations = {
     fields: true,
-    tags: true
+    tags: true,
+    docs: true,
   };
 
   switch (role) {
@@ -390,46 +391,56 @@ export const getTask = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
-export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
+export const uploadTaskFile = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { file } = (req as any).files;
   assert(file, 400, 'No file to upload');
   const { name, data, mimetype, md5 } = file;
   const userId = getUserIdFromReq(req);
+  const orgId = getOrgIdFromReq(req);
   const role = getRoleFromReq(req);
-  const { fieldId } = req.params;
+  const { taskId } = req.params;
 
-  const taskField = await db.getRepository(TaskField).findOne({
+  const query = role === Role.Client ? { userId } : { orgId };
+
+  const task = await db.getRepository(Task).findOne({
     where: {
-      id: fieldId,
+      id: taskId,
+      ...query,
     },
     select: {
       id: true,
-      taskId: true,
-      value: true,
     }
   });
-  assert(taskField, 404);
 
-  await assertTaskAccess(req, taskField.taskId);
+  assert(task, 404);
 
   // Upload file binary to S3
   const fileId = uuidv4();
 
   const location = await uploadToS3(fileId, name, data);
 
-  const fileEntity = new File();
-  fileEntity.id = fileId;
-  // fileEntity.taskId = taskField.taskId;
-  // fileEntity.fieldId = taskField.id;
-  fileEntity.fileName = name;
-  fileEntity.createdBy = userId;
-  fileEntity.mime = mimetype;
-  fileEntity.location = location;
-  fileEntity.md5 = md5;
-  fileEntity.public = false;
+  await db.transaction(async m => {
+    const fileEntity = new File();
+    fileEntity.id = fileId;
+    fileEntity.fileName = name;
+    fileEntity.createdBy = userId;
+    fileEntity.mime = mimetype;
+    fileEntity.location = location;
+    fileEntity.md5 = md5;
+    fileEntity.public = false;
 
-  await db.manager.save(fileEntity);
+    await m.save(fileEntity);
+
+    const taskDoc = new TaskDoc();
+    taskDoc.taskId = taskId;
+    taskDoc.type = 'upload';
+    taskDoc.name = name;
+    taskDoc.fileId = fileId;
+    taskDoc.uploadedBy = userId;
+
+    await m.save(taskDoc);
+  });
 
   res.json({
     fileId: fileId,
@@ -513,7 +524,7 @@ export const assignTask = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
 
   await db.transaction(async m => {
-    const task = await m.findOneByOrFail(Task, {id, orgId});
+    const task = await m.findOneByOrFail(Task, { id, orgId });
     await m.update(Task, { id, orgId }, { agentId });
     await logTaskAssigned(m, task, userId, agentId);
   });
