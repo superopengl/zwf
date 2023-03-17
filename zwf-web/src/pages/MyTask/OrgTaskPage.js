@@ -165,7 +165,7 @@ const OrgTaskPage = React.memo((props) => {
           <Col span={10}>
             <Row gutter={[20, 20]} >
               <Col span={24}>
-                <ProCard title="Attachments">
+                <ProCard>
                   <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'procedure', 'actions', 'history']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
                     <Collapse.Panel key="client" header="Client">
                       <UserNameCard userId={task?.userId} />
