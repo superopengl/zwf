@@ -46,7 +46,4 @@ export class TaskField {
 
   @Column('jsonb', { nullable: true })
   value?: any; // string | number | boolean | { fileId: string, name: string }[] | { docTemplateId: string, fileId?: string };
-
-  @OneToMany(() => File, file => file.field, { eager: false, onDelete: 'CASCADE' })
-  files: File[];
 }

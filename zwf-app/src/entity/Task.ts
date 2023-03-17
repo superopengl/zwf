@@ -1,3 +1,4 @@
+import { TaskDoc } from './TaskDoc';
 import { OrgClientInformation } from './views/OrgClientInformation';
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
@@ -50,8 +51,8 @@ export class Task {
   @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   fields: TaskField[];
 
-  @OneToMany(() => File, file => file.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
-  files: File[];
+  @OneToMany(() => TaskDoc, doc => doc.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
+  docs: TaskDoc[];
 
   @ManyToMany(() => Tag, { onDelete: 'CASCADE' })
   @JoinTable()

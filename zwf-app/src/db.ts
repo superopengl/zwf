@@ -1,3 +1,4 @@
+import { TaskDoc } from './entity/TaskDoc';
 import { LicenseTicket } from './entity/LicenseTicket';
 import { RecurringInformation } from './entity/views/RecurringInformation';
 import { SystemConfig } from './entity/SystemConfig';
@@ -185,6 +186,7 @@ export const db = new DataSource({
     Tag,
     Task,
     TaskField,
+    TaskDoc,
     File,
     TaskTemplate,
     DocTemplate,
@@ -219,7 +221,7 @@ export const db = new DataSource({
     SupportInformation,
     SupportPendingReplyInformation,
     TaskFileMetaInformation,
-    TaskFileInformation,
+    // TaskFileInformation,
     RecurringInformation,
     OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,
