@@ -1,9 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Button, Checkbox } from 'antd';
-import { BorderOutlined, CheckSquareOutlined } from '@ant-design/icons';
-
-const { Text } = Typography;
+import { Button } from 'antd';
+import Icon from '@ant-design/icons';
+import { BsCheckCircleFill, BsCircle } from 'react-icons/bs';
 
 
 const CheckboxButton = (props) => {
@@ -18,9 +17,9 @@ const CheckboxButton = (props) => {
   }
 
   return (
-    <Button type="primary" ghost={!checked} {...other} onClick={handleToggle} icon={checked ?<CheckSquareOutlined /> : <BorderOutlined/> }>
+    <Button type="primary" ghost={!checked} {...other} onClick={handleToggle} icon={<Icon component={checked ? BsCheckCircleFill : BsCircle} />}>
       {children}
-      </Button>
+    </Button>
   );
 };
 
