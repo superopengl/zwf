@@ -893,6 +893,18 @@ paths:
       responses:
         200:
           description: OK     
+  /task/{taskId}/doc_template:
+    post:
+      operationId: addDocTemplateToTask
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true        
+      responses:
+        200:
+          description: OK             
   /task/file/{fileId}:
     get:
       operationId: downloadTaskFile

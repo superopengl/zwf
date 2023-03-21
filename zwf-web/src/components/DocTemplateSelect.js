@@ -51,7 +51,7 @@ const DocTemplateSelect = props => {
   React.useEffect(() => {
     const allRefFields = _.chain(docTemplateOptions)
       .filter(x => Array.isArray(value) ? value.includes(x.id) : value === x.id)
-      .map(x => x.refFields || [])
+      .map(x => x.refFieldNames || [])
       .flatten()
       .uniq()
       .value();

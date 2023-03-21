@@ -50,7 +50,7 @@ async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields:
   let renderedHtml = formatHtmlForRendering(docTemplate.html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
   const usedValueBag = {};
-  for (const fieldName of docTemplate.refFields) {
+  for (const fieldName of docTemplate.refFieldNames) {
     const field = fieldMap.get(fieldName);
     const value = field?.value;
     if (value || value === 0) {

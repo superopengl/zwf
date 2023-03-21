@@ -16,6 +16,13 @@ export function changeTaskStatus$(id, status) {
   return httpPost$(`task/${id}/status/${status}`);
 }
 
+export function addDocTemplateToTask$(taskid, docTemplateIds) {
+  if (!docTemplateIds?.length) {
+    throw new Error(`docTemplateIds is empty`);
+  }
+  return httpPost$(`task/${taskid}/doc_template/`, { docTemplateIds });
+}
+
 export async function saveTask(item) {
   return httpPost('task', item);
 }

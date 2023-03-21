@@ -4,6 +4,7 @@ import { Task } from './Task';
 
 @Entity()
 @Index('idex_taskField_taskId_ordinal', ['taskId', 'ordinal'])
+@Index('idex_taskField_taskId_name_unique', ['taskId', 'name'], { unique: true })
 export class TaskField {
   @PrimaryGeneratedColumn('uuid')
   id?: string;

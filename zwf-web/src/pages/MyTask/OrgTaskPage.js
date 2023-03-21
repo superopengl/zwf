@@ -2,13 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip, Form } from 'antd';
-import { assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
-import { catchError } from 'rxjs/operators';
+import { addDocTemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
+import { catchError, finalize } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, EditOutlined, FileAddOutlined, MessageOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
@@ -23,6 +23,7 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { TaskFileUploader } from 'components/TaskFileUploader';
+import { useAddTaskDocModal } from './useAddTaskDocModal';
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -68,6 +69,7 @@ const OrgTaskPage = React.memo((props) => {
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
+  const [openAddDoc, docContextHolder] = useAddTaskDocModal();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -125,6 +127,15 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
+
+  const handleAddDocTemplates = (docTemplateIds) => {
+    setLoading(true);
+    addDocTemplateToTask$(task.id, docTemplateIds)
+      .pipe(
+        finalize(() => setLoading(false)),
+      )
+      .subscribe(setTask);
+  }
 
   return (<>
     <ContainerStyled>
@@ -187,10 +198,10 @@ const OrgTaskPage = React.memo((props) => {
                 </ProCard>
               </Col>
               <Col span={24}>
-                <ProCard title="Attachments">
-                  <Form>
+                <ProCard title="Attachments" extra={<Button icon={<PlusOutlined />} type="link" onClick={() => openAddDoc({onChange: handleAddDocTemplates})}>Add</Button>}>
+                  <Form initialValues={task.docs}>
                     <Form.Item label="" name="files">
-                      <TaskFileUploader taskId={task.id}/>
+                      <TaskFileUploader taskId={task.id} />
                     </Form.Item>
                   </Form>
                 </ProCard>
@@ -211,6 +222,7 @@ const OrgTaskPage = React.memo((props) => {
         onCancel={() => setEditFieldVisible(false)}
       />}
       {saving && <SavingAffix />}
+      {docContextHolder}
     </ContainerStyled>
   </>
   );
