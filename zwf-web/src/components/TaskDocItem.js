@@ -35,27 +35,27 @@ padding: 4px 0;
 `;
 
 export const TaskDocItem = React.memo(props => {
-  const { value: taskFile, showIcon, style, showCreatedAt, strong, onChange, onDelete, disabled } = props;
+  const { value: taskDoc, showIcon, style, showCreatedAt, strong, onChange, onDelete, disabled } = props;
   const role = useRole();
 
   const isClient = role === 'client';
   const isOrg = role === 'agent' || role === 'admin';
 
-  const canClientSign = isClient && taskFile.requiresSign && !taskFile.signedAt
-  const canRequestSign = isOrg && !taskFile.signedAt;
+  const canClientSign = isClient && taskDoc.requiresSign && !taskDoc.signedAt
+  const canRequestSign = isOrg && !taskDoc.signedAt;
 
-  const canDelete = isOrg && !taskFile.signedAt;
+  const canDelete = isOrg && !taskDoc.signedAt;
 
   const handleToggleRequireSign = () => {
-    taskFile.requiresSign = !taskFile.requiresSign;
-    onChange(taskFile);
+    taskDoc.requiresSign = !taskDoc.requiresSign;
+    onChange(taskDoc);
   }
 
   const handleSignTaskDoc = () => {
-    showSignTaskFileModal(taskFile, {
+    showSignTaskFileModal(taskDoc, {
       onOk: () => {
-        taskFile.signedAt = new Date();
-        onChange(taskFile);
+        taskDoc.signedAt = new Date();
+        onChange(taskDoc);
       },
     })
   }
@@ -66,11 +66,11 @@ export const TaskDocItem = React.memo(props => {
         <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#cf222e' }} />
         Delete file
       </Space>,
-      content: <>Delete file <strong>{taskFile.name}</strong> from this task?</>,
+      content: <>Delete file <strong>{taskDoc.name}</strong> from this task?</>,
       closable: true,
       maskClosable: true,
       icon: null,
-      onOk: () => onDelete(taskFile),
+      onOk: () => onDelete(taskDoc),
       okText: 'Delete it',
       okButtonProps: {
         type: 'primary',
@@ -90,7 +90,7 @@ export const TaskDocItem = React.memo(props => {
   // className={missingVars.length > 0 ? 'error-doc' : !taskFile.fileId ? 'not-generated' : null}
   >
     <Col flex={1}>
-      <TaskFileName taskFile={taskFile} />
+      <TaskFileName taskFile={taskDoc} />
     </Col>
     {!disabled && <Col style={{ paddingTop: 6 }}>
       <Space size="small">
@@ -102,9 +102,9 @@ export const TaskDocItem = React.memo(props => {
             onClick={handleSignTaskDoc}
           >Sign</Button>
         </Tooltip>}
-        {canRequestSign && <Tooltip title={taskFile.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
+        {canRequestSign && <Tooltip title={taskDoc.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
           <Button shape="circle"
-            type={taskFile.requiresSign ? 'primary' : 'default'}
+            type={taskDoc.requiresSign ? 'primary' : 'default'}
             icon={<Icon component={FaSignature} />}
             onClick={handleToggleRequireSign}
           />

@@ -10,7 +10,7 @@ import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { In, Not } from 'typeorm';
+import { EntityManager, In, Not, IsNull } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
@@ -261,6 +261,28 @@ const defaultSearch: ISearchTaskQuery = {
   orderDirection: 'DESC'
 };
 
+const getFullTask = async (m: EntityManager, taskId: string, orgId: string) => {
+  const task = await m.getRepository(Task).findOne({
+    where: {
+      id: taskId,
+      orgId
+    },
+    order: {
+      fields: {
+        ordinal: 'ASC'
+      }
+    },
+    relations: [
+      'fields',
+      'docs',
+      'docs.sign',
+      'tags',
+    ]
+  });
+
+  return task;
+}
+
 export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
@@ -383,6 +405,9 @@ export const getTask = handlerWrapper(async (req, res) => {
     order: {
       fields: {
         ordinal: 'ASC'
+      },
+      docs: {
+        createdAt: 'ASC'
       }
     }
   });
@@ -458,7 +483,7 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
 
 
   // Upload file binary to S3
-  let task:Task;
+  let taskDocs: TaskDoc[] = [];
 
   await db.transaction(async m => {
     const docTemplates = await m.getRepository(DocTemplate).findBy({
@@ -467,7 +492,6 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
     });
 
     if (docTemplates.length) {
-
       const fieldCounts = await m.getRepository(TaskField).countBy({
         taskId
       })
@@ -492,13 +516,15 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
         .orUpdate(['required', 'official'], ['taskId', 'name'])
         .execute();
 
-      const taskDocs = docTemplates.map(t => {
+      taskDocs = docTemplates.map(t => {
         const taskDoc = new TaskDoc();
+        taskDoc.id = uuidv4();
+        taskDoc.orgId = orgId;
         taskDoc.taskId = taskId;
         taskDoc.uploadedBy = userId;
         taskDoc.type = 'autogen';
         taskDoc.docTemplateId = t.id;
-        taskDoc.name = t.name;
+        taskDoc.name = `${t.name}.pdf`;
         taskDoc.fieldBag = t.refFieldNames.reduce((pre, curr) => {
           pre[curr] = null;
           return pre;
@@ -508,22 +534,9 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
 
       await m.save([...taskFields, ...taskDocs]);
     };
-
-    task = await m.getRepository(Task).findOne({
-      where: {
-        id: taskId,
-        orgId
-      },
-      relations: [
-        'fields',
-        'docs',
-        'tags',
-      ]
-    })
-
   });
 
-  res.json(task);
+  res.json(taskDocs);
 });
 
 export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
@@ -685,4 +698,64 @@ export const getTaskLog = handlerWrapper(async (req, res) => {
   const list = await db.getRepository(TaskTrackingInformation).find({ where: query });
 
   res.json(list);
+});
+
+export const deleteTaskDoc = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { docId } = req.params;
+  const orgId = getOrgIdFromReq(req);
+
+  await db.transaction(async m => {
+    const taskDoc = await m.getRepository(TaskDoc).findOneBy({ id: docId, orgId });
+    assert(taskDoc, 404);
+
+    assert(!taskDoc.esign, 400, 'Cannot delete a signed doc');
+
+    await m.softDelete(TaskDoc, { id: docId });
+  });
+
+  res.json();
+});
+
+export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { docId } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
+
+  let taskDoc: TaskDoc = null;
+  await db.transaction(async m => {
+    taskDoc = await m.getRepository(TaskDoc).findOneByOrFail({ id: docId, orgId });
+    assert(taskDoc, 404);
+    assert(!taskDoc.esign, 400, 'Cannot change sign request for a signed doc');
+
+    if (!taskDoc.signRequestedAt) {
+      taskDoc.signRequestedAt = getUtcNow();
+      taskDoc.signRequestedBy = userId;
+      await m.save(taskDoc);
+    }
+  })
+
+  res.json(taskDoc);
+});
+
+export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { docId } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
+
+  let taskDoc: TaskDoc = null;
+  await db.transaction(async m => {
+    taskDoc = await m.getRepository(TaskDoc).findOneByOrFail({ id: docId, orgId });
+    assert(taskDoc, 404);
+    assert(!taskDoc.esign, 400, 'Cannot change sign request for a signed doc');
+
+    taskDoc.signRequestedAt = null;
+    taskDoc.signRequestedBy = null;
+
+    await m.save(taskDoc)
+  })
+
+  res.json(taskDoc);
 });

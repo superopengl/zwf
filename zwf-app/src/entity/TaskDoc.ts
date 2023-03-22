@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, DeleteDateColumn, OneToOne } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany, DeleteDateColumn, OneToOne, JoinColumn } from 'typeorm';
 import { File } from './File';
 import { Task } from './Task';
 
@@ -11,7 +11,7 @@ export class TaskDoc {
   @Column()
   name: string;
 
-  @CreateDateColumn({select: false})
+  @CreateDateColumn()
   createdAt: Date;
 
   @UpdateDateColumn({select: false})
@@ -22,6 +22,9 @@ export class TaskDoc {
 
   @Column()
   type: 'upload' | 'autogen';
+
+  @Column('uuid')
+  orgId: string;
 
   @Column('uuid')
   taskId: string;
@@ -35,7 +38,7 @@ export class TaskDoc {
   @OneToOne(() => File, file => file.taskDoc, { eager: false, onDelete: 'CASCADE' })
   file: File;
 
-  @Column('uuid', { nullable: true })
+  @Column('uuid', { nullable: true, select: false })
   uploadedBy: string;// For 'upload' type only
 
   @Column('uuid', { nullable: true })
@@ -49,4 +52,19 @@ export class TaskDoc {
 
   @Column('jsonb', { nullable: true, select: false })
   fieldBag?: { [key: string]: any }; // For 'autogen' type only
+
+  @Column({ nullable: true})
+  signRequestedAt: Date;
+
+  @Column('uuid', { nullable: true, select: false })
+  signRequestedBy: string;
+
+  @Column({ nullable: true })
+  signedAt: Date;
+
+  @Column('uuid', { nullable: true, select: false })
+  signedBy: string;
+
+  @Column({ nullable: true, select: false })
+  esign: string;
 }
