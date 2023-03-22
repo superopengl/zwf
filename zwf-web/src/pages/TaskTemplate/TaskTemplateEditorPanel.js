@@ -4,7 +4,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { TaskTemplateBuilder } from 'pages/TaskTemplate/formBuilder/TaskTemplateBuilder';
 import PropTypes from 'prop-types';
-import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
