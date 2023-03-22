@@ -105,7 +105,7 @@ TaskFieldEditorPanel.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string.isRequired,
     name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    description: PropTypes.string,
     type: PropTypes.string.isRequired,
     required: PropTypes.bool,
   })).isRequired,
