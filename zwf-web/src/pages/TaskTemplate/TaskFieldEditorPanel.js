@@ -30,10 +30,10 @@ const { Paragraph } = Typography;
 export const TaskFieldEditorPanel = (props) => {
   const { fields: propFields, onChange } = props;
 
-  const [fields, setFields] = React.useState(propFields);
+  const [fields, setFields] = React.useState(propFields ?? []);
 
   React.useEffect(() => {
-    setFields(propFields);
+    setFields(propFields ?? []);
   }, [propFields]);
 
   React.useEffect(() => {
