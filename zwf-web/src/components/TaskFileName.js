@@ -9,7 +9,7 @@ import { BsFillPenFill } from 'react-icons/bs';
 import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from "services/taskService";
 
-const {Link} = Typography
+const { Link } = Typography
 
 const StyledFileIcon = styled.div`
   position: relative;
@@ -26,7 +26,7 @@ const StyledFileIcon = styled.div`
 
 export const TaskFileName = props => {
   const { taskFile } = props;
-  
+
   const { name, fileId, signedAt, requiresSign } = taskFile
 
   let iconType = 'default';
@@ -38,14 +38,14 @@ export const TaskFileName = props => {
     iconType = 'pending';
   }
 
-  const Wraper = fileId ? Link : React.Fragment;
+  const innerContext = <Space>
+    <FileIcon name={name} type={iconType} />
+    {name}
+  </Space>
 
-  return <Wraper href={getTaskDocDownloadUrl(fileId)} target="_blank">
-    <Space>
-      <FileIcon name={name} type={iconType} />
-      {name}
-    </Space>
-  </Wraper>
+  return fileId ? <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
+    {innerContext}
+  </Link> : innerContext;
 }
 
 TaskFileName.propTypes = {
