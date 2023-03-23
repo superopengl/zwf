@@ -49,14 +49,19 @@ export const FieldListEditable = props => {
   }
 
   const handleDragging = React.useCallback((dragIndex, hoverIndex) => {
-    setList((prevList) =>
-      update(prevList, {
+    setList((prevList) => {
+      const updatedList = update(prevList, {
         $splice: [
           [dragIndex, 1],
           [hoverIndex, 0, prevList[dragIndex]],
         ],
-      }),
-    )
+      });
+
+      const nextList = arrangeOridinals(updatedList);
+      onChange(nextList);
+
+      return nextList;
+    })
   }, []);
 
   const handleOnChange = () => {
@@ -64,6 +69,7 @@ export const FieldListEditable = props => {
   }
 
   const handleDrop = () => {
+    console.log('on drop')
     handleOnChange(list);
   };
 
@@ -77,12 +83,17 @@ export const FieldListEditable = props => {
     handleOnChange([...list]);
   }
 
+  const arrangeOridinals = array => {
+    array.forEach((f, index) => f.ordinal = index + 1)
+    return array;
+  };
+
   const isEmpty = !list?.length;
 
   return (
-    <div 
-    // ref={drop} 
-    style={{ ...style, backgroundColor, height: '100%' }}>
+    <div
+      // ref={drop} 
+      style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[8, 8]} justify="center">
         {/* <DebugJsonPanel value={list} /> */}
         {isEmpty ?
@@ -97,8 +108,8 @@ export const FieldListEditable = props => {
               onDelete={() => handleDelete(i)}
             />
           </Col>)}
-
       </Row>
+      {/* <DebugJsonPanel value={list} /> */}
     </div>
   )
 }
