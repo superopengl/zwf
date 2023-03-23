@@ -66,7 +66,6 @@ const OrgTaskPage = React.memo((props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [historyVisible, setHistoryVisible] = React.useState(false);
-  const [editFieldVisible, setEditFieldVisible] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
