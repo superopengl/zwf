@@ -47,9 +47,9 @@ function prefillTaskTemplateFields(taskTemplateFields, varBag: { [key: string]: 
 
 function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
   assert(profile, 500, 'User profile is not specified');
-  const clientName = `${profile.givenName} ${profile.surname}`;
+  const clientName = `${profile.givenName ?? ''} ${profile.surname ?? ''}`;
   const displayName = clientName.trim() ? clientName : profile.email;
-  return `${taskTemplateName} - ${displayName}`;
+  return `${taskTemplateName || 'New ticket'} - ${displayName}`;
 }
 
 function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
@@ -74,28 +74,32 @@ export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: numb
   return field;
 };
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, creatorId: string, id?) => {
-  assert(taskTemplateId, 400, 'taskTemplateId is not specified');
+export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, creatorId: string, id, orgId) => {
   assert(email, 400, 'email is not specified');
 
   let task: Task;
   await db.transaction(async m => {
-    const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, { where: { id: taskTemplateId }, relations: { docs: true } });
-    assert(taskTemplate, 404, 'taskTemplate is not found');
+    const taskTemplate = taskTemplateId ? await m.findOne(TaskTemplate, {
+      where: {
+        id: taskTemplateId
+      },
+      relations: {
+        docs: true
+      }
+    }) : null;
 
-    const { user } = await ensureClientOrGuestUser(m, email, taskTemplate.orgId);
+    const { user } = await ensureClientOrGuestUser(m, email, orgId);
 
     task = new Task();
     task.id = id || uuidv4();
     task.deepLinkId = generateDeepLinkId();
-    task.name = taskName || generateTaskDefaultName(taskTemplate.name, user.profile);
+    task.name = taskName || generateTaskDefaultName(taskTemplate?.name, user.profile);
     task.userId = user.id;
-    task.taskTemplateId = taskTemplateId;
-    task.orgId = taskTemplate.orgId;
+    task.orgId = orgId;
     task.status = TaskStatus.TODO;
 
     // Provision taskFields based on taskTemplate.fields
-    const fields = taskTemplate.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f));
+    const fields = taskTemplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
 
     await m.save([task, ...fields]);
 

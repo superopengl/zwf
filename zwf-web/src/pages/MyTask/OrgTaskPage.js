@@ -31,7 +31,8 @@ const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
 padding: 0;
 // text-align: center;
-max-width: 1000px;
+min-width: 800px;
+max-width: 1200px;
 width: 100%;
 height: 100%;
 
@@ -72,22 +73,22 @@ const OrgTaskPage = React.memo((props) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const subscription$ = load$();
-    return () => {
-      subscription$.unsubscribe();
-    }
+    const sub$ = load$();
+    return () => sub$.unsubscribe()
   }, [id]);
 
   const load$ = () => {
     return getTask$(id).pipe(
-      catchError(() => setLoading(false))
-    )
-      .subscribe((taskInfo) => {
-        const { email, role, orgId, orgName, ...task } = taskInfo;
+      finalize(() => setLoading(false))
+    ).subscribe((taskInfo) => {
+      const { email, role, orgId, orgName, ...task } = taskInfo;
+      if (taskInfo.fields.length) {
         setTask(task);
         setAssigneeId(task.agentId);
-        setLoading(false);
-      });
+      } else {
+        navigate(`/task/${id}/edit`)
+      }
+    });
   }
 
   const handleGoBack = () => {

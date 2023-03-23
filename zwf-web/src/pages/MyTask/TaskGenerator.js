@@ -137,7 +137,7 @@ export const TaskGenerator = React.memo(props => {
               disabled={!clientInfo || !taskTemplate || !taskName}
               onClick={handleCreateEmptyTask}>Create Empty Task</Button> */}
             <Button type="primary" 
-              disabled={!clientInfo || !taskTemplate}
+              disabled={!clientInfo}
               onClick={handleCreateAndEdit}
             >Create Task</Button>
           </Space>

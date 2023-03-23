@@ -9,13 +9,16 @@ import { SavingAffix } from 'components/SavingAffix';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import TaskFieldEditorPanel from 'pages/TaskTemplate/TaskFieldEditorPanel';
+import { EyeOutlined } from '@ant-design/icons';
+import { TaskFieldsPreviewDrawer } from 'pages/TaskTemplate/TaskFieldsPreviewDrawer';
 
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
 padding: 0;
 // text-align: center;
-max-width: 1000px;
+min-width: 800px;
+max-width: 1200px;
 width: 100%;
 height: 100%;
 
@@ -52,6 +55,7 @@ const OrgTaskEditPage = React.memo(() => {
   const [taskName, setTaskName] = React.useState('');
   const [fields, setFields] = React.useState([]);
   const [saving, setSaving] = React.useState(null);
+  const [openPreview, setOpenPreview] = React.useState(false);
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -111,6 +115,7 @@ const OrgTaskEditPage = React.memo(() => {
         icon={<TaskIcon />}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
+          <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
           <Button key="done" type="primary" onClick={handleSave}>Save</Button>
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
@@ -118,6 +123,12 @@ const OrgTaskEditPage = React.memo(() => {
         <TaskFieldEditorPanel fields={fields} onChange={handleTaskFieldsChange} />
       </PageHeaderContainer>
       {saving && <SavingAffix />}
+      <TaskFieldsPreviewDrawer
+        open={openPreview}
+        onClose={() => setOpenPreview(false)}
+        name={taskName}
+        fields={fields}
+      />
     </ContainerStyled>
   </>
   );

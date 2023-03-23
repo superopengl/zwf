@@ -35,10 +35,6 @@ export class Task {
   @Column({ default: TaskStatus.TODO })
   status: TaskStatus;
 
-  @Column('uuid')
-  @Index()
-  taskTemplateId: string;
-
   @Column('uuid', { nullable: true })
   agentId: string;
 

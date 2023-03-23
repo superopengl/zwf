@@ -26,7 +26,7 @@ export async function executeRecurring(recurring: Recurring, resetNextRunAt: boo
   const client = await db.getRepository(UserInformation).findOne({where: {id: userId}});
   const clientEmail = client.email;
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, null);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, null, null, null);
 
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
 

@@ -2,7 +2,7 @@ import React from 'react';
 import { Button, Drawer, Typography, Segmented } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
+import { TaskFieldsPreviewPanel } from './TaskFieldsPreviewPanel';
 import { EyeOutlined, SaveFilled } from '@ant-design/icons';
 import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate$ } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
@@ -15,6 +15,7 @@ import { of } from 'rxjs';
 import { TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
 import { useAssertRole } from 'hooks/useAssertRole';
 import TaskFieldEditorPanel from './TaskFieldEditorPanel';
+import { TaskFieldsPreviewDrawer } from './TaskFieldsPreviewDrawer';
 
 const Container = styled.div`
 min-width: 800px;
@@ -193,23 +194,12 @@ export const TaskTemplatePage = () => {
         </ProCard>
       </DndProvider> */}
       <TaskFieldEditorPanel fields={taskTemplate?.fields ?? []} onChange={handleFieldListChange} />
-      <Drawer
-        title="Preview"
-        closable
+      <TaskFieldsPreviewDrawer
         open={openPreview}
         onClose={() => setOpenPreview(false)}
-        maskClosable
-        width={500}
-        extra={<Segmented
-          options={['agent', 'client']}
-          onChange={setPreviewMode} />}
-      >
-        <TaskTemplatePreviewPanel
-          value={taskTemplate}
-          debug={debugMode}
-          mode={previewMode}
-        />
-      </Drawer>
+        name={taskTemplate?.name}
+        fields={taskTemplate?.fields}
+      />
     </PageHeaderContainer>
   </Container>
   );

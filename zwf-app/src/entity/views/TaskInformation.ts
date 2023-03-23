@@ -21,7 +21,6 @@ import { Tag } from '../Tag';
         `array_agg(json_build_object('id', t.id, 'name', t.name)) as tags`,
       ]), 'tag', 'tag."taskId" = t.id')
     .innerJoin(Org, 'o', 't."orgId" = o.id')
-    .innerJoin(TaskTemplate, 'l', `t."taskTemplateId" = l.id`)
     .innerJoin(User, 'u', `u.id = t."userId"`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([
@@ -36,7 +35,6 @@ import { Tag } from '../Tag';
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
-      't."taskTemplateId" as "taskTemplateId"',
       't."name" as "taskTemplateName"',
       'u.role as role',
       't."agentId" as "assigneeId"',

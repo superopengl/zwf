@@ -12,6 +12,10 @@ margin: 0 auto;
 padding-left: 8px;
 width: 100%;
 
+.ant-page-header-heading-left, .ant-page-header-heading-title {
+  flex: 1 1 auto;
+}
+
 .ant-tabs {
   padding-left: 32px;
 }
@@ -35,9 +39,9 @@ export const PageHeaderContainer = React.memo((props) => {
       onBack={onBack}
       header={{
         // backIcon: <LeftOutlined />,
-        title: <Row align="middle" wrap={false} style={{ height: 46, paddingLeft: onBack ? 0 : 32 }}>
-          {icon && <Col>{icon}</Col>}
-          <Col flex={1}>
+        title: <Row align="middle" wrap={false} style={{ height: 46, paddingLeft: onBack ? 0 : 32, width: '100%' }}>
+          {icon && <Col flex="none">{icon}</Col>}
+          <Col flex="auto">
             <Title level={3} style={{ margin: 0 }}>{title}</Title>
           </Col>
         </Row>,

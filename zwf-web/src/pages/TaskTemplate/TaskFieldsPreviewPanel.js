@@ -1,10 +1,11 @@
-import { Typography, Divider , Alert} from 'antd';
+import { Typography, Divider, Alert } from 'antd';
 import React from 'react';
 
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from 'components/TaskFormWidget';
 import { TaskSchemaRenderer } from 'components/TaskSchemaRenderer';
+import { TaskIcon } from 'components/entityIcon';
 
 const { Title, Paragraph } = Typography;
 
@@ -19,32 +20,30 @@ const Container = styled.div`
 `;
 
 
-export const TaskTemplatePreviewPanel = props => {
+export const TaskFieldsPreviewPanel = props => {
 
-  const { value: taskTemplate, mode } = props;
-
-  if (!taskTemplate) {
-    return null;
-  }
+  const { name, fields, mode, style } = props;
 
   return (
-    <Container style={props.style}>
-      <Title level={3}>{taskTemplate.name}</Title>
+    <Container style={style}>
+      <Title level={3}><TaskIcon/> {name}</Title>
       <TaskSchemaRenderer
-        fields={taskTemplate.fields}
+        fields={fields}
         mode={mode}
       />
     </Container >
   );
 };
 
-TaskTemplatePreviewPanel.propTypes = {
-  value: PropTypes.object,
+TaskFieldsPreviewPanel.propTypes = {
+  name: PropTypes.string,
+  fields: PropTypes.array,
   mode: PropTypes.oneOf(['client', 'agent']).isRequired,
 };
 
-TaskTemplatePreviewPanel.defaultProps = {
+TaskFieldsPreviewPanel.defaultProps = {
+  name: '',
+  fields: [],
   mode: 'agent',
 };
 
-export default TaskTemplatePreviewPanel;
