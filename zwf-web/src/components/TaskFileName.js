@@ -2,12 +2,13 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { FileIcon as ReactFileIcon, defaultStyles } from 'react-file-icon';
-import { Space, Typography } from 'antd';
-import { CheckCircleFilled, CheckOutlined, ClockCircleOutlined } from '@ant-design/icons';
+import { Space, Typography, Tooltip } from 'antd';
+import { CheckCircleFilled, CheckOutlined, ClockCircleOutlined, InfoCircleFilled } from '@ant-design/icons';
 import Icon, { CheckCircleOutlined } from '@ant-design/icons';
 import { BsFillPenFill } from 'react-icons/bs';
 import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from "services/taskService";
+import { DebugJsonPanel } from './DebugJsonPanel';
 
 const { Link } = Typography
 
