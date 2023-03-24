@@ -9,7 +9,7 @@ export const TaskFieldsPreviewDrawer = props => {
   const [previewMode, setPreviewMode] = React.useState('agent');
 
   return (<Drawer
-    title="Preview"
+    title="Form Preview"
     closable
     open={open}
     onClose={onClose}

@@ -241,7 +241,7 @@ export const DocTemplatePage = (props) => {
       </Row>}
     </PageHeaderContainer>
     <Drawer
-      title="Preview"
+      title="Doc Template Preview"
       closable
       maskClosable
       destroyOnClose
