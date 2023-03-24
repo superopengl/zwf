@@ -185,7 +185,7 @@ export const App = React.memo(() => {
             colorLink: '#0051D9',
             colorSuccess: '#00B42A',
             colorError: '#F53F3F',
-            borderRadius: 4,
+            // borderRadius: 6,
             colorTextBase: '#4B5B76',
             colorText: '#4B5B76',
             colorTextSecondary: '#97A3B7',
