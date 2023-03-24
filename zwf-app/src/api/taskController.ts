@@ -435,9 +435,6 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     where: {
       id: taskId,
       ...query,
-    },
-    select: {
-      id: true,
     }
   });
 
@@ -462,6 +459,7 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
 
     const taskDoc = new TaskDoc();
     taskDoc.taskId = taskId;
+    taskDoc.orgId = task.orgId;
     taskDoc.type = 'upload';
     taskDoc.name = name;
     taskDoc.fileId = fileId;

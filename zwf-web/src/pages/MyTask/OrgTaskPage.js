@@ -220,7 +220,7 @@ const OrgTaskPage = React.memo((props) => {
                 </ProCard>
               </Col>
               {task && <Col span={24}>
-                <TaskDocListPanel task={task} />
+                <TaskDocListPanel task={task} onChange={() => load$()}/>
               </Col>}
             </Row>
           </Col>

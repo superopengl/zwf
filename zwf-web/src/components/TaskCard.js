@@ -7,7 +7,7 @@ import { UnreadMessageIcon } from './UnreadMessageIcon';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { TagSelect } from './TagSelect';
-import {HighlightingText} from 'components/HighlightingText';
+import { HighlightingText } from 'components/HighlightingText';
 import { UserNameCard } from './UserNameCard';
 
 const { Link: TextLink } = Typography;
@@ -40,17 +40,19 @@ export const TaskCard = (props) => {
   const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
 
   return <StyledCard
-    title={<Tooltip title={name} placement="bottom"><HighlightingText value={name} search={searchText}></HighlightingText></Tooltip>}
-    extra={<TextLink onClick={e => goToTask(e, id)} target="_blank"><Icon component={MdOpenInNew } /></TextLink>}
+    title={<Tooltip title={name} placement="bottom">
+      <HighlightingText value={name} search={searchText}></HighlightingText>
+    </Tooltip>}
+    extra={<TextLink onClick={e => goToTask(e, id)} target="_blank"><Icon component={MdOpenInNew} /></TextLink>}
     size="small"
     hoverable
     onClick={() => navigate(`/task/${id}`)}
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
-    <Space direction='vertical' size="middle" style={{width: '100%'}}>
+    <Space direction='vertical' size="middle" style={{ width: '100%' }}>
       {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
       {/* <Paragraph type="secondary" style={{lineHeight: 0.8}}><small>{taskTemplateName}</small></Paragraph> */}
-      <UserNameCard userId={task.userId} size={40} showTooltip={true}/>
+      <UserNameCard userId={task.userId} size={40} showTooltip={true} />
       {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
       {tagIds.length > 0 && <TagSelect readonly={true} value={tagIds} />}
     </Space>
