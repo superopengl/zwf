@@ -53,9 +53,9 @@ const ProfileForm = (props) => {
       </Form.Item>
       {!initial && <Form.Item
         label="Email"
-        name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
+        name="email" rules={[{ type: 'email', whitespace: true, max: 100, message: ' ' }]}>
         <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true}
-          disabled={isBuiltinAdmin}
+          disabled={true}
           maxLength="100" autoFocus={!isBuiltinAdmin} />
       </Form.Item>}
       <Form.Item label="Given Name" name="givenName" rules={[{ required: true, whitespace: true, max: 100, message: ' ' }]}>

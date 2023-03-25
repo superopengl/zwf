@@ -271,7 +271,9 @@ const SupportListPage = () => {
       icon: <QuestionOutlined />,
       content: <>To impersonate user <Text code>{user.email}</Text>?</>,
       okText: 'Yes, impersonate',
+      closable: true,
       maskClosable: true,
+      autoFocusButton: 'ok',
       onOk: () => {
         impersonate$(user.userId)
           .subscribe(impersonatedUser => {
@@ -279,6 +281,9 @@ const SupportListPage = () => {
             // reactLocalStorage.clear();
             // window.location = '/';
           });
+      },
+      cancelButtonProps: {
+        type: 'text'
       }
     })
   }
