@@ -6,11 +6,11 @@ import React from 'react';
 import { listTaskTemplate } from 'services/taskTemplateService';
 import { getRecurring$, saveRecurring$ } from 'services/recurringService';
 import styled from 'styled-components';
-import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { ClientSelect } from 'components/ClientSelect';
 import { Input } from 'antd';
+import dayjs from 'dayjs';
 
 const { Paragraph } = Typography;
 
@@ -33,7 +33,7 @@ const RecurringEditModal = (props) => {
     if (propId) {
       setLoading(true)
       const sub$ = getRecurring$(propId).subscribe(item => {
-        setRecurring(item);
+        setRecurring({...item, firstRunOn: dayjs(item.firstRunOn)});
         setLoading(false)
       })
       return () => sub$.unsubscribe();
@@ -101,7 +101,7 @@ const RecurringEditModal = (props) => {
           }
         }]}
       >
-        <DatePicker disabledDate={disabledPastDate}/>
+        <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY"/>
       </Form.Item>
       <Form.Item label="Repeat Every" >
         <Form.Item name="every" rules={[{ required: true, message: ' ' }]} style={{display: 'inline-block', marginRight: 12}}
