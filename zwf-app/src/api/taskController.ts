@@ -185,10 +185,10 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
 
   await db.transaction(async m => {
-    await m.getRepository(TaskField).save(fields);
     if (deletedFieldIds?.length) {
       await m.getRepository(TaskField).delete(deletedFieldIds);
     }
+    await m.getRepository(TaskField).save(fields);
   });
 
   res.json();
