@@ -209,9 +209,9 @@ const RecurringListPage = (props) => {
     const task = await runRecurring(id);
     const notice = notify.success(
       'Successfully run the recurring',
-      <Text>The task <TextLink strong onClick={() => {
+      <Text>Task <TextLink strong onClick={() => {
         notice.close();
-        navigate(`/tasks/${task.id}/proceed`);
+        navigate(`/task/${task.id}`);
       }}>{task.name}</TextLink> was created</Text>,
       15
     );
