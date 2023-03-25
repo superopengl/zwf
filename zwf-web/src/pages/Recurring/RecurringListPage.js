@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Alert } from 'antd';
+import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Row } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import {
-  DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined, DashOutlined
+  DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined, DashOutlined, CloseOutlined
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
@@ -64,7 +64,7 @@ const RecurringListPage = (props) => {
   const [currentId, setCurrentId] = React.useState();
   const navigate = useNavigate();
 
-  const isRecurringDeprecated = item => !item.email || !item.taskTemplateId || !item.portfolioName;
+  const isRecurringDeprecated = item => !item.userId || !item.taskTemplateId;
 
   const columnDef = [
     {
@@ -75,16 +75,16 @@ const RecurringListPage = (props) => {
       ellipsis: false
     },
     {
-      title: 'Form Template',
-      dataIndex: 'taskTemplateName',
-      render: (text, record) => record.taskTemplateName ? <Link to={`/task_template/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
-      ellipsis: false
-    },
-    {
       title: 'Client',
       dataIndex: 'userId',
       onFilter: (value, record) => record.agentId === value,
       render: (value, record) => <UserNameCard userId={value} />
+    },
+    {
+      title: 'Form Template',
+      dataIndex: 'taskTemplateName',
+      render: (text, record) => record.taskTemplateName ? <Link to={`/task_template/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
+      ellipsis: false
     },
     {
       title: 'Frequency',
@@ -93,40 +93,45 @@ const RecurringListPage = (props) => {
         return <Text>{every} {period}{every === 1 ? null : 's'}</Text>;
       }
     },
+    // {
+    //   title: 'Schedule',
+    //   render: (text, record) => {
+    //     const deprecated = isRecurringDeprecated(record);
+    //     const { firstRunOn, every, period, lastRunAt, nextRunAt } = record;
+    //     return <StylePatternTable>
+    //       <tbody>
+    //         {firstRunOn && <tr>
+    //           <td className="label">
+    //             <small>Start From</small>
+    //           </td>
+    //           <td>
+    //             <TimeAgo value={firstRunOn} direction="horizontal" />
+    //           </td>
+    //         </tr>}
+    //         <tr>
+    //           <td className="label">
+    //             <small>Last Run</small>
+    //           </td>
+    //           <td>
+    //             {!lastRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={lastRunAt} direction="horizontal" />}
+    //           </td>
+    //         </tr>
+    //         <tr>
+    //           <td className="label">
+    //             <small>Next Run</small>
+    //           </td>
+    //           <td>
+    //             {deprecated || !nextRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={nextRunAt} direction="horizontal" />}
+    //           </td>
+    //         </tr>
+    //       </tbody>
+    //     </StylePatternTable>;
+    //   }
+    // },
     {
-      title: 'Schedule',
-      render: (text, record) => {
-        const deprecated = isRecurringDeprecated(record);
-        const { firstRunOn, every, period, lastRunAt, nextRunAt } = record;
-        return <StylePatternTable>
-          <tbody>
-            {firstRunOn && <tr>
-              <td className="label">
-                <small>Start From</small>
-              </td>
-              <td>
-                <TimeAgo value={firstRunOn} direction="horizontal" />
-              </td>
-            </tr>}
-            <tr>
-              <td className="label">
-                <small>Last Run</small>
-              </td>
-              <td>
-                {!lastRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={lastRunAt} direction="horizontal" />}
-              </td>
-            </tr>
-            <tr>
-              <td className="label">
-                <small>Next Run</small>
-              </td>
-              <td>
-                {deprecated || !nextRunAt ? <Text type="secondary"><DashOutlined /></Text> : <TimeAgo value={nextRunAt} direction="horizontal" />}
-              </td>
-            </tr>
-          </tbody>
-        </StylePatternTable>;
-      }
+      title: 'Start From',
+      dataIndex: 'firstRunOn',
+      render: (value) => <TimeAgo value={value} />
     },
     {
       title: 'Last Run At',
@@ -145,11 +150,11 @@ const RecurringListPage = (props) => {
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
         return (
-          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            {!deprecated && <Tooltip placement="bottom" title="Edit recurring"><Button type="link" icon={<EditOutlined />} onClick={e => handleEditRecurring(e, record)} /></Tooltip>}
-            {!deprecated && <Tooltip placement="bottom" title="Run immediately"><Button type="link" icon={<CaretRightFilled />} onClick={e => handleRunRecurring(e, record)} /></Tooltip>}
-            <Tooltip placement="bottom" title="Delete recurring"><Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} /></Tooltip>
-          </Space>
+          <Row>
+            <Tooltip title="Edit recurring"><Button type="text" icon={<EditOutlined />} onClick={e => handleEditRecurring(e, record)} disabled={deprecated}/></Tooltip>
+            <Tooltip title="Run immediately"><Button type="text" icon={<CaretRightFilled />} onClick={e => handleRunRecurring(e, record)} disabled={deprecated}/></Tooltip>
+            <Tooltip title="Delete recurring"><Button type="text" danger icon={<CloseOutlined />} onClick={e => handleDelete(e, record)} /></Tooltip>
+          </Row>
         )
       },
     },
