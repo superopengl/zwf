@@ -43,8 +43,10 @@ export const FieldEditFloatPanel = (props) => {
           {/* <Avatar icon={<Icon component={CloseOutlined} />} style={{ backgroundColor: '#F53F3F' }} /> */}
           <Paragraph>Are you sure you want to delete {field.type === 'divider' ? 'this divider' : <>field <Text strong>{field.name}</Text></>}?</Paragraph>
         </Space>
+        <Space style={{justifyContent: 'end', width: '100%'}}>
           {field.type !== 'divider' && <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>}
-          <Button type="primary" block danger icon={<CloseOutlined />} onClick={onDelete}>Delete</Button>
+          <Button type="primary" danger icon={<CloseOutlined />} onClick={onDelete}>Delete</Button>
+        </Space>
       </ProCard> : <ProCard split={'horizontal'} >
         <ProCard>
           <Form
