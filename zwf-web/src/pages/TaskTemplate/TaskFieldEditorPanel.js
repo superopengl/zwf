@@ -42,7 +42,7 @@ export const TaskFieldEditorPanel = (props) => {
 
   const handleAddControl = (controlType, newFieldId) => {
     setFields(preFields => {
-      const name = getUniqueNewFieldName(fields, controlType);
+      const name = getUniqueNewFieldName(preFields, controlType);
       const newField = createFieldItemSchema(controlType, name);
       newField.id = newFieldId;
 
@@ -56,7 +56,7 @@ export const TaskFieldEditorPanel = (props) => {
     const controlDef = TaskTemplateFieldControlDefMap.get(newControlType);
     const fieldBaseName = controlDef.label;
 
-    let number = allFields?.length || 0;
+    let number = 1;
     let name = null;
     do {
       name = `${fieldBaseName} ${number}`;
@@ -92,11 +92,9 @@ export const TaskFieldEditorPanel = (props) => {
           <FieldListEditable fields={fields} onChange={handleFieldsChange} />
         </ProCard>
         <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
-          {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}
         </ProCard>
       </ProCard>
     </DndProvider>
-    {/* <DebugJsonPanel value={fields} /> */}
   </Container>
   );
 };
