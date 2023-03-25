@@ -1,12 +1,11 @@
-import {
+import Icon, {
   CopyOutlined,
-  DeleteOutlined,
+  CloseOutlined,
   EditOutlined,
   EyeOutlined,
   PlusOutlined
 } from '@ant-design/icons';
 import { Button, Card, List, Modal, Space, Typography, Tooltip, Row, Col, Segmented } from 'antd';
-import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
@@ -26,6 +25,7 @@ import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components
 import { Descriptions } from 'antd';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { MdDashboardCustomize } from 'react-icons/md';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -221,7 +221,7 @@ export const TaskTemplateListPage = () => {
           actions: {
             render: (text, row) => [
               <Tooltip title="Create task with this task template" key="new">
-                <Button icon={<PlusOutlined />} type="text"
+                <Button icon={<Icon component={MdDashboardCustomize} />} type="text"
                   onClick={(e) => {
                     e.stopPropagation();
                     handleCreateTask(row.data)
@@ -236,7 +236,7 @@ export const TaskTemplateListPage = () => {
                     onClick: () => handleEdit(row.data)
                   },
                   {
-                    icon: <PlusOutlined />,
+                    icon: <Icon component={MdDashboardCustomize} />,
                     menu: 'Create task',
                     onClick: () => handleCreateTask(row.data),
                   },
@@ -256,7 +256,7 @@ export const TaskTemplateListPage = () => {
                     menu: '-'
                   },
                   {
-                    icon: <Text type="danger"><DeleteOutlined /></Text>,
+                    icon: <Text type="danger"><CloseOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(row.data)
                   },

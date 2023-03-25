@@ -3,14 +3,14 @@ import React from 'react';
 import { Avatar, Modal, Tag, Typography, Space } from 'antd';
 
 import { changeTaskStatus$ } from 'services/taskService';
-import { DeleteOutlined } from '@ant-design/icons';
+import { CloseOutlined } from '@ant-design/icons';
 
 const { Paragraph } = Typography
 
 export function showArchiveTaskModal(taskId, onFinish) {
   const modalRef = Modal.confirm({
     title: <Space>
-      <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#cf222e' }} />
+      <Avatar icon={<CloseOutlined />} style={{ backgroundColor: '#cf222e' }} />
       Archive Task
     </Space>,
     content: <>

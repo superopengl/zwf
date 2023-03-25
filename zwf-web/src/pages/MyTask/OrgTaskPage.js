@@ -8,7 +8,7 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
@@ -171,7 +171,7 @@ const OrgTaskPage = React.memo((props) => {
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
           <Tooltip title="Archieve" key="archieve">
-            <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => showArchiveTaskModal(task.id, load$)} />
+            <Button type="primary" danger icon={<CloseOutlined />} onClick={() => showArchiveTaskModal(task.id, load$)} />
           </Tooltip>,
           <Tooltip key="edit" title="Edit">
             <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />

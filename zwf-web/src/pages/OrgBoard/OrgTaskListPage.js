@@ -12,6 +12,7 @@ import { TaskSearchPanel } from './TaskSearchPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
+import { MdDashboardCustomize } from 'react-icons/md';
 
 const { Link: TextLink } = Typography;
 
@@ -140,7 +141,7 @@ const OrgTaskListPage = () => {
         <Tooltip key="filter" title="Filter">
           <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
         </Tooltip>,
-        <Button type="primary" ghost icon={<PlusOutlined />} onClick={handleCreateTask}>New Task</Button>
+        <Button type="primary" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
       {filterVisible && <Row style={{ marginBottom: 20 }}>

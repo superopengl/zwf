@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Typography, Space, Tooltip, Avatar, Button, Row, Col } from 'antd';
 import _ from 'lodash';
-import Icon, { DeleteOutlined } from '@ant-design/icons';
+import Icon, { CloseOutlined } from '@ant-design/icons';
 import { showSignTaskFileModal } from './showSignTaskFileModal';
 import { Modal } from 'antd';
 import { FaSignature } from 'react-icons/fa';
@@ -63,7 +63,7 @@ export const TaskDocItem = React.memo(props => {
   const handleDelete = () => {
     Modal.confirm({
       title: <Space>
-        <Avatar icon={<DeleteOutlined />} style={{ backgroundColor: '#cf222e' }} />
+        <Avatar icon={<CloseOutlined />} style={{ backgroundColor: '#cf222e' }} />
         Delete file
       </Space>,
       content: <>Delete file <strong>{taskDoc.name}</strong> from this task?</>,
@@ -110,7 +110,7 @@ export const TaskDocItem = React.memo(props => {
           />
         </Tooltip>}
         {isOrg && <Tooltip title="Delete file">
-          <Button key="delete" danger icon={<DeleteOutlined />} type="link" onClick={handleDelete} disabled={!canDelete} />
+          <Button key="delete" danger icon={<CloseOutlined />} type="link" onClick={handleDelete} disabled={!canDelete} />
         </Tooltip>}
       </Space>
     </Col>}

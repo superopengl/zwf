@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Avatar, Modal, Tag, Typography, Space } from 'antd';
 import { changeTaskStatus$ } from 'services/taskService';
-import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 
 const { Paragraph } = Typography
 

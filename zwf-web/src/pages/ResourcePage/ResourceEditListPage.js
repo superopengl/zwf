@@ -1,5 +1,5 @@
 import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, EyeInvisibleOutlined, SyncOutlined
+  CloseOutlined, EditOutlined, EyeOutlined, PlusOutlined, EyeInvisibleOutlined, SyncOutlined
 } from '@ant-design/icons';
 import { Button, Modal, Space, Typography, List, Card, Image } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
@@ -160,7 +160,7 @@ export const ResourceEditListPage = props => {
                     menu: '-'
                   },
                   item.publishedAt ? null : {
-                    icon: <Text type="danger"><DeleteOutlined /></Text>,
+                    icon: <Text type="danger"><CloseOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(item)
                   },

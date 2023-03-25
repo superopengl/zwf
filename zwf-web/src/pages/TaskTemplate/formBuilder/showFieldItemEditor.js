@@ -1,13 +1,11 @@
 import React from 'react';
-import { Card, Switch, Row, Input, Col, Select, Form, Typography, Button, Modal, Divider } from 'antd';
-import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { Switch, Row, Input, Select, Form, Typography, Button, Modal } from 'antd';
+import Icon from '@ant-design/icons'
 import { OptionsBuilder } from './OptionsBuilder';
 import { TaskTemplateWidgetDef } from 'util/TaskTemplateWidgetDef';
 import PropTypes from 'prop-types';
 import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
-import { VarTag } from 'components/VarTag';
 import DocTemplateSelect from 'components/DocTemplateSelect';
-import FormBuilder from 'antd-form-builder'
 
 const { Text } = Typography;
 

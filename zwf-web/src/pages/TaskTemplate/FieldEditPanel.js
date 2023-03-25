@@ -6,7 +6,7 @@ import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
 import Icon from '@ant-design/icons';
-import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
+import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from './formBuilder/OptionsBuilder';
 import DocTemplateSelect from 'components/DocTemplateSelect';
@@ -42,7 +42,7 @@ export const FieldEditPanel = (props) => {
 
   return deleting ? <>
     <Space align='start' style={{width: '100%'}}>
-      <Avatar icon={<Icon component={DeleteOutlined} />} style={{ backgroundColor: '#F53F3F' }} />
+      <Avatar icon={<Icon component={CloseOutlined} />} style={{ backgroundColor: '#F53F3F' }} />
       <Paragraph>Are you sure you want to delete field <Text strong>{field.name}</Text>?</Paragraph>
     </Space>
     <Space style={{ width: '100%', justifyContent: 'end' }}>
@@ -92,7 +92,7 @@ export const FieldEditPanel = (props) => {
           <OptionsBuilder />
         </Form.Item>}
       <Form.Item>
-        <Button danger block type="primary" icon={<DeleteOutlined />} onClick={handleDeleteField}>Delete field</Button>
+        <Button danger block type="primary" icon={<CloseOutlined />} onClick={handleDeleteField}>Delete field</Button>
       </Form.Item>
     </Form>
   </>

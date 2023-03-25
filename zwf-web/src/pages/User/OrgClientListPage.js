@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Table, Input, Drawer, Descriptions } from 'antd';
-import {
+import Icon, {
   SyncOutlined,
   SearchOutlined,
   PlusOutlined,
@@ -26,6 +26,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
+import { MdDashboardCustomize } from 'react-icons/md';
 
 
 const { Text } = Typography;
@@ -206,7 +207,7 @@ const OrgClientListPage = () => {
           <DropdownMenu
             config={[
               {
-                icon: <PlusOutlined />,
+                icon: <Icon component={MdDashboardCustomize} />,
                 menu: `Create task for this client`,
                 onClick: () => createTaskForUser(user)
               },

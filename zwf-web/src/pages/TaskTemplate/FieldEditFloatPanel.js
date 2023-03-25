@@ -1,16 +1,10 @@
-import { useRef } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Avatar, Tooltip, Form, Switch, Input, Button, Drawer, Typography, Space } from 'antd';
+import { Tooltip, Form, Switch, Input, Button, Typography, Space } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
-import Field from '@ant-design/pro-field';
 import React from 'react';
-import Icon, { CloseOutlined } from '@ant-design/icons';
-import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
-import { Divider } from 'antd';
+import { CloseOutlined } from '@ant-design/icons';
 import { OptionsBuilder } from './formBuilder/OptionsBuilder';
 import DocTemplateSelect from 'components/DocTemplateSelect';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -46,7 +40,7 @@ export const FieldEditFloatPanel = (props) => {
 
       {deleting ? <ProCard>
         <Space align='center'>
-          {/* <Avatar icon={<Icon component={DeleteOutlined} />} style={{ backgroundColor: '#F53F3F' }} /> */}
+          {/* <Avatar icon={<Icon component={CloseOutlined} />} style={{ backgroundColor: '#F53F3F' }} /> */}
           <Paragraph>Are you sure you want to delete {field.type === 'divider' ? 'this divider' : <>field <Text strong>{field.name}</Text></>}?</Paragraph>
         </Space>
           {field.type !== 'divider' && <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>}

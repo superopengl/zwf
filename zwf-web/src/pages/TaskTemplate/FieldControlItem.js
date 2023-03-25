@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrag } from 'react-dnd'
-import { Card, Space } from 'antd';
-import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons'
+import { Space } from 'antd';
+import Icon from '@ant-design/icons'
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';

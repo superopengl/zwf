@@ -6,7 +6,7 @@ import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
 import Icon, { BellOutlined } from '@ant-design/icons';
-import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
+import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from '../pages/TaskTemplate/formBuilder/OptionsBuilder';
 import DocTemplateSelect from 'components/DocTemplateSelect';

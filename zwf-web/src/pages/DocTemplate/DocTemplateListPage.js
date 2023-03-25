@@ -1,5 +1,5 @@
 import {
-  DeleteOutlined, EditOutlined, PlusOutlined, CopyOutlined
+  CloseOutlined, EditOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
 import { Button, Modal, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
@@ -195,7 +195,7 @@ export const DocTemplateListPage = () => {
                     menu: '-'
                   },
                   {
-                    icon: <Text type="danger"><DeleteOutlined /></Text>,
+                    icon: <Text type="danger"><CloseOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(row.data)
                   }]}
