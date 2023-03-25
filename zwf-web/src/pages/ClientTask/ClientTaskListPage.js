@@ -19,6 +19,7 @@ import { Descriptions } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { useBreakpoint } = Grid;
 const { CheckableTag } = Tag;
@@ -35,12 +36,6 @@ const LayoutStyled = styled.div`
     width: 100%;
   }
 
-  // .ant-tabs-tab {
-  //   margin: 0 !important;
-  // }
-  .ant-page-header-heading {
-    padding: 0 0 24px 24px;
-  }
 
 `;
 
@@ -160,73 +155,71 @@ export const ClientTaskListPage = () => {
 
   return (
     <LayoutStyled>
-      <PageContainer
-        header={{
-          title: "All My Cases",
-          loading,
-          extra: [
-            <Button key="refresh"
-              icon={<SyncOutlined />}
-              onClick={() => load$()}
-              type="link">Refresh</Button>
-          ]
-        }}
+      <PageHeaderContainer
+        loading={loading}
+        title='All My Cases'
+        extra={[
+          <Button key="refresh"
+            icon={<SyncOutlined />}
+            onClick={() => load$()}
+            type="link">Refresh</Button>
+        ]}
       >
-          <Row gutter={[12,24]}>
-            <Col>
-              <CheckboxButton value={isFilteringStatus('in_progress')} onChange={() => handleToggleStatus('in_progress')}>Pending</CheckboxButton>
-            </Col>
-            <Col>
-              <CheckboxButton danger value={isFilteringStatus('action_required')} onChange={() => handleToggleStatus('action_required')}>Action Required</CheckboxButton>
-            </Col>
-            <Col>
-              <ConfigProvider
-                theme={{
-                  token: {
-                    colorPrimary: '#00B42A'
-                  }
-                }}
-              >
-                <CheckboxButton value={isFilteringStatus('done')} type="primary" onChange={() => handleToggleStatus('done')}>Completed</CheckboxButton>
-              </ConfigProvider>
-            </Col>
+        <Row gutter={[12, 24]}>
+          <Col>
+            <CheckboxButton value={isFilteringStatus('in_progress')} onChange={() => handleToggleStatus('in_progress')}>Pending</CheckboxButton>
+          </Col>
+          <Col>
+            <CheckboxButton danger value={isFilteringStatus('action_required')} onChange={() => handleToggleStatus('action_required')}>Action Required</CheckboxButton>
+          </Col>
+          <Col>
+            <ConfigProvider
+              theme={{
+                token: {
+                  colorPrimary: '#00B42A'
+                }
+              }}
+            >
+              <CheckboxButton value={isFilteringStatus('done')} type="primary" onChange={() => handleToggleStatus('done')}>Completed</CheckboxButton>
+            </ConfigProvider>
+          </Col>
 
-            <Col>
-              <Input.Search
-                key="search"
-                placeholder='Search text'
-                style={{ width: 200 }}
-                value={query.text}
-                onChange={e => setQuery({ ...query, text: e.target.value.toLowerCase() })}
-                onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
-                maxLength={200}
-                allowClear />
+          <Col>
+            <Input.Search
+              key="search"
+              placeholder='Search text'
+              style={{ width: 200 }}
+              value={query.text}
+              onChange={e => setQuery({ ...query, text: e.target.value.toLowerCase() })}
+              onSearch={text => setQuery({ ...query, text: text.toLowerCase() })}
+              maxLength={200}
+              allowClear />
 
-            </Col>
-            <Col>
-              <Select key="org"
-                options={orgOptions}
-                value={query.org}
-                onSelect={org => setQuery({ ...query, org })}
-                dropdownMatchSelectWidth={false}
-                style={{ width: 200 }} />
-            </Col>
-            <Col>
-              <Select key="sort"
-                value={query.order}
-                options={sortOptions}
-                onSelect={order => setQuery({ ...query, order })}
-                dropdownMatchSelectWidth={false}
-                style={{ width: 200 }} />
-            </Col>
-            <Col>
-              <Button key="clear"
-                icon={<ClearOutlined />}
-                onClick={() => setQuery({ ...TASK_FILTER_DEFAULT })}
-                type="link"
-              >Reset filters</Button>
-            </Col>
-          </Row>
+          </Col>
+          <Col>
+            <Select key="org"
+              options={orgOptions}
+              value={query.org}
+              onSelect={org => setQuery({ ...query, org })}
+              dropdownMatchSelectWidth={false}
+              style={{ width: 200 }} />
+          </Col>
+          <Col>
+            <Select key="sort"
+              value={query.order}
+              options={sortOptions}
+              onSelect={order => setQuery({ ...query, order })}
+              dropdownMatchSelectWidth={false}
+              style={{ width: 200 }} />
+          </Col>
+          <Col>
+            <Button key="clear"
+              icon={<ClearOutlined />}
+              onClick={() => setQuery({ ...TASK_FILTER_DEFAULT })}
+              type="link"
+            >Reset filters</Button>
+          </Col>
+        </Row>
         <ProList
           headerTitle=" "
           grid={{
@@ -244,7 +237,7 @@ export const ClientTaskListPage = () => {
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
-                No active tasks.
+                There is no active cases now.
               </Paragraph>
             </div>
           }}
@@ -308,7 +301,7 @@ export const ClientTaskListPage = () => {
             </Tabs.TabPane>
           })}
         </Tabs> */}
-      </PageContainer>
+      </PageHeaderContainer>
     </LayoutStyled>
   )
 }
