@@ -136,7 +136,7 @@ export const DocTemplateListPage = () => {
       loading={loading}
       title='Doc Templates'
       extra={[
-        <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+        <Button type="primary" key="new" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
       ]}
     >
       <ProList
