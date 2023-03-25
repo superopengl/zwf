@@ -8,37 +8,49 @@ import { Task } from '../entity/Task';
 import * as moment from 'moment-timezone';
 import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
+import { EntityManager } from 'typeorm';
 
 export const CLIENT_TZ = 'Australia/Sydney';
 
 export const CRON_EXECUTE_TIME = process.env.NODE_ENV === 'dev' ? moment().add(2, 'minute').format('HH:mm') : '5:00';
 
-export async function testRunRecurring(recurringId: string) {
-  const recurring = await db.getRepository(Recurring).findOne({where: {id: recurringId}});
-  assert(recurring, 404);
-  return executeRecurring(recurring, false);
+export async function testRunRecurring(recurringId: string, orgId: string, executorId: string) {
+  let task: Task;
+  await db.transaction(async m => {
+    const recurring = await m.getRepository(Recurring).findOneBy({ id: recurringId, orgId });
+    assert(recurring, 404);
+    task = await executeRecurring(m, recurring, executorId, false);
+  })
+  return task;
 }
 
-export async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
-  const { taskTemplateId, userId, name } = recurring;
+export async function executeRecurring(m: EntityManager, recurring: Recurring, executorId: string, resetNextRunAt: boolean) {
+  const { taskTemplateId, userId, name, orgId } = recurring;
 
   const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
-  const client = await db.getRepository(UserInformation).findOne({where: {id: userId}});
+  const client = await m.getRepository(UserInformation).findOneOrFail({
+    where: {
+      id: userId
+    },
+    select: {
+      email: true
+    }
+  });
   const clientEmail = client.email;
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, null, null, null);
-
-  console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
-
+  const task = await createTaskByTaskTemplateAndUserEmail(m, taskTemplateId, taskName, clientEmail, executorId, null, orgId);
   task.status = TaskStatus.TODO;
-
-  await db.getRepository(Task).save(task);
+  
+  console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
+  
+  const entitiesToSave: any[] = [task]
 
   if (resetNextRunAt) {
     recurring.lastRunAt = new Date();
     recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
-    await db.getRepository(Recurring).save(recurring);
+    entitiesToSave.push(recurring);
   }
+  await m.save(entitiesToSave);
 
   return task;
 }

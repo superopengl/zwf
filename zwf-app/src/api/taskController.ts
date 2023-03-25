@@ -45,7 +45,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, creatorId, id, orgId);
+  const task = await createTaskByTaskTemplateAndUserEmail(db.manager, taskTemplateId, taskName, clientEmail, creatorId, id, orgId);
 
   res.json(task);
 });
