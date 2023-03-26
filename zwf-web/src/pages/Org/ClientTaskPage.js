@@ -25,13 +25,13 @@ const Container = styled.div`
   // background-color: #ffffff;
   height: 100%;
   width: 100%;
-  max-width: 1200px;
+  // max-width: 1200px;
 `;
 
 const ClientTaskPage = (props) => {
   useAssertRole(['client']);
   const params = useParams();
-  const {id} = params;
+  const { id } = params;
 
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
@@ -57,14 +57,14 @@ const ClientTaskPage = (props) => {
   }
 
   return (<>
-    <Container>
-      {!task ? <Skeleton active /> : <PageHeaderContainer
-        loading={loading}
-        onBack={handleGoBack}
-        // fixedHeader
-        icon={<TaskIcon />}
-        title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
-      >
+    {!task ? <Skeleton active /> : <PageHeaderContainer
+      loading={loading}
+      onBack={handleGoBack}
+      fixedHeader={true}
+      maxWidth={1200}
+      icon={<TaskIcon />}
+      title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
+    >
         <Row gutter={40} wrap={false}>
           <Col span={14}>
             <Card size="large">
@@ -77,19 +77,18 @@ const ClientTaskPage = (props) => {
               title="Comment"
               size="large"
               bodyStyle={{ overflowX: 'hidden', overflowY: 'auto' }}
-              // actions={[
-              //   <div style={{ paddingLeft: 24, paddingRight: 24, width: '100%' }}>
-              //     <TaskMessageForm key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
-              //   </div>
-              // ]}
+            // actions={[
+            //   <div style={{ paddingLeft: 24, paddingRight: 24, width: '100%' }}>
+            //     <TaskMessageForm key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
+            //   </div>
+            // ]}
             >
               <TaskCommentPanel taskId={task.id} />
             </Card>
           </Col>
         </Row>
-      </PageHeaderContainer>}
       {saving && <SavingAffix />}
-    </Container>
+    </PageHeaderContainer>}
   </>
   );
 };

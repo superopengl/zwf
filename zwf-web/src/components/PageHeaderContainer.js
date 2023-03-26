@@ -25,7 +25,7 @@ export const PageHeaderContainer = React.memo((props) => {
   const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, ...others } = props;
 
 
-  return <Container style={{ ...style, maxWidth }}>
+  return <Container style={{ ...style }}>
     <Breadcrumb style={{ padding: '1rem 40px 0' }}>
       {breadcrumb?.map((item, i) => <Breadcrumb.Item key={i} menu={item.menu ? { items: item.menu.map((m, j) => ({ key: j, label: m })) } : null}>
         {
@@ -49,9 +49,11 @@ export const PageHeaderContainer = React.memo((props) => {
         style: {
           paddingTop: 0,
           paddingLeft: 10,
+          maxWidth,
+          margin: '0 auto',
         }
       }}
-    >{children}</PageContainer>
+    ><div style={{ maxWidth, margin: '0 auto' }}>{children}</div></PageContainer>
   </Container>
 });
 
@@ -68,5 +70,6 @@ PageHeaderContainer.propTypes = {
 };
 
 PageHeaderContainer.defaultProps = {
+  maxWidth: '100%',
 };
 
