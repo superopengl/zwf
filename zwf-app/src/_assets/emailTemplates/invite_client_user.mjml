@@ -1,6 +1,6 @@
 <mjml>
   <mj-head>
-    <mj-title>To be served by ZeeWorkflow</mj-title>
+    <mj-title>To receive services from ZeeWorkflow</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
@@ -8,7 +8,7 @@
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          You have been invited to join and receive services from the organization <strong>{{org}}</strong> in ZeeWorkflow. Orgnization <strong>{{org}}</strong> will contact you in the near future if necessary.
+          ZeeWorkflow's organization <strong>{{org}}</strong> has extended an invitation for you to join and avail yourself of their services. You will be reached out in case they require further communication in the near future.
         </mj-text>
       </mj-column>
     </mj-section>
