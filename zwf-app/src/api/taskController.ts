@@ -38,6 +38,7 @@ import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
+import { Org } from '../entity/Org';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
@@ -413,6 +414,11 @@ export const getTask = handlerWrapper(async (req, res) => {
       }
     }
   });
+
+  if(role === Role.Client) {
+    const {name: orgName} = await db.getRepository(Org).findOneBy({id: task.orgId});
+    (task as any).orgName = orgName;
+  }
 
   assert(task, 404);
 

@@ -63,7 +63,7 @@ const ClientTaskPage = (props) => {
         onBack={handleGoBack}
         // fixedHeader
         icon={<TaskIcon />}
-        title={task?.name || <Skeleton paragraph={false} />}
+        title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       >
         <Row gutter={40} wrap={false}>
           <Col span={14}>
