@@ -21,8 +21,22 @@ width: 100%;
 }
 `
 
+const Footer = styled.div`
+margin: 0 auto;
+padding-left: 8px;
+width: 100%;
+border-top: 1px solid rgba(5, 5, 5, 0.06);
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+left: 0;
+background-color: white;
+padding: 16px 24px;
+`
+
 export const PageHeaderContainer = React.memo((props) => {
-  const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, ...others } = props;
+  const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, footer, ...others } = props;
 
 
   return <Container style={{ ...style }}>
@@ -54,6 +68,11 @@ export const PageHeaderContainer = React.memo((props) => {
         }
       }}
     ><div style={{ maxWidth, margin: '0 auto' }}>{children}</div></PageContainer>
+    {footer && <Footer>
+      <div style={{ maxWidth, margin: '0 auto', width: '100%', display: 'flex', justifyContent: 'end' }}>
+        {footer}
+      </div>
+    </Footer>}
   </Container>
 });
 
@@ -67,6 +86,7 @@ PageHeaderContainer.propTypes = {
   title: PropTypes.any,
   extra: PropTypes.array,
   maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  footer: PropTypes.object,
 };
 
 PageHeaderContainer.defaultProps = {

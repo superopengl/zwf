@@ -696,7 +696,7 @@ export const getTaskLog = handlerWrapper(async (req, res) => {
     case Role.Client:
       query = {
         ...query,
-        clientId: getUserIdFromReq(req)
+        userId: getUserIdFromReq(req)
       };
     default:
       break;
