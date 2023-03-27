@@ -19,6 +19,11 @@ width: 100%;
 .ant-tabs {
   padding-left: 32px;
 }
+
+.ant-pro-page-container-children-content {
+  padding-left: 0;
+  padding-right: 0;
+}
 `
 
 const Footer = styled.div`
