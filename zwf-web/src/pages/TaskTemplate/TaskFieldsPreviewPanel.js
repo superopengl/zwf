@@ -3,7 +3,6 @@ import React from 'react';
 
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { TaskFormWidget } from 'components/TaskFormWidget';
 import { TaskSchemaRenderer } from 'components/TaskSchemaRenderer';
 import { TaskIcon } from 'components/entityIcon';
 

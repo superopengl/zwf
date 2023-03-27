@@ -45,17 +45,23 @@ const ClientTaskPage = (props) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    const sub$ = load$();
+    return () => sub$.unsubscribe();
+  }, [])
+
+  const load$ = () => {
+    setLoading(true);
     const sub$ = getTask$(id).pipe(
       finalize(() => setLoading(false))
     ).subscribe(task => {
       setTask(task);
     })
 
-    return () => sub$.unsubscribe();
-  }, [])
+    return sub$;
+  }
 
-  const handleMessageSent = () => {
-    setLoading(false);
+  const handleDocChange = () => {
+    load$();
   }
 
   const handleGoBack = () => {
@@ -66,7 +72,7 @@ const ClientTaskPage = (props) => {
   const isDocView = currentStep === 1;
 
   const span = { xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 };
-  const canRequestChange = task.status === 'todo' || task.status === 'in_progress';
+  const canRequestChange = task?.status === 'todo' || task?.status === 'in_progress';
 
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
@@ -89,7 +95,7 @@ const ClientTaskPage = (props) => {
           </Card>
         </Col>
         <Col {...span}>
-            <ClientTaskDocListPanel task={task} onSavingChange={setSaving} />
+            <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange}/>
         </Col>
       </Row>
       {saving && <SavingAffix />}

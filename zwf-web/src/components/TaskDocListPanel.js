@@ -25,10 +25,6 @@ import { DocTemplateIcon } from './entityIcon';
 import { BsFileEarmarkTextFill, BsInfoLg } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 
-
-const { Dragger } = Upload;
-const { Text, Paragraph } = Typography;
-
 const Container = styled.div`
 
 .ant-table-cell {
@@ -39,54 +35,10 @@ const Container = styled.div`
   margin-left: -8px;
   margin-right: -8px;
 }
-
 `;
-
-const FileIconContainer = styled.div`
-  display: inline-block;
-  position: relative;
-`;
-
-
-const FileIconWithOverlay = props => {
-  const { id, name, size, showsLastReadAt, showsSignedAt } = props
-
-  const [file, setFile] = React.useState();
-
-  const loadEntity = async () => {
-    if (showsLastReadAt || showsSignedAt) {
-      const file = await getFileMeta(id);
-      setFile(file);
-    }
-  }
-
-  React.useEffect(() => {
-    loadEntity();
-  }, []);
-
-  if (!file) {
-    return <FileIcon name={name} width={size} />
-  }
-
-  const { lastReadAt, signedAt } = file;
-
-  return <Popover content={
-    <Space direction="vertical">
-      <TimeAgo value={lastReadAt} prefix="Last read:" direction="horizontal" defaultContent="Unread" />
-      <TimeAgo value={signedAt} prefix="Signed at:" direction="horizontal" defaultContent="Unsigned" />
-    </Space>
-  } trigger="click">
-    <FileIconContainer>
-      <FileIcon name={name} width={size} />
-      {!lastReadAt ? <Badge color="blue" style={{ position: 'absolute', top: -8, left: -8 }} /> :
-        !signedAt ? <Badge color="red" style={{ position: 'absolute', top: -8, left: -8 }} /> :
-          null}
-    </FileIconContainer>
-  </Popover>
-}
 
 export const TaskDocListPanel = React.memo((props) => {
-  const { task, size, showsLastReadAt, showsSignedAt, onChange } = props;
+  const { task, onChange } = props;
 
   const [fileList, setFileList] = React.useState(task.docs);
   const [loading, setLoading] = React.useState(true);
@@ -149,33 +101,17 @@ export const TaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          <TaskFileName taskFile={doc} />
+          <TaskFileName taskFile={doc} showOverlay={false} />
           <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
           <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />
         </Space>
         }>
-          <div>
-
-        <TaskFileName taskFile={doc} />
-          </div>
+        <div>
+          <TaskFileName taskFile={doc} />
+        </div>
       </Tooltip>
 
     },
-    // {
-    //   align: 'right',
-    //   width: 32,
-    //   render: (_, doc) => <Tooltip
-    //     color="white"
-    //     overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
-    //     title={<Space direction='vertical'>
-    //       <TaskFileName taskFile={doc} />
-    //       <TimeAgo prefix="created" direction="horizontal" value={doc.createdAt} />
-    //       <TimeAgo prefix="sign requested" direction="horizontal" value={doc.signRequestedAt} />
-    //     </Space>
-    //     }>
-    //     <Button shape="circle" icon={<Icon component={BsInfoLg} />} type="text" />
-    //   </Tooltip>
-    // },
     {
       align: 'right',
       width: 32,

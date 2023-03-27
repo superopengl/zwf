@@ -202,14 +202,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     },
     control: () => <div className="description-field-control"></div>,
   },
-  // {
-  //   type: 'autodoc',
-  //   label: 'Doc template (PDF)',
-  //   icon: <FilePdfFilled />,
-  //   fieldProps: {
-  //   },
-  //   control: AutoDocInput,
-  // },
 ]);
 
 export const TaskTemplateFieldControlDefMap = new Map(TaskTemplateFieldControlDef.map(x => [x.type, x]));

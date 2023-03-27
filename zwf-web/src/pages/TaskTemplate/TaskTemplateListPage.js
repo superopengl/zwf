@@ -18,7 +18,6 @@ import {TaskFieldsPreviewPanel} from './TaskFieldsPreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
 import { HiViewList } from 'react-icons/hi';
 import { CreateTaskModal } from 'components/CreateTaskModal';
-import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { finalize, switchMap } from 'rxjs/operators';
 import { PageContainer } from '@ant-design/pro-components';
 import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
