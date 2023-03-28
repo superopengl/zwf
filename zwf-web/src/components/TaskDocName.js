@@ -10,6 +10,7 @@ import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from "services/taskService";
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { useDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
+import { openTaskDoc } from 'services/fileService';
 
 const { Link } = Typography
 
@@ -26,10 +27,10 @@ const StyledFileIcon = styled.div`
   }
 `;
 
-export const TaskFileName = props => {
+export const TaskDocName = props => {
   const { taskFile, showOverlay } = props;
 
-  const { name, fileId, signedAt, requiresSign, type, docTemplateId } = taskFile
+  const { id, name, fileId, signedAt, requiresSign, type, docTemplateId } = taskFile
   const [openPreview, previewContextHolder] = useDocTemplatePreviewModal();
 
   let iconType = 'default';
@@ -49,23 +50,36 @@ export const TaskFileName = props => {
     {name}
   </Space>
 
-  const openDocTemplatePreview = (e) => {
+  const handleOpenTaskDoc = async (e) => {
     e.stopPropagation();
-    console.log('click')
-    openPreview(docTemplateId, name);
+    const hasFile = await openTaskDoc(id, name);
+    if (!hasFile && docTemplateId) {
+      openPreview(docTemplateId, name);
+    } else {
+      throw new Error('Cannot open task doc');
+    }
   }
 
   return <>
-   {fileId ? <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
-    {innerContext}
-  </Link> : docTemplateId ? <Link onClick={openDocTemplatePreview}>
-    {innerContext}
-  </Link> : innerContext}
+  <Link onClick={handleOpenTaskDoc}><Space>
+    <FileIcon name={name} type={iconType} />
+    {name}
+  </Space>
+  </Link>
   {previewContextHolder}
   </>
+
+  // return <>
+  //   {fileId ? <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
+  //     {innerContext}
+  //   </Link> : docTemplateId ? <Link onClick={openDocTemplatePreview}>
+  //     {innerContext}
+  //   </Link> : innerContext}
+  //   {previewContextHolder}
+  // </>
 }
 
-TaskFileName.propTypes = {
+TaskDocName.propTypes = {
   taskFile: PropTypes.shape({
     fileId: PropTypes.string,
     docTemplateId: PropTypes.string,
@@ -74,6 +88,6 @@ TaskFileName.propTypes = {
   showOverlay: PropTypes.bool,
 };
 
-TaskFileName.defaultProps = {
+TaskDocName.defaultProps = {
   showOverlay: true,
 };

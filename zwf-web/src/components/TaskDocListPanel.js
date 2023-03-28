@@ -15,7 +15,7 @@ import { Loading } from 'components/Loading';
 import { TaskDocItem } from './TaskDocItem';
 import { deleteTaskDoc$, getTaskDocDownloadUrl, requestSignTaskDoc$, unrequestSignTaskDoc$, addDocTemplateToTask$, } from 'services/taskService';
 import { DebugJsonPanel } from './DebugJsonPanel';
-import { TaskFileName } from './TaskFileName';
+import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
 import Icon, { CloseOutlined, InfoCircleFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
@@ -101,13 +101,13 @@ export const TaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          <TaskFileName taskFile={doc} showOverlay={false} />
+          <TaskDocName taskFile={doc} showOverlay={false} />
           <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
           <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />
         </Space>
         }>
         <div>
-          <TaskFileName taskFile={doc} />
+          <TaskDocName taskFile={doc} />
         </div>
       </Tooltip>
 

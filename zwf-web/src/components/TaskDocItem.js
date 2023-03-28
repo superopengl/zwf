@@ -8,7 +8,7 @@ import Icon, { CloseOutlined } from '@ant-design/icons';
 import { showSignTaskFileModal } from './showSignTaskFileModal';
 import { Modal } from 'antd';
 import { FaSignature } from 'react-icons/fa';
-import { TaskFileName } from './TaskFileName';
+import { TaskDocName } from './TaskDocName';
 import { useRole } from 'hooks/useRole';
 
 const { Link, Text } = Typography;
@@ -90,7 +90,7 @@ export const TaskDocItem = React.memo(props => {
   // className={missingVars.length > 0 ? 'error-doc' : !taskFile.fileId ? 'not-generated' : null}
   >
     <Col flex={1}>
-      <TaskFileName taskFile={taskDoc} />
+      <TaskDocName taskFile={taskDoc} />
     </Col>
     {!disabled && <Col style={{ paddingTop: 6 }}>
       <Space size="small">

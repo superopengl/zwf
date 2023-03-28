@@ -35,7 +35,8 @@ export class TaskDoc {
   @Column('uuid', { nullable: true })
   fileId: string;
 
-  @OneToOne(() => File, file => file.taskDoc, { eager: false, onDelete: 'CASCADE' })
+  @OneToOne(() => File, file => file.taskDoc, { eager: false, orphanedRowAction: 'delete', onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'fileId', referencedColumnName: 'id' })
   file: File;
 
   @Column('uuid', { nullable: true, select: false })
