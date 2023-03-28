@@ -4,25 +4,17 @@ import { TaskTrackingInformation } from './../entity/views/TaskTrackingInformati
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
-import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
-import { TaskAction } from './../entity/TaskAction';
-import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
-import * as moment from 'moment';
-import { EntityManager, In, Not, IsNull } from 'typeorm';
+import { EntityManager, In, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
-import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
-import { Message } from '../entity/Message';
-import { User } from '../entity/User';
 import { TaskStatus } from '../types/TaskStatus';
 import { sendEmailForUserId } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
-import { getNow } from '../utils/getNow';
 import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
@@ -33,9 +25,7 @@ import { File } from '../entity/File';
 import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { filter } from 'rxjs/operators';
-import { uploadToS3 } from '../utils/uploadToS3';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
-import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
@@ -113,84 +103,6 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   streamFileToResponse(file, res);
 });
 
-export const downloadTaskDoc = handlerWrapper(async (req, res) => {
-  assert(getUserIdFromReq(req), 404);
-
-  assertRole(req, ['system', 'admin', 'client', 'agent']);
-  const { docId } = req.params;
-  const role = getRoleFromReq(req);
-  const isClient = role === Role.Client;
-
-  const query: any = {
-    id: docId
-  }
-
-  switch(role) {
-    case Role.Agent:
-    case Role.Admin:
-      query.orgId = getOrgIdFromReq(req);
-      break;
-    default:
-      break;
-  }
-
-  const doc = await db.getRepository(TaskDoc).findOne({
-    where:  {
-      id: docId
-    },
-    relations: {
-      task: true,
-      file: true,
-    }
-  });
-
-  assert(doc, 404);
-  assert(role !== Role.Client || doc.task.userId === getUserIdFromReq(req), 404);
-
-  const { file, docTemplateId } = doc;
-
-  if (file) {
-    streamFileToResponse(file, res);
-  } else if(docTemplateId) {
-    // Hand over to frontend.
-    res.status(425).send("Dependency fields for doc template are not ready").end();
-    return;
-  } else {
-    assert(doc, 500, 'Invalid doc file condition');
-  }
-});
-
-export const signTaskDoc = handlerWrapper(async (req, res) => {
-  assertRole(req, ['client']);
-  const { docId } = req.params;
-  const userId = getUserIdFromReq(req);
-
-  let doc: TaskDoc;
-  await db.transaction(async m => {
-    doc = await m.findOne(TaskDoc, {
-      where: {
-        id: docId,
-        fileId: Not(IsNull()),
-      },
-      relations: {
-        file: true,
-        task: true,
-      },
-    });
-  
-    assert(doc?.task?.userId === userId, 404);
-    assert(!doc.esign, 400, 'The doc has been esigned');
-  
-    const now = getUtcNow();
-    doc.signedBy = userId;
-    doc.signedAt = now;
-    doc.esign = computeTaskFileSignedHash(doc.file.md5, userId, now);
-  
-    await m.save(doc);
-  })
-
-  res.json(doc);
-});
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -461,60 +373,6 @@ export const getTask = handlerWrapper(async (req, res) => {
   assert(task, 404);
 
   res.json(task);
-});
-
-export const uploadTaskFile = handlerWrapper(async (req, res) => {
-  assertRole(req, ['admin', 'agent', 'client']);
-  const { file } = (req as any).files;
-  assert(file, 400, 'No file to upload');
-  const { name, data, mimetype, md5 } = file;
-  const userId = getUserIdFromReq(req);
-  const orgId = getOrgIdFromReq(req);
-  const role = getRoleFromReq(req);
-  const { taskId } = req.params;
-
-  const query = role === Role.Client ? { userId } : { orgId };
-
-  const task = await db.getRepository(Task).findOne({
-    where: {
-      id: taskId,
-      ...query,
-    }
-  });
-
-  assert(task, 404);
-
-  // Upload file binary to S3
-  const fileId = uuidv4();
-
-  const location = await uploadToS3(fileId, name, data);
-
-  await db.transaction(async m => {
-    const fileEntity = new File();
-    fileEntity.id = fileId;
-    fileEntity.fileName = name;
-    fileEntity.createdBy = userId;
-    fileEntity.mime = mimetype;
-    fileEntity.location = location;
-    fileEntity.md5 = md5;
-    fileEntity.public = false;
-
-    await m.save(fileEntity);
-
-    const taskDoc = new TaskDoc();
-    taskDoc.taskId = taskId;
-    taskDoc.orgId = task.orgId;
-    taskDoc.type = 'upload';
-    taskDoc.name = name;
-    taskDoc.fileId = fileId;
-    taskDoc.uploadedBy = userId;
-
-    await m.save(taskDoc);
-  });
-
-  res.json({
-    fileId: fileId,
-  });
 });
 
 export const addDocTemplateToTask = handlerWrapper(async (req, res) => {

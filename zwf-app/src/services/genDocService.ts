@@ -1,3 +1,5 @@
+import { getUtcNow } from './../utils/getUtcNow';
+import { TaskDoc } from './../entity/TaskDoc';
 import { DocTemplate } from './../entity/DocTemplate';
 import * as _ from 'lodash';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
@@ -9,6 +11,7 @@ import { createHash } from 'crypto';
 import { TaskField } from '../entity/TaskField';
 import * as moment from 'moment';
 import * as hash from 'object-hash';
+import { assert } from '../utils/assert';
 
 async function stringifyFieldValue(f) {
   const { value, type } = f;
@@ -17,25 +20,21 @@ async function stringifyFieldValue(f) {
   }
 
   switch (type) {
-    case 'input':
-    case 'number':
+    case 'text':
     case 'textarea':
-    case 'radio':
+    case 'digit':
     case 'checkbox':
     case 'select':
+    case 'radio':
       return value;
     case 'date':
       return moment(value).format('YYYY-MM-DD');
-    case 'month':
+    case 'dateMonth':
       return moment(value).format('YYYY-MM');
-    case 'quarter':
+    case 'dateQuarter':
       return moment(value).format('YYYY [Q]Q');
-    case 'year':
+    case 'dateYear':
       return moment(value).format('YYYY');
-    case 'upload':
-      return value.map(x => x.name).join(', ');
-    case 'autodoc':
-      return value.name;
     default:
       throw new Error(`Unrecognized field type '${type}'`);
   }
@@ -49,41 +48,57 @@ async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields:
   let error: string = null;
   let renderedHtml = formatHtmlForRendering(docTemplate.html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
-  const usedValueBag = {};
+  const usedFieldBag = {};
+
   for (const fieldName of docTemplate.refFieldNames) {
     const field = fieldMap.get(fieldName);
     const value = field?.value;
     if (value || value === 0) {
       const regex = new RegExp(`{{${fieldName}}}`, 'g');
       const replacementString = await stringifyFieldValue(field);
-      usedValueBag[field.name] = field.value;
+      usedFieldBag[field.name] = field.value;
       renderedHtml = renderedHtml.replace(regex, replacementString);
     } else {
       error = `The value of field '${fieldName}' is not specified yet on form`;
       break;
     }
   }
-  return { error, renderedHtml, usedValueBag };
+  return { error, renderedHtml, usedFieldBag };
 }
 
 async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: TaskField[]) {
-  const { error, renderedHtml, usedValueBag } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
+  const { error, renderedHtml, usedFieldBag } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
 
   const pdfData = error ? null : await generatePdfBufferFromHtml(renderedHtml);
   const fileName = `${docTemplate.name}.pdf`;
 
-  return { error, pdfData, fileName, usedValueBag };
+  return { error, pdfData, fileName, usedFieldBag };
 }
 
 export function computeObjectHash(variables) {
   return hash(variables, { unorderedObjects: true });
 }
 
+export async function generatePdfTaskDocFile(m: EntityManager, docId: string, generatorId: string): Promise<File> {
+  const doc = await m.findOne(TaskDoc, {
+    where: { id: docId },
+    relations: {
+      task: {
+        fields: true,
+      },
+    }
+  });
 
-export async function generatePdfDocFile(m: EntityManager, docTemplate: DocTemplate, fields: TaskField[]): Promise<File> {
-  const { error, pdfData, fileName, usedValueBag } = await generatePdfDataFromDocTemplate(docTemplate, fields);
+  assert(doc, 500, 'No doc found');
+  assert(doc.docTemplateId, 500, 'No docTemplateId on this doc');
+  assert(!doc.signedAt, 500, 'Cannot generate PDF as the doc has been signed');
+
+  const docTemplate = await m.findOneBy(DocTemplate, { id: doc.docTemplateId });
+  assert(docTemplate, 500, 'docTemplate not found');
+
+  const { error, pdfData, fileName, usedFieldBag } = await generatePdfDataFromDocTemplate(docTemplate, doc.task.fields);
   if (error) {
-    throw new Error(error);
+    return null;
   }
   const id = uuidv4();
   const location = await uploadToS3(id, fileName, pdfData);
@@ -94,8 +109,16 @@ export async function generatePdfDocFile(m: EntityManager, docTemplate: DocTempl
   file.location = location;
   file.md5 = createHash('md5').update(pdfData).digest('hex');
   file.public = false;
-  // file.usedValueBag = usedValueBag;
-  // file.usedValueHash = computeObjectHash(usedValueBag);
+  // file.usedFieldBag = usedFieldBag;
+  // file.usedValueHash = computeObjectHash(usedFieldBag);
+
+  doc.file = file;
+  doc.generatedAt = getUtcNow();
+  doc.generatedBy = generatorId;
+  doc.fieldBag = usedFieldBag;
+
+
+  await m.save([file, doc]);
 
   return file;
 }
