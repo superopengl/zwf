@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Input, Button, Form, PageHeader, Space, Layout, Drawer, Typography, Radio, Row, Col } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import FieldEditor from 'components/FieldEditor';
 import { Divider } from 'antd';
 import { getTask, saveTask } from '../../services/taskService';
@@ -208,7 +208,7 @@ const ProceedTaskPage = (props) => {
 
 
   return (<LayoutStyled>
-    <HomeHeader></HomeHeader>
+    
     <ContainerStyled>
       {!task ? <Loading /> : <div style={{ width: '100%' }}>
 

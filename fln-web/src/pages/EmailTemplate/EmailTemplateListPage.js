@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Button, Table, Input, Form, Tooltip, Tag, Drawer } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import {
   EditOutlined, PlusOutlined
 } from '@ant-design/icons';
@@ -160,7 +160,7 @@ const EmailTemplateListPage = () => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>

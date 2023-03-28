@@ -1,7 +1,7 @@
 export enum Role {
-    System = 'system',
-    Admin = 'admin',
-    Client = 'client',
-    Agent = 'agent',
-    Guest = 'guest'
+    System = 'system',  // Highest permission
+    Admin = 'admin',    // Org admin (root user)
+    Agent = 'agent',    // Org member
+    Client = 'client',  // Client
+    Guest = 'guest'     // Anonymous user
 }

@@ -1,5 +1,5 @@
 import { Button, Layout, Card, Space, Typography, Row, Col, Spin } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { SyncOutlined } from '@ant-design/icons';
@@ -102,7 +102,7 @@ const AdminStatsPage = () => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space style={{width: '100%', justifyContent: 'flex-end'}}>
 

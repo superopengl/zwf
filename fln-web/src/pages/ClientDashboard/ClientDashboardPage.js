@@ -1,5 +1,5 @@
 import { Button, Layout, Modal, Space, Typography, Tabs } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { listTask } from 'services/taskService';
@@ -107,7 +107,7 @@ const ClientDashboardPage = (props) => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Link to="/tasks">All tasks</Link>

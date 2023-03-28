@@ -10,23 +10,15 @@ import { Org } from '../entity/Org';
 export const listEmailTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const user = getReqUser(req);
-  const list = await getManager() //getRepository(EmailTemplate)
-    .createQueryBuilder()
-    .from(q => q
-      .from(EmailTemplate, 's')
-      .innerJoin(q => q.from(Org, 'g'), 'g', `s."orgId" = g.id`)
-      .where(`g.name = :name`, { name: 'System' }),
-      'default')
-
-    .where(`"orgId" = :id`, { id: user.org.id })
-    .
-  
-  .find({
-      order: {
-        key: 'ASC',
-        locale: 'ASC'
-      }
-    });
+  const list = await getRepository(EmailTemplate).find({
+    where: {
+      orgId: user.orgId
+    },
+    order: {
+      key: 'ASC',
+      locale: 'ASC'
+    }
+  });
   res.json(list);
 });
 

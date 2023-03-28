@@ -2,7 +2,7 @@ import {
   PlusOutlined
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Modal, Space, Typography } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import BlogForm from './BlogForm';
 import React from 'react';
 import styled from 'styled-components';
@@ -109,7 +109,7 @@ export const AdminBlogPage = () => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>

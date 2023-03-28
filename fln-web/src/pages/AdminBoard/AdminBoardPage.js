@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons';
 import { Button, Layout, Row, Col, Space, Spin, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
-import HomeHeader from 'components/HomeHeader';
+
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { saveTask, searchTask } from '../../services/taskService';
@@ -108,7 +108,7 @@ const AdminBoardPage = props => {
   }
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space style={{ width: '100%', justifyContent: 'flex-end', marginBottom: '1rem' }}>
           <Link to="/tasks"><Button type="link">All Tasks</Button></Link>

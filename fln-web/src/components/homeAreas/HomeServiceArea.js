@@ -1,5 +1,4 @@
 import React from 'react';
-import HomeRowArea from "./HomeRowArea";
 import styled from 'styled-components';
 import { Typography, Row, Col, Space } from 'antd';
 import { IconContext } from "react-icons";

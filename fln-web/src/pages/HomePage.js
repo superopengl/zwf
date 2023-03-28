@@ -1,120 +1,190 @@
 // import 'App.css';
-import { Affix, Button, Layout, Modal } from 'antd';
-import ContactForm from 'components/ContactForm';
-import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
+import { Menu, Dropdown } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
-import HomeContactArea from 'components/homeAreas/HomeContactArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
-import HomeTeamArea from 'components/homeAreas/HomeTeamArea';
 import HomeFooter from 'components/HomeFooter';
-import HomeHeader from 'components/HomeHeader';
 import React from 'react';
-import { AiOutlineMessage } from "react-icons/ai";
 import styled from 'styled-components';
+import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
+import CookieConsent from "react-cookie-consent";
+import { withRouter } from 'react-router-dom';
+import loadable from '@loadable/component'
+import { GlobalContext } from 'contexts/GlobalContext';
+import ProLayout from '@ant-design/pro-layout';
+import Icon from '@ant-design/icons';
+import { IoLanguage } from 'react-icons/io5';
+import { useIntl } from 'react-intl';
+import { FormattedMessage } from 'react-intl';
+import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 
-const { Content } = Layout;
+const StyledLayout = styled(ProLayout)`
+.ant-layout {
+  background-color: white;
+}
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-`;
+.ant-menu-item:hover {
+  .ant-pro-menu-item-title {
+    color: rgba(255,255,255, 0.7);
+    // font-weight: 500;
+  }
+  background-color: transparent !important;
+}
 
-const ContentStyled = styled(Content)`
-  margin: 64px auto 0 auto;
+.ant-layout-content {
+  margin: 0;
+  position: absolute;
+  top: 0;
   width: 100%;
-`;
+}
 
-const AffixContactButton = styled(Button)`
-width: 60px;
-height: 60px;
-display: flex;
-align-items: center;
-justify-content: center;
-border: none;
-background-color:  rgba(34, 7, 94, 0.7);
-color: white;
-// box-shadow: 1px 1px 5px #222222;
-border: 2px solid white;
+.ant-pro-top-menu {
+  background: transparent !important;
+}
 
-&:focus,&:hover,&:active {
-color: white;
-background-color: rgb(34, 7, 94);
-border: 2px solid white;
+.ant-pro-top-nav-header-logo, .ant-pro-top-nav-header-main-left {
+  min-width: 0;
+}
+
+.ant-pro-top-nav-header-main {
+  margin: auto;
+  // max-width: 1200px;
+}
+
+.ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
+  // background-color: rgba(34,7,94,0.7);
+  background-color: rgba(255,255,255,0.8);
+  // background-color: rgba(0, 41, 61, 0.6); 
+// background-image: linear-gradient(125deg, #57BB60, #57BB60 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
+}
+
+.ant-pro-global-header-collapsed-button {
+  // color: rgba(255,255,255,0.75);
+  color: rgba(0,0,0,0.75);
+}
+
+.ant-pro-menu-item-title {
+  // color: rgba(255,255,255,0.75);
+  color: rgba(0,0,0,0.75);
+  font-weight: 300;
 }
 `;
 
-class HomePage extends React.Component {
-  constructor(props) {
-    super(props);
+const scrollToElement = (selector) => {
+  document.querySelector(selector)?.scrollIntoView({
+    behavior: 'smooth',
+    block: "start",
+    inline: "nearest"
+  });
+}
 
-    this.state = {
-      modalVisible: false
+
+const HomePage = (props) => {
+
+  const [selectedSymbol, setSelectedSymbol] = React.useState();
+  const context = React.useContext(GlobalContext);
+  const intl = useIntl();
+
+  const handleStockListSymbolClick = (symbol) => {
+    setSelectedSymbol(symbol);
+  }
+
+  const handleLocaleChange = locale => {
+    context.setLocale(locale);
+  }
+
+  const ROUTES = [
+    {
+      key: '0',
+      path: '/#member',
+      name: <FormattedMessage id="menu.proMember" />,
+    },
+    {
+      key: '1',
+      path: '/#stock-radar',
+      name: <FormattedMessage id="menu.stockRadar" />,
+    },
+    {
+      key: '2',
+      path: '/#earnings-calendars',
+      name: <FormattedMessage id="menu.earningsCalendar" />,
+    },
+    {
+      key: '3',
+      path: '/#pricing',
+      name: <FormattedMessage id="menu.pricing" />,
+    },
+    {
+      path: '/signup',
+      name: <FormattedMessage id="menu.signUp" />,
+    },
+    {
+      path: '/login',
+      name: <FormattedMessage id="menu.login" />,
     }
+  ];
 
-    this.contactFormRef = React.createRef();
-
+  const handleMenuClick = (path) => {
+    const isAnchor = path.includes('#');
+    if (isAnchor) {
+      scrollToElement(path.replace(/\//, ''))
+    } else {
+      props.history.push(path);
+    }
   }
 
-  openContactForm = () => {
-    this.setState({
-      modalVisible: true
-    });
-  }
+  return <StyledLayout
+    logo="/favicon-32x32.png"
+    title={null}
+    // logo="/images/logo-transparent.png"
+    siderWidth={270}
+    layout="top"
+    navTheme="dark"
+    route={{ routes: ROUTES }}
+    location={{ pathname: '/non' }}
+    fixedHeader={true}
+    menuItemRender={(item, dom) => <div onClick={() => handleMenuClick(item.path)}>{dom}</div>}
+    rightContentRender={props => {
+      const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
+        <Menu.Item key="en-US">English</Menu.Item>
+        <Menu.Item key="zh-CN">中 文</Menu.Item>
+      </Menu>
 
-  handleContactCancel = () => {
-    this.setState({
-      modalVisible: false
-    }, () => this.resetContactForm());
-  }
+      const dropdown = <Dropdown overlay={menu} trigger={['click']}>
+        {/* <GlobalOutlined /> */}
+        <Icon style={{ fontSize: 20, color: 'rgba(0,0,0,0.75)' }} component={() => <IoLanguage />} />
+      </Dropdown>
+      return props.collapsed ? <div style={{ display: 'flex', alignItems: 'center', }}>
+        {dropdown}
+      </div> : dropdown
+    }}
+  >
 
-  resetContactForm = () => {
-    this.contactFormRef.current.reset();
-  }
+    <section>
+      <HomeCarouselArea />
+    </section>
+    {/* <section>
+      <HomeFeatureArea />
+    </section> */}
+    <section><HomeServiceArea /></section>
+    <section id="pricing">
+      <HomePricingArea />
+    </section>
+    <section><HomeContactArea bgColor="#142952"></HomeContactArea></section>
+    {/* <section><HomeSearchArea /></section> */}
+    {/* <section>
+      <HomeServiceArea bgColor="#135200" />
+    </section> */}
 
+    <HomeFooter />
 
-  render() {
-
-    return (
-      <LayoutStyled>
-        <HomeHeader></HomeHeader>
-        {/* <BarStyled></BarStyled> */}
-        <ContentStyled>
-          <HashAnchorPlaceholder id="home" />
-          <section>
-            <HomeCarouselArea></HomeCarouselArea>
-          </section>
-          <HashAnchorPlaceholder id="services" />
-          <section><HomeServiceArea /></section>
-          {/* <HashAnchorPlaceholder id="team" /> */}
-          {/* <section><HomeTeamArea /></section> */}
-          <section><HomeContactArea bgColor="#142952"></HomeContactArea></section>
-        </ContentStyled>
-        <HomeFooter></HomeFooter>
-        <Affix style={{ position: 'fixed', bottom: 30, right: 30 }}>
-          <AffixContactButton type="primary" shape="circle" size="large" onClick={() => this.openContactForm()}>
-            <AiOutlineMessage size={36} />
-          </AffixContactButton>
-        </Affix>
-        <Modal
-          title={<div style={{ fontSize: '1rem', fontWeight: 300 }}>
-            Let us tailor a service package that meets your needs. Tell us a little about how we can help you or your business, and we will get back to you with some ideas shortly.
-          </div>}
-          visible={this.state.modalVisible}
-          onOk={this.handleContactOk}
-          onCancel={this.handleContactCancel}
-          footer={null}
-          destroyOnClose={true}
-          centered={true}
-        >
-          <ContactForm ref={this.contactFormRef} onDone={this.handleContactCancel}></ContactForm>
-        </Modal>
-      </LayoutStyled>
-    );
-  }
+    <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
+      We use cookies to improve your experiences on our website.
+        </CookieConsent>
+  </StyledLayout>
 }
 
 HomePage.propTypes = {};
 
 HomePage.defaultProps = {};
 
-export default HomePage;
+export default withRouter(HomePage);

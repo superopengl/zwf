@@ -1,50 +1,39 @@
 
-import { getRepository, getConnection } from 'typeorm';
+import { getRepository, getConnection, getManager } from 'typeorm';
 import { User } from '../entity/User';
 import { assert, assertRole } from '../utils/assert';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
-import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmail, SYSTEM_EMAIL_SENDER } from '../services/emailService';
-import { getNow } from '../utils/getNow';
+import { sendEmail, enqueueEmail } from '../services/emailService';
+import { getUtcNow } from '../utils/getUtcNow';
 import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
-import { Org } from '../entity/Org';
+import { logUserLogin } from '../utils/loginLog';
+import { sanitizeUser } from '../utils/sanitizeUser';
+import { computeEmailHash } from '../utils/computeEmailHash';
+import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
+import { UserProfile } from '../entity/UserProfile';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
-  const { user } = (req as any);
+  let { user } = (req as any);
+  if (user) {
+    const email = user.profile.email;
+    user = await getActiveUserByEmail(email);
+    attachJwtCookie(user, res);
+  }
   res.json(user || null);
 });
-
-async function getLoginUser(email) {
-  const repo = getRepository(User);
-  const user: User = await repo
-    .createQueryBuilder('x')
-    .where(
-      'LOWER(email) = LOWER(:email) AND status != :status',
-      {
-        email,
-        status: UserStatus.Disabled
-      })
-    .leftJoinAndSelect('x.org', 'org')
-    .getOne();
-
-  return user;
-}
-
-function sanitizeUser(user: User) {
-  return _.pick(user, ['id', 'email', 'givenName', 'surname', 'role', 'lastLoggedInAt', 'status', 'loginType']);
-}
 
 export const login = handlerWrapper(async (req, res) => {
   const { name, password } = req.body;
 
-  const user = await getLoginUser(name);
+  const user = await getActiveUserByEmail(name);
 
   assert(user, 400, 'User or password is not valid');
 
@@ -52,13 +41,15 @@ export const login = handlerWrapper(async (req, res) => {
   const hash = computeUserSecret(password, user.salt);
   assert(hash === user.secret, 400, 'User or password is not valid');
 
-  user.lastLoggedInAt = getNow();
+  user.lastLoggedInAt = getUtcNow();
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
 
   await getRepository(User).save(user);
 
   attachJwtCookie(user, res);
+
+  logUserLogin(user, req, 'local');
 
   res.json(sanitizeUser(user));
 });
@@ -69,80 +60,67 @@ export const logout = handlerWrapper(async (req, res) => {
 });
 
 
-function createUserEntity(email, password, role): User {
-  validatePasswordStrength(password);
-  assert([Role.Client, Role.Agent].includes(role), 400, `Unsupported role ${role}`);
+function createUserAndProfileEntity(payload): { user: User; profile: UserProfile } {
+  const { email, password, role, referralCode, ...other } = payload;
+  const thePassword = password || uuidv4();
+  validatePasswordStrength(thePassword);
+  assert([Role.Client, Role.Agent, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
 
-  const id = uuidv4();
+  const profileId = uuidv4();
+  const userId = uuidv4();
   const salt = uuidv4();
 
+  const profile = new UserProfile();
+  profile.id = profileId;
+  profile.email = email.trim().toLowerCase();
+  Object.assign(profile, other);
+
   const user = new User();
-  user.id = id;
-  user.email = email.toLowerCase();
-  user.secret = computeUserSecret(password, salt);
+  user.id = userId;
+  user.emailHash = computeEmailHash(email);
+  user.secret = computeUserSecret(thePassword, salt);
   user.salt = salt;
   user.role = role;
   user.status = UserStatus.Enabled;
+  user.profileId = profileId;
 
-  return user;
+  return { user, profile };
+}
+
+async function createNewLocalUser(payload): Promise<{ user: User; profile: UserProfile }> {
+  const { user, profile } = createUserAndProfileEntity(payload);
+
+  user.resetPasswordToken = uuidv4();
+  user.status = UserStatus.ResetPassword;
+
+  await getManager().save([profile, user]);
+
+  return { user, profile };
 }
 
 
-async function createNewLocalUser(email: string, password: string, role: string, org: Org = null): Promise<User> {
-  const user = createUserEntity(email, password, role);
-  user.org = org;
+export const signup = handlerWrapper(async (req, res) => {
+  const payload = req.body;
 
-  return await getRepository(User).save(user);
-}
-
-async function createOrg(orgName): Promise<Org> {
-  const org = new Org();
-  org.name = orgName;
-
-  return await getRepository(Org).save(org);
-}
-
-
-export const signin = handlerWrapper(async (req, res) => {
-  const { email, password, role } = req.body;
-  const result = await createNewLocalUser(email, password, Role.Client);
-
-  const { id } = result;
-
-  // Non-blocking sending email
-  sendEmail({
-    template: 'welcome-client',
-    to: email,
-    vars: {
-      email,
-    },
-    bcc: [SYSTEM_EMAIL_SENDER]
+  const { user, profile } = await createNewLocalUser({
+    password: uuidv4(), // Temp password to fool the functions beneath
+    ...payload,
+    role: Role.Client
   });
 
-  const info = {
-    id,
-    email
-  };
+  const { id, resetPasswordToken } = user;
+  const { email } = profile;
 
-  res.json(info);
-});
-
-export const signOnOrg = handlerWrapper(async (req, res) => {
-  const { org, email, password } = req.body;
-  const orgEntity = await createOrg(org);
-  const result = await createNewLocalUser(email, password, Role.Admin, orgEntity);
-
-  const { id } = result;
-
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   // Non-blocking sending email
   sendEmail({
-    template: 'welcome-org',
+    template: EmailTemplateType.SignUp,
     to: email,
     vars: {
       email,
-      org,
+      url
     },
-    bcc: [SYSTEM_EMAIL_SENDER]
+    shouldBcc: true
   });
 
   const info = {
@@ -159,23 +137,23 @@ async function setUserToResetPasswordStatus(user: User) {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.FLN_DOMAIN_NAME}/reset_password/${resetPasswordToken}/`;
-  await sendEmail({
-    to: user.email,
-    template: 'resetPassword',
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  await enqueueEmail({
+    to: user.profile.email,
+    template: EmailTemplateType.ResetPassword,
     vars: {
-      toWhom: getEmailRecipientName(user),
+      toWhom: getEmailRecipientName(user.profile),
       url
     },
+    shouldBcc: false
   });
 
   await userRepo.save(user);
 }
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
-  const email = req.body.email.toLowerCase();
-  const userRepo = getRepository(User);
-  const user = await userRepo.findOne({ email });
+  const { email } = req.body;
+  const user = await getActiveUserByEmail(email);
   if (!user) {
     res.json();
     return;
@@ -220,7 +198,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.FLN_DOMAIN_NAME}/reset_password?token=${token}`;
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/reset_password?token=${token}`;
   res.redirect(url);
 });
 
@@ -229,7 +207,7 @@ export const impersonate = handlerWrapper(async (req, res) => {
   const { email } = req.body;
   assert(email, 400, 'Invalid email');
 
-  const user = await getLoginUser(email);
+  const user = await getActiveUserByEmail(email);
 
   assert(user, 404, 'User not found');
 
@@ -238,43 +216,51 @@ export const impersonate = handlerWrapper(async (req, res) => {
   res.json(sanitizeUser(user));
 });
 
-export const handleInviteUser = async user => {
+export const handleInviteUser = async (user, profile) => {
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.FLN_DOMAIN_NAME}/reset_password/${resetPasswordToken}/`;
-  await sendEmail({
-    to: user.email,
-    template: 'inviteUser',
+  await getManager().transaction(async m => {
+    await m.save(profile);
+    user.profile = profile;
+    await m.save(user);
+  })
+
+  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const email = profile.email;
+  await enqueueEmail({
+    to: email,
+    template: EmailTemplateType.InviteUser,
     vars: {
-      toWhom: getEmailRecipientName(user),
-      email: user.email,
+      toWhom: getEmailRecipientName(user.profile),
+      email,
       url
     },
+    shouldBcc: false
   });
-
-  await getRepository(User).save(user);
 };
 
 export const inviteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { email, role } = req.body;
-  assert(email, 400, 'Invalid email');
 
-  const existingUser = await getLoginUser(email);
+  const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
 
-  const user = createUserEntity(email, uuidv4(), role || 'client');
+  const { user, profile } = createUserAndProfileEntity({
+    email,
+    role: role || Role.Client
+  });
 
-  await handleInviteUser(user);
+  await handleInviteUser(user, profile);
 
   res.json();
 });
 
 async function decodeEmailFromGoogleToken(token) {
   assert(token, 400, 'Empty code payload');
-  const secret = process.env.FLN_GOOGLE_SSO_CLIENT_SECRET;
+  const secret = process.env.EVC_GOOGLE_SSO_CLIENT_SECRET;
   const decoded = jwt.decode(token, secret);
   const { email, given_name: givenName, family_name: surname } = decoded;
   assert(email, 400, 'Invalid Google token');
@@ -282,34 +268,48 @@ async function decodeEmailFromGoogleToken(token) {
 }
 
 export const ssoGoogle = handlerWrapper(async (req, res) => {
-  const { token } = req.body;
+  const { token, referralCode } = req.body;
 
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  const repo = getRepository(User);
-  let user = await repo
-    .createQueryBuilder('x')
-    .where(
-      'LOWER(email) = LOWER(:email)',
-      { email })
-    .leftJoinAndSelect('x.org', 'org')
-    .getOne();
+  let user = await getActiveUserByEmail(email);
 
+  const isNewUser = !user;
+  const now = getUtcNow();
+  const extra = {
+    loginType: 'google',
+    lastLoggedInAt: now,
+    referredBy: referralCode,
+  };
 
-  if (!user) {
-    user = createUserEntity(email, uuidv4(), 'client');
-    user.status = UserStatus.Enabled;
+  if (isNewUser) {
+    const { user: newUser, profile } = createUserAndProfileEntity({
+      email,
+      role: Role.Client
+    });
+
+    user = Object.assign(newUser, extra);
+    user.profile = profile;
+    profile.givenName = givenName;
+    profile.surname = surname;
+    await getManager().save([user, profile]);
+
+    enqueueEmail({
+      to: user.profile.email,
+      template: EmailTemplateType.GoogleSsoWelcome,
+      vars: {
+        toWhom: getEmailRecipientName(user.profile),
+      },
+      shouldBcc: false
+    });
+  } else {
+    user = Object.assign(user, extra);
+    await getRepository(User).save(user);
   }
 
-  user.givenName = givenName || user.givenName;
-  user.surname = surname || user.surname;
-  user.loginType = 'google';
-  user.lastLoggedInAt = getNow();
-  user.lastNudgedAt = getNow();
-
-  await getRepository(User).save(user);
-
   attachJwtCookie(user, res);
+
+  logUserLogin(user, req, 'google');
 
   res.json(sanitizeUser(user));
 });

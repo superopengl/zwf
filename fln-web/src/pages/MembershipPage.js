@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 // import 'App.css';
 import { Layout, Typography, Button } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import * as _ from 'lodash';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ReactToPrint, { PrintContextConsumer } from 'react-to-print';
@@ -122,7 +122,7 @@ class MembershipPage extends React.Component {
           const { role, user: { memberId, expiryDate }, profile: { name, secondaryName, pictures } } = context;
           const avatarUrl = _.get(pictures, '0.location', null);
           return <LayoutStyled>
-            <HomeHeader></HomeHeader>
+            
             {/* <BarStyled></BarStyled> */}
             <ContentStyled>
               <Title level={2}>Member Card</Title>

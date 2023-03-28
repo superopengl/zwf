@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Layout, Typography, Input, Button, Form } from 'antd';
 import { changePassword } from 'services/userService';
-import HomeHeader from 'components/HomeHeader';
 import { notify } from 'util/notify';
 import { GlobalContext } from 'contexts/GlobalContext';
 
@@ -78,10 +77,9 @@ class ChangePasswordPage extends React.Component {
 
             return (
               <LayoutStyled>
-              <HomeHeader></HomeHeader>
               <ContainerStyled>
                 <Title level={2}>Change Password</Title>
-                <Text  code>{user.email}</Text>
+                <Text  code>{user.profile.email}</Text>
                 <br/>
                 <br/>
                 <Form layout="vertical" onFinish={this.handleSubmit} style={{ textAlign: 'left' }}>

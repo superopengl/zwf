@@ -52,6 +52,8 @@
     "express-async-handler": "^1.1.4",
     "express-fileupload": "^1.1.7-alpha.3",
     "express-list-endpoints": "^4.0.1",
+    "handlebars": "^4.7.7",
+    "html-to-text": "^7.0.0",
     "http-assert": "^1.4.1",
     "jsonwebtoken": "^8.5.1",
     "lodash": "^4.17.15",

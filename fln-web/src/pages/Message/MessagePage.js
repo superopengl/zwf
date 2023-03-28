@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Layout, Space } from 'antd';
-import HomeHeader from 'components/HomeHeader';
+
 import { listMessages } from 'services/messageService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import MessageList from '../../components/MessageList';
@@ -48,7 +48,7 @@ const MessagePage = () => {
 
   return (
     <LayoutStyled>
-      <HomeHeader></HomeHeader>
+      
       <ContainerStyled>
         <Space size="small" direction="vertical" style={{ width: '100%' }}>
           <StyledTitleRow>

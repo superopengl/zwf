@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import 'antd/dist/antd.less';
-import 'react-image-lightbox/style.css';
 import { Route } from 'react-router-dom';
 import OtherPage from 'pages/OtherPage';
 

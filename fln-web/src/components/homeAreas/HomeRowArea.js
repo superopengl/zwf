@@ -2,8 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Row, Col } from 'antd';
-import Carousel from 'react-multi-carousel';
-import 'react-multi-carousel/lib/styles.css';
 
 const Title = styled.h1`
   font-size: 2rem;
@@ -19,9 +17,6 @@ width: 100%;
 text-align: center;
 padding: 2rem 0;
 
-& .react-multi-carousel-list {
-  padding: 12px;
-}
 `;
 
 const InnerContainer = styled.div`
@@ -101,14 +96,6 @@ export class HomeRowArea extends React.Component {
             {!this.state.collapsed && <ExpandButton icon={<UpOutlined />} type="link" onClick={() => this.toggle(true)} />}
           </CenterRowStyled>} */}
 
-          {false && <Carousel
-            responsive={responsive}
-            swipeable={true}
-            removeArrowOnDeviceType={["tablet", "mobile"]}
-            deviceType={deviceType}
-          >
-            {children}
-          </Carousel>}
         </InnerContainer>
       </Container>
 

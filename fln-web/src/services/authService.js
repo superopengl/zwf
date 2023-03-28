@@ -7,7 +7,7 @@ export async function login(name, password) {
 }
 
 export async function signIn(user) {
-  return httpPost(`auth/signon`, user);
+  return httpPost(`auth/signup`, user);
 }
 
 export async function forgotPassword(email) {
