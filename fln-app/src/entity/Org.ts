@@ -1,4 +1,5 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
+import { Task } from './Task';
 import { User } from './User';
 
 @Entity()
@@ -18,6 +19,9 @@ export class Org {
 
   @OneToMany(() => User, user => user.org)
   users: User[];
+
+  @OneToMany(() => Task, task => task.org)
+  tasks: Task[];
 }
 
 

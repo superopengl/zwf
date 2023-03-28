@@ -1,7 +1,8 @@
 
 export enum EmailTemplate {
   Contact = 'contact',
-  Welcome = 'welcome',
+  WelcomeClient = 'welcome-client',
+  WelcomeOrg = 'welcome-org',
   InviteUser = 'invite_user',
   DeleteUser = 'delete_user',
   SubscriptionCreated = 'subscription_created',

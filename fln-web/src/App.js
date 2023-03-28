@@ -19,7 +19,7 @@ import PortfolioListPage from 'pages/Portfolio/PortfolioListPage';
 import AdminTaskListPage from 'pages/AdminTask/AdminTaskListPage';
 import ProceedTaskPage from 'pages/AdminTask/ProceedTaskPage';
 import { getAuthUser } from 'services/authService';
-import {RoleRoute} from 'components/RoleRoute';
+import { RoleRoute } from 'components/RoleRoute';
 import MyTaskPage from 'pages/MyTask/MyTaskPage';
 import RecurringListPage from 'pages/Recurring/RecurringListPage';
 import MessagePage from 'pages/Message/MessagePage';
@@ -35,7 +35,6 @@ import AdminBlogPage from 'pages/AdminBlog/AdminBlogPage';
 import BlogsPage from 'pages/BlogsPage';
 import ProfilePage from 'pages/Profile/ProfilePage';
 import EmailTemplateListPage from 'pages/EmailTemplate/EmailTemplateListPage';
-
 
 class App extends React.Component {
   constructor(props) {
@@ -57,8 +56,10 @@ class App extends React.Component {
     const user = await getAuthUser();
     if (user) {
       this.setUser(user);
-      const count = await countUnreadMessage();
-      this.setNotifyCount(count);
+      if (user.role !== 'system') {
+        const count = await countUnreadMessage();
+        this.setNotifyCount(count);
+      }
     }
     this.setLoading(false);
   }
@@ -77,6 +78,7 @@ class App extends React.Component {
 
   render() {
     const { role, loading } = this.state;
+    const isSystem = role === 'system';
     const isAdmin = role === 'admin';
     const isGuest = role === 'guest';
     const isClient = role === 'client';
@@ -102,7 +104,7 @@ class App extends React.Component {
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template" component={TaskTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/task_template/:id" component={TaskTemplatePage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/doc_template" component={DocTemplatePage} />
-            <RoleRoute visible={isAdmin} loading={loading} exact path="/user" component={UserListPage} />
+            <RoleRoute visible={isAdmin || isSystem} loading={loading} exact path="/user" component={UserListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/recurring" component={RecurringListPage} />
             <RoleRoute visible={isAdmin} loading={loading} exact path="/impersonate" component={ImpersonatePage} />
             <RoleRoute visible={!isGuest} loading={loading} path="/message" exact component={MessagePage} />

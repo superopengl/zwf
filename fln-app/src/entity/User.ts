@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
@@ -59,6 +59,10 @@ export class User {
   resetPasswordToken?: string;
 
   @ManyToOne(() => Org, org => org.users, {nullable: true})
+  @JoinColumn({name: 'orgId', referencedColumnName: 'id'})
   org: Org;
+
+  @Column('uuid')
+  orgId: string;
 }
 
