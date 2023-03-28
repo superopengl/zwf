@@ -204,7 +204,7 @@ const AppLoggedIn = props => {
   </StyledMenu>
 
   return <StyledLayout
-    title="Easy Value Check"
+    title="Filedin"
     logo="/favicon-32x32.png"
     // logo="/header-logo.png"
     route={{ routes }}
@@ -251,7 +251,7 @@ const AppLoggedIn = props => {
               left: '-24px',
               cursor: 'pointer',
               // fontSize: '16px',
-              backgroundColor: '#00293d',
+              backgroundColor: '#05001a',
               width: '20px',
               color: 'white'
             }}
@@ -266,7 +266,7 @@ const AppLoggedIn = props => {
           <a onClick={e => e.preventDefault()}>
             <Avatar size={40}
               icon={<UserOutlined style={{ fontSize: 20 }} />}
-              style={{ backgroundColor: isAdmin ? '#00293d' : isAgent ? '#3273A4' : '#57BB60' }}
+              style={{ backgroundColor: isAdmin ? '#05001a' : isAgent ? '#3273A4' : '#57BB60' }}
             />
           </a>
         </Dropdown>

@@ -51,7 +51,7 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  // background-color: rgba(34,7,94,0.7);
+  // background-color: rgba(76,27,179,0.7);
   background-color: rgba(255,255,255,0.8);
   // background-color: rgba(0, 41, 61, 0.6); 
 // background-image: linear-gradient(125deg, #57BB60, #57BB60 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
@@ -95,23 +95,18 @@ const HomePage = (props) => {
   const ROUTES = [
     {
       key: '0',
-      path: '/#member',
-      name: <FormattedMessage id="menu.proMember" />,
-    },
-    {
-      key: '1',
-      path: '/#stock-radar',
-      name: <FormattedMessage id="menu.stockRadar" />,
-    },
-    {
-      key: '2',
-      path: '/#earnings-calendars',
-      name: <FormattedMessage id="menu.earningsCalendar" />,
+      path: '/#features',
+      name: <FormattedMessage id="menu.features" />,
     },
     {
       key: '3',
       path: '/#pricing',
       name: <FormattedMessage id="menu.pricing" />,
+    },
+    {
+      key: '2',
+      path: '/#resources',
+      name: <FormattedMessage id="menu.resources" />,
     },
     {
       path: '/signup',
