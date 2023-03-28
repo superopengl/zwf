@@ -7,9 +7,7 @@ import {
 } from 'react-icons/fa';
 import { MdOutlineFormatColorText } from 'react-icons/md'
 import { RxSwitch } from 'react-icons/rx';
-import { BsCloudUpload } from 'react-icons/bs';
 import { FieldNumberOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
-import { TaskFileUploader } from 'components/TaskFileUploader';
 import { Tooltip } from 'antd';
 import { EyeInvisibleFilled } from '@ant-design/icons';
 import {

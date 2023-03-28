@@ -64,8 +64,8 @@ export function getTaskDocDownloadUrl(fileId) {
   return `${API_BASE_URL}/task/file/${fileId}`;
 }
 
-export function signTaskFile$(fileId) {
-  return httpPost$(`/task/file/${fileId}/sign`);
+export function signTaskDoc$(docId) {
+  return httpPost$(`/task/doc/${docId}/sign`);
 }
 
 // export function updateTaskFields$(taskId, fields) {

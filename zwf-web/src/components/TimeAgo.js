@@ -23,6 +23,10 @@ const StyledSpace = styled(Space)`
 const ColumnSpace = styled.div`
 display: flex;
 flex-direction: column;
+
+& * {
+  white-space: nowrap;
+}
 `;
 
 export const TimeAgo = React.memo(props => {

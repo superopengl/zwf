@@ -160,45 +160,36 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
   }
 });
 
-export const signTaskFile = handlerWrapper(async (req, res) => {
+export const signTaskDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['client']);
-  const { fileId } = req.params;
-
-  const file = await db.getRepository(File).findOne({
-    where: {
-      id: fileId,
-    },
-    relations: {
-      // field: true,
-      // task: true,
-    }
-  });
-
+  const { docId } = req.params;
   const userId = getUserIdFromReq(req);
-  // assert(file?.task?.userId === userId, 404);
-  // assert(!file.esign, 400, 'Has been esigned');
 
-  // const taskField = file.field;
-  // const { value, type } = taskField;
-  // let fileItem;
-  // if (type === 'upload') {
-  //   fileItem = value.find(x => x.fileId === fileId);
-  // } else if (type === 'autodoc') {
-  //   fileItem = value;
-  // } else {
-  //   assert(false, 400, `Invalid field type '${type}'`);
-  // }
+  let doc: TaskDoc;
+  await db.transaction(async m => {
+    doc = await m.findOne(TaskDoc, {
+      where: {
+        id: docId,
+        fileId: Not(IsNull()),
+      },
+      relations: {
+        file: true,
+        task: true,
+      },
+    });
+  
+    assert(doc?.task?.userId === userId, 404);
+    assert(!doc.esign, 400, 'The doc has been esigned');
+  
+    const now = getUtcNow();
+    doc.signedBy = userId;
+    doc.signedAt = now;
+    doc.esign = computeTaskFileSignedHash(doc.file.md5, userId, now);
+  
+    await m.save(doc);
+  })
 
-  const now = getUtcNow();
-  // file.signedBy = userId;
-  // file.signedAt = now;
-  // file.esign = computeTaskFileSignedHash(file.md5, userId, now);
-
-  // fileItem.signedAt = now;
-  // await db.manager.save([file, taskField]);
-
-  // res.json(fileItem);
-  res.json();
+  res.json(doc);
 });
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {

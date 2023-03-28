@@ -2,7 +2,6 @@ import { Typography, Modal, Form, Input } from 'antd';
 import React from 'react';
 import { notify } from 'util/notify';
 import { cloneDocTemplate$ } from 'services/docTemplateService';
-import { TaskFileUploader } from 'components/TaskFileUploader';
 import DocTemplateSelect from 'components/DocTemplateSelect';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
