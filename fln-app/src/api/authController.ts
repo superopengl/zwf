@@ -19,6 +19,7 @@ import { computeEmailHash } from '../utils/computeEmailHash';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
+import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -61,7 +62,7 @@ export const logout = handlerWrapper(async (req, res) => {
 
 
 function createUserAndProfileEntity(payload): { user: User; profile: UserProfile } {
-  const { email, password, role, referralCode, ...other } = payload;
+  const { email, password, role, orgId, ...other } = payload;
   const thePassword = password || uuidv4();
   validatePasswordStrength(thePassword);
   assert([Role.Client, Role.Agent, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
@@ -81,6 +82,7 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   user.secret = computeUserSecret(thePassword, salt);
   user.salt = salt;
   user.role = role;
+  user.orgId = role === Role.Client ? null : orgId,
   user.status = UserStatus.Enabled;
   user.profileId = profileId;
 
@@ -244,12 +246,13 @@ export const handleInviteUser = async (user, profile) => {
 export const inviteUser = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { email, role } = req.body;
-
+  const orgId = getOrgIdFromReq(req);
   const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
 
   const { user, profile } = createUserAndProfileEntity({
     email,
+    orgId,
     role: role || Role.Client
   });
 

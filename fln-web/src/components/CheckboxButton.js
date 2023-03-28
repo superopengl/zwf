@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Button } from 'antd';
-import * as tinycolor from 'tinycolor2';
 
 const { Text } = Typography;
 

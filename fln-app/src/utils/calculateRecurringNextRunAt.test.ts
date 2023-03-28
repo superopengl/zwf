@@ -1,5 +1,5 @@
 import { Recurring } from '../entity/Recurring';
-import { CLIENT_TZ } from '../services/cronService';
+import { CLIENT_TZ } from '../services/recurringService';
 import * as moment from 'moment-timezone';
 import { Moment } from 'moment-timezone';
 import { calculateRecurringNextRunAt } from './calculateRecurringNextRunAt';

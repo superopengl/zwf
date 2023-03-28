@@ -53,6 +53,7 @@ dependencies:
   styled-components: 5.2.3_84d21352b10017addcdab28b8d95ead5
   tfn: 1.0.0
   uniqolor: 1.0.1
+  uuid: 8.3.2
   validator: 13.1.1
 devDependencies:
   '@craco/craco': 6.1.1_react-scripts@4.0.2
@@ -15022,9 +15023,7 @@ packages:
     resolution:
       integrity: sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
   /uuid/8.3.2:
-    dev: true
     hasBin: true
-    optional: true
     resolution:
       integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
   /v8-compile-cache/2.3.0:
@@ -15785,4 +15784,5 @@ specifiers:
   styled-components: ^5.2.1
   tfn: ^1.0.0
   uniqolor: ^1.0.1
+  uuid: ^8.3.2
   validator: ^13.1.1

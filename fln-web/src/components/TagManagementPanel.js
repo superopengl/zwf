@@ -36,19 +36,6 @@ const TagManagementPanel = (props) => {
         onBlur={e => handleInputBlur(item, e.target.value)}
       />
     },
-    {
-      title: 'Sort group',
-      dataIndex: 'sortGroup',
-      sorter: {
-        compare: (a, b) => a - b
-      },
-      render: (value, item) => <InputNumber
-        value={value}
-        placeholder="To control tags' display order and group"
-        onChange={num => handleSortGroupChange(item, num)}
-        onBlur={e => handleSortGroupBlur(item, e.target.value)}
-      />
-    },
     showOfficialOnly ? {
       title: 'Official use only',
       dataIndex: 'officialOnly',
@@ -78,18 +65,6 @@ const TagManagementPanel = (props) => {
     if (item.isNew) return;
     item.name = value;
     await onSave(item);
-  }
-
-  const handleSortGroupChange = (item, value) => {
-    item.sortGroup = value;
-    setList([...list]);
-  }
-
-  const handleSortGroupBlur = async (item, value) => {
-    item.sortGroup = value;
-    if (!item.isNew) {
-      await onSave(item);
-    }
   }
 
   const handleDelete = async (item) => {
