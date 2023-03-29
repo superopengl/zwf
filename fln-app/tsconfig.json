@@ -2,6 +2,7 @@
   "compilerOptions": {
     "lib": [
       // "es5",
+      "dom",
       "es6"
     ],
     "target": "es6",
@@ -15,6 +16,6 @@
   "include": [
     "src/**/*",
     "migration/**/*",
-    "index.ts"
+    "index.ts", "endpoints"
   ]
 }
