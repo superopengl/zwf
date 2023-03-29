@@ -4,7 +4,6 @@ class RedisCache {
   private redisCache;
   constructor(redisUrl: string) {
     this.redisCache = redis.createClient(redisUrl);
-
   }
 
   async get(key) {
@@ -65,4 +64,38 @@ class RedisCache {
   }
 }
 
-export const redisCache = new RedisCache(process.env.REDIS_URL);
+class DummyRedisCache {
+  constructor(redisUrl: string) {
+  }
+
+  async get(key) {
+    return Promise.resolve(1);
+  }
+
+  async del(key) {
+    return Promise.resolve(1);
+  }
+
+
+  async set(key: string, value: any) {
+    return Promise.resolve(1);
+  }
+
+  async setex(key: string, seconds: number, value: any) {
+    return Promise.resolve(1);
+  }
+
+  async incr(key: string) {
+    return Promise.resolve(1);
+  }
+
+  async decr(key: string) {
+    return Promise.resolve(1);
+  }
+
+  async flush() {
+    return Promise.resolve(1);
+  }
+}
+
+export const redisCache = new DummyRedisCache(process.env.REDIS_URL);
