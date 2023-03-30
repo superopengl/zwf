@@ -177,9 +177,12 @@ const OrgTaskPage = React.memo((props) => {
           <Tooltip key="edit" title="Edit">
             <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
           </Tooltip>,
-          <Tooltip key="comment" title="Log & Comment">
+          <ZeventNoticeableBadge key="comment"
+            message="This task has unread comment"
+            filter={z => z.type === 'task.comment' && z.taskId === task.id}
+          >
             <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
-          </Tooltip>,
+          </ZeventNoticeableBadge>,
           <Tooltip key="share" title="Share">
             <Button icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)} />
           </Tooltip>,

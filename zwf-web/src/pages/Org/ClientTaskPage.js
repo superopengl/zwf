@@ -91,7 +91,12 @@ const ClientTaskPage = (props) => {
         >
           <Button icon={<SyncOutlined />} onClick={() => load$()} />
         </ZeventNoticeableBadge>,
-        <Button key="comment" icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>,
+        <ZeventNoticeableBadge key="comment"
+          message="This task has unread comment"
+          filter={z => z.type === 'task.comment' && z.taskId === task.id}
+        >
+          <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>
+        </ZeventNoticeableBadge>,
         canRequestChange ? <Button key="request">Request change</Button> : null,
       ]}
     >
