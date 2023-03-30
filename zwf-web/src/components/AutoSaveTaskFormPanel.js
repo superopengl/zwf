@@ -5,7 +5,7 @@ import { useDebounce, useDebouncedValue } from "rooks";
 import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
 import { TaskSchemaRenderer } from './TaskSchemaRenderer';
 import { useRole } from 'hooks/useRole';
-import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
+import { useZevent } from 'hooks/useZevent';
 import { finalize } from 'rxjs';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
@@ -21,15 +21,15 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   const isClient = role === 'client';
 
-  const handleZevent = zevent => {
-    const { fields: changedFields } = zevent.payload;
+  const handleZevent = z => {
+    const { fields: changedFields } = z.payload;
     if (changedFields) {
       updateFieldsWithChangedFields(changedFields);
       ref.current?.setFieldsValue(changedFields)
     }
   };
 
-  useSubscribeZevent('task.fields', handleZevent);
+  useZevent(z => z.type === 'task.fields' && z.taskId === task.id, handleZevent);
 
   React.useEffect(() => {
     setFields(task?.fields);
@@ -85,9 +85,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
 AutoSaveTaskFormPanel.propTypes = {
   value: PropTypes.shape({
-    name: PropTypes.string.isRequired,
     fields: PropTypes.array.isRequired,
-    docs: PropTypes.array,
   }).isRequired,
   mode: PropTypes.oneOf(['client', 'agent']).isRequired,
   // onChange: PropTypes.func,

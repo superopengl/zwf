@@ -3,15 +3,14 @@ import React from 'react';
 import { filter, tap } from 'rxjs';
 
 
-export function useSubscribeZevent(type, eventHandler, deps = []) {
+export function useZevent(filterHandler, eventHandler, deps = []) {
   const context = React.useContext(GlobalContext);
   const { zeventBus$ } = context;
 
   React.useEffect(() => {
     const sub$ = zeventBus$.pipe(
-      filter(zevent => zevent.type === type),
-      tap(eventHandler)
-    ).subscribe();
+      filter(zevent => !filterHandler || filterHandler(zevent)),
+    ).subscribe(eventHandler);
 
     return () => sub$.unsubscribe();
   }, [...deps]);

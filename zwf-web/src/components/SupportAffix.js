@@ -9,7 +9,7 @@ import { SupportMessageInput } from './SupportMessageInput';
 import { sendContact$ } from 'services/supportService';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
+import { useZevent } from 'hooks/useZevent';
 
 
 const { Paragraph, Title } = Typography;
@@ -53,9 +53,9 @@ export const SupportAffix = () => {
 
   const cheerName = user?.givenName?.trim() || 'Hi There';
 
-  useSubscribeZevent('support', zevent => {
+  useZevent(z => z.type === 'support', z => {
     setList(list => {
-      return [...list, zevent.payload]
+      return [...list, z.payload]
     })
     if (!visibleRef.current) {
       setUnreadCount(x => x + 1);

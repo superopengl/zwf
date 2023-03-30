@@ -12,7 +12,7 @@ import { ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { TaskMessageForm } from './TaskMessageForm';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
+import { useZevent } from 'hooks/useZevent';
 
 const StyledList = styled(ProList)`
 .ant-pro-card-body {
@@ -67,14 +67,14 @@ export const TaskCommentPanel = React.memo((props) => {
   //   scrollToBottom();
   // }, [list]);
 
-  const handleZevent = zevent => {
-    const event = zevent.payload;
+  const handleZevent = z => {
+    const event = z.payload;
     event.createdAt = moment.utc(event.createdAt).local().toDate();
     setList(list => [...list, event]);
     nudgeCommentAccess$(taskId).subscribe();
   };
 
-  useSubscribeZevent('task.comment', handleZevent);
+  useZevent(z => z.type === 'task.comment' && z.taskId === taskId, handleZevent);
 
   React.useEffect(() => {
     const sub$ = listTaskComment$(taskId).subscribe(allData => {
