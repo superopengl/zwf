@@ -20,6 +20,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
 import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
+import { TaskChangeNoticable } from 'components/TaskChangeNoticable';
 
 const { Text } = Typography;
 
@@ -84,9 +85,14 @@ const ClientTaskPage = (props) => {
       title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       // footer={<Button type="primary">Submit</Button>}
       extra={[
-        <Button icon={<SyncOutlined />} onClick={() => load$()}/>,
-        <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>,
-        canRequestChange ?  <Button>Request change</Button> : null,
+        <TaskChangeNoticable key="refresh"
+          message="This task has changes. Click to refresh"
+          filter={z => z.type === 'task.change' && z.taskId === task.id}
+        >
+          <Button icon={<SyncOutlined />} onClick={() => load$()} />
+        </TaskChangeNoticable>,
+        <Button key="comment" icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>,
+        canRequestChange ? <Button key="request">Request change</Button> : null,
       ]}
     >
       <Row gutter={[40, 40]}>
@@ -96,7 +102,7 @@ const ClientTaskPage = (props) => {
           </Card>
         </Col>
         <Col {...span}>
-            <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange}/>
+          <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} />
         </Col>
       </Row>
       {saving && <SavingAffix />}

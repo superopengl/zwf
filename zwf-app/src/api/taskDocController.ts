@@ -1,4 +1,4 @@
-import { publishEvent } from './../services/globalEventSubPubService';
+import { publishEvent } from '../services/zeventSubPubService';
 import { TaskDoc } from './../entity/TaskDoc';
 
 import { assert } from '../utils/assert';
@@ -19,6 +19,7 @@ import { Task } from '../entity/Task';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
+import { publishTaskChangeEvent } from '../utils/publishTaskChangeEvent';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -103,6 +104,8 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     await m.save(taskDoc);
   });
 
+  publishTaskChangeEvent(task, userId);
+
   res.json({
     fileId: fileId,
   });
@@ -179,6 +182,7 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
         task: true,
       },
     });
+
   
     assert(doc?.task?.userId === userId, 404);
     assert(!doc.esign, 400, 'The doc has been esigned');
@@ -190,6 +194,8 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
   
     await m.save(doc);
   })
+
+  publishTaskChangeEvent(doc.task, getUserIdFromReq(req));
 
   res.json(doc);
 });
