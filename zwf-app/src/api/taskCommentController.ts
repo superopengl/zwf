@@ -97,49 +97,6 @@ export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) =
   res.json(list);
 });
 
-
-export const subscribeTaskComment = handlerWrapper(async (req, res) => {
-  // assertRole(req,[ 'admin', 'agent', 'client', 'guest']);
-  const role = getRoleFromReq(req);
-  assert(role !== Role.System, 404);
-  const { id } = req.params;
-
-  await assertTaskAccess(req, id);
-
-  // const { user: { id: userId } } = req as any;
-  const isProd = process.env.NODE_ENV === 'prod';
-  if (!isProd) {
-    res.setHeader('Access-Control-Allow-Origin', process.env.ZWF_WEB_DOMAIN_NAME);
-  }
-  res.sse();
-  // res.setHeader('Content-Type', 'text/event-stream');
-  // res.setHeader('Cache-Control', 'no-cache');
-  // res.flushHeaders();
-
-  // res.writeHead(200, {
-  //   // Connection: 'keep-alive',
-  //   // 'Content-Type': 'text/event-stream',
-  //   // 'Cache-Control': 'no-cache',
-  //   'Access-Control-Allow-Origin': 'http://localhost:6007'
-  // });
-  // res.flushHeaders();
-
-  const channelSubscription$ = getEventChannel(TASK_ACTIVITY_EVENT_TYPE)
-    .pipe(
-      filter(x => x?.taskId === id)
-    )
-    .subscribe((event) => {
-      res.write(`data: ${JSON.stringify(event)}\n\n`);
-      (res as any).flush();
-    });
-
-  res.on('close', () => {
-    channelSubscription$.unsubscribe();
-    res.end();
-  });
-});
-
-
 export const addTaskComment = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
