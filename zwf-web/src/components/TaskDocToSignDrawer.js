@@ -1,4 +1,4 @@
-import { Drawer, List, Button, Avatar, Row, Typography } from 'antd';
+import { Drawer, List, Button, Avatar, Row, Typography, Checkbox, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
@@ -13,13 +13,14 @@ import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
 import Icon from '@ant-design/icons';
 
-const { Paragraph } = Typography;
+const { Paragraph, Link } = Typography;
 
 
 export const TaskDocToSignDrawer = React.memo((props) => {
   const { docs, visible } = props;
   const [open, setOpen] = React.useState(false);
   const [docsToSign, setDocsToSign] = React.useState([]);
+  const [agreed, setAgreed] = React.useState(false);
 
   React.useEffect(() => {
     const targetDocs = docs.filter(d => d.signRequestedAt);
@@ -38,8 +39,10 @@ export const TaskDocToSignDrawer = React.memo((props) => {
     maskClosable
     placement='top'
     // bodyStyle={{ padding: 0 }}
-    footer={<Row justify="end">
-      <Button type="primary">E-sign All Documents</Button>
+    footer={<Row justify="end" style={{ padding: 16 }}>
+      <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms and conditions before signing'} placement="left">
+        <Button type="primary" disabled={!agreed}>E-sign All Documents</Button>
+      </Tooltip>
     </Row>}
   >
     {/* <Paragraph>
@@ -47,14 +50,17 @@ export const TaskDocToSignDrawer = React.memo((props) => {
     </Paragraph> */}
     <List
       dataSource={docsToSign}
-      renderItem={item => <List.Item
+      renderItem={item => <List.Item style={{ paddingLeft: 0, paddingRight: 0 }}
         actions={[
-          <Button icon={<Icon component={FaSignature} />} type="primary">Sign</Button>
+          <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms and conditions before signing'} placement="left">
+            <Button icon={<Icon component={FaSignature} />} disabled={!agreed}>Sign</Button>
+          </Tooltip>
         ]}
       >
         <TaskDocName taskDoc={item} showOverlay={false} />
       </List.Item>}
     />
+    <Checkbox checked={agreed} onClick={e => setAgreed(e.target.checked)} style={{ marginTop: 16 }}>I have read and agree on the <Link underline target="_blank" href="/terms_and_conditions">terms and conditions</Link></Checkbox>
   </Drawer>
 });
 

@@ -7,11 +7,12 @@ import { TimeAgo } from './TimeAgo';
 import { requestSignTaskDoc$, signTaskDoc$, unrequestSignTaskDoc$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
-import Icon, { } from '@ant-design/icons';
+import Icon, { CheckCircleOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { TaskFileUpload } from './TaskFileUpload';
 import { finalize } from 'rxjs';
 
+const {Text} = Typography;
 
 const Container = styled.div`
 
@@ -60,22 +61,22 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          <TaskDocName taskDoc={doc} />
+          <TaskDocName taskDoc={doc} showOverlay={false}/>
             <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
             {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
             {doc.signedAt && <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />}
         </Space>
         }>
         <div>
-          <TaskDocName taskDoc={doc} />
+          <TaskDocName taskDoc={doc} showOverlay={false}/>
         </div>
       </Tooltip>
     },
     {
       align: 'right',
-      width: 32,
+      // width: 32,
       render: (_, doc) => !doc.signRequestedAt ? null :
-        doc.signedAt ? 'signed' :
+        doc.signedAt ? <Text type="success"><CheckCircleOutlined/> signed</Text> :
           <Tooltip title={`Sign document`}>
             <Button type='primary' icon={<Icon component={FaSignature} />} onClick={() => handleSign(doc)} >Sign</Button>
           </Tooltip>
