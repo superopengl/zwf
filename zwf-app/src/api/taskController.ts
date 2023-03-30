@@ -611,7 +611,7 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
       }
     });
     assert(taskDoc, 404);
-    assert(!taskDoc.esign, 400, 'Cannot change sign request for a signed doc');
+    assert(!taskDoc.signedAt, 400, 'Cannot change sign request for a signed doc');
 
     taskDoc.signRequestedAt = null;
     taskDoc.signRequestedBy = null;
