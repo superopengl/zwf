@@ -21,6 +21,7 @@ import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
 import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
+import { TaskDocToSignDrawer } from 'components/TaskDocToSignDrawer';
 
 const { Text } = Typography;
 
@@ -113,6 +114,7 @@ const ClientTaskPage = (props) => {
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
     {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+    {task && <TaskDocToSignDrawer docs={task.docs} />}
   </Container>
   );
 };
