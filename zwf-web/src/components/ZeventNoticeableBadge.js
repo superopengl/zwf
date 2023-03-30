@@ -5,7 +5,7 @@ import { SyncOutlined } from '@ant-design/icons';
 import { Badge, Button, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
 
-export const TaskChangeNoticable = React.memo((props) => {
+export const ZeventNoticeableBadge = React.memo((props) => {
   const { filter, selfEvent, message, children } = props;
   const [user] = useAuthUser();
 
@@ -29,14 +29,14 @@ export const TaskChangeNoticable = React.memo((props) => {
   );
 });
 
-TaskChangeNoticable.propTypes = {
+ZeventNoticeableBadge.propTypes = {
   taskId: PropTypes.string.isRequired,
   message: PropTypes.string,
   filter: PropTypes.func,
   selfEvent: PropTypes.bool,
 };
 
-TaskChangeNoticable.defaultProps = {
+ZeventNoticeableBadge.defaultProps = {
   message: 'Event fired',
   filter: (z) => false,
   selfEvent: false,
