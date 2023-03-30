@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { updateTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } from 'services/taskService';
+import { updateTaskFields$, saveTaskFieldValues$ } from 'services/taskService';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';
 import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
 import { TaskSchemaRenderer } from './TaskSchemaRenderer';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useRole } from 'hooks/useRole';
+import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
@@ -20,6 +21,12 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const ref = React.useRef();
 
   const isClient = role === 'client';
+
+  useSubscribeZevent(zevent => {
+    const { fields: changedFields } = zevent.payload;
+    updateFieldsWithChangedFields(changedFields);
+    ref.current?.setFieldsValue(changedFields)
+  }, []);
 
   React.useEffect(() => {
     setFields(task?.fields);
@@ -37,23 +44,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       });
     }
   }, [aggregatedChangedFields]);
-
-  React.useEffect(() => {
-    // Subscribe task content change events
-    const eventSource = subscribeTaskFieldsChange(task.id)
-    eventSource.onmessage = (message) => {
-      const event = JSON.parse(message.data);
-      const { fields: changedFields } = event;
-      updateFieldsWithChangedFields(changedFields);
-
-      // Manually set from values based on the content change events
-      ref.current?.setFieldsValue(changedFields)
-    }
-
-    return () => {
-      eventSource?.close();
-    }
-  }, []);
 
   const updateFieldsWithChangedFields = (changedFields) => {
     setFields(fields => {

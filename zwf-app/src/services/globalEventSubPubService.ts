@@ -1,6 +1,6 @@
 import { Role } from './../types/Role';
 import { Subject, Subscription, Observable } from 'rxjs';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import * as redis from 'redis';
 import * as _ from 'lodash';
 import { Zevent } from '../types/Zevent';
@@ -75,6 +75,9 @@ export const getEventChannel = (type: string): Observable<any> => {
 export const getEventSource$ = (filterFunc: (event: Zevent) => boolean): Observable<any> => {
   return golbalSubscriber.getObservable()
     .pipe(
+      // tap(() => {
+      //   console.log('for debugging');
+      // }),
       filter(filterFunc),
     );
 };

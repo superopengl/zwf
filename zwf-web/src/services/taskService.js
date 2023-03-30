@@ -112,9 +112,3 @@ export function listTaskComment$(taskId) {
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
   return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
 }
-
-export function subscribeTaskFieldsChange(taskId) {
-  const url = `${API_BASE_URL}/task/${taskId}/content/sse`;
-  const es = new EventSource(url, { withCredentials: true });
-  return es;
-}
