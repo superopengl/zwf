@@ -16,7 +16,7 @@ export const SupportReplyDrawer = React.memo((props) => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
-  useSubscribeZevent(zevent => {
+  useSubscribeZevent('support', zevent => {
     if(zevent.userId === userId) {
       setList(list => {
         return [...list, zevent.payload]

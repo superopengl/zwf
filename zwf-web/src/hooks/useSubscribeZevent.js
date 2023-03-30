@@ -1,14 +1,15 @@
 import { GlobalContext } from 'contexts/GlobalContext';
 import React from 'react';
-import { tap } from 'rxjs';
+import { filter, tap } from 'rxjs';
 
 
-export function useSubscribeZevent(eventHandler, deps = []) {
+export function useSubscribeZevent(type, eventHandler, deps = []) {
   const context = React.useContext(GlobalContext);
-  const {zeventBus$} = context;
+  const { zeventBus$ } = context;
 
   React.useEffect(() => {
     const sub$ = zeventBus$.pipe(
+      filter(zevent => zevent.type === type),
       tap(eventHandler)
     ).subscribe();
 

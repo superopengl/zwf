@@ -26,8 +26,7 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
   await nudgeCommentAccess(m, taskId, by);
 
   publishEvent({
-    type: 'task',
-    subtype: 'comment',
+    type: 'task.comment',
     userId,
     taskId,
     orgId,

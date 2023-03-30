@@ -3,12 +3,10 @@ import { SupportMessage } from '../entity/SupportMessage';
 
 export type Zevent = {
   type: 'support';
-  subtype: 'support';
   userId: string;
   payload: SupportMessage;
 } | {
-  type: 'task';
-  subtype: 'fields';
+  type: 'task.fields';
   userId: string;
   taskId: string;
   orgId: string;
@@ -17,8 +15,7 @@ export type Zevent = {
     fields: {[key: string]: any}
   };
 } | {
-  type: 'task';
-  subtype: 'comment';
+  type: 'task.comment';
   userId: string;
   taskId: string;
   orgId: string;

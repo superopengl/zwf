@@ -92,7 +92,7 @@ const SupportListPage = () => {
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
   const [modal, contextHolder] = Modal.useModal();
 
-  useSubscribeZevent( zevent => {
+  useSubscribeZevent('support', zevent => {
     const { userId, payload } = zevent;
     setList(list => {
       const item = list.find(x => x.userId === userId);
@@ -102,7 +102,7 @@ const SupportListPage = () => {
       }
       return list;
     })
-  }, []);
+  });
 
   const columnDef = [
     {

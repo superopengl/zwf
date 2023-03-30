@@ -50,15 +50,15 @@ function getEventFilter(role: string, userId: string, orgId: string, taskId: str
       return (zevent: Zevent) => {
         return zevent.userId === userId && (
           zevent.type === 'support' ||
-          (zevent.type === 'task' && (!taskId || zevent.taskId === taskId))
+          (/^task/.test(zevent.type) && (!taskId || zevent.taskId === taskId))
         );
       }
     case Role.Agent:
     case Role.Admin:
-      return (zevent: Zevent) => {
+      return (zevent: any) => {
         return (zevent.userId === userId && zevent.type === 'support') ||
           (
-            zevent.type === 'task' &&
+            /^task/.test(zevent.type) &&
             zevent.orgId === orgId &&
             (!taskId || zevent.taskId === taskId)
           )
