@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from 'antd';
 import { BetaSchemaForm } from '@ant-design/pro-components';
 import { generateSchemaFromColumns } from 'util/TaskTemplateFieldControlDef';
 import styled from 'styled-components';
-import { useRole } from 'hooks/useRole';
 
 const Container = styled.div`
 .ant-form-item {
@@ -22,13 +20,9 @@ const Container = styled.div`
 }
 `;
 
-const { Title, Text, Paragraph } = Typography;
-
 export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
   const { fields, mode, onChange, disabled, onSubmit } = props;
-  const role = useRole();
-
 
   // fields.sort((a, b) => a.ordinal - b.ordinal);
 
@@ -43,10 +37,6 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
   const handleFormValueChange = (changedValues, allValues) => {
     onChange(changedValues);
-  }
-
-  const handleSubmit = (values) => {
-    onSubmit(values);
   }
 
   // console.log(fieldSchema)
