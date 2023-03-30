@@ -2,12 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { updateTaskFields$, saveTaskFieldValues$ } from 'services/taskService';
 import { useDebounce, useDebouncedValue } from "rooks";
-import { isEmpty } from 'lodash';
 import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
 import { TaskSchemaRenderer } from './TaskSchemaRenderer';
-import { useAuthUser } from 'hooks/useAuthUser';
 import { useRole } from 'hooks/useRole';
 import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
+import { finalize } from 'rxjs';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
@@ -37,12 +36,12 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, [task]);
 
   React.useEffect(() => {
-    if (!isEmpty(aggregatedChangedFields)) {
-      saveTaskFieldValues$(task.id, aggregatedChangedFields).subscribe(() => {
+    saveTaskFieldValues$(task.id, aggregatedChangedFields)
+      .pipe(
+        finalize(() => onSavingChange(false))
+      ).subscribe(() => {
         setChangedFields({})
-        onSavingChange(false);
       });
-    }
   }, [aggregatedChangedFields]);
 
   const updateFieldsWithChangedFields = (changedFields) => {
