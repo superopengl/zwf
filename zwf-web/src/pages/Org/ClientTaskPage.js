@@ -13,7 +13,7 @@ import { combineLatest } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
-import { CommentOutlined, LeftOutlined, MessageOutlined } from '@ant-design/icons';
+import { CommentOutlined, LeftOutlined, MessageOutlined, SyncOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -84,6 +84,7 @@ const ClientTaskPage = (props) => {
       title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       // footer={<Button type="primary">Submit</Button>}
       extra={[
+        <Button icon={<SyncOutlined />} onClick={() => load$()}/>,
         <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>,
         canRequestChange ?  <Button>Request change</Button> : null,
       ]}
