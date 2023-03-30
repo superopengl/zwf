@@ -1,6 +1,6 @@
 import { DocTemplate } from './../entity/DocTemplate';
 import { TaskActionType } from './../types/TaskActionType';
-import { TaskTrackingInformation } from './../entity/views/TaskTrackingInformation';
+import { TaskCommentInformation } from './../entity/views/TaskCommentInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
@@ -20,7 +20,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { logTaskStatusChange, logTaskAssigned, logTaskChat } from '../services/taskTrackingService';
+import { logTaskStatusChange, logTaskAssigned, logTaskChat } from '../services/taskCommentService';
 import { File } from '../entity/File';
 import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
@@ -565,7 +565,7 @@ export const getTaskLog = handlerWrapper(async (req, res) => {
     default:
       break;
   }
-  const list = await db.getRepository(TaskTrackingInformation).find({ where: query });
+  const list = await db.getRepository(TaskCommentInformation).find({ where: query });
 
   res.json(list);
 });

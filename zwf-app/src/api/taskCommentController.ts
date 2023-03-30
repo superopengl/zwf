@@ -1,7 +1,7 @@
-import { db } from './../db';
-import { TaskStatus } from './../types/TaskStatus';
-import { TaskTrackingInformation } from '../entity/views/TaskTrackingInformation';
-import { TaskTracking } from './../entity/TaskTracking';
+import { db } from '../db';
+import { TaskStatus } from '../types/TaskStatus';
+import { TaskCommentInformation } from '../entity/views/TaskCommentInformation';
+import { TaskComment } from '../entity/TaskComment';
 import { getEventChannel } from '../services/globalEventSubPubService';
 import { filter } from 'rxjs/operators';
 
@@ -17,16 +17,16 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
-import { logTaskChat, nudgeTrackingAccess, TASK_ACTIVITY_EVENT_TYPE } from '../services/taskTrackingService';
+import { logTaskChat, nudgeCommentAccess, TASK_ACTIVITY_EVENT_TYPE } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
 import { TaskActionType } from '../types/TaskActionType';
 
 
-export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
+export const nudgeCommentCursor = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent', 'client']);
   const { id } = req.params;
   const userId = getUserIdFromReq(req);
-  await nudgeTrackingAccess(db.manager, id, userId);
+  await nudgeCommentAccess(db.manager, id, userId);
   res.json();
 });
 
@@ -39,7 +39,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 
   let list;
   await db.manager.transaction(async m => {
-    list = await m.find(TaskTrackingInformation, {
+    list = await m.find(TaskCommentInformation, {
       where: {
         taskId: id,
         action: TaskActionType.Chat,
@@ -57,7 +57,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
       }
     });
 
-    await nudgeTrackingAccess(m, id, userId);
+    await nudgeCommentAccess(m, id, userId);
   });
 
 
@@ -66,13 +66,13 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 });
 
 
-export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) => {
+export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'client']);
   const userId = getUserIdFromReq(req);
   const page = +req.query.page || 1;
   const size = +req.query.size || 50;
 
-  const list = await db.getRepository(TaskTrackingInformation).find({
+  const list = await db.getRepository(TaskCommentInformation).find({
     where: {
       userId,
     },
@@ -98,7 +98,7 @@ export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) 
 });
 
 
-export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
+export const subscribeTaskComment = handlerWrapper(async (req, res) => {
   // assertRole(req,[ 'admin', 'agent', 'client', 'guest']);
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);

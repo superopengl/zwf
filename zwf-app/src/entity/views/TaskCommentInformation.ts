@@ -1,6 +1,6 @@
 import { TaskInformation } from './TaskInformation';
 import { TaskActionType } from '../../types/TaskActionType';
-import { TaskTracking } from '../TaskTracking';
+import { TaskComment } from '../TaskComment';
 import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { Task } from '../Task';
 
@@ -10,7 +10,7 @@ import { Task } from '../Task';
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(TaskInformation, 't')
-    .innerJoin(TaskTracking, 'k', 't.id = k."taskId"')
+    .innerJoin(TaskComment, 'k', 't.id = k."taskId"')
     .select([
       'k.id as id',
       'k."taskId" as "taskId"',
@@ -24,8 +24,8 @@ import { Task } from '../Task';
       'k."action" as "action"',
       'k."info" as "info"',
     ]),
-  dependsOn: [TaskInformation, TaskTracking]
-}) export class TaskTrackingInformation {
+  dependsOn: [TaskInformation, TaskComment]
+}) export class TaskCommentInformation {
   @ViewColumn()
   id: string;
 

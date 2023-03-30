@@ -19,7 +19,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
-import { TaskLogAndCommentTrackingDrawer } from 'components/TaskLogAndCommentTrackingDrawer';
+import { TaskLogAndCommentCommentDrawer } from 'components/TaskLogAndCommentCommentDrawer';
 
 const { Text } = Typography;
 
@@ -100,7 +100,7 @@ const ClientTaskPage = (props) => {
       </Row>
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
-    {task && <TaskLogAndCommentTrackingDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+    {task && <TaskLogAndCommentCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
   </Container>
   );
 };

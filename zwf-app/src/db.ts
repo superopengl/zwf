@@ -34,9 +34,9 @@ import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
 import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
 import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadInformation';
-import { TaskTrackingInformation } from './entity/views/TaskTrackingInformation';
-import { TaskTrackingLastAccess } from './entity/TaskTrackingLastAccess';
-import { TaskTracking } from './entity/TaskTracking';
+import { TaskCommentInformation } from './entity/views/TaskCommentInformation';
+import { TaskCommentLastAccess } from './entity/TaskCommentLastAccess';
+import { TaskComment } from './entity/TaskComment';
 import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
 import { OrgClientInformation } from './entity/views/OrgClientInformation';
@@ -198,8 +198,8 @@ export const db = new DataSource({
     OrgPromotionCode,
     SupportMessage,
     Contact,
-    TaskTrackingLastAccess,
-    TaskTracking,
+    TaskCommentLastAccess,
+    TaskComment,
     UserAudit,
     TaskTagsTag,
     Recurring,
@@ -215,7 +215,7 @@ export const db = new DataSource({
     OrgClientStatInformation,
     OrgMemberInformation,
     SupportUserUnreadInformation,
-    TaskTrackingInformation,
+    TaskCommentInformation,
     OrgClientInformation,
     OrgBasicInformation,
     SupportInformation,

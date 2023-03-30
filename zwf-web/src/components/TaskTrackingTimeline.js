@@ -40,7 +40,7 @@ const ChatMessage = React.memo(props => {
   </Space>
 });
 
-export const TaskTrackingTimeline = React.memo((props => {
+export const TaskCommentTimeline = React.memo((props => {
   const { dataSource, mode, ...others } = props;
 
   const [user] = useAuthUser();
@@ -103,12 +103,12 @@ export const TaskTrackingTimeline = React.memo((props => {
   </>
 }));
 
-TaskTrackingTimeline.propTypes = {
+TaskCommentTimeline.propTypes = {
   dataSource: PropTypes.array.isRequired,
   mode: PropTypes.oneOf(['single', 'multi'])
 };
 
-TaskTrackingTimeline.defaultProps = {
+TaskCommentTimeline.defaultProps = {
   dataSource: [],
   mode: 'single'
 };
