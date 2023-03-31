@@ -26,6 +26,8 @@ import { useAssertOrgHasOnBoard } from 'hooks/useAssertOrgHasOnBoard';
 import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import { NotificationButton } from 'components/NotificationButton';
+import { HelpDropdownMenu } from 'components/HelpDropdownMenu';
+import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -163,6 +165,7 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertRole(['client', 'agent', 'admin', 'system'])
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
+  const [openSupport, supportContextHolder] = useSupportChatWidget();
 
   useDocumentTitle();
 
@@ -203,6 +206,7 @@ export const AppLoggedInPage = React.memo(() => {
           <SmartSearch />
           <CreateNewButton />
         </Space> : null,
+        isSystem? null: <HelpDropdownMenu onSupportOpen={openSupport}/>,
         isSystem ? null : <NotificationButton key="notification" />,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
@@ -240,9 +244,9 @@ export const AppLoggedInPage = React.memo(() => {
     >
       <Outlet />
     </ProLayout>
-    {!isSystem && <SupportAffix />}
     {isAdmin && <GlobalNotificationBar />}
     {!isSystem && <UnimpersonatedFloatButton />}
+    {supportContextHolder}
   </StyledContainer>
 })
 

@@ -6,7 +6,7 @@ import { getMySupport$, nudgeMyLastReadSupportMessage$ } from 'services/supportS
 import { finalize, catchError } from 'rxjs/operators';
 import { SupportMessageList } from './SupportMessageList';
 import { SupportMessageInput } from './SupportMessageInput';
-import { sendContact$ } from 'services/supportService';
+import { sendSupportMessage$ } from 'services/supportService';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
@@ -95,7 +95,7 @@ export const SupportAffix = () => {
 
   const handleSubmitMessage = (message) => {
     const capturedUrl = window.location.href;
-    return sendContact$(message, capturedUrl);
+    return sendSupportMessage$(message, capturedUrl);
   }
 
   const handleShowChat = () => {

@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Steps, Space, Typography, Row, Col, Card, Skeleton, Button, Grid } from 'antd';
+import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer } from 'antd';
 
 import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
@@ -13,7 +13,7 @@ import { combineLatest } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
-import { CommentOutlined, LeftOutlined, MessageOutlined, SyncOutlined } from '@ant-design/icons';
+import { CommentOutlined, LeftOutlined, MessageOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -25,6 +25,7 @@ import { TaskDocToSignPanel } from 'components/TaskDocToSignPanel';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { ProCard } from '@ant-design/pro-components';
 import { DefaultFooter } from '@ant-design/pro-components';
+import { getPendingSignTaskDocs } from 'util/getPendingSignTaskDocs';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -35,8 +36,8 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   // max-width: 1200px;
-
 `;
+
 
 const FLOW_STEPS = {
   FILL_IN_FORM: 0,
@@ -50,16 +51,28 @@ const ClientTaskPage = (props) => {
   const { id } = params;
 
   const [loading, setLoading] = React.useState(true);
+  const [signPanelOpen, setSignPanelOpen] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [currentStep, setCurrentStep] = React.useState(FLOW_STEPS.FILL_IN_FORM);
   const [historyVisible, setHistoryVisible] = React.useState(false);
+  const [docsToSign, setDocsToSign] = React.useState([]);
   const navigate = useNavigate();
 
   React.useEffect(() => {
     const sub$ = load$();
     return () => sub$.unsubscribe();
   }, [])
+
+  React.useEffect(() => {
+    setDocsToSign(getPendingSignTaskDocs(task));
+  }, [task])
+
+  React.useEffect(() => {
+    if (docsToSign.length > 0) {
+      setCurrentStep(FLOW_STEPS.SIGN_DOCS);
+    }
+  }, [docsToSign])
 
   const load$ = () => {
     setLoading(true);
@@ -95,6 +108,8 @@ const ClientTaskPage = (props) => {
     }
   }
 
+  const hasDocToSign = docsToSign.length > 0;
+
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
       loading={loading}
@@ -125,7 +140,7 @@ const ClientTaskPage = (props) => {
         <Col>
           <Steps
             direction={narrowScreen ? 'horizontal' : 'vertical'}
-            progressDot={narrowScreen}
+            progressDot={true}
             current={currentStep}
             onChange={setCurrentStep}
             size="small"
@@ -136,9 +151,9 @@ const ClientTaskPage = (props) => {
               {
                 title: 'Attachments',
               },
-              {
-                title: 'Sign documents',
-              },
+              hasDocToSign ? {
+                title: <>Sign documents <Badge count={docsToSign.length} showZero={false} /></>
+              } : null,
             ]}
           />
         </Col>
@@ -147,13 +162,28 @@ const ClientTaskPage = (props) => {
             <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
           </ProCard>}
           {currentStep === FLOW_STEPS.ATTACHMENTS && <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} />}
-          {currentStep === FLOW_STEPS.SIGN_DOCS && <TaskDocToSignPanel docs={task.docs} onSavingChange={setSaving} onChange={handleDocChange} />}
+          {currentStep === FLOW_STEPS.SIGN_DOCS && <ProCard
+            title={`${docsToSign.length} Document Waiting for Your Signature`}
+            bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
+            type="inner"
+          >
+            <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
+          </ProCard>}
         </Col>
       </Row>
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
     {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
-    {task && <TaskDocToSignDrawer docs={task.docs} />}
+    <FooterToolbar
+      extra={narrowScreen ? null :
+        <Text type="info">The task is being proceeded</Text>
+      }>
+      <Space style={{ justifyContent: 'end' }} size="large">
+        {currentStep !== 0 && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre - 1)}><LeftOutlined /> Previous</Button>}
+        {currentStep !== FLOW_STEPS.SIGN_DOCS && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre + 1)}>Next <RightOutlined /></Button>}
+        {currentStep === FLOW_STEPS.SIGN_DOCS && <Button type="primary" onClick={() => navigate('/task')}>Done</Button>}
+      </Space>
+    </FooterToolbar>
   </Container>
   );
 };

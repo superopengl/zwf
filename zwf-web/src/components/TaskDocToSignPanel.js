@@ -33,7 +33,6 @@ const Container = styled.div`
 
 export const TaskDocToSignPanel = React.memo((props) => {
   const { docs, onChange } = props;
-  const [open, setOpen] = React.useState(false);
   const [docsToSign, setDocsToSign] = React.useState([]);
   const [agreed, setAgreed] = React.useState(false);
   const [openSignModal, signModalContextHolder] = useSignTaskDocModal();
@@ -41,9 +40,8 @@ export const TaskDocToSignPanel = React.memo((props) => {
   const [selectedRowKeys, setSelectedRowKeys] = React.useState([]);
 
   React.useEffect(() => {
-    const targetDocs = docs.filter(d => d.signRequestedAt);
+    const targetDocs = docs.filter(d => d.signRequestedAt && !d.signedAt);
     setDocsToSign(targetDocs);
-    setOpen(targetDocs.length > 0);
   }, [docs]);
 
   const handleSignTaskDoc = (taskDoc) => {
@@ -59,7 +57,7 @@ export const TaskDocToSignPanel = React.memo((props) => {
   const columns = [
     {
       title: '',
-      render: (_, doc) => <TaskDocName taskDoc={doc} showOverlay={false} allowDownload={false} onClick={() => handleSignTaskDoc(doc)}/>
+      render: (_, doc) => <TaskDocName taskDoc={doc} showOverlay={false} allowDownload={false} onClick={() => handleSignTaskDoc(doc)} />
     },
   ];
 
@@ -68,48 +66,41 @@ export const TaskDocToSignPanel = React.memo((props) => {
   };
 
   return <Container>
-    <ProCard
-      title={<>{docsToSign.length} Document{docsToSign.length === 1 ? '' : 's'} Waiting for Your Signature</>}
-      type="inner"
-      bodyStyle={{ padding: 16 }}
-    >
-      {/* <Paragraph>
+    {/* <Paragraph>
       You have 2 documents are waiting for signature
     </Paragraph> */}
-      <Table
-        size="small"
-        rowSelection={{
-          selectedRowKeys,
-          onChange: onSelectChange,
-          selections: [
-            Table.SELECTION_ALL,
-            Table.SELECTION_INVERT,
-            Table.SELECTION_NONE,
-          ]
-        }}
-        loading={loading}
-        pagination={false}
-        bordered={false}
-        rowKey="id"
-        showHeader={false}
-        columns={columns}
-        dataSource={docsToSign}
-        locale={{ emptyText: 'Upload or add doc templates' }}
-      />
+    <Table
+      size="small"
+      rowSelection={{
+        selectedRowKeys,
+        onChange: onSelectChange,
+        selections: [
+          Table.SELECTION_ALL,
+          Table.SELECTION_INVERT,
+          Table.SELECTION_NONE,
+        ]
+      }}
+      loading={loading}
+      pagination={false}
+      bordered={false}
+      rowKey="id"
+      showHeader={false}
+      columns={columns}
+      dataSource={docsToSign}
+      locale={{ emptyText: 'Upload or add doc templates' }}
+    />
 
-      <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
-        <Col>
-          <Checkbox style={{marginLeft: 8}} checked={agreed} onClick={e => setAgreed(e.target.checked)}>I have read and agree on the <Link underline target="_blank" href="/terms_and_conditions">terms and conditions</Link></Checkbox>
-        </Col>
-        <Col>
-          <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms and conditions before signing'} >
-            <Button type="primary" icon={<Icon component={FaSignature} />} disabled={!agreed || !selectedRowKeys.length}>Sign {selectedRowKeys.length} selected document{selectedRowKeys.length ===1 ? '': 's'}</Button>
-          </Tooltip>
-        </Col>
-      </Row>
-      {signModalContextHolder}
-
-    </ProCard>
+    <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
+      <Col>
+        <Checkbox style={{ marginLeft: 8 }} checked={agreed} onClick={e => setAgreed(e.target.checked)}>I have read and agree on the <Link underline target="_blank" href="/terms_and_conditions">terms and conditions</Link></Checkbox>
+      </Col>
+      <Col>
+        <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms and conditions before signing'} >
+          <Button type="primary" icon={<Icon component={FaSignature} />} disabled={!agreed || !selectedRowKeys.length}>Sign {selectedRowKeys.length} selected document{selectedRowKeys.length === 1 ? '' : 's'}</Button>
+        </Tooltip>
+      </Col>
+    </Row>
+    {signModalContextHolder}
   </Container>
 });
 

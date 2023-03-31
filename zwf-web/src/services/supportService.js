@@ -15,7 +15,7 @@ export function searchUserSupports$(queryInfo) {
   return httpPost$(`/support/search`, queryInfo);
 }
 
-export function sendContact$(message, capturedUrl, replyToUserId) {
+export function sendSupportMessage$(message, capturedUrl, replyToUserId) {
   return httpPost$(`/support`, { message, capturedUrl, replyToUserId });
 }
 
