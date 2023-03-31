@@ -43,8 +43,10 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
 
     assert(doc, 404, 'Task doc is not found');
 
-    const file = await generatePdfTaskDocFile(m, doc.id, userId);
-    assert(file, 400, 'Cannot generate task doc');
+    const fileResult = await generatePdfTaskDocFile(m, doc.id, userId);
+    assert(fileResult.succeeded, 400, 'Cannot generate task doc');
+
+    const { file } = fileResult;
 
     result = {
       fileId: file.id,
@@ -125,7 +127,7 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
     id: docId
   }
 
-  switch(role) {
+  switch (role) {
     case Role.Agent:
     case Role.Admin:
       query.orgId = getOrgIdFromReq(req);
@@ -135,7 +137,7 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
   }
 
   const doc = await db.getRepository(TaskDoc).findOne({
-    where:  {
+    where: {
       id: docId
     },
     relations: {
@@ -151,13 +153,13 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
 
   if (file) {
     streamFileToResponse(file, res);
-  } else if(docTemplateId) {
+  } else if (docTemplateId) {
     // Hand over to frontend.
-    const genedFile = await generatePdfTaskDocFile(db.manager, doc.id, userId);
-    if(genedFile) {
-      streamFileToResponse(genedFile, res);
+    const result = await generatePdfTaskDocFile(db.manager, doc.id, userId);
+    if (result.succeeded) {
+      streamFileToResponse(result.file, res);
     } else {
-      res.status(425).send("Dependency fields for doc template are not ready").end();
+      res.status(425).json(result).end();
     }
     return;
   } else {
@@ -183,15 +185,15 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
       },
     });
 
-  
+
     assert(doc?.task?.userId === userId, 404);
     assert(!doc.esign, 400, 'The doc has been esigned');
-  
+
     const now = getUtcNow();
     doc.signedBy = userId;
     doc.signedAt = now;
     doc.esign = computeTaskFileSignedHash(doc.file.md5, userId, now);
-  
+
     await m.save(doc);
   })
 
