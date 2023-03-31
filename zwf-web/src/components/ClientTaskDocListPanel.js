@@ -18,11 +18,11 @@ const Container = styled.div`
 
 .ant-table-cell {
   border-bottom: none !important;
-  padding: 8px 2px !important;
+  // padding: 8px 2px !important;
 }
 .ant-table-content {
-  margin-left: -8px;
-  margin-right: -8px;
+  // margin-left: -8px;
+  // margin-right: -8px;
 }
 
 `;
@@ -73,13 +73,14 @@ export const ClientTaskDocListPanel = React.memo((props) => {
       </Tooltip>
     },
     {
+      title: 'Created',
+      render: (_, doc) => <TimeAgo direction="horizontal" value={doc.createdAt} />
+    },
+    {
       align: 'right',
-      // width: 32,
       render: (_, doc) => !doc.signRequestedAt ? null :
-        doc.signedAt ? <Text type="success"><CheckCircleOutlined/> signed</Text> :
-          <Tooltip title={`Sign document`}>
-            <Button type='primary' icon={<Icon component={FaSignature} />} onClick={() => handleSign(doc)} >Sign</Button>
-          </Tooltip>
+        doc.signedAt ? <Text type="success"><CheckCircleOutlined/> signed</Text> : 
+        null
     },
   ];
 
@@ -94,6 +95,8 @@ export const ClientTaskDocListPanel = React.memo((props) => {
       title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
       type="inner"
       extra={<TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} />}
+      bodyStyle={{padding: 16}}
+      headStyle={{paddingRight: 8}}
     >
       <Table
         size="small"
@@ -105,9 +108,6 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         columns={columns}
         dataSource={docs}
         locale={{ emptyText: 'Upload or add doc templates' }}
-      // scroll={{
-      //   y: 200
-      // }}
       />
     </ProCard>
   </Container>

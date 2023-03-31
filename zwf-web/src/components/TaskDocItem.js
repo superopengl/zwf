@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Typography, Space, Tooltip, Avatar, Button, Row, Col } from 'antd';
 import _ from 'lodash';
 import Icon, { CloseOutlined } from '@ant-design/icons';
-import { showSignTaskFileModal } from './showSignTaskFileModal';
+import { showSignTaskFileModal } from '../hooks/useSignTaskDocModal';
 import { Modal } from 'antd';
 import { FaSignature } from 'react-icons/fa';
 import { TaskDocName } from './TaskDocName';

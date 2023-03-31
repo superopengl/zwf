@@ -10,6 +10,7 @@ import { sendContact$ } from 'services/supportService';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
+import { ZeventNoticeableBadge } from './ZeventNoticeableBadge';
 
 
 const { Paragraph, Title } = Typography;
@@ -115,52 +116,60 @@ export const SupportAffix = () => {
       open={open}
       onOpenChange={handleFloatButtonOpenChange}
     >
-      <FloatButton
-        tooltip="Terms and Conditions"
-        icon={<QuestionCircleOutlined />}
-        href="/terms_and_conditions"
-        target="_blank"
-      />
-      <FloatButton
-        tooltip="Privacy Policy"
-        icon={<MdOutlinePrivacyTip />}
-        href="/privacy_policy"
-        target="_blank"
-      />
-      <FloatButton
-        icon={<CommentOutlined />}
-        tooltip="Chat with ZeeWorkflow support"
-        onClick={handleShowChat}
-      />
+      <ZeventNoticeableBadge
+        message="You have unread messages"
+        filter={z => z.type === 'support'}
+      >
+        fdsaf
+        <FloatButton
+          tooltip="Terms and Conditions"
+          icon={<QuestionCircleOutlined />}
+          href="/terms_and_conditions"
+          target="_blank"
+        />
+        <FloatButton
+          tooltip="Privacy Policy"
+          icon={<MdOutlinePrivacyTip />}
+          href="/privacy_policy"
+          target="_blank"
+        />
+        <FloatButton
+          icon={<CommentOutlined />}
+          tooltip="Chat with ZeeWorkflow support"
+          onClick={handleShowChat}
+        />
+      </ZeventNoticeableBadge>
     </FloatButton.Group>
 
-    {chatOpen && <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 900 }}>
-      <Space direction="vertical" style={{ alignItems: 'flex-end' }} size="large" >
-        <StyledCard
-          // title="Contact support"
-          title={<>
-            <Title level={2}>Chat with support</Title>
-            <Paragraph>
-              Ask us anything, or share your feedback.
-            </Paragraph>
-          </>}
-          extra={<Button icon={<CloseOutlined />} onClick={() => setChatOpen(false)} type="text" />}
-          headStyle={{ backgroundColor: '#0FBFC4' }}
-          bodyStyle={{ padding: 0 }}
-        >
-          <div style={{ height: '50vh', minHeight: 200, maxHeight: 600 }}>
-            <SupportMessageList dataSource={list} loading={loading} />
-          </div>
-          <hr />
-          <SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />
-        </StyledCard>
-        {/* <Badge count={unreadCount} showZero={false}>
+    {
+      chatOpen && <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 900 }}>
+        <Space direction="vertical" style={{ alignItems: 'flex-end' }} size="large" >
+          <StyledCard
+            // title="Contact support"
+            title={<>
+              <Title level={2}>Chat with support</Title>
+              <Paragraph>
+                Ask us anything, or share your feedback.
+              </Paragraph>
+            </>}
+            extra={<Button icon={<CloseOutlined />} onClick={() => setChatOpen(false)} type="text" />}
+            headStyle={{ backgroundColor: '#0FBFC4' }}
+            bodyStyle={{ padding: 0 }}
+          >
+            <div style={{ height: '50vh', minHeight: 200, maxHeight: 600 }}>
+              <SupportMessageList dataSource={list} loading={loading} />
+            </div>
+            <hr />
+            <SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />
+          </StyledCard>
+          {/* <Badge count={unreadCount} showZero={false}>
           <AffixContactButton type="primary" size="large" onClick={() => setVisible(x => !x)}>
             <AiOutlineDown size={24} />
           </AffixContactButton>
         </Badge> */}
-      </Space>
-    </Affix>}
+        </Space>
+      </Affix>
+    }
   </>
 }
 

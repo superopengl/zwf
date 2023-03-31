@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { updateTaskFields$, saveTaskFieldValues$ } from 'services/taskService';
 import { useDebounce, useDebouncedValue } from "rooks";
-import { TaskDocRequireSignBar } from './TaskDocRequireSignBar';
 import { TaskSchemaRenderer } from './TaskSchemaRenderer';
 import { useRole } from 'hooks/useRole';
 import { useZevent } from 'hooks/useZevent';
@@ -66,12 +65,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     setChangedFields(x => ({ ...x, ...changedFields }))
   }, []);
 
-  const handleSignDoc = () => {
-
-  }
-
   return (<>
-    {isClient && <TaskDocRequireSignBar value={task} onChange={handleSignDoc} />}
     <TaskSchemaRenderer
       fields={fields}
       mode={mode}

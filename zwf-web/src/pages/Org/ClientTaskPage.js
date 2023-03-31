@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Steps, Space, Typography, Row, Col, Card, Skeleton, Button, Tabs } from 'antd';
+import { Steps, Space, Typography, Row, Col, Card, Skeleton, Button, Grid } from 'antd';
 
 import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
@@ -21,9 +21,13 @@ import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
 import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
-import { TaskDocToSignDrawer } from 'components/TaskDocToSignDrawer';
+import { TaskDocToSignPanel } from 'components/TaskDocToSignPanel';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { ProCard } from '@ant-design/pro-components';
+import { DefaultFooter } from '@ant-design/pro-components';
 
 const { Text } = Typography;
+const { useBreakpoint } = Grid;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
@@ -34,6 +38,12 @@ const Container = styled.div`
 
 `;
 
+const FLOW_STEPS = {
+  FILL_IN_FORM: 0,
+  ATTACHMENTS: 1,
+  SIGN_DOCS: 2,
+}
+
 const ClientTaskPage = (props) => {
   useAssertRole(['client']);
   const params = useParams();
@@ -42,7 +52,7 @@ const ClientTaskPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const [currentStep, setCurrentStep] = React.useState(FLOW_STEPS.FILL_IN_FORM);
   const [historyVisible, setHistoryVisible] = React.useState(false);
   const navigate = useNavigate();
 
@@ -72,16 +82,25 @@ const ClientTaskPage = (props) => {
 
   const isFormView = currentStep === 0;
   const isDocView = currentStep === 1;
+  const screens = useBreakpoint();
 
   const span = { xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 };
   const canRequestChange = task?.status === 'todo' || task?.status === 'in_progress';
+  const canEditForm = task?.status === 'action_required';
+  const narrowScreen = (screens.xs || screens.sm) && !screens.md;
+
+  const getInitialStep = (task) => {
+    if (canEditForm) {
+      return FLOW_STEPS.FILL_IN_FORM;
+    }
+  }
 
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
       loading={loading}
       onBack={handleGoBack}
       fixedHeader={true}
-      maxWidth={1200}
+      maxWidth={1000}
       icon={<TaskIcon />}
       title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       // footer={<Button type="primary">Submit</Button>}
@@ -101,14 +120,34 @@ const ClientTaskPage = (props) => {
         canRequestChange ? <Button key="request">Request change</Button> : null,
       ]}
     >
+      {/* <DebugJsonPanel value={screens} /> */}
       <Row gutter={[40, 40]}>
-        <Col {...span}>
-          <Card key="form">
-            <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
-          </Card>
+        <Col>
+          <Steps
+            direction={narrowScreen ? 'horizontal' : 'vertical'}
+            progressDot={narrowScreen}
+            current={currentStep}
+            onChange={setCurrentStep}
+            size="small"
+            items={[
+              {
+                title: 'Fill in the form',
+              },
+              {
+                title: 'Attachments',
+              },
+              {
+                title: 'Sign documents',
+              },
+            ]}
+          />
         </Col>
-        <Col {...span}>
-          <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} />
+        <Col flex="auto">
+          {currentStep === FLOW_STEPS.FILL_IN_FORM && <ProCard title="Information Form" type="inner">
+            <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
+          </ProCard>}
+          {currentStep === FLOW_STEPS.ATTACHMENTS && <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} />}
+          {currentStep === FLOW_STEPS.SIGN_DOCS && <TaskDocToSignPanel docs={task.docs} onSavingChange={setSaving} onChange={handleDocChange} />}
         </Col>
       </Row>
       {saving && <SavingAffix />}
