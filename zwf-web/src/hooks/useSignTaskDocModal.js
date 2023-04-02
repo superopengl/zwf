@@ -4,7 +4,7 @@ import { Modal, Typography, Space, Button, Checkbox, Row, Col, Avatar } from 'an
 import Icon from '@ant-design/icons';
 import { FaFileSignature, FaSignature } from 'react-icons/fa';
 import { FileIcon } from '../components/FileIcon';
-import { getTaskDocDownloadUrl, signTaskDoc$ } from 'services/taskService';
+import { getTaskDocDownloadUrl, signTaskDocs$ } from 'services/taskService';
 import { Loading } from '../components/Loading';
 import { catchError, finalize } from 'rxjs/operators';
 import { TaskDocName } from 'components/TaskDocName';
@@ -20,7 +20,7 @@ const Content = props => {
 
   const handleSign = () => {
     setLoading(true);
-    signTaskDoc$(taskDoc.id).pipe(
+    signTaskDocs$(taskDoc.id).pipe(
       finalize(() => setLoading(false))
     ).subscribe(() => {
       onOk();

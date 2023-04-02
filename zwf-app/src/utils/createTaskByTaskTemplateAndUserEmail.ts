@@ -1,9 +1,6 @@
-import { db } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 import { TaskField } from '../entity/TaskField';
-import { getUtcNow } from './getUtcNow';
 import { UserProfile } from '../entity/UserProfile';
-import { EmailTemplateType } from '../types/EmailTemplateType';
 
 import { assert } from './assert';
 import * as _ from 'lodash';
@@ -12,13 +9,6 @@ import { TaskTemplate } from '../entity/TaskTemplate';
 import { TaskStatus } from '../types/TaskStatus';
 import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 import { v4 as uuidv4 } from 'uuid';
-import { User } from '../entity/User';
-import { sendEmail } from '../services/emailService';
-import { getEmailRecipientName } from './getEmailRecipientName';
-import { Org } from '../entity/Org';
-import { DocTemplate } from '../entity/DocTemplate';
-import { logTaskCreated } from '../services/taskCommentService';
-import { Role } from '../types/Role';
 import * as path from 'path';
 import { TaskTemplateField } from '../types/TaskTemplateField';
 import { generateDeepLinkId } from './generateDeepLinkId';
@@ -103,8 +93,6 @@ export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, tas
     .values(orgClient)
     .orIgnore()
     .execute();
-
-  await logTaskCreated(m, task, creatorId);
 
   // const org = await db.getRepository(Org).findOne({ where: { id: task.orgId } });
 

@@ -46,21 +46,6 @@ export async function nudgeCommentAccess(m: EntityManager, taskId: string, userI
     .execute();
 }
 
-export async function logTaskCreated(m: EntityManager, task: Task, by: string) {
-  return await insertNewCommentEntity(m, TaskActionType.Created, task, by);
-}
-
-export async function logTaskAssigned(m: EntityManager, task: Task, by: string, assigneeId: string) {
-  return await insertNewCommentEntity(m, TaskActionType.Assigned, task, by, assigneeId);
-}
-
-export async function logTaskDocSignedByClient(m: EntityManager, task: Task, clientId: string, taskDocId: string, name: string) {
-  return await insertNewCommentEntity(m, TaskActionType.DocSigned, task, clientId, {taskDocId, name});
-}
-
-export async function logTaskStatusChange(m: EntityManager, task: Task, by: string, oldStatus: TaskStatus, newStatus: TaskStatus) {
-  return await insertNewCommentEntity(m, TaskActionType.StatusChange, task, by, { oldStatus, newStatus });
-}
 
 export async function logTaskChat(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
   return await insertNewCommentEntity(m, TaskActionType.Chat, task, by, message);

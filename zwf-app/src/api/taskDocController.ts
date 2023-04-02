@@ -9,7 +9,7 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { generatePdfTaskDocFile } from '../services/genDocService';
 import { db } from '../db';
-import { IsNull, Not } from 'typeorm';
+import { IsNull, Not, In } from 'typeorm';
 import { Role } from '../types/Role';
 import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
@@ -167,17 +167,20 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
   }
 });
 
-export const signTaskDoc = handlerWrapper(async (req, res) => {
+export const signTaskDocs = handlerWrapper(async (req, res) => {
   assertRole(req, ['client']);
-  const { docId } = req.params;
+  const { docIds } = req.body;
+  assert(docIds?.length, 400, `docIds is empty`);
+  
   const userId = getUserIdFromReq(req);
 
-  let doc: TaskDoc;
+  let docs: TaskDoc[];
   await db.transaction(async m => {
-    doc = await m.findOne(TaskDoc, {
+    docs = await m.find(TaskDoc, {
       where: {
-        id: docId,
+        id: In(docIds),
         fileId: Not(IsNull()),
+        signedAt: IsNull(),
       },
       relations: {
         file: true,
@@ -185,19 +188,19 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
       },
     });
 
-
-    assert(doc?.task?.userId === userId, 404);
-    assert(!doc.esign, 400, 'The doc has been esigned');
+    assert(docs[0]?.task?.userId === userId, 404);
 
     const now = getUtcNow();
-    doc.signedBy = userId;
-    doc.signedAt = now;
-    doc.esign = computeTaskFileSignedHash(doc.file.md5, userId, now);
+    docs.forEach(d => {
+      d.signedBy = userId;
+      d.signedAt = now;
+      d.esign = computeTaskFileSignedHash(d.file.md5, userId, now);
+    })
 
-    await m.save(doc);
+    await m.save(docs);
   })
 
-  publishTaskChangeEvent(doc.task, getUserIdFromReq(req));
+  publishTaskChangeEvent(docs[0].task, getUserIdFromReq(req));
 
-  res.json(doc);
+  res.json(docs);
 });

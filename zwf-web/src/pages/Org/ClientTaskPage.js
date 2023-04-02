@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer } from 'antd';
+import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert } from 'antd';
 
 import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
@@ -13,7 +13,7 @@ import { combineLatest } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
-import { CommentOutlined, LeftOutlined, MessageOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
+import { CommentOutlined, ExclamationCircleFilled, LeftOutlined, MessageOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -38,11 +38,48 @@ const Container = styled.div`
   // max-width: 1200px;
 `;
 
+const PageFooter = styled.div`
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+width: 100vw;
+padding: 16px;
+background-color: white;
+`;
+
 
 const FLOW_STEPS = {
   FILL_IN_FORM: 0,
   ATTACHMENTS: 1,
   SIGN_DOCS: 2,
+}
+
+const ALERT_DEF = {
+  'in_progress': {
+    type: 'info',
+    message: 'In progress',
+    description: `The task is currently in progress. There is no need for you to take any action until ZeeWorkflow provides further notification.`
+  },
+  'action_required': {
+    type: 'error',
+    message: 'Action required.',
+    icon: <ExclamationCircleFilled />,
+    description: <>
+      To proceed this task, you are required to take certain actions such as
+      <ul>
+        <li>signing documents, </li>
+        <li>uploading additional supporting documents, </li>
+        <li>modifying the information provided in the form.</li>
+      </ul>
+      Please review any comments left by your agent as instructions.
+    </>,
+  },
+  'done': {
+    type: 'success',
+    message: 'Completed',
+    description: 'The task has been successfully completed.'
+  },
 }
 
 const ClientTaskPage = (props) => {
@@ -109,6 +146,8 @@ const ClientTaskPage = (props) => {
   }
 
   const hasDocToSign = docsToSign.length > 0;
+  const lastStep = hasDocToSign ? FLOW_STEPS.SIGN_DOCS : FLOW_STEPS.ATTACHMENTS;
+  const alertMeta = ALERT_DEF[task?.status];
 
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
@@ -136,6 +175,14 @@ const ClientTaskPage = (props) => {
       ]}
     >
       {/* <DebugJsonPanel value={screens} /> */}
+      <Alert
+        type={alertMeta.type}
+        icon={alertMeta.icon}
+        message={alertMeta.message}
+        description={alertMeta.description}
+        showIcon
+        style={{ marginBottom: 30 }} />
+
       <Row gutter={[40, 40]}>
         <Col>
           <Steps
@@ -174,16 +221,19 @@ const ClientTaskPage = (props) => {
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
     {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
-    <FooterToolbar
-      extra={narrowScreen ? null :
-        <Text type="info">The task is being proceeded</Text>
-      }>
-      <Space style={{ justifyContent: 'end' }} size="large">
-        {currentStep !== 0 && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre - 1)}><LeftOutlined /> Previous</Button>}
-        {currentStep !== FLOW_STEPS.SIGN_DOCS && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre + 1)}>Next <RightOutlined /></Button>}
-        {currentStep === FLOW_STEPS.SIGN_DOCS && <Button type="primary" onClick={() => navigate('/task')}>Done</Button>}
-      </Space>
-    </FooterToolbar>
+    <PageFooter>
+      <Row gutter={[20, 20]} justify="space-between">
+        <Col>
+        </Col>
+        <Col>
+          <Space style={{ justifyContent: 'end' }} size="large">
+            {currentStep !== 0 && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre - 1)}><LeftOutlined /> Previous</Button>}
+            {currentStep !== lastStep && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre + 1)}>Next <RightOutlined /></Button>}
+            {currentStep === lastStep && <Button type="primary" onClick={() => navigate('/task')}>Done</Button>}
+          </Space>
+        </Col>
+      </Row>
+    </PageFooter>
   </Container>
   );
 };
