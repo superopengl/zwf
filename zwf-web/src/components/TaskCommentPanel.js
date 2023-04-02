@@ -19,10 +19,13 @@ const StyledList = styled(ProList)`
   padding: 0;
 
   .ant-list-item {
-    padding-left: 0;
-    padding-right: 0;
+    padding: 3px 0;
     border: 0;
 
+    .ant-list-item-meta-title {
+      margin-bottom: 4px;
+    }
+    
     .ant-pro-list-row-subTitle {
       font-weight: 400;
     }
