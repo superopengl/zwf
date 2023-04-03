@@ -150,9 +150,9 @@ const OrgClientListPage = () => {
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
     {
-      title: <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />,
+      title: <span style={{fontWeight: 400}}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} /></span>,
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} inPlaceEdit={true} />
+      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} inPlaceEdit={true} placeholder="Click to select tags" />
     },
     {
       title: "Invited",
@@ -206,7 +206,7 @@ const OrgClientListPage = () => {
             config={[
               {
                 icon: <Icon component={MdDashboardCustomize} />,
-                menu: `Create task for this client`,
+                menu: `New task for this client`,
                 onClick: () => createTaskForUser(user)
               },
               {
@@ -214,10 +214,10 @@ const OrgClientListPage = () => {
                 menu: `Client contact`,
                 onClick: () => openClientContact(user)
               },
-              {
-                menu: `Tasks of client`,
-                onClick: () => { }
-              },
+              // {
+              //   menu: `Tasks of client`,
+              //   onClick: () => { }
+              // },
               // {
               //   icon: <TagsOutlined />,
               //   menu: 'Tags',
