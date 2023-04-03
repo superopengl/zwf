@@ -1,4 +1,4 @@
-import { ActivityWatch } from '../entity/ActivityWatch';
+import { ActivityLastSeen } from '../entity/ActivityLastSeen';
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskActivity } from '../entity/TaskActivity';
 import { TaskActionType } from '../types/TaskActionType';
@@ -41,13 +41,13 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
 export async function nudgeCommentAccess(m: EntityManager, taskId: string, userId: string) {
   await m.createQueryBuilder()
     .insert()
-    .into(ActivityWatch)
+    .into(ActivityLastSeen)
     .values({ taskId, userId, type: 'task-comment', lastHappenAt: () => `NOW()` })
-    .orUpdate(['lastHappenAt'])
+    .orUpdate(['lastHappenAt'], ['taskId', 'userId', 'type'])
     .execute();
 }
 
 
-export async function logTaskChat(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
+export async function createTaskComment(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
   return await insertNewCommentEntity(m, TaskActionType.Comment, task, by, message);
 }

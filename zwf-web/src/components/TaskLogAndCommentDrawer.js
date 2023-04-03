@@ -21,7 +21,7 @@ export const TaskLogAndCommentDrawer = React.memo((props) => {
     open={visible}
     onClose={onClose}
     title="Log & Comment"
-    destroyOnClose={false}
+    destroyOnClose={true}
     closable
     autoFocus
     maskClosable
