@@ -1,4 +1,4 @@
-import { publishEvent } from '../services/zeventSubPubService';
+import { publishZevent } from '../services/zeventSubPubService';
 import { TaskDoc } from './../entity/TaskDoc';
 
 import { assert } from '../utils/assert';
@@ -19,7 +19,7 @@ import { Task } from '../entity/Task';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
-import { publishTaskChangeEvent } from '../utils/publishTaskChangeEvent';
+import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { TaskActivity } from '../entity/TaskActivity';
 import { TaskActionType } from '../types/TaskActionType';
 
@@ -114,7 +114,7 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     await m.save([taskDoc, taskActivity]);
   });
 
-  publishTaskChangeEvent(task, userId);
+  publishTaskChangeZevent(task, userId);
 
   res.json({
     fileId: fileId,
@@ -214,7 +214,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
     await m.save([...docs, taskActivity]);
   })
 
-  publishTaskChangeEvent(docs[0].task, getUserIdFromReq(req));
+  publishTaskChangeZevent(docs[0].task, getUserIdFromReq(req));
 
   res.json(docs);
 });

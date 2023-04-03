@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { publishEvent } from '../services/zeventSubPubService';
+import { publishZevent } from '../services/zeventSubPubService';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
@@ -119,7 +119,7 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
 
   await db.manager.save(sm);
 
-  publishEvent({
+  publishZevent({
     type: 'support',
     userId: sm.userId,
     payload: sm,

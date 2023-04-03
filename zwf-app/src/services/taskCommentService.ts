@@ -5,7 +5,7 @@ import { TaskActionType } from '../types/TaskActionType';
 import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { Task } from '../entity/Task';
-import { publishEvent } from './zeventSubPubService';
+import { publishZevent } from './zeventSubPubService';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskInformation } from '../entity/views/TaskInformation';
 
@@ -30,10 +30,11 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
     .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
     .execute();
 
-  publishEvent({
+  publishZevent({
     type: 'task.comment',
     userId,
     taskId,
+    taskName: task.name,
     orgId,
     by,
     payload: comment

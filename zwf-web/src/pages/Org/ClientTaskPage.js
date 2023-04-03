@@ -170,7 +170,7 @@ const ClientTaskPage = (props) => {
       fixedHeader={true}
       maxWidth={1000}
       icon={<TaskIcon />}
-      title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
+      title={<>{task.name} <small><Text type="secondary">by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       // footer={<Button type="primary">Submit</Button>}
       extra={[
         <ZeventNoticeableBadge key="refresh"

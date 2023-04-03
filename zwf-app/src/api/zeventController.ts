@@ -2,7 +2,7 @@
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getEventSource$ } from '../services/zeventSubPubService';
+import { getZeventSource$ } from '../services/zeventSubPubService';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
@@ -27,7 +27,7 @@ export const establishZeventStream = handlerWrapper(async (req, res) => {
   }
   res.sse();
 
-  const source$ = getEventSource$()
+  const source$ = getZeventSource$()
     .pipe(
       filter(filterFunc),
     ).subscribe((zevent) => {

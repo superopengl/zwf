@@ -41,19 +41,40 @@ export const NotificationButton = React.memo((props) => {
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    const sub$ = getMyNotifications$()
+  const load$ = () => {
+    return getMyNotifications$()
       .pipe()
       .subscribe(result => {
         setChangedTasks(result.changedTasks);
         setUnreadSupportMsgCount(result.unreadSupportMsgCount);
       });
+  }
 
+  React.useEffect(() => {
+    const sub$ = load$();
     return () => sub$.unsubscribe();
   }, [])
 
+  React.useEffect(() => {
+    if (open) {
+      const sub$ = load$();
+      return () => sub$.unsubscribe();
+    }
+  }, [open])
+
   useZevent(z => z.type === 'support', z => {
-    setUnreadSupportMsgCount(pre => pre + 1)
+    const { type } = z;
+    if (type === 'support') {
+      setUnreadSupportMsgCount(pre => pre + 1)
+    } else {
+      const exists = changedTasks.some((t => t.taskId === z.taskId));
+      if (!exists) {
+        setChangedTasks(pre => [...pre, {
+          taskId: z.taskId,
+          taskName: z.taskName,
+        }])
+      }
+    }
   });
 
   const items = changedTasks.map(x => ({
@@ -70,7 +91,7 @@ export const NotificationButton = React.memo((props) => {
     })
     items.unshift({
       key: 'support',
-      icon: <Text style={{fontSize: 24, color:'#0FBFC4' }}><CommentOutlined /></Text>,
+      icon: <Text style={{ fontSize: 24, color: '#0FBFC4' }}><CommentOutlined /></Text>,
       label: <>Unread support message <Badge count={unreadSupportMsgCount} /></>,
       onClick: () => {
         onSupportOpen()
