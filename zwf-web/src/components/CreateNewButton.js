@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Dropdown, Typography } from 'antd';
-import { CaretDownOutlined } from '@ant-design/icons';
+import Icon, { CaretDownOutlined } from '@ant-design/icons';
 import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
 import { CreateTaskModal } from 'components/CreateTaskModal';
 import { useNavigate } from 'react-router-dom';
 import { useKeys } from "rooks";
+import { MdDashboardCustomize } from 'react-icons/md';
 
 export const CreateNewButton = React.memo(props => {
   const { size } = props;
@@ -29,17 +30,17 @@ export const CreateNewButton = React.memo(props => {
     setModalVisible(true)
   }
 
-  useKeys(["Alt", "KeyN"], () => {
-    handleCreateTask();
-  })
+  // useKeys(["Alt", "KeyN"], () => {
+  //   handleCreateTask();
+  // })
 
   const menu = {
     items: [{
       key: 'task_template',
-      label: <><TaskTemplateIcon />Create Form Template</>
+      label: <><TaskTemplateIcon />New Form Template</>
     },{
       key: 'doc_template',
-      label: <><DocTemplateIcon />Create Doc Template</>
+      label: <><DocTemplateIcon />New Doc Template</>
     }],
     onClick: handleMenuSelected,
     size,
@@ -53,9 +54,9 @@ export const CreateNewButton = React.memo(props => {
       trigger="click"
       type="primary"
       icon={<CaretDownOutlined />}
-      style={{ width: 196 }}
+      // style={{ width: 196 }}
     >
-      Create Task (Alt + N)
+      <Icon component={MdDashboardCustomize} /> New Task 
     </Dropdown.Button>
     <CreateTaskModal visible={modalVisible} onCancel={() => setModalVisible(false)} onOk={() => setModalVisible(false)} />
   </>
