@@ -29,7 +29,7 @@ const Container = styled.div`
 
 
 export const ClientTaskDocListPanel = React.memo((props) => {
-  const { task, onChange } = props;
+  const { task, onChange, disabled } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [docs, setDocs] = React.useState(task?.docs ?? []);
@@ -81,9 +81,9 @@ export const ClientTaskDocListPanel = React.memo((props) => {
 
   return <Container>
     <ProCard
-      title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
+      title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
       type="inner"
-      extra={<TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} />}
+      extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled}/>}
       bodyStyle={{padding: 16}}
       headStyle={{paddingRight: 8}}
     >
