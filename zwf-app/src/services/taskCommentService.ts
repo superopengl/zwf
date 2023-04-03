@@ -1,6 +1,6 @@
 import { ActivityWatch } from '../entity/ActivityWatch';
 import { getUtcNow } from '../utils/getUtcNow';
-import { TaskComment } from '../entity/TaskComment';
+import { TaskActivity } from '../entity/TaskActivity';
 import { TaskActionType } from '../types/TaskActionType';
 import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -16,7 +16,7 @@ export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 
 async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, task: Task | TaskInformation, by: string, info?: any) {
   assert(task, 500);
-  const comment = new TaskComment();
+  const comment = new TaskActivity();
   const { userId, orgId, id: taskId } = task;
   comment.id = uuidv4();
   comment.action = action;
@@ -49,5 +49,5 @@ export async function nudgeCommentAccess(m: EntityManager, taskId: string, userI
 
 
 export async function logTaskChat(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
-  return await insertNewCommentEntity(m, TaskActionType.Chat, task, by, message);
+  return await insertNewCommentEntity(m, TaskActionType.Comment, task, by, message);
 }

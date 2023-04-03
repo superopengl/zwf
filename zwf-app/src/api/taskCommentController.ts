@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { TaskCommentInformation } from '../entity/views/TaskCommentInformation';
+import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -30,10 +30,10 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 
   let list;
   await db.manager.transaction(async m => {
-    list = await m.find(TaskCommentInformation, {
+    list = await m.find(TaskActivityInformation, {
       where: {
         taskId: id,
-        action: TaskActionType.Chat,
+        action: TaskActionType.Comment,
         ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {
@@ -63,7 +63,7 @@ export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) =
   const page = +req.query.page || 1;
   const size = +req.query.size || 50;
 
-  const list = await db.getRepository(TaskCommentInformation).find({
+  const list = await db.getRepository(TaskActivityInformation).find({
     where: {
       userId,
     },

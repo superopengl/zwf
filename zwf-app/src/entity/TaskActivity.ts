@@ -2,8 +2,8 @@ import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn } from 
 import { TaskActionType } from '../types/TaskActionType';
 
 @Entity()
-@Index('idx_task_comment_taskId_createdAt', ['taskId', 'createdAt'])
-export class TaskComment {
+@Index('idx_task_activity_taskId_createdAt', ['taskId', 'createdAt'])
+export class TaskActivity {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 

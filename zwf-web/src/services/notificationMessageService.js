@@ -1,9 +1,7 @@
 import { httpGet$, httpPost$ } from './http';
 
-export function getMyNotificationMessages$() {
+export function getMyNotifications$() {
   return httpGet$(`/notification`);
 }
 
-export function reactOnNotificationMessage$(id) {
-  return httpPost$(`/notification`, { id });
-}
+

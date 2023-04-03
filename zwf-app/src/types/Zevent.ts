@@ -1,5 +1,5 @@
 import { TaskDoc } from './../entity/TaskDoc';
-import { TaskComment } from '../entity/TaskComment';
+import { TaskActivity } from '../entity/TaskActivity';
 import { SupportMessage } from '../entity/SupportMessage';
 
 export type Zevent = {
@@ -28,7 +28,7 @@ export type Zevent = {
   taskId: string;
   orgId: string;
   by: string;
-  payload: TaskComment;
+  payload: TaskActivity;
 };
 
 

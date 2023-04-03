@@ -5,5 +5,7 @@ export enum TaskActionType {
     Renamed = 'renamed',
     DocSigned = 'doc-signed',
     StatusChange = 'status-change',
-    Chat = 'chat',
+    FieldChange = 'field-change',
+    DocChange = 'doc-change',
+    Comment = 'comment',
 }

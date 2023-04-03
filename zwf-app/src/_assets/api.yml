@@ -13,18 +13,13 @@ definitions:
 paths:
   /notification:
     get:
-      operationId: getMyNotificationMessages
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: reactOnNotificationMessage
+      operationId: getMyNotifications
       responses:
         200:
           description: OK
   /support:
     get:
-      operationId: getMySupport
+      operationId: listMySupportMessages
       responses:
         200:
           description: OK

@@ -20,6 +20,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
 import { publishTaskChangeEvent } from '../utils/publishTaskChangeEvent';
+import { TaskActivity } from '../entity/TaskActivity';
+import { TaskActionType } from '../types/TaskActionType';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -103,7 +105,13 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     taskDoc.fileId = fileId;
     taskDoc.uploadedBy = userId;
 
-    await m.save(taskDoc);
+    const taskActivity = new TaskActivity();
+    taskActivity.action = TaskActionType.DocChange;
+    taskActivity.taskId = task.id;
+    taskActivity.by = getUserIdFromReq(req);
+    taskActivity.info = taskDoc;
+
+    await m.save([taskDoc, taskActivity]);
   });
 
   publishTaskChangeEvent(task, userId);
@@ -171,7 +179,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
   assertRole(req, ['client']);
   const { docIds } = req.body;
   assert(docIds?.length, 400, `docIds is empty`);
-  
+
   const userId = getUserIdFromReq(req);
 
   let docs: TaskDoc[];
@@ -197,7 +205,13 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
       d.esign = computeTaskFileSignedHash(d.file.md5, userId, now);
     })
 
-    await m.save(docs);
+    const taskActivity = new TaskActivity();
+    taskActivity.action = TaskActionType.DocSigned;
+    taskActivity.taskId = docs[0].task.id;
+    taskActivity.by = getUserIdFromReq(req);
+    taskActivity.info = docs;
+
+    await m.save([...docs, taskActivity]);
   })
 
   publishTaskChangeEvent(docs[0].task, getUserIdFromReq(req));
