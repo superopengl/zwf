@@ -7,20 +7,21 @@ import { TaskCommentPanel } from './TaskCommentPanel';
 import { HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
 import { TaskLogPanel } from './TaskLogPanel';
+import { TaskCommentInputForm } from './TaskCommentInputForm';
 
 
 
-export const TaskLogAndCommentDrawer = React.memo((props) => {
-  const { taskId, userId, visible, onClose, width } = props;
+export const ClientTaskCommentDrawer = React.memo((props) => {
+  const { taskId, open, onClose, width } = props;
 
   const handleMessageSent = () => {
     listTaskComment$(taskId).subscribe();
   }
 
   return <Drawer
-    open={visible}
+    open={open}
     onClose={onClose}
-    title="Comment & Log"
+    title="Comments"
     destroyOnClose={true}
     closable
     autoFocus
@@ -29,36 +30,20 @@ export const TaskLogAndCommentDrawer = React.memo((props) => {
   // bodyStyle={{ padding: 0 }}
   // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <UserNameCard userId={userId} size={56} fontSize={18} />
-    <Tabs
-      destroyInactiveTabPane={true}
-      items={[
-        {
-          key: 'comment',
-          label: <div style={{ paddingRight: 16 }}><MessageOutlined /> Comment</div>,
-          children: <TaskCommentPanel taskId={taskId} />
-        },
-        {
-          key: 'log',
-          label: <div style={{ paddingRight: 16 }}><HistoryOutlined /> Log</div>,
-          children: <TaskLogPanel taskId={taskId} />
-        }
-      ]}
-    />
+    <TaskCommentPanel taskId={taskId} />
   </Drawer>
 });
 
-TaskLogAndCommentDrawer.propTypes = {
+ClientTaskCommentDrawer.propTypes = {
   taskId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired,
   width: PropTypes.number,
-  visible: PropTypes.bool.isRequired,
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
 };
 
-TaskLogAndCommentDrawer.defaultProps = {
+ClientTaskCommentDrawer.defaultProps = {
   width: 500,
-  visible: false,
+  open: false,
   onClose: () => { },
 };
 

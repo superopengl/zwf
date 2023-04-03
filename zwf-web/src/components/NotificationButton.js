@@ -90,9 +90,11 @@ export const NotificationButton = (props) => {
   }))
 
   if (unreadSupportMsgCount) {
-    items.unshift({
-      type: 'divider',
-    })
+    if(changedTasks.length > 0) {
+      items.unshift({
+        type: 'divider',
+      })
+    }
     items.unshift({
       key: 'support',
       icon: <Text style={{ fontSize: 24, color: '#0FBFC4' }}><CommentOutlined /></Text>,
@@ -101,6 +103,12 @@ export const NotificationButton = (props) => {
         onSupportOpen()
         setUnreadSupportMsgCount(0)
       },
+    })
+  }
+
+  if(!items.length ) {
+    items.push({
+      label: <Text type="secondary">No notifications</Text>
     })
   }
 
