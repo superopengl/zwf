@@ -36,10 +36,9 @@ const StyledList = styled(List)`
 
 
 export const NotificationButton = (props) => {
-  const { field, onChange, trigger, supportOpen, onSupportOpen } = props;
+  const { supportOpen, onSupportOpen } = props;
   const [changedTasks, setChangedTasks] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
-  const [open, setOpen] = React.useState(false);
   const [user] = useAuthUser();
 
   const userId = user.id;
@@ -59,13 +58,6 @@ export const NotificationButton = (props) => {
     const sub$ = load$();
     return () => sub$.unsubscribe();
   }, [])
-
-  React.useEffect(() => {
-    if (open) {
-      const sub$ = load$();
-      return () => sub$.unsubscribe();
-    }
-  }, [open])
 
   React.useEffect(() => {
     if (supportOpen) {
@@ -114,7 +106,7 @@ export const NotificationButton = (props) => {
 
   return <Dropdown trigger={['click']} menu={{ items }}>
     <Badge showZero={false} count={unreadSupportMsgCount + changedTasks.length} offset={[-4, 6]}>
-      <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => setOpen(true)} />
+      <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => load$()} />
     </Badge>
   </Dropdown>
 };
