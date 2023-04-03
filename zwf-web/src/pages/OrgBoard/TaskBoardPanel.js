@@ -54,7 +54,7 @@ export const TaskBoardPanel = props => {
   const { tasks, onChange, searchText } = props;
 
   return <DndProvider backend={HTML5Backend}>
-    <StyledRow gutter={20}>
+    <StyledRow gutter={10}>
       {COLUMN_DEFS.map((s, i) => <TaskBoardColumn
         status={s.status}
         key={i}

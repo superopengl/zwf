@@ -63,6 +63,36 @@ export const TaskListPanel = (props) => {
       ellipsis: false,
     },
     {
+      title: 'Client',
+      dataIndex: 'userId',
+      render: (value, item) => <UserNameCard userId={value} />
+    },
+    {
+      title: 'Created',
+      dataIndex: 'createdAt',
+      width: 100,
+      sorter: () => 0,
+      render: (text) => <TimeAgo value={text} accurate={false} />
+    },
+    {
+      title: 'Last Updated',
+      dataIndex: 'updatedAt',
+      width: 100,
+      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+      render: (text) => {
+        return <TimeAgo value={text} accurate={false}/>;
+      }
+    },
+    {
+      title: 'Last Comment',
+      dataIndex: 'lastUnreadMessageAt',
+      width: 100,
+      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+      render: (text) => {
+        return <TimeAgo value={text} accurate={false} />;
+      }
+    },
+    {
       title: 'Status',
       dataIndex: 'status',
       width: 160,
@@ -71,11 +101,6 @@ export const TaskListPanel = (props) => {
         <TaskStatusButton size="small" value={value} bordered={false} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />
       </small>,
       ellipsis: false
-    },
-    {
-      title: 'Client',
-      dataIndex: 'userId',
-      render: (value, item) => <UserNameCard userId={value} />
     },
     {
       title: 'Assignee',
@@ -100,31 +125,6 @@ export const TaskListPanel = (props) => {
         bordered={false}
       />
     },
-    {
-      title: 'Created At',
-      dataIndex: 'createdAt',
-      width: 100,
-      sorter: () => 0,
-      render: (text) => <TimeAgo value={text} accurate={false} showTime={false} />
-    },
-    {
-      title: 'Last Update At',
-      dataIndex: 'updatedAt',
-      width: 100,
-      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-      render: (text) => {
-        return <TimeAgo value={text} accurate={false} showTime={false} />;
-      }
-    },
-    {
-      title: 'Last Unread Message',
-      dataIndex: 'lastUnreadMessageAt',
-      width: 100,
-      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-      render: (text) => {
-        return <TimeAgo value={text} accurate={false} showTime={false} />;
-      }
-    },
     // {
     //   title: 'Due Date',
     //   dataIndex: 'dueDate',
@@ -136,28 +136,27 @@ export const TaskListPanel = (props) => {
       dataIndex: 'tags',
       render: (tags) => <TagSelect readonly={true} value={tags.map(t => t.id)} />
     },
-    {
-      // title: 'Action',
-      fixed: 'right',
-      align: 'center',
-      width: 70,
-      render: (text, record) => (
-        <DropdownMenu
-          config={[
-            {
-              icon: <EditOutlined />,
-              menu: 'Edit',
-              onClick: () => navigate(`/task/${record.id}`)
-            },
-            {
-              icon: <Text type="danger"><CloseOutlined /></Text>,
-              menu: <Text type="danger">Archive</Text>,
-              onClick: () => handleDelete(record)
-            }
-          ]}
-        />
-      ),
-    },
+    // {
+    //   fixed: 'right',
+    //   align: 'center',
+    //   width: 70,
+    //   render: (text, record) => (
+    //     <DropdownMenu
+    //       config={[
+    //         {
+    //           icon: <EditOutlined />,
+    //           menu: 'Edit',
+    //           onClick: () => navigate(`/task/${record.id}`)
+    //         },
+    //         {
+    //           icon: <Text type="danger"><CloseOutlined /></Text>,
+    //           menu: <Text type="danger">Archive</Text>,
+    //           onClick: () => handleDelete(record)
+    //         }
+    //       ]}
+    //     />
+    //   ),
+    // },
 
   ];
 
@@ -192,6 +191,7 @@ export const TaskListPanel = (props) => {
     <Table columns={columnDef}
       dataSource={tasks}
       // style={{marginTop: 30}}
+      bordered
       rowKey="id"
       size="small"
       pagination={false}
