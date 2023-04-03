@@ -18,7 +18,7 @@ export class TaskActivity {
   by: string;
 
   @Column()
-  action: TaskActionType;
+  type: TaskActionType;
 
   @Column('jsonb', { nullable: true })
   info: any;

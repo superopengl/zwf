@@ -58,8 +58,7 @@ export const useSupportChatWidget = () => {
       const sub$ = listMySupportMessages$()
         .pipe(
           finalize(() => setLoading(false))
-        ).subscribe(resp => {
-          const { list, unreadCount } = resp;
+        ).subscribe(list => {
           setList(list);
         });
 

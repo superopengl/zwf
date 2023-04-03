@@ -206,8 +206,8 @@ export const AppLoggedInPage = React.memo(() => {
           {/* <SmartSearch /> */}
           <CreateNewButton />
         </Space> : null,
-        isSystem? null: <HelpDropdownMenu onSupportOpen={openSupport}/>,
-        isSystem ? null : <NotificationButton key="notification" />,
+        isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
+        isSystem ? null : <NotificationButton key="notification" onSupportOpen={openSupport} />,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
       headerTitleRender={() => {
