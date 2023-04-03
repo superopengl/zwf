@@ -22,7 +22,7 @@ const definitions = [
     color: '#cf222e',
   },
   {
-    label: 'Done',
+    label: 'Completed',
     value: 'done',
     color: '#2da44e',
   },

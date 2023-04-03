@@ -147,7 +147,7 @@ export const TaskListPanel = (props) => {
             {
               icon: <EditOutlined />,
               menu: 'Edit',
-              onClick: () => navigate(`/tasks/${record.id}`)
+              onClick: () => navigate(`/task/${record.id}`)
             },
             {
               icon: <Text type="danger"><CloseOutlined /></Text>,

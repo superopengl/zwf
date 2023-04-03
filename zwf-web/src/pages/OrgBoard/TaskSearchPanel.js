@@ -56,7 +56,7 @@ export const TaskSearchPanel = props => {
     { label: 'To Do', value: 'todo' },
     { label: 'In Progress', value: 'in_progress' },
     { label: 'Action Required', value: 'action_required' },
-    { label: 'Done', value: 'done' },
+    { label: 'Completed', value: 'done' },
     { label: 'Archived', value: 'archived' },
   ]
 
@@ -95,11 +95,11 @@ export const TaskSearchPanel = props => {
             onChange={handleTagsChange}
           />
         </ItemCol>
-        <ItemCol title="Task template">
+        {/* <ItemCol title="Task template">
           <TaskTemplateSelect
             style={{ width: '100%' }}
             value={queryInfo.taskTemplateId} onChange={handleTaskTemplateIdChange} />
-        </ItemCol>
+        </ItemCol> */}
         <ItemCol title="Assignee">
           <MemberSelect
             placeholder="Filter assignee"
