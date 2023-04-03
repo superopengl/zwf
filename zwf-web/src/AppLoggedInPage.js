@@ -165,7 +165,7 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertRole(['client', 'agent', 'admin', 'system'])
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
-  const [openSupport, supportContextHolder] = useSupportChatWidget();
+  const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
 
   useDocumentTitle();
 
@@ -207,7 +207,7 @@ export const AppLoggedInPage = React.memo(() => {
           <CreateNewButton />
         </Space> : null,
         isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
-        isSystem ? null : <NotificationButton key="notification" onSupportOpen={openSupport} />,
+        isSystem ? null : <NotificationButton key="notification" onSupportOpen={openSupport} supportOpen={supportOpen}/>,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
       headerTitleRender={() => {

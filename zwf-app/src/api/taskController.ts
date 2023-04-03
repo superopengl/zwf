@@ -288,6 +288,7 @@ export const getTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
   const role = getRoleFromReq(req);
+  const userId = getUserIdFromReq(req);
 
   let query: any;
   let relations = {
@@ -335,16 +336,16 @@ export const getTask = handlerWrapper(async (req, res) => {
     });
     assert(task, 404);
 
+    await m.createQueryBuilder()
+      .insert()
+      .into(TaskActivityLastSeen)
+      .values({ taskId: task.id, userId, lastHappenAt: () => `NOW()` })
+      .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
+      .execute();
+
     if (role === Role.Client) {
       const { name: orgName } = await m.getRepository(Org).findOneBy({ id: task.orgId });
       (task as any).orgName = orgName;
-
-      await m.createQueryBuilder()
-        .insert()
-        .into(TaskActivityLastSeen)
-        .values({ taskId: task.id, userId: task.userId, lastHappenAt: () => `NOW()` })
-        .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
-        .execute();
     }
   })
 

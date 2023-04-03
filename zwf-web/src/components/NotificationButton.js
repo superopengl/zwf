@@ -21,6 +21,8 @@ import { FaTasks } from 'react-icons/fa';
 import { MdDashboard } from 'react-icons/md';
 import styled from 'styled-components';
 import { useZevent } from 'hooks/useZevent';
+import { useAuthUser } from 'hooks/useAuthUser';
+import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 
 const { Text, Title, Paragraph, Link } = Typography;
 
@@ -33,11 +35,14 @@ const StyledList = styled(List)`
 `;
 
 
-export const NotificationButton = React.memo((props) => {
-  const { field, onChange, trigger, children, onSupportOpen } = props;
+export const NotificationButton = (props) => {
+  const { field, onChange, trigger, supportOpen, onSupportOpen } = props;
   const [changedTasks, setChangedTasks] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [open, setOpen] = React.useState(false);
+  const [user] = useAuthUser();
+
+  const userId = user.id;
 
   const navigate = useNavigate();
 
@@ -62,10 +67,17 @@ export const NotificationButton = React.memo((props) => {
     }
   }, [open])
 
-  useZevent(z => z.type === 'support', z => {
-    const { type } = z;
-    if (type === 'support') {
-      setUnreadSupportMsgCount(pre => pre + 1)
+  React.useEffect(() => {
+    if (supportOpen) {
+      setUnreadSupportMsgCount(0);
+    }
+  }, [supportOpen]);
+
+  useZevent(z => z.by !== userId, z => {
+    if (z.type === 'support') {
+      if (!supportOpen) {
+        setUnreadSupportMsgCount(pre => pre + 1)
+      }
     } else {
       const exists = changedTasks.some((t => t.taskId === z.taskId));
       if (!exists) {
@@ -75,7 +87,7 @@ export const NotificationButton = React.memo((props) => {
         }])
       }
     }
-  });
+  }, [supportOpen]);
 
   const items = changedTasks.map(x => ({
     key: x.taskId,
@@ -105,39 +117,12 @@ export const NotificationButton = React.memo((props) => {
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => setOpen(true)} />
     </Badge>
   </Dropdown>
-
-  return <Tooltip
-    open={open}
-    // arrow={false}
-    // align={{ offset: [14, -16], targetOffset: [-14, 0] }}
-    // zIndex={200}
-    placement="bottomRight"
-    color="white"
-    trigger="click"
-    overlayInnerStyle={{ width: 300 }}
-    onOpenChange={setOpen}
-    title={<>
-      <StyledList
-        itemLayout="horizontal"
-        dataSource={items}
-        locale={{ emptyText: 'No notifications' }}
-        renderItem={(item, index) => <List.Item onClick={item.onClick}>
-          {item.icon} {item.title}
-        </List.Item>}
-      />
-    </>}
-  >
-    <Dropdown trigger={['click']} menu={{ items }}>
-      <Badge showZero={false} count={unreadSupportMsgCount + changedTasks.length} offset={[-4, 6]}>
-        <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => setOpen(true)} />
-      </Badge>
-    </Dropdown>
-  </Tooltip>
-});
+};
 
 
 NotificationButton.propTypes = {
   onSupportOpen: PropTypes.func,
+  supportOpen: PropTypes.bool,
 };
 
 NotificationButton.defaultProps = {
