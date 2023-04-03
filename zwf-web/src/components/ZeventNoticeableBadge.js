@@ -30,7 +30,6 @@ export const ZeventNoticeableBadge = React.memo((props) => {
 });
 
 ZeventNoticeableBadge.propTypes = {
-  taskId: PropTypes.string.isRequired,
   message: PropTypes.string,
   filter: PropTypes.func,
   selfEvent: PropTypes.bool,
