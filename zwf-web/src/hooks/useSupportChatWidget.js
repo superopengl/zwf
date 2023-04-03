@@ -69,7 +69,7 @@ export const useSupportChatWidget = () => {
 
   const handleSubmitMessage = (message) => {
     const capturedUrl = window.location.href;
-    return sendSupportMessage$(message, capturedUrl).subscribe();
+    return sendSupportMessage$(message, capturedUrl);
   }
 
   const openSupport = () => {
