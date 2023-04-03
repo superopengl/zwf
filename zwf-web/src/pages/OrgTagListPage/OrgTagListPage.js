@@ -7,7 +7,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 
 
-const TagsSettingPage = () => {
+const OrgTagListPage = () => {
 
   useAssertRole(['admin', 'agent']);
 
@@ -23,6 +23,7 @@ const TagsSettingPage = () => {
           name: 'Tags',
         },
       ]}
+      maxWidth={1200}
       title='Tag Management'
       style={{
         width: '100%',
@@ -39,8 +40,8 @@ const TagsSettingPage = () => {
   );
 };
 
-TagsSettingPage.propTypes = {};
+OrgTagListPage.propTypes = {};
 
-TagsSettingPage.defaultProps = {};
+OrgTagListPage.defaultProps = {};
 
-export default TagsSettingPage;
+export default OrgTagListPage;

@@ -40,7 +40,7 @@ const TaskDirectPage = loadable(() => import('pages/MyTask/TaskDirectPage'))
 const ResourceListPage = loadable(() => import('pages/ResourcePage/ResourceListPage'))
 const ResourcePage = loadable(() => import('pages/ResourcePage/ResourcePage'))
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
-const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
+const OrgTagListPage = loadable(() => import('pages/OrgTagListPage/OrgTagListPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
@@ -146,7 +146,7 @@ export const App = React.memo(() => {
           <Route path="/task_template/:id" element={<TaskTemplatePage />} />
           <Route path="/scheduler" element={<RecurringListPage />} />
           <Route path="/client" element={<OrgClientListPage />} />
-          <Route path="/tags" element={<TagsSettingPage />} />
+          <Route path="/tags" element={<OrgTagListPage />} />
           <Route path="/subscription" element={<OrgSubscriptionPage />} />
           <Route path="/team" element={<OrgMemberListPage />} />
           <Route path="/config" element={<ConfigListPage />} />

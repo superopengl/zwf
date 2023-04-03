@@ -1,8 +1,8 @@
 import React from 'react';
 import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
 import { PageContainer } from '@ant-design/pro-components';
-import {OrgPaymentMethodPanel} from './OrgPaymentMethodPanel';
-import {OrgLicenseUsagePanel} from './OrgLicenseUsagePanel';
+import { OrgPaymentMethodPanel } from './OrgPaymentMethodPanel';
+import { OrgLicenseUsagePanel } from './OrgLicenseUsagePanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 
@@ -10,14 +10,15 @@ const OrgSubscriptionPage = () => {
   useAssertRole(['admin']);
   return (
     <PageHeaderContainer
-    breadcrumb={[
-      {
-        name: 'Others'
-      },
-      {
-        name: 'Subscription',
-      },
-    ]}
+      breadcrumb={[
+        {
+          name: 'Others'
+        },
+        {
+          name: 'Subscription',
+        },
+      ]}
+      maxWidth={1200}
       fixedHeader
       title='Subscription & Billings'
       tabList={[
@@ -41,7 +42,7 @@ const OrgSubscriptionPage = () => {
         hideAdd: true
       }}
     >
-      
+
     </PageHeaderContainer>
   );
 };
