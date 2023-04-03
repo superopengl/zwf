@@ -1,3 +1,4 @@
+import { ActivityWatch } from '../entity/ActivityWatch';
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskComment } from '../entity/TaskComment';
 import { TaskActionType } from '../types/TaskActionType';
@@ -16,7 +17,7 @@ export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, task: Task | TaskInformation, by: string, info?: any) {
   assert(task, 500);
   const comment = new TaskComment();
-  const {userId, orgId, id: taskId} = task;
+  const { userId, orgId, id: taskId } = task;
   comment.id = uuidv4();
   comment.action = action;
   comment.taskId = taskId;
@@ -40,9 +41,9 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
 export async function nudgeCommentAccess(m: EntityManager, taskId: string, userId: string) {
   await m.createQueryBuilder()
     .insert()
-    .into(TaskCommentLastAccess)
-    .values({ taskId, userId })
-    .onConflict(`("taskId", "userId") DO UPDATE SET "lastAccessAt" = now()`)
+    .into(ActivityWatch)
+    .values({ taskId, userId, type: 'task-comment', lastHappenAt: () => `NOW()` })
+    .orUpdate(['lastHappenAt'])
     .execute();
 }
 

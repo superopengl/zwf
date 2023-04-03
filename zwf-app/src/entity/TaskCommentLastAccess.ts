@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 
 
@@ -10,7 +10,8 @@ export class TaskCommentLastAccess {
   @PrimaryColumn('uuid')
   userId: string;
 
-  @Column('timestamp', {default: () => 'now()'})
+  @Column('timestamp', { default: () => 'now()' })
   @UpdateDateColumn()
   lastAccessAt: Date;
 }
+

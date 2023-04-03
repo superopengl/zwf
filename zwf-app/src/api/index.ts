@@ -6,7 +6,6 @@ export * from './docTemplateController';
 export * from './taskController';
 export * from './taskCommentController';
 export * from './recurringController';
-export * from './messageController';
 export * from './supportController';
 export * from './statsController';
 export * from './configController';
