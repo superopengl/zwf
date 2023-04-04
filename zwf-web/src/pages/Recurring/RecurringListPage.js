@@ -106,8 +106,9 @@ const RecurringListPage = () => {
     },
     {
       // title: 'Action',
-      // fixed: 'right',
-      // width: 200,
+      fixed: 'right',
+      aligh: 'right',
+      width: 120,
       render: (text, record) => {
         const deprecated = isRecurringDeprecated(record);
         return (

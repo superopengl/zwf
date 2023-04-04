@@ -3,7 +3,7 @@ import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, SaveFilled } from '@ant-design/icons';
+import { CopyOutlined, EyeOutlined, LeftOutlined, QuestionCircleOutlined, SaveFilled } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
@@ -92,7 +92,7 @@ export const DocTemplatePage = (props) => {
   }, []);
 
   const goBack = () => {
-    navigate('/doc_template')
+    navigate(-1)
   };
 
   const handleSave = () => {
@@ -244,6 +244,7 @@ export const DocTemplatePage = (props) => {
     <Drawer
       title="Doc Template Preview"
       closable
+      closeIcon={<LeftOutlined/>}
       maskClosable
       destroyOnClose
       open={previewSider}

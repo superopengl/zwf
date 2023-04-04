@@ -25,6 +25,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
+import { FaUserPlus } from 'react-icons/fa';
 
 
 const { Text } = Typography;
@@ -245,7 +246,7 @@ const OrgClientListPage = () => {
         title='Clients'
         extra={[
           <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
-          <Button key="invite" ghost icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
+          <Button key="invite" ghost icon={<Icon component={FaUserPlus} />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
         ]}
       >
         <Table columns={columnDef}
