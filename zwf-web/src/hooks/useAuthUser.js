@@ -11,7 +11,6 @@ export const useAuthUser = () => {
   const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
   const routePathRef = React.useRef(null);
-  const { setUser } = context;
 
   React.useEffect(() => {
     if (routePathRef.current) {
@@ -27,7 +26,7 @@ export const useAuthUser = () => {
       if (suspended) {
         // When org/account is suspended.
         logout$().subscribe(() => {
-          setUser(null);
+          context.user = null;
           notify.error(
             'Account has been suspended',
             <>
@@ -41,7 +40,7 @@ export const useAuthUser = () => {
       }
     }
 
-    setUser(updatedUser);
+    context.user = updatedUser;
   }
 
   return [context.user, setAuthUser];
