@@ -1,12 +1,9 @@
-import { Button, Form, Select, Space, Typography, InputNumber, Modal, Alert, DatePicker } from 'antd';
+import { Form, Select, Typography, InputNumber, Modal, Alert, DatePicker } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
 
-import { listTaskTemplate } from 'services/taskTemplateService';
 import { getRecurring$, saveRecurring$ } from 'services/recurringService';
-import styled from 'styled-components';
-import { DateInput } from 'components/DateInput';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { ClientSelect } from 'components/ClientSelect';
 import { Input } from 'antd';
