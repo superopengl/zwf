@@ -5,7 +5,7 @@ import { Tag } from 'antd';
 
 const statusDefs = {
   'todo': {
-    label: 'Not Started',
+    label: 'To Do',
     // color: '#d9d9d9',
     color: 'default',
   },
