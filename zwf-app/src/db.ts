@@ -2,7 +2,6 @@ import { TaskDoc } from './entity/TaskDoc';
 import { LicenseTicket } from './entity/LicenseTicket';
 import { RecurringInformation } from './entity/views/RecurringInformation';
 import { SystemConfig } from './entity/SystemConfig';
-import { TaskFileMetaInformation } from './entity/views/TaskFileMetaInformation';
 import { SupportInformation } from './entity/views/SupportInformation';
 import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
@@ -219,7 +218,6 @@ export const db = new DataSource({
     OrgBasicInformation,
     SupportInformation,
     SupportPendingReplyInformation,
-    TaskFileMetaInformation,
     RecurringInformation,
     OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,
