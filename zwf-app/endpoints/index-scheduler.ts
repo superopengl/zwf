@@ -33,7 +33,7 @@ async function executeSingleRecurringFromCron(recurring: Recurring): Promise<voi
 
   try {
     console.log('[Recurring]'.bgYellow, `Executing recuring ${id}`);
-    await executeRecurring(recurring, true);
+    await executeRecurring(db.manager, recurring, null, true);
 
     logging({
       message: 'Recurring complete',
