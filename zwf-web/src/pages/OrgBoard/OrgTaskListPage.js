@@ -105,7 +105,7 @@ const OrgTaskListPage = () => {
   }
 
   const handleCreateTask = () => {
-    openCreator({})
+    openCreator({onOk: handleReload})
   }
 
   return (
