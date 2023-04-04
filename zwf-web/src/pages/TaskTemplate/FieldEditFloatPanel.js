@@ -29,7 +29,7 @@ export const FieldEditFloatPanel = (props) => {
     {...others}
     // open={open}
     // arrow={false}
-    align={{ offset: [14, -16], targetOffset: [-14, 0] }}
+    align={{ offset: [28, 0], targetOffset: [0, 0] }}
     zIndex={1600}
     placement="rightTop"
     color="white"
