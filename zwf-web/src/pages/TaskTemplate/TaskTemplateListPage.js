@@ -152,6 +152,7 @@ export const TaskTemplateListPage = () => {
         }
       ]}
       title='Form Template'
+      loading={loading}
       extra={[
         <Segmented key="views"
           onChange={setViewMode}
