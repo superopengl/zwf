@@ -1,23 +1,33 @@
 
-import { Space, Skeleton, Tooltip, Row, Col } from 'antd';
+import { Space, Skeleton, Tooltip, Row, Col, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
+import { finalize } from 'rxjs';
 import { getUserNameCardInfo$ } from 'services/userService';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 
+const { Text } = Typography;
+
 export const UserNameCard = React.memo((props) => {
   const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type } = props;
 
   const [data, setData] = React.useState();
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
     if (userId) {
-      const sub$ = getUserNameCardInfo$(userId).subscribe(x => {
-        setData(x)
-      });
+      const sub$ = getUserNameCardInfo$(userId)
+        .pipe(
+          finalize(() => setLoading(false))
+        ).subscribe(x => {
+          setData(x)
+          setLoading(false)
+        });
       return () => sub$.unsubscribe();
+    } else {
+      setLoading(false);
     }
   }, [userId]);
 
@@ -35,10 +45,10 @@ export const UserNameCard = React.memo((props) => {
     return ret || null;
   }, [data]);
 
-  if (!data) {
+  if (loading || !data) {
     return <Space size="small">
-      {showAvatar && <Skeleton.Avatar active={true} size={size} shape="circle" />}
-      {showName && <Skeleton.Input style={{ width: 180 }} active={true} size={size} />}
+      {showAvatar && <Skeleton.Avatar active={loading} size={size} shape="circle" />}
+      {showName && loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>}
     </Space>
   }
 

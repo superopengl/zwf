@@ -8,21 +8,19 @@ const StyledInput = styled(Input)`
 border-radius: 4px;
 width: 100%;
 
-&.error {
-  border-color: #cf222e;
-}
-
 &:hover {
   border: 1px solid #0FBFC4AA;
+  background-color: white;
 }
 
-&:focus, &:active {
+&:focus, &:focus-within, &:active {
   border: 1px solid #0FBFC4;
   background-color: white;
 }
 
 &.error {
   border: 1px solid #cf222e;
+  background-color: white;
 }
 `;
 
@@ -61,7 +59,7 @@ export const ClickToEditInput = React.memo((props) => {
       bordered={false}
       allowClear={focused}
       onBlur={handleSave}
-      style={{ fontSize: size }}
+      style={{ fontSize: size -1  }}
     // onPressEnter={handleSave}
     />
   </>
