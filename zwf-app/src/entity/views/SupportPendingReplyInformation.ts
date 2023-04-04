@@ -1,7 +1,5 @@
-import { SupportUserUnreadInformation } from './SupportUserUnreadInformation';
 import { SupportMessage } from '../SupportMessage';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
-import { SupportUserLastAccess } from '../SupportUserLastAccess';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
