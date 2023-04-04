@@ -173,7 +173,8 @@ export const App = React.memo(() => {
   return (
     <GlobalContext.Provider value={contextValueRef.current}>
       <ConfigProvider
-        locale={locale}
+        // locale={locale}
+        locale={antdLocale}
         theme={{
           components: {
             Divider: {
@@ -202,7 +203,7 @@ export const App = React.memo(() => {
             fontSizeHeading4: 18,
           }
         }}
-        locale={antdLocale}>
+        >
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <RouterProvider router={router} />
           <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
