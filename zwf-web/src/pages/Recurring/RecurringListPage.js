@@ -15,7 +15,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 
-const { Link: TextLink } = Typography;
+const { Link: TextLink, Paragraph } = Typography;
 
 const RecurringListPage = () => {
   useAssertRole(['admin', 'agent']);
@@ -23,6 +23,7 @@ const RecurringListPage = () => {
   const [formVisible, setFormVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [currentId, setCurrentId] = React.useState();
+  const [modal, contextHolder] = Modal.useModal();
   const navigate = useNavigate();
 
   const isRecurringDeprecated = item => !item.userId || !item.taskTemplateId;
@@ -113,8 +114,8 @@ const RecurringListPage = () => {
         const deprecated = isRecurringDeprecated(record);
         return (
           <Row>
-            <Tooltip title="Edit recurring"><Button type="text" icon={<EditOutlined />} onClick={e => handleEditRecurring(e, record)} disabled={deprecated}/></Tooltip>
-            <Tooltip title="Run immediately"><Button type="text" icon={<CaretRightFilled />} onClick={e => handleRunRecurring(e, record)} disabled={deprecated}/></Tooltip>
+            <Tooltip title="Edit recurring"><Button type="text" icon={<EditOutlined />} onClick={e => handleEditRecurring(e, record)} disabled={deprecated} /></Tooltip>
+            <Tooltip title="Run immediately"><Button type="text" icon={<CaretRightFilled />} onClick={e => handleRunRecurring(e, record)} disabled={deprecated} /></Tooltip>
             <Tooltip title="Delete recurring"><Button type="text" danger icon={<CloseOutlined />} onClick={e => handleDelete(e, record)} /></Tooltip>
           </Row>
         )
@@ -148,9 +149,13 @@ const RecurringListPage = () => {
 
   const handleDelete = async (e, item) => {
     e.stopPropagation();
-    const { id, taskTemplateName, portfolioName } = item;
-    Modal.confirm({
-      title: <>Delete Recurring <strong>{taskTemplateName}</strong> for <strong>{portfolioName}</strong>?</>,
+    const { id, taskTemplateName, portfolioName, recurringName, userId } = item;
+    modal.confirm({
+      title: <>Delete scheduler</>,
+      content: <>
+        Delete scheduler job <Text code>{recurringName}</Text> for below user?
+        <UserNameCard userId={userId} />
+      </>,
       onOk: async () => {
         setLoading(true);
         await deleteRecurring(id);
@@ -158,10 +163,15 @@ const RecurringListPage = () => {
         setLoading(false);
       },
       maskClosable: true,
+      closable: true,
       okButtonProps: {
         danger: true
       },
-      okText: 'Yes, delete it!'
+      okText: 'Yes, delete it!',
+      cancelButtonProps: {
+        type: 'text'
+      },
+      autoFocusButton: 'cancel',
     });
   }
 
@@ -198,7 +208,7 @@ const RecurringListPage = () => {
       title="Scheduler"
       extra={[
 
-        <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Scheduler</Button>
+        <Button type="primary" ghost icon={<PlusOutlined />} onClick={handleCreateNew}>New Scheduler</Button>
       ]}
     >
       <Table columns={columnDef}
@@ -217,12 +227,21 @@ const RecurringListPage = () => {
             setFormVisible(true);
           }
         })}
+        locale={{
+          emptyText: <div style={{ margin: '30px auto' }}>
+            <Paragraph type="secondary">
+              There is no scheduler. Let's start creating one!
+            </Paragraph>
+            <Link onClick={handleCreateNew}>Create new scheduler</Link>
+          </div>
+        }}
       />
       <RecurringEditModal id={currentId}
         visible={formVisible}
         onOk={handleEditOnOk}
         onCancel={() => setFormVisible(false)}
       />
+      {contextHolder}
     </PageHeaderContainer>
 
   );
