@@ -140,7 +140,7 @@ importers:
       abnacn-validator: ^0.0.5
       antd: ^5.2.1
       antd-form-builder: ^2.1.4
-      antd-img-crop: ^4.5.2
+      antd-img-crop: ^4.12.0
       axios: ^0.21.1
       babel-loader: ^9.1.2
       babel-plugin-import: ^1.13.0
@@ -233,7 +233,7 @@ importers:
       abnacn-validator: 0.0.5
       antd: 5.4.0_4879ac6094ec2e12a098ba552f300ba8
       antd-form-builder: 2.1.4_61582907b7adcf07a8e056b26b382ce8
-      antd-img-crop: 4.11.1_65c113de091416293c93d452cfe58f22
+      antd-img-crop: 4.12.0_65c113de091416293c93d452cfe58f22
       axios: 0.21.4
       dayjs: 1.11.7
       dompurify: 2.4.5
@@ -5268,8 +5268,8 @@ packages:
       - eslint
     dev: false
 
-  /antd-img-crop/4.11.1_65c113de091416293c93d452cfe58f22:
-    resolution: {integrity: sha512-K/kH3+PTM5XTgUB87+W/VgssvCFtYqVFnPfAdFcmUkEHZ08q6Ioq0kG9ib88T8DlI5uTXfXbRT8vqH4T+3IgvA==}
+  /antd-img-crop/4.12.0_65c113de091416293c93d452cfe58f22:
+    resolution: {integrity: sha512-nHRwuLFq2end10J+gG7UuA3iUuiK2C0nCojBYE7c9/NRcaRmv+4uCKRwIzjreGVwCy9Kzeh+2ly0umWjeIoOqw==}
     peerDependencies:
       antd: '>=4.0.0'
       react: '>=16.8.0'
