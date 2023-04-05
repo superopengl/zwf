@@ -1,12 +1,12 @@
 export const notes=`
-fix loading
-open task in new tab
-fix direct route issue
-refine loading in pageHeadContainer
-reload page after new task
-hide cookie consent
-fix default locale
-bigger table
-fix recurring
-fix float editor position
-wording`
+not auto sync db when launching app
+wording
+remember view mode in local storage
+able to update tags from task list view
+task board ui refine
+fix React warning
+hide list view for form template list page
+empty locale
+empty text for scheduler list
+refine placeholder ui
+refine task card`
