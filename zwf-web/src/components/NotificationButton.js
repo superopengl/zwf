@@ -81,8 +81,8 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
-  const items = changedTasks.map(x => ({
-    key: x.taskId,
+  const items = changedTasks.map((x, i) => ({
+    key: x.taskId + i,
     // icon: <Icon component={MdDashboard} />,
     icon: <TaskIcon size={14} />,
     label: x.taskName,

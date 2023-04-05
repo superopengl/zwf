@@ -19,7 +19,7 @@ export const useAuthUser = () => {
   }, [routePathRef.current]);
 
   const setAuthUser = (updatedUser, pathAfter = null) => {
-    routePathRef.current = pathAfter ?? null;
+    routePathRef.current = pathAfter;
 
     if (updatedUser) {
       const { suspended } = updatedUser;
