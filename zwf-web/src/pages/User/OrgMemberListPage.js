@@ -44,15 +44,15 @@ const OrgMemberListPage = () => {
     modal.info({
       title: 'About roles',
       content: <>
-      <Paragraph>
-        <Text code>owner</Text> The superuser of the organization, as well as the user who registered this organization in ZeeWorkflow, has the same level of access to features as the <Text code>admin</Text> role.
-      </Paragraph>
-      <Paragraph>
-        <Text code>admin</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags. Moreover, they have the ability to manage team members and subscriptions, which includes handling billing, invoices, and payment methods.
-      </Paragraph>
-      <Paragraph>
-        <Text code>member</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags in the same manner as the <Text code>admin</Text> role.
-      </Paragraph>
+        <Paragraph>
+          <Text code>owner</Text> The superuser of the organization, as well as the user who registered this organization in ZeeWorkflow, has the same level of access to features as the <Text code>admin</Text> role.
+        </Paragraph>
+        <Paragraph>
+          <Text code>admin</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags. Moreover, they have the ability to manage team members and subscriptions, which includes handling billing, invoices, and payment methods.
+        </Paragraph>
+        <Paragraph>
+          <Text code>member</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags in the same manner as the <Text code>admin</Text> role.
+        </Paragraph>
       </>,
       closable: true,
     })
@@ -65,7 +65,7 @@ const OrgMemberListPage = () => {
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
     {
-      title: <>Role <QuestionCircleOutlined onClick={showRoleHelp}/></>,
+      title: <>Role <QuestionCircleOutlined onClick={showRoleHelp} /></>,
       dataIndex: 'role',
       render: (value, item) => <Select bordered={false}
         disabled={item.orgOwner}
@@ -238,6 +238,11 @@ const OrgMemberListPage = () => {
     }
   }
 
+  const handleMemberProfileUpdate = (updatedUser) => {
+    setList(pre => pre.map(u => u.id === updatedUser.id ? updatedUser : u));
+    setProfileModalVisible(false)
+  }
+
   return (
     <ContainerStyled>
       <PageHeaderContainer
@@ -357,7 +362,7 @@ const OrgMemberListPage = () => {
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
-        {currentUser && <ProfileForm user={currentUser} onOk={() => setProfileModalVisible(false)} refreshAfterLocaleChange={false} />}
+        {currentUser && <ProfileForm user={currentUser} onOk={handleMemberProfileUpdate} refreshAfterLocaleChange={false} />}
       </Drawer>
       <Modal
         open={modalVisible}

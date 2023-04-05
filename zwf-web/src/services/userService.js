@@ -1,6 +1,6 @@
 import { BehaviorSubject, of, Subject } from 'rxjs';
 import { filter, tap, delay, switchMap } from 'rxjs/operators';
-import { httpGet, httpGet$, httpPost, httpPost$, httpDelete$ } from './http';
+import { httpGet$, httpPost, httpPost$, httpDelete$ } from './http';
 
 export async function changePassword(password, newPassword) {
   return httpPost(`user/change_password`, { password, newPassword });
@@ -15,26 +15,33 @@ export function deleteUser$(id) {
 }
 
 export async function setPasswordForUser(id, password) {
-  return httpPost(`user/${id}/set_password`, { password });
+  return httpPost(`/user/${id}/set_password`, { password });
 }
 
-export async function saveProfile(userId, profile) {
-  return httpPost(`user/${userId}/profile`, profile);
+export function saveProfile$(userId, profile) {
+  return httpPost$(`/user/${userId}/profile`, profile);
 }
 
 export async function setUserTags(userId, tags) {
-  return httpPost(`user/${userId}/tags`, { tags });
+  return httpPost(`/user/${userId}/tags`, { tags });
 }
 
 export function setUserTags$(userId, tagIds) {
-  return httpPost$(`user/${userId}/tags`, { tags: tagIds });
+  return httpPost$(`/user/${userId}/tags`, { tags: tagIds });
 }
 
 export async function setUserRole(userId, role) {
-  return httpPost(`user/${userId}/role`, { role });
+  return httpPost(`/user/${userId}/role`, { role });
 }
 
 const userNameCardInfoCache = new Map();
+
+export function refreshUserNameCardCache(userId) {
+  httpPost$(`/user/brief`, { ids: [userId] }).subscribe(info => {
+    const cachedSource$ = userNameCardInfoCache.get(userId);
+    cachedSource$.next(info[0]);
+  });
+}
 
 export function getUserNameCardInfo$(userId) {
   let cachedSource$ = userNameCardInfoCache.get(userId);
@@ -65,7 +72,7 @@ function enqueueRequest(userId) {
       return ids.length ? httpPost$(`/user/brief`, { ids }) : of([])
     }),
   ).subscribe(result => {
-    for(const info of result) {
+    for (const info of result) {
       const userId = info.id;
       const cachedSource$ = userNameCardInfoCache.get(userId);
       cachedSource$.next(info);
