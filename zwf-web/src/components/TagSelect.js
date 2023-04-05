@@ -52,7 +52,7 @@ export const TagSelect = React.memo((props) => {
 
   return (
     <div {...others} style={style} ref={ref} onClick={handleFocus}>
-      {!value && placeholder && readonly ? <Text type="secondary">{placeholder}</Text> : <TagSelectComponent
+      {(!value || !value.length) && placeholder && readonly ? <Text type="secondary">{placeholder}</Text> : <TagSelectComponent
         value={value}
         onChange={handleChange}
         readonly={readonly}

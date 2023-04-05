@@ -4,7 +4,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import Highlighter from "react-highlight-words";
 import { Link, useNavigate } from 'react-router-dom';
-import { assignTask$, changeTaskStatus$, } from '../../services/taskService';
+import { assignTask$, changeTaskStatus$, updateTaskTags$, } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import { notify } from 'util/notify';
@@ -32,6 +32,12 @@ export const TaskListPanel = (props) => {
         }
       })
   }
+
+  const handleTagChange = (item, tags) => {
+    // $(user.id, tags).subscribe()
+    updateTaskTags$(item.id, tags).subscribe();
+  }
+
   const columnDef = [
     {
       title: 'Task Name',
@@ -131,7 +137,13 @@ export const TaskListPanel = (props) => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      render: (tags) => <TagSelect readonly={true} value={tags.map(t => t.id)} />
+      render: (tags, item) => <TagSelect
+        value={tags.map(t => t.id)}
+        onChange={tags => handleTagChange(item, tags)}
+        inPlaceEdit={true}
+        placeholder="Click to select tags"
+      />
+
     },
     // {
     //   fixed: 'right',
@@ -188,7 +200,7 @@ export const TaskListPanel = (props) => {
     <Table columns={columnDef}
       dataSource={tasks}
       // style={{marginTop: 30}}
-      bordered
+      // bordered
       rowKey="id"
       size="small"
       pagination={false}
@@ -205,7 +217,7 @@ export const TaskListPanel = (props) => {
       locale={{
         emptyText: <div style={{ margin: '30px auto' }}>
           <Paragraph type="secondary">
-            There is no task. <br/>Try to modify the filter condition or clear filter.
+            There is no task. <br />Try to modify the filter condition or clear filter.
           </Paragraph>
         </div>
       }}
