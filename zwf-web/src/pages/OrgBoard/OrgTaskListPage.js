@@ -41,7 +41,7 @@ const OrgTaskListPage = () => {
   useAssertRole(['admin', 'agent']);
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
-  const [viewMode, setViewMode] = React.useState('board');
+  const [viewMode, setViewMode] = useLocalstorageState('task.list.view.mode', 'board');
   const [queryInfo, setQueryInfo] = useLocalstorageState(TASK_QUERY_KEY, DEFAULT_QUERY);
   const [messageClosed, setMessageClosed] = useLocalstorageState(TASK_BOARD_VIEW_WARNING, false);
   const [filterVisible, setFilterVisible] = React.useState(false);
