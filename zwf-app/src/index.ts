@@ -46,7 +46,7 @@ async function launchApp() {
   getEmailTemplate(EmailTemplateType.WelcomeOrg);
 
   console.log('Connecting database');
-  await connectDatabase(true);
+  await connectDatabase(false);
 
   const app = createAppInstance();
 
