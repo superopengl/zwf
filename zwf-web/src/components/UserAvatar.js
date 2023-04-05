@@ -112,7 +112,7 @@ export const UserAvatar = React.memo((props) => {
   };
 
   return (
-    <ImgCrop shape='round'>
+    <ImgCrop cropShape='round'>
       <Upload
         multiple={false}
         action={`${API_BASE_URL}/file?public=1`}
