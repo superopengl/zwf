@@ -17,10 +17,10 @@ const StyledRow = styled(Row)`
 
 const StyledColumn = styled(Space)`
 border-radius: 4px;
-background-color: rgb(250,250,250);
+// border-color: rgb(250,250,250);
 height: 100%;
 width: 100%;
-padding: 8px;
+padding: 8px 4px;
 `;
 
 const COLUMN_DEFS = [
@@ -34,19 +34,19 @@ const COLUMN_DEFS = [
     status: 'in_progress',
     label: 'In Progress',
     bgColor: '#F1F2F5',
-    hoverColor: '#0FBFC4',
+    hoverColor: '#0051D9',
   },
   {
     status: 'action_required',
     label: `Await Client's Actions`,
     bgColor: '#F1F2F5',
-    hoverColor: '#cf222e',
+    hoverColor: '#F53F3F',
   },
   {
     status: 'done',
     label: 'Completed',
     bgColor: '#F1F2F5',
-    hoverColor: '#2da44e',
+    hoverColor: '#00B42A',
   },
 ]
 
@@ -95,7 +95,7 @@ const TaskBoardColumn = props => {
       borderColor: isOver ? style.hoverColor : style.bgColor
     }}>
       <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16, opacity: 0.4 }}>
-        <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }}>{style.label}</Title>
+        <Text strong style={{ textAlign: 'center', margin: '0 auto' }}>{style.label}</Text>
         <Text strong>{tasks.length}</Text>
       </Space>
       {tasks.map(task  => <TaskDraggableCard key={task.id} task={task} searchText={searchText} />)}
