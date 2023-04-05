@@ -3,7 +3,7 @@ import { Modal, Table, Tag, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import Highlighter from "react-highlight-words";
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { assignTask$, changeTaskStatus$, } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -14,7 +14,7 @@ import { MemberSelect } from 'components/MemberSelect';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskIcon } from 'components/entityIcon';
 
-const {Text} = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 export const TaskListPanel = (props) => {
   const { tasks, onChange, searchText } = props;
 
@@ -77,7 +77,7 @@ export const TaskListPanel = (props) => {
       width: 100,
       sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
       render: (text) => {
-        return <TimeAgo value={text} accurate={false}/>;
+        return <TimeAgo value={text} accurate={false} />;
       }
     },
     {
@@ -194,7 +194,7 @@ export const TaskListPanel = (props) => {
       pagination={false}
       scroll={{
         x: 'max-content'
-       }}
+      }}
       // onChange={handleTableChange}
       rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
       onRow={(record) => ({
@@ -202,6 +202,13 @@ export const TaskListPanel = (props) => {
           navigate(`/task/${record.id}?${record.lastUnreadMessageAt ? 'chat=1' : ''}`);
         }
       })}
+      locale={{
+        emptyText: <div style={{ margin: '30px auto' }}>
+          <Paragraph type="secondary">
+            There is no task. <br/>Try to modify the filter condition or clear filter.
+          </Paragraph>
+        </div>
+      }}
     />
   );
 };
