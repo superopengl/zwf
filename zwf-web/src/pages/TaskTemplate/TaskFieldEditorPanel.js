@@ -79,6 +79,7 @@ export const TaskFieldEditorPanel = (props) => {
             label={c.label}
             type={c.type}
             onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
+            onClick={(newFieldId) => handleAddControl(c.type, newFieldId)}
             // onDropDone={() => handleAddControl(c.type)}
             index={fields.length}
           />)}

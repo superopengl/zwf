@@ -37,13 +37,6 @@ export const OptionsBuilder = (props) => {
       {options.map((option, index) => {
         return (
           <Row key={index} justify="start" align="top" style={{ marginBottom: 16 }}>
-            {/* <Col flex="24px">
-              <div style={{ position: 'relative', top: 4 }}>
-                {type === 'radio' && <Radio disabled></Radio>}
-                {type === 'checkbox' && <Checkbox disabled />}
-                {type === 'select' && <Text type="secondary"><small>{index + 1}</small></Text>}
-              </div>
-            </Col> */}
             <Col flex="auto">
                 <Input autoFocus maxLength={100} value={option} onChange={e => handleOptionTextChange(e.target.value, index)}/>
             </Col>

@@ -37,7 +37,7 @@ const getControleDefOrDefault = (controlType)  => {
 export const createFieldItemSchema = (controlType, name) => {
   const controlDef = getControleDefOrDefault(controlType);
   const { type } = controlDef;
-  const options = type === 'select' || type === 'radio' ? ['Option 1', 'Option 2'] : undefined;
+  const options = ['radio', 'select', 'checkbox'].includes(type) ? ['Option 1', 'Option 2'] : undefined;
 
   return {
     id: uuidv4(),
@@ -111,7 +111,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     control: ProFormDigit,
   },
   {
-    type: 'checkbox',
+    type: 'switch',
     label: 'Switch',
     icon: <RxSwitch />,
     fieldProps: null,
