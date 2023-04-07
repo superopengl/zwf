@@ -171,10 +171,10 @@ const SupportListPage = () => {
       render: (text, item) => {
         return <Row>
           <Tooltip title="Message">
-            <Button icon={<MessageOutlined />} type="text" onClick={() => handleChatWith(item)} />
+            <Button icon={<MessageOutlined />} type="text" onClick={() => handleChatWith(item)} disabled={item.role === 'system' || item.role === 'guest'} />
           </Tooltip>
           <Tooltip title="Impersonate">
-            <Button icon={<Icon component={GiDominoMask} />} type="text" onClick={() => handleImpersonante(item)} disabled={item.role === 'guest'} />
+            <Button icon={<Icon component={GiDominoMask} />} type="text" onClick={() => handleImpersonante(item)} disabled={item.role === 'system' || item.role === 'guest'} />
           </Tooltip>
           <DropdownMenu
             config={[
