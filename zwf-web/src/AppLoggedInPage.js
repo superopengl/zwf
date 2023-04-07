@@ -9,7 +9,6 @@ import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 import { AiOutlineHistory } from 'react-icons/ai';
-import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { AiFillCalendar } from 'react-icons/ai';
