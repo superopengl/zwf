@@ -46,13 +46,12 @@ export const PageHeaderContainer = React.memo((props) => {
 
 
   return <Container style={{ ...style, maxWidth }}>
-    <Breadcrumb style={{ padding: '1rem 40px 0' }}>
-      {breadcrumb?.map((item, i) => <Breadcrumb.Item key={i} menu={item.menu ? { items: item.menu.map((m, j) => ({ key: j, label: m })) } : null}>
-        {
-          i === breadcrumb.length - 1 || !item.path ? item.name :
-            <Link to={item.path}>{item.name}</Link>
-        }
-      </Breadcrumb.Item>)}
+    <Breadcrumb style={{ padding: '1rem 40px 0' }}
+      items={breadcrumb?.map((item, i) => ({
+        title: i === breadcrumb.length - 1 || !item.path ? item.name :
+          <Link to={item.path}>{item.name}</Link>
+      }))}
+    >
     </Breadcrumb>
     <PageContainer
       {...others}
