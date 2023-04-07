@@ -76,8 +76,8 @@ export const FieldControlItem = (props) => {
     style={style}
     hoverable
   >
-    <Space size="small">
-      <Icon component={() => icon} />
+    <Space size="small" align="center">
+      <Icon component={() => icon} style={{fontSize: 18}}/>
       {label}
     </Space>
   </StyledCard>
