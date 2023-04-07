@@ -111,7 +111,6 @@ export const SupportAffix = () => {
         message="You have unread messages"
         filter={z => z.type === 'support'}
       >
-        fdsaf
         <FloatButton
           tooltip="Terms and Conditions"
           icon={<QuestionCircleOutlined />}
