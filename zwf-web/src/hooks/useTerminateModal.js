@@ -73,7 +73,7 @@ const SurveyPanel = props => {
       </Form.Item>
       <Form.Item>
         <Space style={{ width: '100%', justifyContent: 'end' }}>
-          <Button type="text" onClick={onCancel}>Cancel</Button>
+          <Button type="text" onClick={onCancel} autoFocus>Cancel</Button>
           <Button type="primary" danger htmlType="submit">Terminate Subscription</Button>
         </Space>
       </Form.Item>
@@ -112,7 +112,7 @@ export const useTerminateModal = () => {
       focusTriggerAfterClose: false,
       okText: 'Yes, Terminate Subscription',
       okButtonProps: {
-        type: 'primary',
+        type: 'default',
         danger: true,
       },
       cancelButtonProps: {
