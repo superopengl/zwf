@@ -23,8 +23,8 @@ const OrgSubscriptionPage = () => {
       title='Subscription & Billings'
       tabList={[
         {
-          tab: 'Billing',
-          key: 'billing',
+          tab: 'Subscription',
+          key: 'subscription',
           children: <OrgLicenseUsagePanel />
         },
         {

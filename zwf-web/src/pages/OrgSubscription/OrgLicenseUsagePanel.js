@@ -1,4 +1,4 @@
-import { Button, Space, Typography, Alert, Tooltip, Row, Col } from 'antd';
+import { Button, Space, Typography, Alert, Tooltip, Row, Col, Divider } from 'antd';
 import React from 'react';
 
 import { Loading } from 'components/Loading';
@@ -11,6 +11,8 @@ import moment from 'moment';
 import { ProCard } from '@ant-design/pro-components';
 import MoneyAmount from 'components/MoneyAmount';
 import { Descriptions } from 'antd';
+import { useTerminateModal } from 'hooks/useTerminateModal';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const { Title, Text, Paragraph, Link: TextLink } = Typography;
 
@@ -19,7 +21,14 @@ width: 100%;
 min-width: 400px;
 display: flex;
 justify-content: center;
+flex-direction: column;
 `
+
+const TerminationCard = styled(ProCard)`
+color: #F53F3F;
+border: 1px solid #F53F3F44;
+
+`;
 
 export const OrgLicenseUsagePanel = () => {
 
@@ -28,6 +37,8 @@ export const OrgLicenseUsagePanel = () => {
   const [period, setPeriod] = React.useState();
   const [hasPrevious, setHasPrevious] = React.useState(true);
   const [hasNext, setHasNext] = React.useState(true);
+  const [openTerminate, terminateContextHolder] = useTerminateModal();
+  const [user] = useAuthUser();
 
   React.useEffect(() => {
     const sub$ = getCurrentPeriod();
@@ -77,9 +88,15 @@ export const OrgLicenseUsagePanel = () => {
     return sub$;
   }
 
+  const handleTerminate = () => {
+    openTerminate();
+  }
+
   if (!period) {
     return <Loading />
   }
+
+  const isOwner = user.orgOwner;
 
   return (
     <Container>
@@ -94,7 +111,7 @@ export const OrgLicenseUsagePanel = () => {
           </Tooltip>
         </Col>
         <Col flex="auto">
-          <ProCard gutter={[20, 20]} ghost direction='column'>
+          <ProCard gutter={[30, 30]} ghost direction='column'>
 
             {/* <DebugJsonPanel value={period} /> */}
             <ProCard            >
@@ -185,7 +202,19 @@ export const OrgLicenseUsagePanel = () => {
             </Tooltip>}>
               <OrgPeriodUsageChart period={period} />
             </ProCard>
+            {isOwner && <TerminationCard title="Termination" extra={
+              <Button
+                type="primary"
+                danger
+                onClick={handleTerminate}
+              >Terminate Subscription & Delete Org</Button>
+            }>
+              <Paragraph>
+                Terminate the subscription and delete all accounts linked with this organization immediately. Please note that this action is irreversible. Additionally, for the sake of privacy protection, all assets exclusively linked to this organization will be permanently erased from ZeeWorkflow. We highly advise that you create a backup of all essential information before proceeding.
+              </Paragraph>
+            </TerminationCard>}
           </ProCard>
+
         </Col>
         <Col style={{ paddingTop: 10 }}>
           <Tooltip title={hasNext ? 'Next billing period' : 'No more next period'}>
@@ -197,6 +226,7 @@ export const OrgLicenseUsagePanel = () => {
           </Tooltip>
         </Col>
       </Row>
+{terminateContextHolder}
     </Container >
   );
 };

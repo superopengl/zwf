@@ -52,7 +52,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
 
     await m.save([period, payment]);
 
-    const invoiceInfo = await createInvoice(m, payment);
+    const invoiceInfo = await createInvoiceFile(m, payment);
 
     payment.invoiceFileId = invoiceInfo.fileId;
     await m.save(payment);
@@ -76,7 +76,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     return false;
   }
 }
-async function createInvoice(m: EntityManager, payment: Payment) {
+async function createInvoiceFile(m: EntityManager, payment: Payment) {
   const { pdfStream, fileName } = await generateInvoicePdfStream(m, payment.id);
   const fileId = uuidv4();
 

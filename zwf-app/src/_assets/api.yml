@@ -344,6 +344,11 @@ paths:
       responses:
         200:
           description: OK
+    delete:
+      operationId: terminateOrg
+      responses:
+        200:
+          description: OK          
   /org/member:
     get:
       operationId: listOrgMembers

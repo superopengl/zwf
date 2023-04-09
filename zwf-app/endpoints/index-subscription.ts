@@ -1,13 +1,9 @@
 import { EmailTemplateType } from './../src/types/EmailTemplateType';
-import { OrgSubscriptionPeriodHistoryInformation } from './../src/entity/views/OrgSubscriptionPeriodHistoryInformation';
-import { OrgPromotionCode } from '../src/entity/OrgPromotionCode';
-import { OrgBasicInformation } from '../src/entity/views/OrgBasicInformation';
 import { db } from '../src/db';
-import { EntityManager, In, IsNull } from 'typeorm';
+import { EntityManager } from 'typeorm';
 import { start } from './jobStarter';
 import * as _ from 'lodash';
 import moment = require('moment');
-import { LicenseTicket } from '../src/entity/LicenseTicket';
 import { checkoutSubscriptionPeriod } from '../src/utils/checkoutSubscriptionPeriod';
 import { OrgSubscriptionPeriod } from '../src/entity/OrgSubscriptionPeriod';
 import { User } from '../src/entity/User';

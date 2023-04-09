@@ -46,6 +46,7 @@ import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
 import { TaskActivityLastSeen } from './entity/TaskActivityLastSeen';
 import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
+import { OrgTermination } from './entity/OrgTermination';
 dotenv.config();
 
 const views = [
@@ -203,6 +204,7 @@ export const db = new DataSource({
     SupportUserLastAccess,
     SupportMessageLastSeen,
     EmailSentOutTask,
+    OrgTermination,
     SystemConfig,
     LicenseTicket,
     OrgSubscriptionPeriod,

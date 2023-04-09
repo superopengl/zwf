@@ -1,4 +1,4 @@
-import { httpGet$, httpPost$, httpPut$, httpDelete } from './http';
+import { httpGet$, httpPost$, httpPut$, httpDelete$ } from './http';
 
 export function getMyOrgProfile$() {
   return httpGet$(`/org`);
@@ -14,5 +14,9 @@ export function createMyOrg$(org) {
 
 export function listOrgs$() {
   return httpGet$(`/org/list`);
+}
+
+export function terminateOrg$(payload) {
+  return httpDelete$(`/org`, payload);
 }
 

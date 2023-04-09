@@ -7,6 +7,7 @@ export function sanitizeUserForCookie(user: UserInformation) {
     'id',
     'role',
     'orgId',
+    'orgOwner',
     'email',
     // 'givenName',
     // 'loginType',
