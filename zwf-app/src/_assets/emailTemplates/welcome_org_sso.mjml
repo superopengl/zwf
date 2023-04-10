@@ -1,0 +1,33 @@
+<mjml>
+  <mj-head>
+    <mj-title>Welcome to ZeeWorflow</mj-title>
+    <mj-include path="./emailTemplateHeader.mjml" />
+  </mj-head>
+  <mj-body css-class="content">
+    <mj-include path="./emailTemplateTitle.mjml" />
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Welcome to ZeeWorkflow!</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          We are excited to have you onboard and look forward to providing you with an excellent service.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          If you have any questions or issues, our support team is available. Don't hesitate to reach out if you need assistance.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="18px" font-weight="400">
+          We're thrilled to have you as a user and look forward to helping you achieve your goals.
+        </mj-text>
+      </mj-column>      
+    </mj-section>
+
+    <mj-include path="./emailTemplateFooter.mjml" />
+  </mj-body>
+</mjml>
