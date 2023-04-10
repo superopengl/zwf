@@ -37,7 +37,7 @@ export const GlobalNotificationBar = () => {
           'Trial period is ending',
           <>
             <Paragraph>
-              The trial plan is ending on <Text underline>{periodTo.format('MMM D YYYY')}</Text>. And after then system will automatically transition to a monthly plan. The payment for the first monthly plan period will be processed on or after <Text underline>{periodTo.add(1, 'month').add(-1, 'day').format('MMM D YYYY')}</Text>.
+              The trial plan is ending on <Text underline>{periodTo.format('MMM D YYYY')}</Text>. And after then system will automatically transition to a monthly plan. The payment for the first monthly plan period will be processed on or after <Text underline>{periodTo.add(30, 'days').add(-1, 'day').format('MMM D YYYY')}</Text>.
             </Paragraph>
           </>,
           0,
