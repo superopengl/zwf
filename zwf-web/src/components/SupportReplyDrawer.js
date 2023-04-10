@@ -12,7 +12,7 @@ import { useZevent } from 'hooks/useZevent';
 
 
 export const SupportReplyDrawer = React.memo((props) => {
-  const { title, userId, visible, onClose, eventSource } = props;
+  const { title, userId, visible, onClose } = props;
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
@@ -73,7 +73,6 @@ SupportReplyDrawer.propTypes = {
   userId: PropTypes.string,
   visible: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
-  eventSource: PropTypes.object.isRequired,
 };
 
 SupportReplyDrawer.defaultProps = {
