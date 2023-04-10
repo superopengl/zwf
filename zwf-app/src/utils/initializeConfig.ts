@@ -9,7 +9,7 @@ export async function initializeConfig() {
 
   const contacat = new SystemConfig();
   contacat.key = 'email.contact.recipient';
-  contacat.value = 'contact@zeeworkflow.com';
+  contacat.value = 'info@zeeworkflow.com';
 
   const bcc = new SystemConfig();
   bcc.key = 'email.sender.bcc';
