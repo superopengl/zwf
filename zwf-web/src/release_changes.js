@@ -1,2 +1,3 @@
 export const notes=`
-google sso flow refine`
+UI permission refine
+allow system account to change password`
