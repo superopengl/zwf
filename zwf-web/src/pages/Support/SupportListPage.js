@@ -177,6 +177,7 @@ const SupportListPage = () => {
             <Button icon={<Icon component={GiDominoMask} />} type="text" onClick={() => handleImpersonante(item)} disabled={item.role === 'system' || item.role === 'guest'} />
           </Tooltip>
           <DropdownMenu
+            disabled={item.role === 'system' || item.role === 'guest'}
             config={[
               item.role === 'client' ? {
                 menu: 'Comments',
