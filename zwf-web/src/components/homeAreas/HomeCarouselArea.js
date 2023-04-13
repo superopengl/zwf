@@ -92,7 +92,7 @@ export const HomeCarouselArea = () => {
               <Title style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 800 }}>
                 <span style={{ color: '#0FBFC4' }}>All in one system</span> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
-              <Paragraph>
+              <Paragraph style={{fontSize: 16}}>
                 Join today to experience a comprehensive management system for files, documents, jobs, tasks, and workflows, all in one place!
               </Paragraph>
               <OrgRegisterInput />
