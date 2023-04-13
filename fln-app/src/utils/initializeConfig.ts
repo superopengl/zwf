@@ -1,16 +1,16 @@
 import { getManager } from 'typeorm';
-import { Config } from '../entity/Config';
+import { SystemConfig } from '../entity/Config';
 
 export async function initializeConfig() {
-  const noreply = new Config();
+  const noreply = new SystemConfig();
   noreply.key = 'email.sender.noreply';
   noreply.value = 'noreply@filedin.com';
 
-  const contacat = new Config();
+  const contacat = new SystemConfig();
   contacat.key = 'email.contact.recipient';
   contacat.value = 'contact@filedin.com';
 
-  const bcc = new Config();
+  const bcc = new SystemConfig();
   bcc.key = 'email.sender.bcc';
   bcc.value = 'admin@filedin.com';
 
@@ -23,7 +23,7 @@ export async function initializeConfig() {
   await getManager()
     .createQueryBuilder()
     .insert()
-    .into(Config)
+    .into(SystemConfig)
     .values(entities)
     .orIgnore()
     .execute();

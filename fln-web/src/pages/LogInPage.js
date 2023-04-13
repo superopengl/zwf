@@ -20,7 +20,7 @@ const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 400px;
+  max-width: 360px;
   background-color: #ffffff;
   height: 100%;
 `;
@@ -107,7 +107,7 @@ const LogInPage = props => {
               <Button block type="link">Forgot password? Click here to reset</Button>
             </Link>
             {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-        <Link to="/signup"><Button size="small" block type="link">Not a user? Click to sign on</Button></Link>
+        <Link to="/signup"><Button size="small" block type="link">Not a user? Click to sign up</Button></Link>
           </Form.Item>
         </Form>
       </ContainerStyled>

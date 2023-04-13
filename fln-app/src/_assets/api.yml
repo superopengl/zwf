@@ -121,7 +121,7 @@ paths:
       responses:
         200:
           description: OK
-  /auth/reset_password/{token}:
+  /auth/r/{token}:
     get:
       operationId: retrievePassword
       # security:
@@ -137,7 +137,7 @@ paths:
           description: OK
   /auth/signup:
     post:
-      operationId: signin
+      operationId: signup
       # security:
       #   - authAnyRole: []
       responses:
@@ -172,7 +172,7 @@ paths:
       #   - authAdminOrAgent: []
       responses:
         200:
-          description: OK          
+          description: OK
   /user/:id:
     delete:
       operationId: deleteUser
@@ -265,7 +265,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /usertag:
     get:
       operationId: listUserTags
@@ -288,7 +288,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /task_template:
     post:
       operationId: saveTaskTemplate

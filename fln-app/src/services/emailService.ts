@@ -6,8 +6,8 @@ import * as nodemailer from 'nodemailer';
 import { logError } from '../utils/logger';
 import { EmailRequest } from '../types/EmailRequest';
 import { Locale } from '../types/Locale';
-import { getRepository } from 'typeorm';
-import { EmailTemplate } from '../entity/EmailTemplate';
+import { getRepository, IsNull } from 'typeorm';
+import { SystemEmailTemplate } from '../entity/EmailTemplate';
 import * as handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
 import { getConfigValue } from './configService';
@@ -18,6 +18,9 @@ import { User } from '../entity/User';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { EmailSentOutTask } from '../entity/EmailSentOutTask';
 import 'colors';
+import { SystemEmailSignature } from '../entity/EmailSignature';
+import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
+import { OrgEmailSignature } from '../entity/OrgEmailSignature';
 
 let emailTransporter = null;
 
@@ -31,35 +34,48 @@ function getEmailer() {
   return emailTransporter;
 }
 
-async function getEmailTemplate(templateName: string, locale: Locale): Promise<EmailTemplate> {
+async function getEmailTemplate(orgId: string, templateName: string, locale: Locale): Promise<SystemEmailTemplate> {
   if (!locale) {
     locale = Locale.Engish;
   }
 
-  const template = await getRepository(EmailTemplate).findOne({ key: templateName, locale });
+  const template = orgId ? await getRepository(OrgEmailTemplate).findOne({
+    orgId,
+    key: templateName,
+    locale
+  }) : await getRepository(SystemEmailTemplate).findOne({
+    key: templateName,
+    locale
+  });
+
   assert(template, 500, `Cannot find email template for key ${templateName} and locale ${locale}`);
 
   return template;
 }
 
-async function getEmailSignature(locale: Locale): Promise<string> {
+async function getEmailSignature(orgId: string, locale: Locale): Promise<string> {
   if (!locale) {
     locale = Locale.Engish;
   }
 
-  const { body } = await getRepository(EmailTemplate).findOne({ key: 'signature', locale });
-  assert(body, 500, `Cannot find email signature for locale ${locale}`);
+  const item = orgId ? await getRepository(OrgEmailSignature).findOne({
+    orgId,
+    locale
+  }) : await getRepository(SystemEmailSignature).findOne({
+    locale
+  });
 
-  return body;
+  return item?.body || '';
 }
 
 async function composeEmailOption(req: EmailRequest) {
+  const { orgId } = req;
   const { subject, text, html } = await compileEmailBody(req);
 
   return {
-    from: req.from || await getConfigValue('email.sender.noreply'),
+    from: req.from || await getConfigValue(orgId, 'email.sender.noreply'),
     to: req.to,
-    bcc: req.shouldBcc ? await getConfigValue('email.sender.bcc') : undefined,
+    bcc: req.shouldBcc ? await getConfigValue(orgId, 'email.sender.bcc') : undefined,
     subject: subject,
     text: text,
     html: html,
@@ -67,12 +83,14 @@ async function composeEmailOption(req: EmailRequest) {
 }
 
 async function compileEmailBody(req: EmailRequest) {
-  const { template, vars, locale } = req;
-  const { subject, body } = await getEmailTemplate(template, locale);
-  const signature = await getEmailSignature(locale);
+  const { orgId, template, vars, locale } = req;
+  const emailTemplate = await getEmailTemplate(orgId, template, locale);
+  const subject = emailTemplate.subject || 'Un-subject';
+  const body = emailTemplate.body || '';
+  const signature = await getEmailSignature(orgId, locale);
 
   const allVars = {
-    website: process.env.EVC_API_DOMAIN_NAME,
+    website: process.env.FLN_API_DOMAIN_NAME,
     ...vars
   };
 
@@ -113,12 +131,12 @@ export async function sendEmail(req: EmailRequest) {
 }
 
 export async function enqueueEmail(req: EmailRequest) {
-  const { to, template } = req;
+  const { orgId, to, template } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
 
   const task = new EmailSentOutTask();
-  task.from = req.from || await getConfigValue('email.sender.noreply');
+  task.from = req.from || await getConfigValue(orgId, 'email.sender.noreply');
   task.to = req.to;
   task.template = req.template;
   task.vars = req.vars;

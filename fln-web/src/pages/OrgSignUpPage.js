@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
-import SignUpForm from 'components/SignUpForm';
 import OrgSignUpForm from 'components/OrgSignUpForm';
 
 const PageContainer = styled.div`
@@ -12,7 +11,8 @@ const PageContainer = styled.div`
   height: 100%;
   padding: 0;
   margin: 0;
-  // background-color: #f3f3f3;
+  color: rgba(255,255,255,0.85);
+  background-color: #0e0040;
 `;
 
 const ContainerStyled = styled.div`
@@ -20,17 +20,18 @@ const ContainerStyled = styled.div`
   padding: 2rem 1rem;
   text-align: center;
   max-width: 360px;
-  // background-color: #f3f3f3;
+  height: 100%;
+  // background-color: #ffffff;
 `;
 
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: rgba(76,27,179,0.1);
   height: 100%;
 `;
 
-const SignUpPage = (props) => {
+const OrgSignUpPage = (props) => {
 
   return (
     <GlobalContext.Consumer>{
@@ -40,7 +41,7 @@ const SignUpPage = (props) => {
           <PageContainer>
             <ContainerStyled>
               <Logo />
-              <SignUpForm onOk={() => props.history.push('/')} />
+              <OrgSignUpForm onOk={() => props.history.push('/')} />
             </ContainerStyled>
           </PageContainer>
         </LayoutStyled>;
@@ -50,8 +51,8 @@ const SignUpPage = (props) => {
   );
 }
 
-SignUpPage.propTypes = {};
+OrgSignUpPage.propTypes = {};
 
-SignUpPage.defaultProps = {};
+OrgSignUpPage.defaultProps = {};
 
-export default withRouter(SignUpPage);
+export default withRouter(OrgSignUpPage);

@@ -11,6 +11,7 @@ import * as api from './api';
 import { authMiddleware } from './middlewares/authMiddleware';
 import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
+import * as serveStatic from 'serve-static';
 
 
 function errorHandler(err, req, res, next) {
@@ -92,6 +93,12 @@ export function createAppInstance() {
   // connectPassport(app);
 
   app.use(authMiddleware);
+  app.use((req, res, next) => {
+    res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+    res.header('Expires', '-1');
+    res.header('Pragma', 'no-cache');
+    next();
+  });
   // app.use(passport.initialize());
   // app.use(passport.session());
 
@@ -102,10 +109,16 @@ export function createAppInstance() {
 
   app.get('/healthcheck', (req, res) => res.send('OK'));
 
-  app.get('/reset_password/:token', (req, res) => res.redirect(`/api/v1/auth/reset_password/${req.params.token}`));
+  app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/r/${req.params.token}`));
+
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));
-  app.use('/', express.static(staticWwwDir));
+  app.use('/', serveStatic(staticWwwDir, {
+    cacheControl: true,
+    setHeaders: (res, path) => {
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+    }
+  }));
 
   app.use(errorHandler);
 

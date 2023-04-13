@@ -110,7 +110,7 @@ const TagManagementPanel = (props) => {
       showHeader={true}
       dataSource={list}
       size="small"
-      rowKey="id"
+      rowKey="key"
       loading={loading}
       pagination={false}
     />

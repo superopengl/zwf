@@ -1,9 +1,12 @@
-import { Entity, Column, Index, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
 import { Locale } from '../types/Locale';
 
 
 @Entity()
-export class SystemEmailTemplate {
+export class OrgEmailTemplate {
+  @PrimaryColumn('uuid')
+  orgId: string;
+
   @PrimaryColumn()
   key: string;
 
@@ -19,4 +22,3 @@ export class SystemEmailTemplate {
   @Column('text', { array: true, default: '{}' })
   vars: string[];
 }
-

@@ -1,8 +1,12 @@
-import { Entity, Column, Index, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn } from 'typeorm';
+
 
 
 @Entity()
-export class SystemEmailSignature {
+export class OrgEmailSignature {
+  @PrimaryColumn('uuid')
+  orgId: string;
+
   @PrimaryColumn()
   key: string;
 
@@ -15,5 +19,3 @@ export class SystemEmailSignature {
   @Column('text', { array: true, default: '{}' })
   vars: string[];
 }
-
-

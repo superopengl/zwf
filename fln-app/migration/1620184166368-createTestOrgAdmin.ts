@@ -1,17 +1,25 @@
-import { MigrationInterface, QueryRunner, getRepository } from 'typeorm';
+import {getRepository, MigrationInterface, QueryRunner} from "typeorm";
+import { Org } from "../src/entity/Org";
 import { User } from "../src/entity/User";
 import { UserProfile } from '../src/entity/UserProfile';
 
-export class CreateAdminUser1596415746494 implements MigrationInterface {
-    // Initial password is 'admin'
+export class createTestOrgAdmin1620184166368 implements MigrationInterface {
+
     public async up(queryRunner: QueryRunner): Promise<void> {
+        const orgMetadata = getRepository(Org).metadata;
+        await queryRunner.query(`INSERT INTO "${orgMetadata.schema}"."${orgMetadata.tableName}" (id, name, "businessName")
+        VALUES (
+        'ea3c49ed-b647-4844-bccd-c3ca003f6796',
+        'Techseeding',
+        'Techseeding Inc Pty'
+        )`);
 
         const userProfileMetadata = getRepository(UserProfile).metadata;
         await queryRunner.query(`INSERT INTO "${userProfileMetadata.schema}"."${userProfileMetadata.tableName}" (id, "email", "givenName", "surname", country)
         VALUES (
-        'c576cbb7-793c-4113-8e74-e44f0eb7d261',
-        'admin@filedin.io',
-        'System',
+        '580b9120-6d4f-402a-9149-13cea625084e',
+        'admin@techseeding.com.au',
+        'Techseeding',
         'Admin',
         'AU'
         )`);
@@ -19,15 +27,17 @@ export class CreateAdminUser1596415746494 implements MigrationInterface {
         const userMetadata = getRepository(User).metadata;
         await queryRunner.query(`INSERT INTO "${userMetadata.schema}"."${userMetadata.tableName}" ("emailHash", secret, salt, role, "profileId", "orgId")
         VALUES (
-        '42c5d8b5-8e23-5d97-9862-8bc3a40e842a',
+        '2578947b-c183-5a08-acb2-7b07e4714363',
         'bf1d03be616a88a42b0af835f5f0bf69f51d879534e1b33af91765fd6a935cd3',
         '00000000-f200-485b-ad4f-90b530bdd4a4',
-        'system',
-        'c576cbb7-793c-4113-8e74-e44f0eb7d261',
-        NULL
+        'admin',
+        '580b9120-6d4f-402a-9149-13cea625084e',
+        'ea3c49ed-b647-4844-bccd-c3ca003f6796'
         )`);
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {
     }
 }
+
+

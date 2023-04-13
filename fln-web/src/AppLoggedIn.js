@@ -79,13 +79,13 @@ const ROUTES = [
     path: '/user',
     name: <FormattedMessage id="menu.users" />,
     icon: <TeamOutlined />,
-    roles: ['admin', 'agent']
+    roles: ['system', 'admin']
   },
   {
     path: '/account',
     name: <FormattedMessage id="menu.account" />,
     icon: <Icon component={() => <BiDollar />} />,
-    roles: ['member', 'free'],
+    roles: ['admin'],
   },
   {
     path: '/data',
@@ -97,13 +97,13 @@ const ROUTES = [
     path: '/revenue',
     name: <FormattedMessage id="menu.revenue" />,
     icon: <Icon component={() => <RiCoinsLine />} />,
-    roles: ['admin', 'agent']
+    roles: ['system']
   },
   {
     path: '/settings',
     name: <FormattedMessage id="menu.settings" />,
     icon: <SettingOutlined />,
-    roles: ['admin', 'agent'],
+    roles: ['system', 'admin'],
     routes: [
       {
         path: '/tags',
@@ -240,7 +240,7 @@ const AppLoggedIn = props => {
           <a onClick={e => e.preventDefault()}>
             <Avatar size={40}
               icon={<UserOutlined style={{ fontSize: 20 }} />}
-              style={{ backgroundColor: isAdmin ? '#05001a' : isAgent ? '#3273A4' : '#57BB60' }}
+              style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#05001a' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
             />
           </a>
         </Dropdown>
@@ -265,10 +265,10 @@ const AppLoggedIn = props => {
       {/* <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} /> */}
 
       {/* <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} /> */}
-      <RoleRoute visible={isAdmin} exact path="/user" component={UserListPage} />
-      <RoleRoute visible={isAdmin} exact path="/tags" component={TagsSettingPage} />
-      <RoleRoute visible={isAdmin} exact path="/config" component={ConfigListPage} />
-      <RoleRoute visible={isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/user" component={UserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
       <RoleRoute visible={isClient} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isAdmin || isAgent) ? '/dashboard' : '/stock'} />

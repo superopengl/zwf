@@ -102,7 +102,7 @@ const EmailTemplateListPage = () => {
       dataIndex: 'vars',
       render: (vars) => {
         return <Space direction="vertical" style={{ width: '100%' }} size="small">
-          {vars?.map((v, i) => <Tag key={i} color="success">{v}</Tag>)}
+          {vars?.map((v, i) => <Tag key={i}>{v}</Tag>)}
         </Space>
       },
     },

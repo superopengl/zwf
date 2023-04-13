@@ -36,8 +36,8 @@ export async function connectDatabase(shouldSyncSchema = false) {
  }
 
  async function initializeData() {
-  //  await initializeConfig();
-  //  await initializeEmailTemplates();
+   await initializeConfig();
+   await initializeEmailTemplates();
  }
 
  async function syncDatabaseSchema(connection: Connection) {

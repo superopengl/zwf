@@ -1,6 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn, OneToMany } from 'typeorm';
-import { Task } from './Task';
-import { User } from './User';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, DeleteDateColumn, OneToMany, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity()
 export class Org {
@@ -17,11 +15,30 @@ export class Org {
   @Index({ unique: true })
   name: string;
 
-  @OneToMany(() => User, user => user.org)
-  users: User[];
+  @Column()
+  businessName: string;
 
-  @OneToMany(() => Task, task => task.org)
-  tasks: Task[];
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true })
+  tel: string;
+
+  @Column({ nullable: true })
+  abn: string;
+
+  @Column({ nullable: true })
+  acn: string;
+
+  @Column({ nullable: true })
+  website: string;
+
+  @Column({ nullable: true })
+  stripeCustomerId?: string;
+
+  @Column({ nullable: true })
+  stripePaymentMethodId?: string;
 }
+
 
 

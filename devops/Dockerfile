@@ -58,7 +58,7 @@ RUN pnpm install
 # Env vars in build time
 ARG NODE_ENV
 ARG REACT_APP_GIT_HASH
-ENV TZ=Australia/Sydney
+ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096

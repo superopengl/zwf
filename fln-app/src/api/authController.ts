@@ -105,17 +105,16 @@ export const signup = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
   const { user, profile } = await createNewLocalUser({
-    password: uuidv4(), // Temp password to fool the functions beneath
+    role: Role.Client,
     ...payload,
-    role: Role.Client
+    password: uuidv4(), // Temp password to fool the functions beneath
   });
 
   const { id, resetPasswordToken } = user;
   const { email } = profile;
 
-  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  // Non-blocking sending email
-  sendEmail({
+  const url = `${process.env.FLN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  await sendEmail({
     template: EmailTemplateType.SignUp,
     to: email,
     vars: {
@@ -139,7 +138,7 @@ async function setUserToResetPasswordStatus(user: User) {
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
 
-  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.FLN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await enqueueEmail({
     to: user.profile.email,
     template: EmailTemplateType.ResetPassword,
@@ -200,7 +199,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.EVC_API_DOMAIN_NAME}/reset_password?token=${token}`;
+  const url = `${process.env.FLN_API_DOMAIN_NAME}/reset_password?token=${token}`;
   res.redirect(url);
 });
 
@@ -229,7 +228,7 @@ export const handleInviteUser = async (user, profile) => {
     await m.save(user);
   })
 
-  const url = `${process.env.EVC_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  const url = `${process.env.FLN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   const email = profile.email;
   await enqueueEmail({
     to: email,

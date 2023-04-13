@@ -1,14 +1,12 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Index } from 'typeorm';
 
 
 @Entity()
-export class Config {
-  @PrimaryColumn('uuid')
-  orgId: string;
-
+export class SystemConfig {
   @PrimaryColumn()
   key: string;
 
   @Column('json')
   value: any;
 }
+
