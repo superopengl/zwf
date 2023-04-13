@@ -8,6 +8,7 @@ import { Contact } from '../entity/Contact';
 import { sleep } from '../utils/sleep';
 import { sendEmail } from '../services/emailService';
 import { EmailTemplateType } from '../types/EmailTemplateType';
+import { SYSTEM_EMAIL_INFO } from '../utils/constant';
 
 export const submitContact = handlerWrapper(async (req, res) => {
   const user = getReqUser(req);
@@ -28,6 +29,7 @@ export const submitContact = handlerWrapper(async (req, res) => {
 
   await sendEmail({
     to: email,
+    from: SYSTEM_EMAIL_INFO,
     template: EmailTemplateType.InboundContact,
     vars: {
       toWhom: name,
