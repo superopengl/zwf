@@ -1,58 +1,51 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout, Button, Table, Input, Form, Tooltip, Tag, Drawer } from 'antd';
-
+import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row } from 'antd';
 import {
-  EditOutlined, PlusOutlined
+  EditOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import * as _ from 'lodash';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
-import ReactQuill from 'react-quill';
+import { LocaleSelector } from 'components/LocaleSelector';
 import 'react-quill/dist/quill.snow.css';
+import loadable from '@loadable/component'
+import { from } from 'rxjs';
+import { Switch } from 'antd';
 
-const { Title } = Typography;
+const ReactQuill = loadable(() => import('react-quill'));
+
+const { Text } = Typography;
 
 const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
-`;
-
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
-
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-
-  .ant-drawer-content {
-    .ql-editor {
-      height: 300px !important;
-    } 
-  }
+  width: 100%;
 `;
 
 const modules = {
   toolbar: [
-    [{ 'header': [1, 2, false] }],
-    ['bold', 'italic', 'underline','strike', 'blockquote'],
-    [{'list': 'ordered'}, {'list': 'bullet'}, {'indent': '-1'}, {'indent': '+1'}],
+    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
+    [{ size: [] }],
+    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+    [{ 'list': 'ordered' }, { 'list': 'bullet' },
+    { 'indent': '-1' }, { 'indent': '+1' }],
+    [{ 'align': [] }, { 'color': [] }, { 'background': [] }],
     ['link', 'image'],
     ['clean']
   ],
+  clipboard: {
+    // toggle to add extra line breaks when pasting HTML:
+    matchVisual: false,
+  }
 };
 
 const formats = [
   'header',
   'bold', 'italic', 'underline', 'strike', 'blockquote',
   'list', 'bullet', 'indent',
+  'color', 'background',
   'link', 'image'
 ];
+
 
 const EmailTemplateListPage = () => {
 
@@ -61,75 +54,10 @@ const EmailTemplateListPage = () => {
   const [currentItem, setCurrentItem] = React.useState();
   const [list, setList] = React.useState([]);
 
-  const columnDef = [
-    {
-      title: 'Key',
-      dataIndex: 'key',
-      sorter: {
-        compare: (a, b) => a.key.localeCompare(b.keyy)
-      },
-      render: (text) => text,
-    },
-    {
-      title: 'Locale',
-      dataIndex: 'locale',
-      sorter: {
-        compare: (a, b) => a.locale.localeCompare(b.locale)
-      },
-      render: (text) => {
-        switch (text) {
-          case 'zh-CN':
-            return '简体中文';
-          case 'zh-TW':
-            return '繁體中文';
-          case 'en-US':
-          default:
-            return 'English';
-        }
-      },
-    },
-    {
-      title: 'Template',
-      render: (text, item) => {
-        return <Space direction="vertical" style={{ width: '100%' }}>
-          <Input value={item.subject} readOnly />
-          <ReactQuill value={item.body} readOnly modules={{toolbar:false}}/>
-        </Space>
-      },
-    },
-    {
-      title: 'Variables',
-      dataIndex: 'vars',
-      render: (vars) => {
-        return <Space direction="vertical" style={{ width: '100%' }} size="small">
-          {vars?.map((v, i) => <Tag key={i}>{v}</Tag>)}
-        </Space>
-      },
-    },
-    {
-      render: (text, item) => {
-        return (
-          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip placement="bottom" title="Edit">
-              <Button shape="circle" icon={<EditOutlined />}
-                onClick={() => handleEdit(item)} />
-            </Tooltip>
-          </Space>
-        )
-      },
-    },
-  ];
-
   const handleEdit = item => {
     setCurrentItem(item);
     setDrawerVisible(true);
   }
-
-  const handleCreateNew = () => {
-    setCurrentItem(undefined);
-    setDrawerVisible(true);
-  }
-
 
   const loadList = async () => {
     try {
@@ -141,13 +69,16 @@ const EmailTemplateListPage = () => {
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = from(loadList()).subscribe();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const handleSaveNew = async (values) => {
     try {
       setLoading(true);
-      const {locale, key, ...payload} = values;
+      const { locale, key, ...payload } = values;
       await saveEmailTemplate(locale, key, payload);
       setDrawerVisible(false);
       await loadList();
@@ -159,25 +90,38 @@ const EmailTemplateListPage = () => {
 
 
   return (
-    <LayoutStyled>
-      
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
-          </StyledTitleRow>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+    <ContainerStyled>
+      <Space direction="vertical" size="large" style={{ width: '100%' }}>
+        {/* <StyledTitleRow>
+          <Title level={2} style={{ margin: 'auto' }}>Email Template</Title>
+        </StyledTitleRow> */}
+        {/* <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
             <Button type="primary" ghost onClick={() => handleCreateNew()} icon={<PlusOutlined />} />
-          </Space>
-          <Table columns={columnDef}
+          </Space> */}
+        {/* <Table columns={columnDef}
             dataSource={list}
             size="small"
             rowKey={item => `${item.key}.${item.locale}`}
             loading={loading}
             pagination={false}
-          />
-        </Space>
-      </ContainerStyled>
+          /> */}
+        {list.map((item, i) => <Card
+          key={i}
+          title={item.key}
+          extra={<Tooltip key="edit" placement="bottom" title="Edit">
+          <Button type="link" icon={<EditOutlined />}
+            onClick={() => handleEdit(item)} ></Button>
+        </Tooltip>}
+        >
+          <Space direction="vertical" style={{ width: '100%' }}>
+            {item.key !== 'signature' && <Row>
+              {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
+            </Row>}
+            {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
+            <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+          </Space>
+        </Card>)}
+      </Space>
       <Drawer
         // title=" "
         id="scrolling-container"
@@ -191,26 +135,34 @@ const EmailTemplateListPage = () => {
         <Form
           layout="vertical"
           onFinish={handleSaveNew}
-          initialValues={{...currentItem, body: currentItem?.body || ''}}
+          initialValues={{ ...currentItem, body: currentItem?.body || '' }}
         >
           <Form.Item label="Key" name="key" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input allowClear autoFocus disabled={currentItem}/>
+            <Input allowClear autoFocus disabled={true} />
           </Form.Item>
-          {/* <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <LocaleSelector disabled={currentItem} />
-          </Form.Item> */}
-          <Form.Item label="Subject" name="subject" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <Input allowClear />
+          <Form.Item label="Locale" name="locale" rules={[{ required: true, whitespace: true, message: ' ' }]} style={{display: 'none'}}>
+            <LocaleSelector disabled={currentItem || loading} />
           </Form.Item>
-          <Form.Item label="Body" name="body" rules={[{ required: true, whitespace: true, message: ' ' }]}>
-            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}/>
+          <Form.Item label="Should BCC" name="bcc" valuePropName="checked">
+            <Switch disabled={loading}/>
+          </Form.Item>          
+          <Form.Item label="Subject" name="subject" rules={[{ required: false, whitespace: true, message: ' ' }]}>
+            <Input allowClear disabled={loading} />
+          </Form.Item>
+          <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
+            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}
+              style={{
+                padding: 0,
+                fontSize: 14,
+              }}
+              disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit">Save</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
           </Form.Item>
         </Form>
       </Drawer>
-    </LayoutStyled >
+    </ContainerStyled>
 
   );
 };

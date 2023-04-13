@@ -1,20 +1,39 @@
 
 export enum EmailTemplateType {
-  SignUp = 'signup',
+  // On board
+  WelcomeClient = 'welcome-client',
+  WelcomeOrg = 'welcome-org',
+  InviteOrgMember = 'invite_agent_user',
+  InviteClientUser = 'invite_client_user',
   ResetPassword = 'reset_password',
-  InviteUser = 'invite_user',
-  GoogleSsoWelcome = 'google_sso_welcome',
-  Contact = 'contact',
-  DeleteUser = 'delete_user',
-  CommissionWithdrawalSubmitted = 'commission_withdrawal_submitted',
-  CommissionWithdrawalCompleted = 'commission_withdrawal_completed',
-  CommissionWithdrawalRejected = 'commission_withdrawal_rejected',
-  WatchlistCoreDataChangedEmail = 'watchlist_core_data_changed_email',
-  SubscriptionStarted = 'subscription_started',
-  SubscriptionRecurringAutoPaySucceeded = 'subscription_recurring_autopay_succeeded',
-  SubscriptionRecurringAutoPayFailed = 'subscription_recurring_autopay_failed',
-  SubscriptionExpired = 'subscription_expired',
+  CreatedPortfolio = 'created_portfolio',
+
+  // Recurring
+  RecurringDone = 'recurring_done',
+  RecurringFailed = 'recurring_failed',
+
+  // Task
+  TaskCreated = 'task_created',
+  TaskCompleted = 'task_completed',
+  TaskArchived = 'task_archived',
+  TaskSigned = 'task_signed',
+  TaskRequireSign = 'task_require_sign',
+  TaskRequireAction = 'task_require_action',
+  TaskStatusChange = 'task_status_change',
+  TaskMessageNotification = 'task_message_notification',
+  TaskCommentNotification = 'task_comment_notification',
+
+  // Subscription and payment
+  SubscriptionCreated = 'subscription_created',
   SubscriptionExpiring = 'subscription_expiring',
+  SubscriptionExpired = 'subscription_expired',
+  AutoRenewPaymentSuccessful = 'auto_renew_payment_successful',
+  AutoRenewPaymentFailed = 'auto_renew_payment_failed',
+  PaymentSuccessfulAndReceipt = 'payment_successful_and_receipt',
+
+  // System
+  Contact = 'contact',
+  SystemNotification = 'system_notification',
 }
 
 

@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown } from 'antd';
+import { Menu, Dropdown, Button } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
@@ -7,7 +7,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
 import CookieConsent from "react-cookie-consent";
-import { withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
@@ -79,42 +79,46 @@ const scrollToElement = (selector) => {
 
 
 const HomePage = (props) => {
-
-  const [selectedSymbol, setSelectedSymbol] = React.useState();
   const context = React.useContext(GlobalContext);
   const intl = useIntl();
 
-  const handleStockListSymbolClick = (symbol) => {
-    setSelectedSymbol(symbol);
-  }
 
   const handleLocaleChange = locale => {
     context.setLocale(locale);
   }
+
+  const {role} = context;
+
+  const isLoggedIn = role !== 'guest';
 
   const ROUTES = [
     {
       key: '0',
       path: '/#features',
       name: <FormattedMessage id="menu.features" />,
+      visible: true,
     },
     {
       key: '3',
       path: '/#pricing',
       name: <FormattedMessage id="menu.pricing" />,
+      visible: true,
     },
     {
       key: '2',
       path: '/#resources',
       name: <FormattedMessage id="menu.resources" />,
+      visible: true,
     },
     {
       path: '/signup',
       name: <FormattedMessage id="menu.signUp" />,
+      visible: !isLoggedIn,
     },
     {
       path: '/login',
       name: <FormattedMessage id="menu.login" />,
+      visible: !isLoggedIn,
     }
   ];
 
@@ -137,8 +141,13 @@ const HomePage = (props) => {
     route={{ routes: ROUTES }}
     location={{ pathname: '/non' }}
     fixedHeader={true}
-    menuItemRender={(item, dom) => <div onClick={() => handleMenuClick(item.path)}>{dom}</div>}
+    menuItemRender={(item, dom) => item.visible ? <div onClick={() => handleMenuClick(item.path)}>{dom}</div> : null}
     rightContentRender={props => {
+
+      if(isLoggedIn) {
+        return <Link to="/dashboard"><Button type="primary" ghost >Dashboard</Button></Link>
+      }
+
       const menu = <Menu mode="horizontal" onClick={e => handleLocaleChange(e.key)}>
         <Menu.Item key="en-US">English</Menu.Item>
         <Menu.Item key="zh-CN">中 文</Menu.Item>

@@ -30,8 +30,8 @@ export async function impersonate(email) {
   return httpPost(`auth/impersonate`, { email });
 }
 
-export async function inviteUser(email) {
-  return httpPost(`auth/invite`, { email });
+export async function inviteUser(email, role) {
+  return httpPost(`auth/invite`, { email, role });
 }
 
 export async function ssoGoogle(token) {

@@ -7,7 +7,7 @@ import { logError } from '../utils/logger';
 import { EmailRequest } from '../types/EmailRequest';
 import { Locale } from '../types/Locale';
 import { getRepository, IsNull } from 'typeorm';
-import { SystemEmailTemplate } from '../entity/EmailTemplate';
+import { SystemEmailTemplate } from '../entity/SystemEmailTemplate';
 import * as handlebars from 'handlebars';
 import { htmlToText } from 'html-to-text';
 import { getConfigValue } from './configService';
@@ -18,7 +18,7 @@ import { User } from '../entity/User';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { EmailSentOutTask } from '../entity/EmailSentOutTask';
 import 'colors';
-import { SystemEmailSignature } from '../entity/EmailSignature';
+import { SystemEmailSignature } from '../entity/SystemEmailSignature';
 import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
 import { OrgEmailSignature } from '../entity/OrgEmailSignature';
 

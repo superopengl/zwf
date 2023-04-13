@@ -101,7 +101,41 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
 }
 
 
-export const signup = handlerWrapper(async (req, res) => {
+export const signUp = handlerWrapper(async (req, res) => {
+  const payload = req.body;
+  const role = payload.role || Role.Client;
+
+  assert(role === Role.Client || role === Role.Admin, 400, `Invalid role value ${role}`);
+
+  const { user, profile } = await createNewLocalUser({
+    ...payload,
+    role,
+    password: uuidv4(), // Temp password to fool the functions beneath
+  });
+
+  const { id, resetPasswordToken } = user;
+  const { email } = profile;
+
+  const url = `${process.env.FLN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+  await sendEmail({
+    template: role === Role.Admin ? EmailTemplateType.WelcomeOrg : EmailTemplateType.WelcomeClient,
+    to: email,
+    vars: {
+      email,
+      url
+    },
+    shouldBcc: true
+  });
+
+  const info = {
+    id,
+    email
+  };
+
+  res.json(info);
+});
+
+export const signUpOrg = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
   const { user, profile } = await createNewLocalUser({
@@ -115,7 +149,7 @@ export const signup = handlerWrapper(async (req, res) => {
 
   const url = `${process.env.FLN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
-    template: EmailTemplateType.SignUp,
+    template: EmailTemplateType.WelcomeOrg,
     to: email,
     vars: {
       email,
@@ -204,7 +238,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 });
 
 export const impersonate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system');
   const { email } = req.body;
   assert(email, 400, 'Invalid email');
 
@@ -232,7 +266,7 @@ export const handleInviteUser = async (user, profile) => {
   const email = profile.email;
   await enqueueEmail({
     to: email,
-    template: EmailTemplateType.InviteUser,
+    template: EmailTemplateType.InviteOrgMember,
     vars: {
       toWhom: getEmailRecipientName(user.profile),
       email,
@@ -298,7 +332,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
     enqueueEmail({
       to: user.profile.email,
-      template: EmailTemplateType.GoogleSsoWelcome,
+      template: EmailTemplateType.WelcomeClient,
       vars: {
         toWhom: getEmailRecipientName(user.profile),
       },
