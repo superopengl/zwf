@@ -4,8 +4,8 @@ import { GlobalContext } from './contexts/GlobalContext';
 import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
-  UploadOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, QuestionOutlined, AlertOutlined, HomeOutlined
+  ClockCircleOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
+  DashboardOutlined, QuestionOutlined, AlertOutlined, HomeOutlined, FileOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout$ } from 'services/authService';
@@ -21,8 +21,11 @@ import { FaMoneyBillWave } from 'react-icons/fa';
 import { BiDollar } from 'react-icons/bi';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
-import { GoDatabase } from 'react-icons/go';
-import { RiCoinsLine } from 'react-icons/ri';
+import { GoDatabase, GoTools } from 'react-icons/go';
+import { FaTasks } from 'react-icons/fa';
+import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
+import { HiOutlineViewBoards } from 'react-icons/hi';
+import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -64,22 +67,46 @@ const StyledMenu = styled(Menu)`
 
 const ROUTES = [
   {
-    path: '/',
-    name: <FormattedMessage id="menu.home" />,
-    icon: <HomeOutlined />,
-    roles: ['admin', 'agent', 'client']
-  },
-  {
     path: '/dashboard',
-    name: <FormattedMessage id="menu.dashboard" />,
-    icon: <DashboardOutlined />,
+    name: <FormattedMessage id="menu.board" />,
+    icon: <Icon component={() => <HiOutlineViewBoards />} />,
     roles: ['admin', 'agent']
   },
   {
     path: '/watchlist',
     name: <FormattedMessage id="menu.watchlist" />,
     icon: <StarOutlined />,
-    roles: ['member']
+    roles: ['client']
+  },
+  {
+    path: '/task_template',
+    name: <FormattedMessage id="menu.taskTemplate" />,
+    icon: <Icon component={() => <FaTasks />} />,
+    roles: ['admin']
+  },
+  {
+    path: '/doc_template',
+    name: <FormattedMessage id="menu.docTemplate" />,
+    icon: <FileOutlined />,
+    roles: ['admin']
+  },
+  {
+    path: '/scheduler',
+    name: <FormattedMessage id="menu.scheduler" />,
+    icon: <ClockCircleOutlined />,
+    roles: ['admin']
+  },
+  {
+    path: '/procedure',
+    name: <FormattedMessage id="menu.procedure" />,
+    icon: <Icon component={() => <GoTools />} />,
+    roles: ['admin']
+  },
+  {
+    path: '/metrics',
+    name: <FormattedMessage id="menu.metrics" />,
+    icon: <Icon component={() => <RiBarChartFill />} />,
+    roles: ['admin']
   },
   {
     path: '/user',
@@ -89,7 +116,7 @@ const ROUTES = [
   },
   {
     path: '/account',
-    name: <FormattedMessage id="menu.account" />,
+    name: <FormattedMessage id="menu.subscription" />,
     icon: <Icon component={() => <BiDollar />} />,
     roles: ['admin'],
   },
@@ -97,7 +124,7 @@ const ROUTES = [
     path: '/data',
     name: <FormattedMessage id="menu.dataManagement" />,
     icon: <Icon component={() => <GoDatabase />} />,
-    roles: ['admin', 'agent']
+    roles: ['agent']
   },
   {
     path: '/revenue',
@@ -141,6 +168,7 @@ const AppLoggedIn = props => {
   const [profileVisible, setProfileVisible] = React.useState(false);
   const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
+  const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const [earnCommissionVisible, setEarnCommissionVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
   const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
@@ -172,12 +200,19 @@ const AppLoggedIn = props => {
       <pre style={{ fontSize: 14, margin: 0 }}>{user.profile.email}</pre>
     </Menu.Item>
     <Menu.Divider />
+    <Menu.Item key="home" onClick={() => props.history.push('/')}>
+      <FormattedMessage id="menu.home" />
+    </Menu.Item>
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>
     <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
       <FormattedMessage id="menu.changePassword" />
     </Menu.Item>
+    {isAdmin && <Menu.Divider />}
+    {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
+      Organisation Profile
+    </Menu.Item>}
     <Menu.Divider />
     <Menu.Item key="logout" danger onClick={handleLogout}>
       <FormattedMessage id="menu.logout" />
@@ -301,6 +336,17 @@ const AppLoggedIn = props => {
       maskClosable={false}
     >
       <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
+    </Modal>
+    <Modal
+      title="Organisation Profile"
+      visible={orgProfileVisible}
+      onOk={() => setOrgProfileVisible(false)}
+      onCancel={() => setOrgProfileVisible(false)}
+      footer={null}
+      destroyOnClose={true}
+      maskClosable={false}
+    >
+      <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
     <AboutDrawer
       visible={aboutVisible}

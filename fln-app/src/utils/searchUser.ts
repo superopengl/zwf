@@ -4,6 +4,7 @@ import { Subscription } from '../entity/Subscription';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { Role } from '../types/Role';
 
 export type StockUserParams = {
   text?: string;
@@ -14,7 +15,7 @@ export type StockUserParams = {
   tags: string[];
 };
 
-export async function searchUser(queryInfo: StockUserParams) {
+export async function searchUser(orgId: string, queryInfo: StockUserParams) {
   const { text, page, size, orderField, orderDirection, tags } = queryInfo;
 
   const pageNo = page || 1;
@@ -26,6 +27,11 @@ export async function searchUser(queryInfo: StockUserParams) {
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
     .where('1 = 1');
 
+  if (orgId) {
+    query = query
+      .andWhere('"orgId" = :orgId', { orgId })
+      .andWhere('role IN (:...roles)', { roles: [Role.Admin, Role.Agent] });
+  }
   if (text) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
@@ -36,7 +42,7 @@ export async function searchUser(queryInfo: StockUserParams) {
       'tg."userId" as "userId"',
       'array_agg(tg."userTagId") as tags'
     ]),
-  'tg', 'tg."userId" = u.id');
+    'tg', 'tg."userId" = u.id');
 
   if (tags?.length) {
     query = query.andWhere('(tg.tags && array[:...tags]::uuid[]) IS TRUE', { tags });

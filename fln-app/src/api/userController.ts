@@ -18,6 +18,7 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
 import { existsQuery } from '../utils/existsQuery';
+import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -78,7 +79,10 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 });
 
 export const searchUserList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system', 'admin');
+
+  const orgId = getOrgIdFromReq(req);
+
   const page = +req.body.page;
   const size = +req.body.size;
   const orderField = req.body.orderBy || 'email';
@@ -86,14 +90,16 @@ export const searchUserList = handlerWrapper(async (req, res) => {
   const text = req.body.text?.trim();
   const tags = (req.body.tags || []);
 
-  const list = await searchUser({
-    text,
-    page,
-    size,
-    orderField,
-    orderDirection,
-    tags
-  });
+  const list = await searchUser(
+    orgId,
+    {
+      text,
+      page,
+      size,
+      orderField,
+      orderDirection,
+      tags
+    });
 
   res.json(list);
 });

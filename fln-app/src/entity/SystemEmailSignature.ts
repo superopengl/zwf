@@ -1,19 +1,20 @@
-import { Entity, Column, Index, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 
 @Entity()
+@Unique('sys_email_signature_unique', ['name', 'locale'])
 export class SystemEmailSignature {
-  @PrimaryColumn()
-  key: string;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
 
   @PrimaryColumn({ default: 'en-US' })
   locale: string;
 
   @Column({ nullable: true })
   body: string;
-
-  @Column('text', { array: true, default: '{}' })
-  vars: string[];
 }
 
 

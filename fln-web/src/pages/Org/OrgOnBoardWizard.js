@@ -6,12 +6,13 @@ import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import SignUpForm from 'components/SignUpForm';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
-import { Steps, Button, message, Space, Divider, Form, Input, Typography } from 'antd';
+import { Steps, Button, message, Space, Alert, Form, Input, Typography } from 'antd';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { isValidABN, isValidACN } from "abnacn-validator";
 import * as tfn from 'tfn';
 import { getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
 import { Loading } from 'components/Loading';
+import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -22,6 +23,7 @@ const Container = styled.div`
   padding: 0;
   margin: 0;
   position: relative;
+  text-align: left;
   // background-color: #f3f3f3;
 
   .ant-form-item-explain {
@@ -40,6 +42,7 @@ const InnerContainer = styled.div`
 const OrgOnBoardWizard = (props) => {
   const [current, setCurrent] = React.useState(0);
   const [basicForm] = Form.useForm();
+  const [configForm] = Form.useForm();
   const [org, setOrg] = React.useState();
 
   React.useEffect(() => {
@@ -69,17 +72,20 @@ const OrgOnBoardWizard = (props) => {
     setCurrent(current - 1);
   };
 
-  const handleSubmit = values => {
+  const handleSubmitBasic = values => {
     saveMyOrgProfile$(values).subscribe(
       () => {
         setCurrent(current + 1);
       })
   }
 
+  const handleSubmitConfig = values => {
+  }
+
   const steps = [
     {
       title: 'Basic Info',
-      content: <Form layout="vertical" form={basicForm} onFinish={handleSubmit} style={{ textAlign: 'left' }} initialValues={org}>
+      content: <Form layout="vertical" form={basicForm} onFinish={handleSubmitBasic} style={{ textAlign: 'left' }} initialValues={org}>
         <Form.Item label="Organisation name"
           name="name"
           help={<>The name of your organisation in Filedin. Not necessarily the same as the legal name. The name will show up on some pages.</>}
@@ -116,12 +122,51 @@ const OrgOnBoardWizard = (props) => {
       </Form>,
     },
     {
-      title: 'Configuration',
-      content: 'Second-content',
-    },
-    {
       title: 'Payment',
-      content: 'Last-content',
+      content: <div>
+         <Alert
+          type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />
+        <StripeCardPaymentWidget
+          onProvision={() => {}}
+          onCommit={() => {}}
+          onLoading={() => {}}
+        />
+        <Form layout="vertical" form={configForm} onFinish={handleSubmitConfig} style={{ textAlign: 'left' }} initialValues={org}>
+      <Form.Item label="Organisation name"
+        name="name"
+        help={<>The name of your organisation in Filedin. Not necessarily the same as the legal name. The name will show up on some pages.</>}
+        rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>
+        <Input allowClear={true} placeholder="Filedin" autoComplete="organization" />
+      </Form.Item>
+      <Form.Item label="Domain name"
+        name="domain"
+        help={<>This domain name will be used to generate email sender addresses like <Text code>noreply@filedin.io</Text>.</>}
+        rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
+        <Input placeholder="filedin.io" allowClear={true} />
+      </Form.Item>
+      <Form.Item label="Business legal name"
+        name="businessName"
+        help={<>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>}
+        rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
+        <Input placeholder="Filedin Inc." allowClear={true} autoComplete="organization" />
+      </Form.Item>
+      <Form.Item label="ABN"
+        name="abn"
+        rules={[{ required: true, validator: (rule, value) => value && isValidABN(value) ? Promise.resolve() : Promise.reject('Invalid ABN') }]}>
+        <Input placeholder="" allowClear={true} maxLength={20} />
+      </Form.Item>
+      <Form.Item label="Address"
+        name="address"
+        rules={[{ required: false, message: ' ', whitespace: true, max: 100 }]}>
+        <Input placeholder="Unit 123, God Avenue, NSW 1234" allowClear={true} autoComplete="street-address" />
+      </Form.Item>
+      <Form.Item label="Phone"
+        name="tel"
+        rules={[{ required: false, message: ' ', whitespace: true, max: 30 }]}>
+        <Input placeholder="" allowClear={true} />
+      </Form.Item>
+    </Form>
+    </div>,
     },
   ];
 
