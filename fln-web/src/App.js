@@ -27,8 +27,8 @@ const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const AppLoggedIn = loadable(() => import('AppLoggedIn'));
-const OrgSignUpPage = loadable(() => import('pages/OrgSignUpPage'));
-const OrgOnBoardPage = loadable(() => import('pages/OrgOnBoardPage'));
+const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
+const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 
 const localeDic = {
   'en-US': {
