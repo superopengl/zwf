@@ -3,7 +3,7 @@ import 'antd/dist/antd.less';
 import { BrowserRouter, Switch } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
-import { getAuthUser } from 'services/authService';
+import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import { ContactWidget } from 'components/ContactWidget';
 import { Subject } from 'rxjs';
@@ -48,8 +48,7 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
-
-  const event$ = new Subject();
+  const [event$] = React.useState(new Subject());
 
 
   const globalContextValue = {
@@ -66,16 +65,27 @@ const App = () => {
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);
 
-  const Initalize = async () => {
-    const user = await getAuthUser();
-    ReactDOM.unstable_batchedUpdates(() => {
-      setUser(user);
-      setLoading(false);
-    })
+  // const Initalize = async () => {
+  //   const user = await getAuthUser();
+  //   ReactDOM.unstable_batchedUpdates(() => {
+  //     setUser(user);
+  //     setLoading(false);
+  //   })
+  // }
+
+  const Initalize = () => {
+    return getAuthUser$()
+      .subscribe(user => {
+        setUser(user);
+        setLoading(false);
+      });
   }
 
   React.useEffect(() => {
-    Initalize();
+    const load$ = Initalize();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   React.useEffect(() => {
@@ -90,7 +100,6 @@ const App = () => {
       contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
     }
   }, [user]);
-
 
   const role = contextValue.role;
   const isGuest = !role || role === 'guest';

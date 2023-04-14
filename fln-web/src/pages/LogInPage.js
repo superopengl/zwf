@@ -5,7 +5,7 @@ import { Typography, Input, Button, Form, Layout, Divider } from 'antd';
 import { Logo } from 'components/Logo';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
-import { login } from 'services/authService';
+import { login, login$ } from 'services/authService';
 import { countUnreadMessage } from 'services/messageService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
@@ -57,9 +57,7 @@ const LogInPage = props => {
       const count = await countUnreadMessage();
       setNotifyCount(count);
 
-      const isClient = user.role === 'client';
-
-      props.history.push(isClient ? '/landing' : '/tasks');
+      props.history.push('/dashboard');
     } catch {
       setLoading(false);
     }

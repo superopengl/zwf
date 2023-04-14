@@ -1,9 +1,14 @@
-import { httpPost, httpGet } from './http';
+import { httpPost, httpGet, httpPost$, httpGet$ } from './http';
 import {reactLocalStorage} from 'reactjs-localstorage';
 
 export async function login(name, password) {
   const data = { name, password };
   return httpPost(`auth/login`, data);
+}
+
+export function login$(name, password) {
+  const data = { name, password };
+  return httpPost$(`auth/login`, data);
 }
 
 export async function signUp(user) {
@@ -24,6 +29,10 @@ export async function logout() {
 
 export async function getAuthUser() {
   return httpGet(`auth/user`);
+}
+
+export function getAuthUser$() {
+  return httpGet$(`auth/user`);
 }
 
 export async function impersonate(email) {

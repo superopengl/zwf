@@ -2,6 +2,11 @@ import * as axios from 'axios';
 import * as _ from 'lodash';
 import { notify } from 'util/notify';
 import * as FormData from 'form-data';
+import { ajax } from 'rxjs/ajax';
+import { catchError, map, tap } from 'rxjs/operators';
+
+import * as queryString from 'query-string';
+import { of } from 'rxjs';
 
 axios.defaults.withCredentials = true;
 
@@ -56,11 +61,40 @@ export async function request(method, path, queryParams, body, responseType = 'j
       window.location = '/';
       return;
     }
-    const errorMessage = responseType === 'blob' ? e.message :  _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+    const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);
     console.error(e.response);
     throw e;
   }
+}
+
+export function request$(method, path, queryParams, body, responseType = 'json') {
+  return ajax({
+    method,
+    url: `${API_BASE_URL}/${trimSlash(path)}?${queryString.stringify(queryParams)}`,
+    headers: getHeaders(responseType),
+    body,
+    crossDomain: true,
+    withCredentials: true,
+  }).pipe(
+    // tap(r => {
+    //   debugger;
+    //   console.log(r)
+    // }),
+    map(r => r.response),
+    catchError(e => {
+      const code = e.status;
+      if (code === 401) {
+        notify.error('Session timeout.');
+        window.location = '/';
+        return;
+      }
+      const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+      notify.error('Error', errorMessage);
+      console.error(e.response);
+      return of(null)
+    })
+  );
 }
 
 export async function uploadFile(fileBlob) {
@@ -92,3 +126,8 @@ export const httpGet = async (path, queryParams = null) => request('GET', path, 
 export const httpPost = async (path, body, queryParams = null) => request('POST', path, queryParams, body);
 export const httpPut = async (path, body, queryParams = null) => request('PUT', path, queryParams, body);
 export const httpDelete = async (path, body = null, queryParams = null) => request('DELETE', path, queryParams, body);
+
+export const httpGet$ = (path, queryParams = null) => request$('GET', path, queryParams);
+export const httpPost$ = (path, body, queryParams = null) => request$('POST', path, queryParams, body);
+export const httpPut$ = (path, body, queryParams = null) => request$('PUT', path, queryParams, body);
+export const httpDelete$ = (path, body = null, queryParams = null) => request$('DELETE', path, queryParams, body);
