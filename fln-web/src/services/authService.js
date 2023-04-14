@@ -1,11 +1,6 @@
 import { httpPost, httpGet, httpPost$, httpGet$ } from './http';
 import {reactLocalStorage} from 'reactjs-localstorage';
 
-export async function login(name, password) {
-  const data = { name, password };
-  return httpPost(`auth/login`, data);
-}
-
 export function login$(name, password) {
   const data = { name, password };
   return httpPost$(`auth/login`, data);
@@ -43,6 +38,6 @@ export async function inviteUser(email, role) {
   return httpPost(`auth/invite`, { email, role });
 }
 
-export async function ssoGoogle(token) {
-  return httpPost(`auth/sso/google`, { token });
+export function ssoGoogle$(token) {
+  return httpPost$(`auth/sso/google`, { token });
 }

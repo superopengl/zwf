@@ -3,33 +3,41 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import { GlobalContext } from '../contexts/GlobalContext';
-import { ssoGoogle } from 'services/authService';
-import { countUnreadMessage } from 'services/messageService';
+import { ssoGoogle$ } from 'services/authService';
+import { countUnreadMessage$ } from 'services/messageService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
+import { concat, zip, of } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 
 const GoogleSsoButton = props => {
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
-  const {render} = props;
+  const { render } = props;
 
-  const handleGoogleSso = async (response) => {
+  const handleGoogleSso = (response) => {
     console.log('Google sso', response);
     const { tokenId, error } = response;
-    if(error || !tokenId) {
+    if (error || !tokenId) {
       return;
     }
-    const user = await ssoGoogle(tokenId);
-    if (user) {
-      setUser(user);
 
-      const count = await countUnreadMessage();
-      setNotifyCount(count);
-      
-      props.history.push('/dashboard');
-    } else {
-      notify.error('Failed to log in with Google');
-    }
+    ssoGoogle$(tokenId)
+      .pipe(
+        switchMap(user => {
+          return zip(of(user), user ? countUnreadMessage$() : of(0));
+        })
+      )
+      .subscribe(
+        ([user, count]) => {
+          if (user) {
+            setUser(user);
+            setNotifyCount(count);
+            props.history.push('/dashboard');
+          }
+        },
+        err => notify.error('Failed to log in with Google')
+      );
   }
 
   return <GoogleLogin
@@ -37,7 +45,7 @@ const GoogleSsoButton = props => {
     buttonText="Log In with Google"
     // isSignedIn={true}
     render={render}
-    style={{width: '100%'}}
+    style={{ width: '100%' }}
     icon={true}
     onSuccess={handleGoogleSso}
     onFailure={handleGoogleSso}

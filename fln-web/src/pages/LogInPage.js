@@ -5,10 +5,12 @@ import { Typography, Input, Button, Form, Layout, Divider } from 'antd';
 import { Logo } from 'components/Logo';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
-import { login, login$ } from 'services/authService';
-import { countUnreadMessage } from 'services/messageService';
+import { login$ } from 'services/authService';
+import { countUnreadMessage$ } from 'services/messageService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { concat, zip, of } from 'rxjs';
+import { switchMap, take } from 'rxjs/operators';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
@@ -43,25 +45,33 @@ const LogInPage = props => {
     }
   }
 
-  const handleSubmit = async values => {
+  const handleSubmit = values => {
     if (sending) {
       return;
     }
 
-    try {
-      setLoading(true);
+    setLoading(true);
 
-      const user = await login(values.name, values.password);
-      setUser(user);
-
-      const count = await countUnreadMessage();
-      setNotifyCount(count);
-
-      props.history.push('/dashboard');
-    } catch {
-      setLoading(false);
-    }
+    login$(values.name, values.password)
+      .pipe(
+        switchMap(user => {
+          return zip(of(user), user ? countUnreadMessage$() : of(0));
+        })
+      )
+      .subscribe(
+        ([user, count]) => {
+          if (user) {
+            setUser(user);
+            setNotifyCount(count);
+            props.history.push('/dashboard');
+          }
+        },
+        err => { },
+        () => {
+          setLoading(false);
+        });
   }
+
 
   return (
     <LayoutStyled>
@@ -105,7 +115,7 @@ const LogInPage = props => {
               <Button block type="link">Forgot password? Click here to reset</Button>
             </Link>
             {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-        <Link to="/signup"><Button size="small" block type="link">Not a user? Click to sign up</Button></Link>
+            <Link to="/signup"><Button size="small" block type="link">Not a user? Click to sign up</Button></Link>
           </Form.Item>
         </Form>
       </ContainerStyled>
