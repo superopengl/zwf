@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Layout, Typography } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import SignUpForm from 'components/SignUpForm';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
+import OrgOnBoardWizard from './OrgOnBoardWizard';
+
+const { Title } = Typography;
 
 const Container = styled.div`
   width: 100%;
@@ -19,19 +22,22 @@ const InnerContainer = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 600px;
+  max-width: 400px;
+  height: 100%;
   // background-color: #f3f3f3;
 `;
 
 
 const OrgOnBoardPage = (props) => {
   return <Container>
-      <InnerContainer>
-        <Logo />
-        Org Setup
-        <SignUpForm onOk={() => props.history.push('/')} />
-      </InnerContainer>
-    </Container>
+    <InnerContainer>
+      <Logo />
+      <Title level={2} style={{margin: '2rem auto'}}>
+        Organisation On Board
+      </Title>
+      <OrgOnBoardWizard />
+    </InnerContainer>
+  </Container>
 }
 
 OrgOnBoardPage.propTypes = {};

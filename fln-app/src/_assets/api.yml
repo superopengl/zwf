@@ -272,6 +272,11 @@ paths:
       responses:
         200:
           description: OK
+    post:
+      operationId: saveMyOrgProfile
+      responses:
+        200:
+          description: OK          
   /usertag:
     get:
       operationId: listUserTags
