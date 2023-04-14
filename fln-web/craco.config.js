@@ -12,6 +12,7 @@ const modifyVars = {
   '@info-color': '#18b0d7',
   '@link-color': '#22075e',
   '@font-size-base': '14px',
+  '@table-font-size': '12px',
   '@layout-header-background': '#05001a',
   // '@height-base': '32px',
   // '@height-lg': '40px',

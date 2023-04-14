@@ -35,6 +35,7 @@ const UserListPage = loadable(() => import('pages/User/UserListPage'));
 const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
+const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 
 const { Link: LinkText } = Typography;
 
@@ -52,7 +53,9 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-sider-footer {
+  padding: 0 0 16px 16px;
   .ant-typography {
+    font-size: 12px;
     color: rgba(255,255,255,0.45);
   }
 }
@@ -307,6 +310,7 @@ const AppLoggedIn = props => {
       {/* <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} /> */}
 
       {/* <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} /> */}
+      <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user" component={UserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
