@@ -1,45 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
-import { Typography, Button, Modal, Form, Input, Checkbox, Layout, Divider } from 'antd';
-import { Logo } from 'components/Logo';
-import { signUp } from 'services/authService';
-import { GlobalContext } from 'contexts/GlobalContext';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import { withRouter } from 'react-router-dom';
+import { Typography, Button, Form, Input, Layout } from 'antd';
 import PropTypes from 'prop-types';
-import { Alert } from 'antd';
 import { saveProfile } from 'services/userService';
 import { notify } from 'util/notify';
 import { LocaleSelector } from 'components/LocaleSelector';
 const { Title } = Typography;
 
 
-const PageContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  margin: 0;
-  // background-color: #f3f3f3;
-`;
 
-const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  max-width: 400px;
-  // background-color: #f3f3f3;
-`;
 
-const LogoContainer = styled.div`
-  margin-bottom: 2rem;
-`;
 
-const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
 
 const ProfileForm = (props) => {
   const { user, initial, onOk } = props;

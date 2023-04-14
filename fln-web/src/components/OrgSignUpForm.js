@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Typography, Button, Form, Input } from 'antd';
-import { signUp } from 'services/authService';
+import { signUp$ } from 'services/authService';
 import { notify } from 'util/notify';
 import * as queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
@@ -31,34 +31,32 @@ const OrgSignUpForm = (props) => {
   const { onOk } = props;
 
   const intl = useIntl();
-  const [sending, setSending] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
 
-  const handleSignIn = async (values) => {
-    if (sending) {
+  const handleSignIn = (values) => {
+    if (loading) {
       return;
     }
 
-    try {
-      setSending(true);
+    setLoading(true);
 
-      const { email } = values;
+    const { email } = values;
 
-      await signUp({
-        email,
-        role: 'admin'
-      });
-
-      onOk();
-      // Guest
-      notify.success(
-        '🎉 Successfully signed up!',
-        <>Congratulations and thank you very much for signing up Filedin. The invitation email has been sent out to <Text strong>{email}</Text>.</>
-      );
-    } catch {
-      // Ignore error which will be handled by the http service.
-    } finally {
-      setSending(false);
-    }
+    signUp$({
+      email,
+      role: 'admin'
+    }).subscribe(
+      () => {
+        onOk();
+        // Guest
+        notify.success(
+          '🎉 Successfully signed up!',
+          <>Congratulations and thank you very much for signing up Filedin. The invitation email has been sent out to <Text strong>{email}</Text>.</>
+        );
+      },
+      err => { },
+      () => setLoading(false)
+    );
   }
 
   return (
@@ -92,7 +90,7 @@ const OrgSignUpForm = (props) => {
           />
         </Text>
         <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={sending}>
+          <Button block type="primary" htmlType="submit" disabled={loading}>
             <FormattedMessage id="menu.signUpOrg" />
           </Button>
         </Form.Item>

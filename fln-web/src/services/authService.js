@@ -6,20 +6,20 @@ export function login$(name, password) {
   return httpPost$(`auth/login`, data);
 }
 
-export async function signUp(user) {
-  return httpPost(`auth/signup`, user);
+export function signUp$(user) {
+  return httpPost$(`auth/signup`, user);
 }
 
-export async function forgotPassword(email) {
-  return httpPost(`auth/forgot_password`, { email });
+export function forgotPassword$(email) {
+  return httpPost$(`auth/forgot_password`, { email });
 }
 
-export async function resetPassword(token, password) {
-  return httpPost(`auth/reset_password`, { token, password });
+export function resetPassword$(token, password) {
+  return httpPost$(`auth/reset_password`, { token, password });
 }
 
-export async function logout() {
-  httpPost(`auth/logout`).catch(() => {});
+export function logout$() {
+  return httpPost$(`auth/logout`);
 }
 
 export async function getAuthUser() {
@@ -30,12 +30,12 @@ export function getAuthUser$() {
   return httpGet$(`auth/user`);
 }
 
-export async function impersonate(email) {
-  return httpPost(`auth/impersonate`, { email });
+export function impersonate$(email) {
+  return httpPost$(`auth/impersonate`, { email });
 }
 
-export async function inviteUser(email, role) {
-  return httpPost(`auth/invite`, { email, role });
+export function inviteUser$(email, role) {
+  return httpPost$(`auth/invite`, { email, role });
 }
 
 export function ssoGoogle$(token) {
