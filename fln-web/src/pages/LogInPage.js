@@ -11,6 +11,9 @@ import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { concat, zip, of } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
+import { getMyOrgProfile$ } from 'services/orgService';
+import { Modal } from 'antd';
+import { empty } from 'rxjs';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
@@ -55,15 +58,24 @@ const LogInPage = props => {
     login$(values.name, values.password)
       .pipe(
         switchMap(user => {
-          return zip(of(user), user ? countUnreadMessage$() : of(0));
+          return zip(
+            of(user),
+            user ? countUnreadMessage$() : of(0), // If logged in, get message count
+            user?.role === 'admin' ? getMyOrgProfile$() : of(null) // If it's org admin, check if org profile is complete
+          );
         })
       )
       .subscribe(
-        ([user, count]) => {
+        ([user, count, org]) => {
           if (user) {
             setUser(user);
             setNotifyCount(count);
-            props.history.push('/dashboard');
+            
+            if (user.role === 'admin' && !org) {
+              props.history.push('/onboard')
+            } else {
+              props.history.push('/dashboard');
+            }
           }
         },
         err => { },
