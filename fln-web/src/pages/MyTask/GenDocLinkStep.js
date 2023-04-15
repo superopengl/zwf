@@ -2,7 +2,6 @@ import { Space, Typography, Spin } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { genPdfFromDocTemplate, getDocTemplate } from 'services/docTemplateService';
-import 'react-markdown-editor-lite/lib/index.css';
 import { computeVariablesHash } from 'util/computeVariableHash';
 import FileLink from 'components/FileLink';
 import StepButtonSet from './StepBottonSet';

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import 'pages/MyTask/node_modules/react-markdown-editor-lite/lib/index.css';
 import PDFViewer from 'mgr-pdf-viewer-react';
 
 const Container = styled.div`

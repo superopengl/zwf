@@ -9,13 +9,7 @@ import React from 'react';
 import { deleteDocTemplate, listDocTemplate } from 'services/docTemplateService';
 import styled from 'styled-components';
 
-const { Title, Text } = Typography;
-
-const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
-  // height: 100%;
-  // height: calc(100vh + 64px);
-`;
+const { Text } = Typography;
 
 const StyledDrawer = styled(Drawer)`
 
@@ -32,12 +26,6 @@ const StyledDrawer = styled(Drawer)`
   }
 }
 `;
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
@@ -127,7 +115,7 @@ export const DocTemplatePage = () => {
     });
   }
 
-  const handleTestDocTemplate = (e, item) => {
+  const handleTestDocTemplate = (e) => {
     e.stopPropagation();
 
   }

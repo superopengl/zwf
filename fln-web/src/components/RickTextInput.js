@@ -10,7 +10,7 @@ const DEFAULT_SAMPLE = ``;
 
 const RickTextInput = (props) => {
 
-  const {ref, value, onChange} = props;
+  const {ref, value, disabled, onChange} = props;
 
   return (
     <SunEditor ref={ref}
@@ -36,6 +36,7 @@ const RickTextInput = (props) => {
       }}
       onChange={onChange}
       setContents={value}
+      disable={disabled}
     />
   );
 };
@@ -43,11 +44,13 @@ const RickTextInput = (props) => {
 RickTextInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 RickTextInput.defaultProps = {
   value: DEFAULT_SAMPLE,
-  onChange: () => { }
+  onChange: () => { },
+  disabled: false,
 };
 
 export default withRouter(RickTextInput);

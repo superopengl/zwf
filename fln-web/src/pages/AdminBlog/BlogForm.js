@@ -6,7 +6,6 @@ import { notify } from 'util/notify';
 import { useWindowHeight } from '@react-hook/window-size'
 import { saveBlog } from 'services/blogService';
 import { SampleBlog } from './SampleBlog';
-import MarkdownEditor from '../../components/MarkdownEditor';
 
 const { Paragraph } = Typography;
 
@@ -42,7 +41,7 @@ const BlogForm = (props) => {
         Refer to <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">https://www.markdownguide.org/basic-syntax/</a> for Markdown basic syntax.
         </Paragraph>
       <Form.Item name="md" rules={[{ required: true, message: ' ' }]}>
-        <MarkdownEditor style={{ height: windowHeight - 220 }}
+        {/* <MarkdownEditor style={{ height: windowHeight - 220 }} */}
         />
       </Form.Item>
     </Form >

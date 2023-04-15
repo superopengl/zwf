@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row } from 'antd';
+import { Typography, Card, Button, Input, Form, Tooltip, Drawer, Row, Tag } from 'antd';
 import {
   EditOutlined
 } from '@ant-design/icons';
@@ -8,43 +8,16 @@ import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import { listEmailTemplate, saveEmailTemplate } from 'services/emailTemplateService';
 import { LocaleSelector } from 'components/LocaleSelector';
-import 'react-quill/dist/quill.snow.css';
-import loadable from '@loadable/component'
 import { from } from 'rxjs';
 import { Switch } from 'antd';
-
-const ReactQuill = loadable(() => import('react-quill'));
+import RickTextInput from 'components/RickTextInput';
+import RawHtmlDisplay from 'components/RawHtmlDisplay';
 
 const { Text } = Typography;
 
 const ContainerStyled = styled.div`
   width: 100%;
 `;
-
-const modules = {
-  toolbar: [
-    [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-    [{ size: [] }],
-    ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-    [{ 'list': 'ordered' }, { 'list': 'bullet' },
-    { 'indent': '-1' }, { 'indent': '+1' }],
-    [{ 'align': [] }, { 'color': [] }, { 'background': [] }],
-    ['link', 'image'],
-    ['clean']
-  ],
-  clipboard: {
-    // toggle to add extra line breaks when pasting HTML:
-    matchVisual: false,
-  }
-};
-
-const formats = [
-  'header',
-  'bold', 'italic', 'underline', 'strike', 'blockquote',
-  'list', 'bullet', 'indent',
-  'color', 'background',
-  'link', 'image'
-];
 
 
 const EmailTemplateListPage = () => {
@@ -113,12 +86,18 @@ const EmailTemplateListPage = () => {
             onClick={() => handleEdit(item)} ></Button>
         </Tooltip>}
         >
-          <Space direction="vertical" style={{ width: '100%' }}>
+          <Space direction="vertical" style={{ width: '100%' }} size="large">
             {item.key !== 'signature' && <Row>
-              {item.vars?.map((v, i) => <Text code key={i} >{v}</Text>)}
+              {item.vars?.map((v, i) => <Tag key={i} color="#4c1bb3">{v}</Tag>)}
             </Row>}
-            {item.key !== 'signature' && <Text>{item.subject || 'Subject'}</Text>}
-            <ReactQuill className="body-preview" value={item.body || `Email body`} readOnly theme="bubble" />
+            <Card 
+              size="small"
+              title={<RawHtmlDisplay value={item.subject || 'Subject'}/>}
+              // type="inner"
+            >
+            <RawHtmlDisplay value={item.body} />
+
+            </Card>
           </Space>
         </Card>)}
       </Space>
@@ -150,12 +129,7 @@ const EmailTemplateListPage = () => {
             <Input allowClear disabled={loading} />
           </Form.Item>
           <Form.Item label="Body" name="body" rules={[{ required: false, whitespace: true, message: ' ' }]}>
-            <ReactQuill scrollingContainer="#scrolling-container" modules={modules} formats={formats}
-              style={{
-                padding: 0,
-                fontSize: 14,
-              }}
-              disabled={loading} />
+            <RickTextInput disabled={loading}/>
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
