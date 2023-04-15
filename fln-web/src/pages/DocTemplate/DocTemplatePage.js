@@ -171,7 +171,11 @@ export const DocTemplatePage = () => {
           width="calc(100vw - 280px)"
           footer={null}
         >
-          <DocTemplateForm id={currentId} onClose={() => handleDrawerClose()} onOk={() => { handleDrawerClose(); loadList() }}></DocTemplateForm>
+          <DocTemplateForm
+            id={currentId}
+            onClose={() => handleDrawerClose()}
+            onOk={() => { handleDrawerClose(); loadList() }}
+          />
         </StyledDrawer>
       </LayoutStyled >
     </Space>

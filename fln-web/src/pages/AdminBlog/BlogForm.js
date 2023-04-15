@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { Input, Button, Form, Typography } from 'antd';
 import { notify } from 'util/notify';
-import { useWindowHeight } from '@react-hook/window-size'
 import { saveBlog } from 'services/blogService';
 import { SampleBlog } from './SampleBlog';
 
@@ -18,7 +17,6 @@ const BlogForm = (props) => {
 
   const { blog } = props;
 
-  const windowHeight = useWindowHeight();
 
   const handleSave = async (values) => {
     const { title } = values;

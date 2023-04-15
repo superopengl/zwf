@@ -33,7 +33,7 @@ export class Task {
   @Index()
   taskTemplateId: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   @Index()
   portfolioId: string;
 
@@ -63,7 +63,7 @@ export class Task {
   @Column({ type: 'json', default: [] })
   docs: TaskDoc[];
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   @Index()
   dueDate: Date;
 }
