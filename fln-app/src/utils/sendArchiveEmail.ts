@@ -8,7 +8,7 @@ import { getUserEmailAddress } from './getUserEmailAddress';
 
 export async function sendArchiveEmail(task: Task) {
   const user = await getRepository(User).findOne(task.userId);
-  const { id: taskId, name: taskName, forWhom } = task;
+  const { id: taskId, name: taskName } = task;
 
   await sendEmail({
     to: user.profile.email,
@@ -16,7 +16,6 @@ export async function sendArchiveEmail(task: Task) {
     template: 'taskArchived',
     vars: {
       toWhom: getEmailRecipientName(user),
-      forWhom,
       taskId,
       taskName,
     },

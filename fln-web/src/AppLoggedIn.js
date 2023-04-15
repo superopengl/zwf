@@ -37,6 +37,8 @@ const ChangePasswordModal = loadable(() => import('components/ChangePasswordModa
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
+const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
+const MyTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 
 const { Link: LinkText } = Typography;
 
@@ -304,13 +306,9 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/dashboard" component={AdminBoardPage} />
-
-
-
-      {/* <RoleRoute visible={isMember || isFree} path="/watchlist" exact component={StockWatchListPage} /> */}
-
-      {/* <RoleRoute visible={isAdmin} exact path="/blogs/admin" component={AdminBlogPage} /> */}
+      <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminBoardPage} />
+      <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
+      <RoleRoute visible={isAdmin} exact path="/task/new" component={MyTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user" component={UserListPage} />
