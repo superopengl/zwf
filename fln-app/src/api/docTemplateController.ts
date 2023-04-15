@@ -10,41 +10,57 @@ import * as moment from 'moment';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
 import * as md5 from 'md5';
-import { mdToPdf } from 'md-to-pdf';
+import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { isRole } from '../utils/isRole';
+import { Role } from '../types/Role';
 
-function extractVariables(md: string) {
+function extractVariables(html: string) {
   const pattern = /\{\{[a-zA-Z]+\}\}/ig;
-  const all = (md.match(pattern) || []).map(x => x.replace(/^\{\{/, '').replace(/\}\}$/, ''));
+  const all = (html.match(pattern) || []).map(x => x.replace(/^\{\{/, '').replace(/\}\}$/, ''));
   const set = new Set(all);
   return Array.from(set);
 }
 
 export const saveDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const docTemplate = new DocTemplate();
 
-  const { id, name, description, md } = req.body;
+  const { id, name, description, html } = req.body;
   assert(name, 400, 'name is empty');
+  const orgId = getOrgIdFromReq(req);
+
+  const docTemplate = new DocTemplate();
   docTemplate.id = id || uuidv4();
+  docTemplate.orgId = orgId;
   docTemplate.name = name;
   docTemplate.description = description;
-  docTemplate.md = md;
-  docTemplate.variables = extractVariables(md);
+  docTemplate.html = html;
+  docTemplate.variables = extractVariables(html);
 
-  const repo = getRepository(DocTemplate);
-  await repo.save(docTemplate);
+  await getRepository(DocTemplate).save(docTemplate);
 
   res.json();
 });
 
 export const listDocTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
+  const orgId = getOrgIdFromReq(req);
 
-  const list = await getRepository(DocTemplate)
-    .createQueryBuilder('x')
-    .orderBy('x.createdAt', 'ASC')
-    .select(['id', 'name', 'description', 'variables', `"createdAt"`, '"lastUpdatedAt"'])
-    .execute();
+  const list = await getRepository(DocTemplate).find({
+    where: {
+      orgId
+    },
+    order: {
+      name: 'ASC'
+    },
+    select: [
+      'id',
+      'name',
+      'description',
+      'variables',
+      'createdAt',
+      'lastUpdatedAt'
+    ]
+  });
 
   res.json(list);
 });
@@ -52,8 +68,8 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
 export const getDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
-  const repo = getRepository(DocTemplate);
-  const docTemplate = await repo.findOne(id);
+  const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) }
+  const docTemplate = await getRepository(DocTemplate).findOne(query);
   assert(docTemplate, 404);
 
   res.json(docTemplate);
@@ -62,8 +78,8 @@ export const getDocTemplate = handlerWrapper(async (req, res) => {
 export const deleteDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
-  const repo = getRepository(DocTemplate);
-  await repo.delete({ id });
+  const orgId = getOrgIdFromReq(req);
+  await getRepository(DocTemplate).delete({ id, orgId });
 
   res.json();
 });
@@ -112,21 +128,21 @@ export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
   const docTemplate = await repo.findOne(id);
   assert(docTemplate, 404);
 
-  const { name, md, variables } = docTemplate;
+  const { name, html, variables } = docTemplate;
 
-  const bakedMd = variables.reduce((pre, cur) => {
+  const bakedHtml = variables.reduce((pre, cur) => {
     const pattern = new RegExp(`{{${cur}}}`, 'g');
     const replacement = cur === `now` ? moment(getNow()).format('D MMM YYYY') : inboundVariables[cur];
 
     assert(replacement !== undefined, 400, `Variable '${cur}' is missing`);
     return pre.replace(pattern, replacement);
-  }, md);
+  }, html);
 
 
   const pdfFileId = uuidv4();
   const pdfFileName = `${name}.pdf`;
 
-  const data = await mdToPdfBuffer(bakedMd);
+  const data = await mdToPdfBuffer(bakedHtml);
 
   const location = await uploadToS3(pdfFileId, pdfFileName, data);
 

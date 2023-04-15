@@ -296,10 +296,9 @@ async function sendTaskMessage(Task, senderId, content) {
   assert(user, 404);
 
   const message = new Message();
-  message.sender = senderId;
+  message.senderId = senderId;
   message.taskId = Task.id;
-  message.clientUserId = Task.userId;
-  message.agentUserId = Task.agentId;
+  message.recipientId = Task.userId;
   message.content = content;
 
   await getRepository(Message).save(message);

@@ -2,9 +2,13 @@ import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn } from 
 
 
 @Entity()
+@Index('idx_task_comment_org_createdAt', ['orgId', 'createdAt'])
 export class TaskComment {
   @PrimaryGeneratedColumn()
   id?: number;
+
+  @Column('uuid')
+  orgId: string;
 
   @CreateDateColumn()
   createdAt: Date;

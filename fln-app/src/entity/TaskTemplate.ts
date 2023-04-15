@@ -1,12 +1,15 @@
-import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
 
 @Entity()
+@Unique('idx_task_template_org_name_unique', ['orgId', 'name'])
 export class TaskTemplate {
   @PrimaryColumn('uuid')
   id: string;
 
+  @Column('uuid')
+  orgId: string;
+
   @Column()
-  @Index({ unique: true })
   name: string;
 
   @CreateDateColumn()

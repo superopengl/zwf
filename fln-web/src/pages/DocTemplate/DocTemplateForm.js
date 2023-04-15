@@ -4,12 +4,10 @@ import { withRouter } from 'react-router-dom';
 import { Input, Button, Form, Typography } from 'antd';
 import { saveDocTemplate, getDocTemplate } from 'services/docTemplateService';
 import { notify } from 'util/notify';
-import { Spin } from 'antd';
-import { useWindowHeight } from '@react-hook/window-size'
 import { SampleMarkdown } from './SampleMarkdown';
 import { BuiltInFieldDef } from 'components/FieldDef';
-import MarkdownEditor from 'components/MarkdownEditor';
 import { Loading } from 'components/Loading';
+import RickTextInput from 'components/RickTextInput';
 
 const { Paragraph, Text } = Typography;
 
@@ -21,8 +19,7 @@ const EMPTY_TEMPLATE = {
 const DocTemplateForm = (props) => {
 
   const { id } = props;
-
-  const windowHeight = useWindowHeight();
+  const editorRef = React.useRef(null);
   const [entity, setEntity] = React.useState(EMPTY_TEMPLATE);
   const [loading, setLoading] = React.useState(true);
 
@@ -37,6 +34,7 @@ const DocTemplateForm = (props) => {
 
   React.useEffect(() => {
     loadEntity();
+    console.log(editorRef.current?.editor.core);
   }, [])
 
   const handleSave = async (values) => {
@@ -67,10 +65,13 @@ const DocTemplateForm = (props) => {
       <Paragraph type="secondary">
         Refer to <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">https://www.markdownguide.org/basic-syntax/</a> for Markdown basic syntax. Use double curly braces to express the field variables. The variables that can be automatically filled from portfolios are {BuiltInFieldDef.map(f => <><Text code>{`{{${f.name}}}`}</Text>, </>)}<Text code>{'{{now}}'}</Text>.
         </Paragraph>
-      <Form.Item name="md" rules={[{ required: true, message: ' ' }]}>
+      <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
+       <RickTextInput />
+      </Form.Item>
+      {/* <Form.Item name="md" rules={[{ required: true, message: ' ' }]}>
         <MarkdownEditor style={{ height: windowHeight - 340 }}
         />
-      </Form.Item>
+      </Form.Item> */}
     </Form >
     // </Space>
   );
