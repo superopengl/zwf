@@ -1,0 +1,66 @@
+import { EmailTemplateType } from "../types/EmailTemplateType";
+
+const defaultEmailTemplateDef = {
+  [EmailTemplateType.WelcomeClient]: {
+    vars: ['website', 'toWhom', 'email', 'url'],
+    subject: '[Ziledin] Welcome to join Ziledin',
+    body: `Dear {{toWhom}}
+    <br/>
+Thank you very much for joining Ziledin.
+<br/>
+Your user name is <strong>{{email}}</strong>
+`,
+  },
+  [EmailTemplateType.WelcomeOrg]: {
+    vars: ['website', 'toWhom', 'email', 'url', 'org'],
+    subject: '[Ziledin] Welcome to join Ziledin',
+    body: `Dear {{toWhom}}
+    <br/>
+Thank you very much for joining Ziledin.
+<br/>
+Your user name is <strong>{{email}}</strong> and you are the administrator user of your organisation <strong>{{org}}</strong>.
+`,
+  },
+  [EmailTemplateType.InviteOrgMember]: {
+    vars: ['website', 'toWhom', 'email', 'url', 'org'],
+    subject: '[Ziledin] Invitation to Join Organisation',
+    body: `Dear {{toWhom}}
+<br/>
+You are invited to join <strong>{{org}}</strong> as a member in Ziledin. Your user name is {{email}}.
+<br/>
+Please click below link to accept the invite.
+{{url}}
+`,
+  },
+  [EmailTemplateType.InviteClientUser]: {
+    vars: ['website', 'toWhom', 'email', 'url', 'org'],
+    subject: '[Ziledin] Invitation',
+    body: `Dear {{toWhom}}
+    <br/>
+You are invited to join in Ziledin. Your user name is {{email}}.
+<br/>
+Please click below link to accept the invite.
+{{url}}
+`,
+  },
+  [EmailTemplateType.ResetPassword]: {
+    vars: ['website', 'toWhom', 'email', 'url',],
+    subject: '[Ziledin] Reset Password',
+    body: `Dear {{toWhom}}
+    <br/>
+Please click below link to reset your password.
+<br/>
+{{url}}
+`,
+  },
+  [EmailTemplateType.CreatedPortfolio]: {
+    vars: ['website', 'toWhom', 'email', 'url', 'portfolioName'],
+    subject: '[Ziledin] Created Portfolio',
+    body: `Dear {{toWhom}}
+    <br/>
+Congratulations! Your portfolio {{portfolioName}} was created.
+`,
+  },
+}
+
+export default defaultEmailTemplateDef;

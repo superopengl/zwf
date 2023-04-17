@@ -13,7 +13,7 @@
         "<node_internals>/**"
       ],
       "args": [
-        "${workspaceFolder}/fln-app/src/index.ts"
+        "${workspaceFolder}/zdn-app/src/index.ts"
       ],
       "env": {
         "TS_NODE_IGNORE": "false",
@@ -25,10 +25,10 @@
         "-r",
         "ts-node/register"
       ],
-      "cwd": "${workspaceRoot}/fln-app",
+      "cwd": "${workspaceRoot}/zdn-app",
       "protocol": "inspector",
       "outFiles": [
-        "${workspaceFolder}/fln-app/**/*.js"
+        "${workspaceFolder}/zdn-app/**/*.js"
       ]
     }
   ]
