@@ -1,2 +1,3 @@
 export const notes=`
-ui fix`
+homepage polish
+fix header sticky`
