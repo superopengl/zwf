@@ -11,6 +11,7 @@ import { HomeKeyFeatureArea } from 'components/homeAreas/HomeKeyFeatureArea';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
+import { HomeWhyUsArea } from 'components/homeAreas/HomeWhyUsArea';
 
 smoothscroll.polyfill();
 
@@ -56,6 +57,9 @@ export const HomePage = (props) => {
     </section>
     <section>
       <HomeFeatureListArea />
+    </section>
+    <section>
+      <HomeWhyUsArea />
     </section>
     <section id="contactus">
       <HomeContactUsArea />
