@@ -16,6 +16,7 @@ import { useZevent } from 'hooks/useZevent';
 const StyledList = styled(ProList)`
 .ant-pro-card-body {
   padding: 0;
+  overflow-x: hidden;
 
   .ant-list-item {
     padding: 3px 0;
