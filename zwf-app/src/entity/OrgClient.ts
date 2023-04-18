@@ -2,7 +2,7 @@ import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column
 
 
 @Entity()
-@Index('idx_org_client_unique', ['orgId', 'userId'], { where: `"deletedAt" IS NULL` })
+@Index('idx_org_client_unique', ['orgId', 'userId'], { unique: true, where: `"deletedAt" IS NULL` })
 export class OrgClient {
   @PrimaryGeneratedColumn('uuid')
   id: string;
