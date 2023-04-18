@@ -108,7 +108,7 @@ export const UserSelect = (props) => {
 
 UserSelect.propTypes = {
   value: PropTypes.string,
-  placeholder: PropTypes.string,
+  placeholder: PropTypes.object,
   onChange: PropTypes.func,
   onTextChange: PropTypes.func,
   valueProp: PropTypes.oneOf(['id', 'email']),
