@@ -2,6 +2,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, Joi
 import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
+import { CreditTransaction } from './CreditTransaction';
 import { Subscription } from './Subscription';
 
 @Entity()
@@ -18,18 +19,12 @@ export class Payment {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @UpdateDateColumn()
-  lastUpdatedAt?: Date;
-
   @Column('uuid')
   @Index()
   orgId: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   amount: number;
-
-  @Column({ nullable: true })
-  method: PaymentMethod;
 
   @Column({ nullable: true })
   stripeCustomerId?: string;
@@ -66,4 +61,14 @@ export class Payment {
 
   @Column()
   subscriptionId: string;
+
+  @OneToOne(() => CreditTransaction, { nullable: true, cascade: true })
+  @JoinColumn({ name: 'creditTransactionId', referencedColumnName: 'id' })
+  creditTransaction: CreditTransaction;
+
+  @Column('uuid', { nullable: true })
+  creditTransactionId: string;
+
+  @Column('json', { nullable: true })
+  geo: object;
 }

@@ -34,7 +34,8 @@ const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSetting
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const UserListPage = loadable(() => import('pages/User/UserListPage'));
-const MyAccountPage = loadable(() => import('pages/MyAccount/MyAccountPage'));
+const OrgSubscriptionPage = loadable(() => import('pages/MyAccount/OrgSubscriptionPage'));
+const OrgPaymentMethodPage = loadable(() => import('pages/MyAccount/OrgPaymentMethodPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
@@ -141,9 +142,19 @@ const ROUTES = [
   },
   {
     path: '/account',
-    name: <FormattedMessage id="menu.subscription" />,
+    name: <FormattedMessage id="menu.account" />,
     icon: <Icon component={() => <BiDollar />} />,
     roles: ['admin'],
+    routes: [
+      {
+        path: '/account/subscription',
+        name: <FormattedMessage id="menu.subscription" />,
+      },
+      {
+        path: '/account/payment_methods',
+        name: <FormattedMessage id="menu.paymentMethods" />,
+      },
+    ]
   },
   {
     path: '/data',
@@ -331,6 +342,8 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
+      <RoleRoute visible={isAdmin} exact path="/account/subscription" component={OrgSubscriptionPage} />
+      <RoleRoute visible={isAdmin} exact path="/account/payment_methods" component={OrgPaymentMethodPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={UserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user/client" component={UserListPage} />
@@ -338,7 +351,6 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      <RoleRoute visible={isClient} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isSystem || isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>
 

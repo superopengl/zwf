@@ -62,7 +62,7 @@ export const logout = handlerWrapper(async (req, res) => {
 
 
 function createUserAndProfileEntity(payload): { user: User; profile: UserProfile } {
-  const { email, password, role, orgId, ...other } = payload;
+  const { email, password, role, orgId, orgOwner, ...other } = payload;
   const thePassword = password || uuidv4();
   validatePasswordStrength(thePassword);
   assert([Role.Client, Role.Agent, Role.Admin].includes(role), 400, `Unsupported role ${role}`);
@@ -85,6 +85,7 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   user.orgId = role === Role.Client ? null : orgId,
   user.status = UserStatus.Enabled;
   user.profileId = profileId;
+  user.orgOwner = !!orgOwner;
 
   return { user, profile };
 }
@@ -105,11 +106,10 @@ export const signUp = handlerWrapper(async (req, res) => {
   const payload = req.body;
   const role = payload.role || Role.Client;
 
-  assert(role === Role.Client || role === Role.Admin, 400, `Invalid role value ${role}`);
-
   const { user, profile } = await createNewLocalUser({
     ...payload,
-    role,
+    orgOwner: false,
+    role: Role.Client,
     password: uuidv4(), // Temp password to fool the functions beneath
   });
 
@@ -139,9 +139,10 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
   const { user, profile } = await createNewLocalUser({
-    role: Role.Client,
     ...payload,
+    orgOwner: true,
     password: uuidv4(), // Temp password to fool the functions beneath
+    role: Role.Admin,
   });
 
   const { id, resetPasswordToken } = user;

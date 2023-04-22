@@ -43,7 +43,7 @@ export const subscriptionDef = [
     key: 'unlimited_monthly',
     title: <FormattedMessage id="text.proMemberMonthly" />,
     unit: <FormattedMessage id="text.proMemberMonthlyPriceUnit" />,
-    price: 29,
+    price: 19,
     icon: <GiSawedOffShotgun />,
     description: 
     <DescriptionContainer>
@@ -57,7 +57,7 @@ export const subscriptionDef = [
     key: 'unlimited_yearly',
     title: <FormattedMessage id="text.proMemberAnnually" />,
     unit: <FormattedMessage id="text.proMemberAnnuallyPriceUnit" />,
-    price: 319,
+    price: 209,
     icon: <GiPirateCannon />,
     description: 
     <DescriptionContainer>
