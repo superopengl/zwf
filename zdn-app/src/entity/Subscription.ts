@@ -41,5 +41,8 @@ export class Subscription {
 
   @OneToMany(() => Payment, payment => payment.subscription, {onDelete: 'CASCADE'})
   payments: Payment[];
+
+  @Column('int', {default: 1})
+  seats: number;
 }
 

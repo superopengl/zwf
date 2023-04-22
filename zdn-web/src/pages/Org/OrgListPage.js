@@ -22,6 +22,7 @@ import TagSelect from 'components/TagSelect';
 import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
+import { listOrgs$ } from 'services/orgService';
 
 
 const { Text, Paragraph } = Typography;
@@ -40,7 +41,7 @@ const DEFAULT_QUERY_INFO = {
 
 const LOCAL_STORAGE_KEY = 'user_query';
 
-const UserListPage = () => {
+const OrgListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
@@ -57,30 +58,37 @@ const UserListPage = () => {
     await setUserTags(user.id, tags);
   }
 
-  const isSystem = context.role === 'system';
-  const isAdmin = context.role === 'admin';
-
   const columnDef = [
     {
-      title: 'Email',
-      dataIndex: 'email',
+      title: 'Name',
+      dataIndex: 'name',
       fixed: 'left',
       render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
     {
-      title: 'User Name',
-      dataIndex: 'givenName',
-      render: (text, item) => <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />,
+      title: 'ID',
+      dataIndex: 'id',
+      render: (value, item) => <Text code>{value}</Text>,
     },
-    isSystem ? {
-      title: 'Org',
-      dataIndex: 'orgName',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
-    } : null,
     {
-      title: 'Role',
-      dataIndex: 'role',
-      render: (text) => text
+      title: 'Domain',
+      dataIndex: 'domain',
+      render: (value) => value
+    },
+    {
+      title: 'Business Name',
+      dataIndex: 'businessName',
+      render: (value) => value
+    },
+    {
+      title: 'Tel',
+      dataIndex: 'tel',
+      render: (value) => value
+    },
+    {
+      title: 'Admin User',
+      dataIndex: 'adminUser',
+      render: (value) => value
     },
     // {
     //   title: 'Login Type',
@@ -88,14 +96,9 @@ const UserListPage = () => {
     //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
     // },
     {
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
-    },
-    {
-      title: 'Last Logged In At',
-      dataIndex: 'lastLoggedInAt',
-      render: (text) => <TimeAgo value={text} />,
+      title: 'Subscription',
+      dataIndex: 'subscription',
+      render: (value, item) => value
     },
     {
       // title: 'Action',
@@ -111,33 +114,29 @@ const UserListPage = () => {
             <Tooltip placement="bottom" title="Set password">
               <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
             </Tooltip>
-            {isSystem && <Tooltip placement="bottom" title="Impersonate">
-              <Button shape="circle" onClick={e => handleImpersonante(e, user)}>
-                <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
-              </Button>
-            </Tooltip>}
-            {isSystem && <Tooltip placement="bottom" title="Delete user">
-              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
-            </Tooltip>}
           </Space>
         )
       },
     },
   ].filter(x => !!x);
 
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      await searchByQueryInfo(queryInfo)
-      const tags = await listUserTags();
-      setTags(tags);
-    } catch {
-      setLoading(false);
-    }
+  const loadList = () => {
+    setLoading(true);
+
+    return listOrgs$().subscribe(
+      list => setList(list),
+      () => { },
+      () => {
+        setLoading(false);
+      }
+    );
   }
 
   React.useEffect(() => {
-    loadList();
+    const load$ = loadList();
+    return () => {
+      load$.unsubscribe();
+    }
   }, []);
 
   const updateQueryInfo = (queryInfo) => {
@@ -383,8 +382,8 @@ const UserListPage = () => {
   );
 };
 
-UserListPage.propTypes = {};
+OrgListPage.propTypes = {};
 
-UserListPage.defaultProps = {};
+OrgListPage.defaultProps = {};
 
-export default withRouter(UserListPage);
+export default withRouter(OrgListPage);

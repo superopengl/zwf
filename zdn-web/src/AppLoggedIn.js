@@ -5,7 +5,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, StarOutlined, UserOutlined, SettingOutlined, TeamOutlined,
-  DashboardOutlined, QuestionOutlined, AlertOutlined, HomeOutlined, FileOutlined
+  BankOutlined, QuestionOutlined, AlertOutlined, HomeOutlined, FileOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { logout$ } from 'services/authService';
@@ -26,7 +26,9 @@ import { FaTasks } from 'react-icons/fa';
 import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
 import { HiOutlineViewBoards } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
+import OrgListPage from 'pages/Org/OrgListPage';
 
+const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
@@ -77,7 +79,7 @@ const ROUTES = [
     path: '/dashboard',
     name: <FormattedMessage id="menu.board" />,
     icon: <Icon component={() => <HiOutlineViewBoards />} />,
-    roles: ['admin', 'agent']
+    roles: ['system', 'admin', 'agent']
   },
   {
     path: '/watchlist',
@@ -116,10 +118,26 @@ const ROUTES = [
     roles: ['admin']
   },
   {
+    path: '/org',
+    name: <FormattedMessage id="menu.org" />,
+    icon: <BankOutlined />,
+    roles: ['system']
+  },
+  {
     path: '/user',
     name: <FormattedMessage id="menu.users" />,
     icon: <TeamOutlined />,
-    roles: ['system', 'admin']
+    roles: ['system', 'admin'],
+    routes: [
+      {
+        path: '/user/agent',
+        name: <FormattedMessage id="menu.agent" />,
+      },
+      {
+        path: '/user/client',
+        name: <FormattedMessage id="menu.client" />,
+      },
+    ]
   },
   {
     path: '/account',
@@ -307,17 +325,19 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute visible={isAdmin} exact path="/dashboard" component={AdminBoardPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/dashboard" component={isSystem ? SystemBoardPage : AdminBoardPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={MyTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/user" component={UserListPage} />
+      <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={UserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/user/client" component={UserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
-      <RoleRoute visible={isAdmin} exact path="/revenue" component={RevenuePage} />
+      <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
       <RoleRoute visible={isClient} path="/account" exact component={MyAccountPage} />
       <Redirect to={(isSystem || isAdmin || isAgent) ? '/dashboard' : '/stock'} />
     </Switch>
