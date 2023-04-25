@@ -1,25 +1,30 @@
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
-import { StockLatestPaidInformation } from './StockLatestPaidInformation';
 import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
-import { Subscription } from '../Subscription';
+import { UserProfile } from '../UserProfile';
+import { OrgCurrentSubscription } from './OrgCurrentSubscription';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Org, 'o')
     .leftJoin(User, 'u', `u."orgId" = o.id AND u.role = '${Role.Admin}' AND u."orgOwner" IS TRUE`)
+    .leftJoin(UserProfile, 'p', `u."profileId" = p.id`)
+    .leftJoin(OrgCurrentSubscription, 's', 'o.id = s."orgId"')
     .select([
-      'symbol',
-      '"fairValueLo"',
-      '"fairValueHi"',
-      'supports',
-      'resistances',
-      'md5(row("fairValueLo", "fairValueHi", supports, resistances)::text) as hash',
-      'CURRENT_DATE as date'
+      'o.id as id',
+      'o.name as name',
+      'o."businessName" as "businessName"',
+      'o.domain as domain',
+      'o.tel as tel',
+      'u.id as "adminUserId"',
+      'p.email as "adminUserEmail"',
+      's.start as "subscriptionStart"',
+      's.end as "subscriptionEnd"',
+      's."lastRecurring" as "recurring"',
+      's.seats as seats',
     ])
-    .where(`"fairValueLo" IS NOT NULL`)
 })
 export class OrgBasicInformation {
   @ViewColumn()

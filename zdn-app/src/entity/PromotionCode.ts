@@ -14,10 +14,10 @@ export class PromotionCode {
   orgId: string;
 
   @Column('int', { default: 1 })
-  repeatingMonths: number;
+  repeatingTimes: number;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  discount: number;
+  unitPrice: number;
 
   @Column('uuid')
   createdBy: string;

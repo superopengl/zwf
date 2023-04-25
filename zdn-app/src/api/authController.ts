@@ -295,17 +295,18 @@ export const inviteClient = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const inviteAgent = handlerWrapper(async (req, res) => {
+export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { email } = req.body;
+  const { email, role } = req.body;
   const orgId = getOrgIdFromReq(req);
   const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
+  assert(role === Role.Admin || role === Role.Agent, 400, `Invalid role ${role}`)
 
   const { user, profile } = createUserAndProfileEntity({
     email,
     orgId,
-    role: Role.Agent
+    role
   });
 
   await handleInviteUser(user, profile);

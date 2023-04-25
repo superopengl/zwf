@@ -97,12 +97,12 @@ const OrgSubscriptionPage = (props) => {
     return (data || []).filter(x => x.amount);
   }
 
-  const currentPlanKey = currentSubscription?.currentType || 'free';
-  const isCurrentFree = currentPlanKey === 'free';
+  const currentPlanKey = currentSubscription?.currentType || 'trial';
+  const isCurrentFree = currentPlanKey === 'trial';
 
 
   const handleChangePlan = (subscription) => {
-    if (subscription.key === 'free') {
+    if (subscription.key === 'trial') {
       return;
     }
 
@@ -173,7 +173,7 @@ const OrgSubscriptionPage = (props) => {
               } />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
                 <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
-                  {subscriptionDef.filter(x => x.key !== 'free' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
+                  {subscriptionDef.filter(x => x.key !== 'trial' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
                     <SubscriptionCard
                       title={s.title}
                       icon={s.icon}
@@ -181,7 +181,7 @@ const OrgSubscriptionPage = (props) => {
                       onClick={() => handleChangePlan(s)}
                       price={s.price}
                       active={s.key === currentPlanKey}
-                      interactive={s.key !== 'free'}
+                      interactive={s.key !== 'trial'}
                       recurring={currentSubscription?.lastRecurring}
                       unit={s.unit} />
                   </StyledCol>)}

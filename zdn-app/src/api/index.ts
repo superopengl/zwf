@@ -15,3 +15,5 @@ export * from './configController';
 export * from './userTagController';
 export * from './orgController';
 export * from './orgPaymentMethodController';
+export * from './accountController';
+export * from './subscriptionController';

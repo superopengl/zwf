@@ -40,7 +40,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
 });
 
 export const saveProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member', 'free');
+  assertRole(req, 'admin', 'agent', 'member');
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
   if (role !== 'admin') {
