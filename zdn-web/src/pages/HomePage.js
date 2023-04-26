@@ -17,6 +17,7 @@ import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
+import logoSvg from '../logo.svg';
 
 smoothscroll.polyfill();
 
@@ -54,10 +55,10 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
-  // background-color: rgba(76,27,179,0.7);
+  // background-color: rgba(19,194,194,0.7);
   background-color: rgba(255,255,255,0.8);
   // background-color: rgba(0, 41, 61, 0.6); 
-// background-image: linear-gradient(125deg, #57BB60, #57BB60 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
+// background-image: linear-gradient(125deg, #13c2c2, #13c2c2 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
 }
 
 .ant-pro-global-header-collapsed-button {
@@ -137,7 +138,7 @@ const HomePage = (props) => {
   }
 
   return <StyledLayout
-    logo="/favicon-32x32.png"
+    logo="/images/logo.svg"
     title={null}
     // logo="/images/logo-transparent.png"
     collapsed={collapsed}

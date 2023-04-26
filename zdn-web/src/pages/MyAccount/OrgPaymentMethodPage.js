@@ -157,7 +157,7 @@ const OrgPaymentMethodPage = (props) => {
                 <Space size="large">
                   <Text>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
                   <Text>{item.cardExpiry}</Text>
-                  {item.primary && <Tag key="tag" color="#4c1bb3">primary</Tag>}
+                  {item.primary && <Tag key="tag" color="#13c2c2">primary</Tag>}
                 </Space>
               </List.Item>}
             />

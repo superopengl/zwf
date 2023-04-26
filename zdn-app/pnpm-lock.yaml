@@ -51,6 +51,7 @@ specifiers:
   typeorm: ^0.2.25
   typescript: ^4.2.4
   uuid: ^8.3.0
+  voucher-code-generator: ^1.1.1
   ws: ^7.3.1
   yamljs: ^0.3.0
 
@@ -97,6 +98,7 @@ dependencies:
   tfn: 1.0.0
   typeorm: 0.2.32
   uuid: 8.3.2
+  voucher-code-generator: 1.1.1
   ws: 7.4.5
   yamljs: 0.3.0
 
@@ -7103,6 +7105,10 @@ packages:
   /void-elements/3.1.0:
     resolution: {integrity: sha1-YU9/v42AHwu18GYfWy9XhXUOTwk=}
     engines: {node: '>=0.10.0'}
+    dev: false
+
+  /voucher-code-generator/1.1.1:
+    resolution: {integrity: sha1-weedcQJQbOUMZbgkqfTeE33ScYs=}
     dev: false
 
   /w3c-hr-time/1.0.2:

@@ -81,7 +81,6 @@ const StripeCardPaymentForm = (props) => {
     style: {
       base: {
         fontSize: '16px',
-        color: '#3e9448',
         textAlign: 'center',
         '::placeholder': {
           color: 'rgba(0,0,0,0.2)',

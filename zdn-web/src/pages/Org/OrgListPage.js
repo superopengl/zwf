@@ -87,7 +87,7 @@ const OrgListPage = () => {
     },
     {
       title: 'Admin User',
-      dataIndex: 'adminUser',
+      dataIndex: 'adminUserEmail',
       render: (value) => value
     },
     // {
@@ -105,14 +105,19 @@ const OrgListPage = () => {
       // fixed: 'right',
       // width: 200,
       fixed: 'right',
-      render: (text, user) => {
+      render: (text, item) => {
         return (
           <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip placement="bottom" title="Update profile">
+            {/* <Tooltip placement="bottom" title="Update profile">
               <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
             </Tooltip>
             <Tooltip placement="bottom" title="Set password">
               <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
+            </Tooltip> */}
+            <Tooltip placement="bottom" title="Impersonate admin user">
+              <Button shape="circle" onClick={e => handleImpersonante(e, item.adminUserEmail)}>
+                <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
+              </Button>
             </Tooltip>
           </Space>
         )
@@ -200,18 +205,18 @@ const OrgListPage = () => {
     });
   }
 
-  const handleImpersonante = async (e, item) => {
+  const handleImpersonante = async (e, email) => {
     e.stopPropagation();
     // setSetPasswordVisible(true);
     // setCurrentUser(item);
     Modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
-      content: <>To impersonate user <Text code>{item.email}</Text></>,
+      content: <>To impersonate user <Text code>{email}</Text></>,
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
-        impersonate$(item.email)
+        impersonate$(email)
           .subscribe(() => {
             reactLocalStorage.clear();
             window.location = '/';

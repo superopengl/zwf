@@ -112,7 +112,7 @@ paths:
       #   - authAnyRole: []
       responses:
         200:
-          description: OK          
+          description: OK
   /auth/invite/client:
     post:
       operationId: inviteClient
@@ -285,11 +285,6 @@ paths:
       responses:
         200:
           description: OK
-    post:
-      operationId: saveMyOrgProfile
-      responses:
-        200:
-          description: OK          
   /org/list:
     get:
       operationId: listOrg
@@ -336,7 +331,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /usertag:
     get:
       operationId: listUserTags
@@ -842,7 +837,7 @@ paths:
       operationId: getMyAccount
       responses:
         200:
-          description: OK          
+          description: OK
   /subscription:
     get:
       operationId: getMyCurrnetSubscription
@@ -877,7 +872,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /subscription/recurring/off:
     post:
       operationId: turnOffSubscriptionRecurring
@@ -901,4 +896,20 @@ paths:
           required: true
       responses:
         200:
-          description: OK                    
+          description: OK
+  /promotion:
+    get:
+      operationId: listPromotionCode
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: savePromotion
+      responses:
+        200:
+          description: OK
+    put:
+      operationId: newPromotionCode
+      responses:
+        200:
+          description: OK

@@ -14,14 +14,14 @@ align-items: center;
 justify-content: center;
 border: none;
 padding: 0;
-background-color: rgba(76,27,179,0.8);
+background-color: rgba(19,194,194,0.8);
 color: white;
 // box-shadow: 1px 1px 5px #222222;
 border: 2px solid white;
 
 &:focus,&:hover,&:active {
 color: white;
-background-color: rgba(76,27,179,0.8);
+background-color: rgba(19,194,194,0.8);
 border: 2px solid white;
 }
 `;

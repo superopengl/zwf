@@ -1,8 +1,10 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
+import logoSvg from '../logo.svg';
+import {Image} from 'antd';
 
-export const Logo = () =>
+export const Logo = (props) =>
   <Link to="/">
-    <img alt="Ziledin logo" src="/images/header-logo.jpg" width="auto" height="auto" style={{ padding: '2px 0 2px 0' }}></img>
+    <Image src={logoSvg} preview={false} width={props.size || 80} />
   </Link>

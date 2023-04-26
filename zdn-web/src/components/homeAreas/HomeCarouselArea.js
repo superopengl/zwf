@@ -32,7 +32,7 @@ background-repeat: no-repeat;
 background-size: cover;
 background-position: center;
 // background-image: radial-gradient(rgba(0,0,0,0.8), rgba(0, 0, 0, 0.1)),url("images/poster.jpg");
-background-image: linear-gradient(135deg, #f9f0ff, #f9f0ff 25%, #d3adf7 25%, #d3adf7 50%, #531dab 50%, #531dab 75%, #22075e 75%, #22075e 100%);
+background-image: linear-gradient(135deg, #13c2c2, #13c2c2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
 width: 100%;
 min-height: 200px;
 display: flex;

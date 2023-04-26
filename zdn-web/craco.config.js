@@ -8,12 +8,13 @@ const darkTheme = getThemeVariables({
 
 const modifyVars = {
   ...darkTheme,
-  '@primary-color': '#4c1bb3', // rgb(76,27,179)
-  '@info-color': '#18b0d7',
-  '@link-color': '#22075e',
+  '@primary-color': '#13c2c2', // rgb(19,194,194)
+  '@info-color': '#13c2c2',
+  '@link-color': '#13c2c2',
+  '@success-color': '#13c2c2',
   '@font-size-base': '14px',
   '@table-font-size': '12px',
-  '@layout-header-background': '#05001a',
+  '@layout-header-background': '#002329',
   // '@height-base': '32px',
   // '@height-lg': '40px',
   // '@height-sm': '24px',
