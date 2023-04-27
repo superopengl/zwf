@@ -53,7 +53,7 @@ async function chargeLastSubscriptionPriodIfDue() {
 }
 
 function logProgress(message: string, index: number, period: OrgSubscriptionPeriod) {
-  const days = period.periodDays ?? moment(period.periodTo).diff(moment(period.periodFrom), 'days');
+  const days = period.periodDays ?? moment(period.periodTo).diff(moment(period.periodFrom), 'days') + 1;
   const msg = `
 [${index}] ${message} 
     periodId: ${period.id} (seq ${period.seq})   orgId ${period.orgId}
