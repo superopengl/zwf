@@ -91,7 +91,9 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
         id: true
       },
       orgId: true,
-      userId: true,
+      orgClient: {
+        userId: true,
+      },
     }
   });
   assert(task, 404);

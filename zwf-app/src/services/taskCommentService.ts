@@ -15,7 +15,7 @@ export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, task: Task | TaskInformation, by: string, info?: any) {
   assert(task, 500);
   const comment = new TaskActivity();
-  const { userId, orgId, id: taskId } = task;
+  const { orgId, id: taskId } = task;
   comment.id = uuidv4();
   comment.type = action;
   comment.taskId = taskId;
@@ -23,22 +23,25 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
   comment.info = info;
   const result = await m.save(comment);
 
-  await m.createQueryBuilder()
-    .insert()
-    .into(TaskActivityLastSeen)
-    .values({ taskId, userId, lastHappenAt: () => `NOW()` })
-    .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
-    .execute();
+  const userId = (task as any).orgClient?.userId;
+  if (userId) {
+    await m.createQueryBuilder()
+      .insert()
+      .into(TaskActivityLastSeen)
+      .values({ taskId, userId, lastHappenAt: () => `NOW()` })
+      .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
+      .execute();
 
-  publishZevent({
-    type: 'task.comment',
-    userId,
-    taskId,
-    taskName: task.name,
-    orgId,
-    by,
-    payload: comment
-  });
+    publishZevent({
+      type: 'task.comment',
+      userId,
+      taskId,
+      taskName: task.name,
+      orgId,
+      by,
+      payload: comment
+    });
+  }
 
   return result;
 }

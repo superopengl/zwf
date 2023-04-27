@@ -149,13 +149,15 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
       id: docId
     },
     relations: {
-      task: true,
+      task: {
+        orgClient: true,
+      },
       file: true,
     }
   });
 
   assert(doc, 404);
-  assert(role !== Role.Client || doc.task.userId === getUserIdFromReq(req), 404);
+  assert(role !== Role.Client || doc.task.orgClient?.userId === getUserIdFromReq(req), 404);
 
   const { file, docTemplateId } = doc;
 
@@ -192,11 +194,13 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
       },
       relations: {
         file: true,
-        task: true,
+        task: {
+          orgClient: true,
+        },
       },
     });
 
-    assert(docs[0]?.task?.userId === userId, 404);
+    assert(docs[0]?.task?.orgClient?.userId === userId, 404);
 
     const now = getUtcNow();
     docs.forEach(d => {
