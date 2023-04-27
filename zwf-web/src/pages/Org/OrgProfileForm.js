@@ -93,7 +93,7 @@ const OrgProfileForm = (props) => {
       title: 'Org legal business name',
       dataIndex: 'businessName',
       formItemProps: {
-        help: <>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>,
+        help: <>The legal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>,
         rules: [{ required: true, message: ' ', whitespace: true, max: 100 }]
       },
       fieldProps: {
