@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Divider, Layout } from 'antd';
+import { Typography, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import HomeFooter from 'components/HomeFooter';
 const ContainerStyled = styled.div`
@@ -8,15 +8,10 @@ padding: 2rem 1rem;
 margin: 1rem auto;
 text-align: left;
 width: 100%;
-max-width: 900px;
-font-size: 0.9rem;
+max-width: 700px;
 
-h2 {
+h1 {
   font-size: 1.3rem;
-}
-
-h3 {
-  font-size: 1.1rem;
 }
 `;
 const { Title } = Typography;
@@ -24,90 +19,73 @@ const PrivacyPolicyPage = () => <Layout>
   <ContainerStyled>
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
     <Title style={{ textAlign: 'center' }}>ZeeWorkflow Pty Ltd - Privacy Policy</Title>
-    <p>Protecting your privacy and the confidentiality of your personal information is a high priority for ZeeWorkflow Pty Ltd.</p>
-    <p>Personal information with regards to this website and all ZeeWorkflow Pty Ltd online portals (and any other ZeeWorkflow Pty Ltd printed materials) means information we hold about you from which we can search for and retrieve your identity. For example, we may collect and use your name and address details when you acquire or use particular ZeeWorkflow Pty Ltd membership services. ZeeWorkflow Pty Ltd understands that providing your personal information imposes a serious responsibility upon us.</p>
-    <p>We are committed to protecting your personal information. Where your personal information may be disclosed, and to the extent that we can, we believe in giving you a choice as to whom we may disclose your personal information to, and how these third parties may use your personal information for direct marketing.</p>
-    <Divider/>
-    <Title level={2} id="collecting-your-personal-information">Collecting your personal information</Title>
-    <p>We collect personal information directly from you, and only to the extent necessary to deliver and ensure a ZeeWorkflow Pty Ltd membership service. We may choose to collect personal information from you when you fill in an application form, both in hard copy format or online via our website, or over the telephone.</p>
-    <p>We will always attempt to collect personal information from you using lawful and fair means, and not in an unlawful manner. The type of personal information we may collect from you generally comprises name, address, gender, contact details (including phone, fax and e-mail).</p>
-    <p>If we do not collect this information, we may not be able to provide you with the ZeeWorkflow Pty Ltd membership service you have requested.</p>
-    <p>If you supply us with the personal information of a third party, you agree to notify that third party of this Privacy Policy.</p>
-    <Divider/>
-    <Title level={2} id="how-we-make-use-of-your-personal-information">How we make use of your personal information</Title>
-    <p>ZeeWorkflow Pty Ltd will collect your personal information in order to provide you with, or give you access to, a particular ZeeWorkflow Pty Ltd membership service. ZeeWorkflow Pty Ltd may choose to disclose your personal information for the main purpose for which we collect it, with such disclosure reasonably expected by you. Some of these examples include, but are not limited to:</p>
+    <p style={{ textAlign: 'center' }}>Last Updated: April 2023</p>
+    <h1>General Information</h1>
+    <p>At Zeeworkflow, we are committed to keeping your information safe and secure. We collect data to improve and personalize our services, and we respect your privacy. We use various technologies, such as cookies and error reports, to record how you interact with our services. We may also obtain data from third parties to supplement what we collect. The information we collect depends on the features you use. We use your information for three purposes: to operate and improve our services, to send communications, and to support your use of the Zeeworkflow software. We share your information only with your consent or as necessary to complete transactions or provide services you have requested. We also share personal data with vendors or agents working on our behalf, subject to our data privacy and security requirements. You can manage your personal data online and choose whether to receive promotional communications from us. Our service is hosted on Amazon, which has data centers worldwide. We take precautions to protect your data, no matter where it is stored.</p>
+    <p>&nbsp;</p>
+    <h1><span><strong>Zeeworkflow Pty Ltd, </strong></span><span>Zeeworkflow</span><span><strong> ‘us’, and ‘you’</strong></span></h1>
+    <p>Refers to itself as 'we', 'us', and 'our'. The users, subscribers, or viewers of the Zeeworkflow software, websites, or other related services are referred to as 'you'. The company warns of potential risks involved in the use of the internet, including external websites and sources. The data collected by the company includes direct data provided by users, data obtained through interactions with the service, and data obtained from third parties. The data collected is used to operate the business and provide personalized services, to send communications and promotional materials, and to support users in their use of the service. The data may be shared with third-party providers, affiliates, subsidiaries, and vendors or agents working on behalf of the company. The company provides options for users to view and edit their personal data and choose whether they wish to receive promotional communications. The data may be stored in multiple locations worldwide, but the company has safeguards in place to protect it. The company retains the data for the duration of any active subscription or relationship with the user and for a period afterwards. Users have the right to access, correct, and delete their personal data.</p>
+    <p>&nbsp;</p>
+    <h1><strong>Risks to you Personal Information</strong></h1>
+    <p>While Zeeworkflow Pty Ltd takes every measure to ensure the security and privacy of personal data and to prevent unauthorized access, alteration, corruption or destruction, we would like to caution our users that not all risks related to the use of the Internet can be fully controlled. Please note that Zeeworklow and any related documentation or correspondence may contain links to other websites or sources outside of our control. We cannot be held responsible for the provision, display, content, advertising, products, services or any other material available on or from these external sources.</p>
+    <p>&nbsp;</p>
+    <h1><span><strong>Information We Collect</strong></span></h1>
+    <p>At Zeeworkflow, we gather data to ensure optimal functionality and provide you with a seamless experience. Some of this data is supplied directly by you, such as when you request a trial, subscribe to our services, or input information into the application. Other data is collected through the use of technologies like cookies and by analyzing your interaction with our services, including error reports and usage data from software on your device. We may also obtain data from third-party sources, such as demographic data purchased from other companies. Additionally, we use location-based services from external sources to customize certain features based on your IP address. The data we collect is dependent on the particular services and features you use.</p>
+    <p>&nbsp;</p>
+    <h1><strong>How we use your information</strong></h1>
+    <p>We have three primary objectives for the data we collect: to effectively operate our business and offer services (including personalization and improvement), which may involve sharing data with our third-party providers, to send communications (including marketing communications), and to assist you in your use of the Zeeworkflow software. To provide you with a more seamless, consistent, and personalized experience, we integrate data we collect from the various web services you use. However, we have implemented technological and procedural safeguards to protect privacy and prevent certain data combinations. For instance, we store data we collect from unauthenticated users (not signed in) separately from any account information that directly identifies them, such as their name, email, or phone number.</p>
+    <p>&nbsp;</p>
+    <h1><span><strong>Sharing Your Information</strong></span></h1>
+    <p>We only share your personal data with your consent or as necessary to fulfill any transaction or provide the services you have requested or authorized. For instance, we share your content with third parties only when you explicitly instruct us to do so. When you provide payment data to make a purchase, we share it with banks and other entities involved in processing payment transactions, providing financial services, and preventing fraud and credit risks.</p>
+    <p>We may also share personal data with our controlled affiliates and subsidiaries for the purposes outlined in this statement. Additionally, we may share personal data with vendors or agents who work on our behalf, such as companies providing customer service support or assisting us in protecting and securing our systems and services. However, these companies must comply with our data privacy and security requirements and are prohibited from using personal data received from us for any other purpose.</p>
+    <p>Furthermore, we may disclose personal data as part of a corporate transaction, such as a merger or sale of assets.</p>
+    <p>&nbsp;</p>
+    <h1><span><strong>Management of Personal Data and Communications</strong></span></h1>
+    <p>Accessing and managing your personal data is possible through our online services. The options available to you for controlling or accessing your personal data may vary depending on the Zeeworkflow services you use. You have the option to opt-out of receiving promotional communications from us via email, SMS, physical mail, and telephone. If you receive any promotional emails or SMS messages from us and wish to opt-out, you can follow the instructions provided in the message. Please note that these choices do not apply to mandatory service communications that are essential for billing or core Zeeworkflow services.</p>
+    <p>&nbsp;</p>
+    <h1><span><strong>International Data Storage</strong></span></h1>
+    <p>Zeeworkflow is hosted on Amazon, a global provider of online services with data centers located worldwide. Your data will primarily be stored in a location within the same region as you for performance, regulatory, and security purposes. However, it is possible for backups and traces of your data to be stored in other regions. We and Microsoft have implemented safeguards to protect your data in any location where it is stored. We make every effort to ensure that your data remains in secure locations that we trust and control at all times.</p>
+    <p>&nbsp;</p>
+    <h1>Cookies</h1>
+    <p>we are committed to protecting the privacy of our users. This cookie policy explains how we use cookies and similar technologies on our website.</p>
+    <p>What are Cookies? Cookies are small text files that are placed on your device when you visit our website. They help us improve your browsing experience and provide you with personalized services.</p>
+    <p>How We Use Cookies We use cookies to:</p>
     <ul>
-      <li>Helping ZeeWorkflow Pty Ltd to develop a stronger relationship with you</li>
-      <li>Internal membership management, accounting and finance</li>
-      <li>Administrative reporting</li>
-      <li>Protecting you and ZeeWorkflow Pty Ltd from fraud</li>
-      <li>As part of a ZeeWorkflow Pty Ltd campaign.</li>
+      <li>Remember your preferences and settings</li>
+      <li>Analyze how you use our website and understand your behavior</li>
+      <li>Provide personalized content and advertisements based on your interests</li>
+      <li>Improve the performance and functionality of our website</li>
     </ul>
-    <p>Occasionally, we may also disclose your personal information for the purposes of facilitating the distribution of marketing materials to you by ZeeWorkflow Pty Ltd employing a third party. We will not do this if you ask us not to do so. There are other situations where we are compelled by law to disclose your personal information.</p>
-    <Divider/>
-    <Title level={2} id="direct-marketing">Direct Marketing</Title>
-    <p>ZeeWorkflow Pty Ltd may use the personal information we collect from you to identify particular ZeeWorkflow
-    Pty Ltd products and services, which we believe may be of interest and benefit to you, such as from third
-    parties. This may include such activities as competitions, policy announcements, campaigns or to hear about
-    shows and entertainment from ZeeWorkflow Pty Ltd, our community partners or affiliated sponsors. We may
-    then contact you to let you know about these products and services. If you do not wish to receive this direct
-marketing information from ZeeWorkflow Pty Ltd, please let us know.</p>
-    <Divider/>
-    <Title level={2} id="quality-and-accuracy-of-your-personal-information">Quality and accuracy of your personal information</Title>
-    <p>If we have accurate personal information about you, it enables us to provide you with the best possible service.
-    ZeeWorkflow Pty Ltd will take reasonable steps to ensure the personal information we collect, use and disclose is
-    accurate, complete and up-to-date. If you find that the personal information we hold about you is inaccurate,
-incomplete or out-of-date, please contact us immediately and we will take reasonable steps to correct it.</p>
-    <Divider/>
-    <Title level={2} id="zwf-allied-pty-ltd-campaigns">ZeeWorkflow Pty Ltd Campaigns</Title>
-    <p>ZeeWorkflow Pty Ltd conducts various campaigns and from time to time may use your contact details to update
-    you on the status of a campaign. Likewise, ZeeWorkflow Pty Ltd may also use your details for specific petitions
-    on campaigns. If you have signed a petition, your details may be used for instances such as presenting this
-    information to members of Parliament. If you do not wish for ZeeWorkflow Pty Ltd to contact you via phone or
-email during or campaign or present a petition you have signed, please let us know.</p>
-    <Divider/>
-    <Title level={2} id="security-of-your-information">Security of your information</Title>
-    <p>ZeeWorkflow Pty Ltd takes reasonable steps to protect your personal information from loss, misuse, unauthorised
-disclosure or destruction.</p>
-    <Divider/>
-    <Title level={2} id="cookies-on-zwf-allied-pty-ltd-website">Cookies on ZeeWorkflow Pty Ltd website</Title>
-    <p>A "cookie" is a packet of information that allows the ZeeWorkflow Pty Ltd server (the computer that houses our
-web site) to identify and interact more effectively with your computer.</p>
-    <p>When you access our website, we send you a "temporary cookie" that gives you a unique identification number.
-    A different identification number is sent each time you use our web site. Cookies do not identify individual
-    users, although they do identify a user's Internet browser type and your Internet Service Provider. Our cookie
-    allows us to keep track of the pages you have accessed while visiting our web site. It also allows you to page
-    back and forwards through our website and return to pages you have already visited without requiring you to
-log in to our home page again.</p>
-    <p>You can configure your Internet browser to accept all cookies, reject all cookies or notify you when a cookie is
-sent. Please refer to your Internet browser's instructions or help screens to learn more about these functions.</p>
-    <Divider/>
-    <Title level={2} id="information-logged-on-the-zwf-allied-pty-ltd-website">Information logged on the ZeeWorkflow Pty Ltd website</Title>
-    <p>When you visit the ZeeWorkflow Pty Ltd web site, our server logs the following information which is provided by your browser for statistical purposes only:</p>
+    <p>Types of Cookies We Use We use different types of cookies on our website, including:</p>
     <ul>
-      <li>The type of browser and operating system you are using</li>
-      <li>Your Internet Service Provider and top level domain name (for example - .com, .gov, .au, .uk etc)</li>
-      <li>Your computer's IP (Internet Protocol) address (a number which is unique to the machine through which you are connected to the internet).</li>
-      <li>All of this information is used by ZeeWorkflow Pty Ltd for aggregated statistical analyses, such as Google Analytics reporting, or systems administration purposes only. More information about how Google Analytics collects and processes data is available at <a href="https://www.google.com/policies/privacy/partners/" target="_blank" rel="noopener noreferrer">https://www.google.com/policies/privacy/partners/</a>.</li>
+      <li>
+        <p>Necessary cookies: These cookies are essential for the proper functioning of our website and cannot be disabled. They help us remember your preferences and settings, and enable you to access secure areas of our website.</p>
+      </li>
+      <li>
+        <p>Analytics cookies: We use these cookies to collect information about how you use our website, such as which pages you visit most frequently, and if you experience any errors. This helps us improve the performance and usability of our website.</p>
+      </li>
+      <li>Functionality cookies: These cookies allow us to remember your preferences and settings, such as your language or location, role, and provide you with enhanced features and services. These cookies will be encrypted.</li>
     </ul>
-    <Divider/>
-    <Title level={2} id="links-to-other-websites">Links to other websites</Title>
-    <p>The ZeeWorkflow Pty Ltd site contains links to other web sites. While ZeeWorkflow Pty Ltd will always endeavour to engage in business arrangements with commercial entities of good repute and ethical business practices, we are ultimately not responsible for the privacy practices or the content of such external web sites.</p>
-    <p>Please note that ZeeWorkflow Pty Ltd takes no responsibility for your PC obtaining any viruses from visiting these website links, or viruses obtained from visiting the ZeeWorkflow Pty Ltd website.</p>
-    <Divider/>
-    <Title level={2} id="searching-within-the-zwf-allied-pty-ltd-website">Searching within the ZeeWorkflow Pty Ltd website</Title>
-    <p>Search terms that you enter when using our search engine are collected, but are not associated with any other information that we collect. We use these search terms for the purpose of aggregated statistical analyses so we can ascertain what people are looking for on our web site, and to improve the services that we provide.</p>
-    <Divider/>
-    <Title level={2} id="accessing-your-personal-information">Accessing your personal information</Title>
-    <p>ZeeWorkflow Pty Ltd will, upon your request, and subject to applicable privacy laws, provide you with access to your personal information held by us. However, we ask that you identify, as clearly as possible, the type/s of information requested.</p>
-    <Divider/>
-    <Title level={2} id="contact-the-zwf-allied-pty-ltd-privacy-officer">Contact the ZeeWorkflow Pty Ltd Privacy Officer</Title>
-    <p>Please email your query and contact details (your name, contact phone number and email address) to the ZeeWorkflow Pty Ltd Officer at <a href="mailto:office.zwf.allied@gmail.com">office.zwf.allied@gmail.com</a>. We will respond to your query or complaint within 14 working days from the date first lodged. If your complaint is not resolved to your satisfaction you can contact the Office of the Privacy Commissioner on <a href="tel:1300 363 992">1300 363 992</a>.</p>
-    <p>This policy represents our policy at Aug 2020. We may change this privacy policy from time to time.</p>
-
+    <p>Managing Your Cookies You can manage your cookies preferences by changing your browser settings. Please note that disabling certain cookies may affect the functionality of our website and limit your ability to use certain features.</p>
+    <p>Third-Party Cookies We may also use third-party cookies on our website, such as those from SSO provider, social media platforms or advertising networks. These cookies are subject to the privacy policies of their respective providers.</p>
+    <p>Updates to this Cookie Policy We may update this cookie policy from time to time. We encourage you to review it periodically for any changes.</p>
+    <p>&nbsp;</p>
+    <h1><strong>Retention</strong></h1>
+    <p>The length of time we retain your data depends on several factors, including the type of data we hold, our current relationship with you, and our business needs. We will keep your data for as long as necessary to maintain an active subscription or relationship with you and for a reasonable period thereafter, until we determine that we no longer require it. In cases where we use your data solely for statistical purposes, we will anonymize it for long-term storage and analysis.</p>
+    <p>&nbsp;</p>
+    <h1><strong>Your Rights</strong></h1>
+    <p>As a data subject, you have certain rights with respect to your personal information. You have the right to access, correct, and update your data at any time. You may also request a copy of any personal data we hold about you. Additionally, you have the right to object to the processing of your data by submitting a written request.</p>
+    <p>Moreover, you have the right to request that we stop sending you any marketing-related communications at any time, either through a specific communication channel or all channels. You may do so by using the unsubscribe or stop links within your communication or by contacting us using the information provided below.</p>
+    <p>&nbsp;</p>
+    <h1><span><strong>Contact Us</strong></span></h1>
+    <p>To contact us about this statement, our terms of use, Zeeworkflow or any personal data we may hold about you, please use any of the following methods:</p>
+    <ul>
+      <li>Email to <a rel="noopener" href="mailto:info@zeeworkflow.com">info@zeeworkflow.com</a></li>
+      <li>Submit a contact message on our homepage.</li>
+    </ul>
   </ContainerStyled>
-  <HomeFooter/>
-  </Layout>
+  <HomeFooter />
+</Layout>
 
 
 PrivacyPolicyPage.propTypes = {};
