@@ -30,9 +30,6 @@ const ContainerStyled = styled(Layout.Content)`
   margin: 0 auto;
 `;
 
-const LogoContainer = styled.div`
-  margin-bottom: 2rem;
-`;
 
 const { Title } = Typography;
 const ActivateAccountPage = props => {
