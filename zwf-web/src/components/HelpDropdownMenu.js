@@ -7,7 +7,7 @@ import AboutModal from 'pages/About/AboutModal';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { UserAvatar } from 'components/UserAvatar';
-import TermAndConditionPage from 'pages/TermAndConditionPage';
+import TermOfUsePage from 'pages/TermOfUsePage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { CommentOutlined, QuestionCircleFilled, QuestionOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
@@ -47,7 +47,7 @@ export const HelpDropdownMenu = React.memo((props) => {
         key: 'tc',
         // disabled: true,
         // icon: <QuestionCircleFilled />,
-        label: <Link href="/terms_and_conditions" target="_blank">Terms and Conditions</Link>
+        label: <Link href="/terms_of_use" target="_blank">Terms of Use</Link>
       },
       {
         key: 'home',

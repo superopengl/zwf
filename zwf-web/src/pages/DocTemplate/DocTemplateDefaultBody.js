@@ -17,7 +17,7 @@ export const DOC_TEMPLATE_DEFAULT_HTML_BODY =`
 </blockquote>
 <p>X<sup>2 superscript</sup></p>
 <p>Y<sub>1 subscript</sub></p>
-<p><a href="https://zeeworkflow.com/terms_and_conditions">Link</a></p>
+<p><a href="https://zeeworkflow.com/terms_of_use">Link</a></p>
 <p>Align left</p>
 <p style="text-align: center;">Align middle</p>
 <p style="text-align: right;">Align right</p>

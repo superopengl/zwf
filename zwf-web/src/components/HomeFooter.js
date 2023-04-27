@@ -136,7 +136,7 @@ const HomeFooter = () => {
           <Space style={{ position: 'relative' }} direction={screens.xs ? 'vertical' : 'horizontal'} size={screens.xs ? 'small' : 'large'}>
             <Button type="text" className='copyright-button'>©{new Date().getFullYear()} ZeeWorkflow</Button>
             <Button type="link" href="/privacy_policy" target="_blank">Privacy Policy</Button>
-            <Button type="link" href="/terms_and_conditions" target="_blank">Terms & Conditions</Button>
+            <Button type="link" href="/terms_of_use" target="_blank">Terms of Use</Button>
           </Space>
         </Col>
       </Row>

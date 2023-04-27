@@ -33,7 +33,7 @@ const ActivateAccountPage = loadable(() => import('pages/ActivateAccountPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const OrgResurgingPage = loadable(() => import('pages/OrgResurgingPage'));
-const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
+const TermAndConditionPage = loadable(() => import('pages/TermOfUsePage'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const TaskDirectPage = loadable(() => import('pages/MyTask/TaskDirectPage'))
@@ -115,7 +115,7 @@ export const App = React.memo(() => {
     createRoutesFromElements(
       <Route path="/">
 
-        <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
+        <Route path="/terms_of_use" element={<TermAndConditionPage />} />
         <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
         <Route path="/login" element={<LogInPage />} />
         <Route path="/signup/org" element={<OrgSignUpPage />} />

@@ -7,7 +7,7 @@ import AboutModal from 'pages/About/AboutModal';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { UserAvatar } from 'components/UserAvatar';
-import TermAndConditionPage from 'pages/TermAndConditionPage';
+import TermOfUsePage from 'pages/TermOfUsePage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
@@ -179,7 +179,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       maskClosable={false}
       width={600}
     >
-      <TermAndConditionPage />
+      <TermOfUsePage />
     </Modal>
     <Modal
       open={ppVisible}

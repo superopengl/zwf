@@ -48,7 +48,7 @@
 <mj-section>
   <mj-column>
     <mj-text font-size="14px" font-weight="400" color="#464B53" line-height="17px" padding-top="0" align="center" css-class="footer-section">
-      Use of ZeeWorkflow products is governed by our <a target="_blank" href="https://zeeworkflow.com/privacy_policy">privacy policy</a> and <a target="_blank" href="https://zeeworkflow.com/terms_and_conditions">terms and conditions</a>
+      Use of ZeeWorkflow products is governed by our <a target="_blank" href="https://zeeworkflow.com/privacy_policy">privacy policy</a> and <a target="_blank" href="https://zeeworkflow.com/terms_of_use">terms of use</a>
     </mj-text>
   </mj-column>
 </mj-section>

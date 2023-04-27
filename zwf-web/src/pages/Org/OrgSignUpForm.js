@@ -74,16 +74,10 @@ const OrgSignUpForm = (props) => {
           <Form.Item label="" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
             <Input placeholder={intl.formatMessage({ id: 'placeholder.rootEmailAddress' })} type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
           </Form.Item>
-          {/* <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
-          validator: (_, value) =>
-            value ? Promise.resolve() : Promise.reject('You have to agree to continue.'),
-        }]}>
-          <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
-        </Form.Item> */}
           <Text>
             <FormattedMessage id="text.byClickingAgreement"
               values={{
-                tc: <a target="_blank" href="/terms_and_conditions">
+                tc: <a target="_blank" href="/terms_of_use">
                   <FormattedMessage id="menu.tc" />
                 </a>,
                 pp: <a target="_blank" href="/privacy_policy">
