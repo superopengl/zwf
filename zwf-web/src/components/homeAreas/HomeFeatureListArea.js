@@ -80,7 +80,7 @@ const orgFeatures = [
   { name: 'Tags for task and user management', release: 'v1' },
   { name: 'Invite any clients by email addresses', release: 'v1' },
   { name: 'Google Single Sign On', release: 'v1' },
-  { name: 'Team metrics', dev: true },
+  // { name: 'Team metrics', dev: true },
 ].map((x, i) => ({
   key: i,
   name: x.name,
@@ -91,7 +91,7 @@ const orgFeatures = [
 
 const clientFeatures = [
   { name: 'Realtime chat communication', release: 'v1' },
-  { name: 'Task event timeline', release: 'v1' },
+  // { name: 'Task event timeline', release: 'v1' },
   { name: 'Doc Sign', release: 'v1' },
   // { name: 'Doc Sign on blockchian', dev: true },
 ].map((x, i) => ({
@@ -136,7 +136,7 @@ export const HomeFeatureListArea = props => {
   return (
     <Container>
       <InnerContainer>
-        <Title style={{ textAlign: 'center' }}>Included Features</Title>
+        <Title style={{ textAlign: 'center' }}>Included Main Features</Title>
         <Row justify='center' >
           <Col style={{ maxWidth: 700, width: '100%' }}>
             <Table
