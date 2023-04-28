@@ -3,9 +3,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Input, Button, Form, } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { login$ } from 'services/authService';
-import { delay, finalize, filter, tap, map } from 'rxjs/operators';
+import { finalize, filter, tap, map, catchError } from 'rxjs/operators';
 import PropTypes from 'prop-types';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { notify } from 'util/notify';
+import { of } from 'rxjs';
 
 
 export const LogInPanel = props => {
@@ -35,10 +37,11 @@ export const LogInPanel = props => {
     login$(values.name, values.password)
       .pipe(
         filter(u => !!u),
-        finalize(() => setLoading(false)),
-      ).subscribe(user => {
-        setAuthUser(user, '/landing')
-      })
+        finalize(() => setLoading(false))
+      ).subscribe({
+        next: user => setAuthUser(user, '/landing'),
+        error: err => {},
+      });
   }
 
   return (
