@@ -8,6 +8,7 @@ import { Org } from '../Org';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 import { Tag } from '../Tag';
+import { OrgClient } from '../OrgClient';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection
@@ -21,7 +22,8 @@ import { Tag } from '../Tag';
         `array_agg(json_build_object('id', t.id, 'name', t.name)) as tags`,
       ]), 'tag', 'tag."taskId" = t.id')
     .innerJoin(Org, 'o', 't."orgId" = o.id')
-    .innerJoin(User, 'u', `u.id = t."userId"`)
+    .innerJoin(OrgClient, 'c', `c.id = t."orgClientId"`)
+    .leftJoin(User, 'u', `u.id = c."userId"`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .select([
       't.id as id',
@@ -29,7 +31,8 @@ import { Tag } from '../Tag';
       't.name as name',
       // 't.fields as fields',
       't.status as status',
-      't."userId" as "userId"',
+      'c.id as "orgClientId"',
+      'u.id as "userId"',
       't."orgId" as "orgId"',
       'o."name" as "orgName"',
       'p.email as email',
@@ -58,6 +61,9 @@ import { Tag } from '../Tag';
 
   @ViewColumn()
   status: TaskStatus;
+
+  @ViewColumn()
+  orgClientId: string;
 
   @ViewColumn()
   userId: string;
