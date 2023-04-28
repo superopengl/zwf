@@ -15,14 +15,6 @@ import { OrgBasicInformation } from './OrgBasicInformation';
     .leftJoin(OrgBasicInformation, 'o', 'o.id = u."orgId"')
     // .leftJoin(OrgCurrentSubscriptionInformation, 's', 's."orgId" = u."orgId"')
     // .leftJoin(LicenseTicket, 't', 't."orgId" = u."orgId" AND t."userId" = u.id')
-    .leftJoin(q => q
-      .from('user_tags_tag', 'tg')
-      .groupBy('tg."userId"')
-      .select([
-        'tg."userId" as "userId"',
-        'array_agg(tg."tagId") as tags'
-      ]),
-      'tg', 'tg."userId" = u.id')
     .select([
       'p.email as email',
       'p."givenName" as "givenName"',
@@ -41,7 +33,6 @@ import { OrgBasicInformation } from './OrgBasicInformation';
       'u.suspended OR o."periodTo" < NOW() as suspended',
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
-      'tg.tags as tags',
       'o.type as "currentPlanType"',
       'o."periodTo" as "currentPeriodTo"'
     ]),
@@ -99,9 +90,6 @@ export class UserInformation {
 
   @ViewColumn()
   avatarColorHex: string;
-
-  @ViewColumn()
-  tags: string[];
 
   @ViewColumn()
   currentPlanType: 'trial' | 'monthly';

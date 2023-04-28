@@ -197,26 +197,6 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const setUserTags = handlerWrapper(async (req, res) => {
-  assertRole(req, ['admin']);
-  const { id } = req.params;
-
-  const { tags: tagIds } = req.body;
-  const repo = db.getRepository(User);
-  const user = await repo.findOne({ where: { id } });
-  if (tagIds?.length) {
-    user.tags = await db.getRepository(Tag).find({
-      where: {
-        id: In(tagIds)
-      }
-    });
-  } else {
-    user.tags = [];
-  }
-  await repo.save(user);
-  res.json();
-});
-
 export const setUserRole = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin']);
   const { id } = req.params;

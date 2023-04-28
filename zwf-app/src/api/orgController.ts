@@ -29,6 +29,7 @@ import { enqueueEmailInBulk } from "../services/emailService";
 import { EmailRequest } from "../types/EmailRequest";
 import { EmailTemplateType } from "../types/EmailTemplateType";
 import { getEmailRecipientName } from "../utils/getEmailRecipientName";
+import { Tag } from "../entity/Tag";
 
 const TRIAL_PERIOD_DAYS = 14;
 
@@ -45,6 +46,27 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   }
 
   res.json(org);
+});
+
+export const setOrgClientTags = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+
+  const { tags: tagIds } = req.body;
+  const repo = db.getRepository(OrgClient);
+  const orgClient = await repo.findOneBy({ id, orgId  });
+  if (tagIds?.length) {
+    orgClient.tags = await db.getRepository(Tag).find({
+      where: {
+        id: In(tagIds)
+      }
+    });
+  } else {
+    orgClient.tags = [];
+  }
+  await repo.save(orgClient);
+  res.json();
 });
 
 export const listOrg = handlerWrapper(async (req, res) => {
@@ -136,7 +158,7 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
 
     const period = await m.findOneByOrFail(OrgSubscriptionPeriod, { orgId, tail: true });
     const isTrialPeriod = period.type === 'trial';
-    if(!isTrialPeriod) {
+    if (!isTrialPeriod) {
       await checkoutSubscriptionPeriod(m, period, true);
     }
 

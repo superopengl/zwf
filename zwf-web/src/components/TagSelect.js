@@ -115,7 +115,7 @@ export const TagSelect = React.memo((props) => {
     bordered={bordered}
     tagRender={handleTagRender}
     dropdownMatchSelectWidth={false}
-    maxTagCount="responsive"
+    // maxTagCount="responsive"
     options={tags.map(t => ({ value: t.id, label: <Tag color={t.colorHex}>{t.name}</Tag> }))}
     value={value}
     onChange={handleChange}

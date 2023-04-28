@@ -22,12 +22,8 @@ export function saveProfile$(userId, profile) {
   return httpPost$(`/user/${userId}/profile`, profile);
 }
 
-export async function setUserTags(userId, tags) {
-  return httpPost(`/user/${userId}/tags`, { tags });
-}
-
-export function setUserTags$(userId, tagIds) {
-  return httpPost$(`/user/${userId}/tags`, { tags: tagIds });
+export function setOrgClientTags$(orgClientId, tagIds) {
+  return httpPost$(`/org/client/${orgClientId}/tags`, { tags: tagIds });
 }
 
 export async function setUserRole(userId, role) {

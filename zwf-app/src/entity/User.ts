@@ -59,10 +59,6 @@ export class User {
   @Column('uuid', { nullable: true })
   profileId: string;
 
-  @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
-  @JoinTable()
-  tags: Tag[];
-
   @Column({ default: false })
   orgOwner: boolean;
 

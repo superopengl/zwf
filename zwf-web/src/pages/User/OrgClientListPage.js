@@ -10,7 +10,7 @@ import Icon, {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setUserTags$, searchOrgClientUsers$ } from 'services/userService';
+import { setOrgClientTags$, searchOrgClientUsers$ } from 'services/userService';
 import { TagSelect } from 'components/TagSelect';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
@@ -56,8 +56,8 @@ const OrgClientListPage = () => {
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
   const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
 
-  const handleTagChange = (user, tags) => {
-    setUserTags$(user.id, tags).subscribe()
+  const handleTagChange = (orgClient, tags) => {
+    setOrgClientTags$(orgClient.id, tags).subscribe()
   }
 
   const loadList$ = () => {
@@ -120,19 +120,7 @@ const OrgClientListPage = () => {
     searchByQueryInfo$({ ...queryInfo, page, size: pageSize });
   }
 
-  const handleTagsChange = user => {
-    showSetTagsModal(user.tags, (tagIds, onClose) => {
-      setUserTags$(user.id, tagIds).pipe(
-        finalize(() => onClose())
-      ).subscribe(() => {
-        loadList$();
-      });
-    })
-  }
 
-  const handleInviteClient = () => {
-
-  }
 
   const columnDef = [
     {
