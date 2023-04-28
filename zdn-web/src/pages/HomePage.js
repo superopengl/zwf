@@ -45,6 +45,10 @@ const StyledLayout = styled(ProLayout)`
   background: transparent !important;
 }
 
+.ant-pro-top-nav-header {
+  // box-shadow: none;
+}
+
 .ant-pro-top-nav-header-logo, .ant-pro-top-nav-header-main-left {
   min-width: 0;
 }
@@ -56,9 +60,9 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
   // background-color: rgba(19,194,194,0.7);
-  background-color: rgba(255,255,255,0.8);
-  // background-color: rgba(0, 41, 61, 0.6); 
-// background-image: linear-gradient(125deg, #13c2c2, #13c2c2 90px, rgba(255,255,255,0.3) 90px, rgba(255,255,255,0.3) 100%);
+  background-color: #00474fdd;
+  // background-color: rgba(0, 41, 61, 0.7); 
+// background-image: linear-gradient(135deg, #00474f, #00474f 400px, rgba(255,255,255,0.0) 400px, rgba(255,255,255,0.0) 100%);
 }
 
 .ant-pro-global-header-collapsed-button {
@@ -67,9 +71,9 @@ const StyledLayout = styled(ProLayout)`
 }
 
 .ant-pro-menu-item-title {
-  // color: rgba(255,255,255,0.75);
-  color: rgba(0,0,0,0.75);
-  font-weight: 300;
+  color: rgba(255,255,255,0.95);
+  // color: rgba(0,0,0,0.75);
+  font-weight: 400;
 }
 `;
 

@@ -79,14 +79,10 @@ const PaymentStepperWidget = (props) => {
     onComplete();
   }
 
-  // const handleCommitSubscription = async (data) => {
-  //   await commitSubscription(subscriptionId, {
-  //     paidAmount: paidAmount,
-  //     paymentMethod: paymentDetail.paymentMethod,
-  //     rawRequest: req,
-  //     rawResponse: resp
-  //   });
-  // }
+  const handlePromotionCodeChange = code => {
+    setPromotionCode(code);
+    
+  }
 
   const handleStepChange = current => {
     setCurrentStep(current);

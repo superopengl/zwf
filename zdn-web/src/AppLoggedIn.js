@@ -35,8 +35,7 @@ const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const AgentUserListPage = loadable(() => import('pages/User/AgentUserListPage'));
 const ClientUserListPage = loadable(() => import('pages/User/ClientUserListPage'));
-const OrgSubscriptionPage = loadable(() => import('pages/MyAccount/OrgSubscriptionPage'));
-const OrgPaymentMethodPage = loadable(() => import('pages/MyAccount/OrgPaymentMethodPage'));
+const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
@@ -147,16 +146,6 @@ const ROUTES = [
     name: <FormattedMessage id="menu.account" />,
     icon: <Icon component={() => <BiDollar />} />,
     roles: ['admin'],
-    routes: [
-      {
-        path: '/account/subscription',
-        name: <FormattedMessage id="menu.subscription" />,
-      },
-      {
-        path: '/account/payment_methods',
-        name: <FormattedMessage id="menu.paymentMethods" />,
-      },
-    ]
   },
   {
     path: '/promotion',
@@ -344,8 +333,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
-      <RoleRoute visible={isAdmin} exact path="/account/subscription" component={OrgSubscriptionPage} />
-      <RoleRoute visible={isAdmin} exact path="/account/payment_methods" component={OrgPaymentMethodPage} />
+      <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem} exact path="/promotion" component={PromotionListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={AgentUserListPage} />
