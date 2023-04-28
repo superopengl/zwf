@@ -310,47 +310,52 @@ export const reinviteOrgMember = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const inviteClientToOrg = handlerWrapper(async (req, res) => {
+export const addClientToOrg = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { emails: emailStrings } = req.body;
-  const emails = emailStrings?.split(/[,\n]/).map(x => x.trim()).filter(x => !!x);
-  assert(emails?.length, 400, 'No email address found');;
-  assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
+  const { alias, email } = req.body;
+  assert(alias, 400, 'No email address found');;
+  assert(!email || isEmail(email), 400, 'Invalid email address detected');
   const orgId = getOrgIdFromReq(req);
 
-  for (const email of emails) {
-    await db.manager.transaction(async m => {
-      const { user, newlyCreated } = await ensureClientOrGuestUser(m, email, orgId);
-      const orgClient = new OrgClient();
-      orgClient.orgId = orgId;
-      orgClient.userId = user.id;
+  await db.manager.transaction(async m => {
+    let user = null;
+    let newlyCreated = false;
+    if(email) {
+      const result = await ensureClientOrGuestUser(m, email, orgId);
+      user = result.user;
+      assert(user.role === Role.Client || user.role === Role.Guest, 400, 'Cannot proceed because the account is not a client account')
+      newlyCreated = result.newlyCreated;
+    }
 
-      await m.createQueryBuilder()
-        .insert()
-        .into(OrgClient)
-        .values(orgClient)
-        .orIgnore()
-        .execute();
+    const orgClient = new OrgClient();
+    orgClient.orgId = orgId;
+    orgClient.clientAlias = alias;
+    orgClient.userId = user?.id;
 
-      const org = await m.findOneBy(Org, { id: orgId });
-
-      if (!newlyCreated && user.role === Role.Client) {
-        /**
-         * Exisitng ZeeWorkflow user (client account), but first time to be served by this org.
-         */
-        await sendEmail({
-          to: email,
-          template: EmailTemplateType.InviteClientUser,
-          vars: {
-            toWhom: getEmailRecipientName(user),
-            email,
-            org: org.name,
-          },
-          shouldBcc: false
-        });
-      }
-    });
-  }
+    await m.createQueryBuilder()
+      .insert()
+      .into(OrgClient)
+      .values(orgClient)
+      .orIgnore()
+      .execute();
+      
+    // if (!newlyCreated && user.role === Role.Client) {
+    //   const org = await m.findOneBy(Org, { id: orgId });
+    //   /**
+    //    * Exisitng ZeeWorkflow user (client account), but first time to be served by this org.
+    //    */
+    //   await sendEmail({
+    //     to: email,
+    //     template: EmailTemplateType.InviteClientUser,
+    //     vars: {
+    //       toWhom: getEmailRecipientName(user),
+    //       email,
+    //       org: org.name,
+    //     },
+    //     shouldBcc: false
+    //   });
+    // }
+  });
 
 
   res.json();

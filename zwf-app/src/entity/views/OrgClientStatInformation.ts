@@ -25,6 +25,8 @@ import { TaskStatus } from '../../types/TaskStatus';
     .select([
       'o.id as id',
       'o."orgId" as "orgId"',
+      'o."clientAlias" as "clientAlias"',
+      'o."userId" as "userId"',
       'o.email as email',
       'o."givenName" as "givenName"',
       'o."surname" as "surname"',
@@ -43,6 +45,12 @@ import { TaskStatus } from '../../types/TaskStatus';
   @PrimaryColumn()
   id: string;
 
+  @ViewColumn()
+  userId: string;
+
+  @ViewColumn()
+  clientAlias: string;
+  
   @ViewColumn()
   orgId: string;
 

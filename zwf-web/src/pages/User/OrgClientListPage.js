@@ -28,7 +28,7 @@ import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 
 
-const { Text } = Typography;
+const { Text, Link: TextLink } = Typography;
 
 const ContainerStyled = styled.div`
 `;
@@ -148,10 +148,13 @@ const OrgClientListPage = () => {
       />,
       // width: 400,
       fixed: 'left',
-      render: (text, item) => <UserNameCard userId={item.id} />,
+      render: (text, item) =><Space>
+        {item.clientAlias}
+        {item.userId && <UserNameCard userId={item.userId} />}
+      </Space>
     },
     {
-      title: <span style={{fontWeight: 400}}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
+      title: <span style={{ fontWeight: 400 }}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
       dataIndex: 'tags',
       render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} bordered={false} inPlaceEdit={true} placeholder="Click to select tags" />
     },
@@ -246,7 +249,7 @@ const OrgClientListPage = () => {
         title='Clients'
         extra={[
           <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
-          <Button key="invite" ghost icon={<Icon component={FaUserPlus} />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
+          <Button key="invite" ghost icon={<Icon component={FaUserPlus} />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Add New Client</Button>
         ]}
       >
         <Table columns={columnDef}
@@ -257,6 +260,12 @@ const OrgClientListPage = () => {
           }}
           rowKey="id"
           style={{ marginTop: 20 }}
+          locale={{
+            emptyText:<div style={{display: 'flex', flexDirection: 'column', margin: '2rem auto'}}>
+              No clients.
+              <Button type="link" onClick={() => setInviteUserModalVisible(true)}>Add new client</Button>
+            </div>
+          }}
           pagination={{
             current: queryInfo.current,
             pageSize: queryInfo.size,
