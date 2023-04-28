@@ -6,6 +6,7 @@ import { useOutsideClick } from "rooks";
 import { Typography, Select, Divider, Input, Space, Tag } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import uniqolor from 'uniqolor';
+import { PlusOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -133,14 +134,16 @@ export const TagSelect = React.memo((props) => {
               width: '100%',
             }}
           >
-            <Input
+            <Input.Search
               placeholder="Add new tag"
               ref={inputRef}
               value={name}
               onChange={onNameChange}
               onPressEnter={handleAddNewTag}
+              onSearch={handleCreateNewTag}
               block
               style={{ width: '100%' }}
+              enterButton={<PlusOutlined />}
             />
           </Space>
         </>}
