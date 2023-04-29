@@ -7,6 +7,7 @@ import update from 'immutability-helper'
 import { v4 as uuidv4 } from 'uuid';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { Empty } from 'antd';
+import { EditFieldsContext } from 'contexts/EditFieldsContext';
 
 const { Paragraph, Text } = Typography;
 
@@ -15,18 +16,9 @@ const style = {
   width: '100%',
   padding: '1rem',
 }
-export const FieldListEditable = props => {
-  const { fields, onChange } = props;
+export const FieldListEditable = () => {
 
-  const [list, setList] = React.useState([]);
-
-  React.useEffect(() => {
-    console.log('fields', fields)
-    setList(fields.map((f, i) => ({
-      // id: i,
-      ...f,
-    })))
-  }, [fields]);
+  const {fields, setFields} = React.useContext(EditFieldsContext);
 
   // const [{ canDrop, isOver }, drop] = useDrop(() => ({
   //   accept: 'field',
@@ -49,38 +41,32 @@ export const FieldListEditable = props => {
   }
 
   const handleDragging = React.useCallback((dragIndex, hoverIndex) => {
-    setList((prevList) => {
-      const updatedList = update(prevList, {
+    setFields((prevFields) => {
+      const updatedList = update(prevFields, {
         $splice: [
           [dragIndex, 1],
-          [hoverIndex, 0, prevList[dragIndex]],
+          [hoverIndex, 0, prevFields[dragIndex]],
         ],
       });
 
       const nextList = arrangeOridinals(updatedList);
-      onChange(nextList);
 
       return nextList;
     })
   }, []);
 
-  const handleOnChange = () => {
-    onChange(list);
-  }
-
   const handleDrop = () => {
-    console.log('on drop')
-    handleOnChange(list);
+    setFields([...fields]);
   };
 
   const handleFieldChange = (index, newValues) => {
-    list[index] = newValues;
-    handleOnChange([...list]);
+    fields[index] = newValues;
+    setFields([...fields]);
   }
 
   const handleDelete = (index) => {
-    list.splice(index, 1);
-    handleOnChange([...list]);
+    fields.splice(index, 1);
+    setFields([...fields]);
   }
 
   const arrangeOridinals = array => {
@@ -88,7 +74,7 @@ export const FieldListEditable = props => {
     return array;
   };
 
-  const isEmpty = !list?.length;
+  const isEmpty = !fields?.length;
 
   return (
     <div
@@ -98,7 +84,7 @@ export const FieldListEditable = props => {
         {/* <DebugJsonPanel value={list} /> */}
         {isEmpty ?
           <Empty description="No field defined. Drag control from the left panel to here to add new field." image={Empty.PRESENTED_IMAGE_SIMPLE} />
-          : list.map((field, i) => !field ? <>NULL</> : <Col key={field.id} span={24}>
+          : fields.map((field, i) => !field ? <>NULL</> : <Col key={field.id} span={24}>
             <FieldEditableItem field={field}
               index={i}
               open={i === 0}
