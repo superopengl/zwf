@@ -232,13 +232,13 @@ export const AppLoggedInPage = React.memo(() => {
           {dom}
         </div>
       )}
-      menuFooterRender={props => {
-        if (props?.collapsed) return undefined;
-        return <Space direction="vertical" style={{ width: '100%' }}>
-          <FooterMenuItem href="/terms_of_use">Terms of Use</FooterMenuItem>
-          <FooterMenuItem href="/privacy_policy">Privacy Policy</FooterMenuItem>
-        </Space>
-      }}
+      // menuFooterRender={props => {
+      //   if (props?.collapsed) return undefined;
+      //   return <Space direction="vertical" style={{ width: '100%' }}>
+      //     <FooterMenuItem href="/terms_of_use">Terms of Use</FooterMenuItem>
+      //     <FooterMenuItem href="/privacy_policy">Privacy Policy</FooterMenuItem>
+      //   </Space>
+      // }}
     >
       <Outlet />
     </ProLayout>
