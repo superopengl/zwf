@@ -10,7 +10,7 @@ import Icon, {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setOrgClientTags$, searchOrgClientUsers$ } from 'services/userService';
+import { setOrgClientTags$, searchOrgClientUsers$, saveClientAlias$ } from 'services/userService';
 import { TagSelect } from 'components/TagSelect';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
@@ -120,7 +120,12 @@ const OrgClientListPage = () => {
     searchByQueryInfo$({ ...queryInfo, page, size: pageSize });
   }
 
-
+  const handleAliasChange = (item, newAlias) => {
+    const formattedAlias = newAlias.trim();
+    if(item.clientAlias !== formattedAlias) {
+      saveClientAlias$(item.id, formattedAlias).subscribe();
+    }
+  }
 
   const columnDef = [
     {
@@ -137,7 +142,7 @@ const OrgClientListPage = () => {
       // width: 400,
       fixed: 'left',
       render: (text, item) =><Space>
-        <UserNameCard userId={item.userId} alias={item.clientAlias} />
+        <UserNameCard userId={item.userId} alias={item.clientAlias} onAliasChange={(newAlias) => handleAliasChange(item, newAlias)}/>
       </Space>
     },
     {

@@ -48,6 +48,20 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   res.json(org);
 });
 
+export const setOrgClientAlias = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const { alias } = req.body;
+
+  const formattedAlias = alias?.trim();
+  assert(formattedAlias, 400, 'alias not provided');
+
+  await db.manager.update(OrgClient, {id, orgId}, {clientAlias: formattedAlias})
+
+  res.json();
+});
+
 export const setOrgClientTags = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const { id } = req.params;

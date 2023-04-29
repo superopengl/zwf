@@ -39,7 +39,8 @@ export const ClickToEditInput = React.memo((props) => {
     setFocused(false)
     const text = e.target.value?.trim();
     if (!text) {
-      setClassName('error');
+      // setClassName('error');
+      setValue(propValue);
       return;
     }
 
@@ -51,14 +52,15 @@ export const ClickToEditInput = React.memo((props) => {
 
   return <>
     <StyledInput
+      allowClear={focused}
       {...others}
       className={className}
       value={value}
       onChange={e => setValue(e.target.value)}
       onFocus={() => setFocused(true)}
       bordered={false}
-      allowClear={focused}
       onBlur={handleSave}
+      onPressEnter={handleSave}
       style={{ fontSize: size -1  }}
     // onPressEnter={handleSave}
     />
