@@ -40,24 +40,27 @@ export const AvatarDropdownMenu = React.memo(props => {
   }
 
   const handleLogout = () => {
-    modal.confirm({
-      icon: <QuestionCircleFilled />,
-      title: 'Are you sure you want to log out?',
-      okText: 'Logout',
-      okButtonProps: {
-        danger: true,
-        type: 'primary',
-      },
-      autoFocusButton: 'cancel',
-      onOk: () => {
-        logout$().subscribe(() => {
-          setAuthUser(null, '/');
-        });
-      },
-      cancelButtonProps: {
-        type: 'text'
-      }
+    logout$().subscribe(() => {
+      setAuthUser(null, '/');
     });
+    // modal.confirm({
+    //   icon: <QuestionCircleFilled />,
+    //   title: 'Are you sure you want to log out?',
+    //   okText: 'Logout',
+    //   okButtonProps: {
+    //     danger: true,
+    //     type: 'primary',
+    //   },
+    //   autoFocusButton: 'cancel',
+    //   onOk: () => {
+    //     logout$().subscribe(() => {
+    //       setAuthUser(null, '/');
+    //     });
+    //   },
+    //   cancelButtonProps: {
+    //     type: 'text'
+    //   }
+    // });
   };
 
   const isSystem = role === 'system';
