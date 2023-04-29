@@ -10,7 +10,7 @@ import Icon, {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setOrgClientTags$, searchOrgClientUsers$, saveClientAlias$ } from 'services/clientService';
+import { setOrgClientTags$, searchOrgClients$, saveClientAlias$ } from 'services/clientService';
 import { TagSelect } from 'components/TagSelect';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
@@ -90,7 +90,7 @@ const OrgClientListPage = () => {
 
   const searchByQueryInfo$ = (queryInfo) => {
     setLoading(true);
-    return searchOrgClientUsers$(queryInfo).pipe(
+    return searchOrgClients$(queryInfo).pipe(
       finalize(() => setLoading(false))
     ).subscribe(resp => {
       const { count, page, data } = resp;

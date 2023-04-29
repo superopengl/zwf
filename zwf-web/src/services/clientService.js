@@ -2,7 +2,7 @@ import { BehaviorSubject, of } from 'rxjs';
 import { filter, delay, switchMap } from 'rxjs/operators';
 import { httpPost$ } from './http';
 
-export function searchOrgClientUsers$(payload) {
+export function searchOrgClients$(payload) {
   return httpPost$(`/org/client`, { page: 1, size: 50, ...payload });
 }
 
