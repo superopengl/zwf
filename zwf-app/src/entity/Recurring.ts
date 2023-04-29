@@ -25,7 +25,7 @@ export class Recurring {
 
   @Column('uuid')
   @Index()
-  userId: string;
+  orgClientId: string;
 
   @Column()
   firstRunOn: Date;

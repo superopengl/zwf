@@ -317,6 +317,7 @@ export const addClientToOrg = handlerWrapper(async (req, res) => {
   assert(!email || isEmail(email), 400, 'Invalid email address detected');
   const orgId = getOrgIdFromReq(req);
 
+  let savedEntity = null;
   await db.manager.transaction(async m => {
     let user = null;
     let newlyCreated = false;
@@ -332,33 +333,11 @@ export const addClientToOrg = handlerWrapper(async (req, res) => {
     orgClient.clientAlias = alias;
     orgClient.userId = user?.id;
 
-    await m.createQueryBuilder()
-      .insert()
-      .into(OrgClient)
-      .values(orgClient)
-      .orIgnore()
-      .execute();
-      
-    // if (!newlyCreated && user.role === Role.Client) {
-    //   const org = await m.findOneBy(Org, { id: orgId });
-    //   /**
-    //    * Exisitng ZeeWorkflow user (client account), but first time to be served by this org.
-    //    */
-    //   await sendEmail({
-    //     to: email,
-    //     template: EmailTemplateType.InviteClientUser,
-    //     vars: {
-    //       toWhom: getEmailRecipientName(user),
-    //       email,
-    //       org: org.name,
-    //     },
-    //     shouldBcc: false
-    //   });
-    // }
+    savedEntity = await m.save(orgClient);
   });
 
 
-  res.json();
+  res.json(savedEntity);
 });
 
 async function decodeEmailFromGoogleToken(token) {

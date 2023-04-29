@@ -27,7 +27,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.name = name;
   recurring.orgId = orgId;
   recurring.taskTemplateId = taskTemplateId;
-  recurring.userId = clientId;
+  recurring.orgClientId = clientId;
   recurring.firstRunOn = firstRunOn ? moment.tz(`${firstRunOn} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
