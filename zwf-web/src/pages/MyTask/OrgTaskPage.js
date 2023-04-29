@@ -213,10 +213,10 @@ const OrgTaskPage = React.memo((props) => {
                       <ClientNameCard id={task?.orgClientId} />
                     </Collapse.Panel>
                     <Collapse.Panel key="assignee" header="Assignee">
-                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} />
+                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={false}/>
                     </Collapse.Panel>
                     <Collapse.Panel key="tags" header="Tags">
-                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
+                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false}/>
                     </Collapse.Panel>
                     {/* <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">

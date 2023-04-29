@@ -23,7 +23,7 @@ export const MemberSelect = React.memo((props) => {
     allowInput={false}
     valueProp={'id'}
     onChange={handleChange}
-    placeholder={'Select a member by name or email'}
+    placeholder={'Select a member'}
     bordered={bordered}
   />
 });

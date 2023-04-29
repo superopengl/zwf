@@ -26,6 +26,13 @@ width: 100%;
   .ant-select-selection-placeholder {
     margin-top: 6px;
   }
+
+&.no-border {
+  .ant-select-selector {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}
 `;
 
 export const UserSelect = (props) => {
@@ -71,6 +78,7 @@ export const UserSelect = (props) => {
     <StyledSelect
       ref={ref}
       bordered={bordered}
+      className={bordered ? null : 'no-border'}
       showSearch={allowInput}
       allowClear
       placeholder={placeholder}
@@ -89,12 +97,12 @@ export const UserSelect = (props) => {
         // isValidEmail
         //   ? `Seems like this email isn't a client in your organization. Click to invite this email.`
         //   : `User not found. Typing in a valid email address can invite a user client.`
-          <Button block type="primary" onClick={null}>Invite client with this email</Button>
+        <Button block type="primary" onClick={null}>Invite client with this email</Button>
       }
       {...others}
     >
       {userList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
-        <UserNameCard userId={c.userId}/>
+        <UserNameCard userId={c[valueProp]} />
       </Select.Option>))}
     </StyledSelect>
   </>
