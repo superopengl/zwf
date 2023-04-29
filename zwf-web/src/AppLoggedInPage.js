@@ -27,6 +27,7 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import { NotificationButton } from 'components/NotificationButton';
 import { HelpDropdownMenu } from 'components/HelpDropdownMenu';
 import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
+import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -167,6 +168,7 @@ export const AppLoggedInPage = React.memo(() => {
   const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
 
   useDocumentTitle();
+  useEstablishZeventStream();
 
   const [user] = useAuthUser();
   const role = useRole();
