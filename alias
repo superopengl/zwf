@@ -13,4 +13,6 @@ export AWS_PROFILE=zwf
 
 ssh-add -K ~/.ssh/superopengl_id_rsa
 
+nvm use 18
+
 ahome

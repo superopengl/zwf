@@ -100,7 +100,7 @@ export const OrgClientSelect = (props) => {
       bordered={bordered}
       showSearch={allowInput}
       allowClear
-      placeholder={<><Avatar size={28} icon={<UserOutlined />} /> {allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}</>}
+      placeholder={<><Avatar size={28} icon={<UserOutlined />} /> {allowInput ? 'Search or create a client' : 'Select a client'}</>}
       // optionFilterProp="searchText"
       value={value}
       onChange={handleChange}
@@ -130,17 +130,16 @@ export const OrgClientSelect = (props) => {
 
 OrgClientSelect.propTypes = {
   value: PropTypes.string,
-  placeholder: PropTypes.object,
+  placeholder: PropTypes.any,
   onChange: PropTypes.func,
   onTextChange: PropTypes.func,
   allowInput: PropTypes.bool,
   bordered: PropTypes.bool,
-  dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 OrgClientSelect.defaultProps = {
   loading: false,
-  allowInput: true,
+  allowInput: false,
   bordered: true,
   onTextChange: () => { }
 };
