@@ -5,14 +5,24 @@ import React from 'react';
 
 import { getRecurring$, saveRecurring$ } from 'services/recurringService';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
-import { ClientSelect } from 'components/ClientSelect';
 import { Input } from 'antd';
 import dayjs from 'dayjs';
+import { OrgClientSelect } from 'components/OrgClientSelect';
 
 const { Paragraph } = Typography;
 
 const EMPTY_RECURRING = {
   name: 'Unnamed recurring',
+}
+
+const OrgClientSelectFormWrapper = (props) => {
+  const {onChange, ...others} = props;
+
+  const handleChange = client => {
+    onChange(client?.id);
+  }
+
+  return <OrgClientSelect {...others} style={{ width: '100%' }} onChange={handleChange}/>
 }
 
 
@@ -40,9 +50,10 @@ const RecurringEditModal = (props) => {
   }, [propId]);
 
   const handleSaveRecurring = async (values) => {
+    const {client, ...others} = values;
     const recurring = {
       id,
-      ...values
+      ...others,
     }
 
     saveRecurring$(recurring).subscribe(() => {
@@ -70,8 +81,8 @@ const RecurringEditModal = (props) => {
     okText="Save"
     cancelButtonProps={{ type: 'text' }}
   >
-    {/* <Paragraph type="secondary">The recurrence is scheduled for approximately 5:00 am (Sydney time) on the designated day.</Paragraph> */}
-    <Alert type="info" showIcon description="The recurrence is scheduled for approximately 5:00 am (Sydney time) on the designated day." style={{marginBottom: 20, marginTop: 20}}/>
+    {/* <Paragraph type="secondary">The recurrence is scheduled for approximately 5:00 am (AEST) on the designated day.</Paragraph> */}
+    <Alert type="info" showIcon description="The recurrence is scheduled for approximately 5:00 am (AEST) on the designated day." style={{marginBottom: 20, marginTop: 20}}/>
     {!loading && <Form
       layout="vertical"
       preserve={false}
@@ -82,7 +93,7 @@ const RecurringEditModal = (props) => {
         <Input autoFocus allowClear />
       </Form.Item>
       <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
-        <ClientSelect style={{ width: '100%' }} valueProp="id" />
+        <OrgClientSelectFormWrapper />
       </Form.Item>
       <Form.Item label="Form Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
         <TaskTemplateSelect />

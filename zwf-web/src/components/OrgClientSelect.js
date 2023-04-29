@@ -7,7 +7,7 @@ import { UserAvatar } from './UserAvatar';
 import { UserNameCard } from './UserNameCard';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { searchOrgClientUsers$ } from 'services/userService';
+import { searchOrgClientUsers$ } from 'services/clientService';
 import { addClient$ } from 'services/authService';
 import { finalize } from 'rxjs';
 

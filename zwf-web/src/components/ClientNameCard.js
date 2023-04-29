@@ -1,24 +1,24 @@
 
-import { Space, Skeleton, Tooltip, Row, Col, Typography } from 'antd';
+import { Space, Skeleton, Tooltip, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { finalize } from 'rxjs';
-import { getUserNameCardInfo$ } from 'services/userService';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserAvatar } from './UserAvatar';
-import { UserDisplayName } from './UserDisplayName';
+import { getClientNameCardInfo$ } from 'services/clientService';
+import { ClickToEditInput } from './ClickToEditInput';
 
 const { Text } = Typography;
 
-export const UserNameCard = React.memo((props) => {
-  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type, alias } = props;
+export const ClientNameCard = React.memo((props) => {
+  const { id, size, showTooltip, onAliasChange } = props;
 
   const [data, setData] = React.useState();
   const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    if (userId) {
-      const sub$ = getUserNameCardInfo$(userId)
+    if (id) {
+      const sub$ = getClientNameCardInfo$(id)
         .pipe(
           finalize(() => setLoading(false))
         ).subscribe(x => {
@@ -29,71 +29,37 @@ export const UserNameCard = React.memo((props) => {
     } else {
       setLoading(false);
     }
-  }, [userId]);
-
-  const icon = React.useMemo(() => {
-    let ret = '';
-    if (data) {
-      if (data.givenName) {
-        ret += data.givenName[0].toUpperCase();
-        if (data.surname) {
-          ret += data.surname[0].toUpperCase();
-        }
-      }
-    }
-
-    return ret || null;
-  }, [data]);
+  }, [id]);
 
   if (loading || !data) {
     return <Space size="small">
-      {showAvatar && <Skeleton.Avatar active={loading} size={size} shape="circle" />}
-      {alias || (showName && loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>)}
+      <Skeleton.Avatar active={loading} size={size} shape="circle" />
+      {loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>}
     </Space>
   }
 
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
-    {showAvatar && 
-      <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
-    }
-    {alias ? alias :
-      (showName || showEmail) ? <UserDisplayName
-        surname={data.surname}
-        givenName={data.givenName}
-        email={data.email}
-        searchText={searchText}
-        showEmail={showEmail}
-        size={fontSize}
-        type={type}
-      />
-       : null}
+    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} />
+    {onAliasChange ?
+      <div style={{ position: 'relative', left: -4 }}><ClickToEditInput value={data.clientAlias} onChange={onAliasChange} allowClear={false} /></div>
+      : data.clientAlias}
   </Space>
 
 
   return showTooltip ?
-    <Tooltip title={getUserDisplayName(data.email, data.givenName, data.surname)} placement='bottom'>{contentComponent}</Tooltip> :
+    <Tooltip title={data.email ? getUserDisplayName(data.email, data.givenName, data.surname) : 'Email not set'} placement='bottomLeft'>{contentComponent}</Tooltip> :
     contentComponent;
 });
 
-UserNameCard.propTypes = {
-  userId: PropTypes.string,
-  alias: PropTypes.string,
+ClientNameCard.propTypes = {
+  id: PropTypes.string,
   searchText: PropTypes.string,
-  type: PropTypes.oneOf(['link']),
   size: PropTypes.number,
-  fontSize: PropTypes.number,
   showTooltip: PropTypes.bool,
-  showName: PropTypes.bool,
-  showEmail: PropTypes.bool,
-  showAvatar: PropTypes.bool,
 };
 
-UserNameCard.defaultProps = {
+ClientNameCard.defaultProps = {
   searchText: '',
   size: 36,
-  fontSize: 14,
-  showTooltip: false,
-  showName: true,
-  showEmail: true,
-  showAvatar: true,
+  showTooltip: true,
 };

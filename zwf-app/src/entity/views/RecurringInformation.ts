@@ -14,7 +14,7 @@ import { Recurring } from '../Recurring';
       'r."name" as "recurringName"',
       'r."taskTemplateId" as "taskTemplateId"',
       'r."createdAt" as "createdAt"',
-      'r."userId" as "userId"',
+      'r."orgClientId" as "orgClientId"',
       'r."firstRunOn" as "firstRunOn"',
       'r."every" as "every"',
       'r."period" as "period"',
@@ -40,7 +40,7 @@ import { Recurring } from '../Recurring';
   createdAt: Date;
 
   @ViewColumn()
-  userId: string;
+  orgClientId: string;
 
   @ViewColumn()
   firstRunOn: Date;

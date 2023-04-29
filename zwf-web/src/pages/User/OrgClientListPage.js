@@ -10,7 +10,7 @@ import Icon, {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setOrgClientTags$, searchOrgClientUsers$, saveClientAlias$ } from 'services/userService';
+import { setOrgClientTags$, searchOrgClientUsers$, saveClientAlias$ } from 'services/clientService';
 import { TagSelect } from 'components/TagSelect';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
@@ -26,6 +26,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
+import { ClientNameCard } from 'components/ClientNameCard';
 
 
 const { Text, Link: TextLink } = Typography;
@@ -142,7 +143,7 @@ const OrgClientListPage = () => {
       // width: 400,
       fixed: 'left',
       render: (text, item) =><Space>
-        <UserNameCard userId={item.userId} alias={item.clientAlias} onAliasChange={(newAlias) => handleAliasChange(item, newAlias)}/>
+        <ClientNameCard id={item.id} onAliasChange={(newAlias) => handleAliasChange(item, newAlias)}/>
       </Space>
     },
     {

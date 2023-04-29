@@ -12,7 +12,7 @@ import { ClickToEditInput } from './ClickToEditInput';
 const { Text } = Typography;
 
 export const UserNameCard = React.memo((props) => {
-  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type, alias, onAliasChange } = props;
+  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type } = props;
 
   const [data, setData] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -46,19 +46,11 @@ export const UserNameCard = React.memo((props) => {
     return ret || null;
   }, [data]);
 
-  let aliasComponent = null;
-  if (alias) {
-    if (onAliasChange) {
-      aliasComponent = <div style={{ position: 'relative', left: -4 }}><ClickToEditInput value={alias} onChange={onAliasChange} allowClear={false} /></div>
-    } else {
-      aliasComponent = alias;
-    }
-  }
 
   if (loading || !data) {
     return <Space size="small">
       {showAvatar && <Skeleton.Avatar active={loading} size={size} shape="circle" />}
-      {aliasComponent || (showName && loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>)}
+      {showName && loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>}
     </Space>
   }
 
@@ -66,17 +58,16 @@ export const UserNameCard = React.memo((props) => {
     {showAvatar &&
       <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
     }
-    {aliasComponent ? aliasComponent :
-      (showName || showEmail) ? <UserDisplayName
-        surname={data.surname}
-        givenName={data.givenName}
-        email={data.email}
-        searchText={searchText}
-        showEmail={showEmail}
-        size={fontSize}
-        type={type}
-      />
-        : null}
+    {(showName || showEmail) ? <UserDisplayName
+      surname={data.surname}
+      givenName={data.givenName}
+      email={data.email}
+      searchText={searchText}
+      showEmail={showEmail}
+      size={fontSize}
+      type={type}
+    />
+      : null}
   </Space>
 
 
@@ -87,7 +78,6 @@ export const UserNameCard = React.memo((props) => {
 
 UserNameCard.propTypes = {
   userId: PropTypes.string,
-  alias: PropTypes.string,
   searchText: PropTypes.string,
   type: PropTypes.oneOf(['link']),
   size: PropTypes.number,
@@ -96,7 +86,6 @@ UserNameCard.propTypes = {
   showName: PropTypes.bool,
   showEmail: PropTypes.bool,
   showAvatar: PropTypes.bool,
-  onAliasChange: PropTypes.func,
 };
 
 UserNameCard.defaultProps = {

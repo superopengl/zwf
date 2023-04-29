@@ -6,13 +6,7 @@ export async function changePassword(password, newPassword) {
   return httpPost(`user/change_password`, { password, newPassword });
 }
 
-export function searchOrgClientUsers$(payload) {
-  return httpPost$(`/org/client`, { page: 1, size: 50, ...payload });
-}
 
-export function saveClientAlias$(orgClientId, alias) {
-  return httpPost$(`/org/client/${orgClientId}/alias`, { alias });
-}
 
 export function deleteUser$(id) {
   return httpDelete$(`user/${id}`);
@@ -26,18 +20,16 @@ export function saveProfile$(userId, profile) {
   return httpPost$(`/user/${userId}/profile`, profile);
 }
 
-export function setOrgClientTags$(orgClientId, tagIds) {
-  return httpPost$(`/org/client/${orgClientId}/tags`, { tags: tagIds });
-}
 
 export async function setUserRole(userId, role) {
   return httpPost(`/user/${userId}/role`, { role });
 }
 
 const userNameCardInfoCache = new Map();
+const API_PATH = `/user/brief`;
 
 export function refreshUserNameCardCache(userId) {
-  httpPost$(`/user/brief`, { ids: [userId] }).subscribe(info => {
+  httpPost$(API_PATH, { ids: [userId] }).subscribe(info => {
     const cachedSource$ = userNameCardInfoCache.get(userId);
     cachedSource$.next(info[0]);
   });
@@ -69,7 +61,7 @@ function enqueueRequest(userId) {
       while ((first = requestBuffer.shift())) {
         ids.push(first);
       }
-      return ids.length ? httpPost$(`/user/brief`, { ids }) : of([])
+      return ids.length ? httpPost$(API_PATH, { ids }) : of([])
     }),
   ).subscribe(result => {
     for (const info of result) {
@@ -78,7 +70,6 @@ function enqueueRequest(userId) {
       cachedSource$.next(info);
     }
   });
-
 }
 
 

@@ -4,7 +4,6 @@ import { Space, Typography, Button, Steps, Tabs, Divider, Row, Input } from 'ant
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
-import { ClientSelect } from 'components/ClientSelect';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
 import { RightOutlined } from '@ant-design/icons';

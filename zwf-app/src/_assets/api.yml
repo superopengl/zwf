@@ -372,7 +372,15 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK        
+  /org/client/brief:
+    post:
+      operationId: getBulkClientBrief
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK            
   /org/list:
     get:
       operationId: listOrg
