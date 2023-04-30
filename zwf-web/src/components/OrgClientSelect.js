@@ -32,7 +32,7 @@ width: 100%;
 `;
 
 export const OrgClientSelect = (props) => {
-  const { value, placeholder, onChange, onTextChange, allowInput, bordered, ...others } = props;
+  const { value, placeholder, onChange, onTextChange, allowInput, bordered, onLoadingChange, ...others } = props;
 
   const [clientList, setClientList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
@@ -43,6 +43,10 @@ export const OrgClientSelect = (props) => {
     const sub$ = load$();
     return () => sub$.unsubscribe();
   }, [])
+
+  React.useEffect(() => {
+    onLoadingChange(loading);
+  }, [loading])
 
   const load$ = (text) => {
     setLoading(true)
