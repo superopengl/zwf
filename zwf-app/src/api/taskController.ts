@@ -215,7 +215,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   let query = db.manager
     .createQueryBuilder()
     .from(TaskInformation, 'x')
-    .where(`1 = 1`, {tags});
+    .where(`1 = 1`, { tags });
   if (isClient) {
     query = query.andWhere(`x."userId" = :id`, { id });
   } else {
@@ -234,9 +234,10 @@ export const searchTask = handlerWrapper(async (req, res) => {
   if (tags?.length) {
     query = query.andWhere(
       existsQuery(
-        db.manager.getRepository(TaskTagsTag)
-        .createQueryBuilder('ttt')
-        .where(`x.id = ttt."taskId" AND ttt."tagId" IN (:...tags)`)
+        query.createQueryBuilder()
+          .from(TaskTagsTag, 'ttt')
+          .where(`ttt."tagId" IN (:...tags)`)
+          .andWhere(`x.id = ttt."taskId"`)
       )
     );
   }
@@ -251,10 +252,6 @@ export const searchTask = handlerWrapper(async (req, res) => {
       query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
     }
   }
-  // if (dueDateRange?.length === 2) {
-  //   query = query.andWhere(`x."dueDate" >= :start`, { start: moment(dueDateRange[0], 'DD/MM/YYYY').startOf('day').toDate() })
-  //     .andWhere(`x."dueDate" <= :end`, { end: moment(dueDateRange[1], 'DD/MM/YYYY').endOf('day').toDate() })
-  // }
 
   const total = await query.getCount();
   const list = await query

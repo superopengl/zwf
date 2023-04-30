@@ -17,7 +17,7 @@ import { ClientNameCard } from 'components/ClientNameCard';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 export const TaskListPanel = (props) => {
-  const { tasks, onChange, searchText } = props;
+  const { tasks, onChange, searchText, onChangeFitler } = props;
 
   const navigate = useNavigate();
   const postArchieveMessage = () => {
@@ -218,7 +218,7 @@ export const TaskListPanel = (props) => {
       locale={{
         emptyText: <div style={{ margin: '30px auto' }}>
           <Paragraph type="secondary">
-            There is no task. <br />Try to modify the filter condition or clear filter.
+            No tasks. <TextLink underline={true} onClick={onChangeFitler}>Change filter condition</TextLink>.
           </Paragraph>
         </div>
       }}
@@ -230,6 +230,7 @@ TaskListPanel.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.object),
   onChange: PropTypes.func,
   searchText: PropTypes.string,
+  onChangeFitler: PropTypes.func,
 };
 
 TaskListPanel.defaultProps = {};

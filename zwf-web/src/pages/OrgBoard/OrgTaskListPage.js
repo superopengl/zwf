@@ -2,7 +2,7 @@ import { Button, Row, Space, Pagination, Radio, Tooltip, Alert, Typography, Card
 import React from 'react';
 import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { catchError } from 'rxjs/operators';
+import { catchError, finalize } from 'rxjs/operators';
 import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
 import Icon, { FilterFilled, PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import { TaskBoardPanel } from './TaskBoardPanel';
@@ -14,6 +14,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { Drawer } from 'antd';
+import { TaskSearchDrawer } from './TaskSearchDrawer';
 
 const { Link: TextLink } = Typography;
 
@@ -71,7 +72,7 @@ const OrgTaskListPage = () => {
     setLoading(true);
     return searchTask$({ ...queryInfo, page: 1 })
       .pipe(
-        catchError(() => setLoading(false))
+        finalize(() => setLoading(false))
       )
       .subscribe(resp => {
         setTaskList(resp.data);
@@ -145,20 +146,18 @@ const OrgTaskListPage = () => {
         <Button type="primary" key="new" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
-      <Drawer 
-        title="Task Filter"
+      <TaskSearchDrawer 
         open={filterVisible}
         onClose={() => setFilterVisible(false)}
-        placement='left'
-      >
-          <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} />
-      </Drawer>
+        queryInfo={queryInfo}
+        onSearch={handleFilterSearch}
+      />
 
       <LayoutStyled direction="vertical" size="large">
         {!messageClosed && message && <Alert type="warning" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}
 
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
-        {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
+        {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} onChangeFitler={() => setFilterVisible(true)}/>}
 
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
