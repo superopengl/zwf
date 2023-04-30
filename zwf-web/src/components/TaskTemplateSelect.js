@@ -51,7 +51,7 @@ const TaskTemplateSelect = (props) => {
 
   return (<StyledSelect
     options={options}
-    placeholder={<>{showIcon && <TaskTemplateIcon />}Select a task template</>}
+    placeholder={<>{showIcon && <TaskTemplateIcon />}Select form template</>}
     allowClear
     value={value}
     onChange={onChange}
