@@ -54,11 +54,6 @@ export const TagSelect = React.memo((props) => {
     onChange(ids);
   }
 
-  const handleFocus = () => {
-    if (inPlaceEdit) {
-      // setReadonly(false);
-    }
-  }
 
   const handleAddNewTag = (e) => {
     e.preventDefault();
@@ -70,16 +65,9 @@ export const TagSelect = React.memo((props) => {
     setName(event.target.value);
   };
 
-  const style = {
-    ...(others?.style),
-    height: 32,
-    width: '100%',
-    zIndex: 5000,
-    overflow: 'visible',
-  }
 
   const handleTagRender = (props) => {
-    const { label, value, closable, onClose } = props;
+    const { value, closable, onClose } = props;
     const onPreventMouseDown = (event) => {
       event.preventDefault();
       event.stopPropagation();
@@ -103,7 +91,7 @@ export const TagSelect = React.memo((props) => {
 
   if (readonly) {
     return <>
-      {tags.map(t => <Tag key={t.id} color={t.colorHex}>{t.name}</Tag>)}
+      {tags.filter(t => value?.includes(t.id)).map(t => <Tag key={t.id} color={t.colorHex}>{t.name}</Tag>)}
     </>
   }
 
