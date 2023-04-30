@@ -12,6 +12,7 @@ import { OrgClientInformation } from '../entity/views/OrgClientInformation';
 import { OrgAllClientFieldsInformation } from '../entity/views/OrgAllClientFieldsInformation';
 import { OrgClientField } from '../entity/OrgClientField';
 import { searchOrgClients } from '../utils/searchOrgClients';
+import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 
 
 export const setOrgClientAlias = handlerWrapper(async (req, res) => {
@@ -102,43 +103,6 @@ export const getOrgClientDataBag = handlerWrapper(async (req, res) => {
   });
 });
 
-export const createOrgClientDataBagField = handlerWrapper(async (req, res) => {
-  assertRole(req, [Role.Admin, Role.Agent]);
-  const orgId = getOrgIdFromReq(req);
-  const { id } = req.params;
-  const { name } = req.body;
-
-  const formattedName = name?.trim();
-  assert(formattedName, 400, 'Empty field name');
-
-  const clientField = new OrgClientField();
-  clientField.orgClientId = id;
-  clientField.name = formattedName;
-
-  const client = await db.getRepository(OrgClient).findOne({
-    where: {
-      id,
-      orgId,
-    },
-    relations: {
-      fields: true
-    }
-  })
-
-  const allFieldNamesResult = await db.getRepository(OrgAllClientFieldsInformation).find({
-    where: {
-      orgId,
-    },
-    select: {
-      name: true,
-    }
-  })
-
-  res.json({
-    fields: client.fields,
-    allNames: allFieldNamesResult.map(x => x.name),
-  });
-});
 
 export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
   assertRole(req, ['system', 'admin', 'agent']);
@@ -166,32 +130,39 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const saveOrgClientDataBag = handlerWrapper(async (req, res) => {
+export const saveOrgClientProfile = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
+  const { email, fields } = req.body;
 
-  const client = await db.getRepository(OrgClient).findOne({
-    where: {
-      id,
-      orgId,
-    },
-    relations: {
-      fields: true
+  await db.transaction(async m => {
+    const orgClient = await m.findOneOrFail(OrgClient, {
+      where: { id, orgId }
+    });
+
+    if (email && !orgClient.userId) {
+      const { user } = await ensureClientOrGuestUser(m, email, orgId);
+      orgClient.userId = user.id;
     }
-  })
 
-  const allFieldNamesResult = await db.getRepository(OrgAllClientFieldsInformation).find({
-    where: {
-      orgId,
-    },
-    select: {
-      name: true,
-    }
-  })
+    await m.delete(OrgClientField, { orgClientId: id });
 
-  res.json({
-    fields: client.fields,
-    allNames: allFieldNamesResult.map(x => x.name),
+    const fieldEntities = fields.map((f, i) => {
+      const entity = new OrgClientField();
+      entity.orgClientId = id;
+      entity.name = f.name;
+      entity.ordinal = i + 1;
+      entity.value = f.value;
+      return entity;
+    });
+
+    await m.save(fieldEntities);
+
+    orgClient.fields = fieldEntities;
+
+    await m.save(orgClient);
   });
+
+  res.json();
 });

@@ -36,7 +36,7 @@ export const FormSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   }, [fields, disabled, mode]);
 
   const handleFormValueChange = (changedValues, allValues) => {
-    onChange(changedValues);
+    onChange(changedValues, allValues);
   }
 
   // console.log(fieldSchema)
@@ -73,14 +73,12 @@ FormSchemaRenderer.propTypes = {
   disabled: PropTypes.bool,
   mode: PropTypes.oneOf(['agent', 'client', 'profile']),
   onChange: PropTypes.func,
-  onSubmit: PropTypes.func,
 };
 
 FormSchemaRenderer.defaultProps = {
   readonly: false,
   disabled: false,
   mode: 'agent',
-  onChange: (fieldId, newValue) => { },
-  onSubmit: () => { },
+  onChange: (changedValues, allValues) => { },
 };
 
