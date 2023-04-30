@@ -1,15 +1,12 @@
 import React from 'react';
-import { useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Row, Col, Card, Typography } from 'antd';
+import { Row, Col } from 'antd';
 import { FieldEditableItem } from './FieldEditableItem';
 import update from 'immutability-helper'
-import { v4 as uuidv4 } from 'uuid';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { Empty } from 'antd';
 import { EditFieldsContext } from 'contexts/EditFieldsContext';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
-const { Paragraph, Text } = Typography;
 
 const style = {
   height: '100%',
@@ -81,7 +78,7 @@ export const FieldListEditable = () => {
       // ref={drop} 
       style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[8, 8]} justify="center">
-        {/* <DebugJsonPanel value={list} /> */}
+        {/* <DebugJsonPanel value={fields} /> */}
         {isEmpty ?
           <Empty description="No field defined. Drag control from the left panel to here to add new field." image={Empty.PRESENTED_IMAGE_SIMPLE} />
           : fields.map((field, i) => !field ? <>NULL</> : <Col key={field.id} span={24}>
