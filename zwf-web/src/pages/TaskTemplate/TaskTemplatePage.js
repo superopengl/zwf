@@ -103,10 +103,14 @@ export const TaskTemplatePage = () => {
       name: taskTemplateName,
     };
 
-    saveTaskTemplate$(entity).subscribe(() => {
-      notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
-      navigate('/task_template')
-    });
+    saveTaskTemplate$(entity)
+      .subscribe({
+        next: () => {
+          notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
+          navigate('/task_template')
+        },
+        error: () => { }
+      });
   }
 
   const debugMode = false;

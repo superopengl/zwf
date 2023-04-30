@@ -38,19 +38,17 @@ export const FieldListEditable = () => {
   }
 
   const handleDragging = React.useCallback((dragIndex, hoverIndex) => {
-    setFields((prevFields) => {
-      const updatedList = update(prevFields, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, prevFields[dragIndex]],
-        ],
-      });
+    const updatedList = update(fields, {
+      $splice: [
+        [dragIndex, 1],
+        [hoverIndex, 0, fields[dragIndex]],
+      ],
+    });
 
-      const nextList = arrangeOridinals(updatedList);
+    const nextList = arrangeOridinals(updatedList);
 
-      return nextList;
-    })
-  }, []);
+    setFields(nextList);
+  }, [fields]);
 
   const handleDrop = () => {
     setFields([...fields]);
