@@ -15,7 +15,7 @@ const { Text, Paragraph } = Typography;
 const span = { xs: 24, sm: 24, md: 12, lg: 8, xl: 6, xxl: 4 };
 
 const ItemCol = props => {
-  return <Col {...span}>
+  return <Col span={24}>
     <Paragraph strong>{props.title}</Paragraph>
     {props.children}
   </Col>
@@ -33,16 +33,16 @@ export const TaskSearchPanel = props => {
     onChange({ ...queryInfo, status });
   }
 
-  const handleAssigneeChange = (agentId) => {
-    onChange({ ...queryInfo, agentId });
+  const handleAssigneeChange = (assigneeId) => {
+    onChange({ ...queryInfo, assigneeId });
   }
 
   const handleTaskTemplateIdChange = (taskTemplateId) => {
     onChange({ ...queryInfo, taskTemplateId, });
   }
 
-  const handleClientIdChange = (clientId) => {
-    onChange({ ...queryInfo, clientId });
+  const handleClientIdChange = (client) => {
+    onChange({ ...queryInfo, clientId: client?.id });
   }
 
   const handleTagsChange = tags => {
@@ -105,7 +105,7 @@ export const TaskSearchPanel = props => {
           <MemberSelect
             placeholder="Filter assignee"
             onChange={handleAssigneeChange}
-            value={queryInfo.agentId}
+            value={queryInfo.assigneeId}
           />
         </ItemCol>
         <ItemCol title="Client">
@@ -129,7 +129,7 @@ TaskSearchPanel.propTypes = {
     tags: PropTypes.arrayOf(PropTypes.string),
     taskTemplateId: PropTypes.string,
     clientId: PropTypes.string,
-    agentId: PropTypes.string,
+    assigneeId: PropTypes.string,
   }),
   onChange: PropTypes.func,
 };

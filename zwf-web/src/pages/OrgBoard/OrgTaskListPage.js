@@ -13,6 +13,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
+import { Drawer } from 'antd';
 
 const { Link: TextLink } = Typography;
 
@@ -53,13 +54,13 @@ const OrgTaskListPage = () => {
     return () => subscription.unsubscribe()
   }, []);
 
-  React.useEffect(() => {
-    if (viewMode === 'board') {
-      setMessage(<>Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see all tasks including archived ones.</>);
-    } else {
-      setMessage(null);
-    }
-  }, [viewMode]);
+  // React.useEffect(() => {
+  //   if (viewMode === 'board') {
+  //     setMessage(<>Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see all tasks including archived ones.</>);
+  //   } else {
+  //     setMessage(null);
+  //   }
+  // }, [viewMode]);
 
   const handleSwitchToListView = () => {
     setViewMode('list');
@@ -144,13 +145,14 @@ const OrgTaskListPage = () => {
         <Button type="primary" key="new" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
-      {filterVisible && <Row style={{ marginBottom: 20 }}>
-        <Card
-          style={{ width: "100%" }}
-          size="small">
+      <Drawer 
+        title="Task Filter"
+        open={filterVisible}
+        onClose={() => setFilterVisible(false)}
+        placement='left'
+      >
           <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} />
-        </Card>
-      </Row>}
+      </Drawer>
 
       <LayoutStyled direction="vertical" size="large">
         {!messageClosed && message && <Alert type="warning" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}

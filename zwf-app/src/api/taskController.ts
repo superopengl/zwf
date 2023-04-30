@@ -29,6 +29,8 @@ import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
+import { TaskTagsTag } from '../entity/TaskTagsTag';
+import { existsQuery } from '../utils/existsQuery';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
@@ -182,9 +184,9 @@ interface ISearchTaskQuery {
   page?: number;
   size?: number;
   status?: TaskStatus[];
-  assignee?: string;
+  assigneeId?: string;
   taskTemplateId?: string;
-  portfolioId?: string;
+  tags?: string[];
   clientId?: string;
   dueDateRange?: [string, string];
   orderField?: string;
@@ -204,7 +206,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
-  const { text, status, page, assignee, orderDirection, orderField, taskTemplateId, portfolioId, clientId } = option;
+  const { text, status, page, assigneeId, orderDirection, orderField, taskTemplateId, tags, clientId } = option;
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
@@ -213,7 +215,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   let query = db.manager
     .createQueryBuilder()
     .from(TaskInformation, 'x')
-    .where(`1 = 1`);
+    .where(`1 = 1`, {tags});
   if (isClient) {
     query = query.andWhere(`x."userId" = :id`, { id });
   } else {
@@ -223,17 +225,23 @@ export const searchTask = handlerWrapper(async (req, res) => {
   if (status?.length) {
     query = query.andWhere(`x.status IN (:...status)`, { status });
   }
-  if (assignee) {
-    query = query.andWhere('x."agentId" = :assignee', { assignee });
+  if (assigneeId) {
+    query = query.andWhere('x."assigneeId" = :assigneeId', { assigneeId });
   }
   if (taskTemplateId) {
     query = query.andWhere(`x."taskTemplateId" = :taskTemplateId`, { taskTemplateId });
   }
-  if (portfolioId) {
-    query = query.andWhere(`x."portfolioId" = :portfolioId`, { portfolioId });
+  if (tags?.length) {
+    query = query.andWhere(
+      existsQuery(
+        db.manager.getRepository(TaskTagsTag)
+        .createQueryBuilder('ttt')
+        .where(`x.id = ttt."taskId" AND ttt."tagId" IN (:...tags)`)
+      )
+    );
   }
   if (clientId) {
-    query = query.andWhere(`x."userId" = :clientId`, { clientId });
+    query = query.andWhere(`x."orgClientId" = :clientId`, { clientId });
   }
 
   if (text) {

@@ -13,6 +13,7 @@ import PropTypes from 'prop-types';
 import { MemberSelect } from 'components/MemberSelect';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskIcon } from 'components/entityIcon';
+import { ClientNameCard } from 'components/ClientNameCard';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 export const TaskListPanel = (props) => {
@@ -67,8 +68,8 @@ export const TaskListPanel = (props) => {
     },
     {
       title: 'Client',
-      dataIndex: 'userId',
-      render: (value, item) => <UserNameCard userId={value} />
+      dataIndex: 'orgClientId',
+      render: (value, item) => <ClientNameCard id={value} />
     },
     {
       title: 'Created',
