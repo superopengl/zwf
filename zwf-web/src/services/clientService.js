@@ -1,6 +1,6 @@
 import { BehaviorSubject, of } from 'rxjs';
 import { filter, delay, switchMap } from 'rxjs/operators';
-import { httpPost$ } from './http';
+import { httpPost$, httpGet$ } from './http';
 
 export function searchOrgClients$(payload) {
   return httpPost$(`/org/client`, { page: 1, size: 50, ...payload });
@@ -12,6 +12,14 @@ export function saveClientAlias$(orgClientId, alias) {
 
 export function setOrgClientTags$(orgClientId, tagIds) {
   return httpPost$(`/org/client/${orgClientId}/tags`, { tags: tagIds });
+}
+
+export function createOrgClientField$(orgClientId, name) {
+  return httpPost$(`/org/client/${orgClientId}/databag`, { name });
+}
+
+export function getOrgClientDataBag$(orgClientId) {
+  return httpGet$(`/org/client/${orgClientId}/databag`);
 }
 
 const clientNameCardInfoCache = new Map();

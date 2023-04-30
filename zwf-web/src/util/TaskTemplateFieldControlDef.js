@@ -48,7 +48,7 @@ export const createFieldItemSchema = (controlType, name) => {
   }
 }
 
-export function createFormItemSchema(field, mode) {
+export function createFormItemSchema(field, mode = 'agent' | 'client' | 'profile') {
   const controlDef = getControleDefOrDefault(field.type);
   return {
     title: field.type === 'divider' ? null : mode === 'agent' && field.official ? <Tooltip title="Official only field. Client cannot see."><a>{field.name} <EyeInvisibleFilled /></a></Tooltip> : field.name,
@@ -57,7 +57,7 @@ export function createFormItemSchema(field, mode) {
     formItemProps: {
       ...field.formItemProps,
       help: field.description,
-      rules: [{ required: field.required, whitespace: true }]
+      rules: [{ required: mode !== 'profile' && field.required, whitespace: true }]
     },
     fieldProps: {
       ...controlDef.fieldProps,
@@ -68,9 +68,9 @@ export function createFormItemSchema(field, mode) {
   };
 }
 
-export function generateSchemaFromColumns(fields, mode = 'agent' | 'client') {
+export function generateSchemaFromColumns(fields, mode = 'agent' | 'client' | 'profile') {
   return fields
-    .filter(f => mode === 'agent' || !f.official)
+    .filter(f => mode !== 'client' || !f.official)
     .map(f => createFormItemSchema(f, mode));
 }
 

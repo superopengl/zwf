@@ -30,6 +30,7 @@ import { TaskStatus } from '../../types/TaskStatus';
       'o.email as email',
       'o."givenName" as "givenName"',
       'o."surname" as "surname"',
+      'o."phone" as "phone"',
       'o."role" as "role"',
       'o."invitedAt" as "invitedAt"',
       'o.tags as tags',
@@ -62,6 +63,9 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   surname: string;
+
+  @ViewColumn()
+  phone: string;
 
   @ViewColumn()
   role: string;

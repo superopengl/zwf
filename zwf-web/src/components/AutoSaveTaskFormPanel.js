@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { updateTaskFields$, saveTaskFieldValues$ } from 'services/taskService';
 import { useDebounce, useDebouncedValue } from "rooks";
-import { TaskSchemaRenderer } from './TaskSchemaRenderer';
+import { FormSchemaRenderer } from './FormSchemaRenderer';
 import { useRole } from 'hooks/useRole';
 import { useZevent } from 'hooks/useZevent';
 import { finalize } from 'rxjs';
@@ -66,7 +66,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, []);
 
   return (<>
-    <TaskSchemaRenderer
+    <FormSchemaRenderer
       fields={fields}
       mode={mode}
       ref={ref}

@@ -17,7 +17,7 @@ export const TaskFieldsPreviewDrawer = props => {
     maskClosable
     width={500}
     extra={<Segmented
-      options={['agent', 'client']}
+      options={['agent', 'client', 'profile']}
       onChange={setPreviewMode} />}
   >
     <TaskFieldsPreviewPanel

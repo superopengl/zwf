@@ -47,6 +47,8 @@ import { NotificationMessage } from './entity/NotificationMessage';
 import { TaskActivityLastSeen } from './entity/TaskActivityLastSeen';
 import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 import { OrgTermination } from './entity/OrgTermination';
+import { OrgClientField } from './entity/OrgClientField';
+import { OrgAllClientFieldsInformation } from './entity/views/OrgAllClientFieldsInformation';
 dotenv.config();
 
 const views = [
@@ -181,6 +183,7 @@ export const db = new DataSource({
     UserProfile,
     Org,
     OrgClient,
+    OrgClientField,
     SysLog,
     Tag,
     Task,
@@ -214,6 +217,7 @@ export const db = new DataSource({
     TaskInformation,
     UserInformation,
     OrgClientStatInformation,
+    OrgAllClientFieldsInformation,
     OrgMemberInformation,
     TaskActivityInformation,
     OrgClientInformation,

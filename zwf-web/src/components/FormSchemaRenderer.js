@@ -20,9 +20,9 @@ const Container = styled.div`
 }
 `;
 
-export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
+export const FormSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, mode, onChange, disabled, onSubmit } = props;
+  const { fields, mode, onChange, disabled } = props;
 
   // fields.sort((a, b) => a.ordinal - b.ordinal);
 
@@ -67,16 +67,16 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   </Container>
 }));
 
-TaskSchemaRenderer.propTypes = {
+FormSchemaRenderer.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
-  mode: PropTypes.oneOf(['agent', 'client']),
+  mode: PropTypes.oneOf(['agent', 'client', 'profile']),
   onChange: PropTypes.func,
   onSubmit: PropTypes.func,
 };
 
-TaskSchemaRenderer.defaultProps = {
+FormSchemaRenderer.defaultProps = {
   readonly: false,
   disabled: false,
   mode: 'agent',

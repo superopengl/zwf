@@ -64,28 +64,7 @@ export const getBulkUserBrief = handlerWrapper(async (req, res) => {
   res.json(data);
 });
 
-export const getBulkClientBrief = handlerWrapper(async (req, res) => {
-  assertRole(req, [Role.Admin, Role.Agent]);
-  const { ids } = req.body;
-  const orgId = getOrgIdFromReq(req);
 
-  assert(ids.length, 400, 'ids cannot be empty');
-
-  const data = await db.getRepository(OrgClientInformation).find({
-    where: { id: In(ids), orgId },
-    select: {
-      id: true,
-      clientAlias: true,
-      avatarFileId: true,
-      avatarColorHex: true,
-      givenName: true,
-      surname: true,
-      email: true,
-    }
-  });
-
-  res.json(data);
-});
 
 export const saveProfile = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.System, Role.Admin, Role.Agent, Role.Client]);
@@ -156,31 +135,7 @@ export const listOrgMembers = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
-  assertRole(req, ['system', 'admin', 'agent']);
 
-  const orgId = getOrgIdFromReq(req);
-
-  const page = +req.body.page;
-  const size = +req.body.size;
-  const orderField = req.body.orderBy || 'email';
-  const orderDirection = req.body.orderDirection || 'ASC';
-  const text = req.body.text?.trim();
-  const tags = (req.body.tags || []);
-
-  const list = await searchOrgClients(
-    orgId,
-    {
-      text,
-      page,
-      size,
-      orderField,
-      orderDirection,
-      tags
-    });
-
-  res.json(list);
-});
 
 const BUILTIN_SYSTEM_ADMIN_EMIAL_HASH = computeEmailHash('admin@zeeworkflow.com');
 

@@ -1,26 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Drawer, Descriptions } from 'antd';
+import { Typography, Button, Table, Input } from 'antd';
 import Icon, {
   SyncOutlined,
-  SearchOutlined,
-  PlusOutlined,
-  UserAddOutlined,
-  PhoneOutlined
-} from '@ant-design/icons';
+  SearchOutlined} from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setOrgClientTags$, searchOrgClients$, saveClientAlias$ } from 'services/clientService';
+import { setOrgClientTags$, searchOrgClients$ } from 'services/clientService';
 import { TagSelect } from 'components/TagSelect';
 import DropdownMenu from 'components/DropdownMenu';
-import { UserNameCard } from 'components/UserNameCard';
 import { TaskStatusTag } from 'components/TaskStatusTag';
-import { showSetTagsModal } from 'components/showSetTagsModal';
 import { finalize } from 'rxjs/operators';
 import { useLocalstorageState } from 'rooks';
 import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
-import { UserAvatar } from 'components/UserAvatar';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
@@ -28,6 +21,7 @@ import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { BsFillPersonVcardFill } from 'react-icons/bs';
+import { ClientProfileDrawer } from 'pages/OrgBoard/ClientProfileDrawer';
 
 
 const { Text, Link: TextLink } = Typography;
@@ -48,12 +42,10 @@ const LOCAL_STORAGE_KEY = 'user_query';
 
 const OrgClientListPage = () => {
   useAssertRole(['admin', 'agent'])
-  const [profileModalVisible, setProfileModalVisible] = React.useState(false);
-  const [createTaskModalVisible, setCreateTaskModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
-  const [currentUser, setCurrentUser] = React.useState();
   const [inviteUserModalVisible, setInviteUserModalVisible] = React.useState(false);
+  const [currentClient, setCurrentClient] = React.useState();
   const [list, setList] = React.useState([]);
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
   const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
@@ -102,12 +94,7 @@ const OrgClientListPage = () => {
 
   }
 
-  const openClientContact = (user) => {
-    setProfileModalVisible(true);
-    setCurrentUser(user);
-  }
-
-  const createTaskForUser = (user) => {
+  const createTaskForClient = (user) => {
     openTaskCreator({
       client: user,
     });
@@ -122,12 +109,7 @@ const OrgClientListPage = () => {
     searchByQueryInfo$({ ...queryInfo, page, size: pageSize });
   }
 
-  const handleAliasChange = (item, newAlias) => {
-    const formattedAlias = newAlias.trim();
-    if (item.clientAlias !== formattedAlias) {
-      saveClientAlias$(item.id, formattedAlias).subscribe();
-    }
-  }
+
 
   const columnDef = [
     {
@@ -144,7 +126,7 @@ const OrgClientListPage = () => {
       // width: 400,
       fixed: 'left',
       render: (text, item) => <Space>
-        <ClientNameCard id={item.id} onAliasChange={(newAlias) => handleAliasChange(item, newAlias)} />
+        <ClientNameCard id={item.id} allowChangeAlias={true} />
       </Space>
     },
     {
@@ -198,20 +180,19 @@ const OrgClientListPage = () => {
       width: 140,
       align: 'right',
       fixed: 'right',
-      render: (text, user) => {
+      render: (text, item) => {
         return <div>
-          <Button icon={<Icon component={BsFillPersonVcardFill} />} type="text"></Button>
           <DropdownMenu
             config={[
               {
                 icon: <Icon component={MdDashboardCustomize} />,
                 menu: `New task for this client`,
-                onClick: () => createTaskForUser(user)
+                onClick: () => createTaskForClient(item)
               },
               {
-                icon: <PhoneOutlined />,
-                menu: `Client contact`,
-                onClick: () => openClientContact(user)
+                icon: <Icon component={BsFillPersonVcardFill} />,
+                menu: `Set Profile`,
+                onClick: () => setCurrentClient(item)
               },
               // {
               //   menu: `Tasks of client`,
@@ -277,28 +258,7 @@ const OrgClientListPage = () => {
           }}
         />
       </PageHeaderContainer>
-      <Drawer
-        open={profileModalVisible}
-        destroyOnClose={true}
-        maskClosable={true}
-        title="Client Contact"
-        onClose={() => setProfileModalVisible(false)}
-        footer={null}
-        width={400}
-      // bodyStyle={{width: "80vw", maxWidth: 600}}
-      >
-        {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
-
-        {currentUser && <Space style={{ width: '100%', alignItems: 'center' }} direction="vertical" size="large">
-          <UserAvatar size={120} editable={false} userId={currentUser.id} givenName={currentUser.givenName} surname={currentUser.surname} />
-          <Descriptions column={1} bordered={true}>
-            <Descriptions.Item label="Email">{currentUser.email}</Descriptions.Item>
-            <Descriptions.Item label="Given Name">{currentUser.givenName}</Descriptions.Item>
-            <Descriptions.Item label="Surname">{currentUser.surname}</Descriptions.Item>
-            <Descriptions.Item label="Phone">{currentUser.phone}</Descriptions.Item>
-          </Descriptions>
-        </Space>}
-      </Drawer>
+      <ClientProfileDrawer value={currentClient} open={!!currentClient} onClose={() => setCurrentClient(null)} />
       <InviteClientModal open={inviteUserModalVisible}
         onOk={() => {
           setInviteUserModalVisible(false);
