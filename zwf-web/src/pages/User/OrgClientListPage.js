@@ -212,7 +212,7 @@ const OrgClientListPage = () => {
               },
               {
                 icon: <Icon component={HiDatabase} />,
-                menu: `Databag`,
+                menu: `Profile`,
                 onClick: () => {
                   setCurrentClient(item)
                   setOpenDatabag(true);
