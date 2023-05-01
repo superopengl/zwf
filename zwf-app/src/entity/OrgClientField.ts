@@ -19,6 +19,9 @@ export class OrgClientField {
   @Column()
   name: string;
 
+  @Column({ default: 'text' })
+  type: string;
+
   @Column('int')
   ordinal: number;
 

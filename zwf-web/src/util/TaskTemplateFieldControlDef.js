@@ -28,8 +28,8 @@ import {RiRadioButtonFill} from'react-icons/ri';
 const getControleDefOrDefault = (controlType)  => {
   let controlDef = TaskTemplateFieldControlDefMap.get(controlType);
   if (!controlDef) {
-    console.error(`Unknown control type ${controlType}. Fail back to textarea`);
-    controlDef =  TaskTemplateFieldControlDefMap.get('textarea');
+    console.warn(`Unknown control type ${controlType}. Fail back to textarea`);
+    controlDef =  TaskTemplateFieldControlDefMap.get('text');
   }
   return controlDef;;
 }
