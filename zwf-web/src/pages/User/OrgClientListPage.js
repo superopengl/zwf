@@ -3,7 +3,8 @@ import styled from 'styled-components';
 import { Typography, Button, Table, Input } from 'antd';
 import Icon, {
   SyncOutlined,
-  SearchOutlined} from '@ant-design/icons';
+  SearchOutlined,
+  ContactsFilled} from '@ant-design/icons';
 
 import { Space } from 'antd';
 import { setOrgClientTags$, searchOrgClients$ } from 'services/clientService';
@@ -20,8 +21,10 @@ import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { BsFillPersonVcardFill } from 'react-icons/bs';
-import { ClientProfileDrawer } from 'pages/OrgBoard/ClientProfileDrawer';
+import { BsDatabaseFill, BsFillPersonVcardFill, BsFillSendFill } from 'react-icons/bs';
+import { ClientDatabagDrawer } from 'pages/OrgBoard/ClientDatabagDrawer';
+import { ClientInfoDrawer } from 'pages/OrgBoard/ClientInfoDrawer';
+import { HiDatabase, HiVariable } from 'react-icons/hi';
 
 
 const { Text, Link: TextLink } = Typography;
@@ -49,6 +52,9 @@ const OrgClientListPage = () => {
   const [list, setList] = React.useState([]);
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
   const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
+  const [openInfo, setOpenInfo] = React.useState(false);
+  const [openDatabag, setOpenDatabag] = React.useState(false);
+
 
   const handleTagChange = (orgClient, tags) => {
     setOrgClientTags$(orgClient.id, tags).subscribe()
@@ -189,10 +195,28 @@ const OrgClientListPage = () => {
                 menu: `New task for this client`,
                 onClick: () => createTaskForClient(item)
               },
+              item.userId ? {
+                icon: <ContactsFilled />,
+                menu: `Client information`,
+                onClick: () => {
+                  setCurrentClient(item)
+                  setOpenInfo(true);
+                }
+              } : {
+                icon: <Icon component={BsFillSendFill} />,
+                menu: `Invite client to ZeeWorkflow`,
+                onClick: () => {
+                  setCurrentClient(item)
+                  setOpenInfo(true);
+                }
+              },
               {
-                icon: <Icon component={BsFillPersonVcardFill} />,
-                menu: `Profile`,
-                onClick: () => setCurrentClient(item)
+                icon: <Icon component={HiDatabase} />,
+                menu: `Databag`,
+                onClick: () => {
+                  setCurrentClient(item)
+                  setOpenDatabag(true);
+                }
               },
               // {
               //   menu: `Tasks of client`,
@@ -258,7 +282,8 @@ const OrgClientListPage = () => {
           }}
         />
       </PageHeaderContainer>
-      <ClientProfileDrawer id={currentClient?.id} open={!!currentClient} onClose={() => setCurrentClient(null)} />
+      <ClientInfoDrawer id={currentClient?.id} open={openInfo} onClose={() => setOpenInfo(false)} />
+      <ClientDatabagDrawer id={currentClient?.id} open={openDatabag} onClose={() => setOpenDatabag(false)} />
       <InviteClientModal open={inviteUserModalVisible}
         onOk={() => {
           setInviteUserModalVisible(false);

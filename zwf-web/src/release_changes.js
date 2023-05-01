@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 refine profile fields
 save client profile
 client profile

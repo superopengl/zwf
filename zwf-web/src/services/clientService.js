@@ -22,12 +22,20 @@ export function getOrgClientDataBag$(orgClientId) {
   return httpGet$(`/org/client/${orgClientId}/databag`);
 }
 
-export function getOrgClientProfile$(orgClientId) {
-  return httpGet$(`/org/client/${orgClientId}/profile`);
+export function getOrgClientDatabag$(orgClientId) {
+  return httpGet$(`/org/client/${orgClientId}/databag`);
 }
 
-export function saveOrgClientProfile$(orgClientId, email, fields) {
-  return httpPost$(`/org/client/${orgClientId}/profile`, { email, fields });
+export function getOrgClientInfo$(orgClientId) {
+  return httpGet$(`/org/client/${orgClientId}/info`);
+}
+
+export function saveOrgClientEmail$(orgClientId, email) {
+  return httpPost$(`/org/client/${orgClientId}/email`, { email });
+}
+
+export function saveOrgClientDatabag$(orgClientId, fields) {
+  return httpPost$(`/org/client/${orgClientId}/databag`, { fields });
 }
 
 const clientNameCardInfoCache = new Map();

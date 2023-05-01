@@ -79,12 +79,12 @@ export async function request(method, path, queryParams, body, responseType = 'j
       return false;
     }
     const shouldSilent = code === 425;
+    const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
     if (!shouldSilent) {
-      const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
       notify.error('Error', errorMessage);
     }
     console.error(e.response);
-    throw e;
+    // throw new Error('errorMessage');
   }
 }
 
