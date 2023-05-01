@@ -59,7 +59,7 @@ border-radius:4px;
 `;
 
 
-const OrgTaskPage = React.memo((props) => {
+const OrgTaskPage = React.memo(() => {
   useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id } = params;
@@ -114,9 +114,6 @@ const OrgTaskPage = React.memo((props) => {
     });
   }
 
-  const handleTaskFieldsChange = fields => {
-    setTask(task => ({ ...task, fields }));
-  }
 
   const handleRename = (name) => {
     renameTask$(task.id, name).subscribe(() => {
@@ -137,14 +134,6 @@ const OrgTaskPage = React.memo((props) => {
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
 
-  const handleAddDocTemplates = (docTemplateIds) => {
-    setLoading(true);
-    addDocTemplateToTask$(task.id, docTemplateIds)
-      .pipe(
-        finalize(() => setLoading(false)),
-      )
-      .subscribe(setTask);
-  }
 
   return (<>
     <ContainerStyled>

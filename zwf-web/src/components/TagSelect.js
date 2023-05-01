@@ -12,7 +12,7 @@ const { Text } = Typography;
 
 export const TagSelect = React.memo((props) => {
 
-  const { value: propValues, onChange, readonly, allowCreate, inPlaceEdit, placeholder, bordered, allowClear, ...others } = props;
+  const { value: propValues, onChange, readonly, inPlaceEdit, placeholder, bordered, allowClear} = props;
 
   const [tags, setTags] = React.useState([]);
   const [value, setValue] = React.useState(propValues);
@@ -95,17 +95,17 @@ export const TagSelect = React.memo((props) => {
     </>
   }
 
-  return <Select
+  return <><Select
     mode="multiple"
-    allowClear={allowClear}
     placeholder={placeholder}
+    allowClear={allowClear}
     style={{ minWidth: 150, width: '100%' }}
     bordered={bordered}
     tagRender={handleTagRender}
     dropdownMatchSelectWidth={false}
     // maxTagCount="responsive"
     options={tags.map(t => ({ value: t.id, label: <Tag color={t.colorHex}>{t.name}</Tag> }))}
-    value={value}
+    value={value || undefined}
     onChange={handleChange}
     notFoundContent={"No tag defined"}
     dropdownRender={(menu) => (
@@ -139,6 +139,7 @@ export const TagSelect = React.memo((props) => {
       </>
     )}
   />
+  </>
 });
 
 TagSelect.propTypes = {
