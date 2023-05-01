@@ -7,11 +7,12 @@ import { TaskCommentPanel } from './TaskCommentPanel';
 import { HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
 import { TaskLogPanel } from './TaskLogPanel';
+import { ClientNameCard } from './ClientNameCard';
 
 
 
 export const TaskLogAndCommentDrawer = React.memo((props) => {
-  const { taskId, userId, visible, onClose, width } = props;
+  const { taskId, orgClientId, visible, onClose, width } = props;
 
   const handleMessageSent = () => {
     listTaskComment$(taskId).subscribe();
@@ -29,7 +30,7 @@ export const TaskLogAndCommentDrawer = React.memo((props) => {
   // bodyStyle={{ padding: 0 }}
   // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <UserNameCard userId={userId} size={56} fontSize={18} />
+    <ClientNameCard id={orgClientId} size={36} fontSize={18} />
     <Tabs
       destroyInactiveTabPane={true}
       items={[

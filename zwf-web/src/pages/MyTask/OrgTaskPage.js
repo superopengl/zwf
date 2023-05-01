@@ -234,7 +234,7 @@ const OrgTaskPage = React.memo((props) => {
           </Col>
         </Row>
       </PageHeaderContainer>}
-      {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+      {task && <TaskLogAndCommentDrawer taskId={task.id} orgClientId={task.orgClientId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       {saving && <SavingAffix />}
     </ContainerStyled>
   </>
