@@ -10,10 +10,10 @@ import { TaskStatus } from '../../types/TaskStatus';
     .createQueryBuilder()
     .from(OrgClientInformation, 'o')
     .leftJoin(q => q.from(TaskInformation, 't')
-      .groupBy(`t."userId"`)
+      .groupBy(`t."orgClientId"`)
       .addGroupBy(`t."orgId"`)
       .select([
-        `"userId"`,
+        `"orgClientId"`,
         `"orgId"`,
         `COUNT(*) FILTER (where t.status = '${TaskStatus.TODO}') AS "countToDo"`,
         `COUNT(*) FILTER (where t.status = '${TaskStatus.IN_PROGRESS}') AS "countInProgress"`,
@@ -21,7 +21,7 @@ import { TaskStatus } from '../../types/TaskStatus';
         `COUNT(*) FILTER (where t.status = '${TaskStatus.DONE}') AS "countDone"`,
         `COUNT(*) FILTER (where t.status = '${TaskStatus.ARCHIVED}') AS "countArchived"`,
       ])
-    , 'ti', 'ti."userId" = o.id AND ti."orgId" = o."orgId"')
+    , 'ti', 'ti."orgClientId" = o.id AND ti."orgId" = o."orgId"')
     .select([
       'o.id as id',
       'o."orgId" as "orgId"',
@@ -34,11 +34,11 @@ import { TaskStatus } from '../../types/TaskStatus';
       'o."role" as "role"',
       'o."invitedAt" as "invitedAt"',
       'o.tags as tags',
-      `ti."countToDo"`,
-      `ti."countInProgress"`,
-      `ti."countActionRequired"`,
-      `ti."countDone"`,
-      `ti."countArchived"`,
+      `COALESCE(ti."countToDo", 0) as "countToDo"`,
+      `COALESCE(ti."countInProgress", 0) as "countInProgress"`,
+      `COALESCE(ti."countActionRequired", 0) as "countActionRequired"`,
+      `COALESCE(ti."countDone", 0) as "countDone"`,
+      `COALESCE(ti."countArchived", 0) as "countArchived"`,
     ]),
   dependsOn: [OrgClientInformation, TaskInformation]
 }) export class OrgClientStatInformation {
