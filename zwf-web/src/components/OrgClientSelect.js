@@ -145,6 +145,7 @@ OrgClientSelect.defaultProps = {
   loading: false,
   allowInput: false,
   bordered: true,
-  onTextChange: () => { }
+  onTextChange: () => { },
+  onLoadingChange: () => { }
 };
 

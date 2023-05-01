@@ -186,6 +186,7 @@ export const App = React.memo(() => {
             colorTextSecondary: '#97A3B7',
             fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
             colorTextHeading: '#1C222B',
+            colorTextPlaceholder: '#97A3B7',
             fontSizeHeading1: 32,
             fontSizeHeading2: 28,
             fontSizeHeading3: 22,
