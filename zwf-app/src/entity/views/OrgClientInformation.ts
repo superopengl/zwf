@@ -25,6 +25,7 @@ import { UserStatus } from '../../types/UserStatus';
       'c."createdAt" as "invitedAt"',
       'o.name as "orgName"',
       'c."clientAlias" as "clientAlias"',
+      'c."remark" as "remark"',
       'u.id as "userId"',
       'u.email as "email"',
       'u."givenName" as "givenName"',
@@ -53,6 +54,9 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   clientAlias: string;
+
+  @ViewColumn()
+  remark: string;
 
   @ViewColumn()
   userId: string;

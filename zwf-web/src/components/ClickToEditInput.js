@@ -25,11 +25,11 @@ width: 100%;
 `;
 
 export const ClickToEditInput = React.memo((props) => {
-  const { value: propValue, size, onChange, ...others } = props;
+  const { value: propValue, size, onChange, allowEmpty, ...others } = props;
 
   const [value, setValue] = React.useState(propValue);
   const [focused, setFocused] = React.useState(false);
-  const [className, setClassName] = React.useState(propValue ? '' : 'error');
+  const [className, setClassName] = React.useState(propValue || allowEmpty ? '' : 'error');
 
   React.useEffect(() => {
     setValue(propValue);
@@ -38,12 +38,14 @@ export const ClickToEditInput = React.memo((props) => {
   const handleSave = (e) => {
     setFocused(false)
     const text = e.target.value?.trim();
-    if (!text) {
+ 
+    debugger;
+    if (!text && !allowEmpty) {
       // setClassName('error');
       setValue(propValue);
       return;
     }
-
+    
     setClassName('');
     if (text !== propValue) {
       onChange(text);
@@ -75,10 +77,12 @@ ClickToEditInput.propTypes = {
   value: PropTypes.string,
   size: PropTypes.number,
   required: PropTypes.bool.isRequired,
+  allowEmpty: PropTypes.bool,
 };
 
 ClickToEditInput.defaultProps = {
   value: '',
   size: 14,
-  required: true
+  required: true,
+  allowEmpty: false,
 };

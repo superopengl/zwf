@@ -26,6 +26,7 @@ import { TaskStatus } from '../../types/TaskStatus';
       'o.id as id',
       'o."orgId" as "orgId"',
       'o."clientAlias" as "clientAlias"',
+      'o."remark" as "remark"',
       'o."userId" as "userId"',
       'o.email as email',
       'o."givenName" as "givenName"',
@@ -51,6 +52,9 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   clientAlias: string;
+
+  @ViewColumn()
+  remark: string;
   
   @ViewColumn()
   orgId: string;
