@@ -17,7 +17,6 @@ import { notify } from 'util/notify';
 import {TaskFieldsPreviewPanel} from './TaskFieldsPreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
 import { HiViewList } from 'react-icons/hi';
-import { CreateTaskModal } from 'components/CreateTaskModal';
 import { finalize, switchMap } from 'rxjs/operators';
 import { PageContainer } from '@ant-design/pro-components';
 import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
@@ -25,6 +24,7 @@ import { Descriptions } from 'antd';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { MdDashboardCustomize } from 'react-icons/md';
+import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -42,9 +42,8 @@ export const TaskTemplateListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
   const [viewMode, setViewMode] = React.useState('grid');
-  const [currentTaskTemplateId, setCurrentTaskTemplateId] = React.useState(null);
-  const [modalVisible, setModalVisible] = React.useState(false)
   const [previewMode, setPreviewMode] = React.useState('agent');
+  const [openCreator, creatorContextHolder] = useCreateTaskModal();
 
   const navigate = useNavigate();
 
@@ -114,8 +113,9 @@ export const TaskTemplateListPage = () => {
 
 
   const handleCreateTask = (item) => {
-    setCurrentTaskTemplateId(item.id);
-    setModalVisible(true);
+    openCreator({
+      taskTemplateId: item.id
+    })
   }
 
   const dataSource = filteredList.map(item => ({
@@ -280,13 +280,8 @@ export const TaskTemplateListPage = () => {
           mode={previewMode}
         />
       </Modal>
-      <CreateTaskModal
-        taskTemplateId={currentTaskTemplateId}
-        visible={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        onOk={() => setModalVisible(false)}
-      />
     </PageHeaderContainer>
+    {creatorContextHolder}
   </Container>)
 };
 

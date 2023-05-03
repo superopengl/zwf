@@ -7,7 +7,7 @@ import { BsFillNutFill } from 'react-icons/bs';
 export const useCreateTaskModal = () => {
   const [modal, contextHolder] = Modal.useModal();
 
-  const open = ({ taskTemplateId, client, onOk, onCancel, postCreateMode }) => {
+  const open = ({ taskTemplateId, client, onOk, onCancel, postCreateMode } = {}) => {
     const instance = modal.info({
       icon: null,
       title: <><TaskIcon /> Create New Task</>,

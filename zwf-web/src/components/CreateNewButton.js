@@ -3,15 +3,15 @@ import PropTypes from 'prop-types';
 import { Menu, Dropdown, Typography } from 'antd';
 import Icon, { CaretDownOutlined } from '@ant-design/icons';
 import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
-import { CreateTaskModal } from 'components/CreateTaskModal';
 import { useNavigate } from 'react-router-dom';
 import { useKeys } from "rooks";
 import { MdDashboardCustomize } from 'react-icons/md';
+import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 
 export const CreateNewButton = React.memo(props => {
   const { size } = props;
-  const [modalVisible, setModalVisible] = React.useState(false)
   const navigate = useNavigate();
+  const [openCreator, creatorContextHolder] = useCreateTaskModal();
 
   const handleMenuSelected = (e) => {
     switch (e.key) {
@@ -27,7 +27,8 @@ export const CreateNewButton = React.memo(props => {
   }
 
   const handleCreateTask = () => {
-    setModalVisible(true)
+    openCreator()
+
   }
 
   // useKeys(["Alt", "KeyN"], () => {
@@ -58,7 +59,7 @@ export const CreateNewButton = React.memo(props => {
     >
       <Icon component={MdDashboardCustomize} /> New Task 
     </Dropdown.Button>
-    <CreateTaskModal visible={modalVisible} onCancel={() => setModalVisible(false)} onOk={() => setModalVisible(false)} />
+    {creatorContextHolder}
   </>
 });
 
