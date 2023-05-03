@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Typography, Tooltip, Form, Drawer } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Typography, Tooltip, Space, Drawer } from 'antd';
 import { addDocTemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
 import { catchError, finalize } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -13,10 +13,8 @@ import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
-import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
 import { SavingAffix } from 'components/SavingAffix';
 import { showCompleteTaskModal } from 'components/showCompleteTaskModal';
-import { showRequireActionModal } from 'components/showRequireActionModal';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
@@ -24,6 +22,8 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { TaskDocListPanel } from 'components/TaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
+import { TaskCommentPanel } from 'components/TaskCommentPanel';
+import { TaskLogDrawer } from 'components/TaskLogDrawer';
 
 const {Link: TextLink, Text} = Typography;
 
@@ -226,23 +226,28 @@ const OrgTaskPage = React.memo(() => {
                     <Collapse.Panel key="tags" header="Tags">
                       <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false} />
                     </Collapse.Panel>
-                    {/* <Collapse.Panel key="actions" header="Actions">
+                    <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                        {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>}
+                        {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
                         {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                       </Space>
-                    </Collapse.Panel> */}
+                    </Collapse.Panel>
                   </Collapse>
                 </ProCard>
               </Col>
-              {/* {task && <Col span={24}>
-                <TaskDocListPanel task={task} onChange={() => load$()} />
-              </Col>} */}
+              {task && <Col span={24}>
+                <ProCard
+                  // title="Comments"
+                  // type="inner"
+                >
+                <TaskCommentPanel taskId={task.id} />
+                </ProCard>
+              </Col>}
             </Row>
           </Col>
         </Row>
       </PageHeaderContainer>}
-      {task && <TaskLogAndCommentDrawer taskId={task.id} orgClientId={task.orgClientId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+      {task && <TaskLogDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       {saving && <SavingAffix />}
     </ContainerStyled>
   </>

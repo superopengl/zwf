@@ -56,13 +56,11 @@ export const TaskCommentInputForm = React.memo((props) => {
         ref={textareaRef}
       />
     </Form.Item>
-    <Form.Item>
       <Row justify="end" gutter={8} style={{position: 'relative', top: -16}}>
         <Col>
           <Button type="primary" htmlType="submit" disabled={loading}>Send</Button>
         </Col>
       </Row>
-    </Form.Item>
   </Form>
 
 });
