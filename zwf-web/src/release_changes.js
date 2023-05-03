@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 improve task editor
 misc
 ui refine
