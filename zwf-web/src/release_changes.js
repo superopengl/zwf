@@ -1,7 +1,8 @@
 export const notes=`
-set client remark
-refine
-fix task statstics on client page
-fix client name card
-refine
-misc bugfix`
+improve task editor
+misc
+ui refine
+task trash page
+org task ui refine
+not ask to edit fields for empty task
+refactoring`
