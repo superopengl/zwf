@@ -22,6 +22,7 @@ import { Error404 } from 'pages/Error404';
 import { LandingPage } from 'pages/LandingPage';
 import 'dayjs/locale/en-au';
 
+const OrgArchivedTasksPage = loadable(() => import( 'pages/OrgBoard/OrgArchivedTasksPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
 const ActivateAccountPage = loadable(() => import('pages/ActivateAccountPage'));
@@ -133,7 +134,8 @@ export const App = React.memo(() => {
           <Route path="/task_template" element={<TaskTemplateListPage />} />
           <Route path="/task_template/new" element={<TaskTemplatePage />} />
           <Route path="/task_template/:id" element={<TaskTemplatePage />} />
-          <Route path="/scheduler" element={<RecurringListPage />} />
+          <Route path="/recurring" element={<RecurringListPage />} />
+          <Route path="/trash" element={<OrgArchivedTasksPage />} />
           <Route path="/client" element={<OrgClientListPage />} />
           <Route path="/tags" element={<OrgTagListPage />} />
           <Route path="/subscription" element={<OrgSubscriptionPage />} />
