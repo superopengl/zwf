@@ -168,18 +168,12 @@ const OrgTaskPage = React.memo(() => {
           >
             <Button icon={<SyncOutlined />} onClick={() => load$()} />
           </ZeventNoticeableBadge>,
-          // <Tooltip key="edit" title="Edit">
-          //   <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
-          // </Tooltip>,
-          <ZeventNoticeableBadge key="comment"
-            message="This task has unread comment"
-            filter={z => z.type === 'task.comment' && z.taskId === task.id}
-          >
-            <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
-          </ZeventNoticeableBadge>,
-          <Tooltip key="share" title="Share">
-            <Button icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)} />
-          </Tooltip>,
+          // <ZeventNoticeableBadge key="comment"
+          //   message="This task has unread comment"
+          //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
+          // >
+          //   <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
+          // </ZeventNoticeableBadge>,
           <TaskStatusButton key="status" value={task.status} onChange={handleStatusChange} />
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
@@ -227,6 +221,7 @@ const OrgTaskPage = React.memo(() => {
                     <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                         {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
+                        <Button type="link" icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share link</Button>
                         {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                         {task.status !== 'archived' && <Button type="link" danger icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
                       </Space>
