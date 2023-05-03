@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip, Form, Drawer } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Typography, Tooltip, Form, Drawer } from 'antd';
 import { addDocTemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
 import { catchError, finalize } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -25,6 +25,7 @@ import { TaskDocListPanel } from 'components/TaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 
+const {Link: TextLink, Text} = Typography;
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -81,12 +82,14 @@ const OrgTaskPage = React.memo(() => {
       finalize(() => setLoading(false))
     ).subscribe((taskInfo) => {
       const { email, role, orgId, orgName, ...task } = taskInfo;
-      if (taskInfo.fields.length) {
-        setTask(task);
-        setAssigneeId(task.agentId);
-      } else {
-        navigate(`/task/${id}/edit`)
-      }
+      setTask(task);
+      setAssigneeId(task.agentId);
+      // if (taskInfo.fields.length) {
+      //   setTask(task);
+      //   setAssigneeId(task.agentId);
+      // } else {
+      //   navigate(`/task/${id}/edit`)
+      // }
     });
   }
 
@@ -164,9 +167,9 @@ const OrgTaskPage = React.memo(() => {
           >
             <Button icon={<SyncOutlined />} onClick={() => load$()} />
           </ZeventNoticeableBadge>,
-          <Tooltip key="edit" title="Edit">
-            <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
-          </Tooltip>,
+          // <Tooltip key="edit" title="Edit">
+          //   <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
+          // </Tooltip>,
           <ZeventNoticeableBadge key="comment"
             message="This task has unread comment"
             filter={z => z.type === 'task.comment' && z.taskId === task.id}
@@ -189,9 +192,25 @@ const OrgTaskPage = React.memo(() => {
       >
         <Row gutter={[30, 30]} >
           <Col span={14}>
-            <ProCard>
-              <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} />
-            </ProCard>
+          <Row gutter={[30, 30]} >
+              <Col span={24} >
+              <ProCard
+              title="Form"
+              type="inner"
+              extra={<Button onClick={handleEditFields} icon={<EditOutlined />}>Edit</Button>}
+              >
+              {task?.fields.length>0 ?
+                <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
+                <Row justify="center">
+                  <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
+                </Row>
+              }
+             </ProCard>
+              </Col>
+              <Col span={24} >
+                <TaskDocListPanel task={task} onChange={() => load$()} />
+              </Col>
+            </Row>
           </Col>
           <Col span={10}>
             <Row gutter={[30, 30]} >
@@ -202,10 +221,10 @@ const OrgTaskPage = React.memo(() => {
                       <ClientNameCard id={task?.orgClientId} />
                     </Collapse.Panel>
                     <Collapse.Panel key="assignee" header="Assignee">
-                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={false}/>
+                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={false} />
                     </Collapse.Panel>
                     <Collapse.Panel key="tags" header="Tags">
-                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false}/>
+                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false} />
                     </Collapse.Panel>
                     {/* <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
@@ -216,9 +235,9 @@ const OrgTaskPage = React.memo(() => {
                   </Collapse>
                 </ProCard>
               </Col>
-              {task && <Col span={24}>
+              {/* {task && <Col span={24}>
                 <TaskDocListPanel task={task} onChange={() => load$()} />
-              </Col>}
+              </Col>} */}
             </Row>
           </Col>
         </Row>

@@ -62,7 +62,6 @@ export const TaskTemplateListPage = () => {
   }, [])
 
   React.useEffect(() => {
-    debugger;
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
   }, [list, searchText])
 
