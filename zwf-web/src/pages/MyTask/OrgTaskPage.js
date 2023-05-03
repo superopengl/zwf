@@ -8,7 +8,7 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
+import Icon, { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
@@ -24,6 +24,7 @@ import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentPanel } from 'components/TaskCommentPanel';
 import { TaskLogDrawer } from 'components/TaskLogDrawer';
+import { BsFillTrash3Fill } from 'react-icons/bs';
 
 const {Link: TextLink, Text} = Typography;
 
@@ -179,9 +180,6 @@ const OrgTaskPage = React.memo(() => {
           <Tooltip key="share" title="Share">
             <Button icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)} />
           </Tooltip>,
-          <Tooltip title="Archieve" key="archieve">
-            <Button type="primary" danger icon={<CloseOutlined />} onClick={() => showArchiveTaskModal(task.id, load$)} />
-          </Tooltip>,
           <TaskStatusButton key="status" value={task.status} onChange={handleStatusChange} />
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
@@ -216,7 +214,7 @@ const OrgTaskPage = React.memo(() => {
             <Row gutter={[30, 30]} >
               <Col span={24}>
                 <ProCard>
-                  <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'procedure', 'actions', 'history']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+                  <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
                     <Collapse.Panel key="client" header="Client">
                       <ClientNameCard id={task?.orgClientId} />
                     </Collapse.Panel>
@@ -224,12 +222,13 @@ const OrgTaskPage = React.memo(() => {
                       <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={false} />
                     </Collapse.Panel>
                     <Collapse.Panel key="tags" header="Tags">
-                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false} />
+                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false} placeholder="Select tags" />
                     </Collapse.Panel>
                     <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                         {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
                         {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
+                        {task.status !== 'archived' && <Button type="link" danger icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
                       </Space>
                     </Collapse.Panel>
                   </Collapse>
