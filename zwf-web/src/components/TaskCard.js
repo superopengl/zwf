@@ -1,4 +1,4 @@
-import { Typography, Tooltip, Row, Col } from 'antd';
+import { Typography, Tooltip, Row, Col, Space } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -76,47 +76,44 @@ export const TaskCard = (props) => {
         </Col>
       </Row>
       <Row gutter={[10, 10]} justify="space-between">
-        <Col span={12}>
+        <Col>
           <ClientNameCard id={task.orgClientId} />
         </Col>
-        <Col span={12}>
-          <Row gutter={[10, 10]}>
-            <Col span={8}>
-              <small>Updated</small>
-            </Col>
-            <Col span={16}>
-              <TimeAgo value={task.updatedAt} />
-            </Col>
-            {task.dueAt && <>
-              <Col span={8}>
-                <small>Due by</small>
-              </Col>
-              <Col span={16}>
-                <TimeAgo value={task.dueAt} />
-              </Col>
-            </>}
-            {(task.estNumber && task.estUnit) && <>
-              <Col span={8}>
-                <small>Estimated time</small>
-              </Col>
-              <Col span={16}>
-                {task.estNumber} {task.estUnit}
-              </Col>
-            </>}
-          </Row>
+        <Col>
+            <Space align="top">
+              Updated
+              <TimeAgo value={task.updatedAt}/>
+            </Space>
         </Col>
       </Row>
     </ProCard>
 
     {(tagIds.length > 0 || task.assigneeId) &&
       <ProCard>
-        <Row gutter={[10, 10]} justify="space-between" wrap={false}>
-          <Col>
+        <Row gutter={[10, 10]} justify="space-between">
+        <Col span={24}>
             <TagSelect readonly={true} value={tagIds} />
           </Col>
+          {task.dueAt && <>
+            <Col>
+              <Space align='top'>
+                Due
+                <TimeAgo value={task.dueAt} accurate={false}/>
+              </Space>
+            </Col>
+          </>}
+          {(task.estNumber && task.estUnit) && <>
+            <Col>
+              <Space align='top'>
+                EST.
+                <Text>{task.estNumber} {task.estUnit}</Text>
+              </Space>
+            </Col>
+          </>}
           {task.assigneeId && <Col>
             <UserNameCard userId={task.assigneeId} size={40} showTooltip={true} showName={false} showEmail={false} />
           </Col>}
+
         </Row>
       </ProCard>}
   </StyledCard>
