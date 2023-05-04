@@ -30,6 +30,15 @@ export class Task {
   @Index()
   updatedAt: Date;
 
+  @Column({nullable: true})
+  estNumber: string;
+
+  @Column({nullable: true})
+  estUnit: 'hour' | 'day' | 'week';
+
+  @Column({nullable: true})
+  dueAt: Date;
+
   @Column()
   name: string;
 

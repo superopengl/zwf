@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Typography, Tooltip, Space, Drawer } from 'antd';
-import { addDocTemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Typography, Select, Space, Drawer } from 'antd';
+import { addDocTemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTask$, updateTaskTags$ } from 'services/taskService';
 import { catchError, finalize } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
@@ -25,8 +25,13 @@ import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentPanel } from 'components/TaskCommentPanel';
 import { TaskLogDrawer } from 'components/TaskLogDrawer';
 import { BsFillTrash3Fill } from 'react-icons/bs';
+import { DatePicker } from 'antd';
+import { InputNumber } from 'antd';
+import { EstInput } from 'components/EstInput';
+import moment from 'moment';
+import dayjs from 'dayjs';
 
-const {Link: TextLink, Text} = Typography;
+const { Link: TextLink, Text } = Typography;
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -138,6 +143,24 @@ const OrgTaskPage = React.memo(() => {
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
 
+  const handleDueDateChange = (dueDate) => {
+    updateTask$(task.id, {
+      dueAt: dueDate?.toDate()
+    }).subscribe(() => {
+      // task.dueAt = dueDate?.toDate();
+      setTask({...task, dueAt: dueDate})
+    });
+  }
+
+  const handleEstNumberChange = ([estNumber, estUnit]) => {
+    updateTask$(task.id, {
+      estNumber,
+      estUnit
+    }).subscribe(() => {
+      task.estNumber = estNumber;
+      task.estUnit = estUnit;
+    });
+  }
 
   return (<>
     <ContainerStyled>
@@ -184,20 +207,20 @@ const OrgTaskPage = React.memo(() => {
       >
         <Row gutter={[30, 30]} >
           <Col span={14}>
-          <Row gutter={[30, 30]} >
+            <Row gutter={[30, 30]} >
               <Col span={24} >
-              <ProCard
-              title="Form"
-              type="inner"
-              extra={<Button onClick={handleEditFields} icon={<EditOutlined />}>Edit</Button>}
-              >
-              {task?.fields.length>0 ?
-                <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
-                <Row justify="center">
-                  <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
-                </Row>
-              }
-             </ProCard>
+                <ProCard
+                  title="Form"
+                  type="inner"
+                  extra={<Button onClick={handleEditFields} icon={<EditOutlined />}>Edit</Button>}
+                >
+                  {task?.fields.length > 0 ?
+                    <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
+                    <Row justify="center">
+                      <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
+                    </Row>
+                  }
+                </ProCard>
               </Col>
               <Col span={24} >
                 <TaskDocListPanel task={task} onChange={() => load$()} />
@@ -208,7 +231,7 @@ const OrgTaskPage = React.memo(() => {
             <Row gutter={[30, 30]} >
               <Col span={24}>
                 <ProCard>
-                  <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+                  <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'dueAt', 'est']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
                     <Collapse.Panel key="client" header="Client">
                       <ClientNameCard id={task?.orgClientId} />
                     </Collapse.Panel>
@@ -217,6 +240,16 @@ const OrgTaskPage = React.memo(() => {
                     </Collapse.Panel>
                     <Collapse.Panel key="tags" header="Tags">
                       <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false} placeholder="Select tags" />
+                    </Collapse.Panel>
+                    <Collapse.Panel key="dueAt" header="Due date">
+                      <DatePicker allowClear style={{ width: 180 }} value={task.dueAt ? dayjs(task.dueAt) : null} onChange={handleDueDateChange} format="DD MMM YYYY" />
+                    </Collapse.Panel>
+                    <Collapse.Panel key="est" header="Estimated time">
+                      <EstInput allowClear min={0} max={99.9} precision={1}
+                        style={{ width: 180 }}
+                        value={[task.estNumber, task.estUnit]}
+                        onChange={handleEstNumberChange}
+                      />
                     </Collapse.Panel>
                     <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
@@ -231,10 +264,10 @@ const OrgTaskPage = React.memo(() => {
               </Col>
               {task && <Col span={24}>
                 <ProCard
-                  // title="Comments"
-                  // type="inner"
+                // title="Comments"
+                // type="inner"
                 >
-                <TaskCommentPanel taskId={task.id} />
+                  <TaskCommentPanel taskId={task.id} />
                 </ProCard>
               </Col>}
             </Row>

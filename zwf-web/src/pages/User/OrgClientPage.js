@@ -131,7 +131,13 @@ const OrgClientPage = React.memo(() => {
       >
         <ProCard style={{ marginBlockStart: 8 }} gutter={8} ghost>
           <ProCard colSpan={16} layout="center" bordered title="Remark">
-            <Input.TextArea autoSize={{minRows: 3}} maxLength={1000} showCount allowClear style={{marginBottom: '1rem'}}/>
+            <Input.TextArea
+              defaultValue={client?.remark}
+              autoSize={{ minRows: 3 }}
+              maxLength={1000}
+              showCount
+              allowClear
+              style={{ marginBottom: '1rem' }} />
           </ProCard>
           <ProCard colSpan={8} layout="center" bordered title="Basic information">
             Col
