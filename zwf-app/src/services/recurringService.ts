@@ -27,7 +27,7 @@ export async function testRunRecurring(recurringId: string, orgId: string, execu
 export async function executeRecurring(m: EntityManager, recurring: Recurring, executorId: string, resetNextRunAt: boolean) {
   const { taskTemplateId, orgClientId, name, orgId } = recurring;
 
-  const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
+  const taskName = `${name} ${moment().format('D MMM YYYY')}`;
 
   const task = await createTaskByTaskTemplateForClient(m, taskTemplateId, taskName, orgClientId, executorId, null, orgId);
   task.status = TaskStatus.TODO;

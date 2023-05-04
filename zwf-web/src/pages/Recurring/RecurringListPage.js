@@ -9,7 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { listRecurring$, deleteRecurring, runRecurring } from 'services/recurringService';
-import RecurringEditModal from './RecurringEditModal';
+import { useRecurringEditModal } from '../../hooks/useRecurringEditModal';
 import { notify } from 'util/notify';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
@@ -24,6 +24,7 @@ const RecurringListPage = () => {
   const [list, setList] = React.useState([]);
   const [currentId, setCurrentId] = React.useState();
   const [modal, contextHolder] = Modal.useModal();
+  const [openCreator, creatorContextHolder] = useRecurringEditModal();
   const navigate = useNavigate();
 
   const isRecurringDeprecated = item => !item.orgClientId || !item.taskTemplateId;
@@ -137,14 +138,12 @@ const RecurringListPage = () => {
   }, []);
 
   const handleCreateNew = async () => {
-    setCurrentId();
-    setFormVisible(true);
+    openCreator({ id: null, onOk: loadList$ });
   }
 
   const handleEditRecurring = async (e, record) => {
     e.stopPropagation();
-    setCurrentId(record.id);
-    setFormVisible(true);
+    openCreator({ id: record.id, onOk: loadList$ });
   }
 
   const handleDelete = async (e, item) => {
@@ -235,11 +234,7 @@ const RecurringListPage = () => {
           </div>
         }}
       />
-      <RecurringEditModal id={currentId}
-        visible={formVisible}
-        onOk={handleEditOnOk}
-        onCancel={() => setFormVisible(false)}
-      />
+      <div>{creatorContextHolder}</div>
       {contextHolder}
     </PageHeaderContainer>
 

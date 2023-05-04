@@ -147,7 +147,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     icon: <BsFillCalendarDateFill />,
     fieldProps: {
       picker: 'date',
-      format: 'DD MMM YYYY',
+      format: 'D MMM YYYY',
       showTime: false,
     },
     control: ProFormDateTimePicker,
