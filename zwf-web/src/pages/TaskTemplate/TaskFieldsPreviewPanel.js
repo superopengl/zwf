@@ -26,10 +26,10 @@ export const TaskFieldsPreviewPanel = props => {
 
   return (
     <Container style={style}>
-      <Title level={3}>
+      {/* <Title level={3}>
         {mode !== 'profile' && <TaskIcon/>}
         {name}
-        </Title>
+        </Title> */}
       <FormSchemaRenderer
         fields={fields}
         mode={mode}

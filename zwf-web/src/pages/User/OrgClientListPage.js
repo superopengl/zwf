@@ -4,7 +4,8 @@ import { Typography, Button, Table, Input, Form } from 'antd';
 import Icon, {
   SyncOutlined,
   SearchOutlined,
-  ContactsFilled
+  ContactsFilled,
+  RightOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
@@ -23,8 +24,8 @@ import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { BsDatabaseFill, BsFillPersonVcardFill, BsFillSendFill } from 'react-icons/bs';
-import { ClientDatabagDrawer } from 'pages/OrgBoard/ClientDatabagDrawer';
-import { ClientInfoDrawer } from 'pages/OrgBoard/ClientInfoDrawer';
+import { OrgClientFieldsPanel } from 'pages/OrgBoard/OrgClientFieldsPanel';
+import { ClientInfoPanel } from 'pages/OrgBoard/ClientInfoPanel';
 import { HiDatabase, HiVariable } from 'react-icons/hi';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate } from 'react-router-dom';
@@ -58,12 +59,9 @@ const OrgClientListPage = () => {
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [inviteUserModalVisible, setInviteUserModalVisible] = React.useState(false);
-  const [currentClient, setCurrentClient] = React.useState();
   const [list, setList] = React.useState([]);
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
   const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
-  const [openInfo, setOpenInfo] = React.useState(false);
-  const [openDatabag, setOpenDatabag] = React.useState(false);
   const [editingKey, setEditingKey] = React.useState('');
   const navigate = useNavigate();
 
@@ -239,51 +237,35 @@ const OrgClientListPage = () => {
     //   align: 'right',
     //   render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'archived')}>{value}</TextLink> : null,
     // },
+    // {
+    //   width: 40,
+    //   align: 'right',
+    //   fixed: 'right',
+    //   render: (text, item) => <DropdownMenu
+    //     config={[
+    //       item.userId ? {
+    //         icon: <ContactsFilled />,
+    //         menu: `Client information`,
+    //         onClick: () => {
+    //           setCurrentClient(item)
+    //           setOpenInfo(true);
+    //         }
+    //       } : {
+    //         icon: <Icon component={BsFillSendFill} />,
+    //         menu: `Invite client to ZeeWorkflow`,
+    //         onClick: () => {
+    //           setCurrentClient(item)
+    //           setOpenInfo(true);
+    //         }
+    //       },
+    //     ]}
+    //   />
+    // },
     {
       width: 40,
       align: 'right',
       fixed: 'right',
-      render: (text, item) => <DropdownMenu
-        config={[
-          {
-            icon: <Icon component={MdDashboardCustomize} />,
-            menu: `New task for this client`,
-            onClick: () => createTaskForClient(item)
-          },
-          item.userId ? {
-            icon: <ContactsFilled />,
-            menu: `Client information`,
-            onClick: () => {
-              setCurrentClient(item)
-              setOpenInfo(true);
-            }
-          } : {
-            icon: <Icon component={BsFillSendFill} />,
-            menu: `Invite client to ZeeWorkflow`,
-            onClick: () => {
-              setCurrentClient(item)
-              setOpenInfo(true);
-            }
-          },
-          {
-            icon: <Icon component={HiDatabase} />,
-            menu: `Profile`,
-            onClick: () => {
-              setCurrentClient(item)
-              setOpenDatabag(true);
-            }
-          },
-          // {
-          //   menu: `Tasks of client`,
-          //   onClick: () => { }
-          // },
-          // {
-          //   icon: <TagsOutlined />,
-          //   menu: 'Tags',
-          //   onClick: () => handleTagsChange(user)
-          // },
-        ]}
-      />
+      render: (text, item) => <Button type="text" icon={<RightOutlined/>}/>
     },
   ].filter(x => !!x);
 
@@ -352,8 +334,6 @@ const OrgClientListPage = () => {
           }}
         />
       </PageHeaderContainer>
-      <ClientInfoDrawer id={currentClient?.id} open={openInfo} onClose={() => setOpenInfo(false)} />
-      <ClientDatabagDrawer id={currentClient?.id} open={openDatabag} onClose={() => setOpenDatabag(false)} />
       <InviteClientModal open={inviteUserModalVisible}
         onOk={() => {
           setInviteUserModalVisible(false);

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { switchMap } from 'rxjs/operators';
 import { listTags$, saveTag$, subscribeTags } from 'services/tagService';
 import { useOutsideClick } from "rooks";
-import { Typography, Select, Divider, Input, Space, Tag } from 'antd';
+import { Typography, Select, Divider, Input, Row, Tag } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import uniqolor from 'uniqolor';
 import { PlusOutlined } from '@ant-design/icons';
@@ -12,7 +12,7 @@ const { Text } = Typography;
 
 export const TagSelect = React.memo((props) => {
 
-  const { value: propValues, onChange, readonly, inPlaceEdit, placeholder, bordered, allowClear} = props;
+  const { value: propValues, onChange, readonly, inPlaceEdit, placeholder, bordered, allowClear } = props;
 
   const [tags, setTags] = React.useState([]);
   const [value, setValue] = React.useState(propValues);
@@ -43,9 +43,12 @@ export const TagSelect = React.memo((props) => {
     };
     saveTag$(tag).pipe(
       switchMap(() => listTags$()),
-    ).subscribe(() => {
-      inputRef.current?.focus();
-      setName('');
+    ).subscribe({
+      next: () => {
+        inputRef.current?.focus();
+        setName('');
+      },
+      error: () => {}
     });
   }
 
@@ -73,7 +76,7 @@ export const TagSelect = React.memo((props) => {
       event.stopPropagation();
     };
     const tag = tags.find(t => t.id === value);
-    if(!tag) return null;
+    if (!tag) return null;
     return (
       <Tag
         color={tag.colorHex}
@@ -95,50 +98,51 @@ export const TagSelect = React.memo((props) => {
     </>
   }
 
-  return <><Select
-    mode="multiple"
-    placeholder={placeholder}
-    allowClear={allowClear}
-    style={{ minWidth: 150, width: '100%' }}
-    bordered={bordered}
-    tagRender={handleTagRender}
-    dropdownMatchSelectWidth={false}
-    // maxTagCount="responsive"
-    options={tags.map(t => ({ value: t.id, label: <Tag color={t.colorHex}>{t.name}</Tag> }))}
-    value={value || undefined}
-    onChange={handleChange}
-    notFoundContent={"No tag defined"}
-    dropdownRender={(menu) => (
-      <>
-        {menu}
-        {inPlaceEdit && <>
-          <Divider
-            style={{
-              margin: '8px 0',
-            }}
-          />
-          <Space
-            style={{
-              padding: '0 8px 4px',
-              width: '100%',
-            }}
-          >
-            <Input.Search
-              placeholder="Add new tag"
-              ref={inputRef}
-              value={name}
-              onChange={onNameChange}
-              onPressEnter={handleAddNewTag}
-              onSearch={handleCreateNewTag}
-              block
-              style={{ width: '100%' }}
-              enterButton={<PlusOutlined />}
+  return <>
+    <Select
+      mode="multiple"
+      placeholder={placeholder}
+      allowClear={allowClear}
+      style={{ minWidth: 150, width: '100%' }}
+      bordered={bordered}
+      tagRender={handleTagRender}
+      dropdownMatchSelectWidth={false}
+      // maxTagCount="responsive"
+      options={tags.map(t => ({ value: t.id, label: <Tag color={t.colorHex}>{t.name}</Tag> }))}
+      value={value || undefined}
+      onChange={handleChange}
+      notFoundContent={"No tag defined"}
+      dropdownRender={(menu) => (
+        <>
+          {menu}
+          {inPlaceEdit && <>
+            <Divider
+              style={{
+                margin: '8px 0',
+              }}
             />
-          </Space>
-        </>}
-      </>
-    )}
-  />
+            <Row
+              style={{
+                padding: '0 8px 4px',
+                width: '100%',
+              }}
+            >
+              <Input.Search
+                placeholder="Add new tag"
+                ref={inputRef}
+                value={name}
+                onChange={onNameChange}
+                onPressEnter={handleAddNewTag}
+                onSearch={handleCreateNewTag}
+                block
+                style={{ width: '100%' }}
+                enterButton={<PlusOutlined />}
+              />
+            </Row>
+          </>}
+        </>
+      )}
+    />
   </>
 });
 

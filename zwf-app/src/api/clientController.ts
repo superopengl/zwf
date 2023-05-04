@@ -14,6 +14,55 @@ import { OrgClientField } from '../entity/OrgClientField';
 import { searchOrgClients } from '../utils/searchOrgClients';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 
+
+export const updateOrgClient = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const payload = req.body;
+
+  await db.manager.transaction(async m => {
+    const client = await m.findOneByOrFail(OrgClient, { id, orgId });
+    Object.assign(client, payload);
+
+    if (payload.tags) {
+      const tagIds = payload.tags;
+      if (tagIds?.length) {
+        client.tags = await db.getRepository(Tag).find({
+          where: {
+            id: In(tagIds)
+          }
+        });
+      } else {
+        client.tags = [];
+      }
+    }
+
+    if (payload.fields) {
+      await m.delete(OrgClientField, { orgClientId: id });
+
+      const fieldEntities = payload.fields.map((f, i) => {
+        const entity = new OrgClientField();
+        entity.orgClientId = id;
+        entity.options = f.options;
+        entity.type = f.type;
+        entity.name = f.name;
+        entity.ordinal = i + 1;
+        entity.value = f.value;
+        return entity;
+      });
+  
+      await m.save(fieldEntities);
+  
+      client.fields = fieldEntities;
+    }
+
+    await m.save(client);
+  })
+
+  res.json();
+});
+
 export const getOrgClient = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const { id } = req.params;
@@ -22,7 +71,9 @@ export const getOrgClient = handlerWrapper(async (req, res) => {
   const client = await db.manager.findOneOrFail(OrgClient, {
     where: { id, orgId },
     relations: {
-      user: true,
+      user: {
+        profile: true,
+      },
       tasks: true,
       tags: true,
       fields: true,
@@ -194,7 +245,8 @@ export const saveOrgClientEmail = handlerWrapper(async (req, res) => {
     });
 
     if (email && !orgClient.userId) {
-      const { user } = await ensureClientOrGuestUser(m, email, orgId);
+      const { user, newlyCreated } = await ensureClientOrGuestUser(m, email, orgId);
+      assert(newlyCreated || user.role === Role.Guest, 400, 'Cannot use this email address to proceed. The email address has been associated with a non-client account in ZeeWorkflow.')
       orgClient.userId = user.id;
     }
 
