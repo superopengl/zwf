@@ -137,9 +137,7 @@ export const TaskGenerator = React.memo(props => {
           onLoadingChange={setLoading}
           value={clientInfo?.id} />
       </>,
-      canNext: () => {
-        
-      },
+      canNext: () => !!client,
     },
     {
       title: 'From template',
@@ -211,12 +209,14 @@ export const TaskGenerator = React.memo(props => {
     setCurrent(current - 1);
   };
 
+  const currentStepDef = steps[current];
+  const canNext = currentStepDef.canNext?.();
   return (
     <Loading loading={loading}>
 
       {/* <Steps current={current} items={items} size="small" progressDot /> */}
       <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" />
-      <Space direction="vertical" style={{ width: '100%' }}>{steps[current].content}</Space>
+      <Space direction="vertical" style={{ width: '100%' }}>{currentStepDef.content}</Space>
 
       <Row justify={current ? "space-between" : 'end'} style={{ marginTop: 20 }}>
         {current > 0 && (
@@ -225,7 +225,7 @@ export const TaskGenerator = React.memo(props => {
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" ghost onClick={() => next()}>
+          <Button type="primary" ghost onClick={() => next()} disabled={!canNext}>
             Next <RightOutlined />
           </Button>
         )}
