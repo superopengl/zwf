@@ -50,9 +50,10 @@ export const TaskCard = (props) => {
   const { task, searchText } = props;
   const { id, name, tags } = task;
   const [user] = useAuthUser();
-  const { showClient, showTags } = React.useContext(TaskBoardContext) ?? {};
+  const { showClient, showTags } = React.useContext(TaskBoardContext);
   const navigate = useNavigate();
 
+  debugger;
   const tagIds = React.useMemo(() => (tags ?? []).map(t => t.id), [tags]);
 
   return <StyledCard gutter={[20, 20]}

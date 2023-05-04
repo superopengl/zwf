@@ -47,7 +47,7 @@ export const TagListPanel = React.memo((props) => {
           // }}
           />
         }
-        return <Tag color={item.colorHex} style={{ color: getFontColor(item.colorHex) }}>{item.name}</Tag>
+        return <Tag color={item.colorHex} style={{ color: 'white' }}>{item.name}</Tag>
       }
     },
     // {

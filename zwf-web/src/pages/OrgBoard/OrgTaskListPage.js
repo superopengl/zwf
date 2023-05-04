@@ -15,6 +15,7 @@ import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { Drawer } from 'antd';
 import { TaskSearchDrawer } from './TaskSearchDrawer';
+import { TaskBoardContext } from 'contexts/TaskBoardContext';
 
 const { Link: TextLink } = Typography;
 
