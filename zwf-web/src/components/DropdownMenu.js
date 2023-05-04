@@ -42,7 +42,7 @@ const DropdownMenu = (props) => {
       placement="bottomRight"
       trigger="click"
     >
-      <Button type="text" icon={<Icon component={IoEllipsisVertical} />} >
+      <Button type="text" icon={<Icon component={IoEllipsisVertical} />} onClick={e => e.stopPropagation()}>
         {/* <CaretDownOutlined /> */}
         {/* <EllipsisOutlined/> */}
       </Button>

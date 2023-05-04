@@ -6,6 +6,10 @@ export function searchOrgClients$(payload) {
   return httpPost$(`/org/client`, { page: 1, size: 50, ...payload });
 }
 
+export function getOrgClient$(orgClientId) {
+  return httpGet$(`/org/client/${orgClientId}`);
+}
+
 export function saveClientAlias$(orgClientId, alias) {
   return httpPost$(`/org/client/${orgClientId}/alias`, { alias });
 }

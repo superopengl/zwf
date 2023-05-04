@@ -27,6 +27,7 @@ import { ClientDatabagDrawer } from 'pages/OrgBoard/ClientDatabagDrawer';
 import { ClientInfoDrawer } from 'pages/OrgBoard/ClientInfoDrawer';
 import { HiDatabase, HiVariable } from 'react-icons/hi';
 import { ClickToEditInput } from 'components/ClickToEditInput';
+import { useNavigate } from 'react-router-dom';
 
 
 const { Paragraph, Text, Link: TextLink } = Typography;
@@ -64,6 +65,7 @@ const OrgClientListPage = () => {
   const [openInfo, setOpenInfo] = React.useState(false);
   const [openDatabag, setOpenDatabag] = React.useState(false);
   const [editingKey, setEditingKey] = React.useState('');
+  const navigate = useNavigate();
 
   const isEditing = (record) => record.id === editingKey;
 
@@ -172,7 +174,7 @@ const OrgClientListPage = () => {
           <Input.TextArea
             bordered={true}
             defaultValue={value}
-            autoSize={{minRows: 2}}
+            autoSize={{ minRows: 2 }}
           />
         </Form.Item>
         <Form.Item
@@ -241,53 +243,47 @@ const OrgClientListPage = () => {
       width: 40,
       align: 'right',
       fixed: 'right',
-      render: (text, item) => {
-        return isEditing(item) ? <Button type="link" onClick={(e) => {
-          e.stopPropagation();
-          setEditingKey('')
-        }}>Done</Button> :
-          <DropdownMenu
-            config={[
-              {
-                icon: <Icon component={MdDashboardCustomize} />,
-                menu: `New task for this client`,
-                onClick: () => createTaskForClient(item)
-              },
-              item.userId ? {
-                icon: <ContactsFilled />,
-                menu: `Client information`,
-                onClick: () => {
-                  setCurrentClient(item)
-                  setOpenInfo(true);
-                }
-              } : {
-                icon: <Icon component={BsFillSendFill} />,
-                menu: `Invite client to ZeeWorkflow`,
-                onClick: () => {
-                  setCurrentClient(item)
-                  setOpenInfo(true);
-                }
-              },
-              {
-                icon: <Icon component={HiDatabase} />,
-                menu: `Profile`,
-                onClick: () => {
-                  setCurrentClient(item)
-                  setOpenDatabag(true);
-                }
-              },
-              // {
-              //   menu: `Tasks of client`,
-              //   onClick: () => { }
-              // },
-              // {
-              //   icon: <TagsOutlined />,
-              //   menu: 'Tags',
-              //   onClick: () => handleTagsChange(user)
-              // },
-            ]}
-          />
-      }
+      render: (text, item) => <DropdownMenu
+        config={[
+          {
+            icon: <Icon component={MdDashboardCustomize} />,
+            menu: `New task for this client`,
+            onClick: () => createTaskForClient(item)
+          },
+          item.userId ? {
+            icon: <ContactsFilled />,
+            menu: `Client information`,
+            onClick: () => {
+              setCurrentClient(item)
+              setOpenInfo(true);
+            }
+          } : {
+            icon: <Icon component={BsFillSendFill} />,
+            menu: `Invite client to ZeeWorkflow`,
+            onClick: () => {
+              setCurrentClient(item)
+              setOpenInfo(true);
+            }
+          },
+          {
+            icon: <Icon component={HiDatabase} />,
+            menu: `Profile`,
+            onClick: () => {
+              setCurrentClient(item)
+              setOpenDatabag(true);
+            }
+          },
+          // {
+          //   menu: `Tasks of client`,
+          //   onClick: () => { }
+          // },
+          // {
+          //   icon: <TagsOutlined />,
+          //   menu: 'Tags',
+          //   onClick: () => handleTagsChange(user)
+          // },
+        ]}
+      />
     },
   ].filter(x => !!x);
 
@@ -328,8 +324,8 @@ const OrgClientListPage = () => {
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
-                setEditingKey(record.id);
-
+                // setEditingKey(record.id);
+                navigate(`/client/${record.id}`);
               }, // click row
               onDoubleClick: (event) => { }, // double click row
               onContextMenu: (event) => { }, // right button click row
