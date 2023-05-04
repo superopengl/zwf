@@ -43,7 +43,7 @@ import { OrgClient } from '../OrgClient';
       'p.surname as surname',
       't."name" as "taskTemplateName"',
       'u.role as role',
-      't."agentId" as "assigneeId"',
+      't."assigneeId" as "assigneeId"',
       't."createdAt" as "createdAt"',
       't."updatedAt" as "updatedAt"',
       `coalesce(tag.tags, '{}'::jsonb[]) as tags`,

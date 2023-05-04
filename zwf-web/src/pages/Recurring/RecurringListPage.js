@@ -39,7 +39,7 @@ const RecurringListPage = () => {
     {
       title: 'Client',
       dataIndex: 'orgClientId',
-      onFilter: (value, record) => record.agentId === value,
+      onFilter: (value, record) => record.assigneeId === value,
       render: (value) => <ClientNameCard id={value} />
     },
     {

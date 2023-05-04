@@ -520,13 +520,13 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
 export const assignTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { id } = req.params;
-  const { agentId } = req.body;
+  const { assigneeId } = req.body;
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
   await db.transaction(async m => {
     const task = await m.findOneByOrFail(Task, { id, orgId });
-    await m.update(Task, { id, orgId }, { agentId });
+    await m.update(Task, { id, orgId }, { assigneeId });
   });
 
   res.json();

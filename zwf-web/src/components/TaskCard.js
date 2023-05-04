@@ -13,6 +13,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { ClientNameCard } from './ClientNameCard';
 import dayjs from 'dayjs';
+import { TaskBoardContext } from 'contexts/TaskBoardContext';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -49,9 +50,10 @@ export const TaskCard = (props) => {
   const { task, searchText } = props;
   const { id, name, tags } = task;
   const [user] = useAuthUser();
+  const { showClient, showTags } = React.useContext(TaskBoardContext) ?? {};
   const navigate = useNavigate();
 
-  const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
+  const tagIds = React.useMemo(() => (tags ?? []).map(t => t.id), [tags]);
 
   return <StyledCard gutter={[20, 20]}
     direction="row"
@@ -76,14 +78,14 @@ export const TaskCard = (props) => {
         </Col>
       </Row>
       <Row gutter={[10, 10]} justify="space-between">
-        <Col>
+        {showClient && <Col>
           <ClientNameCard id={task.orgClientId} />
-        </Col>
+        </Col>}
         <Col>
-            <Space align="top">
-              Updated
-              <TimeAgo value={task.updatedAt}/>
-            </Space>
+          <Space align="top">
+            Updated
+            <TimeAgo value={task.updatedAt} />
+          </Space>
         </Col>
       </Row>
     </ProCard>
@@ -91,14 +93,14 @@ export const TaskCard = (props) => {
     {(tagIds.length > 0 || task.assigneeId) &&
       <ProCard>
         <Row gutter={[10, 10]} justify="space-between">
-        <Col span={24}>
+          {showTags && <Col span={24}>
             <TagSelect readonly={true} value={tagIds} />
-          </Col>
+          </Col>}
           {task.dueAt && <>
             <Col>
               <Space align='top'>
                 Due
-                <TimeAgo value={task.dueAt} accurate={false}/>
+                <TimeAgo value={task.dueAt} accurate={false} />
               </Space>
             </Col>
           </>}

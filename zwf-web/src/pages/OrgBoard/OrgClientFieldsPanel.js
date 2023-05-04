@@ -82,7 +82,7 @@ export const OrgClientFieldsPanel = (props) => {
 
   return (
     <Loading loading={loading}>
-      <Paragraph type="secondary">Choose a form template to setup databag</Paragraph>
+      <Paragraph type="secondary">Choose a form template to setup profile</Paragraph>
       <TaskTemplateSelect
         style={{ width: '100%' }}
         value={formTemplateId}
@@ -90,7 +90,7 @@ export const OrgClientFieldsPanel = (props) => {
       />
 
       <Paragraph type="secondary" style={{ marginTop: 24, fontSize: 20, textAlign: 'center' }}><ArrowDownOutlined /></Paragraph>
-      <Paragraph type="secondary">The values stored in this databag can be used as default prefilled values in forms associated with this client</Paragraph>
+      <Paragraph type="secondary">The default prefilled values in forms associated with this client will be taken from the values stored in this profile</Paragraph>
       {fields && <FormSchemaRenderer fields={fields} mode="profile" onChange={handleFieldsChange} />}
     </Loading>
   )
