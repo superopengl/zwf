@@ -107,7 +107,7 @@ const OrgTaskListPage = () => {
   }
 
   const handleCreateTask = () => {
-    openCreator({onOk: handleReload})
+    openCreator({ onOk: handleReload })
   }
 
   return (
@@ -127,26 +127,29 @@ const OrgTaskListPage = () => {
         <Tooltip key="refresh" title="Refresh">
           <Button icon={<SyncOutlined />} onClick={handleReload} />
         </Tooltip>,
-        <Segmented key="views"
+        <Radio.Group key="vires"
+          optionType="button"
+          buttonStyle="solid"
           value={viewMode}
-          onChange={setViewMode}
+          onChange={e => setViewMode(e.target.value)}
           options={[
             {
-              icon: <Icon component={HiOutlineViewBoards} />,
+              label: <Icon component={HiOutlineViewBoards} />,
               value: 'board'
             },
             {
-              icon: <Icon component={HiOutlineViewList} />,
+              label: <Icon component={HiOutlineViewList} />,
               value: 'list'
             },
-          ]} />,
+          ]}
+        />,
         <Tooltip key="filter" title="Filter">
           <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
         </Tooltip>,
         <Button type="primary" key="new" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
-      <TaskSearchDrawer 
+      <TaskSearchDrawer
         open={filterVisible}
         onClose={() => setFilterVisible(false)}
         queryInfo={queryInfo}
@@ -157,7 +160,7 @@ const OrgTaskListPage = () => {
         {!messageClosed && message && <Alert type="warning" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}
 
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
-        {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} onChangeFitler={() => setFilterVisible(true)}/>}
+        {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} onChangeFitler={() => setFilterVisible(true)} />}
 
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
