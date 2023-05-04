@@ -14,14 +14,14 @@ const { Paragraph } = Typography;
 
 
 const ItemCol = props => {
-  return <Col span={24}>
+  return <Col span={props.span || 24}>
     <Paragraph strong>{props.title}</Paragraph>
     {props.children}
   </Col>
 }
 
 export const TaskSearchPanel = props => {
-  const { queryInfo, onChange } = props;
+  const { queryInfo, onChange,showStatusFilter, span } = props;
 
   const handleTextChange = (value) => {
     const text = value?.trim();
@@ -57,7 +57,7 @@ export const TaskSearchPanel = props => {
   return (
     <>
       <Row gutter={[20, 10]}>
-        <ItemCol title="Search text">
+        <ItemCol title="Search text" span={span}>
           <Input
             style={{ width: '100%' }}
             placeholder="Task name, client name, or client email"
@@ -67,7 +67,7 @@ export const TaskSearchPanel = props => {
             allowClear
           />
         </ItemCol>
-        <ItemCol title="Status">
+        {showStatusFilter && <ItemCol title="Status" span={span}>
           <Select
             mode="multiple"
             allowClear={false}
@@ -80,8 +80,8 @@ export const TaskSearchPanel = props => {
               {x.label}
             </Select.Option>)}
           </Select>
-        </ItemCol>
-        <ItemCol title="Tags">
+        </ItemCol>}
+        <ItemCol title="Tags" span={span}>
           <TagSelect
             style={{ width: '100%' }}
             allowCreate={false}
@@ -94,14 +94,14 @@ export const TaskSearchPanel = props => {
             style={{ width: '100%' }}
             value={queryInfo.taskTemplateId} onChange={handleTaskTemplateIdChange} />
         </ItemCol> */}
-        <ItemCol title="Assignee">
+        <ItemCol title="Assignee" span={span}>
           <MemberSelect
             placeholder="Filter assignee"
             onChange={handleAssigneeChange}
             value={queryInfo.assigneeId}
           />
         </ItemCol>
-        <ItemCol title="Client">
+        <ItemCol title="Client" span={span}>
           <OrgClientSelect
             style={{ width: '100%' }}
             placeholder="Search a client"
@@ -125,8 +125,12 @@ TaskSearchPanel.propTypes = {
     assigneeId: PropTypes.string,
   }),
   onChange: PropTypes.func,
+  showStatusFilter: PropTypes.bool,
+  span: PropTypes.number,
 };
 
 TaskSearchPanel.defaultProps = {
+  showStatusFilter: true,
+  span: 24,
 };
 

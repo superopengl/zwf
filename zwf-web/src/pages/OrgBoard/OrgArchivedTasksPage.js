@@ -106,15 +106,13 @@ const OrgArchivedTasksPage = () => {
         </Tooltip>,
       ]}
     >
-      <TaskSearchDrawer 
-        open={filterVisible}
-        onClose={() => setFilterVisible(false)}
-        queryInfo={queryInfo}
-        onSearch={handleFilterSearch}
-      />
+      <Card>
+        <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} showStatusFilter={false} span={6} />
+      </Card>
+      
 
       <LayoutStyled direction="vertical" size="large">
-        <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} onChangeFitler={() => setFilterVisible(true)}/>
+        <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
             total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />

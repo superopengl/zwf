@@ -218,7 +218,7 @@ export const TaskListPanel = (props) => {
       locale={{
         emptyText: <div style={{ margin: '30px auto' }}>
           <Paragraph type="secondary">
-            No tasks. <TextLink underline={true} onClick={onChangeFitler}>Change filter condition</TextLink>.
+            No tasks {onChangeFitler && <TextLink underline={true} onClick={onChangeFitler}>Change filter condition</TextLink>}
           </Paragraph>
         </div>
       }}
