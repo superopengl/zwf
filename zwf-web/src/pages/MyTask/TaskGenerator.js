@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Space, Typography, Button, Steps, Tabs, Progress, Row, Input } from 'antd';
+import { Space, Typography, Button, Form, Radio, Progress, Row, Input, InputNumber, Select } from 'antd';
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
@@ -26,15 +26,20 @@ import {
   ProFormTextArea,
   StepsForm,
 } from '@ant-design/pro-components';
+import { RecurringForm } from 'pages/Recurring/RecurringForm';
+import { DatePicker } from 'antd';
+import { RecurringPeriodInput } from 'components/RecurringPeriodInput';
 
-const { Text, Link: TextLink } = Typography;
+const { Text, Link: TextLink, Paragraph } = Typography;
 
-const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
+const StyledDescription = props => <Paragraph type="secondary">{props.value}</Paragraph>
 
 export const TaskGenerator = React.memo(props => {
   const { client, postCreateMode } = props;
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
+  const [startMode, setStartMode] = React.useState('now');
+  const [recurringMode, setRecurringMode] = React.useState('once');
   const [taskName, setTaskName] = React.useState();
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -80,6 +85,11 @@ export const TaskGenerator = React.memo(props => {
     next();
   }
 
+  const disabledPastDate = (current) => {
+    // Can not select days before today and today
+    return current && current.endOf('day').isBefore();
+  };
+
   const createTaskWithVarBag$ = () => {
     const id = uuidv4();
     const payload = {
@@ -93,6 +103,10 @@ export const TaskGenerator = React.memo(props => {
     return createNewTask$(payload).pipe(
       finalize(() => setLoading(false)),
     )
+  }
+
+  const handleRecurringChange = (recurring) => {
+
   }
 
   const handleCreateAndEdit = () => {
@@ -123,6 +137,9 @@ export const TaskGenerator = React.memo(props => {
           onLoadingChange={setLoading}
           value={clientInfo?.id} />
       </>,
+      canNext: () => {
+        
+      },
     },
     {
       title: 'From template',
@@ -132,10 +149,43 @@ export const TaskGenerator = React.memo(props => {
       </>,
     },
     {
+      title: 'Start',
+      content: <>
+        <StyledDescription value="When to create this task" />
+        <Radio.Group onChange={e => setStartMode(e.target.value)} value={startMode}
+          // optionType="button"
+          buttonStyle="solid"
+        >
+          <Space direction="vertical">
+            <Radio value={'now'}>Create now</Radio>
+            <Radio value={'later'}>
+              <Space>
+                Scheduled in future date
+                <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" disabled={startMode !== 'later'} />
+              </Space>
+            </Radio>
+          </Space>
+        </Radio.Group>
+      </>,
+    },
+    {
       title: 'Recurring',
       content: <>
         <StyledDescription value="Choose a task template to begin with." />
-        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
+        <Radio.Group onChange={e => setRecurringMode(e.target.value)} value={recurringMode}
+          // optionType="button"
+          buttonStyle="solid"
+        >
+          <Space direction="vertical">
+            <Radio value={'once'}>One-time task</Radio>
+            <Radio value={'recurring'}>
+              <Space>
+                Recurring every
+                <RecurringPeriodInput style={{ width: 180 }} disabled={recurringMode!=='recurring'}/>
+              </Space>
+            </Radio>
+          </Space>
+        </Radio.Group>
       </>,
     },
     {
@@ -145,6 +195,8 @@ export const TaskGenerator = React.memo(props => {
         <Input style={{ height: 50 }}
           placeholder={taskName}
           onPressEnter={handleNameEnter}
+          autoFocus
+          allowClear
           // value={taskName}
           onChange={e => setTaskName(e.target.value)} />
       </>,
@@ -162,29 +214,29 @@ export const TaskGenerator = React.memo(props => {
   return (
     <Loading loading={loading}>
 
-        {/* <Steps current={current} items={items} size="small" progressDot /> */}
-        <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" />
-        <Row>{steps[current].content}</Row>
+      {/* <Steps current={current} items={items} size="small" progressDot /> */}
+      <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" />
+      <Space direction="vertical" style={{ width: '100%' }}>{steps[current].content}</Space>
 
-        <Row justify={current ? "space-between" : 'end'} style={{marginTop: 20}}>
-          {current > 0 && (
-            <Button icon={<LeftOutlined />} type="primary" ghost onClick={() => prev()}>
-              Previous
-            </Button>
-          )}
-          {current < steps.length - 1 && (
-            <Button type="primary" ghost onClick={() => next()}>
-              Next <RightOutlined />
-            </Button>
-          )}
-          {current === steps.length - 1 && (
-            <Button type="primary"
-              disabled={!clientInfo}
-              onClick={handleCreateAndEdit}
-            >Create Task</Button>
-          )}
+      <Row justify={current ? "space-between" : 'end'} style={{ marginTop: 20 }}>
+        {current > 0 && (
+          <Button icon={<LeftOutlined />} type="primary" ghost onClick={() => prev()}>
+            Previous
+          </Button>
+        )}
+        {current < steps.length - 1 && (
+          <Button type="primary" ghost onClick={() => next()}>
+            Next <RightOutlined />
+          </Button>
+        )}
+        {current === steps.length - 1 && (
+          <Button type="primary"
+            disabled={!clientInfo}
+            onClick={handleCreateAndEdit}
+          >Create Task</Button>
+        )}
 
-        </Row>
+      </Row>
     </Loading>
   );
 });
