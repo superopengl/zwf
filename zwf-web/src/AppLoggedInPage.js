@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon, {
-  SettingOutlined, BankOutlined, TagFilled, CreditCardFilled
+  SettingOutlined, BankOutlined, TagFilled, CreditCardFilled, ClockCircleOutlined
 } from '@ant-design/icons';
 import { Space, Typography, Button, Image } from 'antd';
 import styled from 'styled-components';
@@ -9,11 +9,11 @@ import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 import { AiOutlineHistory } from 'react-icons/ai';
-import { MdMessage, MdOutlinePages } from 'react-icons/md';
+import { MdMessage, MdOutlinePages, MdOutlineRepeat } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { AiFillCalendar } from 'react-icons/ai';
 import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
-import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill, BsFillTrash3Fill } from 'react-icons/bs';
+import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill, BsFillTrash3Fill, BsRepeat, BsClock } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { ProLayout } from '@ant-design/pro-components';
 import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
@@ -28,7 +28,8 @@ import { NotificationButton } from 'components/NotificationButton';
 import { HelpDropdownMenu } from 'components/HelpDropdownMenu';
 import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
-import { TbRepeat } from 'react-icons/tb';
+import { TbClock, TbClockPlay, TbRepeat } from 'react-icons/tb';
+import { BiRepeat } from 'react-icons/bi';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -73,7 +74,7 @@ const ROUTES = [
       {
         path: '/recurring',
         name: <FormattedMessage id="menu.scheduler" />,
-        icon: <Icon component={TbRepeat} />,
+        icon: <ClockCircleOutlined />,
         roles: ['admin', 'agent'],
       },
       {
