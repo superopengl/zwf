@@ -44,6 +44,12 @@ background: #ffffff;
 .ant-layout-sider-children {
   padding-top: 8px !important;
 }
+
+.header-logo-image {
+  &:hover {
+    cursor: pointer !important;
+  }
+}
 `;
 
 
@@ -206,7 +212,7 @@ export const AppLoggedInPage = React.memo(() => {
           colorTextMenu: '#1C222B'
         }
       }}
-      logo={<Image src="/images/logo-full-primary.png" preview={false} width={150} onClick={() => navigate('/')} />}
+      logo={<Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')} />}
       title={""}
       actionsRender={() => [
         canCreateNew ? <Space key="search" size="large">
@@ -218,7 +224,7 @@ export const AppLoggedInPage = React.memo(() => {
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
       headerTitleRender={() => {
-        return <Image src="/images/logo-full-primary.png" preview={false} width={150} />
+        return <Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')}/>
       }}
       location={{ pathname }}
       route={{ routes }}
