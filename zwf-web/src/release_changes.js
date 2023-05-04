@@ -1,9 +1,10 @@
 export const notes=`
-update release notes
-improve task editor
-misc
+icon refine
+more ui refine
 ui refine
-task trash page
-org task ui refine
-not ask to edit fields for empty task
-refactoring`
+ui refine
+org client page
+task due and est
+draft org client page
+search in archived tasks
+fix logo link`
