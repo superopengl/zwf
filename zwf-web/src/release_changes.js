@@ -1,10 +1,11 @@
 export const notes=`
-icon refine
-more ui refine
-ui refine
-ui refine
-org client page
-task due and est
-draft org client page
-search in archived tasks
-fix logo link`
+navi bugfix
+refine task & recurring generator
+create generator
+refine task generator
+org client refine
+client task card bugfix
+fix tags
+more fix
+task generator refine
+refactoring recurring modal`
