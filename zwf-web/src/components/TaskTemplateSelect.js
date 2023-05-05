@@ -51,8 +51,7 @@ const TaskTemplateSelect = (props) => {
   }
 
   const handleChange = (id) => {
-    const selected = options.find(x => x.value === id).data;
-    onChange(selected);
+    onChange(id);
   }
 
   return (<StyledSelect

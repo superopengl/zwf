@@ -16,8 +16,8 @@ const { Paragraph } = Typography;
 const OrgClientSelectFormWrapper = (props, ref) => {
   const { onChange, ...others } = props;
 
-  const handleChange = client => {
-    onChange(client?.id);
+  const handleChange = clientId => {
+    onChange(clientId);
   }
 
   return <OrgClientSelect {...others} style={{ width: '100%' }} onChange={handleChange} />

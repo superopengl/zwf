@@ -67,9 +67,8 @@ export const OrgClientSelect = (props) => {
     // onTextChange(value);
   }
 
-  const handleSelect = (value) => {
-    const item = clientList.find(x => x.id === value);
-    onChange(item);
+  const handleSelect = (orgClientId) => {
+    onChange(orgClientId);
   }
 
   const handleClear = () => {

@@ -37,10 +37,8 @@ export const useCreateTaskModal = () => {
       //   postCreateMode={postCreateMode || 'notify'}
       // />
       content: <TaskOrRecurringGenerator
-        value={{
-          orgClientId: client?.id,
-          formTemplateId: taskTemplateId,
-        }}
+        orgClientId={client?.id}
+        formTemplateId={taskTemplateId}
         onCancel={() => {
           onCancel?.();
           instance.destroy();
