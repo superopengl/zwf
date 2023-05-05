@@ -53,7 +53,6 @@ export const TaskCard = (props) => {
   const { showClient, showTags } = React.useContext(TaskBoardContext);
   const navigate = useNavigate();
 
-  debugger;
   const tagIds = React.useMemo(() => (tags ?? []).map(t => t.id), [tags]);
 
   return <StyledCard gutter={[20, 20]}

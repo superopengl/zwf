@@ -39,20 +39,22 @@ export const RecurringPeriodInput = React.memo((props) => {
     setUnitValue(value?.[1]);
   }, [value]);
 
-  React.useEffect(() => {
-    const isValid = validateValues(numberValue, unitValue);
+  const handleChange = (number, unit) => {
+    setNumberValue(number);
+    setUnitValue(unit);
+    const isValid = validateValues(number, unit);
     setValid(isValid)
     if (isValid) {
-      onChange([numberValue, unitValue]);
+      onChange([number, unit]);
     }
-  }, [numberValue, unitValue]);
+  };
 
   const handleEstNumberChange = (number) => {
-    setNumberValue(number);
+    handleChange(number, unitValue);
   }
 
   const handleEstUnitChange = unit => {
-    setUnitValue(unit);
+    handleChange(numberValue, unit);
   }
 
   return <>
@@ -93,5 +95,5 @@ RecurringPeriodInput.propTypes = {
 };
 
 RecurringPeriodInput.defaultProps = {
-  onChange: () => {}
+  onChange: () => { }
 };

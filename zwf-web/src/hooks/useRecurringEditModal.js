@@ -30,6 +30,7 @@ export const useRecurringEditModal = () => {
 
     const handleSaveRecurring = async (values) => {
       const { client, ...others } = values;
+      debugger;
       const recurring = {
         id,
         ...others,
