@@ -63,6 +63,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
   const handlePostCreateAction = (entity) => {
     const isTask = mode === 'task';
     if (postCreateMode === 'navigate') {
+      debugger;
       if (isTask) {
         navigate(`/task/${entity.id}`)
       } else {
@@ -74,7 +75,11 @@ export const TaskOrRecurringGenerator = React.memo(props => {
         `Successfully created ${isTask ? 'task' : 'recurring'}`,
         <Text>{isTask ? 'Task' : 'Recurring'} <TextLink strong onClick={() => {
           notice.close();
-          navigate(`/${isTask ? 'task' : 'recurring'}/${entity.id}`);
+          if (isTask) {
+            navigate(`/task/${entity.id}`)
+          } else {
+            navigate(`/recurring`)
+          }
         }}>{entity.name}</TextLink> was created</Text>,
       );
     }
