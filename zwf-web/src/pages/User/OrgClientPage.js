@@ -170,8 +170,7 @@ const OrgClientPage = React.memo(() => {
         <Row gutter={[20, 20]} style={{ marginBottom: 20 }}>
           <Col span={12}>
             <div style={{ marginBottom: 20 }}>
-              <ClientNameCard id={id} allowChangeAlias={true} size={60} />
-
+              <ClientNameCard id={id} allowChangeAlias={true} size={60} bordered={true} />
             </div>
             {client.userId ?
               <ClientInfoPanel orgClient={client} />

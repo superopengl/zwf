@@ -10,33 +10,15 @@ import { Loading } from 'components/Loading';
 import { getOrgClientDatabag$, getOrgClientInfo$, saveOrgClientEmail$ } from 'services/clientService';
 import { notify } from 'util/notify';
 import { InviteClientInput } from 'components/InviteClientInput';
+import { TimeAgo } from 'components/TimeAgo';
 
-const { Paragraph, Text } = Typography;
+const { Text } = Typography;
 
 
 export const ClientInfoPanel = (props) => {
   useAssertRole(['admin', 'agent']);
-  const { orgClient, onInviteFinish } = props;
-  const [loading, setLoading] = React.useState(true);
-  const ref = React.useRef();
+  const { orgClient } = props;
 
-  const handleSubmit = (values) => {
-    const { email } = values;
-    setLoading(true)
-    saveOrgClientEmail$(orgClient.id, email)
-      .pipe(
-        finalize(() => setLoading(false))
-      )
-      .subscribe({
-        next: () => {
-          notify.success(
-            'Client invitation sent out',
-            <>Successfully sent out invitation to email client <Text code>{email}</Text></>,
-          )
-        },
-        error: () => { },
-      });
-  }
 
   const profile = orgClient?.user?.profile;
 
@@ -44,9 +26,9 @@ export const ClientInfoPanel = (props) => {
     <>
       <Descriptions column={1} bordered={false} size="small" layout="horizontal">
         <Descriptions.Item label="Email">{profile?.email}</Descriptions.Item>
-        <Descriptions.Item label="Given Name">{profile?.givenName}</Descriptions.Item>
-        <Descriptions.Item label="Surname">{profile?.surname}</Descriptions.Item>
-        <Descriptions.Item label="Phone">{profile?.phone}</Descriptions.Item>
+         <Descriptions.Item label="Invited from"><TimeAgo value={orgClient.createdAt} /></Descriptions.Item>
+        {/*<Descriptions.Item label="Surname">{profile?.surname}</Descriptions.Item>
+        <Descriptions.Item label="Phone">{profile?.phone}</Descriptions.Item> */}
       </Descriptions>
     </>
   )

@@ -15,7 +15,7 @@ import { BsFillPersonVcardFill } from 'react-icons/bs';
 const { Text } = Typography;
 
 export const ClientNameCard = React.memo((props) => {
-  const { id, size, showTooltip, allowChangeAlias } = props;
+  const { id, size, showTooltip, allowChangeAlias, bordered } = props;
 
   const [data, setData] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -59,7 +59,7 @@ export const ClientNameCard = React.memo((props) => {
     <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={data.email ? null : <Icon style={{fontSize: fontSize }} component={BsFillPersonVcardFill} />} />
     {allowChangeAlias ?
       <div style={{ position: 'relative', left: -4, width: '100%' }}>
-        <ClickToEditInput value={data.clientAlias} onChange={handleAliasChange} allowClear={false} size={fontSize} />
+        <ClickToEditInput value={data.clientAlias} onChange={handleAliasChange} allowClear={false} size={fontSize} bordered={bordered} placeholder={"Client alias"}/>
       </div>
       : data.clientAlias}
   </Space>
@@ -76,6 +76,7 @@ ClientNameCard.propTypes = {
   size: PropTypes.number,
   showTooltip: PropTypes.bool,
   allowChangeAlias: PropTypes.bool,
+  bordered: PropTypes.bool,
 };
 
 ClientNameCard.defaultProps = {
@@ -83,4 +84,5 @@ ClientNameCard.defaultProps = {
   size: 36,
   showTooltip: false,
   allowChangeAlias: false,
+  bordered: false,
 };

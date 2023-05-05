@@ -335,9 +335,9 @@ const OrgClientListPage = () => {
         />
       </PageHeaderContainer>
       <InviteClientModal open={inviteUserModalVisible}
-        onOk={() => {
+        onOk={(newClientId) => {
           setInviteUserModalVisible(false);
-          loadList$();
+          navigate(`/client/${newClientId}`);
         }}
         onCancel={() => setInviteUserModalVisible(false)} />
       {taskCreatorContextHolder}

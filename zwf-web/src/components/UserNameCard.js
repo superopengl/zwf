@@ -8,6 +8,7 @@ import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 import { ClickToEditInput } from './ClickToEditInput';
+import Icon, { ProfileOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -46,6 +47,7 @@ export const UserNameCard = React.memo((props) => {
     return ret || null;
   }, [data]);
 
+  const iconfontSize = size * 14 / 36;
 
   if (loading || !data) {
     return <Space size="small">
@@ -56,7 +58,9 @@ export const UserNameCard = React.memo((props) => {
 
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
     {showAvatar &&
-      <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
+      <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size}
+        fallbackIcon={<Icon style={{ fontSize: iconfontSize }} component={icon} />}
+      />
     }
     {(showName || showEmail) ? <UserDisplayName
       surname={data.surname}

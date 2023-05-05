@@ -27,9 +27,9 @@ export const InviteClientModal = props => {
     addClient$(alias, email).pipe(
       finalize(() => setLoading(false)),
     ).subscribe({
-      next: () => {
+      next: (newClient) => {
         hasInvited.current = true;
-        onOk();
+        onOk(newClient.id);
       },
       error: e => { }
     })
