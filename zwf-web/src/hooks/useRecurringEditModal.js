@@ -24,13 +24,14 @@ const EMPTY_RECURRING = {
 export const useRecurringEditModal = () => {
 
   const [modal, contextHolder] = Modal.useModal();
+  const formRef = React.useRef();
 
   const open = async ({ id, onOk }) => {
     const isNew = !id;
 
-    const handleSaveRecurring = async (values) => {
-      const { client, ...others } = values;
+    const handleSaveRecurring = (values) => {
       debugger;
+      const { client, ...others } = values;
       const recurring = {
         id,
         ...others,
@@ -39,6 +40,12 @@ export const useRecurringEditModal = () => {
       saveRecurring$(recurring).subscribe(() => {
         onOk?.();
       });
+    }
+
+    const handleOk = () => {
+      debugger;
+      formRef.current.submit();
+      return true;
     }
 
     const source$ = isNew ? of(EMPTY_RECURRING) : getRecurring$(id);
@@ -51,10 +58,11 @@ export const useRecurringEditModal = () => {
         maskClosable: false,
         destroyOnClose: true,
         okText: 'Save',
+        onOk: handleOk,
         cancelButtonProps: {
           type: 'text',
         },
-        content: <RecurringForm recurring={recurring} onDone={handleSaveRecurring} />
+        content: <RecurringForm ref={formRef} recurring={recurring} onDone={handleSaveRecurring} />
       })
     })
   }
