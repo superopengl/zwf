@@ -188,7 +188,7 @@ export const DocTemplatePage = (props) => {
           name: 'Templates'
         },
         {
-          path: '/doc_template',
+          path: '/demplate',
           name: 'Doc Template',
         },
         {

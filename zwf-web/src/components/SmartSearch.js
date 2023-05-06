@@ -32,7 +32,7 @@ const DOMAIN_CONFIG = {
   },
   'doc_template': {
     searchHandler: smartSearchDocTemplate$,
-    pathHandler: id => `/doc_template/${id}`,
+    pathHandler: id => `/demplate/${id}`,
     renderHandler: (item, searchText) => <>
       <DocTemplateIcon />
       <HighlightingText value={item.name} search={searchText} />

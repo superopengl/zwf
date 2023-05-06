@@ -9,11 +9,11 @@ export function saveDocTemplate$(docTemplate) {
 }
 
 export function cloneDocTemplate$(sourceTemplateId, name) {
-  return httpPut$(`/doc_template/${sourceTemplateId}/clone`, {name});
+  return httpPut$(`/demplate/${sourceTemplateId}/clone`, {name});
 }
 
 export function deleteDocTemplate$(id) {
-  return httpDelete$(`/doc_template/${id}`);
+  return httpDelete$(`/demplate/${id}`);
 }
 
 export function listDocTemplate$() {
@@ -21,5 +21,5 @@ export function listDocTemplate$() {
 }
 
 export function renameDocTemplate$(id, name) {
-  return httpPost$(`/doc_template/${id}/rename`, { name });
+  return httpPost$(`/demplate/${id}/rename`, { name });
 }

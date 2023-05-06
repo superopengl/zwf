@@ -18,7 +18,7 @@ export const useCloneDocTemplateModal = () => {
         .subscribe(cloned => {
           modalInstance.destroy();
           notify.success('Cloned doc template',
-            <>Successfully cloned doc template. The new doc template is  <TextLink target="_self" href={`/doc_template/${cloned.id}`}>{cloned.name}</TextLink></>,
+            <>Successfully cloned doc template. The new doc template is  <TextLink target="_self" href={`/demplate/${cloned.id}`}>{cloned.name}</TextLink></>,
             10);
           onOk?.();
         });

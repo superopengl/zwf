@@ -696,7 +696,7 @@ paths:
       responses:
         200:
           description: OK
-  /doc_template:
+  /demplate:
     post:
       operationId: saveDocTemplate
       # security:
@@ -711,7 +711,7 @@ paths:
       responses:
         200:
           description: OK
-  /doc_template/{id}:
+  /demplate/{id}:
     get:
       operationId: getDocTemplate
       # security:
@@ -738,7 +738,7 @@ paths:
       responses:
         200:
           description: OK
-  /doc_template/{id}/clone:
+  /demplate/{id}/clone:
     put:
       operationId: cloneDocTemplate
       # security:
@@ -752,7 +752,7 @@ paths:
       responses:
         200:
           description: OK
-  /doc_template/{id}/rename:
+  /demplate/{id}/rename:
     post:
       operationId: renameDocTemplate
       # security:
@@ -1005,7 +1005,7 @@ paths:
       responses:
         200:
           description: OK                       
-  /task/{taskId}/doc_template:
+  /task/{taskId}/demplate:
     post:
       operationId: addDocTemplateToTask
       parameters:
@@ -1334,7 +1334,7 @@ paths:
       responses:
         200:
           description: OK
-  /smart_search/doc_template:
+  /smart_search/demplate:
     post:
       operationId: smartSearchDocTemplate
       responses:

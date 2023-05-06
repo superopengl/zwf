@@ -96,7 +96,7 @@ const ROUTES = [
         roles: ['admin', 'agent'],
       },
       {
-        path: '/doc_template',
+        path: '/demplate',
         name: <FormattedMessage id="menu.docTemplate" />,
         icon: <Icon component={BsFileEarmarkTextFill} />,
         roles: ['admin', 'agent'],

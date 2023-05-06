@@ -129,9 +129,9 @@ export const App = React.memo(() => {
           <Route path="/task/:id" element={<TaskPage />} />
           <Route path="/task/:id/edit" element={<OrgTaskEditPage />} />
           <Route path="/activity" element={<ClientCommentListPage />} />
-          <Route path="/doc_template" element={<DocTemplateListPage />} />
-          <Route path="/doc_template/new" element={<DocTemplatePage />} />
-          <Route path="/doc_template/:id" element={<DocTemplatePage />} />
+          <Route path="/demplate" element={<DocTemplateListPage />} />
+          <Route path="/demplate/new" element={<DocTemplatePage />} />
+          <Route path="/demplate/:id" element={<DocTemplatePage />} />
           <Route path="/femplate" element={<TaskTemplateListPage />} />
           <Route path="/femplate/new" element={<TaskTemplatePage />} />
           <Route path="/femplate/:id" element={<TaskTemplatePage />} />
