@@ -12,6 +12,7 @@ import { FieldItem } from './FieldItem';
 import { useOutsideClick } from "rooks";
 import { FieldEditFloatPanel } from './FieldEditFloatPanel';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { EditFieldsContext } from 'contexts/EditFieldsContext';
 
 const { Text } = Typography
 
@@ -19,9 +20,9 @@ const StyledCard = styled(ProCard)`
 cursor: grab;
 border: 1px solid white;
 
-&:hover {
+&:not(.context-dragging):hover {
   border: 1px solid #0FBFC4;
-  background-color: #0FBFC422;
+  background-color: #0FBFC411;
   // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 `;
@@ -35,14 +36,15 @@ export const FieldEditableItem = (props) => {
   }
 
   const [focused, setFocused] = React.useState(false);
-  const [isControlDragging, setDragging] = React.useState(false);
+  const [thisBeingDragged, setThisBeingDragged] = React.useState(false);
+  const {dragging: contextDragging} = React.useContext(EditFieldsContext);
 
   const dragDropManager = useDragDropManager()
 
   const handleStateChange = () => {
     const dragging = dragDropManager.getMonitor().isDragging();
     if (!dragging) {
-      setDragging(false);
+      setThisBeingDragged(false);
     }
   }
 
@@ -66,7 +68,7 @@ export const FieldEditableItem = (props) => {
       if (!ref.current) {
         return
       }
-      setDragging(item.id === id);
+      setThisBeingDragged(item.id === id);
       const dragIndex = item.index
       const hoverIndex = index
       // Don't replace items with themselves
@@ -109,7 +111,7 @@ export const FieldEditableItem = (props) => {
     },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult()
-      setDragging(false);
+      setThisBeingDragged(false);
       if (item && dropResult) {
         onDrop();
       }
@@ -120,7 +122,7 @@ export const FieldEditableItem = (props) => {
   })
   drag(drop(ref))
 
-  const dragging = isDragging || isControlDragging;
+  const dragging = isDragging || thisBeingDragged;
   const style = dragging ? {
     borderStyle: 'dashed',
     borderWidth: '1px',
@@ -146,16 +148,18 @@ export const FieldEditableItem = (props) => {
     onChange={onChange}
     onDelete={onDelete}
     // open={editing && !dragging}
-    open={editing && !dragging}
+    open={editing && !contextDragging}
     // onOpenChange={handleEditPanelOpenChange}
   >
     {/* <DebugJsonPanel value={field} /> */}
+    {thisBeingDragged.toString()}
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}
       size="small"
       bordered
       hoverable={false}
+      className={contextDragging ? 'context-dragging' : ''}
       // split="vertical"
       onClick={handleClick}
       style={{ ...style, borderColor: editing && !dragging ? "#0FBFC4" : undefined, opacity: isDragging ? 0 : 1, padding: 6 }}

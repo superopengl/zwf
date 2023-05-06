@@ -61,7 +61,9 @@ export const OptionsBuilder = (props) => {
         <Col flex="auto">
           <Button
             block
-            icon={<PlusOutlined/>}
+            type="primary"
+            ghost
+            // icon={<PlusOutlined/>}
             onClick={() => {
               const newOptions = [
                 ...options,

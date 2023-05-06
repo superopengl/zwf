@@ -31,6 +31,8 @@ const { Paragraph } = Typography;
 export const TaskFieldEditorPanel = (props) => {
   const { fields, onChange: setFields } = props;
 
+  const [dragging, setDragging] = React.useState(false);
+
   const handleAddControl = (controlType, newFieldId) => {
     const name = getUniqueNewFieldName(fields, controlType);
     const newField = createFieldItemSchema(controlType, name);
@@ -38,6 +40,7 @@ export const TaskFieldEditorPanel = (props) => {
 
     // console.log('just added', newField);
     setFields(pre => [...pre, newField]);
+    setDragging(true);
   }
 
   const getUniqueNewFieldName = (allFields, newControlType) => {
@@ -57,7 +60,9 @@ export const TaskFieldEditorPanel = (props) => {
   return (<Container>
     <EditFieldsContext.Provider value={{
       fields,
-      setFields
+      setFields,
+      dragging,
+      setDragging,
     }}>
       <DndProvider backend={HTML5Backend}>
         <ProCard gutter={[20, 20]} ghost className="field-control-column">
@@ -69,7 +74,7 @@ export const TaskFieldEditorPanel = (props) => {
               type={c.type}
               onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
               onClick={(newFieldId) => handleAddControl(c.type, newFieldId)}
-              // onDropDone={() => handleAddControl(c.type)}
+              onDropDone={() => setDragging(false)}
               index={fields.length}
             />)}
             <Col span={24}>
