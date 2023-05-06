@@ -31,7 +31,9 @@ export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
       const userId = getUserIdFromReq(req);
       query = {
         ...query,
-        userId
+        orgClient: {
+          userId
+        }
       };
       break;
     case Role.Guest:
@@ -45,8 +47,12 @@ export const taskDirectLinkHanlder = handlerWrapper(async (req, res) => {
 
   const task = await db.getRepository(Task).findOne({
     where: query,
-    select: ['id']
+    select: ['id'],
+    relations: {
+      orgClient: true
+    },
   });
+
   httpAssert(task, 404);
   // Redirect to a logged in task page
   res.redirect(`${process.env.ZWF_WEB_DOMAIN_NAME}/task/${task.id}`);

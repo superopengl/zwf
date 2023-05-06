@@ -315,7 +315,12 @@ export const getTask = handlerWrapper(async (req, res) => {
         };
         break;
       case Role.Client:
-        query = { id };
+        query = { 
+          id,
+          orgClient: {
+            userId
+          }
+        };
         // relations = ['fields', 'fields.docs', 'fields.docs.file'];
         relations = {
           ...relations,
