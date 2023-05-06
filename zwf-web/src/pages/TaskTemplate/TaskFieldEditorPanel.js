@@ -74,7 +74,7 @@ export const TaskFieldEditorPanel = (props) => {
             />)}
             <Col span={24}>
               <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>
-                Click controls to add fields to the form.
+                Drag or click a control to add fields to the form.
               </Paragraph>
             </Col>
           </ProCard>
