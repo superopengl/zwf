@@ -53,12 +53,12 @@ export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: numb
   return field;
 };
 
-export const createTaskByTaskTemplateForClient = async (m: EntityManager, taskTemplateId, taskName, clientId, creatorId: string, id, orgId) => {
+export const createTaskByTaskTemplateForClient = async (m: EntityManager, femplateId, taskName, clientId, creatorId: string, id, orgId) => {
   assert(clientId, 400, 'clientId is not specified');
 
-  const taskTemplate = taskTemplateId ? await m.findOne(TaskTemplate, {
+  const femplate = femplateId ? await m.findOne(TaskTemplate, {
     where: {
-      id: taskTemplateId
+      id: femplateId
     },
   }) : null;
 
@@ -69,13 +69,13 @@ export const createTaskByTaskTemplateForClient = async (m: EntityManager, taskTe
   const task = new Task();
   task.id = id || uuidv4();
   task.deepLinkId = generateDeepLinkId();
-  task.name = taskName || generateTaskDefaultName(taskTemplate?.name, orgClient.clientAlias);
+  task.name = taskName || generateTaskDefaultName(femplate?.name, orgClient.clientAlias);
   task.orgClient = orgClient;
   task.orgId = orgId;
   task.status = TaskStatus.TODO;
 
-  // Provision taskFields based on taskTemplate.fields
-  const fields = taskTemplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
+  // Provision taskFields based on femplate.fields
+  const fields = femplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
 
   await m.save([task, ...fields]);
 

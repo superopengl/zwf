@@ -46,5 +46,5 @@ export class TaskField {
   options: string[];
 
   @Column('jsonb', { nullable: true })
-  value?: any; // string | number | boolean | { fileId: string, name: string }[] | { docTemplateId: string, fileId?: string };
+  value?: any; // string | number | boolean | { fileId: string, name: string }[] | { demplateId: string, fileId?: string };
 }

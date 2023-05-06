@@ -7,12 +7,12 @@ import { Recurring } from '../Recurring';
   expression: (ds: DataSource) => ds
     .createQueryBuilder()
     .from(Recurring, 'r')
-    .leftJoin(TaskTemplate, 't', `t.id = r."taskTemplateId"`)
+    .leftJoin(TaskTemplate, 't', `t.id = r."femplateId"`)
     .select([
       'r.id as id',
       'r."orgId" as "orgId"',
       'r."name" as "recurringName"',
-      'r."taskTemplateId" as "taskTemplateId"',
+      'r."femplateId" as "femplateId"',
       'r."createdAt" as "createdAt"',
       'r."orgClientId" as "orgClientId"',
       'r."firstRunOn" as "firstRunOn"',
@@ -34,7 +34,7 @@ import { Recurring } from '../Recurring';
   recurringName: string;
 
   @ViewColumn()
-  taskTemplateId: string;
+  femplateId: string;
 
   @ViewColumn()
   createdAt: Date;

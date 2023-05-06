@@ -106,8 +106,8 @@ const OrgClientPage = React.memo(() => {
     navigate(-1);
   }
 
-  const handleFieldsChange = (formTemplateId, fields) => {
-    updateOrgClient$(client.id, { formTemplateId, fields }).subscribe();
+  const handleFieldsChange = (femplateId, fields) => {
+    updateOrgClient$(client.id, { femplateId, fields }).subscribe();
   }
 
   const handleTagChange = (tags) => {
@@ -227,7 +227,7 @@ const OrgClientPage = React.memo(() => {
         >
           <ProCard.TabPane key="profile" tab="Profile">
             <ProCard style={{ maxWidth: 500 }} ghost>
-              <OrgClientFieldsPanel formTemplateId={client.formTemplateId} fields={client.fields} onChange={handleFieldsChange} />
+              <OrgClientFieldsPanel femplateId={client.femplateId} fields={client.fields} onChange={handleFieldsChange} />
             </ProCard>
 
           </ProCard.TabPane>

@@ -91,13 +91,13 @@ const ROUTES = [
     routes: [
       {
         path: '/femplate',
-        name: <FormattedMessage id="menu.taskTemplate" />,
+        name: <FormattedMessage id="menu.femplate" />,
         icon: <Icon component={MdSpaceDashboard} />,
         roles: ['admin', 'agent'],
       },
       {
         path: '/demplate',
-        name: <FormattedMessage id="menu.docTemplate" />,
+        name: <FormattedMessage id="menu.demplate" />,
         icon: <Icon component={BsFileEarmarkTextFill} />,
         roles: ['admin', 'agent'],
       },

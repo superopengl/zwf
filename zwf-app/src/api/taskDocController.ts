@@ -162,11 +162,11 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
   assert(doc, 404);
   assert(role !== Role.Client || doc.task.orgClient?.userId === getUserIdFromReq(req), 404);
 
-  const { file, docTemplateId } = doc;
+  const { file, demplateId } = doc;
 
   if (file) {
     streamFileToResponse(file, res);
-  } else if (docTemplateId) {
+  } else if (demplateId) {
     // Hand over to frontend.
     const result = await generatePdfTaskDocFile(db.manager, doc.id, userId);
     if (result.succeeded) {

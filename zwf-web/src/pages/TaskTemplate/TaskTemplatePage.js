@@ -67,7 +67,7 @@ export const TaskTemplatePage = () => {
   const [openPreview, setOpenPreview] = React.useState(false);
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Form Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
-  const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
+  const [femplate, setFemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
   const [fields, setFields] = React.useState([]);
   const [dragging, setDragging] = React.useState(false);
 
@@ -79,10 +79,10 @@ export const TaskTemplatePage = () => {
       .pipe(
         finalize(() => setLoading(false))
       )
-      .subscribe(taskTemplate => {
-        setTaskTemplate(taskTemplate)
-        setTaskTemplateName(taskTemplate.name)
-        setFields(taskTemplate.fields ?? [])
+      .subscribe(femplate => {
+        setFemplate(femplate)
+        setTaskTemplateName(femplate.name)
+        setFields(femplate.fields ?? [])
       });
 
     return () => {
@@ -91,23 +91,23 @@ export const TaskTemplatePage = () => {
   }, []);
 
   React.useEffect(() => {
-    if (taskTemplate) {
-      setTaskTemplate(x => ({ ...x, name: taskTemplateName }));
+    if (femplate) {
+      setFemplate(x => ({ ...x, name: taskTemplateName }));
     }
   }, [taskTemplateName])
 
   React.useEffect(() => {
-    setTaskTemplate(pre => ({ ...pre, fields }));
+    setFemplate(pre => ({ ...pre, fields }));
   }, [fields])
 
   const handleSave = () => {
-    if (!taskTemplate.fields?.length) {
+    if (!femplate.fields?.length) {
       notify.error("Cannot Save", "This form template fields not defined.")
       return;
     }
 
     const entity = {
-      ...taskTemplate,
+      ...femplate,
       name: taskTemplateName,
     };
 
@@ -127,7 +127,7 @@ export const TaskTemplatePage = () => {
       setTaskTemplateName(newName);
 
       if (!isNew) {
-        renameTaskTemplate$(taskTemplate.id, newName).subscribe();
+        renameTaskTemplate$(femplate.id, newName).subscribe();
       }
     }
   }
@@ -171,8 +171,8 @@ export const TaskTemplatePage = () => {
       <TaskFieldsPreviewDrawer
         open={openPreview}
         onClose={() => setOpenPreview(false)}
-        name={taskTemplate?.name}
-        fields={taskTemplate?.fields}
+        name={femplate?.name}
+        fields={femplate?.fields}
       />
     </PageHeaderContainer>
   </Container>

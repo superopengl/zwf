@@ -43,7 +43,7 @@ export const RecurringForm = React.forwardRef((props, ref) => {
     <Form.Item label="Client" name="orgClientId" rules={[{ required: true, message: ' ' }]}>
       <OrgClientSelectFormWrapper />
     </Form.Item>
-    <Form.Item label="Form Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
+    <Form.Item label="Form Template" name="femplateId" rules={[{ required: true, message: ' ' }]}>
       <FormTemplateSelect />
     </Form.Item>
     <Form.Item

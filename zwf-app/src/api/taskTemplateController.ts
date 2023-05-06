@@ -24,14 +24,14 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   validateFormFields(fields);
 
   await db.manager.transaction(async m => {
-    const taskTemplate = new TaskTemplate();
-    taskTemplate.id = id || uuidv4();
-    taskTemplate.orgId = orgId;
-    taskTemplate.name = name;
-    taskTemplate.description = description;
-    taskTemplate.fields = fields;
+    const femplate = new TaskTemplate();
+    femplate.id = id || uuidv4();
+    femplate.orgId = orgId;
+    femplate.name = name;
+    femplate.description = description;
+    femplate.fields = fields;
 
-    await m.save(taskTemplate);
+    await m.save(femplate);
   });
 
   res.json();
@@ -71,10 +71,10 @@ export const getTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
-  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: query });
-  assert(taskTemplate, 404);
+  const femplate = await db.getRepository(TaskTemplate).findOne({ where: query });
+  assert(femplate, 404);
 
-  res.json(taskTemplate);
+  res.json(femplate);
 });
 
 export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
@@ -104,21 +104,21 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  let taskTemplate: TaskTemplate;
+  let femplate: TaskTemplate;
   await db.transaction(async m => {
-    taskTemplate = await m.findOne(TaskTemplate, { where: { id, orgId } });
-    assert(taskTemplate, 404);
+    femplate = await m.findOne(TaskTemplate, { where: { id, orgId } });
+    assert(femplate, 404);
 
     const newTaskTemplateId = uuidv4();
-    taskTemplate.id = newTaskTemplateId;
-    taskTemplate.createdAt = getUtcNow();
-    taskTemplate.updatedAt = getUtcNow();
-    taskTemplate.name = await getUniqueCopyName(m, taskTemplate);
+    femplate.id = newTaskTemplateId;
+    femplate.createdAt = getUtcNow();
+    femplate.updatedAt = getUtcNow();
+    femplate.name = await getUniqueCopyName(m, femplate);
 
-    await m.save(taskTemplate);
+    await m.save(femplate);
   });
 
-  res.json(taskTemplate);
+  res.json(femplate);
 });
 
 

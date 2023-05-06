@@ -12,7 +12,7 @@ const { Link, Text } = Typography
 export const TaskDocName = props => {
   const { taskDoc, showOverlay, allowDownload, onClick, strong } = props;
 
-  const { id, name, fileId, signedAt, signRequestedAt, type, docTemplateId } = taskDoc
+  const { id, name, fileId, signedAt, signRequestedAt, type, demplateId } = taskDoc
   const [iconType, setIconType] = React.useState('default');
   const [loading, setLoading] = React.useState(false);
   const [hasFile, setHasFile] = React.useState(!!fileId);
@@ -44,8 +44,8 @@ export const TaskDocName = props => {
     setLoading(true)
     try {
       const exists = await openTaskDoc(id, name);
-      if (!exists && docTemplateId) {
-        openPreview(docTemplateId, name);
+      if (!exists && demplateId) {
+        openPreview(demplateId, name);
       }
       setHasFile(exists);
     } finally {
@@ -67,7 +67,7 @@ export const TaskDocName = props => {
 TaskDocName.propTypes = {
   taskDoc: PropTypes.shape({
     fileId: PropTypes.string,
-    docTemplateId: PropTypes.string,
+    demplateId: PropTypes.string,
     name: PropTypes.string.isRequired,
   }),
   showOverlay: PropTypes.bool,

@@ -39,13 +39,13 @@ const StyledDescription = props => <Paragraph type="secondary">{props.value}</Pa
 
 export const TaskGenerator = React.memo(props => {
   const { client, postCreateMode } = props;
-  const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
+  const [femplateId, setTaskTemplateId] = React.useState(props.femplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
   const [startMode, setStartMode] = React.useState();
   const [recurringMode, setRecurringMode] = React.useState();
   const [startAt, setStartAt] = React.useState();
   const [taskName, setTaskName] = React.useState();
-  const [taskTemplate, setTaskTemplate] = React.useState();
+  const [femplate, setFemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [current, setCurrent] = React.useState(0);
   const [newTaskInfo, setNewTaskInfo] = React.useState({});
@@ -53,26 +53,26 @@ export const TaskGenerator = React.memo(props => {
   const formRef = React.useRef();
 
   React.useEffect(() => {
-    if (taskTemplateId) {
-      getTaskTemplate$(taskTemplateId)
+    if (femplateId) {
+      getTaskTemplate$(femplateId)
         .pipe(
           catchError(() => setLoading(false))
         )
-        .subscribe(taskTemplate => {
-          setTaskTemplate(taskTemplate)
+        .subscribe(femplate => {
+          setFemplate(femplate)
           setLoading(false)
         });
     } else {
-      setTaskTemplate(null)
+      setFemplate(null)
     }
-  }, [taskTemplateId])
+  }, [femplateId])
 
   React.useEffect(() => {
-    if (clientInfo && taskTemplate) {
-      const name = `${taskTemplate.name} - ${clientInfo.clientAlias}`;
+    if (clientInfo && femplate) {
+      const name = `${femplate.name} - ${clientInfo.clientAlias}`;
       setTaskName(name);
     }
-  }, [clientInfo, taskTemplate])
+  }, [clientInfo, femplate])
 
   const handleTaskTemplateChange = formTemplateid => {
     setNewTaskInfo({ ...newTaskInfo, formTemplateid })
@@ -289,7 +289,7 @@ export const TaskGenerator = React.memo(props => {
 
 
 TaskGenerator.propTypes = {
-  taskTemplateId: PropTypes.string,
+  femplateId: PropTypes.string,
   client: PropTypes.object,
   onCancel: PropTypes.func,
   onCreated: PropTypes.func,

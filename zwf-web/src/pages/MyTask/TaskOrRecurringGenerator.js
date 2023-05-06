@@ -47,7 +47,7 @@ h5 {
 
 
 export const TaskOrRecurringGenerator = React.memo(props => {
-  const { postCreateMode, onCreated, onTaskCreated, onRecurringCreated, orgClientId, formTemplateId } = props;
+  const { postCreateMode, onCreated, onTaskCreated, onRecurringCreated, orgClientId, femplateId } = props;
   const [mode, setMode] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
@@ -85,7 +85,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
   }
 
   const handleSubmit = (values) => {
-    const { orgClientId, formTemplateId, name, firstRunOn, repeating } = values;
+    const { orgClientId, femplateId, name, firstRunOn, repeating } = values;
 
     let source$;
     let entity;
@@ -93,7 +93,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
       entity = {
         id: entityId,
         orgClientId,
-        formTemplateId,
+        femplateId,
         name,
       }
       source$ = createNewTask$(entity);
@@ -102,7 +102,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
         id: entityId,
         name,
         orgClientId,
-        formTemplateId,
+        femplateId,
         firstRunOn: firstRunOn?.toDate(),
         every: repeating?.[0],
         period: repeating?.[1],
@@ -154,7 +154,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
           ref={formRef}
           initialValues={{
             orgClientId,
-            formTemplateId,
+            femplateId,
           }}
           onFieldsChange={(_, values) => console.log(values)}
           onFinish={handleSubmit}
@@ -172,11 +172,11 @@ export const TaskOrRecurringGenerator = React.memo(props => {
               onLoadingChange={setLoading}
             />
           </Form.Item>
-          <Form.Item name="formTemplateId" label="Task template"
+          <Form.Item name="femplateId" label="Task template"
             rules={[{ required: mode === 'recurring' }]}
           >
             <FormTemplateSelect style={{ width: '100%' }}
-              disabled={formTemplateId}
+              disabled={femplateId}
               showIcon={true} />
           </Form.Item>
           {mode === 'recurring' && <>

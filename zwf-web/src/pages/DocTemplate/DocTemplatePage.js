@@ -66,10 +66,10 @@ export const DocTemplatePage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [showingHelp, setShowingHelp] = React.useState(false);
-  const [docTemplate, setDocTemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
+  const [demplate, setDemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
   const [previewSider, setPreviewSider] = React.useState(false);
   const [docTemplateName, setDocTemplateName] = React.useState('New Doc Template');
-  const [html, setHtml] = React.useState(docTemplate.html);
+  const [html, setHtml] = React.useState(demplate.html);
   const [dirty, setDirty] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
   const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
@@ -84,7 +84,7 @@ export const DocTemplatePage = (props) => {
         finalize(() => setLoading(false))
       )
       .subscribe(d => {
-        setDocTemplate(d);
+        setDemplate(d);
         setDocTemplateName(d.name);
         setHtml(d.html);
       });
@@ -97,7 +97,7 @@ export const DocTemplatePage = (props) => {
 
   const handleSave = () => {
     const entity = {
-      ...docTemplate,
+      ...demplate,
       name: docTemplateName,
     };
 
@@ -112,7 +112,7 @@ export const DocTemplatePage = (props) => {
   }
 
   const handlePopPreview = () => {
-    // showDocTemplatePreviewModal(docTemplate, { allowTest: true });
+    // showDocTemplatePreviewModal(demplate, { allowTest: true });
     setPreviewSider(true)
   }
 
@@ -121,7 +121,7 @@ export const DocTemplatePage = (props) => {
       setDocTemplateName(newName);
 
       if (!isNew) {
-        renameDocTemplate$(docTemplate.id, newName).subscribe();
+        renameDocTemplate$(demplate.id, newName).subscribe();
       }
     }
   }
@@ -132,7 +132,7 @@ export const DocTemplatePage = (props) => {
   }
 
   const fieldNames = React.useMemo(() => {
-    docTemplate.html = html
+    demplate.html = html
     const { vars } = extractVarsFromDocTemplateBody(html);
     return vars;
   }, [html]);
@@ -151,8 +151,8 @@ export const DocTemplatePage = (props) => {
 
   const handleClone = () => {
     cloneAction({
-      targetId: docTemplate.id,
-      name: `Clone - ${docTemplate.name}`,
+      targetId: demplate.id,
+      name: `Clone - ${demplate.name}`,
     })
   }
 
@@ -252,7 +252,7 @@ export const DocTemplatePage = (props) => {
       width={700}
     >
       <DocTemplatePreviewPanel
-        value={docTemplate}
+        value={demplate}
         debug={debugMode}
         type="agent"
         allowTest={true}

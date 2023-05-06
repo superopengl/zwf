@@ -14,7 +14,7 @@ export class Recurring {
 
   @Column('uuid')
   @Index()
-  taskTemplateId: string;
+  femplateId: string;
 
   @CreateDateColumn()
   createdAt: Date;

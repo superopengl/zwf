@@ -44,13 +44,13 @@ function formatHtmlForRendering(html) {
   return `<body style="font-size: 14px;font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;">${html}</body>`;
 }
 
-async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskField[]) {
-  let renderedHtml = formatHtmlForRendering(docTemplate.html);
+async function renderDocTemplateBodyWithVarBag(demplate: DocTemplate, fields: TaskField[]) {
+  let renderedHtml = formatHtmlForRendering(demplate.html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
   const usedFieldBag = {};
   const missingFields = [];
 
-  for (const fieldName of docTemplate.refFieldNames) {
+  for (const fieldName of demplate.refFieldNames) {
     const field = fieldMap.get(fieldName);
     const value = field?.value;
     if (value || value === 0) {
@@ -65,11 +65,11 @@ async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields:
   return { renderedHtml, usedFieldBag, missingFields };
 }
 
-async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: TaskField[]) {
-  const { renderedHtml, usedFieldBag, missingFields } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
+async function generatePdfDataFromDocTemplate(demplate: DocTemplate, fields: TaskField[]) {
+  const { renderedHtml, usedFieldBag, missingFields } = await renderDocTemplateBodyWithVarBag(demplate, fields);
 
   const pdfData = missingFields.length === 0 ? await generatePdfBufferFromHtml(renderedHtml) : null;
-  const fileName = `${docTemplate.name}.pdf`;
+  const fileName = `${demplate.name}.pdf`;
 
   return { pdfData, fileName, usedFieldBag, missingFields };
 }
@@ -89,13 +89,13 @@ export async function generatePdfTaskDocFile(m: EntityManager, docId: string, ge
   });
 
   assert(doc, 500, 'No doc found');
-  assert(doc.docTemplateId, 500, 'No docTemplateId on this doc');
+  assert(doc.demplateId, 500, 'No demplateId on this doc');
   assert(!doc.signedAt, 500, 'Cannot generate PDF as the doc has been signed');
 
-  const docTemplate = await m.findOneBy(DocTemplate, { id: doc.docTemplateId });
-  assert(docTemplate, 500, 'docTemplate not found');
+  const demplate = await m.findOneBy(DocTemplate, { id: doc.demplateId });
+  assert(demplate, 500, 'demplate not found');
 
-  const { pdfData, fileName, usedFieldBag, missingFields } = await generatePdfDataFromDocTemplate(docTemplate, doc.task.fields);
+  const { pdfData, fileName, usedFieldBag, missingFields } = await generatePdfDataFromDocTemplate(demplate, doc.task.fields);
 
   if (pdfData) {
     const id = uuidv4();
