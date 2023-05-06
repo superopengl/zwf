@@ -90,7 +90,7 @@ const ROUTES = [
     name: 'Templates',
     routes: [
       {
-        path: '/task_template',
+        path: '/femplate',
         name: <FormattedMessage id="menu.taskTemplate" />,
         icon: <Icon component={MdSpaceDashboard} />,
         roles: ['admin', 'agent'],

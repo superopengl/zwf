@@ -79,7 +79,7 @@ export const FormTemplateSelect = (props) => {
         >
           <Button block type="primary"
             icon={<PlusOutlined />}
-            onClick={() => navigate("/task_template/new")}
+            onClick={() => navigate("/femplate/new")}
             ghost>Create new template</Button>
         </Row>
       </>}

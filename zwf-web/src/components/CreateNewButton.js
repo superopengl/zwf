@@ -16,7 +16,7 @@ export const CreateNewButton = React.memo(props => {
   const handleMenuSelected = (e) => {
     switch (e.key) {
       case 'task_template':
-        navigate('/task_template/new')
+        navigate('/femplate/new')
         break;
       case 'doc_template':
         navigate('/doc_template/new')

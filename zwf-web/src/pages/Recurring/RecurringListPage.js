@@ -46,7 +46,7 @@ const RecurringListPage = () => {
     {
       title: 'Form Template',
       dataIndex: 'taskTemplateName',
-      render: (text, record) => record.taskTemplateName ? <Link to={`/task_template/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
+      render: (text, record) => record.taskTemplateName ? <Link to={`/femplate/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
       ellipsis: false
     },
     {

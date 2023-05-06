@@ -1,25 +1,25 @@
 import { httpGet$, httpPost$, httpDelete$, httpPut$ } from './http';
 
 export function getTaskTemplate$(id) {
-  return httpGet$(`/task_template/${id}`);
+  return httpGet$(`/femplate/${id}`);
 }
 
 export function saveTaskTemplate$(taskTemplate) {
-  return httpPost$('/task_template', taskTemplate);
+  return httpPost$('/femplate', taskTemplate);
 }
 
 export function cloneTaskTemplate$(sourceTemplateId) {
-  return httpPut$(`/task_template/${sourceTemplateId}/clone`, );
+  return httpPut$(`/femplate/${sourceTemplateId}/clone`, );
 }
 
 export function deleteTaskTemplate$(id) {
-  return httpDelete$(`/task_template/${id}`);
+  return httpDelete$(`/femplate/${id}`);
 }
 
 export function listTaskTemplate$() {
-  return httpGet$('/task_template');
+  return httpGet$('/femplate');
 }
 
 export function renameTaskTemplate$(id, name) {
-  return httpPost$(`/task_template/${id}/rename`, {name});
+  return httpPost$(`/femplate/${id}/rename`, {name});
 }

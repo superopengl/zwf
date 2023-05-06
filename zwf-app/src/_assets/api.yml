@@ -626,7 +626,7 @@ paths:
       responses:
         200:
           description: OK
-  /task_template:
+  /femplate:
     post:
       operationId: saveTaskTemplate
       # security:
@@ -641,7 +641,7 @@ paths:
       responses:
         200:
           description: OK
-  /task_template/{id}:
+  /femplate/{id}:
     get:
       operationId: getTaskTemplate
       # security:
@@ -668,7 +668,7 @@ paths:
       responses:
         200:
           description: OK
-  /task_template/{id}/clone:
+  /femplate/{id}/clone:
     put:
       operationId: cloneTaskTemplate
       # security:
@@ -682,7 +682,7 @@ paths:
       responses:
         200:
           description: OK
-  /task_template/{id}/rename:
+  /femplate/{id}/rename:
     post:
       operationId: renameTaskTemplate
       # security:
@@ -1328,7 +1328,7 @@ paths:
       responses:
         200:
           description: OK
-  /smart_search/task_template:
+  /smart_search/femplate:
     post:
       operationId: smartSearchTaskTemplate
       responses:

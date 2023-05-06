@@ -23,7 +23,7 @@ const DOMAIN_CONFIG = {
   },
   'task_template': {
     searchHandler: smartSearchTaskTemplate$,
-    pathHandler: id => `/task_template/${id}`,
+    pathHandler: id => `/femplate/${id}`,
     renderHandler: (item, searchText) => <>
       <TaskTemplateIcon />
       <HighlightingText value={item.name} search={searchText} />
