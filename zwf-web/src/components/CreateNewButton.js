@@ -15,10 +15,10 @@ export const CreateNewButton = React.memo(props => {
 
   const handleMenuSelected = (e) => {
     switch (e.key) {
-      case 'task_template':
+      case 'femplate':
         navigate('/femplate/new')
         break;
-      case 'doc_template':
+      case 'demplate':
         navigate('/demplate/new')
         break;
       default:
@@ -37,10 +37,10 @@ export const CreateNewButton = React.memo(props => {
 
   const menu = {
     items: [{
-      key: 'task_template',
+      key: 'femplate',
       label: <><TaskTemplateIcon />New Form Template</>
     },{
-      key: 'doc_template',
+      key: 'demplate',
       label: <><DocTemplateIcon />New Doc Template</>
     }],
     onClick: handleMenuSelected,
