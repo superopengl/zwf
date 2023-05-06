@@ -4,7 +4,6 @@ import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
 
 import { getRecurring$, saveRecurring$ } from 'services/recurringService';
-import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { Input } from 'antd';
 import dayjs from 'dayjs';
 import { OrgClientSelect } from 'components/OrgClientSelect';

@@ -3,7 +3,6 @@ import { Button, Input, Card, Select, Space, Row, Col, Drawer, Typography } from
 
 import React from 'react';
 import styled from 'styled-components';
-import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { ClientSelect } from 'components/ClientSelect';
 import PropTypes from 'prop-types';
 import { TagSelect } from 'components/TagSelect';

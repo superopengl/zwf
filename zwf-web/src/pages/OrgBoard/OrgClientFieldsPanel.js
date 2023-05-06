@@ -4,7 +4,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { Drawer, Form, Typography, Input, Descriptions } from 'antd';
 import PropTypes from 'prop-types';
 import { ClientNameCard } from 'components/ClientNameCard';
-import TaskTemplateSelect from 'components/TaskTemplateSelect';
+import {FormTemplateSelect} from 'components/FormTemplateSelect';
 import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import { finalize } from 'rxjs';
@@ -83,7 +83,7 @@ export const OrgClientFieldsPanel = (props) => {
   return (
     <Loading loading={loading}>
       <Paragraph type="secondary">Choose a form template to setup profile</Paragraph>
-      <TaskTemplateSelect
+      <FormTemplateSelect
         style={{ width: '100%' }}
         value={formTemplateId}
         onChange={handleFormTemplateChange}
