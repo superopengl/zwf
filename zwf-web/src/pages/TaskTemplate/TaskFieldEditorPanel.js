@@ -29,17 +29,18 @@ const { Paragraph } = Typography;
 
 
 export const TaskFieldEditorPanel = (props) => {
-  const { fields, onChange: setFields } = props;
-
-  const [dragging, setDragging] = React.useState(false);
+  const {fields, setFields, setDragging} = React.useContext(EditFieldsContext);
 
   const handleAddControl = (controlType, newFieldId) => {
-    const name = getUniqueNewFieldName(fields, controlType);
-    const newField = createFieldItemSchema(controlType, name);
-    newField.id = newFieldId;
-
-    // console.log('just added', newField);
-    setFields(pre => [...pre, newField]);
+    setFields(preFields => {
+      
+      const name = getUniqueNewFieldName(preFields, controlType);
+      const newField = createFieldItemSchema(controlType, name);
+      newField.id = newFieldId;
+  
+      console.log('just added', newField);
+      return [...preFields, newField]
+    });
     setDragging(true);
   }
 
@@ -58,12 +59,6 @@ export const TaskFieldEditorPanel = (props) => {
   }
 
   return (<Container>
-    <EditFieldsContext.Provider value={{
-      fields,
-      setFields,
-      dragging,
-      setDragging,
-    }}>
       <DndProvider backend={HTML5Backend}>
         <ProCard gutter={[20, 20]} ghost className="field-control-column">
           <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
@@ -90,24 +85,14 @@ export const TaskFieldEditorPanel = (props) => {
           </ProCard>
         </ProCard>
       </DndProvider>
-    </EditFieldsContext.Provider>
   </Container>
   );
 };
 
 TaskFieldEditorPanel.propTypes = {
-  fields: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    type: PropTypes.string.isRequired,
-    required: PropTypes.bool,
-  })).isRequired,
-  onChange: PropTypes.func,
 };
 
 TaskFieldEditorPanel.defaultProps = {
-  onChange: () => { }
 };
 
 export default TaskFieldEditorPanel;

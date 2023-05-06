@@ -75,6 +75,7 @@ export const FieldListEditable = () => {
 
   const isEmpty = !fields?.length;
 
+  // console.log('fields', fields);
   return (
     <div
       // ref={drop} 
@@ -86,7 +87,10 @@ export const FieldListEditable = () => {
           : fields.map((field, i) => !field ? <>NULL</> : <Col key={field.id} span={24}>
             <FieldEditableItem field={field}
               index={i}
-              onClick={() => setActiveIndex(i)}
+              onClick={() => {
+                setActiveIndex(i)
+                setDragging(false)
+              }}
               editing={i === activeIndex}
               onDragging={handleDragging}
               onDrop={handleDrop}
