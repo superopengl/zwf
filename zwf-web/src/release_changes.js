@@ -1,11 +1,5 @@
 export const notes=`
-navi bugfix
-refine task & recurring generator
-create generator
-refine task generator
-org client refine
-client task card bugfix
-fix tags
-more fix
-task generator refine
-refactoring recurring modal`
+style bugfix
+client able to drop files
+drop file refine
+bugfix`
