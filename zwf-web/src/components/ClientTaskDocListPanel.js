@@ -96,7 +96,7 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         showHeader={false}
         columns={columns}
         dataSource={docs}
-        locale={{ emptyText: 'Upload or add doc templates' }}
+        locale={{ emptyText: <Text type="secondary">Upload or add doc templates</Text> }}
       />
     </ProCard>
   </Container>

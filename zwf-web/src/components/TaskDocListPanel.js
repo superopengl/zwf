@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Button, Tooltip, Table, Modal, Dropdown } from 'antd';
+import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
@@ -13,17 +13,14 @@ import { ProCard } from '@ant-design/pro-components';
 import { useAddDocTemplateToTaskModal } from 'hooks/useAddDocTemplateToTaskModal';
 import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
+import { TaskDocDropableContainer } from './TaskDocDropableContainer';
+
+const { Text } = Typography;
+
 
 const Container = styled.div`
 
-.ant-table-cell {
-  border-bottom: none !important;
-  padding: 8px 2px !important;
-}
-.ant-table-content {
-  margin-left: -8px;
-  margin-right: -8px;
-}
+
 `;
 
 export const TaskDocListPanel = React.memo((props) => {
@@ -135,30 +132,31 @@ export const TaskDocListPanel = React.memo((props) => {
   }]
 
   return <Container>
-    <ProCard
-      title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
-      type="inner"
-      extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu" disabled={loading}>
-        <Button icon={<PlusOutlined />}>Add</Button>
-      </Dropdown>}
-    >
-      <Table
-        size="small"
-        loading={loading}
-        pagination={false}
-        bordered={false}
-        rowKey="id"
-        showHeader={false}
-        columns={columns}
-        dataSource={docs}
-        locale={{ emptyText: 'Upload or add doc templates' }}
-      // scroll={{
-      //   y: 200
-      // }}
-      />
-    </ProCard>
-    {deleteModalContextHolder}
-    {docTemplateContextHolder}
+    <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
+      <ProCard
+        title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
+        type="inner"
+        extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu" disabled={loading}>
+          <Button icon={<PlusOutlined />}>Add</Button>
+        </Dropdown>}
+      >
+        <Table
+          size="small"
+          loading={loading}
+          pagination={false}
+          bordered={false}
+          rowKey="id"
+          showHeader={false}
+          columns={columns}
+          dataSource={docs}
+          locale={{ emptyText: 'Upload or add doc templates' }}
+        />
+        <div>
+          {deleteModalContextHolder}
+        </div>
+        {docTemplateContextHolder}
+      </ProCard>
+    </TaskDocDropableContainer>
   </Container>
 })
 
