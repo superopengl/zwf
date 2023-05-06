@@ -10,8 +10,9 @@ import Icon, { CheckCircleOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { TaskFileUpload } from './TaskFileUpload';
 import { finalize } from 'rxjs';
+import { TaskDocDropableContainer } from './TaskDocDropableContainer';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const Container = styled.div`
 
@@ -50,14 +51,14 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          <TaskDocName taskDoc={doc} showOverlay={false}/>
-            <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
-            {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
-            {doc.signedAt && <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />}
+          <TaskDocName taskDoc={doc} showOverlay={false} />
+          <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
+          {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
+          {doc.signedAt && <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />}
         </Space>
         }>
         <div>
-          <TaskDocName taskDoc={doc} showOverlay={false}/>
+          <TaskDocName taskDoc={doc} showOverlay={false} />
         </div>
       </Tooltip>
     },
@@ -68,8 +69,8 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     {
       align: 'right',
       render: (_, doc) => !doc.signRequestedAt ? null :
-        doc.signedAt ? <Text type="success"><CheckCircleOutlined/> signed</Text> : 
-        null
+        doc.signedAt ? <Text type="success"><CheckCircleOutlined /> signed</Text> :
+          null
     },
   ];
 
@@ -80,25 +81,28 @@ export const ClientTaskDocListPanel = React.memo((props) => {
   }
 
   return <Container>
-    <ProCard
-      title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
-      type="inner"
-      extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled}/>}
-      bodyStyle={{padding: 16}}
-      headStyle={{paddingRight: 8}}
-    >
-      <Table
-        size="small"
-        loading={loading}
-        pagination={false}
-        bordered={false}
-        rowKey="id"
-        showHeader={false}
-        columns={columns}
-        dataSource={docs}
-        locale={{ emptyText: <Text type="secondary">Upload or add doc templates</Text> }}
-      />
-    </ProCard>
+    <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
+
+      <ProCard
+        title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
+        type="inner"
+        extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled} />}
+        bodyStyle={{ padding: 16 }}
+        headStyle={{ paddingRight: 8 }}
+      >
+        <Table
+          size="small"
+          loading={loading}
+          pagination={false}
+          bordered={false}
+          rowKey="id"
+          showHeader={false}
+          columns={columns}
+          dataSource={docs}
+          locale={{ emptyText: <Text type="secondary">Upload or add doc templates</Text> }}
+        />
+      </ProCard>
+    </TaskDocDropableContainer>
   </Container>
 })
 
