@@ -27,7 +27,7 @@ border: 1px solid white;
 `;
 
 export const FieldEditableItem = (props) => {
-  const { field, index, onDragging, onSelect, onDrop, onChange, onDelete, open } = props;
+  const { field, index, onDragging, onSelect, onClick, onDrop, onChange, onDelete, editing } = props;
   const { id } = field;
 
   if(!id) {
@@ -35,7 +35,6 @@ export const FieldEditableItem = (props) => {
   }
 
   const [focused, setFocused] = React.useState(false);
-  const [editing, setEditing] = React.useState(open);
   const [isControlDragging, setDragging] = React.useState(false);
 
   const dragDropManager = useDragDropManager()
@@ -132,11 +131,12 @@ export const FieldEditableItem = (props) => {
 
   const handleClick = () => {
     setFocused(true);
+    onClick();
   }
 
-  const handleEditPanelOpenChange = open => {
-    setEditing(open)
-  }
+  // const handleEditPanelOpenChange = open => {
+  //   setEditing(open)
+  // }
 
   // useOutsideClick(ref, handleClickOutside);
 
@@ -145,8 +145,9 @@ export const FieldEditableItem = (props) => {
     trigger="click"
     onChange={onChange}
     onDelete={onDelete}
+    // open={editing && !dragging}
     open={editing && !dragging}
-    onOpenChange={handleEditPanelOpenChange}
+    // onOpenChange={handleEditPanelOpenChange}
   >
     {/* <DebugJsonPanel value={field} /> */}
     <StyledCard
@@ -176,17 +177,19 @@ FieldEditableItem.propTypes = {
   onSelect: PropTypes.func,
   onChange: PropTypes.func,
   onDelete: PropTypes.func,
+  onClick: PropTypes.func,
   onDragging: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
-  open: PropTypes.bool
+  editing: PropTypes.bool
 };
 
 FieldEditableItem.defaultProps = {
   field: {},
-  open: false,
+  editing: false,
   onChange: () => { },
   onDelete: () => { },
   onSelect: () => { },
   onDragging: () => { },
   onDrop: () => { },
+  onClick: () => {},
 };
