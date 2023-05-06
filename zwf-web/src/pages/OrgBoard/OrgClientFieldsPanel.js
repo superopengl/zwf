@@ -87,6 +87,7 @@ export const OrgClientFieldsPanel = (props) => {
         style={{ width: '100%' }}
         value={formTemplateId}
         onChange={handleFormTemplateChange}
+        allowAdd={true}
       />
 
       <Paragraph type="secondary" style={{ marginTop: 24, fontSize: 20, textAlign: 'center' }}><ArrowDownOutlined /></Paragraph>
