@@ -5,19 +5,22 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { InputNumber } from 'antd';
 import { Select } from 'antd';
-import { isNil, isNumber } from 'lodash';
+import { isNaN, isNil, isNumber } from 'lodash';
 
 const StyledInputNumber = styled(InputNumber)`
 &.error {
-
   .ant-input-number, .ant-input-number-group-addon {
-    border-color: #cf222e;
+    border-color: #f53f3f;
   }
+}
+
+.ant-input-number.ant-input-number-status-error + .ant-input-number-group-addon {
+  border-color: #f53f3f;
 }
 `;
 
 const validateValues = (number, unit) => {
-  if (isNumber(+number) && unit) {
+  if (!isNaN(+number) && unit) {
     return true;
   }
   if (isNil(number) && isNil(unit)) {
