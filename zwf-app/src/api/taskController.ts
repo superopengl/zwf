@@ -34,7 +34,7 @@ import { existsQuery } from '../utils/existsQuery';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { id, femplateId, orgClientId, name, startAt, every, period } = req.body;
+  const { id, femplateId, orgClientId, name } = req.body;
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
