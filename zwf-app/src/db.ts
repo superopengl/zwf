@@ -8,7 +8,7 @@ import { ResourcePage } from './entity/ResourcePage';
 import { Payment } from './entity/Payment';
 import { EmailLog } from './entity/EmailLog';
 import { Message } from './entity/Message';
-import { DocTemplate } from './entity/DocTemplate';
+import { Demplate } from './entity/Demplate';
 import { Femplate } from './entity/Femplate';
 import { UserProfile } from './entity/UserProfile';
 import { TaskField } from './entity/TaskField';
@@ -191,7 +191,7 @@ export const db = new DataSource({
     TaskDoc,
     File,
     Femplate,
-    DocTemplate,
+    Demplate,
     EmailLog,
     Message,
     Payment,

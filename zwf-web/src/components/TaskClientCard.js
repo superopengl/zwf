@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { TimeAgo } from './TimeAgo';
 import { TaskStatusTag } from './TaskStatusTag';
-import { ClientIcon, DocTemplateIcon, TaskIcon, FemplateIcon } from './entityIcon';
+import { ClientIcon, DemplateIcon, TaskIcon, FemplateIcon } from './entityIcon';
 import { HighlightingText } from './HighlightingText';
 
 const { Link: TextLink, Paragraph, Text, Title } = Typography;

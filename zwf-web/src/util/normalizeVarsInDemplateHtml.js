@@ -1,7 +1,7 @@
 
 const regex = /\{\{([^\}]+)\}\}/ig;
 
-export function normalizeVarsInDocTemplateHtml(html) {
+export function normalizeVarsInDemplateHtml(html) {
   const map = new Map();
   let output = html;
 

@@ -1,13 +1,13 @@
 import { Typography, Modal, Form, Input } from 'antd';
 import React from 'react';
 import { notify } from 'util/notify';
-import { cloneDocTemplate$ } from 'services/docTemplateService';
-import DocTemplateSelect from 'components/DocTemplateSelect';
+import { cloneDemplate$ } from 'services/demplateService';
+import {DemplateSelect} from 'components/DemplateSelect';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Link: TextLink } = Typography
 
-export const useAddDocTemplateToTaskModal = () => {
+export const useAddDemplateToTaskModal = () => {
   const [modal, contextHolder] = Modal.useModal();
   const [form] = Form.useForm();
   const [formValues, setFormValues] = React.useState();
@@ -16,7 +16,7 @@ export const useAddDocTemplateToTaskModal = () => {
 
     // const handleClone = (formValues) => {
     //   const { name } = formValues;
-    //   cloneDocTemplate$(targetId, name)
+    //   cloneDemplate$(targetId, name)
     //     .pipe()
     //     .subscribe(cloned => {
     //       modalInstance.destroy();
@@ -28,7 +28,7 @@ export const useAddDocTemplateToTaskModal = () => {
     // }
 
     const handleSubmit = values => {
-      onChange(values.docTemplateIds);
+      onChange(values.demplateIds);
     };
 
     const handleValuesChange = (changedValue, values) => {
@@ -49,10 +49,10 @@ export const useAddDocTemplateToTaskModal = () => {
           form={form}
           requiredMark={false}
         >
-          <Form.Item label="" name="docTemplateIds" rules={[{ required: true, whitespace: true, max: 1000, type: 'array' }]}
+          <Form.Item label="" name="demplateIds" rules={[{ required: true, whitespace: true, max: 1000, type: 'array' }]}
             extra={`The system will create a duplicate of the document template with the specified name. In case a document with the same name already exists, the system will append a number suffix (such as "(2)") to the name.`}
           >
-            <DocTemplateSelect isMultiple={true} />
+            <DemplateSelect isMultiple={true} />
           </Form.Item>
         </Form>
         {/* <DebugJsonPanel value={formValues} /> */}

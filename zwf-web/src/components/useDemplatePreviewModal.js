@@ -2,12 +2,12 @@ import React from 'react';
 
 import { Modal, Skeleton, Tag } from 'antd';
 
-import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import { DocTemplateIcon } from './entityIcon';
-import { getDocTemplate$ } from 'services/docTemplateService';
+import { DemplatePreviewPanel } from 'components/DemplatePreviewPanel';
+import { DemplateIcon } from './entityIcon';
+import { getDemplate$ } from 'services/demplateService';
 
 
-export function useDocTemplatePreviewModal() {
+export function useDemplatePreviewModal() {
   const [modal, contextHolder] = Modal.useModal()
 
   const open = (demplateId, name) => {
@@ -17,7 +17,7 @@ export function useDocTemplatePreviewModal() {
     }
 
     const modalInstance = modal.info({
-      title: <><DocTemplateIcon /> {name} <Tag color="warning">pending generation</Tag></>,
+      title: <><DemplateIcon /> {name} <Tag color="warning">pending generation</Tag></>,
       content: <Skeleton />,
       icon: null,
       closable: true,
@@ -34,10 +34,10 @@ export function useDocTemplatePreviewModal() {
       zIndex: 4000,
     });
 
-    getDocTemplate$(demplateId)
+    getDemplate$(demplateId)
       .subscribe((demplate) => {
         modalInstance.update({
-          content: <DocTemplatePreviewPanel
+          content: <DemplatePreviewPanel
             style={{ marginTop: 20 }}
             value={demplate}
             debug={false}

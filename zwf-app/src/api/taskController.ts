@@ -1,5 +1,5 @@
 import { TaskActivity } from './../entity/TaskActivity';
-import { DocTemplate } from './../entity/DocTemplate';
+import { Demplate } from './../entity/Demplate';
 import { TaskActionType } from './../types/TaskActionType';
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { getUtcNow } from './../utils/getUtcNow';
@@ -369,10 +369,10 @@ export const getTask = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
-export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
+export const addDemplateToTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { docTemplateIds } = req.body
-  assert(docTemplateIds?.length, 400, 'docTemplateIds is empty');
+  const { demplateIds } = req.body
+  assert(demplateIds?.length, 400, 'demplateIds is empty');
   const userId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
   const { taskId } = req.params;
@@ -383,18 +383,18 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
   let task: Task;
   await db.transaction(async m => {
     task = await m.getRepository(Task).findOneByOrFail({ id: taskId, orgId });
-    const docTemplates = await m.getRepository(DocTemplate).findBy({
-      id: In(docTemplateIds),
+    const demplates = await m.getRepository(Demplate).findBy({
+      id: In(demplateIds),
       orgId,
     });
 
-    if (docTemplates.length) {
+    if (demplates.length) {
       const fieldCounts = await m.getRepository(TaskField).countBy({
         taskId
       })
 
       const fieldsNamesToAdd = new Set<string>();
-      docTemplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
+      demplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
       const taskFields = Array.from(fieldsNamesToAdd).map((n, index) => {
         const taskField = new TaskField();
         taskField.taskId = taskId;
@@ -413,7 +413,7 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
         .orUpdate(['required', 'official'], ['taskId', 'name'])
         .execute();
 
-      taskDocs = docTemplates.map(t => {
+      taskDocs = demplates.map(t => {
         const taskDoc = new TaskDoc();
         taskDoc.id = uuidv4();
         taskDoc.orgId = orgId;

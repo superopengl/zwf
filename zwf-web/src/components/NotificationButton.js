@@ -9,7 +9,6 @@ import Icon, { BellOutlined, CommentOutlined, RightOutlined } from '@ant-design/
 import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from '../pages/Femplate/formBuilder/OptionsBuilder';
-import DocTemplateSelect from 'components/DocTemplateSelect';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { getMyNotifications$, } from 'services/notificationMessageService';
 import { Badge } from 'antd';

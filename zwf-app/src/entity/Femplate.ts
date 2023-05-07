@@ -1,6 +1,6 @@
 import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
 import { FemplateField } from '../types/FemplateField';
-import { DocTemplate } from './DocTemplate';
+import { Demplate } from './Demplate';
 
 @Entity()
 @Unique('idx_femplate_org_name_unique', ['orgId', 'name'])

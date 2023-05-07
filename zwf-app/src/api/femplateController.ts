@@ -1,5 +1,5 @@
 import { db } from '../db';
-import { DocTemplate } from '../entity/DocTemplate';
+import { Demplate } from '../entity/Demplate';
 import { getUtcNow } from '../utils/getUtcNow';
 
 import { EntityManager, In } from 'typeorm';

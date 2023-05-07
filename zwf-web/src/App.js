@@ -44,8 +44,8 @@ const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'))
 const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
 const OrgSubscriptionPage = loadable(() => import('pages/OrgSubscription/OrgSubscriptionPage'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
-const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
-const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
+const DemplateListPage = loadable(() => import('pages/Demplate/DemplateListPage'));
+const DemplatePage = loadable(() => import('pages/Demplate/DemplatePage'));
 const FemplateListPage = loadable(() => import('pages/Femplate/FemplateListPage'));
 const FemplatePage = loadable(() => import('pages/Femplate/FemplatePage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
@@ -129,9 +129,9 @@ export const App = React.memo(() => {
           <Route path="/task/:id" element={<TaskPage />} />
           <Route path="/task/:id/edit" element={<OrgTaskEditPage />} />
           <Route path="/activity" element={<ClientCommentListPage />} />
-          <Route path="/demplate" element={<DocTemplateListPage />} />
-          <Route path="/demplate/new" element={<DocTemplatePage />} />
-          <Route path="/demplate/:id" element={<DocTemplatePage />} />
+          <Route path="/demplate" element={<DemplateListPage />} />
+          <Route path="/demplate/new" element={<DemplatePage />} />
+          <Route path="/demplate/:id" element={<DemplatePage />} />
           <Route path="/femplate" element={<FemplateListPage />} />
           <Route path="/femplate/new" element={<FemplatePage />} />
           <Route path="/femplate/:id" element={<FemplatePage />} />

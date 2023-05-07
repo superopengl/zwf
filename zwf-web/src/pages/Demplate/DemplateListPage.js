@@ -4,16 +4,16 @@ import Icon, {
 import { Button, Modal, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate$, listDocTemplate$ } from 'services/docTemplateService';
+import { deleteDemplate$, listDemplate$ } from 'services/demplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import { DocTemplateIcon } from '../../components/entityIcon';
+import { DemplateIcon } from '../../components/entityIcon';
 import { useNavigate, Link } from 'react-router-dom';
 import { finalize, switchMap } from 'rxjs/operators';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
-import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
+import { useCloneDemplateModal } from './useCloneDemplateModal';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { IoDuplicateOutline } from 'react-icons/io5';
 
@@ -27,13 +27,13 @@ const Container = styled.div`
 
 
 
-export const DocTemplateListPage = () => {
+export const DemplateListPage = () => {
   useAssertRole(['admin', 'agent'])
   const [list, setList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
-  const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
+  const [cloneAction, cloneContextHolder] = useCloneDemplateModal();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -54,9 +54,9 @@ export const DocTemplateListPage = () => {
       title: <>Delete Dot Template <Text code>{name}</Text>?</>,
       onOk: () => {
         setLoading(true);
-        deleteDocTemplate$(id).pipe(
+        deleteDemplate$(id).pipe(
           finalize(() => setLoading(false)),
-          switchMap(() => listDocTemplate$()),
+          switchMap(() => listDemplate$()),
           finalize(() => setLoading(false)),
         ).subscribe(list => {
           setList(list);
@@ -76,7 +76,7 @@ export const DocTemplateListPage = () => {
 
   React.useEffect(() => {
     setLoading(true);
-    const subscription$ = listDocTemplate$()
+    const subscription$ = listDemplate$()
       .pipe(
         finalize(() => setLoading(false))
       )
@@ -98,7 +98,7 @@ export const DocTemplateListPage = () => {
       name: `Copy - ${demplate.name}`,
       onOk: () => {
         setLoading(true);
-        listDocTemplate$().pipe(
+        listDemplate$().pipe(
           finalize(() => setLoading(false)),
         ).subscribe(list => {
           setList(list);
@@ -111,7 +111,7 @@ export const DocTemplateListPage = () => {
     id: item.id,
     data: item,
     title: item.name,
-    avatar: <DocTemplateIcon />,
+    avatar: <DemplateIcon />,
     content: <>
       <Descriptions size="small">
         <Descriptions.Item label="created" span={12}>
@@ -212,8 +212,8 @@ export const DocTemplateListPage = () => {
   );
 };
 
-DocTemplateListPage.propTypes = {};
+DemplateListPage.propTypes = {};
 
-DocTemplateListPage.defaultProps = {};
+DemplateListPage.defaultProps = {};
 
-export default DocTemplateListPage;
+export default DemplateListPage;

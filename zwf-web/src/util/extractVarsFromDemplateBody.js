@@ -6,7 +6,7 @@ function validateVarName(name) {
   return true || varNameValidator.test(name)
 }
 
-export const extractVarsFromDocTemplateBody = (html) => {
+export const extractVarsFromDemplateBody = (html) => {
   if (!html) {
     return {
       vars: [],

@@ -36,7 +36,7 @@ EntityIcon.defaultProps = {
 export const TaskIcon = (props) => <EntityIcon icon={<MdDashboard />} color="#0FBFC4" style={props.style} /> 
 export const RecurringIcon = (props) => <EntityIcon icon={<ClockCircleOutlined />} color="#0051D9" style={props.style} /> 
 export const FemplateIcon = (props) => <EntityIcon icon={<Icon component={MdSpaceDashboard} />} color="#9254de" style={props.style} /> 
-export const DocTemplateIcon = (props) => <EntityIcon icon={<Icon component={BsFileEarmarkTextFill} />} color="#cf222e" style={props.style} /> 
+export const DemplateIcon = (props) => <EntityIcon icon={<Icon component={BsFileEarmarkTextFill} />} color="#cf222e" style={props.style} /> 
 export const ResourcePageIcon = (props) => <EntityIcon icon={<MdOutlinePages />} color="#13c2c2" style={props.style} /> 
 export const ClientIcon = (props) => <EntityIcon icon={<UserOutlined />} color="#00232944" style={props.style} /> 
 

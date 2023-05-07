@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 
-export const DocTemplateEditorPanel = React.memo(props => {
+export const DemplateEditorPanel = React.memo(props => {
   const { value, onChange } = props;
 
   return <Container>
@@ -23,11 +23,11 @@ export const DocTemplateEditorPanel = React.memo(props => {
   </Container>
 });
 
-DocTemplateEditorPanel.propTypes = {
+DemplateEditorPanel.propTypes = {
   onChange: PropTypes.func.isRequired,
   value: PropTypes.string.isRequired,
 };
 
-DocTemplateEditorPanel.defaultProps = {
+DemplateEditorPanel.defaultProps = {
 };
 
