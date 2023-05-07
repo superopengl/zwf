@@ -75,7 +75,7 @@ export const TaskListPanel = (props) => {
       sorter: () => 0,
       // onFilter: (value, record) => record.name.includes(value),
       render: (text, record) => {
-        const { id, name, femplateName, lastUnreadMessageAt } = record;
+        const { id, name, lastUnreadMessageAt } = record;
         return <div style={{ display: 'flex', flexDirection: 'column', fontSize: 14 }}>
           <Link to={`/task/${id}?${lastUnreadMessageAt ? 'chat=1' : ''}`}>
             <TaskIcon />
@@ -96,7 +96,7 @@ export const TaskListPanel = (props) => {
     {
       title: 'Client',
       dataIndex: 'orgClientId',
-      render: (value, item) => <ClientNameCard id={value} />
+      render: (value) => <ClientNameCard id={value} />
     },
     {
       title: 'Created',
@@ -167,7 +167,8 @@ export const TaskListPanel = (props) => {
         value={tags.map(t => t.id)}
         onChange={tags => handleTagChange(item, tags)}
         inPlaceEdit={true}
-        placeholder="Click to select tags"
+        placeholder="Select tags"
+        bordered={false}
       />
 
     },
@@ -201,26 +202,6 @@ export const TaskListPanel = (props) => {
     });
   }
 
-  const handleDelete = async (item) => {
-    const { id, name } = item;
-    Modal.confirm({
-      title: <>Archive task <Text strong>{name}</Text>?</>,
-      okText: 'Yes, Archive it',
-      onOk: () => {
-        postArchieveMessage();
-        changeTaskStatus$(id, 'archived').subscribe(() => onChange());
-      },
-      maskClosable: true,
-      closable: true,
-      autoFocusButton: 'cancel',
-      okButtonProps: {
-        danger: true
-      },
-      cancelButtonProps: {
-        type: 'text',
-      }
-    });
-  }
 
   return (
     <StyledTable columns={columnDef}

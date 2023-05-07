@@ -61,7 +61,7 @@ export const ClientNameCard = React.memo((props) => {
       <div style={{ position: 'relative', left: -4, width: '100%' }}>
         <ClickToEditInput value={data.clientAlias} onChange={handleAliasChange} allowClear={false} size={fontSize} bordered={bordered} placeholder={"Client alias"}/>
       </div>
-      : data.clientAlias}
+      : <span style={{fontSize}}>{data.clientAlias}</span>}
   </Space>
 
 
