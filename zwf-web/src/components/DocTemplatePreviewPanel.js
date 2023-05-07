@@ -1,4 +1,4 @@
-import { Form, Input, Card, Space, Collapse, Button, Drawer } from 'antd';
+import { Form, Input, Card, Space, Row, Button, Drawer } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -67,7 +67,11 @@ export const DocTemplatePreviewPanel = props => {
   return (
     <Container style={props.style} direction="vertical" size="large">
       {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
-      {shouldShowTestPanel && <Button onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>}
+      {shouldShowTestPanel && <Row justify="end">
+        <Button
+      type="primary"
+      onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>
+      </Row>}
 
       <PreviewDocContainer bordered>
         <RawHtmlDisplay value={renderedHtml} />
