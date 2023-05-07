@@ -103,7 +103,7 @@ export const OrgClientSelect = (props) => {
       bordered={bordered}
       showSearch={allowInput}
       allowClear
-      placeholder={<><Avatar size={28} icon={<UserOutlined />} /> {allowInput ? 'Search or create a client' : 'Select client'}</>}
+      placeholder={<><Avatar size={28} icon={<UserOutlined />} /> {allowInput ? 'Select client or type to create new client' : 'Select client'}</>}
       // optionFilterProp="searchText"
       value={value}
       onChange={handleChange}

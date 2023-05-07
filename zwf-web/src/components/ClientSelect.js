@@ -40,13 +40,14 @@ export const ClientSelect = (props) => {
       valueProp={valueProp}
       onChange={handleChange}
       onTextChange={handleTextChange}
-      placeholder={<><Avatar size={28} icon={<UserOutlined/>}/> {allowInput ? 'Search a client by name or email or input a new email address' : 'Select client by name or email'}</>}
+      placeholder={<><Avatar size={28} icon={<UserOutlined/>}/> {allowInput ? 'Select client or type in new client' : 'Select client'}</>}
     />
   </>
 };
 
 ClientSelect.propTypes = {
   value: PropTypes.string,
+  placeholder: PropTypes.string,
   onChange: PropTypes.func,
   valueProp: PropTypes.oneOf(['id', 'email']),
   allowInput: PropTypes.bool,

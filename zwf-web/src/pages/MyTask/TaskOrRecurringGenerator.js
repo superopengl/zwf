@@ -151,6 +151,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
         </Space>
         }
         {mode && <><Form
+          requiredMark={false}
           layout='vertical'
           ref={formRef}
           initialValues={{
@@ -171,9 +172,10 @@ export const TaskOrRecurringGenerator = React.memo(props => {
             <OrgClientSelect style={{ width: '100%' }}
               disabled={orgClientId}
               onLoadingChange={setLoading}
+              allowInput={true}
             />
           </Form.Item>
-          <Form.Item name="femplateId" label="Task template"
+          <Form.Item name="femplateId" label={`Task template ${mode === 'recurring' ? '' : '(optional)'}`}
             rules={[{ required: mode === 'recurring' }]}
           >
             <FormTemplateSelect style={{ width: '100%' }}
