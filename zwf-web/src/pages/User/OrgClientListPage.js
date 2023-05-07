@@ -186,6 +186,7 @@ const OrgClientListPage = () => {
     {
       title: <span style={{ fontWeight: 400 }}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
       dataIndex: 'tags',
+      width: 300,
       render: (value, item) =>
         <TagSelect value={value}
           onChange={tags => handleTagChange(item, tags)}
