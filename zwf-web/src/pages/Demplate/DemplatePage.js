@@ -103,12 +103,15 @@ export const DemplatePage = (props) => {
 
     saveDemplate$(entity).pipe(
       tap(() => setDirty(false)),
-      tap(() => {
+    )
+    .subscribe({
+      next: () => {
         notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
-      }),
-    ).subscribe(() => {
-      // goBack();
+        navigate(-1)
+      },
+      error: () => { }
     });
+
   }
 
   const handlePopPreview = () => {
