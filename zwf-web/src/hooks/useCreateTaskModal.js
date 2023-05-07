@@ -23,19 +23,6 @@ export const useCreateTaskModal = () => {
           display: 'none',
         }
       },
-      // content: <TaskGenerator
-      //   femplateId={femplateId}
-      //   client={client}
-      //   onCancel={() => {
-      //     onCancel?.();
-      //     instance.destroy();
-      //   }}
-      //   onCreated={(task) => {
-      //     onOk?.(task);
-      //     instance.destroy();
-      //   }}
-      //   postCreateMode={postCreateMode || 'notify'}
-      // />
       content: <TaskOrRecurringGenerator
         orgClientId={client?.id}
         femplateId={femplateId}

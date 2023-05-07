@@ -50,10 +50,10 @@ const RecurringListPage = () => {
       ellipsis: false
     },
     {
-      title: 'Frequency',
+      title: 'Repeating',
       render: (text, record) => {
         const { every, period } = record;
-        return <Text>{every} {period}{every === 1 ? null : 's'}</Text>;
+        return <Text><Text type="secondary"><small>every</small></Text> {every} {period}{every === 1 ? null : 's'}</Text>;
       }
     },
     // {

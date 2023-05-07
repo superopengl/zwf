@@ -73,7 +73,7 @@ export const RecurringForm = React.forwardRef((props, ref) => {
         }
       }]}
     >
-      <RecurringPeriodInput />
+      <RecurringPeriodInput style={{width: 180}}/>
     </Form.Item>
   </Form>
 });
