@@ -3,7 +3,7 @@ import React from 'react';
 import { Space, Typography, Button, Form, Card, Col, Row, Input, InputNumber, Select } from 'antd';
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
-import {FormTemplateSelect} from 'components/FormTemplateSelect';
+import {FemplateSelect} from 'components/FemplateSelect';
 import { getFemplate$ } from 'services/femplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
 import { ClockCircleFilled, ClockCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -178,7 +178,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
           <Form.Item name="femplateId" label={`Task template ${mode === 'recurring' ? '' : '(optional)'}`}
             rules={[{ required: mode === 'recurring' }]}
           >
-            <FormTemplateSelect style={{ width: '100%' }}
+            <FemplateSelect style={{ width: '100%' }}
               disabled={femplateId}
               showIcon={true} />
           </Form.Item>

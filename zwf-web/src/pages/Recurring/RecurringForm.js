@@ -4,7 +4,7 @@ import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
 
 import { getRecurring$, saveRecurring$ } from 'services/recurringService';
-import { FormTemplateSelect } from 'components/FormTemplateSelect';
+import { FemplateSelect } from 'components/FemplateSelect';
 import { Input } from 'antd';
 import dayjs from 'dayjs';
 import { OrgClientSelect } from 'components/OrgClientSelect';
@@ -44,7 +44,7 @@ export const RecurringForm = React.forwardRef((props, ref) => {
       <OrgClientSelectFormWrapper />
     </Form.Item>
     <Form.Item label="Form Template" name="femplateId" rules={[{ required: true, message: ' ' }]}>
-      <FormTemplateSelect />
+      <FemplateSelect />
     </Form.Item>
     <Form.Item
       label="Start On (First Run)" name="firstRunOn"
