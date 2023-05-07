@@ -222,7 +222,7 @@ export const TaskGenerator = React.memo(props => {
     },
     {
       title: 'From template',
-      description: isRecurring ? 'Choose a task template for the recurring' : 'Optionally choose a task template to begin with',
+      description: isRecurring ? 'Choose a template for the recurring' : 'Optionally choose a template to begin with',
       content: <>
         <FemplateSelect style={{ width: '100%' }} onChange={handleFemplateChange}
           showIcon={true} value={newTaskInfo.formTemplateid} />

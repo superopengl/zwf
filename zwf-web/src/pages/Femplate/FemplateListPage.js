@@ -102,11 +102,11 @@ export const FemplateListPage = () => {
     navigate('/femplate/new');
   }
 
-  const handleClone = item => {
+  const handleDuplicate = item => {
     duplicateFemplate$(item.id)
       .subscribe(cloned => {
         // console.log(task);
-        notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/femplate/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
+        notify.success('Cloned task', <>Successfully duplicated form template. The new form template is  <TextLink target="_blank" href={`/femplate/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
         loadList$();
       })
   }
@@ -246,7 +246,7 @@ export const FemplateListPage = () => {
                   {
                     icon: <Icon component={IoDuplicateOutline} />,
                     menu: 'Duplicate',
-                    onClick: () => handleClone(row.data)
+                    onClick: () => handleDuplicate(row.data)
                   },
                   {
                     menu: '-'

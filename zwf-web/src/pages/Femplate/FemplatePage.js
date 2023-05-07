@@ -114,7 +114,7 @@ export const FemplatePage = () => {
     saveFemplate$(entity)
       .subscribe({
         next: () => {
-          notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
+          notify.success(<>Successfully saved form template <strong>{entity.name}</strong></>)
           navigate(-1)
         },
         error: () => { }
