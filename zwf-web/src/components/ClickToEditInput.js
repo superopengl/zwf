@@ -85,5 +85,5 @@ ClickToEditInput.defaultProps = {
   size: 14,
   required: true,
   allowEmpty: false,
-  bordered: false,
+  bordered: true,
 };
