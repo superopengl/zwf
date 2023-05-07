@@ -64,8 +64,6 @@ const DocTemplateSelect = props => {
     onChange(selectedValue);
   }
 
-  console.log(docTemplateOptions)
-
   return <Loading loading={loading}>
     <StyledSelect
       mode={isMultiple ? "multiple" : null}

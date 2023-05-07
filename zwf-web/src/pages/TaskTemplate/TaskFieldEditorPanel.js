@@ -38,7 +38,6 @@ export const TaskFieldEditorPanel = (props) => {
       const newField = createFieldItemSchema(controlType, name);
       newField.id = newFieldId;
   
-      console.log('just added', newField);
       return [...preFields, newField]
     });
     setDragging(true);
