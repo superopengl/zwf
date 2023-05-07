@@ -124,7 +124,7 @@ const OrgResurgingPage = () => {
                 {data?.orgName}
               </Descriptions.Item>
               <Descriptions.Item label="Billing period">
-                {moment(period.periodFrom).format('MMM DD YYYY')} - {moment(period.periodTo).format('MMM DD YYYY')}
+                {moment(period.periodFrom).format('D MMM YYYY')} - {moment(period.periodTo).format('D MMM YYYY')}
               </Descriptions.Item>
               <Descriptions.Item label="Period days">
                 {period.periodDays} days

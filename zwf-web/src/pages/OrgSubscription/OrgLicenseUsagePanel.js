@@ -132,7 +132,7 @@ export const OrgLicenseUsagePanel = () => {
               extra={period.payment && <Button type="link" target="_blank" icon={<DownloadOutlined />} href={getInvoiceUrl(period.payment.invoiceFileId)}>Download Invoice</Button>}
             >
               <div style={{ marginBottom: 16 }}>
-                <ClockCircleOutlined /> {moment(period.periodFrom).format('MMM DD YYYY')} - <ClockCircleOutlined /> {moment(period.periodTo).format('MMM DD YYYY')} ({period.periodDays} days)
+                <ClockCircleOutlined /> {moment(period.periodFrom).format('D MMM YYYY')} - <ClockCircleOutlined /> {moment(period.periodTo).format('D MMM YYYY')} ({period.periodDays} days)
               </div>
               {period.type === 'trial' ? <>
                 <Paragraph>
@@ -152,7 +152,7 @@ export const OrgLicenseUsagePanel = () => {
                 <Col>
                   <Descriptions column={2}>
                     <Descriptions.Item label="Paid at">
-                      {moment(period.checkoutDate).format('MMM DD YYYY')}
+                      {moment(period.checkoutDate).format('D MMM YYYY')}
                     </Descriptions.Item>
                     <Descriptions.Item label="Paid with">
                       Card ending with {period.payment.cardLast4}
@@ -180,7 +180,7 @@ export const OrgLicenseUsagePanel = () => {
               </Row> : <>
                 <Paragraph>
                   Pending Payment. The subsequent automatic deduction is scheduled after <Text strong>
-                    <ClockCircleOutlined /> {moment(period.periodTo).format('MMM DD YYYY')}
+                    <ClockCircleOutlined /> {moment(period.periodTo).format('D MMM YYYY')}
                   </Text>.
                   Please kindly ensure that the primary payment method is valid and has enough balance.
                 </Paragraph>

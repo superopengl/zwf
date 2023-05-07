@@ -1,9 +1,9 @@
 
-import * as moment from 'moment';
+import dayjs from 'dayjs';
 
 export function compareDates(a, b) {
-  const momentA = moment(a);
-  const momentB = moment(b);
+  const momentA = dayjs(a);
+  const momentB = dayjs(b);
   if (momentA > momentB)
     return 1;
   if (momentA < momentB)
