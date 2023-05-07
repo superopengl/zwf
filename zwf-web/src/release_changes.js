@@ -1,11 +1,9 @@
 export const notes=`
-more fix
-doc_template => demplate (doc template)
-task_template => femplate (form template)
-form editor bugfix
-able to add template from form template select
-clean up
-refine field editor
-fix control grab
-fix control drag
-fix float panel`
+ui refine
+recurring icon
+client profile ui refine
+ui refine
+ui refine
+icon refine
+ui refine
+var name refactoring`
