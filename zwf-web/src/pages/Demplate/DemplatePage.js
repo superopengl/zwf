@@ -57,7 +57,7 @@ const EMPTY_DOC_TEMPLATE = {
 };
 
 
-export const DemplatePage = (props) => {
+export const DemplatePage = () => {
   useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id: routeParamId } = params;
@@ -152,12 +152,6 @@ export const DemplatePage = (props) => {
     setHtml(newHtml);
   }
 
-  const handleClone = () => {
-    cloneAction({
-      targetId: demplate.id,
-      name: `Copy - ${demplate.name}`,
-    })
-  }
 
   return <Container>
     <ReactRouterPrompt when={dirty}>
@@ -202,10 +196,9 @@ export const DemplatePage = (props) => {
       loading={loading}
       icon={<DemplateIcon />}
       onBack={goBack}
-      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={demplateName} size={24} onChange={handleRename} maxLength={100} />}
+      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={demplateName} size={22} onChange={handleRename} maxLength={100} bordered={true}/>}
       extra={[
         <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => setShowingHelp(true)} /></Tooltip>,
-        // <Tooltip key="clone" title="Duplicate"><Button icon={<CopyOutlined />} onClick={() => handleClone()} /></Tooltip>,
         <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}
