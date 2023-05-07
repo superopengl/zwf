@@ -152,7 +152,7 @@ export const DocTemplatePage = (props) => {
   const handleClone = () => {
     cloneAction({
       targetId: demplate.id,
-      name: `Clone - ${demplate.name}`,
+      name: `Copy - ${demplate.name}`,
     })
   }
 
@@ -202,7 +202,7 @@ export const DocTemplatePage = (props) => {
       title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
       extra={[
         <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => setShowingHelp(true)} /></Tooltip>,
-        <Tooltip key="clone" title="Clone"><Button icon={<CopyOutlined />} onClick={() => handleClone()} /></Tooltip>,
+        // <Tooltip key="clone" title="Duplicate"><Button icon={<CopyOutlined />} onClick={() => handleClone()} /></Tooltip>,
         <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}

@@ -25,6 +25,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
+import { IoDuplicateOutline } from 'react-icons/io5';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -243,8 +244,8 @@ export const TaskTemplateListPage = () => {
                     }
                   },
                   {
-                    icon: <CopyOutlined />,
-                    menu: 'Clone',
+                    icon: <Icon component={IoDuplicateOutline} />,
+                    menu: 'Duplicate',
                     onClick: () => handleClone(row.data)
                   },
                   {

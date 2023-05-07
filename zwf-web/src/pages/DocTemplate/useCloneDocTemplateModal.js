@@ -26,7 +26,7 @@ export const useCloneDocTemplateModal = () => {
 
     const modalInstance = modal.confirm({
       icon: null,
-      title: 'Clone doc template',
+      title: 'Duplicate doc template',
       content: <Form
         style={{width: '100%'}}
         initialValues={{ name }}
@@ -44,7 +44,7 @@ export const useCloneDocTemplateModal = () => {
       closable: true,
       maskClosable: true,
       destroyOnClose: true,
-      okText: 'Clone',
+      okText: 'Duplicate',
       cancelButtonProps: {
         type: 'text'
       },
