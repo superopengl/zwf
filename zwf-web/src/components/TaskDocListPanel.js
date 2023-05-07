@@ -136,9 +136,10 @@ export const TaskDocListPanel = React.memo((props) => {
       <ProCard
         title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
         type="inner"
-        extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu" disabled={loading}>
+        extra={<Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
           <Button icon={<PlusOutlined />}>Add</Button>
         </Dropdown>}
+        onClick={e => e.stopPropagation()}
       >
         <Table
           size="small"
