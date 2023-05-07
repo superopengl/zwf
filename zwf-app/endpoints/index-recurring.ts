@@ -10,7 +10,7 @@ import { Recurring } from '../src/entity/Recurring';
 import { TaskStatus } from '../src/types/TaskStatus';
 import errorToJSON from 'error-to-json';
 import { calculateRecurringNextRunAt } from '../src/utils/calculateRecurringNextRunAt';
-import { TaskTemplate } from '../src/entity/TaskTemplate';
+import { Femplate } from '../src/entity/Femplate';
 import { executeRecurring } from '../src/services/recurringService';
 
 
@@ -69,7 +69,7 @@ start(JOB_NAME, async () => {
 
   const list = await db.getRepository(Recurring)
     .createQueryBuilder('r')
-    .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = r."femplateId"')
+    .innerJoin(q => q.from(Femplate, 'j'), 'j', 'j.id = r."femplateId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = r."userId"')
     .where(`r."nextRunAt" <= now()`)
     .getMany();

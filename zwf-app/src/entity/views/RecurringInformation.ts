@@ -1,4 +1,4 @@
-import { TaskTemplate } from './../TaskTemplate';
+import { Femplate } from '../Femplate';
 import { UserInformation } from './UserInformation';
 import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
 import { Recurring } from '../Recurring';
@@ -7,7 +7,7 @@ import { Recurring } from '../Recurring';
   expression: (ds: DataSource) => ds
     .createQueryBuilder()
     .from(Recurring, 'r')
-    .leftJoin(TaskTemplate, 't', `t.id = r."femplateId"`)
+    .leftJoin(Femplate, 't', `t.id = r."femplateId"`)
     .select([
       'r.id as id',
       'r."orgId" as "orgId"',
@@ -20,9 +20,9 @@ import { Recurring } from '../Recurring';
       'r."period" as "period"',
       'r."lastRunAt" as "lastRunAt"',
       'r."nextRunAt" as "nextRunAt"',
-      't."name" as "taskTemplateName"',
+      't."name" as "femplateName"',
     ]),
-  dependsOn: [Recurring, TaskTemplate]
+  dependsOn: [Recurring, Femplate]
 }) export class RecurringInformation {
   @ViewColumn()
   id: string;
@@ -58,5 +58,5 @@ import { Recurring } from '../Recurring';
   nextRunAt: string;
 
   @ViewColumn()
-  taskTemplateName: string;
+  femplateName: string;
 }

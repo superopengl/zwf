@@ -46,8 +46,8 @@ const OrgSubscriptionPage = loadable(() => import('pages/OrgSubscription/OrgSubs
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
-const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
-const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
+const FemplateListPage = loadable(() => import('pages/Femplate/FemplateListPage'));
+const FemplatePage = loadable(() => import('pages/Femplate/FemplatePage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const TaskPage = loadable(() => import('pages/TaskPage'));
 const TaskListPage = loadable(() => import('pages/TaskListPage'));
@@ -132,9 +132,9 @@ export const App = React.memo(() => {
           <Route path="/demplate" element={<DocTemplateListPage />} />
           <Route path="/demplate/new" element={<DocTemplatePage />} />
           <Route path="/demplate/:id" element={<DocTemplatePage />} />
-          <Route path="/femplate" element={<TaskTemplateListPage />} />
-          <Route path="/femplate/new" element={<TaskTemplatePage />} />
-          <Route path="/femplate/:id" element={<TaskTemplatePage />} />
+          <Route path="/femplate" element={<FemplateListPage />} />
+          <Route path="/femplate/new" element={<FemplatePage />} />
+          <Route path="/femplate/:id" element={<FemplatePage />} />
           <Route path="/recurring" element={<RecurringListPage />} />
           <Route path="/trash" element={<OrgArchivedTasksPage />} />
           <Route path="/client" element={<OrgClientListPage />} />

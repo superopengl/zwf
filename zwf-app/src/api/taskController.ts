@@ -15,7 +15,7 @@ import { sendEmailForUserId } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskByTaskTemplateForClient } from '../utils/createTaskByTaskTemplateAndUserEmail';
+import { createTaskForClientByFemplate } from '../utils/createTaskForClientByFemplate';
 import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
@@ -38,7 +38,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateForClient(db.manager, femplateId, name, orgClientId, creatorId, id, orgId);
+  const task = await createTaskForClientByFemplate(db.manager, femplateId, name, orgClientId, creatorId, id, orgId);
 
   res.json(task);
 });
@@ -245,9 +245,9 @@ export const searchTask = handlerWrapper(async (req, res) => {
 
   if (text) {
     if (isClient) {
-      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text)', { text: `%${text}%` });
+      query = query.andWhere('(x.name ILIKE :text OR x."femplateName" ILIKE :text)', { text: `%${text}%` });
     } else {
-      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
+      query = query.andWhere('(x.name ILIKE :text OR x."femplateName" ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
     }
   }
 

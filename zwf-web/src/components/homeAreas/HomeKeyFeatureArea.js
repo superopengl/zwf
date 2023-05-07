@@ -81,7 +81,7 @@ export const HomeKeyFeatureArea = () => {
             <Paragraph>Create custom forms based on your specific needs and reuse them as necessary. Our platform offers a variety of controls to customize forms that meet your business requirements.</Paragraph>
           </Col>
           <Col {...span} >
-            <Image src="/images/feature-task-template.svg" preview={false} style={{ padding: '0 1rem' }} />
+            <Image src="/images/feature-femplate.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>
         </Row>
         <Row gutter={[24, 24]} justify='center'>

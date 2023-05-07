@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Dropdown, Typography } from 'antd';
 import Icon, { CaretDownOutlined } from '@ant-design/icons';
-import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
+import { FemplateIcon, DocTemplateIcon } from './entityIcon';
 import { useNavigate } from 'react-router-dom';
 import { useKeys } from "rooks";
 import { MdDashboardCustomize } from 'react-icons/md';
@@ -38,7 +38,7 @@ export const CreateNewButton = React.memo(props => {
   const menu = {
     items: [{
       key: 'femplate',
-      label: <><TaskTemplateIcon />New Form Template</>
+      label: <><FemplateIcon />New Form Template</>
     },{
       key: 'demplate',
       label: <><DocTemplateIcon />New Doc Template</>

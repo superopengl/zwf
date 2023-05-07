@@ -8,7 +8,7 @@ import React from 'react';
 import Icon, { BellOutlined, CommentOutlined, RightOutlined } from '@ant-design/icons';
 import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
-import { OptionsBuilder } from '../pages/TaskTemplate/formBuilder/OptionsBuilder';
+import { OptionsBuilder } from '../pages/Femplate/formBuilder/OptionsBuilder';
 import DocTemplateSelect from 'components/DocTemplateSelect';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { getMyNotifications$, } from 'services/notificationMessageService';

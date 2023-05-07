@@ -2,7 +2,7 @@ import { TaskStatus } from './../types/TaskStatus';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 
 import { getRepository, ILike, Not } from 'typeorm';
-import { TaskTemplate } from '../entity/TaskTemplate';
+import { Femplate } from '../entity/Femplate';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
@@ -39,14 +39,14 @@ export const smartSearchTask = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const smartSearchTaskTemplate = handlerWrapper(async (req, res) => {
+export const smartSearchFemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
   const { text } = req.body;
   assert(text, 400);
   const orgId = getOrgIdFromReq(req);
   const size = 20;
 
-  const list = await db.getRepository(TaskTemplate).find({
+  const list = await db.getRepository(Femplate).find({
     where: {
       orgId,
       name: ILike(`%${text}%`)

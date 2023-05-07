@@ -1,10 +1,10 @@
 import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
-import { TaskTemplateField } from '../types/TaskTemplateField';
+import { FemplateField } from '../types/FemplateField';
 import { DocTemplate } from './DocTemplate';
 
 @Entity()
-@Unique('idx_task_template_org_name_unique', ['orgId', 'name'])
-export class TaskTemplate {
+@Unique('idx_femplate_org_name_unique', ['orgId', 'name'])
+export class Femplate {
   @PrimaryColumn('uuid')
   id: string;
 
@@ -28,7 +28,7 @@ export class TaskTemplate {
   updatedAt: Date;
 
   @Column('jsonb', { default: '[]' })
-  fields: TaskTemplateField[];
+  fields: FemplateField[];
 
   @Column({ default: true })
   allowAttachments: boolean;

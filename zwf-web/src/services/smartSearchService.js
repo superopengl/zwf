@@ -6,7 +6,7 @@ export function smartSearchTask$(searchText) {
   return text ? httpPost$(`smart_search/task`, { text }) : EMPTY;
 }
 
-export function smartSearchTaskTemplate$(searchText) {
+export function smartSearchFemplate$(searchText) {
   const text = searchText?.trim();
   return text ? httpPost$(`smart_search/femplate`, { text }) : EMPTY;
 }

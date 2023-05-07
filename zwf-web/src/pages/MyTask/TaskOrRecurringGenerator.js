@@ -4,7 +4,7 @@ import { Space, Typography, Button, Form, Card, Col, Row, Input, InputNumber, Se
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import {FormTemplateSelect} from 'components/FormTemplateSelect';
-import { getTaskTemplate$ } from 'services/taskTemplateService';
+import { getFemplate$ } from 'services/femplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
 import { ClockCircleFilled, ClockCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { createNewTask$ } from 'services/taskService';
