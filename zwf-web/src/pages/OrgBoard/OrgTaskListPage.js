@@ -3,7 +3,7 @@ import React from 'react';
 import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { catchError, finalize } from 'rxjs/operators';
-import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
+import { HiOutlineViewBoards, HiOutlineViewList, HiViewBoards, HiViewList } from 'react-icons/hi';
 import Icon, { FilterFilled, PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import { TaskBoardPanel } from './TaskBoardPanel';
 import { TaskListPanel } from './TaskListPanel';
@@ -135,11 +135,11 @@ const OrgTaskListPage = () => {
           onChange={e => setViewMode(e.target.value)}
           options={[
             {
-              label: <Icon component={HiOutlineViewBoards} />,
+              label: <Icon component={HiViewBoards} />,
               value: 'board'
             },
             {
-              label: <Icon component={HiOutlineViewList} />,
+              label: <Icon component={HiViewList} />,
               value: 'list'
             },
           ]}
