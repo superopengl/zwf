@@ -7,7 +7,7 @@ import { unimpersonate$ } from 'services/authService';
 
 const StyledFloatButton = styled(FloatButton)`
 top: 0;
-left: -4px;
+left: 50px;
 bottom: auto;
 z-index: 300;
 .ant-float-btn-body {
