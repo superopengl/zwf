@@ -16,6 +16,7 @@ import { MdDashboardCustomize } from 'react-icons/md';
 import { Drawer } from 'antd';
 import { TaskSearchDrawer } from './TaskSearchDrawer';
 import { TaskBoardContext } from 'contexts/TaskBoardContext';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Link: TextLink } = Typography;
 
@@ -165,7 +166,7 @@ const OrgTaskListPage = () => {
 
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
-            total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
+            total={queryInfo.total} showTotal={t => `Total ${t}`} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
       </LayoutStyled>
       {creatorContextHolder}

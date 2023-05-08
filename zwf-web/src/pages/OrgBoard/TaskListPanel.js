@@ -44,7 +44,7 @@ const StyledTable = styled(Table)`
 `;
 
 export const TaskListPanel = (props) => {
-  const { tasks, onChange, searchText, onChangeFitler } = props;
+  const { tasks, onChange, searchText, onChangeFitler, archivedMode } = props;
 
   const navigate = useNavigate();
   const postArchieveMessage = () => {
@@ -123,7 +123,7 @@ export const TaskListPanel = (props) => {
     //     return <TimeAgo value={text} accurate={false} />;
     //   }
     // },
-    {
+    archivedMode ? null : {
       title: 'Status',
       dataIndex: 'status',
       width: 160,
@@ -154,7 +154,7 @@ export const TaskListPanel = (props) => {
       //   <Select.Option key={-1} value={null}>{' '}</Select.Option>
       //   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
       // </Select>,
-      render: (value, record) => <MemberSelect
+      render: (value, record) => archivedMode ? <UserNameCard userId={value} /> : <MemberSelect
         onChange={assigneeId => assignTaskToAgent(record, assigneeId)}
         value={value}
         bordered={false}
@@ -175,6 +175,7 @@ export const TaskListPanel = (props) => {
         inPlaceEdit={true}
         placeholder="Select tags"
         bordered={false}
+        readonly={archivedMode}
       />
 
     },
@@ -200,7 +201,7 @@ export const TaskListPanel = (props) => {
     //   ),
     // },
 
-  ];
+  ].filter(x => !!x);
 
   const assignTaskToAgent = (task, assigneeId) => {
     assignTask$(task.id, assigneeId).subscribe(() => {
@@ -243,7 +244,10 @@ TaskListPanel.propTypes = {
   onChange: PropTypes.func,
   searchText: PropTypes.string,
   onChangeFitler: PropTypes.func,
+  archivedMode: PropTypes.bool,
 };
 
-TaskListPanel.defaultProps = {};
+TaskListPanel.defaultProps = {
+  archivedMode: false,
+};
 
