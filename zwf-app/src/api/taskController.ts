@@ -315,7 +315,7 @@ export const getTask = handlerWrapper(async (req, res) => {
         };
         break;
       case Role.Client:
-        query = { 
+        query = {
           id,
           orgClient: {
             userId
@@ -460,7 +460,9 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
     case Role.Client:
       query = {
         ...query,
-        userId: getUserIdFromReq(req)
+        orgClient: {
+          userId: getUserIdFromReq(req)
+        }
       };
       break;
     default:
@@ -471,6 +473,9 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
     where: query,
     select: {
       id: true,
+    },
+    relations: {
+      orgClient: true,
     }
   });
 
