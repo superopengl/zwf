@@ -76,13 +76,13 @@ export const TagListPanel = React.memo((props) => {
         const isNew = item.isNew;
         const isEditing = editingKey === item.id;
         return <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          {isNew && <Button type="text" disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}>create</Button>}
-          {isEditing ? <Button type="link" onClick={() => handleSaveName(item)}>save</Button> : null}
-          {isEditing ? <Button type="link" onClick={() => handleCancelEdit(item)}>cancel</Button> : null}
-          {isNew || isEditing ? null : <Button type="text" onClick={() => handleEdit(item)}>edit</Button>}
+          {isNew && <Button type="primary" ghost disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}>Create</Button>}
+          {isEditing ? <Button type="primary" ghost onClick={() => handleSaveName(item)}>Save</Button> : null}
+          {isEditing ? <Button type="text" onClick={() => handleCancelEdit(item)}>Cancel</Button> : null}
+          {isNew || isEditing ? null : <Button type="text" onClick={() => handleEdit(item)}>Edit</Button>}
           {isNew || isEditing ? null : <ConfirmDeleteButton onOk={() => handleDelete(item)}
             message={<>Delete tag <Tag color={item.colorHex} style={{ color: getFontColor(item.colorHex) }}>{item.name}</Tag>?</>}>
-            delete
+            Delete
           </ConfirmDeleteButton>}
         </Space>
       }
