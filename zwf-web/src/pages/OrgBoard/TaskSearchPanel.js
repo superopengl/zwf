@@ -59,7 +59,7 @@ export const TaskSearchPanel = props => {
         <ItemCol title="Search text" span={span}>
           <Input
             style={{ width: '100%' }}
-            placeholder="Task name, client name, or client email"
+            placeholder="Search task"
             onPressEnter={e => handleTextChange(e.target.value)}
             onChange={e => handleTextChange(e.target.value)}
             value={queryInfo.text}
@@ -85,6 +85,7 @@ export const TaskSearchPanel = props => {
             style={{ width: '100%' }}
             allowCreate={false}
             value={queryInfo.tags}
+            placeholder="Select tags"
             onChange={handleTagsChange}
           />
         </ItemCol>
