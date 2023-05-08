@@ -191,27 +191,30 @@ const OrgTaskPage = React.memo(() => {
       >
         <Row gutter={[30, 30]} >
           <Col flex="2 2 300px">
-            <Row gutter={[30, 30]} >
-              <Col span={24} >
-                <ProCard
-                  title="Form"
-                  type="inner"
-                  extra={<Button onClick={handleEditFields} icon={<EditOutlined />}>Edit</Button>}
-                >
-                  {task?.fields.length > 0 ?
-                    <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
-                    <Row justify="center">
-                      <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
-                    </Row>
-                  }
-                </ProCard>
-              </Col>
-              <Col span={24} >
+            <ProCard
+              tabs={{
+                type: 'card',
+              }}
+              type="inner"
+              ghost
+            >
+              <ProCard.TabPane key="form" tab="Form">
+                {task?.fields.length > 0 ?
+                  <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
+                  <Row justify="center">
+                    <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
+                  </Row>
+                }
+              </ProCard.TabPane>
+              <ProCard.TabPane key="doc" tab={`Documents (${task.docs.length})`}>
                 <TaskDocListPanel task={task} onChange={() => load$()} />
-              </Col>
-            </Row>
+              </ProCard.TabPane>
+              <ProCard.TabPane key="comments" tab="Comments">
+                  <TaskCommentPanel taskId={task.id} />
+              </ProCard.TabPane>
+            </ProCard>
           </Col>
-          <Col flex="1 1 200px">
+          <Col flex="1 1 300px">
             <Row gutter={[30, 30]} >
               <Col span={24}>
                 <ProCard ghost>
@@ -231,13 +234,6 @@ const OrgTaskPage = React.memo(() => {
                         {task.status !== 'archived' && <Button type="link" danger icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
                       </Space>
                     </Descriptions.Item>
-                    <Descriptions.Item label="Comments">
-                      <ProCard size="small" bodyStyle={{ padding: '12px 0' }} bordered={true}>
-                        <TaskCommentPanel taskId={task.id} />
-                      </ProCard>
-
-                    </Descriptions.Item>
-
                   </Descriptions>
                 </ProCard>
               </Col>

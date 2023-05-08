@@ -39,9 +39,10 @@ const options = definitions.map(d => ({
 }))
 
 export const TaskStatusButton = props => {
-  const { onChange, value, style, ...others } = props;
+  const { onChange, value, ...others } = props;
 
-  return <Select {...others} options={options} value={value} onChange={onChange} dropdownMatchSelectWidth={false}/>
+  return <Select {...others} options={options} value={value} 
+  onChange={onChange} dropdownMatchSelectWidth={false}/>
 };
 
 TaskStatusButton.propTypes = {

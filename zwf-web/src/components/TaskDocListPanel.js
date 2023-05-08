@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography } from 'antd';
+import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography, Row } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
@@ -40,7 +40,8 @@ export const TaskDocListPanel = React.memo((props) => {
   }, [task]);
 
 
-  const handleDeleteDoc = doc => {
+  const handleDeleteDoc = (doc, e) => {
+    e.stopPropagation();
     deleteModal.confirm({
       title: <>Delete doc {doc.name}?</>,
       maskClosable: true,
@@ -58,7 +59,8 @@ export const TaskDocListPanel = React.memo((props) => {
         ).subscribe(() => {
           setDocs(docList => docList.filter(x => x.id !== doc.id));
         });
-      }
+      },
+      // onCancel: e => e.stopPropagation(),
     });
   }
 
@@ -99,7 +101,7 @@ export const TaskDocListPanel = React.memo((props) => {
       align: 'right',
       width: 32,
       render: (_, doc) => <Tooltip title={`Delete ${doc.name}`} placement="topRight">
-        <Button type="text" shape="circle" danger icon={<CloseOutlined />} onClick={() => handleDeleteDoc(doc)} />
+        <Button type="text" shape="circle" danger icon={<CloseOutlined />} onClick={(e) => handleDeleteDoc(doc, e)} />
       </Tooltip>
     },
   ];
@@ -132,32 +134,34 @@ export const TaskDocListPanel = React.memo((props) => {
   }]
 
   return <Container>
-    <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
-      <ProCard
-        title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
-        type="inner"
-        extra={<Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
-          <Button icon={<PlusOutlined />}>Add</Button>
-        </Dropdown>}
+    <Row justify="end" style={{marginBottom:20}}>
+      <Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
+        <Button icon={<PlusOutlined />}>Add Documents</Button>
+      </Dropdown>
+    </Row>
+    {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}
+      <Table
+        size="small"
+        loading={loading}
+        pagination={false}
+        bordered={false}
+        rowKey="id"
+        showHeader={false}
+        columns={columns}
+        dataSource={docs}
+        locale={{ emptyText: 'Upload or add doc templates' }}
         onClick={e => e.stopPropagation()}
-      >
-        <Table
-          size="small"
-          loading={loading}
-          pagination={false}
-          bordered={false}
-          rowKey="id"
-          showHeader={false}
-          columns={columns}
-          dataSource={docs}
-          locale={{ emptyText: 'Upload or add doc templates' }}
-        />
-        <div>
-          {deleteModalContextHolder}
-        </div>
-        {demplateContextHolder}
-      </ProCard>
-    </TaskDocDropableContainer>
+        onRow={() => {
+          return {
+            onClick: e => e.stopPropagation()
+          }
+        }}
+      />
+      <div>
+        {deleteModalContextHolder}
+      </div>
+      {demplateContextHolder}
+    {/* </TaskDocDropableContainer> */}
   </Container>
 })
 
