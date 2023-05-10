@@ -6,8 +6,6 @@ function getUnitPricing(type: SubscriptionType) {
     return 0;
   case SubscriptionType.Montly:
     return 19;
-  case SubscriptionType.Yearly:
-    return 209;
   default:
     throw new Error(`Unknown subscription type ${type}`);
   }
