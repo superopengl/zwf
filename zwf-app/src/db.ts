@@ -32,7 +32,7 @@ import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
 import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
 import { TaskActivityInformation } from './entity/views/TaskActivityInformation';
-import { TaskActivity } from './entity/TaskActivity';
+import { TaskEvent } from './entity/TaskEvent';
 import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
 import { OrgClientInformation } from './entity/views/OrgClientInformation';
@@ -44,7 +44,7 @@ import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
-import { TaskActivityLastSeen } from './entity/TaskActivityLastSeen';
+import { TaskEventLastSeen } from './entity/TaskEventLastSeen';
 import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 import { OrgTermination } from './entity/OrgTermination';
 import { OrgClientField } from './entity/OrgClientField';
@@ -200,7 +200,7 @@ export const db = new DataSource({
     OrgPromotionCode,
     SupportMessage,
     Contact,
-    TaskActivity,
+    TaskEvent,
     UserAudit,
     TaskTagsTag,
     Recurring,
@@ -212,7 +212,7 @@ export const db = new DataSource({
     LicenseTicket,
     OrgSubscriptionPeriod,
     NotificationMessage,
-    TaskActivityLastSeen,
+    TaskEventLastSeen,
     // Views below
     TaskInformation,
     UserInformation,

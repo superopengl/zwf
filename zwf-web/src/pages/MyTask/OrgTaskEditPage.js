@@ -79,9 +79,6 @@ const OrgTaskEditPage = React.memo(() => {
     navigate(`/task/${id}`);
   }
 
-  const handleTaskFieldsChange = fields => {
-    setFields(fields);
-  }
 
   const handleSave = () => {
     setSaving(true);

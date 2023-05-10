@@ -1,5 +1,5 @@
 import { TaskDoc } from './../entity/TaskDoc';
-import { TaskActivity } from '../entity/TaskActivity';
+import { TaskEvent } from '../entity/TaskEvent';
 import { SupportMessage } from '../entity/SupportMessage';
 
 export type Zevent = {
@@ -30,7 +30,7 @@ export type Zevent = {
   taskName: string;
   orgId: string;
   by: string;
-  payload: TaskActivity;
+  payload: TaskEvent;
 };
 
 

@@ -50,10 +50,6 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function updateTask$(taskId, payload) {
-  return httpPost$(`/task/${taskId}`, payload);
-}
-
 export function updateTaskFields$(taskId, fields) {
   return httpPost$(`/task/${taskId}/fields`, { fields });
 }

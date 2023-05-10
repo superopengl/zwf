@@ -20,8 +20,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
-import { TaskActivity } from '../entity/TaskActivity';
-import { TaskActionType } from '../types/TaskActionType';
+import { TaskEvent } from '../entity/TaskEvent';
+import { TaskEventType } from '../types/TaskEventType';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -108,8 +108,8 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     taskDoc.fileId = fileId;
     taskDoc.uploadedBy = userId;
 
-    const taskActivity = new TaskActivity();
-    taskActivity.type = TaskActionType.DocChange;
+    const taskActivity = new TaskEvent();
+    taskActivity.type = TaskEventType.DocChange;
     taskActivity.taskId = task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = taskDoc;
@@ -212,8 +212,8 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
       d.esign = computeTaskFileSignedHash(d.file.md5, userId, now);
     })
 
-    const taskActivity = new TaskActivity();
-    taskActivity.type = TaskActionType.DocSigned;
+    const taskActivity = new TaskEvent();
+    taskActivity.type = TaskEventType.DocSigned;
     taskActivity.taskId = docs[0].task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = docs;

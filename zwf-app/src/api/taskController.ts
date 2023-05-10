@@ -1,6 +1,6 @@
-import { TaskActivity } from './../entity/TaskActivity';
+import { TaskEvent } from '../entity/TaskEvent';
 import { Demplate } from './../entity/Demplate';
-import { TaskActionType } from './../types/TaskActionType';
+import { TaskEventType } from '../types/TaskEventType';
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
@@ -28,9 +28,10 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
-import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
+import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { TaskTagsTag } from '../entity/TaskTagsTag';
 import { existsQuery } from '../utils/existsQuery';
+import { emitTaskEvent } from '../utils/emitTaskEvent';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -46,28 +47,40 @@ export const createNewTask = handlerWrapper(async (req, res) => {
 export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assert(getUserIdFromReq(req), 404);
 
-  assertRole(req, ['system', 'admin', 'client', 'agent']);
+  assertRole(req, ['admin', 'client', 'agent']);
   const { fileId } = req.params;
   const role = getRoleFromReq(req);
   const isClient = role === Role.Client;
+  const userId = getUserIdFromReq(req);
+
+  const query: any = isClient ? {
+    taskDoc: {
+      task: {
+        userId,
+      }
+    }
+  } : {
+    taskDoc: {
+      orgId: getOrgIdFromReq(req)
+    }
+  }
 
   const file = await db.getRepository(File).findOne({
     where: {
       id: fileId,
+      ...query
     },
-    // relations: {
-    //   field: isClient
-    // }
+    relations: {
+      taskDoc: {
+        task: isClient
+      },
+    }
   });
 
   assert(file, 404);
-  // await assertTaskAccess(req, file.taskId);
 
   if (isClient) {
-    // const taskField = file.field;
-    // const { value } = taskField;
-    // value.lastClientReadAt = getUtcNow();
-    // await db.getRepository(TaskField).save(taskField);
+    await emitTaskEvent(db.manager, TaskEventType.ClientDownloadDoc, userId);
   }
 
   streamFileToResponse(file, res);
@@ -78,6 +91,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { fields } = req.body;
   const { id } = req.params;
+  const userId = getUserIdFromReq(req);
 
   assert(fields.length, 400, 'No fields to update');
 
@@ -100,29 +114,27 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   });
   assert(task, 404);
 
-  fields.forEach((f, index) => {
-    f.taskId = id;
-    f.ordinal = index + 1;
-  });
+
 
   // const originalFieldIds = task.fields.map(x => x.id);
   // const currentFieldIds = fields.map(x => x.id);
   // const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
 
   await db.transaction(async m => {
+    const existingFields = await m.getRepository(TaskField).findBy({ taskId: id });
+    const valueMap = new Map(existingFields.map(x => [x.name, x]));
+    fields.forEach((f, index) => {
+      const existingField = valueMap.get(f.name);
+      f.taskId = id;
+      f.ordinal = index + 1;
+      f.value = existingField?.value;
+    });
+
     await m.getRepository(TaskField).delete({ taskId: id });
     await m.getRepository(TaskField).save(fields);
 
-    const taskActivity = new TaskActivity();
-    taskActivity.type = TaskActionType.FieldChange;
-    taskActivity.taskId = task.id;
-    taskActivity.by = getUserIdFromReq(req);
-    taskActivity.info = fields;
-
-    await m.save(taskActivity);
+    await emitTaskEvent(m, TaskEventType.FieldSchemaChange, id, userId, fields);
   });
-
-  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -132,6 +144,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   const { fields } = req.body;
   const { id } = req.params;
   const role = getRoleFromReq(req);
+  const userId = getUserIdFromReq(req);
 
   let query: any = { id };
   switch (role) {
@@ -145,7 +158,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
     case Role.Client:
       query = {
         ...query,
-        userId: getUserIdFromReq(req),
+        userId,
       };
       break;
     default:
@@ -161,18 +174,8 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
 
     await m.getRepository(TaskField).save(fieldEntities);
 
-    const taskActivity = new TaskActivity();
-    taskActivity.type = TaskActionType.FieldChange;
-    taskActivity.taskId = task.id;
-    taskActivity.by = getUserIdFromReq(req);
-    taskActivity.info = fields;
-
-    await m.save(taskActivity);
-
+    await emitTaskEvent(m, TaskEventType.FieldValuesChange, id, userId, fields);
   })
-
-
-  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -353,7 +356,7 @@ export const getTask = handlerWrapper(async (req, res) => {
 
     await m.createQueryBuilder()
       .insert()
-      .into(TaskActivityLastSeen)
+      .into(TaskEventLastSeen)
       .values({ taskId: task.id, userId, lastHappenAt: () => `NOW()` })
       .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
       .execute();
@@ -429,17 +432,9 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
         return taskDoc;
       })
 
-      const taskActivity = new TaskActivity();
-      taskActivity.type = TaskActionType.DocChange;
-      taskActivity.taskId = task.id;
-      taskActivity.by = getUserIdFromReq(req);
-      taskActivity.info = taskDocs;
-
-      await m.save([...taskFields, ...taskDocs, taskActivity]);
+      await emitTaskEvent(m, TaskEventType.AddDoc, taskId, userId, taskDocs);
     };
   });
-
-  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json(taskDocs);
 });
@@ -518,16 +513,8 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
     });
     task.name = name;
 
-    const taskActivity = new TaskActivity();
-    taskActivity.type = TaskActionType.Renamed;
-    taskActivity.taskId = task.id;
-    taskActivity.by = getUserIdFromReq(req);
-    taskActivity.info = name;
-
-    await m.save([task, taskActivity]);
+    await emitTaskEvent(m, TaskEventType.Rename, task.id, getUserIdFromReq(req), { name });
   })
-
-  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -542,29 +529,34 @@ export const assignTask = handlerWrapper(async (req, res) => {
   await db.transaction(async m => {
     const task = await m.findOneByOrFail(Task, { id, orgId });
     await m.update(Task, { id, orgId }, { assigneeId });
+    await emitTaskEvent(m, TaskEventType.Assign, id, userId, { assigneeId });
   });
 
   res.json();
 });
 
-export const updateTask = handlerWrapper(async (req, res) => {
-  assertRole(req, ['admin', 'agent']);
-  const { id, status } = req.params;
-  const orgId = getOrgIdFromReq(req);
-  const payload = req.body || {};
-
-  let task: Task;
-  await db.transaction(async m => {
-    task = await m.findOneOrFail(Task, { where: { id, orgId } });
-    Object.assign(task, payload);
-
-    await m.save(task);
-  });
-
-  publishTaskChangeZevent(task, getUserIdFromReq(req));
-
-  res.json();
-});
+const statusMapping = new Map([
+  [`${TaskStatus.TODO}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
+  [`${TaskStatus.TODO}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.TODO}>${TaskStatus.DONE}`, TaskEventType.Complete],
+  [`${TaskStatus.TODO}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.DONE}`, TaskEventType.Complete],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.IN_PROGRESS}`, TaskEventType.ClientSubmit],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.DONE}`, TaskEventType.Complete],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
+  [`${TaskStatus.DONE}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
+  [`${TaskStatus.DONE}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
+  [`${TaskStatus.DONE}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.DONE}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.DONE}`, TaskEventType.Complete],
+]);
 
 export const changeTaskStatus = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -572,25 +564,24 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
-  let task: Task;
   await db.transaction(async m => {
-    task = await m.findOneOrFail(Task, { where: { id, orgId } });
+    const task = await m.findOneOrFail(Task, {
+      where: { id, orgId },
+      select: {
+        status: true,
+      }
+    });
     const oldStatus = task.status;
     const newStatus = status as TaskStatus;
-    if (oldStatus !== newStatus) {
-      await m.update(Task, { id }, { status: newStatus });
 
-      const taskActivity = new TaskActivity();
-      taskActivity.type = TaskActionType.StatusChange;
-      taskActivity.taskId = task.id;
-      taskActivity.by = getUserIdFromReq(req);
-      taskActivity.info = newStatus;
-
-      await m.save(taskActivity);
+    if (oldStatus === newStatus) {
+      return;
     }
+    await m.update(Task, { id, orgId }, { status: newStatus });
+
+    await emitTaskEvent(m, TaskEventType.StatusChange, id, userId, { status: newStatus })
   });
 
-  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -629,7 +620,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 export const getTaskLog = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
-  let query: any = { taskId: id, type: Not(TaskActionType.Comment) };
+  let query: any = { taskId: id, type: Not(TaskEventType.Comment) };
   const role = getRoleFromReq(req);
   switch (role) {
     case Role.Admin:
