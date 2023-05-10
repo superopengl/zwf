@@ -33,7 +33,7 @@ const InnerContainer = styled.div`
 
 const OrgOnBoardPage = (props) => {
 
-  const handleCreatedOrg = () => {
+  const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe(() => {
       props.history.push('/dashboard');
     });
@@ -46,7 +46,7 @@ const OrgOnBoardPage = (props) => {
       <Title level={2} style={{ margin: '2rem auto' }}>
         Organisation Profile
       </Title>
-      <OrgOnBoardForm onOk={handleCreatedOrg} />
+      <OrgOnBoardForm onOk={handleAfterOrgCreated} />
     </InnerContainer>
   </Container>
 }
