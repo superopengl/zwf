@@ -30,16 +30,16 @@ const events = [
 @ViewEntity({
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
-    .from(OrgMemberInformation, 'c')
-    .innerJoin(Task, 't', 't."orgId" = c."orgId"')
+    .from(Task, 't')
     .innerJoin(TaskEvent, 'e', `e."taskId" = t.id`)
-    .innerJoin(TaskWatchlist, 'w', `w."taskId" = t."id" AND w."userId" = c."id"`)
-    .leftJoin(TaskEventAck, 'a', 'a."userId" = c."id" AND a."taskEventId" = e.id')
+    .innerJoin(TaskWatchlist, 'w', `w."taskId" = t."id"`)
+    .leftJoin(TaskEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
     .where(`e.type IN (${events})`)
     .andWhere(`e.by != c."id"`)
     .select([
-      'c."id" as "userId"',
+      'w."userId" as "userId"',
       't."orgId" as "orgId"',
+      't."orgClientId" as "orgClientId"',
       't.id as "taskId"',
       't.name as "taskName"',
       'e."type" as "type"',
@@ -50,12 +50,15 @@ const events = [
     ])
     .orderBy('e."createdAt"', 'DESC'),
   dependsOn: [Task, OrgMemberInformation, TaskEvent, TaskEventAck, TaskWatchlist]
-}) export class OrgMemberTaskEventAckInformation {
+}) export class UserTaskEventAckInformation {
   @ViewColumn()
   userId: string;
 
   @ViewColumn()
   orgId: string;
+
+  @ViewColumn()
+  orgClientId: string;
 
   @ViewColumn()
   taskId: string;

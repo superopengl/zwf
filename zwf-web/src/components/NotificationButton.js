@@ -29,6 +29,7 @@ const { Text, Title, Paragraph, Link: TextLink } = Typography;
 
 const StyledCompactSpace = styled(Space)`
 gap: 0 !important;
+width: '100%;
 `;
 
 const messageFuncMap = {
@@ -139,7 +140,7 @@ export const NotificationButton = (props) => {
     })
   }
 
-  return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown">
+  return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
     <Badge showZero={false} count={list.length} offset={[-4, 6]}>
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => load$()} />
     </Badge>
