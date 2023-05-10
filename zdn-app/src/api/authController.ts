@@ -83,7 +83,7 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   user.salt = salt;
   user.role = role;
   user.orgId = role === Role.Client ? null : orgId,
-  user.status = UserStatus.Enabled;
+    user.status = UserStatus.Enabled;
   user.profileId = profileId;
   user.orgOwner = !!orgOwner;
 
@@ -136,17 +136,18 @@ export const signUp = handlerWrapper(async (req, res) => {
 });
 
 export const signUpOrg = handlerWrapper(async (req, res) => {
-  const payload = req.body;
+  const { email } = req.body;
 
-  const { user, profile } = await createNewLocalUser({
-    ...payload,
+  assert(email, 400, 'email is required');
+
+  const { user } = await createNewLocalUser({
+    email: email.toLowerCase(),
     orgOwner: true,
     password: uuidv4(), // Temp password to fool the functions beneath
     role: Role.Admin,
   });
 
   const { id, resetPasswordToken } = user;
-  const { email } = profile;
 
   const url = `${process.env.ZDN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
