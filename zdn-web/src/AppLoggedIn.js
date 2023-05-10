@@ -196,7 +196,6 @@ const AppLoggedIn = props => {
   const [contactVisible, setContactVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
-  const [earnCommissionVisible, setEarnCommissionVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
   const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
 
@@ -260,18 +259,11 @@ const AppLoggedIn = props => {
     collapsed={collapsed}
     onCollapse={setCollapsed}
     menuItemRender={(item, dom) => {
-      if (item.path === '/referral') {
-        return <div onClick={() => setEarnCommissionVisible(true)}>
-          {dom}
-        </div>
-      } else {
-
         return <Link to={item.path} onClick={() => {
           setPathname(item.path);
         }}>
           {dom}
         </Link>
-      }
     }}
     // collapsedButtonRender={false}
     // postMenuData={menuData => {
