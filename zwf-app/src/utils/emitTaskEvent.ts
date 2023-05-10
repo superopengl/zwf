@@ -6,7 +6,7 @@ import { Task } from "../entity/Task";
 
 const ZEVENTABLE_TASKEENTTYPES = new Set([
  TaskEventType.ClientSignDoc,
- TaskEventType.AskClientAction,
+ TaskEventType.RequestClientSign,
  TaskEventType.ClientSubmit,
  TaskEventType.FieldSchemaChange,
  TaskEventType.FieldValuesChange,

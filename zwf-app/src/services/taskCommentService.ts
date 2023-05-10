@@ -12,15 +12,15 @@ import { TaskInformation } from '../entity/views/TaskInformation';
 export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 
 
-async function insertNewCommentEntity(m: EntityManager, action: TaskEventType, task: Task | TaskInformation, by: string, info?: any) {
+export async function createTaskComment(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
   assert(task, 500);
   const comment = new TaskEvent();
   const { orgId, id: taskId } = task;
   comment.id = uuidv4();
-  comment.type = action;
+  comment.type = TaskEventType.Comment;
   comment.taskId = taskId;
   comment.by = by;
-  comment.info = info;
+  comment.info = message;
   const result = await m.save(comment);
 
   const userId = (task as any).orgClient?.userId;
@@ -44,8 +44,4 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskEventType, t
   }
 
   return result;
-}
-
-export async function createTaskComment(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
-  return await insertNewCommentEntity(m, TaskEventType.Comment, task, by, message);
 }

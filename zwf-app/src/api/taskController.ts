@@ -537,11 +537,11 @@ export const assignTask = handlerWrapper(async (req, res) => {
 
 const statusMapping = new Map([
   [`${TaskStatus.TODO}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
-  [`${TaskStatus.TODO}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.TODO}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.TODO}>${TaskStatus.DONE}`, TaskEventType.Complete],
   [`${TaskStatus.TODO}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
   [`${TaskStatus.IN_PROGRESS}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
-  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.IN_PROGRESS}>${TaskStatus.DONE}`, TaskEventType.Complete],
   [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
   [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
@@ -550,11 +550,11 @@ const statusMapping = new Map([
   [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
   [`${TaskStatus.DONE}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
   [`${TaskStatus.DONE}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
-  [`${TaskStatus.DONE}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.DONE}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.DONE}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
   [`${TaskStatus.ARCHIVED}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
   [`${TaskStatus.ARCHIVED}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
-  [`${TaskStatus.ARCHIVED}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.AskClientAction],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.ARCHIVED}>${TaskStatus.DONE}`, TaskEventType.Complete],
 ]);
 
@@ -647,14 +647,23 @@ export const deleteTaskDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { docId } = req.params;
   const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
 
   await db.transaction(async m => {
-    const taskDoc = await m.getRepository(TaskDoc).findOneBy({ id: docId, orgId });
+    const taskDoc = await m.getRepository(TaskDoc).findOne({
+      where: {
+        id: docId, orgId
+      },
+      relations: {
+        task: true,
+      }
+    });
     assert(taskDoc, 404);
-
     assert(!taskDoc.esign, 400, 'Cannot delete a signed doc');
 
     await m.softDelete(TaskDoc, { id: docId });
+
+    await emitTaskEvent(m, TaskEventType.DeleteDoc, taskDoc.task.id, userId, { docId });
   });
 
   res.json();
@@ -681,10 +690,10 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
       taskDoc.signRequestedAt = getUtcNow();
       taskDoc.signRequestedBy = userId;
       await m.save(taskDoc);
+
+      await emitTaskEvent(m, TaskEventType.RequestClientSign, taskDoc.task.id, userId, { docId });
     }
   })
-
-  publishTaskChangeZevent(taskDoc.task, getUserIdFromReq(req));
 
   res.json(taskDoc);
 });
@@ -693,6 +702,7 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { docId } = req.params;
   const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
 
   let taskDoc: TaskDoc = null;
   await db.transaction(async m => {
@@ -709,9 +719,8 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.signRequestedBy = null;
 
     await m.save(taskDoc)
+    await emitTaskEvent(m, TaskEventType.RequestClientSign, taskDoc.task.id, userId, { docId });
   })
-
-  publishTaskChangeZevent(taskDoc.task, getUserIdFromReq(req));
 
   res.json(taskDoc);
 });

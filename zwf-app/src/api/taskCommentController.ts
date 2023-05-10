@@ -89,6 +89,7 @@ export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) =
 export const addTaskComment = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
+  // assertRole(req, ['admin', 'agent', 'client']);
 
   const { id: taskId } = req.params;
   const { message } = req.body;
