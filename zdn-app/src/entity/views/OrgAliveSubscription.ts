@@ -56,7 +56,7 @@ import { Payment } from '../Payment';
       'r.id as "lastSubscriptionId"',
     ])
 })
-export class OrgCurrentSubscription {
+export class OrgAliveSubscription {
   @ViewColumn()
   @PrimaryColumn()
   orgId: string;

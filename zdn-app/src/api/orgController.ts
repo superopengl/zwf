@@ -11,6 +11,7 @@ import { OrgEmailTemplate } from '../entity/OrgEmailTemplate';
 import { SystemEmailSignature } from '../entity/SystemEmailSignature';
 import { OrgEmailSignature } from '../entity/OrgEmailSignature';
 import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
+import { createOrgTrialSubscription } from '../utils/createOrgTrialSubscription';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -74,6 +75,7 @@ export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
     })
 
     await m.save([...entities, ...orgEmailTemplates, ...orgEmailSignatures]);
+    await createOrgTrialSubscription(m, org.id);
   })
 
   res.json();
