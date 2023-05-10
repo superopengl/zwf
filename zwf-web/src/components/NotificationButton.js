@@ -22,6 +22,8 @@ import styled from 'styled-components';
 import { useZevent } from 'hooks/useZevent';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
+import { UserNameCard } from 'components/UserNameCard';
+import { TimeAgo } from 'components/TimeAgo';
 
 const { Text, Title, Paragraph, Link } = Typography;
 
@@ -33,10 +35,30 @@ const StyledList = styled(List)`
 }
 `;
 
+const messageFuncMap = {
+  'client-submit': x => <>Task {x.taskName} was submitted by client</>,
+  'client-sign-doc': x => <>Document {x.info.docName} of task {x.taskName} was signed by client</>,
+  'comment': x => <>Task {x.taskName} has new comments</>,
+  'create-by-recurring': x => <>Task {x.taskName} was created automatically by recurring</>,
+  'start-proceeding': x => <>Task {x.taskName} started being proceeded</>,
+  'assign': x => <>Task {x.taskName} was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
+  'complete': x => <>Task {x.taskName} was completed</>,
+  'archive': x => <>Task {x.taskName} was archieved</>,
+  'request-client-sign': x => <>Documents of task {x.taskName} requires sign</>,
+  'request-client-fields': x => <>Form of task {x.taskName} requires to be filled</>,
+};
+
+const getNotificationMessage = notification => {
+  const { type } = notification;
+  const func = messageFuncMap[type] ?? (x => <>Task {x.taskName} {type}</>);
+  return func(notification);
+}
+
 
 export const NotificationButton = (props) => {
   const { supportOpen, onSupportOpen } = props;
   const [changedTasks, setChangedTasks] = React.useState([]);
+  const [list, setList] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
 
@@ -47,10 +69,11 @@ export const NotificationButton = (props) => {
   const load$ = () => {
     return getMyNotifications$()
       .pipe()
-      .subscribe(result => {
-        setChangedTasks(result.changedTasks);
-        setUnreadSupportMsgCount(result.unreadSupportMsgCount);
-      });
+      .subscribe(setList);
+    // .subscribe(result => {
+    //   setChangedTasks(result.changedTasks);
+    //   setUnreadSupportMsgCount(result.unreadSupportMsgCount);
+    // });
   }
 
   React.useEffect(() => {
@@ -80,16 +103,19 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
-  const items = changedTasks.map((x, i) => ({
-    key: x.taskId + i,
+  const items = list.map((x, i) => ({
+    key: i,
     // icon: <Icon component={MdDashboard} />,
     icon: <TaskIcon size={14} />,
-    label: x.taskName,
+    label: <Space direction='vertical'>
+      <Text>{getNotificationMessage(x)}</Text>
+      <TimeAgo value={x.eventAt} direction="horizontal"/>
+    </Space>,
     onClick: () => navigate(`/task/${x.taskId}`),
   }))
 
   if (unreadSupportMsgCount) {
-    if(changedTasks.length > 0) {
+    if (changedTasks.length > 0) {
       items.unshift({
         type: 'divider',
       })
@@ -105,14 +131,14 @@ export const NotificationButton = (props) => {
     })
   }
 
-  if(!items.length ) {
+  if (!items.length) {
     items.push({
       label: <Text type="secondary">No notifications</Text>
     })
   }
 
   return <Dropdown trigger={['click']} menu={{ items }}>
-    <Badge showZero={false} count={unreadSupportMsgCount + changedTasks.length} offset={[-4, 6]}>
+    <Badge showZero={false} count={list.length} offset={[-4, 6]}>
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => load$()} />
     </Badge>
   </Dropdown>

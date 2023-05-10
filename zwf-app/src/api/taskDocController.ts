@@ -224,6 +224,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
 
     await emitTaskEvent(m, TaskEventType.ClientSignDoc, taskId, userId, docs.map(d => ({
       docId: d.id,
+      docName: d.name,
       esign: d.esign,
       sigedAt: d.signedAt,
       signedBy: d.signedBy,

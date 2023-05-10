@@ -13,6 +13,7 @@ const { Text } = Typography;
 
 const StyledSpace = styled(Space)`
 // font-size: 0.8rem;
+// gap: 0 !important;
 
 .ant-space-item {
   margin-bottom: 0 !important;
@@ -23,6 +24,7 @@ const StyledSpace = styled(Space)`
 const ColumnSpace = styled.div`
 display: flex;
 flex-direction: column;
+align-items: baseline;
 
 & * {
   white-space: nowrap;
@@ -38,14 +40,14 @@ export const TimeAgo = React.memo(props => {
   if(toLocalTime) {
     m = m.local();
   }
-  return <StyledSpace size="small" direction="horizontal">
-    <ColumnSpace>
+  return <StyledSpace size="small" direction={direction} style={{gap: direction === 'vertical' ? 0 : 8 }}>
+    {/* <ColumnSpace style={{flexDirection: direction === 'vertical' ? 'column' : 'row'}}> */}
       {prefix}
       {showAgo && <ReactTimeAgo date={m.toDate()} />}
       {showTime && <Text style={{fontSize: showAgo ? 'smaller' : undefined}} type={showAgo ? 'secondary' : undefined}>
         {m.format(accurate ? 'D MMM YYYY HH:mm' : 'D MMM YYYY')}
         </Text>}
-    </ColumnSpace>
+    {/* </ColumnSpace> */}
     {extra}
   </StyledSpace>
 })

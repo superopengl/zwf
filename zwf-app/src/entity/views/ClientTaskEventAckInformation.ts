@@ -30,11 +30,11 @@ const events = [
     .innerJoin(Task, 't', 't."orgClientId" = c.id')
     .innerJoin(TaskEvent, 'e', `e."taskId" = t.id`)
     .innerJoin(TaskWatchlist, 'w', `w."taskId" = t."id" AND w."userId" = c."userId"`)
-    .leftJoin(TaskEventAck, 'a', 'a."userId" = c."id" AND a."taskEventId" = e.id')
+    .leftJoin(TaskEventAck, 'a', 'a."userId" = c."userId" AND a."taskEventId" = e.id')
     .where(`e.type IN (${events})`)
-    .andWhere(`e.by != c."id"`)
+    .andWhere(`e.by != c."userId"`)
     .select([
-      'c."id" as "userId"',
+      'c."userId" as "userId"',
       't.id as "taskId"',
       't.name as "taskName"',
       'e."type" as "type"',
