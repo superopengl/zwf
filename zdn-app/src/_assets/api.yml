@@ -116,24 +116,18 @@ paths:
   /auth/invite/client:
     post:
       operationId: inviteClient
-      # security:
-      #   - authAnyRole: []
       responses:
         200:
           description: OK
   /auth/reset_password:
     post:
       operationId: resetPassword
-      # security:
-      #   - authAnyRole: []
       responses:
         200:
           description: OK
   /auth/r/{token}:
     get:
       operationId: retrievePassword
-      # security:
-      #   - authAnyRole: []
       parameters:
         - name: token
           in: path
@@ -146,8 +140,12 @@ paths:
   /auth/signup:
     post:
       operationId: signUp
-      # security:
-      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK
+  /auth/signup/org:
+    post:
+      operationId: signUpOrg
       responses:
         200:
           description: OK
@@ -160,24 +158,18 @@ paths:
   /auth/sso/google:
     post:
       operationId: ssoGoogle
-      # security:
-      #   - authAnyRole: []
       responses:
         200:
           description: OK
   /user:
     get:
       operationId: listAllUsers
-      # security:
-      #   - authAdminOrAgent: []
       responses:
         200:
           description: OK
   /user/search:
     post:
       operationId: searchUserList
-      # security:
-      #   - authAdminOrAgent: []
       responses:
         200:
           description: OK

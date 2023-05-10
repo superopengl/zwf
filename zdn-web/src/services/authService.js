@@ -10,6 +10,10 @@ export function signUp$(user) {
   return httpPost$(`auth/signup`, user);
 }
 
+export function signUpOrg$(email) {
+  return httpPost$(`auth/signup/org`, {email});
+}
+
 export function forgotPassword$(email) {
   return httpPost$(`auth/forgot_password`, { email });
 }
