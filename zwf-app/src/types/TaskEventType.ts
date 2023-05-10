@@ -1,10 +1,11 @@
 
 export enum TaskEventType {
-    Create = 'create',
+    CreateByHand = 'create-by-hand',
+    CreateByRecurring = 'create-by-recurring',
     Assign = 'assign',
     Rename = 'rename',
     ClientSignDoc = 'client-sign-doc',
-    OrgProceed = 'start-proceeding',
+    OrgStartProceed = 'start-proceeding',
     RequestClientSign = 'request-client-sign',
     UnrequestClientSign = 'unrequest-client-sign',
     RequestClientInputFields = 'request-client-fields',
@@ -12,7 +13,6 @@ export enum TaskEventType {
     ClientDownloadDoc = 'client-download-doc',
     Complete = 'complete',
     Archive = 'archive',
-    StatusChange = 'status-change',
     MoveBackToDo = 'move-back-to-do',
     FieldSchemaChange = 'field-schema-change',
     FieldValuesChange = 'field-value-change',

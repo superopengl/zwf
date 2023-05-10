@@ -161,20 +161,30 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
 
   const { file, demplateId } = doc;
 
+  const emitClientDownloadEvent = async () => {
+    if(isClient) {
+      await emitTaskEvent(db.manager, TaskEventType.ClientDownloadDoc, doc.taskId, userId, {docId: doc.id});
+    }
+  }
+
   if (file) {
+    await emitClientDownloadEvent();
     streamFileToResponse(file, res);
   } else if (demplateId) {
     // Hand over to frontend.
     const result = await generatePdfTaskDocFile(db.manager, doc.id, userId);
     if (result.succeeded) {
+      await emitClientDownloadEvent();
       streamFileToResponse(result.file, res);
     } else {
       res.status(425).json(result).end();
+      return;
     }
-    return;
   } else {
     assert(doc, 500, 'Invalid doc file condition');
   }
+
+
 });
 
 export const signTaskDocs = handlerWrapper(async (req, res) => {
@@ -212,7 +222,13 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
     const taskId = docs[0].task.id;
     await m.save([...docs]);
 
-    await emitTaskEvent(m, TaskEventType.ClientSignDoc, taskId, userId, docs);
+    await emitTaskEvent(m, TaskEventType.ClientSignDoc, taskId, userId, docs.map(d => ({
+      docId: d.id,
+      esign: d.esign,
+      sigedAt: d.signedAt,
+      signedBy: d.signedBy,
+      md5: d.file.md5,
+    })));
   })
 
   res.json(docs);

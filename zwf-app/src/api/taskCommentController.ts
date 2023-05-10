@@ -92,7 +92,7 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
   // assertRole(req, ['admin', 'agent', 'client']);
 
   const { id: taskId } = req.params;
-  const { message } = req.body;
+  const { message, mentioned } = req.body;
   assert(message, 400, 'Empty message body');
 
   const taskRepo = db.getRepository(Task);

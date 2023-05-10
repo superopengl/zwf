@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, Unique } from 'typeorm';
 import { TaskEventType } from '../types/TaskEventType';
 
 @Entity()
@@ -23,3 +23,6 @@ export class TaskEvent {
   @Column('jsonb', { nullable: true })
   info: any;
 }
+
+
+

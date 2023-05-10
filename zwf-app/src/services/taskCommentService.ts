@@ -8,6 +8,7 @@ import { Task } from '../entity/Task';
 import { publishZevent } from './zeventSubPubService';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskInformation } from '../entity/views/TaskInformation';
+import { emitTaskEvent } from '../utils/emitTaskEvent';
 
 export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 
@@ -21,7 +22,9 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
   comment.taskId = taskId;
   comment.by = by;
   comment.info = message;
-  const result = await m.save(comment);
+  // const result = await m.save(comment);
+
+  await emitTaskEvent(m, TaskEventType.Comment, taskId, by, {message});
 
   const userId = (task as any).orgClient?.userId;
   if (userId) {
@@ -43,5 +46,4 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
     });
   }
 
-  return result;
 }
