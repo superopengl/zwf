@@ -233,7 +233,7 @@ const OrgClientPage = React.memo(() => {
                 ghost
                 onClick={createTaskForClient}>New Task</Button>}
             >
-              <TaskBoardPanel tasks={client.tasks ?? []} showClient={false} showTags={false} />
+              <TaskBoardPanel tasks={client.tasks ?? []} showClient={false} showTags={false} onChange={() => load$()} />
             </ProCard>
           </ProCard.TabPane>
         </ProCard>
