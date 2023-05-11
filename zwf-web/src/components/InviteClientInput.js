@@ -49,8 +49,8 @@ export const InviteClientInput = (props) => {
         .subscribe({
           next: () => {
             notify.success(
-              'Client invitation sent out',
-              <>Successfully sent out invitation to email client <Text code>{email}</Text></>,
+              'Client invitation done',
+              <>Successfully sent out invitation to client <Text code>{email}</Text></>,
             );
             onFinish?.();
           },

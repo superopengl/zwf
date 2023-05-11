@@ -248,7 +248,7 @@ export const saveOrgClientEmail = handlerWrapper(async (req, res) => {
 
     if (email && !orgClient.userId) {
       const { user, newlyCreated } = await ensureClientOrGuestUser(m, email, orgId);
-      assert(newlyCreated || user.role === Role.Guest, 400, 'Cannot use this email address to proceed. The email address has been associated with a non-client account in ZeeWorkflow.')
+      assert(newlyCreated || user.role === Role.Client, 400, 'Cannot use this email address to proceed. The email address has been associated with a non-client account in ZeeWorkflow.')
       orgClient.userId = user.id;
     }
 
