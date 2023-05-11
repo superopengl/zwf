@@ -7,7 +7,7 @@ import { TimeAgo } from './TimeAgo';
 import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDemplateToTask$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
-import Icon, { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import Icon, { CloseOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { useAddDemplateToTaskModal } from 'hooks/useAddDemplateToTaskModal';
@@ -101,7 +101,7 @@ export const TaskDocListPanel = React.memo((props) => {
       align: 'right',
       width: 32,
       render: (_, doc) => <Tooltip title={`Delete ${doc.name}`} placement="topRight">
-        <Button type="text" shape="circle" danger icon={<CloseOutlined />} onClick={(e) => handleDeleteDoc(doc, e)} />
+        <Button shape="circle" icon={<MinusOutlined />} onClick={(e) => handleDeleteDoc(doc, e)} />
       </Tooltip>
     },
   ];

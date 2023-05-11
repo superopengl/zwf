@@ -8,7 +8,7 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import Icon, { CheckOutlined, CommentOutlined, FileAddOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
+import Icon, { CheckOutlined, CommentOutlined, EditOutlined, FileAddOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { useShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
@@ -23,10 +23,13 @@ import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentPanel } from 'components/TaskCommentPanel';
 import { TaskLogDrawer } from 'components/TaskLogDrawer';
-import { BsFillTrash3Fill } from 'react-icons/bs';
+import { BsFillSendFill, BsFillTrash3Fill, BsInputCursorText } from 'react-icons/bs';
 import { Descriptions } from 'antd';
 import { Drawer } from 'antd';
 import { Divider } from 'antd';
+import { FaSignature } from 'react-icons/fa';
+import { useRequestActionModal } from 'hooks/useRequestActionModal';
+import { MdEditNote } from 'react-icons/md';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -60,6 +63,13 @@ border-radius:4px;
     padding-right:0;
   }
 }
+
+.ant-descriptions-item {
+  .ant-divider {
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+}
 `;
 
 
@@ -76,6 +86,7 @@ const OrgTaskPage = React.memo(() => {
   const [assigneeId, setAssigneeId] = React.useState();
   const navigate = useNavigate();
   const [openDeepLink, deepLinkContextHolder] = useShareTaskDeepLinkModal();
+  const [openRequestActionModal, requestActionContextHolder] = useRequestActionModal();
 
   React.useEffect(() => {
     const sub$ = load$();
@@ -130,18 +141,10 @@ const OrgTaskPage = React.memo(() => {
   }
 
   const handleEditFields = () => {
-    // openFieldEditor({
-    //   fields: task.fields,
-    //   onChange: handleTaskFieldsChange,
-    // })
-
-    // setEditFieldVisible(true);
-
     navigate(`/task/${task?.id}/edit`)
   }
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
-
 
   return (<>
     <ContainerStyled>
@@ -187,7 +190,7 @@ const OrgTaskPage = React.memo(() => {
       // ]}
       >
         <Row gutter={[30, 30]} wrap={false}>
-          <Col flex="auto">
+          <Col flex="2 2 400px">
             <Row gutter={[20, 20]}>
               <Col span={24}>
                 <ProCard title={`Documents (${task.docs.length})`}>
@@ -197,7 +200,7 @@ const OrgTaskPage = React.memo(() => {
               <Col flex="1 1 300px">
                 <Row gutter={[20, 20]}>
                   <Col span={24}>
-                    <ProCard title="Form">
+                    <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
                       {task?.fields.length > 0 ?
                         <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
                         <Row justify="center">
@@ -209,14 +212,9 @@ const OrgTaskPage = React.memo(() => {
 
                 </Row>
               </Col>
-              {/* <Col flex="1 1 300px">
-                <ProCard title="Comments" size="small">
-                  <TaskCommentPanel taskId={task.id} />
-                </ProCard>
-              </Col> */}
             </Row>
           </Col>
-          <Col flex="300px">
+          <Col flex="0 0 300px">
             <ProCard ghost>
               <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
               <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
@@ -231,7 +229,10 @@ const OrgTaskPage = React.memo(() => {
                     {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
                     <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments</Button>
-                    <Divider/>
+                    <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
+                    <Divider />
+                    <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={() => openRequestActionModal()}>Notify client</Button>
+                    <Divider />
                     {!hasFinished && <Button type="text" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                     {task.status !== 'archived' && <Button type="text" danger block icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
                   </Space>
@@ -248,10 +249,13 @@ const OrgTaskPage = React.memo(() => {
         title="Comments"
         open={commentsOpen}
         onClose={() => setCommentsOpen(false)}
-        // mask={false}
+      // mask={false}
       >
         {task && <TaskCommentPanel taskId={task.id} />}
       </Drawer>
+      <div>
+        {requestActionContextHolder}
+      </div>
     </ContainerStyled>
   </>
   );

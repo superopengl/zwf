@@ -1,6 +1,6 @@
 import { Button, Row, Col, Input, Typography, Modal } from 'antd';
 import React from 'react';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 const { Text } = Typography
 
@@ -50,7 +50,7 @@ export const DemplateRenameFieldInput = (props) => {
         onBlur={e => handleRename(e.target.value)} />
     </Col>
     <Col>
-      <Button type="text" danger icon={<CloseOutlined />} onClick={handleDelete} style={{display: deleteVisible ? undefined : 'none'}}/>
+      <Button type="text" icon={<MinusCircleOutlined />} onClick={handleDelete} style={{display: deleteVisible ? undefined : 'none'}}/>
       {contextHolder}
     </Col>
   </Row>

@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Typography, Space, Tooltip, Avatar, Button, Row, Col } from 'antd';
 import _ from 'lodash';
-import Icon, { CloseOutlined } from '@ant-design/icons';
+import Icon, { CloseOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { showSignTaskFileModal } from '../hooks/useSignTaskDocModal';
 import { Modal } from 'antd';
 import { FaSignature } from 'react-icons/fa';
@@ -110,7 +110,7 @@ export const TaskDocItem = React.memo(props => {
           />
         </Tooltip>}
         {isOrg && <Tooltip title="Delete file">
-          <Button key="delete" danger icon={<CloseOutlined />} type="link" onClick={handleDelete} disabled={!canDelete} />
+          <Button key="delete" icon={<MinusCircleOutlined />} type="text" onClick={handleDelete} disabled={!canDelete} />
         </Tooltip>}
       </Space>
     </Col>}
