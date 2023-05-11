@@ -33,16 +33,16 @@ width: '100%;
 `;
 
 const messageFuncMap = {
-  'client-submit': x => <>Task was submitted by client</>,
+  'client-submit': x => <>Submitted by client</>,
   'client-sign-doc': x => <>Documents were signed by client</>,
-  'comment': x => <>Task has new comments</>,
-  'create-by-recurring': x => <>Task was created automatically by recurring</>,
-  'start-proceeding': x => <>Task started being proceeded</>,
-  'assign': x => <>Task was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
-  'complete': x => <>Task was completed</>,
-  'archive': x => <>Task was archieved</>,
-  'request-client-sign': x => <>Documents of task requires sign</>,
-  'request-client-fields': x => <>Form of task requires to be filled</>,
+  'comment': x => <>Has new comments</>,
+  'create-by-recurring': x => <>Was created automatically by recurring</>,
+  'start-proceeding': x => <>Started being proceeded</>,
+  'assign': x => <>Was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
+  'complete': x => <>Was completed</>,
+  'archive': x => <>Was archieved</>,
+  'request-client-sign': x => <>Documents requires sign</>,
+  'request-client-fields': x => <>Form fields require to be filled</>,
 };
 
 const getNotificationMessage = notification => {

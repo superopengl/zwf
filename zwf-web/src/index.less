@@ -177,3 +177,19 @@ hr {
     align-items: start !important;
   }
 }
+
+.hightlighten-glowing {
+  // animation: glow 0.5s infinite alternate;
+  animation-name: glow;
+  animation-duration: 0.2s;
+  animation-iteration-count: 4;
+}
+
+@keyframes glow {
+  from {
+    box-shadow: 0 0 2px -2px #F7BA1E;
+  }
+  to {
+    box-shadow: 0 0 2px 2px #F7BA1E;
+  }
+}
