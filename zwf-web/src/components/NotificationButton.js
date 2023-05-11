@@ -10,7 +10,7 @@ import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from '../pages/Femplate/formBuilder/OptionsBuilder';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { getMyNotifications$, } from 'services/notificationMessageService';
+import { ackTaskEventNotification$, getMyNotifications$, } from 'services/notificationService';
 import { Badge } from 'antd';
 import { List } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -100,6 +100,18 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
+  const handleItemClick = (item) => {
+    const { taskId, type } = item;
+
+    item.clicked = true;
+    setList([...list]);
+    navigate(`/task/${taskId}`)
+    ackTaskEventNotification$(taskId, type).subscribe({
+      // next: () => load$(),
+      error: () => { /** Swallow error */ },
+    });
+  }
+
   const items = [];
   list.forEach((x, i) => {
     const item = {
@@ -107,11 +119,11 @@ export const NotificationButton = (props) => {
       // icon: <Icon component={MdDashboard} />,
       icon: <TaskIcon size={14} />,
       label: <StyledCompactSpace direction='vertical'>
-        <Text strong >{x.taskName}</Text>
-        <Text>{getNotificationMessage(x)}</Text>
-        <TimeAgo value={x.eventAt} direction="horizontal" />
+        <Text strong={!x.ackAt}>{x.taskName}</Text>
+        <Text strong={!x.ackAt}>{getNotificationMessage(x)}</Text>
+        <TimeAgo strong={!x.ackAt} value={x.eventAt} direction="horizontal" />
       </StyledCompactSpace>,
-      onClick: () => navigate(`/task/${x.taskId}`),
+      onClick: () => handleItemClick(x),
     };
 
     if (i !== 0) {
@@ -140,9 +152,13 @@ export const NotificationButton = (props) => {
     })
   }
 
+  const handleClick = () => {
+    load$();
+  }
+
   return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
     <Badge showZero={false} count={list.length} offset={[-4, 6]}>
-      <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => load$()} />
+      <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={handleClick} />
     </Badge>
   </Dropdown>
 };

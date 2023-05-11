@@ -15,7 +15,28 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgMemberInformation } from '../entity/views/OrgMemberInformation';
 import { UserTaskEventAckInformation } from '../entity/views/UserTaskEventAckInformation';
 import { UserTaskEventNotificationInformation } from '../entity/views/UserTaskEventNotificationInformation';
+import { TaskEvent } from '../entity/TaskEvent';
+import { TaskEventAck } from '../entity/TaskEventAck';
+import { assert } from '../utils/assert';
 
+const CLIENT_WATCH_EVENTS = [
+  TaskEventType.RequestClientInputFields,
+  TaskEventType.RequestClientSign,
+  TaskEventType.Comment,
+  TaskEventType.Complete,
+  TaskEventType.Archive
+]
+
+const ORG_MEMBER_WATCH_EVENTS = [
+  TaskEventType.ClientSubmit,
+  TaskEventType.ClientSignDoc,
+  TaskEventType.Comment,
+  TaskEventType.CreateByRecurring,
+  TaskEventType.OrgStartProceed,
+  TaskEventType.Assign,
+  TaskEventType.Complete,
+  TaskEventType.Archive,
+]
 
 export const getMyNotifications = handlerWrapper(async (req, res) => {
   assertRole(req, ['client', 'agent', 'admin']);
@@ -28,22 +49,7 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const take = pageSize;
   const role = getRoleFromReq(req);
   const userId = getUserIdFromReq(req);
-  const eventTypes = role === Role.Client ? [
-    TaskEventType.RequestClientInputFields,
-    TaskEventType.RequestClientSign,
-    TaskEventType.Comment,
-    TaskEventType.Complete,
-    TaskEventType.Archive
-  ] : [
-    TaskEventType.ClientSubmit,
-    TaskEventType.ClientSignDoc,
-    TaskEventType.Comment,
-    TaskEventType.CreateByRecurring,
-    TaskEventType.OrgStartProceed,
-    TaskEventType.Assign,
-    TaskEventType.Complete,
-    TaskEventType.Archive,
-  ];
+  const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
 
   const result = await db
     .getRepository(UserTaskEventNotificationInformation)
@@ -56,8 +62,47 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
     .take(take)
     .getMany();
 
-
   res.json(result);
+});
+
+export const ackTaskEventNotification = handlerWrapper(async (req, res) => {
+  assertRole(req, ['client', 'agent', 'admin']);
+  const userId = getUserIdFromReq(req);
+  const { taskId, type } = req.body;
+
+  assert(taskId, 400, 'taskId is not specified');
+  assert(type, 400, 'type is not specified');
+
+  await db.transaction(async m => {
+    const taskEvents = await m.find(UserTaskEventAckInformation, {
+      where: {
+        userId,
+        taskId,
+        type,
+        ackAt: IsNull()
+      },
+      select: {
+        eventId: true
+      }
+    })
+    const acks = taskEvents.map(x => {
+      const ack = new TaskEventAck();
+      ack.userId = userId;
+      ack.taskEventId = x.eventId;
+      return ack;
+    });
+
+    if (acks.length) {
+      await m.createQueryBuilder()
+        .insert()
+        .into(TaskEventAck)
+        .values(acks)
+        .orIgnore()
+        .execute()
+    }
+  });
+
+  res.json();
 });
 
 

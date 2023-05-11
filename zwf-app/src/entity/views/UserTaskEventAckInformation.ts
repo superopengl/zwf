@@ -25,6 +25,7 @@ import { TaskWatchlist } from '../TaskWatchlist';
     .leftJoin(TaskEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
     .where(`e.by != w."userId"`)
     .select([
+      'e.id as "eventId"',
       'w."userId" as "userId"',
       't."orgId" as "orgId"',
       't."orgClientId" as "orgClientId"',
@@ -39,6 +40,9 @@ import { TaskWatchlist } from '../TaskWatchlist';
     .orderBy('e."createdAt"', 'DESC'),
   dependsOn: [Task, OrgMemberInformation, TaskEvent, TaskEventAck, TaskWatchlist]
 }) export class UserTaskEventAckInformation {
+  @ViewColumn()
+  eventId: string;
+
   @ViewColumn()
   userId: string;
 

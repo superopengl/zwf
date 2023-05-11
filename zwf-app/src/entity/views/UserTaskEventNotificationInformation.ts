@@ -33,6 +33,7 @@ const events = [
     .createQueryBuilder()
     .from(UserTaskEventAckInformation, 'x')
     .where({ ackAt: IsNull() })
+    .orWhere(`"ackAt" > now() - interval '30 minutes'`)
     .distinctOn(['x."taskId"', 'x."type"'])
     .orderBy('x."taskId"', 'ASC')
     .addOrderBy('x.type', 'ASC')
@@ -62,6 +63,9 @@ const events = [
 
   @ViewColumn()
   eventAt: Date;
+
+  @ViewColumn()
+  ackAt: Date;
 
   @ViewColumn()
   eventBy: string;
