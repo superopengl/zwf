@@ -105,8 +105,8 @@ export const TaskCommentPanel = React.memo((props) => {
       </Row>}
       dataSource={list.map(item => ({
         avatar: <UserNameCard size={40} userId={item.by} showName={false} showEmail={false} showTooltip={true} />,
-        title: isMe(item.by) ? "Me" : <UserNameCard userId={item.by} showName={true} showAvatar={false} showEmail={false} showTooltip={false} />,
-        subTitle: <TimeAgo value={item.createdAt} showTime={false} />,
+        title: isMe(item.by) ? "Me" : <UserNameCard userId={item.by} showName={true} showAvatar={false} showEmail={false} showTooltip={true} />,
+        subTitle: <small><TimeAgo type="secondary" value={item.createdAt} showTime={false} /></small>,
         description: item.info.message,
       }))}
       locale={{ emptyText: <></> }}

@@ -8,7 +8,7 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import Icon, { CheckOutlined, FileAddOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
+import Icon, { CheckOutlined, CommentOutlined, FileAddOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { useShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
@@ -25,6 +25,8 @@ import { TaskCommentPanel } from 'components/TaskCommentPanel';
 import { TaskLogDrawer } from 'components/TaskLogDrawer';
 import { BsFillTrash3Fill } from 'react-icons/bs';
 import { Descriptions } from 'antd';
+import { Drawer } from 'antd';
+import { Divider } from 'antd';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -70,6 +72,7 @@ const OrgTaskPage = React.memo(() => {
   const [historyVisible, setHistoryVisible] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
+  const [commentsOpen, setCommentsOpen] = React.useState(false);
   const [assigneeId, setAssigneeId] = React.useState();
   const navigate = useNavigate();
   const [openDeepLink, deepLinkContextHolder] = useShareTaskDeepLinkModal();
@@ -183,61 +186,72 @@ const OrgTaskPage = React.memo(() => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <Row gutter={[30, 30]} >
-          <Col flex="2 2 300px">
-            <ProCard
-              tabs={{
-                type: 'card',
-              }}
-              type="inner"
-              ghost
-            >
-              <ProCard.TabPane key="form" tab="Form">
-                {task?.fields.length > 0 ?
-                  <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
-                  <Row justify="center">
-                    <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
-                  </Row>
-                }
-              </ProCard.TabPane>
-              <ProCard.TabPane key="doc" tab={`Documents (${task.docs.length})`}>
-                <TaskDocListPanel task={task} onChange={() => load$()} />
-              </ProCard.TabPane>
-              <ProCard.TabPane key="comments" tab="Comments">
-                  <TaskCommentPanel taskId={task.id} />
-              </ProCard.TabPane>
-            </ProCard>
-          </Col>
-          <Col flex="1 1 300px">
-            <Row gutter={[30, 30]} >
+        <Row gutter={[30, 30]} wrap={false}>
+          <Col flex="auto">
+            <Row gutter={[20, 20]}>
               <Col span={24}>
-                <ProCard ghost>
-                  <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
-                  <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
-                    <Descriptions.Item label="Assignee">
-                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Tags">
-                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
-                    </Descriptions.Item>
-                    <Descriptions.Item label="Actions">
-                      <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                        {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
-                        <Button type="link" icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                        {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
-                        {task.status !== 'archived' && <Button type="link" danger icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
-                      </Space>
-                    </Descriptions.Item>
-                  </Descriptions>
+                <ProCard title={`Documents (${task.docs.length})`}>
+                  <TaskDocListPanel task={task} onChange={() => load$()} />
                 </ProCard>
               </Col>
+              <Col flex="1 1 300px">
+                <Row gutter={[20, 20]}>
+                  <Col span={24}>
+                    <ProCard title="Form">
+                      {task?.fields.length > 0 ?
+                        <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
+                        <Row justify="center">
+                          <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
+                        </Row>
+                      }
+                    </ProCard>
+                  </Col>
+
+                </Row>
+              </Col>
+              {/* <Col flex="1 1 300px">
+                <ProCard title="Comments" size="small">
+                  <TaskCommentPanel taskId={task.id} />
+                </ProCard>
+              </Col> */}
             </Row>
+          </Col>
+          <Col flex="300px">
+            <ProCard ghost>
+              <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+              <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
+                <Descriptions.Item label="Assignee">
+                  <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
+                </Descriptions.Item>
+                <Descriptions.Item label="Tags">
+                  <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
+                </Descriptions.Item>
+                <Descriptions.Item label="Actions">
+                  <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
+                    {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
+                    <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
+                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments</Button>
+                    <Divider/>
+                    {!hasFinished && <Button type="text" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
+                    {task.status !== 'archived' && <Button type="text" danger block icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
+                  </Space>
+                </Descriptions.Item>
+              </Descriptions>
+            </ProCard>
           </Col>
         </Row>
       </PageHeaderContainer>}
       {task && <TaskLogDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       {saving && <SavingAffix />}
       {deepLinkContextHolder}
+      <Drawer
+        title="Comments"
+        open={commentsOpen}
+        onClose={() => setCommentsOpen(false)}
+        // mask={false}
+      >
+        {task && <TaskCommentPanel taskId={task.id} />}
+      </Drawer>
     </ContainerStyled>
   </>
   );

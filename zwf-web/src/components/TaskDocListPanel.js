@@ -134,33 +134,33 @@ export const TaskDocListPanel = React.memo((props) => {
   }]
 
   return <Container>
-    <Row justify="end" style={{marginBottom:20}}>
+    <Row justify="end" style={{ marginBottom: 20 }}>
       <Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
-        <Button icon={<PlusOutlined />}>Add Documents</Button>
+        <Button icon={<PlusOutlined />}>Add Document</Button>
       </Dropdown>
     </Row>
     {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}
-      <Table
-        size="small"
-        loading={loading}
-        pagination={false}
-        bordered={false}
-        rowKey="id"
-        showHeader={false}
-        columns={columns}
-        dataSource={docs}
-        locale={{ emptyText: 'Upload or add doc templates' }}
-        onClick={e => e.stopPropagation()}
-        onRow={() => {
-          return {
-            onClick: e => e.stopPropagation()
-          }
-        }}
-      />
-      <div>
-        {deleteModalContextHolder}
-      </div>
-      {demplateContextHolder}
+    <Table
+      size="small"
+      loading={loading}
+      pagination={false}
+      bordered={false}
+      rowKey="id"
+      showHeader={false}
+      columns={columns}
+      dataSource={docs}
+      locale={{ emptyText: 'Upload or add doc templates' }}
+      onClick={e => e.stopPropagation()}
+      onRow={() => {
+        return {
+          onClick: e => e.stopPropagation()
+        }
+      }}
+    />
+    <div>
+      {deleteModalContextHolder}
+    </div>
+    {demplateContextHolder}
     {/* </TaskDocDropableContainer> */}
   </Container>
 })
