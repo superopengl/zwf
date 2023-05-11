@@ -21,10 +21,10 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
   comment.type = TaskEventType.Comment;
   comment.taskId = taskId;
   comment.by = by;
-  comment.info = message;
+  comment.info = { message };
   // const result = await m.save(comment);
 
-  await emitTaskEvent(m, TaskEventType.Comment, taskId, by, {message});
+  await emitTaskEvent(m, TaskEventType.Comment, taskId, by, { message });
 
   const userId = (task as any).orgClient?.userId;
   if (userId) {
