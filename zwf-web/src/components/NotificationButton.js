@@ -105,7 +105,7 @@ export const NotificationButton = (props) => {
 
     item.clicked = true;
     setList([...list]);
-    navigate(`/task/${taskId}`)
+    navigate(`/task/${taskId}`, { state: { type } });
     ackTaskEventNotification$(taskId, type).subscribe({
       // next: () => load$(),
       error: () => { /** Swallow error */ },
