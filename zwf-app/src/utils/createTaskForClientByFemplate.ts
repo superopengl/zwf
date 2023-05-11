@@ -88,13 +88,13 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
     const creatorTaskWatch = new TaskWatchlist();
     creatorTaskWatch.taskId = task.id;
     creatorTaskWatch.userId = creatorId;
-    creatorTaskWatch.reason = 'interested';
+    creatorTaskWatch.reason = 'watch';
 
     const clientTaskWatch = new TaskWatchlist();
     clientTaskWatch.taskId = task.id;
     clientTaskWatch.userId = orgClient.userId;
     clientTaskWatch.reason = 'client';
-    
+
     entities.push(creatorTaskWatch, clientTaskWatch);
   }
 

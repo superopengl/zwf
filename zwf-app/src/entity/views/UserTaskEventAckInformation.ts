@@ -16,17 +16,6 @@ import { TaskEventType } from '../../types/TaskEventType';
 import { OrgMemberInformation } from './OrgMemberInformation';
 import { TaskWatchlist } from '../TaskWatchlist';
 
-const events = [
-  TaskEventType.ClientSubmit,
-  TaskEventType.ClientSignDoc,
-  TaskEventType.Comment,
-  TaskEventType.CreateByRecurring,
-  TaskEventType.OrgStartProceed,
-  TaskEventType.Assign,
-  TaskEventType.Complete,
-  TaskEventType.Archive,
-].map(x => `'${x}'`).join(',');
-
 @ViewEntity({
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
@@ -34,8 +23,7 @@ const events = [
     .innerJoin(TaskEvent, 'e', `e."taskId" = t.id`)
     .innerJoin(TaskWatchlist, 'w', `w."taskId" = t."id"`)
     .leftJoin(TaskEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
-    .where(`e.type IN (${events})`)
-    .andWhere(`e.by != c."id"`)
+    .where(`e.by != w."userId"`)
     .select([
       'w."userId" as "userId"',
       't."orgId" as "orgId"',

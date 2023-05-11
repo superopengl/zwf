@@ -38,12 +38,15 @@ const events = [
     .addOrderBy('x.type', 'ASC')
     .addOrderBy('x."eventAt"', 'DESC'),
   dependsOn: [UserTaskEventAckInformation]
-}) export class OrgMemberTaskEventNotificationInformation {
+}) export class UserTaskEventNotificationInformation {
   @ViewColumn()
   userId: string;
 
   @ViewColumn()
   orgId: string;
+
+  @ViewColumn()
+  orgClientId: string;
 
   @ViewColumn()
   taskId: string;
