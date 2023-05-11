@@ -157,7 +157,7 @@ export const NotificationButton = (props) => {
   }
 
   return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
-    <Badge showZero={false} count={list.length} offset={[-4, 6]}>
+    <Badge showZero={false} count={list.filter(x => !x.ackAt).length} offset={[-4, 6]}>
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={handleClick} />
     </Badge>
   </Dropdown>
