@@ -200,7 +200,7 @@ const OrgTaskPage = React.memo(() => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <Row gutter={[50, 40]} wrap={false} style={{paddingTop: 30}}>
+        <Row gutter={[50, 40]} wrap={false} style={{ paddingTop: 30 }}>
           <Col flex="2 2 400px">
             <Row gutter={[40, 40]}>
               <Col span={24}>
@@ -256,7 +256,8 @@ const OrgTaskPage = React.memo(() => {
         title="Comments"
         open={commentsOpen}
         onClose={() => setCommentsOpen(false)}
-      // mask={false}
+        // mask={false}
+        bodyStyle={{ padding: 0 }}
       >
         {task && <TaskCommentPanel taskId={task.id} />}
       </Drawer>

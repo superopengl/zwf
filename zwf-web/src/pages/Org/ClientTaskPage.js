@@ -238,7 +238,7 @@ const ClientTaskPage = (props) => {
       maxWidth={700}
       // icon={<TaskIcon />}
       title={<>{task.name} </> || <Skeleton paragraph={false} />}
-      footer={<Row className='client-task-footer' justify="space-between" wrap={false}>
+      footer={<Row className='client-task-footer' justify="space-around" wrap={false}>
         <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
           type={activePanel === 'comment' ? 'primary' : 'text'}
           ghost={activePanel === 'comment'}
@@ -309,7 +309,7 @@ const ClientTaskPage = (props) => {
       >
         <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
       </ProCard>}
-      {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef}>
+      {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{padding: '12px 0'}}>
         <TaskCommentPanel taskId={task.id} />
       </ProCard>}
       {saving && <SavingAffix />}

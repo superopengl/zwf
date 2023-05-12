@@ -10,7 +10,7 @@ export class TaskWatcher {
   @Index()
   taskId: string;
 
-  @ManyToOne(() => Task, task => task.watchers)
+  @ManyToOne(() => Task, task => task.watchers, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
   task: Task;
 

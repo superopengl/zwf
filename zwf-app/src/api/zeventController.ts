@@ -50,20 +50,18 @@ function getSourcePipelines(role: string, userId: string, orgId: string, taskId:
       }
     case Role.Client:
       return (zevent: Zevent) => {
-        return zevent.userId === userId && (
-          zevent.type === 'support' ||
-          (/^task/.test(zevent.type) && (!taskId || zevent.taskId === taskId))
-        );
+        return zevent.userId === userId;
       }
     case Role.Agent:
     case Role.Admin:
       return (zevent: any) => {
-        return (zevent.userId === userId && zevent.type === 'support') ||
-          (
-            /^task/.test(zevent.type) &&
-            zevent.orgId === orgId &&
-            (!taskId || zevent.taskId === taskId)
-          )
+        return zevent.userId === userId;
+        //  && (zevent.type === 'support' ||
+        //   (
+        //     zevent.type === 'taskEvent' &&
+        //     zevent.taskEvent.orgId === orgId
+        //   )
+        // )
       };
     default:
       assert(false, 403, `Does not support SSE`);

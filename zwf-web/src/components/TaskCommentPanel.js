@@ -19,7 +19,7 @@ const StyledList = styled(ProList)`
   overflow-x: hidden;
 
   .ant-list-item {
-    padding: 3px 0;
+    padding: 3px 24px;
     border: 0;
 
     .ant-list-item-meta-title {
@@ -71,18 +71,24 @@ export const TaskCommentPanel = React.memo((props) => {
   // }, [list]);
 
   const handleZevent = z => {
-    const event = z.payload;
-    event.createdAt = moment.utc(event.createdAt).local().toDate();
+    const event = z.taskEvent;
+    event.eventAt = moment.utc(event.eventAt).local().toDate();
     setList(list => [...list, event]);
   };
 
-  useZevent(z => z.type === 'task.comment' && z.taskId === taskId, handleZevent);
+  const filterZevent = z => {
+    return z.type === 'taskEvent' &&
+      z.taskEvent.taskId === taskId &&
+      z.taskEvent.type === 'comment';
+  }
+
+  useZevent(filterZevent, handleZevent);
 
   React.useEffect(() => {
     const sub$ = listTaskComment$(taskId).subscribe(allData => {
-      allData.forEach(x => {
-        x.createdAt = moment.utc(x.createdAt).local().toDate()
-      });
+      // allData.forEach(x => {
+      //   x.createdAt = moment.utc(x.createdAt).local().toDate()
+      // });
       setList(allData);
       setLoading(false);
     });
@@ -95,16 +101,16 @@ export const TaskCommentPanel = React.memo((props) => {
       split={false}
       rowKey="id"
       itemLayout="vertical"
-      footer={<Row gutter={16}>
+      footer={<Row gutter={16} style={{padding: '0 24px'}}>
         <Col>
-          <UserNameCard size={40} userId={myUserId} showName={false} showEmail={false} showTooltip={true} />
+          <UserNameCard size={32} userId={myUserId} showName={false} showEmail={false} showTooltip={true} />
         </Col>
-        <Col flex="auto">
+        <Col flex="auto" >
           <TaskCommentInputForm taskId={taskId} />
         </Col>
       </Row>}
       dataSource={list.map(item => ({
-        avatar: <UserNameCard size={40} userId={item.by} showName={false} showEmail={false} showTooltip={true} />,
+        avatar: <UserNameCard size={32} userId={item.by} showName={false} showEmail={false} showTooltip={true} />,
         title: isMe(item.by) ? "Me" : <UserNameCard userId={item.by} showName={true} showAvatar={false} showEmail={false} showTooltip={true} />,
         subTitle: <small><TimeAgo type="secondary" value={item.createdAt} showTime={false} /></small>,
         description: item.info.message,
