@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space, Button, Tooltip, Table } from 'antd';
+import { Upload, Typography, Space, Button, Tooltip, Row } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
@@ -13,25 +13,31 @@ import { finalize } from 'rxjs';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
 import { List } from 'antd';
 import { FileIcon } from './FileIcon';
+import { openTaskDoc } from 'services/fileService';
 
 const { Text } = Typography;
 
 const Container = styled.div`
 
-.ant-table-cell {
-  border-bottom: none !important;
-  // padding: 8px 2px !important;
-}
-.ant-table-content {
-  // margin-left: -8px;
-  // margin-right: -8px;
-}
-
 .client-doc-card {
   h4 {
     font-size: 1rem;
     font-weight: normal;
-    margin: 0;
+    margin: 0 !important;
+  }
+}
+
+.ant-list-item {
+  border: none !important;
+  padding-left: 0;
+
+  &:hover {
+    cursor: pointer;
+
+    h4 {
+      color: #0051D9 !important;
+      text-decoration: underline;
+    }
   }
 }
 
@@ -90,6 +96,10 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     onChange();
   }
 
+  const handleTaskDocOpen = async (item) => {
+    await openTaskDoc(item.id, item.name);
+  }
+
   //  <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
   return <Container>
     <ProCard
@@ -105,20 +115,25 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         pagination={false}
         bordered={false}
         rowKey="id"
+        itemLayout="vertical"
         showHeader={false}
         // columns={columns}
         dataSource={docs}
         locale={{ emptyText: <Text type="secondary">{placeholder || 'Upload or add doc templates'}</Text> }}
-        renderItem={doc => <List.Item>
+        renderItem={doc => <List.Item
+          extra={doc.signedAt ? <Text type="success"><CheckCircleOutlined /> signed</Text> : null}
+          onClick={() => handleTaskDocOpen(doc)}
+        >
           <List.Item.Meta
             className="client-doc-card"
             avatar={<FileIcon name={doc.name} />}
             title={doc.name}
-            description={<TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />}
+            description={doc.signedAt ? <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} /> : null}
           />
-          {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
-          {doc.signedAt && <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />}
-          {doc.signedAt && <Text type="success"><CheckCircleOutlined /> signed</Text>}
+          {/* <Space direction='vertical'>
+            {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
+            {doc.signedAt && <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />}
+          </Space> */}
         </List.Item>}
       />
     </ProCard>
