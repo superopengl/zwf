@@ -137,7 +137,6 @@ const ClientTaskPage = (props) => {
   const screens = useBreakpoint();
 
 
-  debugger;
   React.useEffect(() => {
     switch (notificationType) {
       case 'request-client-fields':
@@ -222,7 +221,7 @@ const ClientTaskPage = (props) => {
   }
 
   const handleHighlightenSignPanel = () => {
-    highlightGlow(signPanelRef)
+    // highlightGlow(signPanelRef)
     setActivePanel('sign')
   }
 
