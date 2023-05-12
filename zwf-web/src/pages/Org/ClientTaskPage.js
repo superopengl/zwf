@@ -13,7 +13,7 @@ import { combineLatest, of } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
-import { CommentOutlined, ExclamationCircleFilled, LeftOutlined, MessageOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
+import Icon, { CommentOutlined, ExclamationCircleFilled, LeftOutlined, MessageOutlined, PaperClipOutlined, SyncOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -27,6 +27,9 @@ import { DefaultFooter } from '@ant-design/pro-components';
 import { getPendingSignTaskDocs } from 'util/getPendingSignTaskDocs';
 import { ClientTaskCommentDrawer } from 'components/ClientTaskCommentDrawer';
 import { highlightGlow } from '../../util/highlightGlow';
+import { AiOutlineForm } from 'react-icons/ai';
+import { FaSignature } from 'react-icons/fa';
+import { BiComment, BiCommentDetail } from 'react-icons/bi';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -37,6 +40,26 @@ const Container = styled.div`
   height: 100%;
   width: 100%;
   // max-width: 1200px;
+
+.client-task-footer {
+  .ant-btn {
+    height: 64px;
+    width: 100px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &>.anticon+span {
+      margin: 0 !important;
+    }
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+    }
+  }
+}  
 `;
 
 const PageFooter = styled.div`
@@ -108,6 +131,7 @@ const ClientTaskPage = (props) => {
   const signPanelRef = React.useRef();
   const commentPanelRef = React.useRef();
   const formPanelRef = React.useRef();
+  const [activePanel, setActivePanel] = React.useState('comments');
 
   React.useEffect(() => {
     switch (notificationType) {
@@ -192,6 +216,7 @@ const ClientTaskPage = (props) => {
 
   const handleHighlightenSignPanel = () => {
     highlightGlow(signPanelRef)
+    setActivePanel('sign')
   }
 
   return (<Container>
@@ -199,10 +224,25 @@ const ClientTaskPage = (props) => {
       loading={loading}
       onBack={handleGoBack}
       fixedHeader={false}
-      maxWidth={1000}
+      maxWidth={700}
       icon={<TaskIcon />}
-      title={<>{task.name} <small><Text type="secondary">by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
-      // footer={<Button type="primary">Submit</Button>}
+      title={<>{task.name} <small><Text type="secondary" strong={false}>by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
+      footer={<Space className='client-task-footer' size="large" style={{ width: '100%', margin: '0 auto', justifyContent: 'space-evenly' }}>
+        <Button type="text" size="large" icon={<Icon component={AiOutlineForm} />}
+          onClick={() => setActivePanel('form')}
+        >Form</Button>
+        <Button type="text" size="large" icon={<PaperClipOutlined />}
+          onClick={() => setActivePanel('docs')}
+        >Docs</Button>
+        <Badge showZero={true} count={docsToSign.length}>
+          <Button type="text" size="large" icon={<Icon component={FaSignature} />} onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
+            Sign
+          </Button>
+        </Badge>
+        <Button type="text" size="large" icon={<Icon component={BiCommentDetail} />}
+          onClick={() => setActivePanel('comments')}
+        >Comments</Button>
+      </Space>}
       extra={[
         <ZeventNoticeableBadge key="refresh"
           message="This task has changes. Click to refresh"
@@ -221,66 +261,44 @@ const ClientTaskPage = (props) => {
       ]}
     >
       {/* <DebugJsonPanel value={screens} /> */}
-      {alertMeta && <Alert
+      {/* {alertMeta && <Alert
         type={alertMeta.type}
         icon={alertMeta.icon}
         message={alertMeta.message}
         description={alertMeta.description}
         showIcon
-        style={{ marginBottom: 30 }} />}
+        style={{ marginBottom: 30 }} />} */}
 
-      <Row gutter={[20, 20]}>
-        <Col span={24}>
-          {docsToSign.length > -1 && <ProCard
-            title={`${docsToSign.length} Document Waiting for Your Signature`}
-            bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
-            ref={signPanelRef}
-          >
-            <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
-          </ProCard>}
-        </Col>
-
-        <Col span={24}>
-          <Row gutter={[20, 20]}>
-            <Col flex="2 2 300px">
-              <Row gutter={[20, 20]}>
-                <Col span={24}>
-                  <ProCard title="Form" ref={formPanelRef}>
-                    <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
-                  </ProCard>
-                </Col>
-
-                <Col span={24}>
-                  <ProCard ghost>
-                    <ClientTaskDocListPanel
-                      task={task}
-                      onSavingChange={setSaving}
-                      onChange={handleDocChange}
-                      disabled={!canEdit}
-                      placeholder="Upload attachments"
-                    />
-                  </ProCard>
-                </Col>
-              </Row>
-
-            </Col>
-            <Col flex="1 1 240px">
-              <ProCard size="small" ref={commentPanelRef}>
-                <TaskCommentPanel taskId={task.id} />
-              </ProCard>
-            </Col>
-          </Row>
-        </Col>
-
-      </Row>
+      {activePanel === 'form' && <ProCard title="Form" ref={formPanelRef}>
+        <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
+      </ProCard>}
+      {activePanel === 'docs' && <ProCard ghost>
+        <ClientTaskDocListPanel
+          task={task}
+          onSavingChange={setSaving}
+          onChange={handleDocChange}
+          disabled={!canEdit}
+          placeholder="Upload attachments"
+        />
+      </ProCard>}
+      {activePanel === 'sign' && <ProCard
+        title={`${docsToSign.length} Document Waiting for Your Signature`}
+        bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
+        ref={signPanelRef}
+      >
+        <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
+      </ProCard>}
+      {activePanel === 'comments' && <ProCard size="small" ref={commentPanelRef}>
+        <TaskCommentPanel taskId={task.id} />
+      </ProCard>}
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
-    <FooterToolbar>
+    {/* <FooterToolbar>
       {hasDocToSign && <Button key="sign" type="primary" danger
         onClick={handleHighlightenSignPanel}
       >Sign {docsToSign.length} documents</Button>}
       {task?.status === 'action_required' && <Button key="submit" type="primary">Submit</Button>}
-    </FooterToolbar>
+    </FooterToolbar> */}
     {requestChangeContextHolder}
   </Container>
   );
