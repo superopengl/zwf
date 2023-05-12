@@ -16,7 +16,7 @@ import { EntityManager } from 'typeorm';
 import { OrgClientField } from '../entity/OrgClientField';
 import { emitTaskEvent } from './emitTaskEvent';
 import { TaskEventType } from '../types/TaskEventType';
-import { TaskWatchlist } from '../entity/TaskWatchlist';
+import { TaskWatcher } from '../entity/TaskWatcher';
 
 function prefillFemplateFields(femplateFields, varBag: { [key: string]: any }) {
   if (!varBag) return femplateFields;
@@ -85,12 +85,12 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
 
   const entities: any[] = [task, ...fields];
   if (creatorId) {
-    const creatorTaskWatch = new TaskWatchlist();
+    const creatorTaskWatch = new TaskWatcher();
     creatorTaskWatch.taskId = task.id;
     creatorTaskWatch.userId = creatorId;
     creatorTaskWatch.reason = 'watch';
 
-    const clientTaskWatch = new TaskWatchlist();
+    const clientTaskWatch = new TaskWatcher();
     clientTaskWatch.taskId = task.id;
     clientTaskWatch.userId = orgClient.userId;
     clientTaskWatch.reason = 'client';

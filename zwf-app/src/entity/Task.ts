@@ -6,6 +6,7 @@ import { Tag } from './Tag';
 import { TaskField } from './TaskField';
 import { File } from './File';
 import { OrgClient } from './OrgClient';
+import { TaskWatcher } from './TaskWatcher';
 // import { TaskField } from '../types/TaskField';
 
 @Entity()
@@ -58,6 +59,9 @@ export class Task {
   @ManyToMany(() => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: Tag[];
+
+  @OneToMany(() => TaskWatcher, taskWatcher => taskWatcher.task, { eager: false })
+  watchers: TaskWatcher[];
 }
 
 /**

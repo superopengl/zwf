@@ -1,7 +1,7 @@
 import { Entity, CreateDateColumn, PrimaryColumn } from 'typeorm';
 
 @Entity()
-export class TaskEventAck {
+export class TaskWatcherEventAck {
   @PrimaryColumn('uuid')
   userId: string;
 

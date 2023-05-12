@@ -32,7 +32,7 @@ import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { TaskTagsTag } from '../entity/TaskTagsTag';
 import { existsQuery } from '../utils/existsQuery';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
-import { TaskWatchlist } from '../entity/TaskWatchlist';
+import { TaskWatcher } from '../entity/TaskWatcher';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -533,20 +533,20 @@ export const assignTask = handlerWrapper(async (req, res) => {
     await m.update(Task, { id, orgId }, { assigneeId });
 
     if (assigneeId) {
-      const taskWatchlist = new TaskWatchlist();
+      const taskWatchlist = new TaskWatcher();
       taskWatchlist.taskId = id;
       taskWatchlist.userId = assigneeId;
       taskWatchlist.reason = 'assignee';
 
       await m.createQueryBuilder()
         .insert()
-        .into(TaskWatchlist)
+        .into(TaskWatcher)
         .values(taskWatchlist)
         .orIgnore()
         .execute();
     } else {
       // Unassign
-      await m.delete(TaskWatchlist, { taskId: id, userId: assigneeId, reason: 'assignee' });
+      await m.delete(TaskWatcher, { taskId: id, userId: assigneeId, reason: 'assignee' });
     }
 
     await emitTaskEvent(m, TaskEventType.Assign, id, userId, { assigneeId });

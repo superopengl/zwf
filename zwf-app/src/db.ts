@@ -49,10 +49,10 @@ import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 import { OrgTermination } from './entity/OrgTermination';
 import { OrgClientField } from './entity/OrgClientField';
 import { OrgAllClientFieldsInformation } from './entity/views/OrgAllClientFieldsInformation';
-import { TaskEventAck } from './entity/TaskEventAck';
-import { UserTaskEventAckInformation } from './entity/views/UserTaskEventAckInformation';
-import { TaskWatchlist } from './entity/TaskWatchlist';
-import { UserTaskEventNotificationInformation } from './entity/views/UserTaskEventNotificationInformation';
+import { TaskWatcherEventAck } from './entity/TaskWatcherEventAck';
+import { TaskWatcherEventAckInformation } from './entity/views/TaskWatcherEventAckInformation';
+import { TaskWatcher } from './entity/TaskWatcher';
+import { TaskWatcherEventNotificationInformation } from './entity/views/TaskWatcherEventNotificationInformation';
 dotenv.config();
 
 const views = [
@@ -217,8 +217,8 @@ export const db = new DataSource({
     OrgSubscriptionPeriod,
     NotificationMessage,
     TaskEventLastSeen,
-    TaskEventAck,
-    TaskWatchlist,
+    TaskWatcherEventAck,
+    TaskWatcher,
     // Views below
     TaskInformation,
     UserInformation,
@@ -233,8 +233,8 @@ export const db = new DataSource({
     RecurringInformation,
     OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,
-    UserTaskEventAckInformation,
-    UserTaskEventNotificationInformation,
+    TaskWatcherEventAckInformation,
+    TaskWatcherEventNotificationInformation,
   ],
 });
 

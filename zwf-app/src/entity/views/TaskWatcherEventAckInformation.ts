@@ -10,19 +10,19 @@ import { UserProfile } from '../UserProfile';
 import { Tag } from '../Tag';
 import { OrgClient } from '../OrgClient';
 import { TaskEvent } from '../TaskEvent';
-import { TaskEventAck } from '../TaskEventAck';
+import { TaskWatcherEventAck } from '../TaskWatcherEventAck';
 import { OrgClientInformation } from './OrgClientInformation';
 import { TaskEventType } from '../../types/TaskEventType';
 import { OrgMemberInformation } from './OrgMemberInformation';
-import { TaskWatchlist } from '../TaskWatchlist';
+import { TaskWatcher } from '../TaskWatcher';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(Task, 't')
     .innerJoin(TaskEvent, 'e', `e."taskId" = t.id`)
-    .innerJoin(TaskWatchlist, 'w', `w."taskId" = t."id"`)
-    .leftJoin(TaskEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
+    .innerJoin(TaskWatcher, 'w', `w."taskId" = t."id"`)
+    .leftJoin(TaskWatcherEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
     .where(`e.by != w."userId"`)
     .select([
       'e.id as "eventId"',
@@ -38,8 +38,8 @@ import { TaskWatchlist } from '../TaskWatchlist';
       'a."ackAt" as "ackAt"',
     ])
     .orderBy('e."createdAt"', 'DESC'),
-  dependsOn: [Task, OrgMemberInformation, TaskEvent, TaskEventAck, TaskWatchlist]
-}) export class UserTaskEventAckInformation {
+  dependsOn: [Task, OrgMemberInformation, TaskEvent, TaskWatcherEventAck, TaskWatcher]
+}) export class TaskWatcherEventAckInformation {
   @ViewColumn()
   eventId: string;
 
