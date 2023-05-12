@@ -6,7 +6,6 @@ import en from 'javascript-time-ago/locale/en'
 import ReactTimeAgo from 'react-time-ago'
 import * as moment from 'moment';
 import styled from 'styled-components';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 JavascriptTimeAgo.addLocale(en);
 
@@ -28,16 +27,6 @@ const StyledSpace = styled(Space)`
   // line-height: 15px;
 }
 `
-
-const ColumnSpace = styled.div`
-display: flex;
-flex-direction: column;
-align-items: baseline;
-
-& * {
-  white-space: nowrap;
-}
-`;
 
 export const TimeAgo = React.memo(props => {
   const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type, toLocalTime } = props;

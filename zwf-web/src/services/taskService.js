@@ -26,7 +26,7 @@ export function addDemplateToTask$(taskid, demplateIds) {
   if (!demplateIds?.length) {
     throw new Error(`demplateIds cannot be empty`);
   }
-  return httpPost$(`task/${taskid}/demplate/`, { demplateIds });
+  return httpPost$(`task/${taskid}/demplate`, { demplateIds });
 }
 
 export function deleteTaskDoc$(docId) {
