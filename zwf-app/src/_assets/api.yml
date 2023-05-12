@@ -835,7 +835,7 @@ paths:
           description: OK
   /task/{id}/rename:
     post:
-      operationId: updateTaskName
+      operationId: renameTask
       # security:
       #   - authClient: []
       parameters:
