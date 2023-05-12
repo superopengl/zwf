@@ -8,6 +8,7 @@ import { MdDriveFileRenameOutline } from 'react-icons/md'
 import { combineLatest } from 'rxjs';
 import { Checkbox } from 'antd';
 import styled from 'styled-components';
+import { BsFillSendFill } from 'react-icons/bs';
 
 const { Text, Paragraph } = Typography;
 
@@ -22,7 +23,6 @@ const Content = props => {
   const formRef = React.createRef();
 
   const handleSendNotification = (values) => {
-    debugger;
     requestClientAction$(id, values)
       .subscribe({
         next: onOk,
@@ -36,12 +36,13 @@ const Content = props => {
   }
 
   return <Container>
-    <Paragraph>Send notification to client for more information. Optionally, you can also leave additional message.</Paragraph>
+    <Paragraph>Send notification to client for actions and if needed, include an additional comment.</Paragraph>
     <Form
       ref={formRef}
       initialValues={{ name }}
       onFinish={handleSendNotification}
       style={{ marginTop: 20 }}
+      preserve={false}
     >
       <Form.Item name="requestSign" valuePropName="checked">
         <Checkbox>Request to sign documents</Checkbox>
@@ -49,9 +50,9 @@ const Content = props => {
       <Form.Item name="requestForm" valuePropName="checked">
         <Checkbox>Request to fill the form (for information capture)</Checkbox>
       </Form.Item>
-      <Form.Item name="comment" rules={[{ required: false, max: 1000, message: ' ', whitespace: false }]}>
+      <Form.Item name="comment" rules={[{ required: false, max: 1000, message: ' ', whitespace: false }]} style={{marginTop: 18}}>
         <Input.TextArea
-          placeholder="Leave additional comments"
+          placeholder="Leave additional comment"
           autoSize={{ minRows: 3 }}
           autoFocus
           allowClear
@@ -71,10 +72,8 @@ export const useRequestActionModal = () => {
 
   const open = (taskId, onOk) => {
     const modalRef = modal.info({
-      title: <Space>
-        <Avatar icon={<NotificationOutlined />} style={{ backgroundColor: '#0FBFC4' }} />
-        Request client's actions
-      </Space>,
+      icon: <Icon component={BsFillSendFill} />,
+      title: `Request client's actions`,
       content: <Content id={taskId} onOk={() => {
         modalRef.destroy();
         onOk?.();
@@ -82,9 +81,9 @@ export const useRequestActionModal = () => {
       afterClose: () => {
       },
       className: 'modal-hide-footer',
-      icon: null,
-      width: 500,
-      closable: true,
+      // icon: null,
+      width: 470,
+      closable: false,
       maskClosable: true,
       destroyOnClose: true,
       focusTriggerAfterClose: true,
