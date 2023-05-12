@@ -138,16 +138,25 @@ export const ClientTaskListPage = () => {
     return options;
   }, [allList]);
 
+  const descriptionSpan = {
+    xs: 24,
+    sm: 12,
+    md: 12,
+    lg: 12,
+    xl: 12,
+    xxl: 12
+  }
+
   return (
     <Container>
       <PageHeaderContainer
         loading={loading}
         title='All My Cases'
         extra={[
-          <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} >Refresh</Button>
+          // <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} >Refresh</Button>
         ]}
       >
-        <Row gutter={[12, 24]} style={{display: 'none'}}>
+        <Row gutter={[20, 20]} style={{ display: 'none' }}>
           <Col>
             <CheckboxButton value={isFilteringStatus('in_progress')} onChange={() => handleToggleStatus('in_progress')}>Pending</CheckboxButton>
           </Col>
@@ -204,13 +213,13 @@ export const ClientTaskListPage = () => {
         </Row>
         <StyledList
           grid={{
-            gutter: [10, 10],
+            gutter: [20, 10],
             xs: 1,
             sm: 1,
             md: 1,
-            lg: 1,
-            xl: 1,
-            xxl: 1
+            lg: 2,
+            xl: 2,
+            xxl: 3
           }}
           dataSource={filteredList}
           loading={loading}
@@ -231,14 +240,14 @@ export const ClientTaskListPage = () => {
               hoverable
               bordered={false}
             >
-              <Descriptions size="small" column={2}>
-                <Descriptions.Item label="created">
-                  <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
-                </Descriptions.Item>
-                <Descriptions.Item label="updated">
-                  <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
-                </Descriptions.Item>
-              </Descriptions>
+              <Row>
+                <Col {...descriptionSpan}>
+                  <TimeAgo prefix="created" value={item.createdAt} showTime={false} direction="horizontal" />
+                </Col>
+                <Col {...descriptionSpan}>
+                  <TimeAgo prefix="updated" value={item.updatedAt} showTime={false} direction="horizontal" />
+                </Col>
+              </Row>
             </Card>
           </List.Item>}
         />

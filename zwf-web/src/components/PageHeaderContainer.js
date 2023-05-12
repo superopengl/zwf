@@ -47,6 +47,7 @@ export const PageHeaderContainer = React.memo((props) => {
   const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, footer, loading, ...others } = props;
 
   const screens = Grid.useBreakpoint();
+  const narrowScreen = (screens.xs || screens.sm) && !screens.md;
 
   console.log(screens)
 
@@ -83,13 +84,13 @@ export const PageHeaderContainer = React.memo((props) => {
         <div style={{
           maxWidth,
           margin: '0 auto',
-          padding: `0 ${screens.md ? 40 : 4}px`,
+          padding: `0 ${narrowScreen ? 40 : 4}px`,
           paddingBottom: footer ? 80 : 40,
         }}>{children}</div>
       </Loading>
     </PageContainer>
     {footer && <Footer>
-      <div style={{ maxWidth, margin: '0 auto', width: '100%', padding: '0 40px'}}>
+      <div style={{ maxWidth, margin: '0 auto', width: '100%', padding: `0 ${narrowScreen ? 4 : 40}px`}}>
         {footer}
       </div>
     </Footer>}

@@ -43,8 +43,9 @@ const Container = styled.div`
 
 .client-task-footer {
   .ant-btn {
+    border: none;
     height: 64px;
-    width: 100px;
+    // width: 100px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -96,7 +97,7 @@ const ALERT_DEF = {
         <li>uploading additional supporting documents, </li>
         <li>modifying the information provided in the form.</li>
       </ul>
-      Please review any comments left by your agent as instructions.
+      Please review any comment left by your agent as instructions.
     </>,
   },
   'done': {
@@ -132,18 +133,24 @@ const ClientTaskPage = (props) => {
   const signPanelRef = React.useRef();
   const commentPanelRef = React.useRef();
   const formPanelRef = React.useRef();
-  const [activePanel, setActivePanel] = React.useState('comments');
+  const [activePanel, setActivePanel] = React.useState('comment');
+  const screens = useBreakpoint();
 
+
+  debugger;
   React.useEffect(() => {
     switch (notificationType) {
       case 'request-client-fields':
-        highlightGlow(formPanelRef);
+        setActivePanel('form')
+        // highlightGlow(formPanelRef);
         break;
       case 'request-client-sign':
-        highlightGlow(signPanelRef);
+        setActivePanel('sign')
+        // highlightGlow(signPanelRef);
         break;
       case 'comment':
-        highlightGlow(commentPanelRef);
+        setActivePanel('comment')
+        // highlightGlow(commentPanelRef);
         break;
       default:
         break;
@@ -186,7 +193,6 @@ const ClientTaskPage = (props) => {
 
   const isFormView = currentStep === 0;
   const isDocView = currentStep === 1;
-  const screens = useBreakpoint();
 
   const span = { xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 };
   const canRequestChange = false && (task?.status === 'todo' || task?.status === 'in_progress');
@@ -220,6 +226,10 @@ const ClientTaskPage = (props) => {
     setActivePanel('sign')
   }
 
+  const isNarrowToChangeBottom = screens.xs;
+
+  const buttonSize = narrowScreen ? 'default' : 'large';
+
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
       loading={loading}
@@ -228,22 +238,31 @@ const ClientTaskPage = (props) => {
       maxWidth={700}
       icon={<TaskIcon />}
       title={<>{task.name} <small><Text type="secondary" strong={false}>by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
-      footer={<Space className='client-task-footer' size="large" style={{ width: '100%', margin: '0 auto', justifyContent: 'space-evenly' }}>
-        <Button type="text" size="large" icon={<Icon component={BiCommentDetail} />}
-          onClick={() => setActivePanel('comments')}
+      footer={<Row className='client-task-footer' justify="space-between" wrap={false}>
+        <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
+          type={activePanel === 'comment' ? 'primary' : 'text'}
+          ghost={activePanel === 'comment'}
+          onClick={() => setActivePanel('comment')}
         >Chat</Button>
-        {task.fields.length > 0 && <Button type="text" size="large" icon={<Icon component={AiOutlineForm} />}
+        {task.fields.length > 0 && <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
+        type={activePanel === 'form' ? 'primary' : 'text'}
+        ghost={activePanel === 'form'}
           onClick={() => setActivePanel('form')}
         >Form</Button>}
-        <Button type="text" size="large" icon={<PaperClipOutlined />}
+        <Button size={buttonSize} icon={<PaperClipOutlined />}
+        type={activePanel === 'docs' ? 'primary' : 'text'}
+        ghost={activePanel === 'docs'}
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
         {docsToSign.length > 0 && <Badge showZero={true} count={docsToSign.length}>
-          <Button type="text" size="large" icon={<Icon component={FaSignature} />} onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
+          <Button size={buttonSize} icon={<Icon component={FaSignature} />} 
+          type={activePanel === 'sign' ? 'primary' : 'text'}
+          ghost={activePanel === 'sign'}
+          onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
             Sign
           </Button>
         </Badge>}
-      </Space>}
+      </Row>}
       extra={[
         // <ZeventNoticeableBadge key="refresh"
         //   message="This task has changes. Click to refresh"
@@ -289,7 +308,7 @@ const ClientTaskPage = (props) => {
       >
         <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
       </ProCard>}
-      {activePanel === 'comments' && <ProCard size="small" ref={commentPanelRef}>
+      {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef}>
         <TaskCommentPanel taskId={task.id} />
       </ProCard>}
       {saving && <SavingAffix />}
