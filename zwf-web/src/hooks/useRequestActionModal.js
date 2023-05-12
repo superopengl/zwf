@@ -1,11 +1,7 @@
 import React from 'react';
-import { Modal, Typography, Input, Row, Space, Avatar, Button, Form } from 'antd';
-import { TaskIcon } from 'components/entityIcon';
-import { changeTaskStatus$, getTaskDeepLinkUrl, notifyTask$, renameTask$, requestClientAction$ } from 'services/taskService';
-import { ClickToCopyTooltip } from '../components/ClickToCopyTooltip';
-import Icon, { NotificationOutlined, ShareAltOutlined } from '@ant-design/icons';
-import { MdDriveFileRenameOutline } from 'react-icons/md'
-import { combineLatest } from 'rxjs';
+import { Modal, Typography, Input, Row, Button, Form } from 'antd';
+import { requestClientAction$ } from 'services/taskService';
+import Icon, {  } from '@ant-design/icons';
 import { Checkbox } from 'antd';
 import styled from 'styled-components';
 import { BsFillSendFill } from 'react-icons/bs';
@@ -27,12 +23,6 @@ const Content = props => {
       .subscribe({
         next: onOk,
       });
-
-    // const message$ = notifyTask$(id, values.message);
-    // const status$ = changeTaskStatus$(id, 'action_required');
-    // combineLatest([message$, status$]).subscribe(() => {
-    //   onOk();
-    // })
   }
 
   return <Container>

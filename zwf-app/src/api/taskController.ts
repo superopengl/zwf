@@ -649,37 +649,6 @@ export const requestClientAction = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const notifyTask = handlerWrapper(async (req, res) => {
-  assertRole(req, ['admin', 'agent']);
-  const { id } = req.params;
-  const orgId = getOrgIdFromReq(req);
-  const userId = getUserIdFromReq(req);
-
-  const task = await db.getRepository(TaskInformation).findOne({
-    where: {
-      id,
-      orgId
-    }
-  });
-  assert(task, 404);
-
-  const message = req.body.message?.trim();
-  if (message) {
-    await createTaskComment(db.manager, task, userId, message);
-  }
-
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;
-
-  sendEmailForUserId(task.userId, EmailTemplateType.TaskRequireAction, {
-    task: task.name,
-    url,
-    message,
-    org: task.orgName,
-  });
-
-  res.json();
-});
-
 export const getTaskLog = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
