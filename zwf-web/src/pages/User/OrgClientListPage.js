@@ -265,7 +265,6 @@ const OrgClientListPage = () => {
     {
       width: 40,
       align: 'right',
-      fixed: 'right',
       render: (text, item) => <Button type="text" icon={<RightOutlined/>}/>
     },
   ].filter(x => !!x);
