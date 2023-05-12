@@ -4,6 +4,12 @@ import { Dropdown, Menu, Button } from 'antd';
 import styled from 'styled-components';
 import { CaretDownOutlined, SettingOutlined } from '@ant-design/icons';
 
+const StyledDropdown = styled(Dropdown)`
+.ant-dropdown-menu-item:hover {
+  background-color: #13c2c2 !important;
+}
+`
+
 const DropdownMenu = (props) => {
   const { config } = props;
 
@@ -15,7 +21,7 @@ const DropdownMenu = (props) => {
 
   const menu = <Menu
     mode="vertical"
-    theme="dark"
+    // theme="dark"
     onClick={handleMenuClick}>
     {config.map((x, i) => <Menu.Item key={i} icon={x.icon} disabled={x.disabled}>
       {x.menu}
@@ -23,13 +29,14 @@ const DropdownMenu = (props) => {
   </Menu>
 
   return (
-    <Dropdown
+    <StyledDropdown
       overlay={menu}
+      trigger="click"
     >
       <Button icon={<SettingOutlined />} style={{ paddingLeft: 8, paddingRight: 8 }}>
         <CaretDownOutlined />
       </Button>
-    </Dropdown>
+    </StyledDropdown>
   );
 };
 
