@@ -14,6 +14,7 @@ import { useAddDemplateToTaskModal } from 'hooks/useAddDemplateToTaskModal';
 import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
+import { TbSignature, TbSignatureOff } from 'react-icons/tb';
 
 const { Text } = Typography;
 
@@ -93,16 +94,18 @@ export const OrgTaskDocListPanel = React.memo((props) => {
     },
     {
       align: 'right',
-      width: 32,
-      render: (_, doc) => doc.signedAt ? null : <Tooltip title={doc.signRequestedAt ? `Revoke sign request` : `Request sign`}>
-        <Button shape="circle" type={doc.signRequestedAt ? 'default' : 'primary'} icon={<Icon component={FaSignature} />} onClick={() => handleRequestSign(doc)} />
-      </Tooltip>
+      render: (_, doc) => doc.signedAt ? null : <Button 
+        type="text"
+        // icon={<Icon component={doc.signRequestedAt ? TbSignatureOff : TbSignature} />} 
+        onClick={() => handleRequestSign(doc)} >
+          {doc.signRequestedAt ? `Revoke sign request` : `Request sign`}
+        </Button>
     },
     {
       align: 'right',
-      width: 32,
-      render: (_, doc) => <Tooltip title={`Delete ${doc.name}`} placement="topRight">
-        <Button shape="circle" icon={<MinusOutlined />} onClick={(e) => handleDeleteDoc(doc, e)} />
+      width: 16,
+      render: (_, doc) => <Tooltip title={`Delete`} placement="topRight">
+        <Button type="text" icon={<MinusCircleOutlined />} onClick={(e) => handleDeleteDoc(doc, e)} />
       </Tooltip>
     },
   ];
