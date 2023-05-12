@@ -29,7 +29,7 @@ const COLUMN_DEFS = [
     status: 'todo',
     label: 'To Do',
     // bgColor: '#F1F2F5',
-    bgColor: '#d9d9d911',
+    bgColor: '#d9d9d966',
     hoverColor: '#d9d9d9',
   },
   {
@@ -41,7 +41,7 @@ const COLUMN_DEFS = [
   },
   {
     status: 'action_required',
-    label: `Await Client's Actions`,
+    label: `Request Client's Actions`,
     // bgColor: '#F1F2F5',
     bgColor: '#F53F3F11',
     hoverColor: '#F53F3F',

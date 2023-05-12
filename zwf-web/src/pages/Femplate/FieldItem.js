@@ -35,6 +35,7 @@ export const FieldItem = React.memo((props) => {
   return <Container>
     <BetaSchemaForm
       layoutType='Form'
+      requiredMark="optional"
       columns={[fieldSchema]}
       submitter={{
         render: () => null

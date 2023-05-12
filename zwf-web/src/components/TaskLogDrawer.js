@@ -5,10 +5,10 @@ import 'react-chat-elements/dist/main.css';
 import { TaskLogPanel } from './TaskLogPanel';
 
 export const TaskLogDrawer = React.memo((props) => {
-  const { taskId, visible, onClose, width } = props;
+  const { taskId, open, onClose, width } = props;
 
   return <Drawer
-    open={visible}
+    open={open}
     onClose={onClose}
     title={<>Logs</>}
     destroyOnClose={true}
@@ -26,13 +26,13 @@ export const TaskLogDrawer = React.memo((props) => {
 TaskLogDrawer.propTypes = {
   taskId: PropTypes.string.isRequired,
   width: PropTypes.number,
-  visible: PropTypes.bool.isRequired,
+  open: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
 };
 
 TaskLogDrawer.defaultProps = {
   width: 500,
-  visible: false,
+  open: false,
   onClose: () => { },
 };
 

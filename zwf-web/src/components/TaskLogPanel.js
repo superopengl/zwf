@@ -36,9 +36,10 @@ export const TaskLogPanel = React.memo((props) => {
   return <Container>
     <Timeline
       items={list.map(x => ({
-        children: <Space direction="vertical">
-          <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} />
-          <Text strong className="capitalized">{x.action}</Text>
+        children: <Space direction='vertical'>
+          <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} showTime={false}/>
+          <Text strong className="capitalized">{x.type}</Text>
+          <UserNameCard userId={x.by} />
         </Space>
       }))}
     />

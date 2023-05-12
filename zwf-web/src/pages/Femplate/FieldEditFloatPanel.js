@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import { Tooltip, Form, Switch, Input, Button, Typography, Space } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import React from 'react';
-import { CloseOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { OptionsBuilder } from './formBuilder/OptionsBuilder';
 import {DemplateSelect} from 'components/DemplateSelect';
 
@@ -50,6 +50,7 @@ export const FieldEditFloatPanel = (props) => {
       </ProCard> : <ProCard split={'horizontal'} >
         <ProCard>
           <Form
+            requiredMark={false}
             layout="vertical"
             initialValues={field}
             onValuesChange={handleValuesChange}
@@ -93,7 +94,7 @@ export const FieldEditFloatPanel = (props) => {
           </Form>
         </ProCard>
         <ProCard>
-          <Button danger block type="primary" icon={<CloseOutlined />} onClick={handleDeleteField}>Delete</Button>
+          <Button danger block type="primary" ghost icon={<MinusCircleOutlined />} onClick={handleDeleteField}>Delete</Button>
         </ProCard>
       </ProCard>
       }
