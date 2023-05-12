@@ -5,7 +5,8 @@ import {
   DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
   UserOutlined,
-  ClearOutlined
+  ClearOutlined,
+  MinusOutlined
 } from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space, Pagination } from 'antd';
@@ -23,6 +24,7 @@ import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
+import DropdownMenu from 'components/DropdownMenu';
 
 
 const { Text, Paragraph } = Typography;
@@ -65,15 +67,15 @@ const OrgListPage = () => {
       fixed: 'left',
       render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
     },
-    {
-      title: 'ID',
-      dataIndex: 'id',
-      render: (value, item) => <Text code>{value}</Text>,
-    },
+    // {
+    //   title: 'ID',
+    //   dataIndex: 'id',
+    //   render: (value, item) => <Text code>{value}</Text>,
+    // },
     {
       title: 'Domain',
       dataIndex: 'domain',
-      render: (value) => value
+      render: (value) => <Text code>{value}</Text>
     },
     {
       title: 'Business Name',
@@ -96,30 +98,38 @@ const OrgListPage = () => {
     //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
     // },
     {
-      title: 'Subscription',
+      title: 'Next pay / trial end',
       dataIndex: 'subscription',
+      render: (value, item) => <Space>
+        <TimeAgo value={item.subscriptionEnd} showTime={false}/>
+        {item.isTrial && <Tag>Trial</Tag>}
+      </Space>
+    },
+    {
+      title: 'Licenses',
+      dataIndex: 'seats',
       render: (value, item) => value
     },
     {
       // title: 'Action',
       // fixed: 'right',
       // width: 200,
+      align: 'right',
       fixed: 'right',
-      render: (text, item) => {
+      render: (text, org) => {
         return (
-          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            {/* <Tooltip placement="bottom" title="Update profile">
-              <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
-            </Tooltip>
-            <Tooltip placement="bottom" title="Set password">
-              <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
-            </Tooltip> */}
-            <Tooltip placement="bottom" title="Impersonate admin user">
-              <Button shape="circle" onClick={e => handleImpersonante(e, item.adminUserEmail)}>
-                <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
-              </Button>
-            </Tooltip>
-          </Space>
+          <DropdownMenu 
+            config={[
+              {
+                menu: 'Impersonate',
+                onClick: () => handleImpersonante(org.adminUserEmail)
+              },
+              {
+                menu: 'Billing',
+                onClick: () => handleOpenBilling(org)
+              },
+            ]}
+          />
         )
       },
     },
@@ -205,10 +215,7 @@ const OrgListPage = () => {
     });
   }
 
-  const handleImpersonante = async (e, email) => {
-    e.stopPropagation();
-    // setSetPasswordVisible(true);
-    // setCurrentUser(item);
+  const handleImpersonante = async (email) => {
     Modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
@@ -225,6 +232,9 @@ const OrgListPage = () => {
     })
   }
 
+  const handleOpenBilling = (org) => {
+
+  }
 
   const openSetPasswordModal = async (e, user) => {
     e.stopPropagation();

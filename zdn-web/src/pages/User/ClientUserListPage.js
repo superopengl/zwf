@@ -22,6 +22,7 @@ import TagSelect from 'components/TagSelect';
 import { listUserTags, saveUserTag } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
+import DropdownMenu from 'components/DropdownMenu';
 
 
 const { Text, Paragraph } = Typography;
@@ -101,25 +102,30 @@ const ClientUserListPage = () => {
       // title: 'Action',
       // fixed: 'right',
       // width: 200,
+      align: 'right',
       fixed: 'right',
       render: (text, user) => {
         return (
-          <Space size="small" style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Tooltip placement="bottom" title="Update profile">
-              <Button shape="circle" icon={<UserOutlined />} onClick={e => openProfileModal(e, user)} />
-            </Tooltip>
-            <Tooltip placement="bottom" title="Set password">
-              <Button shape="circle" icon={<SafetyCertificateOutlined />} onClick={e => openSetPasswordModal(e, user)} />
-            </Tooltip>
-            {isSystem && <Tooltip placement="bottom" title="Impersonate">
-              <Button shape="circle" onClick={e => handleImpersonante(e, user)}>
-                <FaTheaterMasks style={{ position: 'relative', top: 1 }} size={20} />
-              </Button>
-            </Tooltip>}
-            {isSystem && <Tooltip placement="bottom" title="Delete user">
-              <Button shape="circle" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, user)} disabled={user.email === 'admin@easyvaluecheck.com'} />
-            </Tooltip>}
-          </Space>
+          <DropdownMenu
+            config={[
+              {
+                menu: 'Update profile',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Set password',
+                onClick: () => openSetPasswordModal(user)
+              },
+              {
+                menu: 'Impersonate',
+                onClick: () => handleImpersonante(user)
+              },
+              {
+                menu: 'Delete user',
+                onClick: () => handleDelete(user),
+              }
+            ]}
+          />
         )
       },
     },
@@ -182,8 +188,7 @@ const ClientUserListPage = () => {
     }
   }
 
-  const handleDelete = async (e, item) => {
-    e.stopPropagation();
+  const handleDelete = async (item) => {
     const { id, email } = item;
     Modal.confirm({
       title: <>Delete user</>,
@@ -201,10 +206,7 @@ const ClientUserListPage = () => {
     });
   }
 
-  const handleImpersonante = async (e, item) => {
-    e.stopPropagation();
-    // setSetPasswordVisible(true);
-    // setCurrentUser(item);
+  const handleImpersonante = async (item) => {
     Modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
@@ -222,14 +224,12 @@ const ClientUserListPage = () => {
   }
 
 
-  const openSetPasswordModal = async (e, user) => {
-    e.stopPropagation();
+  const openSetPasswordModal = async (user) => {
     setSetPasswordVisible(true);
     setCurrentUser(user);
   }
 
-  const openProfileModal = async (e, user) => {
-    e.stopPropagation();
+  const openProfileModal = async (user) => {
     setProfileModalVisible(true);
     setCurrentUser(user);
   }
