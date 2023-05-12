@@ -103,12 +103,14 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
 export const provisionSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const { plan, seats } = req.body;
+  const { seats, promotionCode } = req.body;
+
+  assert(seats > 0, 400, 'seats must be positive integer');
 
   const payment = await provisionSubscriptionPurchase({
     orgId,
-    subscriptionType: plan,
-    seats
+    seats,
+    promotionCode
   }, req);
   const result: any = {
     amount: payment.amount,
@@ -145,8 +147,8 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const { seats, type, promotionCode } = req.body;
-  const result = await getNewSubscriptionPaymentInfo(getManager(), orgId, type, seats, promotionCode);
+  const { seats, promotionCode } = req.body;
+  const result = await getNewSubscriptionPaymentInfo(getManager(), orgId, seats, promotionCode);
   res.json(result);
 });
 

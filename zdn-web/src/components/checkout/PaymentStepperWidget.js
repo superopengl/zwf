@@ -95,10 +95,10 @@ const PaymentStepperWidget = (props) => {
           <Text>Total price:</Text>
           {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
         </Space>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        {paymentDetail?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Deduction (from previous unfinished subscription):</Text>
-          {paymentDetail ? <MoneyAmount value={paymentDetail.creditBalance * -1} /> : '-'}
-        </Space>
+          <MoneyAmount value={paymentDetail.creditBalance * -1} />
+        </Space>}
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Promotion code</Text>
           <Input value={promotionCode} onChange={e => setPromotionCode(e.target.value)} />
@@ -137,17 +137,19 @@ const PaymentStepperWidget = (props) => {
     }
   ];
 
+  const newPlanDef = subscriptionDef[1];
+
   return (
     <Loading loading={loading} message={'In progress. Please do not close the window.'}>
       <Space direction="vertical" size="large" style={{ width: '100%' }} >
         <Card>
-          {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
             <div><Text strong type="success"><big>$ {newPlanDef.price}</big></Text> {newPlanDef.unit}</div>
           </Space>
           <div style={{ display: 'flex' }}>
             {newPlanDef.description}
-          </div> */}
+          </div>
         </Card>
         <div style={{ width: '100%', marginTop: 16, marginBottom: 30 }}>
           {stepDef[currentStep].component}

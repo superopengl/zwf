@@ -21,7 +21,7 @@ import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 const CreditHistoryListModal = loadable(() => import('./CreditHistoryListDrawer'));
 
-const { Paragraph, Text, Title, Link } = Typography;
+const { Paragraph, Text, Title, Link: TextLink } = Typography;
 
 
 const ContainerStyled = styled.div`
@@ -102,28 +102,8 @@ const OrgAccountPage = (props) => {
   const isCurrentFree = currentPlanKey === 'trial';
 
 
-  const handleChangePlan = (subscription) => {
-    if (subscription.key === 'trial') {
-      return;
-    }
-
-    if (currentSubscription?.lastRecurring) {
-      Modal.warning({
-        title: 'Auto-renew Payment is On',
-        content: <Paragraph>
-          The auto-renew payment is on for your current or last subscription. You need to turn it off before changing a plan.
-        </Paragraph>
-      });
-      return;
-    }
-
-    if (currentSubscription) {
-      setPlanType(subscription.key);
-      setModalVisible(true);
-    } else {
-      setPlanType(subscription.key);
-      setModalVisible(true);
-    }
+  const handleBuyLicense = () => {
+    setModalVisible(true);
   }
 
   const handlePaymentOk = async () => {
@@ -139,9 +119,9 @@ const OrgAccountPage = (props) => {
     xs: 24,
     sm: 24,
     md: 24,
-    lg: 8,
-    xl: 8,
-    xxl: 8
+    lg: 12,
+    xl: 12,
+    xxl: 12
   } : {
     xs: 24,
     sm: 24,
@@ -170,26 +150,13 @@ const OrgAccountPage = (props) => {
                   The new plan will take effect right after all your alive subscriptions end.
               </>} />}
               {!currentSubscription && <Alert type="info" showIcon description={
-                <FormattedMessage id="text.freeToPaidSuggestion"/>
+                <FormattedMessage id="text.freeToPaidSuggestion" />
               } />}
               <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
-                <StyledRow gutter={[30, 30]} style={{ maxWidth: isCurrentFree ? 900 : 700 }}>
-                  {subscriptionDef.filter(x => x.key !== 'trial' || isCurrentFree).map(s => <StyledCol key={s.key} {...priceCardSpan}>
-                    <SubscriptionCard
-                      title={s.title}
-                      icon={s.icon}
-                      description={s.description}
-                      onClick={() => handleChangePlan(s)}
-                      price={s.price}
-                      active={s.key === currentPlanKey}
-                      interactive={s.key !== 'trial'}
-                      recurring={currentSubscription?.lastRecurring}
-                      unit={s.unit} />
-                  </StyledCol>)}
-                </StyledRow>
+                <Title><TextLink underline onClick={handleBuyLicense}>Buy more licenses</TextLink></Title>
               </div>
             </Space>
-            {subscriptionHistory?.length > 0 && <OrgSubscriptionHistoryPanel data={subscriptionHistory} />}
+            <OrgSubscriptionHistoryPanel data={subscriptionHistory} />
           </Card>
           <Card
             bordered={false}
@@ -200,13 +167,13 @@ const OrgAccountPage = (props) => {
           >
             <Space style={{ width: '100%', justifyContent: 'space-between' }}>
               <Paragraph type="secondary">
-              <FormattedMessage id="text.commissionBalanceDescription1" /><br/>
-              <FormattedMessage id="text.commissionBalanceDescription2" values={{amount: <MoneyAmount value={account.referralCommission * 29} />}}/><br/>
-                <FormattedMessage id="text.commissionBalanceDescription3" values={{amount: <MoneyAmount value={account.referralCommission * 319} />}}/>
-                </Paragraph>
+                <FormattedMessage id="text.commissionBalanceDescription1" /><br />
+                <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommission * 29} /> }} /><br />
+                <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommission * 319} /> }} />
+              </Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
-              <FormattedMessage id="text.creditHistory" />
+                <FormattedMessage id="text.creditHistory" />
               </Button>
             </Space>
           </Card>
@@ -225,7 +192,6 @@ const OrgAccountPage = (props) => {
         onCancel={handleCancelPayment}
       >
         <PaymentStepperWidget
-          planType={planType}
           onComplete={handlePaymentOk}
           onLoading={loading => setPaymentLoading(loading)}
         />
