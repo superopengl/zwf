@@ -35,7 +35,7 @@ const ProfileForm = (props) => {
 
   return (
     <Container>
-      <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user}>
+      <Form layout="vertical" onFinish={handleSave} style={{ textAlign: 'left' }} initialValues={user} requiredMark={false}>
         <Form.Item
           name="avatarFileId"
           className="avatar-field"
