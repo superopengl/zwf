@@ -200,30 +200,25 @@ const OrgTaskPage = React.memo(() => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <Row gutter={[30, 30]} wrap={false}>
+        <Row gutter={[50, 40]} wrap={false} style={{paddingTop: 30}}>
           <Col flex="2 2 400px">
-            <Row gutter={[20, 20]}>
+            <Row gutter={[40, 40]}>
               <Col span={24}>
                 <OrgTaskDocListPanel task={task} onChange={() => load$()} />
               </Col>
-              <Col flex="1 1 300px">
-                <Row gutter={[20, 20]}>
-                  <Col span={24}>
-                    <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
-                      {task?.fields.length > 0 ?
-                        <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
-                        <Row justify="center">
-                          <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
-                        </Row>
-                      }
-                    </ProCard>
-                  </Col>
-
-                </Row>
+              <Col span={24}>
+                <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
+                  {task?.fields.length > 0 ?
+                    <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
+                    <Row justify="center">
+                      <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
+                    </Row>
+                  }
+                </ProCard>
               </Col>
             </Row>
           </Col>
-          <Col flex="0 0 300px">
+          <Col flex="0 0 340px">
             <ProCard ghost>
               <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
               <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
