@@ -1,6 +1,6 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { Typography, Button, Alert, Divider, Input, Card } from 'antd';
+import { Typography, Button, Divider, Input, Card } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { Space } from 'antd';
@@ -16,7 +16,7 @@ import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
 import { InputNumber } from 'antd';
 
-const { Title, Text } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 const PaymentStepperWidget = (props) => {
 
@@ -81,6 +81,10 @@ const PaymentStepperWidget = (props) => {
     setCurrentStep(current);
   }
 
+  const handlePayByNewCard = () => {
+
+  }
+
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
@@ -95,7 +99,7 @@ const PaymentStepperWidget = (props) => {
           <Text>Total price:</Text>
           {paymentDetail ? <MoneyAmount value={paymentDetail.price} /> : '-'}
         </Space>
-        <Divider/>
+        <Divider />
         {paymentDetail?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text>Deduction (from previous unfinished subscription):</Text>
           <MoneyAmount value={paymentDetail.creditBalance * -1} />
@@ -131,8 +135,21 @@ const PaymentStepperWidget = (props) => {
     },
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Text strong>Total payable amount:</Text>
+          {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.payable} /> : '-'}
+        </Space>
+        <Divider><Text type="secondary"><small>saved methods</small></Text></Divider>
         <Button block type="primary">Use card XXXX</Button>
-        <Button block type="link">Add new payment method</Button>
+        <Divider><Text type="secondary"><small>or new method</small></Text></Divider>
+
+        <StripeCardPaymentWidget
+          onComplete={handlePayByNewCard}
+          onLoading={loading => setLoading(loading)}
+        />
+        <Paragraph type="secondary">
+          Please notice this card will be added to the payment methods once the payment succeeds, for future auto renew payment automatically.
+          </Paragraph>
       </Space>
     },
     {

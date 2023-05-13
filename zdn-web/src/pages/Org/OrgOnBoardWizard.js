@@ -12,7 +12,6 @@ import { isValidABN, isValidACN } from "abnacn-validator";
 import * as tfn from 'tfn';
 import { getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
 import { Loading } from 'components/Loading';
-import StripeCardPaymentWidget from './StripeCardPaymentWidget';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -124,13 +123,13 @@ const OrgOnBoardWizard = (props) => {
     {
       title: 'Payment',
       content: <div>
-         <Alert
+         {/* <Alert
           type="info" description="Credit card information is required when opt-in auto renew. When each renew payment happens, system will try to use your credit as much over charging your card." showIcon />
         <StripeCardPaymentWidget
           onProvision={() => {}}
           onCommit={() => {}}
           onLoading={() => {}}
-        />
+        /> */}
         <Form layout="vertical" form={configForm} onFinish={handleSubmitConfig} style={{ textAlign: 'left' }} initialValues={org}>
       <Form.Item label="Organisation name"
         name="name"
