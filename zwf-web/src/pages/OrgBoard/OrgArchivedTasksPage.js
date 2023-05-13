@@ -9,6 +9,7 @@ import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { TaskSearchFilterButton } from 'pages/OrgBoard/TaskSearchFilterButton';
 
 const { Link: TextLink } = Typography;
 
@@ -26,7 +27,6 @@ const DEFAULT_QUERY = {
   page: 1,
   size: 200,
   total: 0,
-  status: ['todo', 'in_progress', 'action_required', 'done'],
   orderField: 'updatedAt',
   orderDirection: 'DESC'
 };
@@ -92,15 +92,15 @@ const OrgArchivedTasksPage = () => {
       fixedHeader
       title='Archived Tasks'
       extra={[
+        <TaskSearchFilterButton
+        storeKey='tasks.filter.archived'
+        onChange={handleFilterSearch}
+        defaultQuery={DEFAULT_QUERY} />,
         <Tooltip key="refresh" title="Refresh">
           <Button icon={<SyncOutlined />} onClick={handleReload} />
         </Tooltip>,
       ]}
     >
-      <Card>
-        <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} showStatusFilter={false} span={6} />
-      </Card>
-
 
       <LayoutStyled direction="vertical" size="large">
         <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} archivedMode={true} />

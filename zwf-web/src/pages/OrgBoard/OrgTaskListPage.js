@@ -17,6 +17,7 @@ import { Drawer } from 'antd';
 import { TaskSearchDrawer } from './TaskSearchDrawer';
 import { TaskBoardContext } from 'contexts/TaskBoardContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { TaskSearchFilterButton } from 'pages/OrgBoard/TaskSearchFilterButton';
 
 const { Link: TextLink } = Typography;
 
@@ -145,18 +146,13 @@ const OrgTaskListPage = () => {
             },
           ]}
         />,
-        <Tooltip key="filter" title="Filter">
-          <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
-        </Tooltip>,
+        <TaskSearchFilterButton
+          storeKey='tasks.filter'
+          onChange={handleFilterSearch}
+          defaultQuery={DEFAULT_QUERY} />,
         <Button type="primary" key="new" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
-      <TaskSearchDrawer
-        open={filterVisible}
-        onClose={() => setFilterVisible(false)}
-        queryInfo={queryInfo}
-        onSearch={handleFilterSearch}
-      />
 
       <LayoutStyled direction="vertical" size="large">
         {!messageClosed && message && <Alert type="warning" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}
