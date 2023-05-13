@@ -1,4 +1,4 @@
-import { httpGet, httpPost, request } from './http';
+import { httpGet, httpPost, request, httpPost$ } from './http';
 
 export async function downloadReceipt(paymentId) {
   const path = `subscription/${paymentId}/receipt`;
@@ -29,8 +29,8 @@ export async function confirmSubscriptionPayment(paymentId, payload) {
   return httpPost(`subscription/payment/${paymentId}/confirm`, payload);
 }
 
-export async function calculatePaymentDetail(seats, promotionCode) {
-  return httpPost(`subscription/preview`, { seats, promotionCode });
+export function calculatePaymentDetail$(seats, promotionCode) {
+  return httpPost$(`subscription/preview`, { seats, promotionCode });
 }
 
 export async function fetchStripeCheckoutSession() {

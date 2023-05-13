@@ -4,6 +4,7 @@ import { Payment } from '../entity/Payment';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { getUtcNow } from './getUtcNow';
 import { User } from '../entity/User';
+import { Subscription } from '../entity/Subscription';
 
 
 export async function commitSubscription(payment: Payment) {
@@ -14,6 +15,8 @@ export async function commitSubscription(payment: Payment) {
     const subscription = payment.subscription;
     subscription.status = SubscriptionStatus.Alive;
     const { orgId } = subscription;
+
+    await m.update(Subscription, { orgId, status: SubscriptionStatus.Alive }, { status: SubscriptionStatus.Terminated });
 
     await m.save(payment);
 

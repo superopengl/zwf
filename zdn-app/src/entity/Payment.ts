@@ -27,9 +27,6 @@ export class Payment {
   amount: number;
 
   @Column({ nullable: true })
-  stripeCustomerId?: string;
-
-  @Column({ nullable: true })
   stripePaymentMethodId?: string;
 
   @Column('json', { nullable: true })

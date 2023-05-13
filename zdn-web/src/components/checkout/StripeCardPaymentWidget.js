@@ -23,6 +23,7 @@ const StripeCardPaymentForm = (props) => {
   const isInfoComplete = stripe && elements && cardNumberComplete && cardExpiryComplete && cardCvcComplete;
 
   const handleSubmit = async (event) => {
+    debugger;
     event.preventDefault();
 
     if (!isInfoComplete) {
@@ -35,6 +36,7 @@ const StripeCardPaymentForm = (props) => {
 
       const paymentInfo = await onProvision();
       const { clientSecret, paymentId } = paymentInfo;
+      debugger;
 
       // Use your card Element with other Stripe.js APIs
       const rawResponse = await stripe.confirmCardSetup(clientSecret,
@@ -43,6 +45,8 @@ const StripeCardPaymentForm = (props) => {
             card: cardNumberElement,
           }
         });
+
+       console.log('>>>', rawResponse);
 
       const { error } = rawResponse;
 

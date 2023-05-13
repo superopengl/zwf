@@ -34,9 +34,6 @@ export class Subscription {
   @Column({ default: true })
   recurring: boolean;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer() })
-  totalPrice: number;
-
   @Column('date')
   start: Date;
 

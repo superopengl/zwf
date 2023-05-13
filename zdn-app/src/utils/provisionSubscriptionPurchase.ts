@@ -40,7 +40,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
 
     const { start, end } = await getSubscriptionPeriod(tran, orgId);
 
-    const { creditBalance, price } = await getNewSubscriptionPaymentInfo(tran.manager, orgId, seats, promotionCode);
+    const { creditBalance, price, payable } = await getNewSubscriptionPaymentInfo(tran.manager, orgId, seats, promotionCode);
 
     const subscription = new Subscription();
     subscription.id = uuidv4();
@@ -48,16 +48,19 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.type = SubscriptionType.Montly;
     subscription.start = start;
     subscription.end = end;
+    subscription.seats = seats;
     subscription.recurring = true;
     subscription.status = SubscriptionStatus.Provisioning;
     await tran.manager.save(subscription);
 
-    const creditTransaction = new CreditTransaction();
-    assert(price <= creditBalance, 400, 'No enough credit balance');
-    creditTransaction.orgId = orgId;
-    creditTransaction.amount = -1 * price;
-    creditTransaction.type = 'user-pay';
-    await tran.manager.save(creditTransaction);
+    let creditTransaction = null;
+    if (creditBalance > 0) {
+      creditTransaction = new CreditTransaction();
+      creditTransaction.orgId = orgId;
+      creditTransaction.amount = -1 * (price - payable);
+      creditTransaction.type = 'user-pay';
+      await tran.manager.save(creditTransaction);
+    }
 
     const paymentId = uuidv4();
     payment = new Payment();
@@ -66,7 +69,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     payment.start = start;
     payment.end = end;
     payment.paidAt = null;
-    payment.amount = price;
+    payment.amount = payable;
     payment.status = PaymentStatus.Pending;
     payment.auto = false;
     payment.geo = await getRequestGeoInfo(expressReq);

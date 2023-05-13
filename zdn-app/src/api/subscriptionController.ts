@@ -15,6 +15,7 @@ import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await getRepository(Subscription).find({
@@ -134,8 +135,11 @@ export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
 
   assert(payment, 404);
 
-  const { stripePaymentMethodId } = req.body;
-  payment.stripePaymentMethodId = stripePaymentMethodId;
+  const { paymentMethodId } = req.body;
+  const paymentMethod = await getRepository(OrgPaymentMethod).findOne(paymentMethodId);
+  assert(paymentMethod, 404, 'Payment method cannot be found');
+
+  payment.stripePaymentMethodId = paymentMethod.stripePaymentMethodId;
   const rawResponse = await chargeStripeForCardPayment(payment, true);
   payment.rawResponse = rawResponse;
   await commitSubscription(payment);
