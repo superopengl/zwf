@@ -40,7 +40,7 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
   if (user) {
     const { email } = user;
     currentUserInfo = await getActiveUserInformation(db.manager, email);
-    if (currentUserInfo.suspended) {
+    if (currentUserInfo?.suspended) {
       clearJwtCookie(res);
       currentUserInfo = null;
     } else {

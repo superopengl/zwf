@@ -738,7 +738,7 @@ paths:
         200:
           description: OK
     get:
-      operationId: listMyTasks
+      operationId: listMyCases
       # security:
       #   - authLoggedInUser: []
       responses:
@@ -895,7 +895,34 @@ paths:
           required: true        
       responses:
         200:
-          description: OK      
+          description: OK    
+  /task/{id}/watch:
+    get:
+      operationId: listMyWatchedTasks
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true        
+      responses:
+        200:
+          description: OK    
+    post:
+      operationId: watchTask
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true        
+      responses:
+        200:
+          description: OK              
   /task/{id}/field/value:
     post:
       operationId: saveTaskFieldValue

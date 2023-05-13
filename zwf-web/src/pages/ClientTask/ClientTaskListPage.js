@@ -227,7 +227,7 @@ export const ClientTaskListPage = () => {
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
-                There is no active cases now.
+                There is no active cases now. 
               </Paragraph>
             </div>
           }}

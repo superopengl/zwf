@@ -1,20 +1,14 @@
-import { Button, Row, Space, Pagination, Radio, Tooltip, Alert, Typography, Card, Segmented } from 'antd';
+import { Button, Space, Pagination, Tooltip, Typography, Card } from 'antd';
 import React from 'react';
 import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { catchError, finalize } from 'rxjs/operators';
-import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
-import Icon, { FilterFilled, PlusOutlined, SyncOutlined } from '@ant-design/icons';
-import { TaskBoardPanel } from './TaskBoardPanel';
+import { finalize } from 'rxjs/operators';
+import { SyncOutlined } from '@ant-design/icons';
 import { TaskListPanel } from './TaskListPanel';
 import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
-import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
-import { MdDashboardCustomize } from 'react-icons/md';
-import { Drawer } from 'antd';
-import { TaskSearchDrawer } from './TaskSearchDrawer';
 
 const { Link: TextLink } = Typography;
 
@@ -37,14 +31,11 @@ const DEFAULT_QUERY = {
   orderDirection: 'DESC'
 };
 
-const TASK_BOARD_VIEW_WARNING = 'task.boardView.closed';
-
 const OrgArchivedTasksPage = () => {
   useAssertRole(['admin', 'agent']);
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
   const [queryInfo, setQueryInfo] = useLocalstorageState(TASK_QUERY_KEY, DEFAULT_QUERY);
-  const [filterVisible, setFilterVisible] = React.useState(false);
 
   React.useEffect(() => {
     const subscription = reloadWithQueryInfo$(queryInfo)

@@ -29,10 +29,10 @@ import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
-import { TaskTagsTag } from '../entity/TaskTagsTag';
-import { existsQuery } from '../utils/existsQuery';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 import { TaskWatcher } from '../entity/TaskWatcher';
+import { searchTaskList } from '../utils/searchTaskList';
+import { addTaskWatcher } from '../utils/addWTaskWatcher';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -140,6 +140,53 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const watchTask = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { watch } = req.body;
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
+
+  await db.transaction(async m => {
+    await m.getRepository(Task).findOneByOrFail({
+      id,
+      orgId,
+    });
+
+    if (watch) {
+      // watch task
+      await addTaskWatcher(m, id, userId, 'watch');
+    } else {
+      // unwatch task
+      await m.getRepository(TaskWatcher).delete({
+        taskId: id,
+        userId,
+      })
+    }
+  });
+
+  res.json();
+});
+
+export const listMyWatchedTasks = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
+  const role = getRoleFromReq(req);
+
+  const condition: ISearchTaskQuery = {
+    ...defaultSearch,
+    ...req.body,
+    watchedOnly: true
+  };
+
+  const result = await searchTaskList(userId, role, orgId, condition);
+
+  res.json(result);
+});
+
+
+
 export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { fields } = req.body;
@@ -198,7 +245,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-interface ISearchTaskQuery {
+export interface ISearchTaskQuery {
   text?: string;
   page?: number;
   size?: number;
@@ -207,6 +254,7 @@ interface ISearchTaskQuery {
   femplateId?: string;
   tags?: string[];
   clientId?: string;
+  watchedOnly: boolean;
   dueDateRange?: [string, string];
   orderField?: string;
   orderDirection?: 'ASC' | 'DESC';
@@ -216,6 +264,7 @@ const defaultSearch: ISearchTaskQuery = {
   page: 1,
   size: 50,
   status: [TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE],
+  watchedOnly: false,
   orderField: 'updatedAt',
   orderDirection: 'DESC'
 };
@@ -224,65 +273,16 @@ const defaultSearch: ISearchTaskQuery = {
 export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
+  const role = getRoleFromReq(req);
+  const userId = getUserIdFromReq(req);
+  const orgId = getOrgIdFromReq(req);
 
-  const { text, status, page, assigneeId, orderDirection, orderField, femplateId, tags, clientId } = option;
-  const size = option.size;
-  const skip = (page - 1) * size;
-  const { role, id } = (req as any).user;
-  const isClient = role === Role.Client;
+  const result = await searchTaskList(userId, role, orgId, option);
 
-  let query = db.manager
-    .createQueryBuilder()
-    .from(TaskInformation, 'x')
-    .where(`1 = 1`, { tags });
-  if (isClient) {
-    query = query.andWhere(`x."userId" = :id`, { id });
-  } else {
-    const orgId = getOrgIdFromReq(req);
-    query = query.andWhere(`x."orgId" = :orgId`, { orgId });
-  }
-  if (status?.length) {
-    query = query.andWhere(`x.status IN (:...status)`, { status });
-  }
-  if (assigneeId) {
-    query = query.andWhere('x."assigneeId" = :assigneeId', { assigneeId });
-  }
-  if (femplateId) {
-    query = query.andWhere(`x."femplateId" = :femplateId`, { femplateId });
-  }
-  if (tags?.length) {
-    query = query.andWhere(
-      existsQuery(
-        query.createQueryBuilder()
-          .from(TaskTagsTag, 'ttt')
-          .where(`ttt."tagId" IN (:...tags)`)
-          .andWhere(`x.id = ttt."taskId"`)
-      )
-    );
-  }
-  if (clientId) {
-    query = query.andWhere(`x."orgClientId" = :clientId`, { clientId });
-  }
-
-  if (text) {
-    if (isClient) {
-      query = query.andWhere('(x.name ILIKE :text OR x."femplateName" ILIKE :text)', { text: `%${text}%` });
-    } else {
-      query = query.andWhere('(x.name ILIKE :text OR x."femplateName" ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
-    }
-  }
-
-  const total = await query.getCount();
-  const list = await query
-    .orderBy(`"${orderField}"`, orderDirection)
-    .offset(skip)
-    .limit(size)
-    .execute();
-
-  res.json({ data: list, pagination: { page, size, total } });
+  res.json(result);
 });
 
-export const listMyTasks = handlerWrapper(async (req, res) => {
+export const listMyCases = handlerWrapper(async (req, res) => {
   assertRole(req, ['client']);
   const userId = getUserIdFromReq(req);
 
@@ -553,17 +553,7 @@ export const assignTask = handlerWrapper(async (req, res) => {
     await m.update(Task, { id, orgId }, { assigneeId });
 
     if (assigneeId) {
-      const taskWatchlist = new TaskWatcher();
-      taskWatchlist.taskId = id;
-      taskWatchlist.userId = assigneeId;
-      taskWatchlist.reason = 'assignee';
-
-      await m.createQueryBuilder()
-        .insert()
-        .into(TaskWatcher)
-        .values(taskWatchlist)
-        .orIgnore()
-        .execute();
+      await addTaskWatcher(m, id, assigneeId, 'assignee');
     } else {
       // Unassign
       await m.delete(TaskWatcher, { taskId: id, userId: assigneeId, reason: 'assignee' });
@@ -782,3 +772,5 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
 
   res.json(taskDoc);
 });
+
+

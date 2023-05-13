@@ -30,6 +30,7 @@ export const TaskSearchDrawer = (props) => {
       placement='right'
       footer={<Button type="primary" onClick={handleSearch}>Search</Button>}
     >
+      <DebugJsonPanel value={queryInfo} />
       <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} />
     </Drawer>
   )
