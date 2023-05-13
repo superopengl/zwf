@@ -21,16 +21,20 @@ export const TaskSearchDrawer = (props) => {
     onClose();
   }
 
+  const handleOnClose = () => {
+    onSearch(queryInfo);
+    onClose();
+  }
+
   return (
     <Drawer
       open={open}
-      onClose={onClose}
+      onClose={handleOnClose}
       title="Task Filter"
-      destroyOnClose
+      destroyOnClose={false}
       placement='right'
-      footer={<Button type="primary" onClick={handleSearch}>Search</Button>}
+    // footer={<Button type="primary" onClick={handleSearch}>Search</Button>}
     >
-      <DebugJsonPanel value={queryInfo} />
       <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} />
     </Drawer>
   )
