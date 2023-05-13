@@ -22,7 +22,7 @@ const Container = styled.div`
 
 export const FormSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, mode, onChange, disabled } = props;
+  const { fields, mode, onChange, disabled, requiredMark } = props;
 
   // fields.sort((a, b) => a.ordinal - b.ordinal);
 
@@ -42,7 +42,7 @@ export const FormSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   return <Container>
     <BetaSchemaForm
       layoutType='Form'
-      requiredMark="optional"
+      requiredMark={requiredMark}
       formRef={ref}
       columns={fieldSchema}
       onValuesChange={handleFormValueChange}
@@ -72,6 +72,7 @@ FormSchemaRenderer.propTypes = {
   disabled: PropTypes.bool,
   mode: PropTypes.oneOf(['agent', 'client', 'profile']),
   onChange: PropTypes.func,
+  requiredMark: PropTypes.oneOf([true, false, 'optional']),
 };
 
 FormSchemaRenderer.defaultProps = {
@@ -79,5 +80,6 @@ FormSchemaRenderer.defaultProps = {
   disabled: false,
   mode: 'agent',
   onChange: (changedValues, allValues) => { },
+  requiredMark: 'optional'
 };
 

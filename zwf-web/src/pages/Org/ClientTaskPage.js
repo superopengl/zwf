@@ -28,7 +28,7 @@ import { getPendingSignTaskDocs } from 'util/getPendingSignTaskDocs';
 import { ClientTaskCommentDrawer } from 'components/ClientTaskCommentDrawer';
 import { highlightGlow } from '../../util/highlightGlow';
 import { AiOutlineForm } from 'react-icons/ai';
-import { FaSignature } from 'react-icons/fa';
+import { RiQuillPenFill } from 'react-icons/ri';
 import { BiComment, BiCommentDetail } from 'react-icons/bi';
 
 const { Text } = Typography;
@@ -254,7 +254,7 @@ const ClientTaskPage = (props) => {
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
         {docsToSign.length > 0 && <Badge showZero={true} count={docsToSign.length}>
-          <Button size={buttonSize} icon={<Icon component={FaSignature} />} 
+          <Button size={buttonSize} icon={<Icon component={RiQuillPenFill} />} 
           type={activePanel === 'sign' ? 'primary' : 'text'}
           ghost={activePanel === 'sign'}
           onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>

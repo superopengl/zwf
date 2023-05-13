@@ -115,7 +115,7 @@ const OrgMemberListPage = () => {
                 onClick: () => handleDelete(item),
                 disabled: item.orgOwner
               },
-            ].filter(x => !!x)}
+            ]}
           />
         )
       },
@@ -156,28 +156,6 @@ const OrgMemberListPage = () => {
     });
   }
 
-  const handleImpersonante = (item) => {
-    // setSetPasswordVisible(true);
-    // setCurrentUser(item);
-    modal.confirm({
-      title: 'Impersonate',
-      icon: <QuestionOutlined />,
-      content: <UserNameCard userId={item.id} />,
-      okText: 'Yes, impersonate',
-      maskClosable: true,
-      onOk: () => {
-        impersonate$(item.id)
-          .subscribe(impersonatedUser => {
-            setAuthUser(impersonatedUser, '/landing');
-            // reactLocalStorage.clear();
-            // window.location = '/';
-          });
-      },
-      cancelButtonProps: {
-        type: 'text'
-      },
-    })
-  }
 
   const handleResendInvite = (item) => {
     reinviteMember$(item.email, true).subscribe(() => {

@@ -104,7 +104,10 @@ export const OrgClientFieldsPanel = (props) => {
         </Col>
         <Col flex="50%">
           <ProCard bordered={true}>
-          {fields?.length > 0 ? <FormSchemaRenderer fields={fields} mode="profile" onChange={handleFieldsChange} /> : <Text type="secondary">Start setting profile by selecting a template from the left dropdown.</Text>}
+          {fields?.length > 0 ? <FormSchemaRenderer 
+          fields={fields} 
+          requiredMark={false}
+          mode="profile" onChange={handleFieldsChange} /> : <Text type="secondary">Start setting profile by selecting a template from the left dropdown.</Text>}
           </ProCard>
         </Col>
 
