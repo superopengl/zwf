@@ -24,6 +24,7 @@ import { useAuthUser } from 'hooks/useAuthUser';
 import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Text, Title, Paragraph, Link: TextLink } = Typography;
 
@@ -55,9 +56,9 @@ const getNotificationMessage = notification => {
 export const NotificationButton = (props) => {
   const { supportOpen, onSupportOpen } = props;
   const [changedTasks, setChangedTasks] = React.useState([]);
-  const [list, setList] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
+  const { notifications, setNotifications } = React.useContext(GlobalContext);
 
   const userId = user.id;
 
@@ -66,7 +67,7 @@ export const NotificationButton = (props) => {
   const load$ = () => {
     return getMyNotifications$()
       .pipe()
-      .subscribe(setList);
+      .subscribe(setNotifications);
     // .subscribe(result => {
     //   setChangedTasks(result.changedTasks);
     //   setUnreadSupportMsgCount(result.unreadSupportMsgCount);
@@ -89,6 +90,9 @@ export const NotificationButton = (props) => {
       if (!supportOpen) {
         setUnreadSupportMsgCount(pre => pre + 1)
       }
+    } else if (z.type === 'task') {
+
+
     } else {
       const exists = changedTasks.some((t => t.taskId === z.taskId));
       if (!exists) {
@@ -104,7 +108,7 @@ export const NotificationButton = (props) => {
     const { taskId, type } = item;
 
     item.clicked = true;
-    setList([...list]);
+    setNotifications([...notifications]);
     navigate(`/task/${taskId}`, { state: { type } });
     ackTaskEventNotification$(taskId, type).subscribe({
       // next: () => load$(),
@@ -113,7 +117,7 @@ export const NotificationButton = (props) => {
   }
 
   const items = [];
-  list.forEach((x, i) => {
+  notifications.forEach((x, i) => {
     const item = {
       key: i,
       // icon: <Icon component={MdDashboard} />,
@@ -157,7 +161,7 @@ export const NotificationButton = (props) => {
   }
 
   return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
-    <Badge showZero={false} count={list.filter(x => !x.ackAt).length} offset={[-4, 6]}>
+    <Badge showZero={false} count={notifications.filter(x => !x.ackAt).length} offset={[-4, 6]}>
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={handleClick} />
     </Badge>
   </Dropdown>

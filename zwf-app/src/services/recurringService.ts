@@ -1,6 +1,6 @@
 import { db } from './../db';
 import { UserInformation } from './../entity/views/UserInformation';
-import { createTaskForClientByFemplate } from '../utils/createTaskForClientByFemplate';
+import { createTaskForClient } from '../utils/createTaskForClient';
 import { Recurring } from '../entity/Recurring';
 import { assert } from '../utils/assert';
 import { TaskStatus } from '../types/TaskStatus';
@@ -29,7 +29,7 @@ export async function executeRecurring(m: EntityManager, recurring: Recurring, e
 
   const taskName = `${name} ${moment().format('D MMM YYYY')}`;
 
-  const task = await createTaskForClientByFemplate(m, femplateId, taskName, orgClientId, executorId, null, orgId);
+  const task = await createTaskForClient(m, femplateId, taskName, orgClientId, executorId, null, orgId);
   task.status = TaskStatus.TODO;
   
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);

@@ -1,6 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Task } from './Task';
 import { OrgClient } from './OrgClient';
+import { TaskWatcherReason } from "../types/TaskWatcherReason";
 
 
 
@@ -18,7 +19,7 @@ export class TaskWatcher {
   createdAt: Date;
   
   @Column()
-  reason: 'watch' | 'assignee' | 'mentioned' | 'client';
+  reason: TaskWatcherReason;
 
   @ManyToOne(() => Task, task => task.watchers, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
