@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Button, Typography, Space } from 'antd';
-import { assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
+import { Layout, Skeleton, Row, Col, Button, Typography, Space, Tooltip } from 'antd';
+import { assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$, watchTask$ } from 'services/taskService';
 import { finalize } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
@@ -30,6 +30,7 @@ import { Divider } from 'antd';
 import { useRequestActionModal } from 'hooks/useRequestActionModal';
 import { MdEditNote } from 'react-icons/md';
 import { TbGitCommit } from 'react-icons/tb';
+import { IoNotificationsOffOutline, IoNotificationsOutline } from 'react-icons/io5';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -153,6 +154,12 @@ const OrgTaskPage = React.memo(() => {
     })
   }
 
+  const handleWatch = (watch) => {
+    watchTask$(task.id, watch).subscribe({
+      next: () => load$(),
+    });
+  };
+
   return (<>
     <ContainerStyled>
       {task && <PageHeaderContainer
@@ -235,6 +242,12 @@ const OrgTaskPage = React.memo(() => {
                 <Descriptions.Item label="Actions">
                   <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                     {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
+                    {!task.watched && <Tooltip title="By watching this task, you will be notified of the changes made to this task">
+                      <Button type="text" block icon={<Icon component={IoNotificationsOutline} />} onClick={() => handleWatch(true)}>Watch</Button>
+                      </Tooltip>}
+                    {task.watched && <Tooltip title="Stop being notified of the changes made to this task">
+                    <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
+                      </Tooltip>}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
                     <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments</Button>
                     <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>

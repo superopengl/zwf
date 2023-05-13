@@ -10,6 +10,10 @@ export function getTask$(id) {
   return httpGet$(`task/${id}`);
 }
 
+export function watchTask$(id, watch) {
+  return httpPost$(`task/${id}/watch`, { watch });
+}
+
 export function getDeepLinkedTask$(deepLinkId) {
   return httpGet$(`task/deep/${deepLinkId}`);
 }
