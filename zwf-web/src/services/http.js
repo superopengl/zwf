@@ -138,11 +138,11 @@ export function request$(method, path, queryParams, body, responseType = 'json')
       notify.error('Error', displayErrorMessage);
       console.error(e.response);
 
-      // stopOnError$.next();
+      stopOnError$.next();
       // throw e;
       return of(null);
     }),
-    // takeUntil(stopOnError$)
+    takeUntil(stopOnError$)
   );
 }
 
