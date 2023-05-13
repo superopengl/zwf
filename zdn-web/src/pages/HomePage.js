@@ -99,6 +99,7 @@ const HomePage = (props) => {
   const {role} = context;
 
   const isLoggedIn = role !== 'guest';
+  const isSystem = role === 'system';
 
   const ROUTES = [
     {
@@ -157,7 +158,7 @@ const HomePage = (props) => {
     rightContentRender={props => {
 
       if(isLoggedIn) {
-        return <Link to="/dashboard"><Button type="primary" ghost >
+        return <Link to={isSystem ? '/org' : '/dashboard'}><Button type="primary" ghost >
           <FormattedMessage id="menu.dashboard" />
           </Button></Link>
       }
