@@ -44,7 +44,6 @@ import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
-import { TaskEventLastSeen } from './entity/TaskEventLastSeen';
 import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 import { OrgTermination } from './entity/OrgTermination';
 import { OrgClientField } from './entity/OrgClientField';
@@ -217,7 +216,6 @@ export const db = new DataSource({
     LicenseTicket,
     OrgSubscriptionPeriod,
     NotificationMessage,
-    TaskEventLastSeen,
     TaskWatcherEventAck,
     TaskWatcher,
     // Views below

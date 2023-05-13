@@ -1,4 +1,3 @@
-import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskEvent } from '../entity/TaskEvent';
 import { TaskEventType } from '../types/TaskEventType';

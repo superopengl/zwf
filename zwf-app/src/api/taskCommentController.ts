@@ -11,7 +11,6 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { createTaskComment } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
 import { TaskEventType } from '../types/TaskEventType';
-import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
@@ -40,13 +39,6 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
         info: true,
       }
     });
-
-    await m.createQueryBuilder()
-      .insert()
-      .into(TaskEventLastSeen)
-      .values({ taskId: id, userId, lastSeenAt: () => `NOW()` })
-      .orUpdate(['lastSeenAt'], ['taskId', 'userId'])
-      .execute();
   });
 
 

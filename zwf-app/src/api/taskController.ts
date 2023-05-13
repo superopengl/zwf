@@ -28,7 +28,6 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
-import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 import { TaskWatcher } from '../entity/TaskWatcher';
 import { searchTaskList } from '../utils/searchTaskList';
