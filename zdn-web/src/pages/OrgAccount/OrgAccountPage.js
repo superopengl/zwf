@@ -184,10 +184,10 @@ const OrgAccountPage = (props) => {
         visible={modalVisible}
         closable={!paymentLoading}
         maskClosable={false}
-        title="Subscribe plan"
+        title="Buy licenses"
         destroyOnClose
         footer={null}
-        width={520}
+        width={420}
         onOk={handleCancelPayment}
         onCancel={handleCancelPayment}
       >

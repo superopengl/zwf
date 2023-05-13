@@ -129,7 +129,7 @@ const PaymentStepperWidget = (props) => {
         <Button type="primary" block
           size="large"
           style={{ marginTop: 20 }} onClick={() => handleStepChange(1)}>
-          Checkout
+          Payment method
         </Button>
       </Space>
     },
@@ -140,7 +140,7 @@ const PaymentStepperWidget = (props) => {
           {paymentDetail ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentDetail.payable} /> : '-'}
         </Space>
         <Divider><Text type="secondary"><small>saved methods</small></Text></Divider>
-        <Button block type="primary">Use card XXXX</Button>
+        <Button block size="large" type="primary">Use card XXXX</Button>
         <Divider><Text type="secondary"><small>or new method</small></Text></Divider>
 
         <StripeCardPaymentWidget
@@ -148,7 +148,7 @@ const PaymentStepperWidget = (props) => {
           onLoading={loading => setLoading(loading)}
         />
         <Paragraph type="secondary">
-          Please notice this card will be added to the payment methods once the payment succeeds, for future auto renew payment automatically.
+          This card will be added to the payment methods for future auto renew payment automatically.
           </Paragraph>
       </Space>
     },
