@@ -114,15 +114,16 @@ async function syncDatabaseSchema(db: DataSource) {
 }
 
 async function dropAllViewsAndMatviews() {
+  const { schema } = db.getRepository(User).metadata;
   const list = await db.manager.query(`
 select format('DROP VIEW IF EXISTS "%I"."%I" cascade;', schemaname, viewname) as sql
 from pg_catalog.pg_views
-where schemaname in (SELECT * FROM current_schema())
+where schemaname = '${schema}'
 union
 select format('DROP MATERIALIZED VIEW IF EXISTS "%I"."%I" cascade;', schemaname, matviewname) as sql
 from pg_catalog.pg_matviews
-where schemaname in (SELECT * FROM current_schema())
-  `);
+where schemaname = '${schema}'
+`);
 
   for (const item of list) {
     await db.manager.query(item.sql);
