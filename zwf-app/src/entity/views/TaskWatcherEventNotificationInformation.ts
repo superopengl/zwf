@@ -37,7 +37,7 @@ const events = [
     .distinctOn(['x."taskId"', 'x."type"'])
     .orderBy('x."taskId"', 'ASC')
     .addOrderBy('x.type', 'ASC')
-    .addOrderBy('x."eventAt"', 'DESC'),
+    .addOrderBy('x."createdAt"', 'DESC'),
   dependsOn: [TaskWatcherEventAckInformation]
 }) export class TaskWatcherEventNotificationInformation {
   @ViewColumn()
@@ -62,7 +62,7 @@ const events = [
   info: any;
 
   @ViewColumn()
-  eventAt: Date;
+  createdAt: Date;
 
   @ViewColumn()
   ackAt: Date;

@@ -276,6 +276,7 @@ const OrgTaskPage = React.memo(() => {
         open={commentsOpen}
         onClose={() => setCommentsOpen(false)}
         // mask={false}
+        placement='right'
         bodyStyle={{ padding: 0 }}
       >
         {task && <TaskCommentPanel taskId={task.id} />}

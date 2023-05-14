@@ -10,7 +10,7 @@ export const TaskLogDrawer = React.memo((props) => {
   return <Drawer
     open={open}
     onClose={onClose}
-    title={<>Logs</>}
+    title={<>Timeline</>}
     destroyOnClose={true}
     closable
     autoFocus
