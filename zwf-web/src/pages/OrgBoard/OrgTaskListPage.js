@@ -135,17 +135,14 @@ const OrgTaskListPage = () => {
           buttonStyle="solid"
           value={viewMode}
           onChange={e => setViewMode(e.target.value)}
-          options={[
-            {
-              label: <Icon component={HiViewBoards} />,
-              value: 'board'
-            },
-            {
-              label: <Icon component={HiViewList} />,
-              value: 'list'
-            },
-          ]}
-        />,
+        >
+          <Tooltip title="Task board view">
+            <Radio.Button value="board" ><Icon component={HiViewBoards} /></Radio.Button>
+          </Tooltip>
+          <Tooltip title="Task list view">
+            <Radio.Button value="list" ><Icon component={HiViewList} /></Radio.Button>
+          </Tooltip>
+        </Radio.Group>,
         <TaskSearchFilterButton
           storeKey='tasks.filter'
           onChange={handleFilterSearch}
