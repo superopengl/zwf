@@ -1,31 +1,26 @@
 export const notes=`
+fix notification
+fix drop view
+add tooltip
+task filter button
+hide termination
+bugfix for create task when no user associated orgClient
+terminate on error
+fix transaction
+watch/unwatch task
+remove TaskEventLastSeen
+return watched from task
+refine task search
+watchedOnly
 misc
-wording fix
+clients manually submit form
 ui refine
-gutter refine
-bugfix task rename
+save field bugfix
+timeline
+add demplate bugfix
+no glowing
+clean up
+set timezone to UTC
 refactoring
-misc
-client mobile view refine
-ui refine
-fix fixHeaader issue
-client page mobile view
-ui refine
-ui refine
-client glowing
-glow
-fix client view
-bugfix
-client 1 to many mapping to users
-wording
-notification
-refine notification db table
-refine
-ui refine
-notification bar
-watchlist
-fix task board update
-misc fix
-task events
-avoid hardcoded schema
-misc`
+refactoring
+clean up`
