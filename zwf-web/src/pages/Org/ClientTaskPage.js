@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert, Modal } from 'antd';
+import { Tag, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert, Modal } from 'antd';
 
 import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
@@ -219,7 +219,7 @@ const ClientTaskPage = () => {
         </Badge>}
       </Row>}
       extra={[
-        <small key="orgName"><Text type="secondary" strong={false}>by {task.orgName}</Text></small>
+        <Tag key="org">{task.orgName}</Tag>
         // <ZeventNoticeableBadge key="refresh"
         //   message="This task has changes. Click to refresh"
         //   filter={z => z.type === 'task.change' && z.taskId === task.id}

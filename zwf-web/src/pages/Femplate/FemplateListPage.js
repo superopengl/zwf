@@ -190,9 +190,9 @@ export const FemplateListPage = () => {
         locale={{
           emptyText: <div style={{ margin: '30px auto' }}>
             <Paragraph type="secondary">
-              There is no form template. Let's start creating one!
+              There is no form template. Let's <TextLink underline onClick={() => navigate("/femplate/new")}>create a new form template</TextLink>!
             </Paragraph>
-            <Link to="/femplate/new">Create new form template</Link>
+            
           </div>
         }}
         ghost={viewMode === 'grid'}

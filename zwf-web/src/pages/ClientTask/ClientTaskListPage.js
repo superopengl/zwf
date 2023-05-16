@@ -1,5 +1,5 @@
 import { ClearOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Space, Typography, Row, Col, List, Card, Select, Input, ConfigProvider } from 'antd';
+import { Badge, Tag, Button, Space, Typography, Row, Col, List, Card, Select, Input, ConfigProvider } from 'antd';
 import React from 'react';
 
 import { listClientTask$ } from '../../services/taskService';
@@ -16,6 +16,7 @@ import { HighlightingText } from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { TaskStatusTag } from 'components/TaskStatusTag';
+import { NotificationContext } from 'contexts/NotificationContext';
 
 const { Paragraph, Text } = Typography;
 
@@ -58,6 +59,7 @@ export const ClientTaskListPage = () => {
   const [searchText, setSearchText] = React.useState();
   const [query, setQuery] = useLocalstorageState(CLIENT_TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
   const navigate = useNavigate();
+  const { zevents } = React.useContext(NotificationContext);
 
   const load$ = () => {
     setLoading(true);
@@ -219,7 +221,7 @@ export const ClientTaskListPage = () => {
             md: 1,
             lg: 2,
             xl: 2,
-            xxl: 3
+            xxl: 2
           }}
           dataSource={filteredList}
           loading={loading}
@@ -227,15 +229,21 @@ export const ClientTaskListPage = () => {
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
-                There is no active cases now. 
+                There is no active cases now.
               </Paragraph>
             </div>
           }}
           rowKey="id"
           renderItem={item => <List.Item>
             <Card
-              title={<><HighlightingText value={item.name} search={query.text} /> <Text type="secondary"><small>by {item.orgName}</small></Text></>}
-              extra={<TaskStatusTag status={item.status} />}
+              title={<><HighlightingText value={item.name} search={query.text} /></>}
+              extra={[
+                <Tag key="org">{item.orgName}</Tag>,
+                <Badge key="count" showZero={false} 
+                count={zevents.filter(z => z.payload.taskId === item.id && !z.payload.ackAt).length} 
+                offset={[34, -36]}
+                />
+              ]}
               onClick={() => navigate(`/task/${item.id}`)}
               hoverable
               bordered={false}

@@ -48,10 +48,10 @@ const OrgMemberListPage = () => {
           <Text code>owner</Text> The superuser of the organization, as well as the user who registered this organization in ZeeWorkflow, has the same level of access to features as the <Text code>admin</Text> role.
         </Paragraph>
         <Paragraph>
-          <Text code>admin</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags. Moreover, they have the ability to manage team members and subscriptions, which includes handling billing, invoices, and payment methods.
+          <Text code>admin</Text> This user can access all the features related to tasks, recurring, templates, users, and tags. Moreover, they have the ability to manage team members and subscriptions, which includes handling billing, invoices, and payment methods.
         </Paragraph>
         <Paragraph>
-          <Text code>member</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags in the same manner as the <Text code>admin</Text> role.
+          <Text code>member</Text> This user can access all the features related to tasks, recurring, templates, users, and tags in the same manner as the <Text code>admin</Text> role.
         </Paragraph>
       </>,
       closable: true,

@@ -28,7 +28,7 @@
   "menu.pp": "Privacy Policy",
   "menu.femplate": "Form Template",
   "menu.demplate": "Doc Template",
-  "menu.scheduler": "Recurring",
+  "menu.recurring": "Recurring",
   "menu.procedure": "Procedure",
   "menu.metrics": "Metrics",
   "menu.org": "Orgs",

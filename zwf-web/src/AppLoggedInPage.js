@@ -74,7 +74,7 @@ const ROUTES = [
       // },
       {
         path: '/recurring',
-        name: <FormattedMessage id="menu.scheduler" />,
+        name: <FormattedMessage id="menu.recurring" />,
         icon: <ClockCircleOutlined />,
         roles: ['admin', 'agent'],
       },

@@ -129,9 +129,9 @@ export const ResourceEditListPage = props => {
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
-                There is no resources. Let's start creating one!
+                There is no resources. Let's <Link to="/manage/resource/new">create a new resource page</Link>!
               </Paragraph>
-              <Link to="/manage/resource/new">Create new resource page</Link>
+              
             </div>
           }}
           renderItem={item => <List.Item>
