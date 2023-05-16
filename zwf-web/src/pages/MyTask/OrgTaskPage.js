@@ -22,7 +22,7 @@ import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
-import { TaskLogDrawer } from 'components/TaskLogDrawer';
+import { TaskTimelineDrawer } from 'components/TaskTimelineDrawer';
 import { BsFillSendFill, BsFillTrash3Fill, BsInputCursorText } from 'react-icons/bs';
 import { Descriptions } from 'antd';
 import { Drawer } from 'antd';
@@ -273,7 +273,7 @@ const OrgTaskPage = () => {
           </Col>
         </Row>
       </PageHeaderContainer>}
-      {task && <TaskLogDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />}
+      {task && <TaskTimelineDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />}
       {saving && <SavingAffix />}
       {deepLinkContextHolder}
       {task && <Drawer

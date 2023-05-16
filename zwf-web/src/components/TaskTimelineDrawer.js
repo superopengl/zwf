@@ -2,9 +2,9 @@ import { Drawer } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { TaskLogPanel } from './TaskLogPanel';
+import { TaskTimelinePanel } from './TaskTimelinePanel';
 
-export const TaskLogDrawer = React.memo((props) => {
+export const TaskTimelineDrawer = React.memo((props) => {
   const { taskId, open, onClose, width } = props;
 
   return <Drawer
@@ -19,18 +19,18 @@ export const TaskLogDrawer = React.memo((props) => {
   // bodyStyle={{ padding: 0 }}
   // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <TaskLogPanel taskId={taskId} />
+    <TaskTimelinePanel taskId={taskId} />
   </Drawer>
 });
 
-TaskLogDrawer.propTypes = {
+TaskTimelineDrawer.propTypes = {
   taskId: PropTypes.string.isRequired,
   width: PropTypes.number,
   open: PropTypes.bool.isRequired,
   onClose: PropTypes.func,
 };
 
-TaskLogDrawer.defaultProps = {
+TaskTimelineDrawer.defaultProps = {
   width: 500,
   open: false,
   onClose: () => { },
