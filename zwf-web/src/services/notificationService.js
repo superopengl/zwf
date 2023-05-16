@@ -5,7 +5,7 @@ export function getMyNotifications$() {
   return httpGet$(`/notification`);
 }
 
-export function ackTaskEventNotification$(taskId, type) {
+export function ackTaskEventType$(taskId, type) {
   return httpPost$(`/notification`, { taskId, type });
 }
 

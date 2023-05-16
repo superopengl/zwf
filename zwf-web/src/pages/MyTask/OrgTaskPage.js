@@ -21,7 +21,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { TaskCommentPanel } from 'components/TaskCommentPanel';
+import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
 import { TaskLogDrawer } from 'components/TaskLogDrawer';
 import { BsFillSendFill, BsFillTrash3Fill, BsInputCursorText } from 'react-icons/bs';
 import { Descriptions } from 'antd';
@@ -35,6 +35,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { NotificationContext } from 'contexts/NotificationContext';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
+import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -275,16 +276,18 @@ const OrgTaskPage = () => {
       {task && <TaskLogDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />}
       {saving && <SavingAffix />}
       {deepLinkContextHolder}
-      <Drawer
+      {task && <Drawer
         title="Comments"
         open={commentsOpen}
         onClose={() => setCommentsOpen(false)}
         // mask={false}
+        destroyOnClose={true}
         placement='right'
         bodyStyle={{ padding: 0 }}
+        footer={<TaskCommentInputForm taskId={task.id} />}
       >
-        {task && <TaskCommentPanel taskId={task.id} />}
-      </Drawer>
+        <TaskCommentDisplayPanel taskId={task.id} />
+      </Drawer>}
       <div>
         {requestActionContextHolder}
       </div>

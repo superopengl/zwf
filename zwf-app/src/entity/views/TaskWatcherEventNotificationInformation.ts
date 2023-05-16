@@ -21,7 +21,7 @@ const events = [
   TaskEventType.ClientSubmit,
   TaskEventType.ClientSignDoc,
   TaskEventType.Comment,
-  TaskEventType.CreateByRecurring,
+  TaskEventType.CreatedByRecurring,
   TaskEventType.OrgStartProceed,
   TaskEventType.Assign,
   TaskEventType.Complete,

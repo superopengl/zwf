@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
 import { listTaskComment$ } from 'services/taskService';
-import { TaskCommentPanel } from './TaskCommentPanel';
+import { TaskCommentDisplayPanel } from './TaskCommentDisplayPanel';
 import { HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
 import { TaskLogPanel } from './TaskLogPanel';
@@ -30,7 +30,7 @@ export const ClientTaskCommentDrawer = React.memo((props) => {
   // bodyStyle={{ padding: 0 }}
   // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <TaskCommentPanel taskId={taskId} />
+    <TaskCommentDisplayPanel taskId={taskId} />
   </Drawer>
 });
 

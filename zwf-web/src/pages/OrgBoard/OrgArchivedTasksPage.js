@@ -93,6 +93,7 @@ const OrgArchivedTasksPage = () => {
       title='Archived Tasks'
       extra={[
         <TaskSearchFilterButton
+        key="search"
         storeKey='tasks.filter.archived'
         onChange={handleFilterSearch}
         defaultQuery={DEFAULT_QUERY} />,
