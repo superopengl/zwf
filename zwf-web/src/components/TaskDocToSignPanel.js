@@ -101,7 +101,7 @@ export const TaskDocToSignPanel = React.memo((props) => {
       locale={{ emptyText: 'No documents to sign currently' }}
     />
 
-    <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
+    {docsToSign.length > 0 && <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
       <Col>
         <Checkbox style={{ marginLeft: 8 }}
           checked={agreed}
@@ -120,7 +120,7 @@ export const TaskDocToSignPanel = React.memo((props) => {
           </Button>
         </Tooltip>
       </Col>
-    </Row>
+    </Row>}
     {signModalContextHolder}
   </Container>
 });
