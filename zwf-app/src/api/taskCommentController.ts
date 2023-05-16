@@ -32,7 +32,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
         createdAt: 'ASC'
       },
       select: {
-        id: true,
+        eventId: true,
         createdAt: true,
         by: true,
         type: true,
@@ -63,7 +63,7 @@ export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) =
     skip: (page - 1) * size,
     take: size,
     select: [
-      'id',
+      'eventId',
       'taskId',
       'taskName',
       'orgId',

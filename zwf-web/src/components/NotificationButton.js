@@ -26,6 +26,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { NotificationContext } from 'contexts/NotificationContext';
+import { groupBy, orderBy, sortBy } from 'lodash';
 
 const { Text, Title, Paragraph, Link: TextLink } = Typography;
 
@@ -67,30 +68,55 @@ export const NotificationButton = (props) => {
 
   const navigate = useNavigate();
 
+  /**
+   * Initial load
+   */
+
   const load$ = () => {
     return getMyNotifications$()
       .pipe()
       .subscribe(result => {
-        setList(result ?? [])
+        setZevents(result ?? [])
       });
-    // .subscribe(result => {
-    //   setChangedTasks(result.changedTasks);
-    //   setUnreadSupportMsgCount(result.unreadSupportMsgCount);
-    // });
   }
 
+  React.useEffect(() => {
+    const sub$ = load$();
+    return () => sub$.unsubscribe();
+  }, []);
+
+  /**
+   * Zevent source
+   */
   const filterZevent = React.useCallback(() => true, []);
 
   const handleZevent = React.useCallback(z => {
-    setList(pre => [...pre, z])
+    const { type, payload } = z;
+    switch (type) {
+      case 'taskEvent':
+        setZevents(pre => [...pre, z])
+        break;
+      case 'taskEvent.ack':
+        setZevents(pre => pre.filter(z => z.payload.eventId !== payload.eventId));
+        break;
+      case 'support':
+        break;
+      default:
+        break;
+    }
   }, []);
 
   useZevent(filterZevent, handleZevent, [user]);
 
   React.useEffect(() => {
-    const sub$ = load$();
-    return () => sub$.unsubscribe();
-  }, [])
+    const taskGropus = groupBy(zevents, z => z.payload.taskId);
+    const newList = Object.values(taskGropus).map(taskEvents => {
+      const first = orderBy(taskEvents, t => Date.parse(t.payload.createdAt), ['desc'])[0];
+      return first;
+    })
+    setList(newList);
+  }, [zevents]);
+
 
   React.useEffect(() => {
     if (supportOpen) {
@@ -131,10 +157,8 @@ export const NotificationButton = (props) => {
   // }, [supportOpen]);
 
   const handleItemClick = (item) => {
-    const { payload: {taskId, type} } = item;
+    const { payload: { taskId, type } } = item;
 
-    item.clicked = true;
-    setList([...list]);
     navigate(`/task/${taskId}`, { state: { type } });
     ackTaskEventNotification$(taskId, type).subscribe({
       // next: () => load$(),
@@ -149,10 +173,9 @@ export const NotificationButton = (props) => {
       // icon: <Icon component={MdDashboard} />,
       icon: <TaskIcon size={14} />,
       label: <StyledCompactSpace direction='vertical'>
-        <Text strong>{x.taskName}</Text>
-        <Text strong={!x.ackAt}>{getNotificationMessage(x)}</Text>
-        <TimeAgo strong={!x.ackAt} value={x.createdAt} direction="horizontal" />
-        <DebugJsonPanel value={x} />
+        <Text strong>{x.payload.taskName}</Text>
+        <Text strong={!x.payload.ackAt}>{getNotificationMessage(x)}</Text>
+        <TimeAgo strong={!x.payload.ackAt} value={x.payload.createdAt} direction="horizontal" />
       </StyledCompactSpace>,
       onClick: () => handleItemClick(x),
     };

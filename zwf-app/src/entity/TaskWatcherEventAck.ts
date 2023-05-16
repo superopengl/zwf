@@ -6,7 +6,7 @@ export class TaskWatcherEventAck {
   userId: string;
 
   @PrimaryColumn('uuid')
-  taskEventId: string;
+  eventId: string;
 
   @CreateDateColumn()
   ackAt: Date;

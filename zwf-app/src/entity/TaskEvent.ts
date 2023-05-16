@@ -6,7 +6,7 @@ import { TaskEventType } from '../types/TaskEventType';
 @Index('idx_task_event_taskId_type', ['taskId', 'type'])
 export class TaskEvent {
   @PrimaryGeneratedColumn('uuid')
-  id?: string;
+  eventId?: string;
 
   @CreateDateColumn()
   @Index()

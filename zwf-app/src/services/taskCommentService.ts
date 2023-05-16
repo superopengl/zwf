@@ -16,7 +16,7 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
   assert(task, 500);
   const comment = new TaskEvent();
   const { orgId, id: taskId } = task;
-  comment.id = uuidv4();
+  comment.eventId = uuidv4();
   comment.type = TaskEventType.Comment;
   comment.taskId = taskId;
   comment.by = by;
