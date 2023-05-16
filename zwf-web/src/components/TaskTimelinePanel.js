@@ -39,9 +39,9 @@ export const TaskTimelinePanel = React.memo((props) => {
         children: <Space direction='vertical'>
           <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} showTime={false} />
           <Space>
-            <Tag>{x.type}</Tag>
-            by
             <UserNameCard userId={x.by} showEmail={false} size={24} />
+            triggered
+            <Tag>{x.type}</Tag>
           </Space>
         </Space>
       }))}
