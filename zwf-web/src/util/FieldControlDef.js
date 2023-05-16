@@ -57,7 +57,7 @@ export function createFormItemSchema(field, mode = 'agent' | 'client' | 'profile
     dataIndex: field.id,
     initialValue: field.value,
     formItemProps: {
-      ...field.formItemProps,
+      ...controlDef.formItemProps,
       help: field.description,
       rules: [{ required: mode !== 'profile' && field.required && field.type !== 'instruction', whitespace: true }]
     },
@@ -208,7 +208,8 @@ export const FieldControlDef = Object.freeze([
     label: 'Instruction (help text)',
     icon: <FaHireAHelper />,
     formItemProps: {
-      label: null,
+      // label: null,
+      className: 'control-instruction-item',
     },
     hideInForm: true,
     fieldProps: {
