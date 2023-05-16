@@ -88,6 +88,10 @@ export const App = React.memo(() => {
   });
 
   React.useEffect(() => {
+    console.log('notifications', notifications);
+  }, [notifications]);
+
+  React.useEffect(() => {
     const sub$ = getAuthUser$()
       .pipe(
         finalize(() => setLoading(false))

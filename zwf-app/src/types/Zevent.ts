@@ -1,36 +1,20 @@
 import { TaskDoc } from './../entity/TaskDoc';
 import { TaskEvent } from '../entity/TaskEvent';
 import { SupportMessage } from '../entity/SupportMessage';
+import { TaskWatcherEventAck } from '../entity/TaskWatcherEventAck';
 
 export type Zevent = {
   type: 'support';
   userId: string;
-  by: string;
   payload: SupportMessage;
-// } | {
-//   type: 'task.fields';
-//   userId: string;
-//   taskId: string;
-//   orgId: string;
-//   payload: {
-//     taskId: string;
-//     fields: {[key: string]: any}
-//   };
-} | {
-  type: 'task.change';
-  userId: string;
-  taskId: string;
-  taskName: string;
-  orgId: string;
-  by: string;
 } | {
   type: 'taskEvent',
   userId: string,
-  taskEvent: TaskEvent,
+  payload: TaskEvent,
 } | {
   type: 'taskEvent.ack',
   userId: string,
-  taskEvent: TaskEvent,
+  payload: TaskWatcherEventAck,
 };;
 
 

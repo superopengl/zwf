@@ -52,7 +52,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, [aggregatedChangedFields]);
 
   const handleManualSubmit = async () => {
-    debugger;
     await ref.current.validateFields();
 
     saveTaskFieldValues$(task.id, changedFields)

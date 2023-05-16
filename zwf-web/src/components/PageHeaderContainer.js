@@ -50,7 +50,7 @@ export const PageHeaderContainer = React.memo((props) => {
   const screens = Grid.useBreakpoint();
   const narrowScreen = (screens.xs || screens.sm) && !screens.md;
 
-  console.log(screens)
+  // console.log(screens)
 
   return <Container style={{ ...style }}>
     <Breadcrumb style={{ padding: '1rem 40px 0' }}

@@ -17,6 +17,7 @@ import { TaskWatcherEventNotificationInformation } from '../entity/views/TaskWat
 import { TaskEvent } from '../entity/TaskEvent';
 import { TaskWatcherEventAck } from '../entity/TaskWatcherEventAck';
 import { assert } from '../utils/assert';
+import { emitTaskEventAcks } from '../utils/emitTaskEventAcks';
 
 const CLIENT_WATCH_EVENTS = [
   TaskEventType.RequestClientInputFields,
@@ -83,22 +84,9 @@ export const ackTaskEventNotification = handlerWrapper(async (req, res) => {
       select: {
         eventId: true
       }
-    })
-    const acks = taskEvents.map(x => {
-      const ack = new TaskWatcherEventAck();
-      ack.userId = userId;
-      ack.taskEventId = x.eventId;
-      return ack;
     });
 
-    if (acks.length) {
-      await m.createQueryBuilder()
-        .insert()
-        .into(TaskWatcherEventAck)
-        .values(acks)
-        .orIgnore()
-        .execute()
-    }
+    emitTaskEventAcks(m, taskEvents.map(x => x.eventId), userId);
   });
 
   res.json();

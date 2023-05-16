@@ -31,6 +31,9 @@ import { useRequestActionModal } from 'hooks/useRequestActionModal';
 import { MdEditNote } from 'react-icons/md';
 import { TbGitCommit } from 'react-icons/tb';
 import { IoNotificationsOffOutline, IoNotificationsOutline } from 'react-icons/io5';
+import { GlobalContext } from 'contexts/GlobalContext';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { NotificationContext } from 'contexts/NotificationContext';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -74,7 +77,7 @@ border-radius:4px;
 `;
 
 
-const OrgTaskPage = React.memo(() => {
+const OrgTaskPage = () => {
   useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id } = params;
@@ -89,11 +92,19 @@ const OrgTaskPage = React.memo(() => {
   const navigate = useNavigate();
   const [openDeepLink, deepLinkContextHolder] = useShareTaskDeepLinkModal();
   const [openRequestActionModal, requestActionContextHolder] = useRequestActionModal();
+  const context = React.useContext(GlobalContext);
+
+  const {notifications, setNotifications } = React.useContext(NotificationContext);
 
   React.useEffect(() => {
     const sub$ = load$();
     return () => sub$.unsubscribe()
   }, [id]);
+
+
+  React.useEffect(() => {
+    debugger;
+  }, [notifications]);
 
   const load$ = () => {
     return getTask$(id).pipe(
@@ -225,6 +236,8 @@ const OrgTaskPage = React.memo(() => {
                 </ProCard>
               </Col>
             </Row>
+        <DebugJsonPanel value={notifications} />
+
           </Col>
           <Col flex="0 0 340px">
             <ProCard ghost>
@@ -253,7 +266,7 @@ const OrgTaskPage = React.memo(() => {
                     <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
                       </Tooltip>}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments</Button>
+                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <ZeventNoticeableBadge selfEvent={true} filter={() => true} message="comments"/></Button>
                     <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
                     <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                     <Divider />
@@ -287,7 +300,7 @@ const OrgTaskPage = React.memo(() => {
     </ContainerStyled>
   </>
   );
-});
+};
 
 OrgTaskPage.propTypes = {
   // id: PropTypes.string.isRequired

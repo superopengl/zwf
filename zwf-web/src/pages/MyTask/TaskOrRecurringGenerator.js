@@ -158,7 +158,6 @@ export const TaskOrRecurringGenerator = React.memo(props => {
             orgClientId,
             femplateId,
           }}
-          // onFieldsChange={(_, values) => console.log(values)}
           onFinish={handleSubmit}
         >
           <Form.Item name="name" label="Name"

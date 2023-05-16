@@ -13,7 +13,7 @@ export const FieldNameSelect = (props) => {
   const [newName, setNewName] = React.useState();
 
   const handleCreateNew = () => {
-    console.log(newName)
+    // console.log(newName)
   }
 
   return <>

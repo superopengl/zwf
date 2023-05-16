@@ -41,9 +41,10 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventTy
     for (const userId of watcherUserIds) {
       publishZevent({
         type: 'taskEvent',
-        taskEvent,
         userId,
+        payload: taskEvent,
       })
     }
   }
 }
+

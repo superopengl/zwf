@@ -30,6 +30,7 @@ import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
 import { TbClock, TbClockPlay, TbRepeat } from 'react-icons/tb';
 import { BiRepeat } from 'react-icons/bi';
+import { NotificationContext } from 'contexts/NotificationContext';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -180,6 +181,7 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
   const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
+  const [notifications, setNotifications] = React.useState([]);
 
   useDocumentTitle();
   useEstablishZeventStream();
@@ -203,51 +205,52 @@ export const AppLoggedInPage = React.memo(() => {
   const isSystem = role === 'system';
   const isAdmin = role === 'admin';
 
-  return <StyledContainer>
-    <ProLayout
-      token={{
-        header: {
-          // heightLayoutHeader: 200
-        },
-        sider: {
-          colorTextMenu: '#1C222B'
-        }
-      }}
-      logo={<Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')} />}
-      title={""}
-      actionsRender={() => [
-        canCreateNew ? <Space key="search" size="large">
-          {/* <SmartSearch /> */}
-          <CreateNewButton />
-        </Space> : null,
-        isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
-        isSystem ? null : <NotificationButton key="notification" onSupportOpen={openSupport} supportOpen={supportOpen}/>,
-        <AvatarDropdownMenu key="avatar" />
-      ].filter(x => !!x)}
-      headerTitleRender={() => {
-        return <Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')}/>
-      }}
-      location={{ pathname }}
-      route={{ routes }}
-      // fixSiderbar={true}
-      layout={role === 'client' ? 'top' : 'mix'}
-      // splitMenus={true}
-      siderWidth={210}
-      menu={{
-        type: 'group',
-      }}
-      suppressSiderWhenMenuEmpty={true}
-      // headerRender={false}
-      menuItemRender={(item, dom) => (
-        <div
-          onClick={() => {
-            setPathname(item.path || '/');
-            navigate(item.path);
-          }}
-        >
-          {dom}
-        </div>
-      )}
+  return <NotificationContext.Provider value={{notifications, setNotifications}}>
+    <StyledContainer>
+      <ProLayout
+        token={{
+          header: {
+            // heightLayoutHeader: 200
+          },
+          sider: {
+            colorTextMenu: '#1C222B'
+          }
+        }}
+        logo={<Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')} />}
+        title={""}
+        actionsRender={() => [
+          canCreateNew ? <Space key="search" size="large">
+            {/* <SmartSearch /> */}
+            <CreateNewButton />
+          </Space> : null,
+          isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
+          isSystem ? null : <NotificationButton key="notification" onSupportOpen={openSupport} supportOpen={supportOpen} />,
+          <AvatarDropdownMenu key="avatar" />
+        ].filter(x => !!x)}
+        headerTitleRender={() => {
+          return <Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')} />
+        }}
+        location={{ pathname }}
+        route={{ routes }}
+        // fixSiderbar={true}
+        layout={role === 'client' ? 'top' : 'mix'}
+        // splitMenus={true}
+        siderWidth={210}
+        menu={{
+          type: 'group',
+        }}
+        suppressSiderWhenMenuEmpty={true}
+        // headerRender={false}
+        menuItemRender={(item, dom) => (
+          <div
+            onClick={() => {
+              setPathname(item.path || '/');
+              navigate(item.path);
+            }}
+          >
+            {dom}
+          </div>
+        )}
       // menuFooterRender={props => {
       //   if (props?.collapsed) return undefined;
       //   return <Space direction="vertical" style={{ width: '100%' }}>
@@ -255,12 +258,13 @@ export const AppLoggedInPage = React.memo(() => {
       //     <FooterMenuItem href="/privacy_policy">Privacy Policy</FooterMenuItem>
       //   </Space>
       // }}
-    >
-      <Outlet />
-    </ProLayout>
-    {isAdmin && <GlobalNotificationBar />}
-    {!isSystem && <UnimpersonatedFloatButton />}
-    {supportContextHolder}
-  </StyledContainer>
+      >
+        <Outlet />
+      </ProLayout>
+      {isAdmin && <GlobalNotificationBar />}
+      {!isSystem && <UnimpersonatedFloatButton />}
+      {supportContextHolder}
+    </StyledContainer >
+  </NotificationContext.Provider >
 })
 

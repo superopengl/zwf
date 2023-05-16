@@ -25,6 +25,7 @@ import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { NotificationContext } from 'contexts/NotificationContext';
 
 const { Text, Title, Paragraph, Link: TextLink } = Typography;
 
@@ -58,7 +59,9 @@ export const NotificationButton = (props) => {
   const [changedTasks, setChangedTasks] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
-  const [ notifications, setNotifications ]= React.useState([]);
+  const {notifications, setNotifications} = React.useContext(NotificationContext);
+
+  // const { notifications, setNotifications } = context;
 
   const userId = user.id;
 
@@ -67,7 +70,9 @@ export const NotificationButton = (props) => {
   const load$ = () => {
     return getMyNotifications$()
       .pipe()
-      .subscribe(result => setNotifications(result ?? []));
+      .subscribe(result => {
+        setNotifications(result ?? [])
+      });
     // .subscribe(result => {
     //   setChangedTasks(result.changedTasks);
     //   setUnreadSupportMsgCount(result.unreadSupportMsgCount);
@@ -85,32 +90,27 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
-  const handleZeventTaskEvent = taskEvent => {
+  const handleZeventTaskEvent = z => {
+    const taskEvent = z.payload;
     setNotifications([...notifications, taskEvent]);
     const existing = notifications.find(x => x.taskId = taskEvent.taskId && x.type === taskEvent.type);
-    if(existing) {
-      debugger;
+    if (existing) {
       existing.createdAt = taskEvent.createdAt;
       setNotifications([...notifications]);
     } else {
-      debugger;
       setNotifications(list => [taskEvent, ...list]);
     }
   }
 
   useZevent(z => {
-    if (z.type === 'taskEvent') {
-      return z.taskEvent.by !== userId;
-    } else {
-      return z.by !== userId
-    }
+    return z.payload.by !== userId;
   }, z => {
     if (z.type === 'support') {
       if (!supportOpen) {
         setUnreadSupportMsgCount(pre => pre + 1)
       }
     } else if (z.type === 'taskEvent') {
-      handleZeventTaskEvent(z.taskEvent);
+      handleZeventTaskEvent(z);
     } else {
       const exists = changedTasks.some((t => t.taskId === z.taskId));
       if (!exists) {
@@ -178,7 +178,7 @@ export const NotificationButton = (props) => {
     load$();
   }
 
-  console.log(items)
+  console.log('items', items)
 
   return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
     <Badge showZero={false} count={notifications.filter(x => !x.ackAt).length} offset={[-4, 6]}>
