@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Avatar, Tooltip, Form, Switch, Row, Button, Drawer, Typography, Space, Dropdown } from 'antd';
+import { Avatar, Tooltip, Form, Switch, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
@@ -48,10 +48,10 @@ const messageFuncMap = {
   'request-client-fields': x => <>Form fields require to be filled</>,
 };
 
-const getNotificationMessage = notification => {
-  const { type } = notification;
-  const func = messageFuncMap[type] ?? (x => <>Task has an event of {type}</>);
-  return func(notification);
+const getNotificationMessage = x => {
+  const { payload: { type } } = x;
+  const func = messageFuncMap[type] ?? (x => <>Task has an event <Tag>{type}</Tag></>);
+  return func(x);
 }
 
 
@@ -97,6 +97,7 @@ export const NotificationButton = (props) => {
         setZevents(pre => [...pre, z])
         break;
       case 'taskEvent.ack':
+        debugger;
         setZevents(pre => pre.filter(z => z.payload.eventId !== payload.eventId));
         break;
       case 'support':
@@ -109,7 +110,7 @@ export const NotificationButton = (props) => {
   useZevent(filterZevent, handleZevent, [user]);
 
   React.useEffect(() => {
-    const taskGropus = groupBy(zevents, z => z.payload.taskId);
+    const taskGropus = groupBy(zevents, z => `${z.payload.taskId}.${z.payload.type}`);
     const newList = Object.values(taskGropus).map(taskEvents => {
       const first = orderBy(taskEvents, t => Date.parse(t.payload.createdAt), ['desc'])[0];
       return first;
@@ -124,17 +125,17 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
-  const handleZeventTaskEvent = z => {
-    const taskEvent = z.payload;
-    setList([...list, taskEvent]);
-    const existing = list.find(x => x.taskId = taskEvent.taskId && x.type === taskEvent.type);
-    if (existing) {
-      existing.createdAt = taskEvent.createdAt;
-      setList([...list]);
-    } else {
-      setList(list => [taskEvent, ...list]);
-    }
-  }
+  // const handleZeventTaskEvent = z => {
+  //   const taskEvent = z.payload;
+  //   setList([...list, taskEvent]);
+  //   const existing = list.find(x => x.taskId = taskEvent.taskId && x.type === taskEvent.type);
+  //   if (existing) {
+  //     existing.createdAt = taskEvent.createdAt;
+  //     setList([...list]);
+  //   } else {
+  //     setList(list => [taskEvent, ...list]);
+  //   }
+  // }
 
   // useZevent(z => {
   //   return z.payload.by !== userId;
