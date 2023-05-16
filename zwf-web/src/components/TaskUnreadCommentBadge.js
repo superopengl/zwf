@@ -4,26 +4,20 @@ import { useZevent } from 'hooks/useZevent';
 import { SyncOutlined } from '@ant-design/icons';
 import { Badge, Button, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { NotificationContext } from 'contexts/NotificationContext';
 
 export const TaskUnreadCommentBadge = React.memo((props) => {
   const { taskId, tooltip } = props;
   const [user] = useAuthUser();
-
   const [count, setCount] = React.useState(0);
+  const { zevents } = React.useContext(NotificationContext);
 
-  const filterZevent = z => {
-    return ((z.type === 'taskEvent' && z.payload.type === 'comment') || z.type === 'taskEvent.ack') && z.payload.taskId === taskId;
-  }
-
-  const handleZevent = z => {
-    const { payload: { by }, type } = z;
-    if (by !== user.id) {
-      const change = type === 'taskEvent' ? 1 : -1;
-      setCount(pre => pre + change)
-    }
-  }
-
-  useZevent(filterZevent, handleZevent);
+  React.useEffect(() => {
+    const num = zevents.filter(z => z.payload.taskId === taskId
+      && z.payload.type === 'comment'
+      && z.payload.by !== user.id).length;
+    setCount(num);
+  }, [zevents])
 
   return (<Tooltip title={count ? tooltip : null}>
     <Badge count={count} showZero={false}>

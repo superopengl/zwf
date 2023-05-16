@@ -158,7 +158,6 @@ export const NotificationButton = (props) => {
 
   const handleItemClick = (item) => {
     const { payload: { taskId, type } } = item;
-
     navigate(`/task/${taskId}`, { state: { type } });
     ackTaskEventNotification$(taskId, type).subscribe({
       // next: () => load$(),
@@ -209,8 +208,6 @@ export const NotificationButton = (props) => {
   const handleClick = () => {
     load$();
   }
-
-  console.log('items', items)
 
   return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
     <Badge showZero={false} count={list.filter(x => !x.ackAt).length} offset={[-4, 6]}>
