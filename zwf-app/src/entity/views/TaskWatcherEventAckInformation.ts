@@ -25,7 +25,7 @@ import { TaskWatcher } from '../TaskWatcher';
     .leftJoin(TaskWatcherEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
     .where(`e.by != w."userId"`)
     .select([
-      'e.id as "eventId"',
+      'e.id as "id"',
       'w."userId" as "userId"',
       't."orgId" as "orgId"',
       't."orgClientId" as "orgClientId"',
@@ -34,14 +34,14 @@ import { TaskWatcher } from '../TaskWatcher';
       'e."type" as "type"',
       'e."info" as "info"',
       'e."createdAt" as "createdAt"',
-      'e."by" as "eventBy"',
+      'e."by" as "by"',
       'a."ackAt" as "ackAt"',
     ])
     .orderBy('e."createdAt"', 'DESC'),
   dependsOn: [Task, OrgMemberInformation, TaskEvent, TaskWatcherEventAck, TaskWatcher]
 }) export class TaskWatcherEventAckInformation {
   @ViewColumn()
-  eventId: string;
+  id: string;
 
   @ViewColumn()
   userId: string;
@@ -68,7 +68,7 @@ import { TaskWatcher } from '../TaskWatcher';
   createdAt: Date;
 
   @ViewColumn()
-  eventBy: string;
+  by: string;
 
   @ViewColumn()
   ackAt: Date;

@@ -68,5 +68,5 @@ const events = [
   ackAt: Date;
 
   @ViewColumn()
-  eventBy: string;
+  by: string;
 }
