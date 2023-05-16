@@ -38,6 +38,10 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventTy
 
   if (ZEVENTABLE_TASKEENTTYPES.has(taskEventType)) {
     const watcherUserIds = task.watchers.map(x => x.userId);
+    if (taskEventType === TaskEventType.Comment && !watcherUserIds.includes(by)) {
+      // If comment, always publish to self, regardless if watching or not.
+      watcherUserIds.push(by);
+    }
     for (const userId of watcherUserIds) {
       publishZevent({
         type: 'taskEvent',

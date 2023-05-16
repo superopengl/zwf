@@ -127,21 +127,13 @@ export const NotificationButton = (props) => {
         key: first.payload.taskId,
         // icon: <Icon component={MdDashboard} />,
         icon: null,
-        label: <Row justify="space-between" wrap={false} gutter={10} style={{ maxWidth: 300, paddingRight: 40 }}>
-          <Col flex="auto" style={{paddingRight: 40}}>
-            <Row wrap={false}>
-              <Col>
-                <TaskIcon size={14} />
-              </Col>
-              <Col>
-                <Text ellipsis={true}>{first.payload.taskName}</Text>
-              </Col>
-            </Row>
-          </Col>
-          <Col flex="20px">
-            <Badge showZero={false} count={taskEvents.filter(z => !z.payload.ackAt).length} />
-          </Col>
-        </Row>,
+        label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+          <Row style={{ maxWidth: 240 }} wrap={false}>
+            <TaskIcon size={14} />
+            <Text ellipsis={true}>{first.payload.taskName}</Text>
+          </Row>
+          <Badge showZero={false} count={taskEvents.filter(z => !z.payload.ackAt).length} />
+        </Space>,
         children: taskEvents.map(z => ({
           key: z.payload.id,
           label: <StyledCompactSpace direction='vertical'>
