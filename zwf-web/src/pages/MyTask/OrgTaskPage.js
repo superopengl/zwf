@@ -283,7 +283,8 @@ const OrgTaskPage = () => {
         // mask={false}
         destroyOnClose={true}
         placement='right'
-        bodyStyle={{ padding: 0 }}
+        // height="90vh"
+        bodyStyle={{ padding: 0}}
         footer={<TaskCommentInputForm taskId={task.id} />}
       >
         <TaskCommentDisplayPanel taskId={task.id} />
