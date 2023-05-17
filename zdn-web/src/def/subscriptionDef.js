@@ -43,7 +43,7 @@ export const subscriptionDef = [
     key: 'monthly',
     title: <FormattedMessage id="text.proMemberMonthly" />,
     unit: <FormattedMessage id="text.proMemberMonthlyPriceUnit" />,
-    price: 19,
+    price: 49,
     icon: <GiSawedOffShotgun />,
     description: 
     <DescriptionContainer>

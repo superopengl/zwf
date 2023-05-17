@@ -152,9 +152,12 @@ const OrgAccountPage = (props) => {
               {!currentSubscription && <Alert type="info" showIcon description={
                 <FormattedMessage id="text.freeToPaidSuggestion" />
               } />}
-              <div style={{ display: 'flex', justifyContent: 'center', width: '100%', margin: '30px auto' }}>
-                <Title><TextLink underline onClick={handleBuyLicense}>Buy more licenses</TextLink></Title>
-              </div>
+              <Space direction="vertical" align="center">
+                <Title><TextLink underline onClick={handleBuyLicense}>Adjust licenses</TextLink></Title>
+                <Paragraph type="secondary">
+                  You can buy more or reduce licenses by purchasing a new subscription. The ongoing subscription will be returned to your credits, which will be applied to your new subscription's payment. The new subscription will start right away.
+                </Paragraph>
+              </Space>
             </Space>
             <OrgSubscriptionHistoryPanel data={subscriptionHistory} />
           </Card>

@@ -19,14 +19,10 @@ export type ProvisionSubscriptionRequest = {
   promotionCode: string;
 };
 
-async function getSubscriptionPeriod(q: QueryRunner, orgId: string): Promise<{ start: Date, end: Date }> {
-  const aliveSubscription = await q.manager.getRepository(OrgAliveSubscription)
-    .findOne({
-      orgId
-    });
-
-  const start = aliveSubscription ? moment(aliveSubscription.end).add(1, 'day').toDate() : getUtcNow();
-  const end = moment(start).add(1, 'month').add(-1, 'day').toDate();
+function getSubscriptionPeriod() {
+  const now = moment.utc();
+  const start = now.toDate();
+  const end = now.add(1, 'month').add(-1, 'day').toDate();
   return { start, end };
 }
 
@@ -38,7 +34,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
   try {
     tran.startTransaction();
 
-    const { start, end } = await getSubscriptionPeriod(tran, orgId);
+    const { start, end } = getSubscriptionPeriod();
 
     const { creditBalance, price, payable } = await getNewSubscriptionPaymentInfo(tran.manager, orgId, seats, promotionCode);
 
@@ -47,7 +43,6 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     subscription.orgId = orgId;
     subscription.type = SubscriptionType.Montly;
     subscription.start = start;
-    subscription.end = end;
     subscription.seats = seats;
     subscription.recurring = true;
     subscription.status = SubscriptionStatus.Provisioning;
