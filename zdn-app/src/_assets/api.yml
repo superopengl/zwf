@@ -837,7 +837,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: provisionSubscription
+      operationId: purchaseSubscription
       responses:
         200:
           description: OK
@@ -850,18 +850,6 @@ paths:
   /subscription/history:
     get:
       operationId: listMySubscriptionHistory
-      responses:
-        200:
-          description: OK
-  /subscription/payment/:id/confirm:
-    post:
-      operationId: confirmSubscriptionPayment
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
       responses:
         200:
           description: OK

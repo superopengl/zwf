@@ -25,9 +25,7 @@ export async function getNewSubscriptionPaymentInfo(
 
   let promotionPercentage = null;
   if (promotionCode) {
-    const promotion = await m.getRepository(OrgPromotionCode).findOne({
-      code: promotionCode
-    });
+    const promotion = await m.findOne(OrgPromotionCode, { code: promotionCode });
     if (promotion) {
       promotionPercentage = promotion.percentage;
     }
@@ -39,7 +37,7 @@ export async function getNewSubscriptionPaymentInfo(
     payable = 0;
   }
 
-  const primaryPaymentMethod = await m.getRepository(OrgPaymentMethod).findOne({ orgId, primary: true });
+  const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { orgId, primary: true });
 
   const result = {
     unitPrice,
@@ -47,13 +45,15 @@ export async function getNewSubscriptionPaymentInfo(
     promotionPercentage,
     price,
     creditBalance,
+    refundable,
     payable,
-    paymentMethodId: primaryPaymentMethod?.id
+    paymentMethodId: primaryPaymentMethod?.id,
+    stripePaymentMethodId: primaryPaymentMethod?.stripePaymentMethodId,
   };
   return result;
 }
 
-export async function getRefundableCredits(m: EntityManager, orgId: string) {
+async function getRefundableCredits(m: EntityManager, orgId: string) {
   const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { orgId });
   return refundable?.refundableAmount || 0;
 }

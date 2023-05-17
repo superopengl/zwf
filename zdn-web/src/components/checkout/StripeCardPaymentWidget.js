@@ -5,10 +5,11 @@ import PropTypes from 'prop-types';
 import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useElements, Elements } from '@stripe/react-stripe-js';
 import { CreditCardOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
+import { getPaymentMethodSecret } from 'services/orgPaymentMethodService';
 
 const StripeCardPaymentForm = (props) => {
 
-  const { onProvision, onCommit, onLoading, buttonText } = props;
+  const { onOk, onLoading, buttonText } = props;
   const [loading, setLoading] = React.useState(false);
   const [cardNumberComplete, setCardNumberComplete] = React.useState(false);
   const [cardExpiryComplete, setCardExpiryComplete] = React.useState(false);
@@ -22,8 +23,12 @@ const StripeCardPaymentForm = (props) => {
 
   const isInfoComplete = stripe && elements && cardNumberComplete && cardExpiryComplete && cardCvcComplete;
 
+  const getClientSecret = async () => {
+    const result = await getPaymentMethodSecret();
+    return result.clientSecret;
+  }
+
   const handleSubmit = async (event) => {
-    debugger;
     event.preventDefault();
 
     if (!isInfoComplete) {
@@ -34,9 +39,7 @@ const StripeCardPaymentForm = (props) => {
       setLoading(true);
       const cardNumberElement = elements.getElement('cardNumber');
 
-      const paymentInfo = await onProvision();
-      const { clientSecret, paymentId } = paymentInfo;
-      debugger;
+      const clientSecret = await getClientSecret();
 
       // Use your card Element with other Stripe.js APIs
       const rawResponse = await stripe.confirmCardSetup(clientSecret,
@@ -46,16 +49,13 @@ const StripeCardPaymentForm = (props) => {
           }
         });
 
-       console.log('>>>', rawResponse);
-
       const { error } = rawResponse;
 
       if (error) {
         notify.error('Failed to complete the payment', error.message);
       } else {
-        await onCommit(paymentId, {
-          stripePaymentMethodId: rawResponse.setupIntent.payment_method
-        });
+        const stripePaymentMethodId = rawResponse.setupIntent.payment_method;
+        await onOk(stripePaymentMethodId);
       }
     } finally {
       setLoading(false);
@@ -133,13 +133,12 @@ const StripeCardPaymentForm = (props) => {
 }
 
 const StripeCardPaymentWidget = props => (<Elements stripe={stripePromise}>
-  <StripeCardPaymentForm onProvision={props.onProvision} onCommit={props.onCommit} onLoading={props.onLoading} buttonText={props.buttonText} />
+  <StripeCardPaymentForm onOk={props.onOk} onLoading={props.onLoading} buttonText={props.buttonText} />
 </Elements>)
 
 
 StripeCardPaymentWidget.propTypes = {
-  onProvision: PropTypes.func.isRequired,
-  onCommit: PropTypes.func.isRequired,
+  onOk: PropTypes.func.isRequired,
   onLoading: PropTypes.func.isRequired,
   buttonText: PropTypes.string,
 };

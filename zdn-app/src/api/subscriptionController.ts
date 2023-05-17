@@ -16,6 +16,7 @@ import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
+import { purchaseNewSubscriptionWithPrimaryCard } from '../utils/purchaseNewSubscriptionWithPrimaryCard';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await getRepository(Subscription).find({
@@ -24,7 +25,7 @@ async function getUserSubscriptionHistory(orgId) {
       status: Not(SubscriptionStatus.Provisioning)
     },
     order: {
-      start: 'ASC',
+      createdAt: 'ASC',
     },
     relations: [
       'payments'
@@ -101,52 +102,21 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   res.json(subscription);
 });
 
-export const provisionSubscription = handlerWrapper(async (req, res) => {
+export const purchaseSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
 
   assert(seats > 0, 400, 'seats must be positive integer');
 
-  const payment = await provisionSubscriptionPurchase({
+  await purchaseNewSubscriptionWithPrimaryCard({
     orgId,
     seats,
     promotionCode
   }, req);
-  const result: any = {
-    amount: payment.amount,
-    paymentId: payment.id,
-    subscriptionId: payment.subscription.id,
-    clientSecret: await getStripeClientSecretForOrg(orgId)
-  };
-
-  res.json(result);
-});
-
-export const confirmSubscriptionPayment = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const { id: paymentId } = req.params;
-  const orgId = getOrgIdFromReq(req);
-
-  const payment = await getRepository(Payment).findOne({
-    id: paymentId,
-    orgId,
-  }, { relations: ['subscription'] });
-
-  assert(payment, 404);
-
-  const { paymentMethodId } = req.body;
-  const orgPaymentMethod = await getRepository(OrgPaymentMethod).findOne(paymentMethodId);
-  assert(orgPaymentMethod, 404, 'Payment method cannot be found');
-
-  payment.orgPaymentMethodId = paymentMethodId;
-  const rawResponse = await chargeStripeForCardPayment(payment, true);
-  payment.rawResponse = rawResponse;
-  await commitSubscription(payment);
 
   res.json();
 });
-
 
 export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');

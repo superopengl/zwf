@@ -21,5 +21,5 @@ export class CreditTransaction {
   revertedCreditTransactionId?: string;
 
   @Column()
-  type: 'grant' | 'user-pay' | 'revert'
+  type: 'grant' | 'deduct' | 'revert' | 'refund'
 }

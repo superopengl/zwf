@@ -41,7 +41,7 @@ export async function provisionSubscriptionPurchase(request: ProvisionSubscripti
     const subscription = new Subscription();
     subscription.id = uuidv4();
     subscription.orgId = orgId;
-    subscription.type = SubscriptionType.Montly;
+    subscription.type = SubscriptionType.Monthly;
     subscription.start = start;
     subscription.seats = seats;
     subscription.recurring = true;

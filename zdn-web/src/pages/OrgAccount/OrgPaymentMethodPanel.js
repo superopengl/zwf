@@ -5,7 +5,7 @@ import { Loading } from 'components/Loading';
 import { PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
-import { getPaymentMethodSecret$, saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
+import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
 
 const { Text } = Typography;
 
@@ -33,9 +33,8 @@ const OrgPaymentMethodPanel = () => {
     }
   }, []);
 
-  const handleSavePayment = async (paymentId, payload) => {
-    const { stripePaymentMethodId } = payload;
-    savePaymentMethod(stripePaymentMethodId);
+  const handleSavePayment = async (stripePaymentMethodId) => {
+    await saveOrgPaymentMethod(stripePaymentMethodId);
     setModalVisible(false);
     load();
   }
@@ -46,15 +45,6 @@ const OrgPaymentMethodPanel = () => {
 
   const handleAddNew = () => {
     setModalVisible(true);
-  }
-
-  const getClientSecret = async () => {
-    const result = await getPaymentMethodSecret$().toPromise();
-    return result.clientSecret;
-  }
-
-  const savePaymentMethod = async (paymentMethodId) => {
-    await saveOrgPaymentMethod$(paymentMethodId).toPromise();
   }
 
   const handleDelete = (item) => {
@@ -93,11 +83,6 @@ const OrgPaymentMethodPanel = () => {
     })
   }
 
-  const handleGetClientSecret = async () => {
-    const clientSecret = await getClientSecret();
-    return { clientSecret };
-  }
-
   return (
     <Loading loading={loading} style={{ width: '100%' }}>
       <Card
@@ -111,6 +96,7 @@ const OrgPaymentMethodPanel = () => {
         <List
           dataSource={list}
           loading={loading}
+          bordered={false}
           locale={{
             emptyText: <>
               No payment method is set.<br />
@@ -119,12 +105,13 @@ const OrgPaymentMethodPanel = () => {
           }}
           renderItem={item => <List.Item
             actions={item.primary || list.length <= 1 ? null : [
-              <Button key="primary" type="primary" ghost onClick={() => handleSetPrimary(item)}>Set Primary</Button>,
-              <Button key="delete" ghost type="danger" onClick={() => handleDelete(item)}>Remove</Button>
+              <Button key="primary" type="link" ghost onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
+              <Button key="delete" ghost type="link" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
             ]}
           >
             <Space size="large">
               <Text code>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
+              <Text>{item.cardBrand}</Text>
               <Text>{item.cardExpiry}</Text>
               {item.primary && <Tag key="tag" color="#13c2c2">primary</Tag>}
             </Space>
@@ -144,8 +131,7 @@ const OrgPaymentMethodPanel = () => {
       >
         <Loading loading={paymentLoading}>
           <StripeCardPaymentWidget
-            onProvision={handleGetClientSecret}
-            onCommit={handleSavePayment}
+            onOk={handleSavePayment}
             onLoading={loading => setPaymentLoading(loading)}
             buttonText="Add this card"
           />

@@ -246,7 +246,6 @@ const AgentUserListPage = () => {
 
   const openSetPasswordModal = async (user) => {
     setSetPasswordVisible(true);
-    debugger;
     setCurrentUser(user);
   }
 
