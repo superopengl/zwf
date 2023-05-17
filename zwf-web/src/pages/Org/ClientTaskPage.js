@@ -190,7 +190,7 @@ const ClientTaskPage = () => {
       fixedHeader={true}
       maxWidth={700}
       // icon={<TaskIcon />}
-      title={<>{task.name} </> || <Skeleton paragraph={false} />}
+      title={task.name || <Skeleton paragraph={false} />}
       footer={<Row className='client-task-footer' justify="space-around" wrap={false}>
         <TaskUnreadCommentBadge taskId={task.id} offset={[0, 10]}>
           <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
@@ -209,7 +209,7 @@ const ClientTaskPage = () => {
           ghost={activePanel === 'docs'}
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
-        <Badge showZero={false} count={docsToSign.length}>
+        {docsToSign.length > 0 && <Badge showZero={false} count={docsToSign.length} offset={[0, 10]}>
           <Button size={buttonSize} icon={<Icon component={RiQuillPenFill} />}
             type={activePanel === 'sign' ? 'primary' : 'text'}
             ghost={activePanel === 'sign'}
@@ -217,10 +217,10 @@ const ClientTaskPage = () => {
             onClick={handleHighlightenSignPanel}>
             Sign
           </Button>
-        </Badge>
+        </Badge>}
       </Row>}
       extra={[
-        <Tag key="org">{task.orgName}</Tag>
+        // <Tag key="org">{task.orgName}</Tag>
         // <ZeventNoticeableBadge key="refresh"
         //   message="This task has changes. Click to refresh"
         //   filter={z => z.type === 'task.change' && z.taskId === task.id}
