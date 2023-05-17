@@ -82,3 +82,4 @@ export class OrgAliveSubscription {
   @ViewColumn()
   lastSubscriptionId: string;
 }
+

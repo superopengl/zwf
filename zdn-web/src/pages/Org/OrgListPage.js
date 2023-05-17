@@ -89,8 +89,8 @@ const OrgListPage = () => {
       render: (value) => value
     },
     {
-      title: 'Admin User',
-      dataIndex: 'adminUserEmail',
+      title: 'Owner User',
+      dataIndex: 'ownerEmail',
       render: (value) => value
     },
     // {
@@ -228,7 +228,7 @@ const OrgListPage = () => {
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
-        impersonate$(org.adminUserEmail)
+        impersonate$(org.ownerEmail)
           .subscribe(() => {
             reactLocalStorage.clear();
             window.location = '/';

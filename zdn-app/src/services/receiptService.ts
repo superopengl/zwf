@@ -21,8 +21,8 @@ async function generatePdfStream(html, options) {
   })
 }
 
-function getPaymentMethodName(paymentMethod: PaymentMethod) {
-  return _.capitalize(paymentMethod);
+function getPaymentMethodName(cardLast4: string) {
+  return `Card ends with ${cardLast4}`;
 }
 
 function getSubscriptionDescription(receipt: ReceiptInformation) {
@@ -45,6 +45,7 @@ function getVars(receipt: ReceiptInformation) {
     subscriptionDescription: getSubscriptionDescription(receipt),
     subscriptionPrice: subscriptionPrice.toFixed(2),
     creditDeduction: (+receipt.deduction || 0).toFixed(2),
+    paymentMethod: getPaymentMethodName(receipt.cardLast4),
     payableAmount: (+receipt.payable || 0).toFixed(2),
   };
 }

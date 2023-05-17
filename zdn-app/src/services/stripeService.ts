@@ -7,6 +7,7 @@ import { User } from '../entity/User';
 import { PaymentMethod } from '../types/PaymentMethod';
 import { Org } from '../entity/Org';
 import { getOrgOwner } from '../utils/getOrgOwner';
+import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 
 let stripe: Stripe = null;
 function getStripe() {
@@ -52,11 +53,13 @@ const DUMMY_STRIPE_RESPONSE = {
 };
 
 export async function chargeStripeForCardPayment(payment: Payment, onSessionPayment: boolean) {
-  const { amount, orgId, stripePaymentMethodId } = payment;
+  const { amount, orgId, orgPaymentMethodId } = payment;
 
   const stripeCustomerId = await getOrgStripeCustomerId(orgId);
   assert(stripeCustomerId, 400, 'Stripe customer ID is missing');
-  assert(stripePaymentMethodId, 400, 'Stripe payment method ID is missing');
+  assert(orgPaymentMethodId, 400, 'Stripe payment method ID is missing');
+
+  const {stripePaymentMethodId} = await getRepository(OrgPaymentMethod).findOneOrFail(orgPaymentMethodId);
 
   const paymentIntent = amount ? await getStripe().paymentIntents.create({
     amount: Math.ceil(amount * 100),
@@ -71,7 +74,7 @@ export async function chargeStripeForCardPayment(payment: Payment, onSessionPaym
   return paymentIntent;
 }
 
-export async function retrievePaymentMethod(paymentMethodId: string) {
+export async function retrieveStripePaymentMethod(paymentMethodId: string) {
   const paymentMethod = await getStripe().paymentMethods.retrieve(paymentMethodId);
   return paymentMethod;
 }
