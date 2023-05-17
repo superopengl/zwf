@@ -86,7 +86,7 @@ export const PageHeaderContainer = React.memo((props) => {
         <div style={{
           maxWidth,
           margin: '0 auto',
-          padding: `0 ${narrowScreen ? 0 : 40}px`,
+          padding: `0 ${narrowScreen ? 14 : 40}px`,
           paddingBottom: footer ? 80 : 40,
         }}>{children}</div>
       </Loading>
