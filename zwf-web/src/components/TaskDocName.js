@@ -1,61 +1,40 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Space, Typography } from 'antd';
+import { Space, Typography, Tag } from 'antd';
 import { FileIcon } from './FileIcon';
 import { useDemplatePreviewModal } from './useDemplatePreviewModal';
 import { openTaskDoc } from 'services/fileService';
 import { Loading } from './Loading';
 import { TaskContext } from 'contexts/TaskContext';
+import { Alert } from 'antd';
+import { LeftOutlined } from '@ant-design/icons';
+import { isEmpty } from 'lodash';
 
 const { Link, Text } = Typography
 
 export const TaskDocName = props => {
-  const { taskDoc, showOverlay, allowDownload, onClick, strong, showDescription } = props;
+  const { taskDoc, showOverlay, allowDownload, onClick, strong } = props;
 
-  const { id, name, fileId, signedAt, signRequestedAt, type, demplateId } = taskDoc
-  const [iconType, setIconType] = React.useState('default');
-  const [description, setDescription] = React.useState(null);
+  const { id, name, fileId, demplateId, signedAt, signRequestedAt } = taskDoc
   const [loading, setLoading] = React.useState(false);
-  const [hasFile, setHasFile] = React.useState(!!fileId);
   const [openPreview, previewContextHolder] = useDemplatePreviewModal();
-  const {task} = React.useContext(TaskContext);
 
-  React.useEffect(() => {
+  const hasFile = !!fileId;
+
+  const iconType = React.useMemo(() => {
     if (showOverlay) {
       if (signedAt) {
-        setIconType('signed')
-        setDescription('client has signed')
+        return 'signed'
       } else if (signRequestedAt) {
-        setIconType('await-sign');
-        setDescription('awaiting client to sign')
+        return 'await-sign';
       } else if (!hasFile) {
-        
-        const filledFields = []
-        const missingFields = [];
-
-        Object.keys(taskDoc.fieldBag).forEach(fieldName => {
-          const fieldValue = task?.fields.find(x => x.name === fieldName)?.value;
-          if(fieldValue) {
-            filledFields.push(fieldName);
-          } else {
-            missingFields.push(fieldName);
-          }
-        });
-
-        if(missingFields.length) {
-          setDescription(`The doc is pending generation because not all dependency fields are filled (${missingFields.join(',')})`)
-        } else {
-          setDescription('Ready to generate doc');
-        }
-
-        setIconType('pending');
+        return 'pending';
       } else {
-        setIconType('default')
-        setDescription(null)
+        return 'default'
       }
     }
-  }, [taskDoc, hasFile, showDescription]);
+  }, []);
 
   const handleOpenTaskDoc = async (e) => {
     onClick?.();
@@ -72,7 +51,6 @@ export const TaskDocName = props => {
       if (!exists && demplateId) {
         openPreview(demplateId, name);
       }
-      setHasFile(exists);
     } finally {
       setLoading(false);
     }
@@ -82,10 +60,7 @@ export const TaskDocName = props => {
     <Link onClick={handleOpenTaskDoc} strong={strong}>
       <Space>
         <FileIcon name={name} type={iconType} />
-        <Space.Compact direction="vertical" size="small">
-          <Text>{name}</Text>
-          {description && <Text type="secondary"><small>{description}</small></Text>}
-        </Space.Compact>
+        <Text>{name}</Text>
         <Loading loading={loading} size={14} />
       </Space>
     </Link>
@@ -103,12 +78,10 @@ TaskDocName.propTypes = {
   allowDownload: PropTypes.bool,
   strong: PropTypes.bool,
   onClick: PropTypes.func,
-  showDescription: PropTypes.bool,
 };
 
 TaskDocName.defaultProps = {
   showOverlay: true,
   allowDownload: true,
   strong: false,
-  showDescription: false,
 };
