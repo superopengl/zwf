@@ -117,8 +117,6 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   });
   assert(task, 404);
 
-
-
   // const originalFieldIds = task.fields.map(x => x.id);
   // const currentFieldIds = fields.map(x => x.id);
   // const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
