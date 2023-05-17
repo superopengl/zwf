@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Select, Row, Space } from 'antd';
+import { Typography, Select, Row, Space, Divider, Button } from 'antd';
 import { Loading } from './Loading';
 import * as _ from 'lodash';
 import { listDemplate$ } from 'services/demplateService';
@@ -8,6 +8,8 @@ import { DemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { VarTag } from './VarTag';
 import { finalize } from 'rxjs/operators';
+import { PlusOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const { Paragraph } = Typography;
 
@@ -32,10 +34,11 @@ const StyledSelect = styled(Select)`
 `;
 
 export const DemplateSelect = props => {
-  const { value, onChange, onVariableChange, placeholder, showVariables, isMultiple } = props;
+  const { value, onChange, onVariableChange, placeholder, showVariables, isMultiple, allowAdd } = props;
   const [loading, setLoading] = React.useState(true);
   const [demplateOptions, setDemplateOptions] = React.useState([]);
   const [allRefFields, setAllRefFields] = React.useState([]);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setLoading(true);
@@ -74,6 +77,27 @@ export const DemplateSelect = props => {
       onChange={handleChange}
       notFoundContent={"No template"}
       options={demplateOptions.map(x => ({ label: <Space><DemplateIcon />{x.name}</Space>, value: x.id }))}
+      dropdownRender={menu => (<>
+        {menu}
+        {allowAdd && <>
+          <Divider
+          style={{
+            margin: '8px 0',
+          }}
+        />
+        <Row
+          style={{
+            padding: '0 10px 4px',
+            width: '100%',
+          }}
+        >
+          <Button block type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/demplate/new")}
+            ghost>Create new doc template</Button>
+        </Row>
+        </>}
+      </>)}
     />
     {showVariables && allRefFields.length > 0 && <Paragraph type="secondary" style={{ marginTop: 8 }}>
       This doc template references fields {allRefFields.map(v => <VarTag key={v}>{v}</VarTag>)}.
@@ -88,6 +112,7 @@ DemplateSelect.propTypes = {
   placeholder: PropTypes.string,
   showVariables: PropTypes.bool,
   isMultiple: PropTypes.bool,
+  allowAdd: PropTypes.bool,
 };
 
 DemplateSelect.defaultProps = {
@@ -97,5 +122,6 @@ DemplateSelect.defaultProps = {
   placeholder: 'Doc templates to apply',
   showVariables: false,
   isMultiple: true,
+  allowAdd: false,
 };
 

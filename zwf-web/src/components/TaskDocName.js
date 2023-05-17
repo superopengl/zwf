@@ -10,10 +10,11 @@ import { Loading } from './Loading';
 const { Link, Text } = Typography
 
 export const TaskDocName = props => {
-  const { taskDoc, showOverlay, allowDownload, onClick, strong } = props;
+  const { taskDoc, showOverlay, allowDownload, onClick, strong, showDescription } = props;
 
   const { id, name, fileId, signedAt, signRequestedAt, type, demplateId } = taskDoc
   const [iconType, setIconType] = React.useState('default');
+  const [description, setDescription] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [hasFile, setHasFile] = React.useState(!!fileId);
   const [openPreview, previewContextHolder] = useDemplatePreviewModal();
@@ -22,15 +23,21 @@ export const TaskDocName = props => {
     if (showOverlay) {
       if (signedAt) {
         setIconType('signed')
+        setDescription('client has signed')
       } else if (signRequestedAt) {
         setIconType('await-sign');
+        setDescription('awaiting client to sign')
       } else if (!hasFile) {
         setIconType('pending');
+        const x = taskDoc;
+        debugger;
+        setDescription('The doc is pending generation because not all dependency fields are filled')
       } else {
         setIconType('default')
+        setDescription(null)
       }
     }
-  }, [taskDoc, hasFile]);
+  }, [taskDoc, hasFile, showDescription]);
 
   const handleOpenTaskDoc = async (e) => {
     onClick?.();
@@ -57,7 +64,11 @@ export const TaskDocName = props => {
     <Link onClick={handleOpenTaskDoc} strong={strong}>
       <Space>
         <FileIcon name={name} type={iconType} />
-        {name} <Loading loading={loading} size={14} />
+        <Space.Compact direction="vertical" size="small">
+        <Text>{name}</Text>
+        {description && <Text type="secondary"><small>{description}</small></Text>}
+        </Space.Compact>
+        <Loading loading={loading} size={14} />
       </Space>
     </Link>
     {previewContextHolder}
@@ -74,10 +85,12 @@ TaskDocName.propTypes = {
   allowDownload: PropTypes.bool,
   strong: PropTypes.bool,
   onClick: PropTypes.func,
+  showDescription: PropTypes.bool,
 };
 
 TaskDocName.defaultProps = {
   showOverlay: true,
   allowDownload: true,
   strong: false,
+  showDescription: false,
 };
