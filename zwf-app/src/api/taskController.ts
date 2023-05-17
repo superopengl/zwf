@@ -150,7 +150,7 @@ export const watchTask = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
 
   await db.transaction(async m => {
-    await m.getRepository(Task).findOneByOrFail({
+    const task = await m.getRepository(Task).findOneByOrFail({
       id,
       orgId,
     });
@@ -160,6 +160,7 @@ export const watchTask = handlerWrapper(async (req, res) => {
       await addTaskWatcher(m, id, userId, 'watch');
     } else {
       // unwatch task
+      assert(task.assigneeId !== userId, 400, 'Cannot unwatch because you are the assignee of this task.')
       await m.getRepository(TaskWatcher).delete({
         taskId: id,
         userId,
@@ -652,7 +653,7 @@ export const requestClientAction = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const getTaskLog = handlerWrapper(async (req, res) => {
+export const getTaskTimeline = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
   let query: any = { taskId: id, type: Not(TaskEventType.Comment) };

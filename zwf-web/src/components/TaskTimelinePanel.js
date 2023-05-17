@@ -2,7 +2,7 @@ import { Skeleton, Space, Typography, Timeline, Tag } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { getTaskLog$ } from 'services/taskService';
+import { getTaskTimeline$ } from 'services/taskService';
 import styled from 'styled-components';
 import { finalize } from 'rxjs/operators';
 import { TimeAgo } from './TimeAgo';
@@ -23,7 +23,7 @@ export const TaskTimelinePanel = React.memo((props) => {
   const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
-    const sub$ = getTaskLog$(taskId).pipe(
+    const sub$ = getTaskTimeline$(taskId).pipe(
       finalize(() => setLoading(false))
     ).subscribe(setList);
     return () => sub$.unsubscribe()
@@ -36,11 +36,12 @@ export const TaskTimelinePanel = React.memo((props) => {
   return <Container>
     <Timeline
       items={list.map(x => ({
+        // color: 
         children: <Space direction='vertical'>
-          <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} showTime={false} />
+          <TimeAgo value={x.createdAt} direction="horizontal" accurate={true} showTime={true} />
           <Space>
             <UserNameCard userId={x.by} showEmail={false} size={24} />
-            triggered
+            emitted
             <Tag>{x.type}</Tag>
           </Space>
         </Space>

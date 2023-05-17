@@ -847,9 +847,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/log:
+  /task/{id}/timeline:
     get:
-      operationId: getTaskLog
+      operationId: getTaskTimeline
       parameters:
         - name: id
           in: path
