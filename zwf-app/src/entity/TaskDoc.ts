@@ -51,7 +51,7 @@ export class TaskDoc {
   @Column('uuid', { nullable: true, select: false })
   generatedBy: string; // For 'autogen' type only
 
-  @Column('jsonb', { nullable: true, select: false })
+  @Column('jsonb', { nullable: true })
   fieldBag?: { [key: string]: any }; // For 'autogen' type only
 
   @Column({ nullable: true})
