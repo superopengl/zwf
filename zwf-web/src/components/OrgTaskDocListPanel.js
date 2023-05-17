@@ -13,7 +13,7 @@ import { useAddDemplateToTaskModal } from 'hooks/useAddDemplateToTaskModal';
 import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
-import { TbSignature, TbSignatureOff } from 'react-icons/tb';
+import { TbFileImport, TbSignature, TbSignatureOff } from 'react-icons/tb';
 import DropdownMenu from './DropdownMenu';
 import { RiQuillPenLine, RiQuillPenFill } from 'react-icons/ri';
 
@@ -74,6 +74,10 @@ export const OrgTaskDocListPanel = React.memo((props) => {
     })
   }
 
+  const handleGenerateDoc = doc => {
+
+  }
+
   const columns = [
     {
       title: '',
@@ -92,7 +96,6 @@ export const OrgTaskDocListPanel = React.memo((props) => {
           <TaskDocName taskDoc={doc} showDescription={true}/>
         </div>
       </Tooltip>
-
     },
     // {
     //   align: 'right',
@@ -112,15 +115,21 @@ export const OrgTaskDocListPanel = React.memo((props) => {
       fixed: 'right',
       width: 16,
       render: (text, doc) => {
+        const hasFile = !!doc.fileId;
+
         return (
           <DropdownMenu
             config={[
-              doc.signedAt ? null : {
+              doc.signedAt || !hasFile ? null : {
                 icon: <Icon component={doc.signRequestedAt ?  RiQuillPenLine : RiQuillPenFill} />,
                 menu: doc.signRequestedAt ? `Revoke sign request` : `Request sign`,
                 onClick: () => handleRequestSign(doc)
               },
-
+              doc.demplateId && !hasFile ? {
+                icon: <Icon component={BsFileEarmarkTextFill} />,
+                menu: `Generate doc`,
+                onClick: () => handleGenerateDoc(doc)
+              } : null,
               // {
               //   menu: 'Impersonate',
               //   onClick: () => handleImpersonante(item)
@@ -169,7 +178,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
     >Doc Template</Button>
   }]
 
-  return <ProCard title={`Documents (${docs.length})`}
+  return <ProCard title={`Documents`}
     extra={<Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
       <Button icon={<PlusOutlined />}>Add Document</Button>
     </Dropdown>}
