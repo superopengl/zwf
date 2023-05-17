@@ -66,12 +66,13 @@ export const PageHeaderContainer = React.memo((props) => {
       className="page-header"
       header={{
         // backIcon: <LeftOutlined />,
-        title: <Row align="middle" wrap={false} style={{ height: 46, paddingLeft: onBack ? 0 : 32, width: '100%' }}>
-          {icon && <Col flex="none">{icon}</Col>}
-          <Col flex="auto">
-            <Title level={3} style={{ margin: 0 }}>{title}</Title>
-          </Col>
-        </Row>,
+        // title: <Row align="middle" wrap={true} style={{ height: 46, paddingLeft: onBack ? 0 : 32, width: '100%' }}>
+        //   {icon && <Col flex="none">{icon}</Col>}
+        //   <Col flex="auto">
+        //     <Title level={3} style={{ margin: 0 }}>{title}</Title>
+        //   </Col>
+        // </Row>,
+        title: title,
         extra: extra?.filter(x => !!x),
         style: {
           paddingTop: 0,
