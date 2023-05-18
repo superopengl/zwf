@@ -207,7 +207,7 @@ const ClientTaskPage = () => {
             type={activePanel === 'comment' ? 'primary' : 'text'}
             ghost={activePanel === 'comment'}
             onClick={() => setActivePanel('comment')}
-          >Comments</Button>
+          >Chat</Button>
           {task.fields.length > 0 && <Button size={buttonSize} icon={<TaskRequestFillFormBadge taskId={task.id} offset={[10, 0]}>
           <Icon component={AiOutlineForm} />
           </TaskRequestFillFormBadge>}

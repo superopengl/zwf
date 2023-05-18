@@ -14,6 +14,8 @@ import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
 import { ackTaskEventType$ } from 'services/notificationService';
 import { finalize, switchMap, tap } from 'rxjs';
+import { TaskCommentTimeline } from './TaskCommentTimeline';
+import { TaskCommentList } from './TaskCommentList';
 
 const StyledList = styled(ProList)`
 .ant-pro-card-body {
@@ -104,19 +106,11 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
   }, []);
 
   return <ScrollToBottom className={containerCss} debug={false}>
-    <StyledList
+    {/* <StyledList
       split={false}
       rowKey="id"
       loading={loading}
       itemLayout="vertical"
-      // footer={<Row gutter={16} style={{padding: '0 24px'}}>
-      //   <Col>
-      //     <UserNameCard size={32} userId={myUserId} showName={false} showEmail={false} showTooltip={true} />
-      //   </Col>
-      //   <Col flex="auto" >
-      //     <TaskCommentInputForm taskId={taskId} />
-      //   </Col>
-      // </Row>}
       dataSource={list.map(item => ({
         avatar: <UserNameCard size={32} userId={item.by} showName={false} showEmail={false} showTooltip={true} />,
         title: isMe(item.by) ? "Me" : <UserNameCard userId={item.by} showName={true} showAvatar={false} showEmail={false} showTooltip={true} />,
@@ -130,7 +124,8 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
         description: {},
         subTitle: {},
       }}
-    />
+    /> */}
+    <TaskCommentList dataSource={list} loading={loading} />
   </ScrollToBottom >
 });
 
