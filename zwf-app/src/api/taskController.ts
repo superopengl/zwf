@@ -619,7 +619,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
 export const requestClientAction = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { id } = req.params;
-  const { requestSign, requestForm, comment } = req.body;
+  const { comment } = req.body;
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
@@ -628,23 +628,13 @@ export const requestClientAction = handlerWrapper(async (req, res) => {
       where: {
         id,
         orgId,
-      },
-      relations: {
-        docs: true
       }
     });
-    if (requestForm) {
-      await emitTaskEvent(m, TaskEventType.RequestClientInputFields, id, userId);
-    }
+
+    await emitTaskEvent(m, TaskEventType.RequestClientInputFields, id, userId);
     const message = comment?.trim();
     if (message) {
       await emitTaskEvent(m, TaskEventType.Comment, id, userId, { message });
-    }
-    if (requestSign) {
-      const docsToSign = task.docs.filter(d => d.signRequestedAt && !d.esign);
-      if (docsToSign.length) {
-        await emitTaskEvent(m, TaskEventType.RequestClientSign, id, userId);
-      }
     }
 
     task.status = TaskStatus.ACTION_REQUIRED;
