@@ -6,8 +6,10 @@ import { FormSchemaRenderer } from './FormSchemaRenderer';
 import { useRole } from 'hooks/useRole';
 import { useZevent } from 'hooks/useZevent';
 import { finalize } from 'rxjs';
-import { Row, Button } from 'antd';
+import { Row, Button, Typography } from 'antd';
 import { TaskContext } from 'contexts/TaskContext';
+
+const { Text } = Typography
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
@@ -16,6 +18,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const { task, setTask } = React.useContext(TaskContext);
   // const [fields, setFields] = React.useState(task?.fields);
   const [changedFields, setChangedFields] = React.useState({});
+  const [savingStatus, setSavingStatus] = React.useState();
   const [aggregatedChangedFields] = useDebouncedValue(changedFields, 1000);
   const [disabled, setDisabled] = React.useState(false);
   const role = useRole();
@@ -47,9 +50,11 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     if (!autoSave) {
       return;
     }
+    setTask({ ...task, fields });
+    setSavingStatus('Saving ...')
     saveTaskFieldValues$(task.id, aggregatedChangedFields)
       .pipe(
-        finalize(() => onLoadingChange(false))
+        finalize(() => setSavingStatus('Saved'))
       ).subscribe(() => {
         setChangedFields({})
       });
@@ -73,13 +78,13 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       }
     });
 
-    setTask({...task, fields})
   }
 
   const handleTaskFieldsValueChange = React.useCallback(changedFields => {
     updateFieldsWithChangedFields(changedFields);
     onLoadingChange(true);
     setChangedFields(x => ({ ...x, ...changedFields }))
+    setSavingStatus('Unsaved');
   }, []);
 
   return (<>
@@ -92,9 +97,11 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       requiredMark={requiredMark}
 
     />
-    {!autoSave && <Row justify="end" style={{ marginTop: 20 }}>
-      <Button onClick={handleManualSubmit} type="primary">{submitText}</Button>
-    </Row>}
+    <Row justify="end" style={{ marginTop: 20 }}>
+      {autoSave ?
+        <Text type="secondary" italic><small>{savingStatus}</small></Text> :
+        <Button onClick={handleManualSubmit} type="primary">{submitText}</Button>}
+    </Row>
   </>
   );
 });

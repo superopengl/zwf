@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Typography, Tag, Space, Alert, Button } from 'antd';
 import { TaskContext } from 'contexts/TaskContext';
-import { ArrowLeftOutlined, ArrowRightOutlined, ExclamationCircleFilled, LeftOutlined } from '@ant-design/icons';
+import Icon, { ArrowLeftOutlined, ArrowRightOutlined, ExclamationCircleFilled, LeftOutlined } from '@ant-design/icons';
 import { isEmpty } from 'lodash';
+import { BsArrowRightShort } from 'react-icons/bs';
 
 const { Text, Paragraph } = Typography;
 
@@ -73,12 +74,16 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
         showIcon
         icon={<ExclamationCircleFilled />}
         message="There have been changes in the values of certain dependency fields since the last generation. Regenerate the document with the latest field values?"
-        action={<Button size="small">Re-generate</Button>}
+        action={<Button size="small">Re-generate doc</Button>}
         description={<>
-          {Object.entries(valueChangedVars).map(([varName, diff]) => (<Space size="small" key={varName}>
-            <Text strong>{varName} : </Text>
-            <Text code>{diff.valueInDoc}</Text><ArrowRightOutlined /><Text code>{diff.valueInField}</Text>
-          </Space>))}
+          {Object.entries(valueChangedVars).map(([varName, diff]) => (<div key={varName}>
+            <Space size="small" >
+              <Text strong>{varName} : </Text>
+              <Text code>{diff.valueInDoc}</Text>
+              <Text type="secondary"><Icon component={BsArrowRightShort} /></Text>
+              <Text code>{diff.valueInField}</Text>
+            </Space>
+          </div>))}
         </>}
       />
     }
@@ -98,7 +103,9 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
           icon={<ExclamationCircleFilled />}
           message="The following dependency fields are empty. Please fill them in before proceeding with document generation."
           description={<>
-            {blankVars.map(varName => <Text code key={varName}>{varName}</Text>)}
+            {blankVars.map(varName => <div key={varName} >
+              <Text code>{varName}</Text>
+            </div>)}
           </>}
         />
       </>
