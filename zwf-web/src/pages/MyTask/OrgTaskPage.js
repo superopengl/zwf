@@ -239,7 +239,7 @@ const OrgTaskPage = () => {
             <Col flex="0 0 340px">
               <ProCard ghost>
                 <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
-                <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
+                <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }} colon={false}>
                   <Descriptions.Item label="Status">
                     <TaskStatusButton style={{ width: '100%' }} key="status" value={task.status} onChange={handleStatusChange} />
                   </Descriptions.Item>
