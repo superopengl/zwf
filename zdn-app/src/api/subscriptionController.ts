@@ -1,6 +1,7 @@
 
 import { getManager, getRepository, Not } from 'typeorm';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';

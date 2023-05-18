@@ -2,7 +2,8 @@
 import { getRepository, IsNull, getManager } from 'typeorm';
 import { Task } from '../entity/Task';
 import { Message } from '../entity/Message';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getNow } from '../utils/getNow';
 

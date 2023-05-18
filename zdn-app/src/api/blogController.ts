@@ -1,7 +1,8 @@
 
 import { getRepository } from 'typeorm';
 import { Blog } from '../entity/Blog';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getNow } from '../utils/getNow';
 

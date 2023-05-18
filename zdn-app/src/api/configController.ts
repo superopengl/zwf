@@ -1,6 +1,7 @@
 
 import { getManager, getRepository } from 'typeorm';
-import { assert, assertRole } from '../utils/assert';
+import { assert } from '../utils/assert';
+import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { SystemConfig } from '../entity/Config';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
