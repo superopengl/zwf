@@ -10,6 +10,8 @@ import { of } from 'rxjs';
 
 axios.defaults.withCredentials = true;
 
+let isSessionTimeoutModalOn = false;
+
 function trimSlash(str) {
   return str ? str.replace(/^\/+/, '').replace(/\/+$/, '') : str;
 }
@@ -57,14 +59,33 @@ export async function request(method, path, queryParams, body, responseType = 'j
   } catch (e) {
     const code = _.get(e, 'response.status', null);
     if (code === 401) {
-      notify.error('Session timeout.');
-      window.location = '/';
-      return;
+      handleSessionTimeout();
+      return false;
     }
     const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);
     console.error(e.response);
     throw e;
+  }
+}
+
+function reloadPage() {
+  window.location = '/';
+}
+
+function handleSessionTimeout() {
+  if(!isSessionTimeoutModalOn) {
+    isSessionTimeoutModalOn = true;
+    Modal.warning({
+      title: 'Session timeout',
+      content: 'Your session is timeout.',
+      maskClosable: false,
+      closable: false,
+      okText: 'Reload page',
+      onOk: () => {
+        reloadPage();
+      }
+    });
   }
 }
 
@@ -86,9 +107,8 @@ export function request$(method, path, queryParams, body, responseType = 'json')
     catchError(e => {
       const code = e.status;
       if (code === 401) {
-        notify.error('Session timeout.');
-        window.location = '/';
-        return;
+        handleSessionTimeout();
+        return false;
       }
       const errorMessage = responseType === 'blob' ? e.message : e.response || _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
       notify.error('Error', errorMessage);
@@ -112,9 +132,8 @@ export async function uploadFile(fileBlob) {
   } catch (e) {
     const code = _.get(e, 'response.status', null);
     if (code === 401) {
-      notify.error('Session timeout.');
-      window.location = '/';
-      return;
+      handleSessionTimeout();
+      return false;
     }
     const errorMessage = _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
     notify.error('Error', errorMessage);
