@@ -51,10 +51,10 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       return;
     }
     setTask({ ...task, fields });
-    setSavingStatus('Saving ...')
+    setSavingStatus('saving ...')
     saveTaskFieldValues$(task.id, aggregatedChangedFields)
       .pipe(
-        finalize(() => setSavingStatus('Saved'))
+        finalize(() => setSavingStatus('saved'))
       ).subscribe(() => {
         setChangedFields({})
       });
@@ -84,7 +84,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     updateFieldsWithChangedFields(changedFields);
     onLoadingChange(true);
     setChangedFields(x => ({ ...x, ...changedFields }))
-    setSavingStatus('Unsaved');
+    setSavingStatus('saving ...');
   }, []);
 
   return (<>
@@ -95,7 +95,6 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       onChange={handleTaskFieldsValueChange}
       disabled={disabled}
       requiredMark={requiredMark}
-
     />
     <Row justify="end" style={{ marginTop: 20 }}>
       {autoSave ?
