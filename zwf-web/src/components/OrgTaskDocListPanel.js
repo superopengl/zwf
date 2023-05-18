@@ -25,6 +25,10 @@ const Container = styled.div`
 .ant-table-cell {
   border: none !important;
 }
+
+.dropdown-menu {
+  vertical-align: top;
+}
 `;
 
 export const OrgTaskDocListPanel = React.memo((props) => {
@@ -113,6 +117,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
       align: 'right',
       fixed: 'right',
       width: 16,
+      className: 'dropdown-menu',
       render: (text, doc) => {
         const hasFile = !!doc.fileId;
 
