@@ -7,7 +7,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { NotificationMessage } from "../entity/NotificationMessage";
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
-import { TaskEventType } from '../types/TaskEventType';
+import { ZeventType, ZeventTypeDef } from '../types/ZeventTypeDef';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
@@ -19,24 +19,15 @@ import { TaskWatcherEventAck } from '../entity/TaskWatcherEventAck';
 import { assert } from '../utils/assert';
 import { emitTaskEventAcks } from '../utils/emitTaskEventAcks';
 
-const CLIENT_WATCH_EVENTS = [
-  TaskEventType.RequestClientInputFields,
-  TaskEventType.RequestClientSign,
-  TaskEventType.Comment,
-  TaskEventType.Complete,
-  TaskEventType.Archive
-]
+const def = Object.entries(ZeventTypeDef);
 
-const ORG_MEMBER_WATCH_EVENTS = [
-  TaskEventType.ClientSubmit,
-  TaskEventType.ClientSignDoc,
-  TaskEventType.Comment,
-  TaskEventType.CreatedByRecurring,
-  TaskEventType.OrgStartProceed,
-  TaskEventType.Assign,
-  TaskEventType.Complete,
-  TaskEventType.Archive,
-]
+const CLIENT_WATCH_EVENTS = def
+  .filter(([key, value]) => value.notifyClientWatcher)
+  .map(([key, value]) => key);
+
+const ORG_MEMBER_WATCH_EVENTS = def
+  .filter(([key, value]) => value.notifyOrgWatcher)
+  .map(([key, value]) => key);
 
 export const getMyNotifications = handlerWrapper(async (req, res) => {
   assertRole(req, ['client', 'agent', 'admin']);
@@ -55,6 +46,7 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
     .getRepository(TaskWatcherEventAckInformation)
     .createQueryBuilder('x')
     .where(`"userId" = :userId`, { userId })
+    .andWhere(`type IN (:...eventTypes)`, { eventTypes })
     // .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
     .andWhere(`"ackAt" IS NULL`)
     .select([

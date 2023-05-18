@@ -14,7 +14,7 @@ export const TaskUnreadCommentBadge = React.memo((props) => {
 
   React.useEffect(() => {
     const num = zevents.filter(z => z.payload.taskId === taskId
-      && z.payload.type === 'comment'
+      && z.payload.type === 'task-comment'
       && z.payload.by !== user.id
       && !z.payload.ackAt).length;
     setCount(num);

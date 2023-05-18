@@ -10,15 +10,7 @@ import { useAuthUser } from 'hooks/useAuthUser';
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { UserNameCard } from './UserNameCard';
 
-const { Paragraph, Title, Text } = Typography;
-
-const containerCss = css({
-  height: '100%',
-  width: '100%',
-  '& button': {
-    display: 'none',
-  }
-});
+const { Text } = Typography;
 
 const StyledList = styled(List)`
 .ant-list-item {
@@ -38,8 +30,8 @@ const ChatMessage = React.memo(props => {
   const currentUserId = user?.id;
   const isMe = userId === currentUserId;
 
-  return <Space style={{ flexDirection: isMe ? 'row-reverse' : 'column', alignItems: 'flex-start', width: '100%', gap: isMe? 8 : 0 }} size="small">
-    <UserNameCard userId={userId} showName={!isMe} showEmail={false}/>
+  return <Space style={{ flexDirection: isMe ? 'row-reverse' : 'column', alignItems: 'flex-start', width: '100%', gap: isMe ? 8 : 0 }} size="small">
+    <UserNameCard userId={userId} showName={!isMe} showEmail={false} />
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: isMe ? 'flex-end' : 'flex-start', paddingLeft: isMe ? 0 : 42 }}>
       <Card
         size="small"
@@ -56,7 +48,7 @@ const ChatMessage = React.memo(props => {
           backgroundColor: isMe ? '#0FBFC499' : 'rgb(236, 236, 236)',
           borderRadius: 12,
         }}>
-          {message}
+        {message}
       </Card>
       <Text type="secondary">
         <small><TimeAgo value={createdAt} accurate={false} showTime={false} /></small>
@@ -67,15 +59,13 @@ const ChatMessage = React.memo(props => {
 
 export const TaskCommentList = React.memo((props) => {
   const { dataSource, loading } = props;
-  return <ScrollToBottom className={containerCss} debug={false}>
-      <StyledList
-        loading={loading}
-        dataSource={dataSource}
-        renderItem={item => <List.Item>
-          <ChatMessage userId={item.by} message={item.info.message} createdAt={item.createdAt} />
-        </List.Item>} />
-        {/* <DebugJsonPanel value={dataSource} /> */}
-    </ScrollToBottom>
+  return <StyledList
+    loading={loading}
+    dataSource={dataSource}
+    locale={{ emptyText: 'No messages' }}
+    renderItem={item => <List.Item>
+      <ChatMessage userId={item.by} message={item.info.message} createdAt={item.createdAt} />
+    </List.Item>} />
 });
 
 TaskCommentList.propTypes = {

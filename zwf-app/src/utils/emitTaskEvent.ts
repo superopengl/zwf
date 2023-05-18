@@ -1,22 +1,22 @@
 import { EntityManager } from "typeorm";
-import { TaskEventType } from "../types/TaskEventType";
+import { ZeventType } from "../types/ZeventTypeDef";
 import { TaskEvent } from "../entity/TaskEvent";
 import { publishTaskChangeZevent } from "./publishTaskChangeZevent";
 import { Task } from "../entity/Task";
 import { publishZevent } from "../services/zeventSubPubService";
 
 const ZEVENTABLE_TASKEENTTYPES = new Set([
-  TaskEventType.ClientSignDoc,
-  TaskEventType.RequestClientSign,
-  TaskEventType.ClientSubmit,
-  TaskEventType.FieldSchemaChange,
-  TaskEventType.FieldValuesChange,
-  TaskEventType.Complete,
-  TaskEventType.Archive,
-  TaskEventType.Comment,
+  ZeventType.ClientSignDoc,
+  ZeventType.RequestClientSign,
+  ZeventType.ClientSubmitForm,
+  ZeventType.FieldSchemaChange,
+  ZeventType.FieldValuesChange,
+  ZeventType.Complete,
+  ZeventType.Archive,
+  ZeventType.Comment,
 ]);
 
-export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventType, taskId: string, by?: string, info?: any) {
+export async function emitTaskEvent(m: EntityManager, taskEventType: ZeventType, taskId: string, by?: string, info?: any) {
   const task = await m.findOne(Task, {
     where: {
       id: taskId,
@@ -29,6 +29,7 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventTy
 
   const taskEvent = new TaskEvent();
   taskEvent.taskId = taskId;
+  taskEvent.taskName = task.name;
   taskEvent.by = by;
   taskEvent.orgId = task.orgId;
   taskEvent.type = taskEventType;
@@ -38,7 +39,7 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventTy
 
   if (ZEVENTABLE_TASKEENTTYPES.has(taskEventType)) {
     const watcherUserIds = task.watchers.map(x => x.userId);
-    if (taskEventType === TaskEventType.Comment && !watcherUserIds.includes(by)) {
+    if (taskEventType === ZeventType.Comment && !watcherUserIds.includes(by)) {
       // If comment, always publish to self, regardless if watching or not.
       watcherUserIds.push(by);
     }

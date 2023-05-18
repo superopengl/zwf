@@ -1,6 +1,6 @@
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskEvent } from '../entity/TaskEvent';
-import { TaskEventType } from '../types/TaskEventType';
+import { ZeventType } from '../types/ZeventTypeDef';
 import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { Task } from '../entity/Task';
@@ -17,13 +17,13 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
   const comment = new TaskEvent();
   const { orgId, id: taskId } = task;
   comment.eventId = uuidv4();
-  comment.type = TaskEventType.Comment;
+  comment.type = ZeventType.Comment;
   comment.taskId = taskId;
   comment.by = by;
   comment.info = { message };
   // const result = await m.save(comment);
 
-  await emitTaskEvent(m, TaskEventType.Comment, taskId, by, { message });
+  await emitTaskEvent(m, ZeventType.Comment, taskId, by, { message });
 
   // const userId = (task as any).orgClient?.userId;
   // if (userId) {

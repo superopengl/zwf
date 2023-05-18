@@ -21,7 +21,7 @@ import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { TaskEvent } from '../entity/TaskEvent';
-import { TaskEventType } from '../types/TaskEventType';
+import { ZeventType } from '../types/ZeventTypeDef';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 
 export const generateDemplateDoc = handlerWrapper(async (req, res) => {
@@ -113,7 +113,7 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
 
     await m.save(taskDoc);
 
-    await emitTaskEvent(m, TaskEventType.AddDoc, task.id, userId, { docId });
+    await emitTaskEvent(m, ZeventType.AddDoc, task.id, userId, { docId });
   });
 
   res.json({
@@ -163,7 +163,7 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
 
   const emitClientDownloadEvent = async () => {
     if(isClient) {
-      await emitTaskEvent(db.manager, TaskEventType.ClientDownloadDoc, doc.taskId, userId, {docId: doc.id});
+      await emitTaskEvent(db.manager, ZeventType.ClientDownloadDoc, doc.taskId, userId, {docId: doc.id});
     }
   }
 
@@ -222,7 +222,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
     const taskId = docs[0].task.id;
     await m.save([...docs]);
 
-    await emitTaskEvent(m, TaskEventType.ClientSignDoc, taskId, userId, docs.map(d => ({
+    await emitTaskEvent(m, ZeventType.ClientSignDoc, taskId, userId, docs.map(d => ({
       docId: d.id,
       docName: d.name,
       esign: d.esign,

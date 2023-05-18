@@ -54,9 +54,9 @@ export const TaskCommentTimeline = React.memo((props => {
     <Timeline mode="left" style={{ padding: 16, paddingLeft: 20 }}>
       {(dataSource ?? []).map(item => <Timeline.Item
         key={item.id}
-        color={item.type === 'comment' ? (item.by === currentUserId ? 'blue' : 'gray') : 'blue'}
-        // position={item.type === 'comment' && item.by === currentUserId ? 'left' : 'right'}
-        dot={item.type === 'comment' ? <MessageFilled /> : null}
+        color={item.type === 'task-comment' ? (item.by === currentUserId ? 'blue' : 'gray') : 'blue'}
+        // position={item.type === 'task-comment' && item.by === currentUserId ? 'left' : 'right'}
+        dot={item.type === 'task-comment' ? <MessageFilled /> : null}
       // label={singleMode ? null : <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />}
       >
         <Row gutter={20} wrap={false}>
@@ -78,7 +78,7 @@ export const TaskCommentTimeline = React.memo((props => {
                 <Link to={`/task/${item.taskId}`}><strong>{item.taskName}</strong></Link>
                 <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
               </Space>}
-              {item.type === 'comment' ? <ChatMessage userId={item.by} message={item.info} />
+              {item.type === 'task-comment' ? <ChatMessage userId={item.by} message={item.info} />
                 : item.type === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
                   : item.type === 'doc-signed' ? <Space size="small" onClick={e => e.stopPropagation()}>
                     <TextLink href={getTaskDocDownloadUrl(item.info.taskDocId)} target="_blank" >

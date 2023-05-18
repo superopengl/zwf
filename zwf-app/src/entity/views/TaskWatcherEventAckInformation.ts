@@ -12,7 +12,7 @@ import { OrgClient } from '../OrgClient';
 import { TaskEvent } from '../TaskEvent';
 import { TaskWatcherEventAck } from '../TaskWatcherEventAck';
 import { OrgClientInformation } from './OrgClientInformation';
-import { TaskEventType } from '../../types/TaskEventType';
+import { ZeventType } from '../../types/ZeventTypeDef';
 import { OrgMemberInformation } from './OrgMemberInformation';
 import { TaskWatcher } from '../TaskWatcher';
 
@@ -59,7 +59,7 @@ import { TaskWatcher } from '../TaskWatcher';
   taskName: string;
 
   @ViewColumn()
-  type: TaskEventType;
+  type: ZeventType;
 
   @ViewColumn()
   info: any;

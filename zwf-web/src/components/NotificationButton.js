@@ -33,16 +33,15 @@ const { Text } = Typography;
 
 
 const messageFuncMap = {
-  'client-submit': () => <>Submitted by client</>,
+  'client-submit-form': () => <>Submitted by client</>,
   'client-sign-doc': () => <>Documents were signed by client</>,
-  'comment': () => <>Has new comments</>,
+  'task-comment': () => <>Has new comments</>,
   'created-recurringly': () => <>Was created automatically by recurring</>,
-  'start-proceeding': () => <>Started being proceeded</>,
   'assign': x => <>Was assigned to <UserNameCard userId={x.payload.info.assigneeId} showEmail={false} /></>,
   'complete': () => <>Was completed</>,
   'archive': () => <>Was archieved</>,
   'request-client-sign': () => <>Documents requires sign</>,
-  'request-client-fields': () => <>Form fields require to be filled</>,
+  'request-client-fill-form': () => <>Form fields require to be filled</>,
 };
 
 const getNotificationMessage = x => {
@@ -61,7 +60,6 @@ export const NotificationButton = (props) => {
   const [open, setOpen] = React.useState(false)
 
   // const { notifications, setNotifications } = context;
-
 
   const navigate = useNavigate();
 
