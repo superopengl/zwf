@@ -202,7 +202,7 @@ const ClientTaskPage = () => {
         title={task.name || <Skeleton paragraph={false} />}
         footer={<Row className='client-task-footer' justify="space-around" wrap={false}>
           <Button size={buttonSize} icon={<TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]}>
-            <Icon component={BiCommentDetail} />
+            <CommentOutlined />
           </TaskUnreadCommentBadge>}
             type={activePanel === 'comment' ? 'primary' : 'text'}
             ghost={activePanel === 'comment'}

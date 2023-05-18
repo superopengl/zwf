@@ -62,8 +62,8 @@ export function updateTaskFields$(taskId, fields) {
   return httpPost$(`/task/${taskId}/fields`, { fields });
 }
 
-export function generateAutoDoc$(fieldId) {
-  return httpPost$(`/task/field/${fieldId}/autodoc`);
+export function generateDemplateDoc$(docId) {
+  return httpPost$(`/task/doc/${docId}/gendoc`);
 }
 
 export function saveTaskFieldValues$(taskId, fields) {

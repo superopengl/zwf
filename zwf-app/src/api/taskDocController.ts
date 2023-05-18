@@ -24,7 +24,7 @@ import { TaskEvent } from '../entity/TaskEvent';
 import { TaskEventType } from '../types/TaskEventType';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 
-export const generateAutoDoc = handlerWrapper(async (req, res) => {
+export const generateDemplateDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { docId } = req.params;
   const orgId = getOrgIdFromReq(req);
