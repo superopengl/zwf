@@ -1,7 +1,6 @@
 import { EntityManager } from "typeorm";
 import { ZeventType } from "../types/ZeventTypeDef";
 import { TaskEvent } from "../entity/TaskEvent";
-import { publishTaskChangeZevent } from "./publishTaskChangeZevent";
 import { Task } from "../entity/Task";
 import { publishZevent } from "../services/zeventSubPubService";
 

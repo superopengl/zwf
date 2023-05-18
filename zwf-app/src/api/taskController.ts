@@ -27,7 +27,6 @@ import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
-import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 import { TaskWatcher } from '../entity/TaskWatcher';
 import { searchTaskList } from '../utils/searchTaskList';
