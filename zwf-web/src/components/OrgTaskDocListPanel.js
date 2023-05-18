@@ -92,10 +92,8 @@ export const OrgTaskDocListPanel = React.memo((props) => {
           <TimeAgo prefix="Signed" value={doc.signedAt} />
         </Space>
         }>
-        <Space.Compact direction='vertical'>
           <TaskDocName taskDoc={doc}/>
           <TaskDocDescription taskDoc={doc} />
-        </Space.Compact>
       </Tooltip>
     },
     // {
