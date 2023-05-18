@@ -13,8 +13,8 @@ margin-left: 36px;
 positon: relative:
 top: -10px;
 
-&, .ant-typography, .ant-tag, .ant-alert-message, .ant-alert-description {
-  font-size: 0.8rem;
+&, .ant-typography, .ant-tag, .ant-alert-message, .ant-alert-description, .ant-btn-sm {
+  font-size: 12px;
 }
 
 .ant-alert {
@@ -72,11 +72,11 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
       return <Alert type="warning"
         showIcon
         icon={<ExclamationCircleFilled />}
-        message="Some dependency field values have changed after previous generation. Regenerate with the latest field values?"
+        message="There have been changes in the values of certain dependency fields since the last generation. Regenerate the document with the latest field values?"
         action={<Button size="small">Re-generate</Button>}
         description={<>
           {Object.entries(valueChangedVars).map(([varName, diff]) => (<Space size="small" key={varName}>
-            <Text>{varName}</Text>
+            <Text strong>{varName} : </Text>
             <Text code>{diff.valueInDoc}</Text><ArrowRightOutlined /><Text code>{diff.valueInField}</Text>
           </Space>))}
         </>}
@@ -87,8 +87,7 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
     if (readyToGen) {
       return <><Alert type="success"
         showIcon
-        message="All dependency fields are filled. Ready to generate doc."
-        // description={'All dependency fields are filled. Ready to generate doc.'}
+        description={'All mandatory fields have been completed. Document generation can now proceed.'}
         action={<Button size="small">Generate doc</Button>}
       />
       </>
@@ -97,7 +96,7 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
         <Alert type="warning"
           showIcon
           icon={<ExclamationCircleFilled />}
-          message="Below dependency field are blank. Fill them in before so as to generate the doc."
+          message="The following dependency fields are empty. Please fill them in before proceeding with document generation."
           description={<>
             {blankVars.map(varName => <Text code key={varName}>{varName}</Text>)}
           </>}
