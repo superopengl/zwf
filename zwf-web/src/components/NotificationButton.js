@@ -207,7 +207,7 @@ export const NotificationButton = (props) => {
       maskClosable={true}
       destroyOnClose={true}
       // maskStyle={{ background: 'rgba(0, 0, 0, 0)' }}
-      bodyStyle={{padding: '0 8px'}}
+      bodyStyle={{ padding: '0 8px' }}
       onClick={() => setOpen(false)}
     >
       <List
@@ -215,6 +215,7 @@ export const NotificationButton = (props) => {
         dataSource={zevents}
         grid={{ gutter: 0, column: 1 }}
         size="small"
+        locale={{ emptyText: <Card size="small">No notifications</Card> }}
         renderItem={z => <List.Item style={{ padding: 0 }}>
           <Card
             title={<><TaskIcon /> {z.payload.taskName}</>}
