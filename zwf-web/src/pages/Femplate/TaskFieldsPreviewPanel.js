@@ -16,13 +16,13 @@ const Container = styled.div`
   // padding: 2rem;
   // height: calc(100vh - 64px);
   // height: 100%;
-  padding: 1rem 0;
+  // padding: 1rem 0;
 `;
 
 
 export const TaskFieldsPreviewPanel = props => {
 
-  const { name, fields, mode, style } = props;
+  const { fields, mode, style } = props;
 
   return (
     <Container style={style}>
@@ -39,13 +39,11 @@ export const TaskFieldsPreviewPanel = props => {
 };
 
 TaskFieldsPreviewPanel.propTypes = {
-  name: PropTypes.string,
   fields: PropTypes.array,
   mode: PropTypes.oneOf(['client', 'agent', 'profile']).isRequired,
 };
 
 TaskFieldsPreviewPanel.defaultProps = {
-  name: '',
   fields: [],
   mode: 'agent',
 };

@@ -1,10 +1,15 @@
 import React from 'react';
 import { Modal, Typography, Input, Row, Button, Form } from 'antd';
 import { requestClientAction$ } from 'services/taskService';
-import Icon, {  } from '@ant-design/icons';
+import Icon, { } from '@ant-design/icons';
 import { Checkbox } from 'antd';
 import styled from 'styled-components';
 import { BsFillSendFill } from 'react-icons/bs';
+import { TaskFieldsPreviewPanel } from 'pages/Femplate/TaskFieldsPreviewPanel';
+import { TaskContext } from 'contexts/TaskContext';
+import { ProCard } from '@ant-design/pro-components';
+import { Divider } from 'antd';
+import { notify } from 'util/notify';
 
 const { Text, Paragraph } = Typography;
 
@@ -17,32 +22,35 @@ const Container = styled.div`
 const Content = props => {
   const { id, name, onOk } = props;
   const formRef = React.createRef();
+  const { task } = React.useContext(TaskContext);
 
   const handleSendNotification = (values) => {
     requestClientAction$(id, values)
       .subscribe({
-        next: onOk,
-      });
+        next: () => {
+          notify.success('Request sent out', 'Successfully sent out the request. Please wait for the client to submit the form.');
+          onOk();
+        }
+      })
   }
 
   return <Container>
-    <Paragraph>Send notification to client for actions and if needed, include an additional comment.</Paragraph>
+    <Paragraph>Inform the client to fill out the form like below.</Paragraph>
+    <ProCard bordered title="Form" style={{boxShadow:'0 5px 10px rgba(0,0,0,0.3)'}}>
+      <TaskFieldsPreviewPanel mode="client" fields={task.fields} />
+    </ProCard>
+    <Divider style={{ marginTop: 40 }} />
+    <Paragraph >You may provide an additional comment along with the notification.</Paragraph>
     <Form
       ref={formRef}
       initialValues={{ name }}
       onFinish={handleSendNotification}
-      style={{ marginTop: 20 }}
+      
       preserve={false}
     >
-      <Form.Item name="requestSign" valuePropName="checked">
-        <Checkbox>Request to sign documents</Checkbox>
-      </Form.Item>
-      <Form.Item name="requestForm" valuePropName="checked">
-        <Checkbox>Request to fill the form (for information capture)</Checkbox>
-      </Form.Item>
-      <Form.Item name="comment" rules={[{ required: false, max: 1000, message: ' ', whitespace: false }]} style={{marginTop: 18}}>
+      <Form.Item name="comment" rules={[{ required: false, max: 1000, message: ' ', whitespace: false }]} style={{ marginTop: 18 }}>
         <Input.TextArea
-          placeholder="Leave additional comment"
+          placeholder="Additional comment"
           autoSize={{ minRows: 3 }}
           autoFocus
           allowClear
@@ -52,7 +60,7 @@ const Content = props => {
       </Form.Item>
     </Form>
     <Row justify="end" style={{ marginTop: 32 }}>
-      <Button type="primary" onClick={() => formRef.current.submit()}>Send</Button>
+      <Button type="primary" onClick={() => formRef.current.submit()}>Request Client to Fill</Button>
     </Row>
   </Container>
 }
@@ -63,7 +71,7 @@ export const useRequestActionModal = () => {
   const open = (taskId, onOk) => {
     const modalRef = modal.info({
       icon: <Icon component={BsFillSendFill} />,
-      title: `Request client's actions`,
+      title: `Request client to fill form`,
       content: <Content id={taskId} onOk={() => {
         modalRef.destroy();
         onOk?.();
@@ -72,7 +80,7 @@ export const useRequestActionModal = () => {
       },
       className: 'modal-hide-footer',
       // icon: null,
-      width: 470,
+      width: 500,
       closable: false,
       maskClosable: true,
       destroyOnClose: true,
