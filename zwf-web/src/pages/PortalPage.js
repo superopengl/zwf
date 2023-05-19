@@ -45,6 +45,13 @@ background: #ffffff;
 
 `;
 
+const StyledLogoImage = styled(Image)`
+&, & > .ant-image-img {
+  width: auto !important;
+  height: 40px;
+}
+`;
+
 
 
 export const PortalPage = () => {
@@ -70,15 +77,17 @@ export const PortalPage = () => {
     setModalMenuVisible(false);
   }
 
+  const narrowScreen = (screens.xs || screens.sm ) && !screens.md;
+
 
   return <StyledLayoutPage>
     <Layout.Header>
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
-        <Link to="/">
-          <Image src="/images/logo-full-primary.svg" preview={false} height={40} />
+        <Link onClick={() => setModalMenuVisible(x => !x)}>
+          <StyledLogoImage src="/images/logo-full-primary.svg" height={narrowScreen? 30 : 40} preview={false} />
         </Link>
 
-        <Row gutter={(screens.xxl || screens.xl || screens.lg || screens.md) ? 30 : 16} align="middle">
+        <Row gutter={narrowScreen ? 8 : 30} wrap={false}>
           {(screens.xxl || screens.xl || screens.lg) && <Col>
             <Tabs
               defaultActiveKey="/"
@@ -117,7 +126,7 @@ export const PortalPage = () => {
             </Link>
           </Col>}
           {!(screens.xxl || screens.xl || screens.lg) && <Col>
-            <Button size="large" icon={<MenuOutlined />} onClick={() => setModalMenuVisible(x => !x)} />
+            <Button icon={<MenuOutlined />} onClick={() => setModalMenuVisible(x => !x)} />
           </Col>}
         </Row>
       </Space>
