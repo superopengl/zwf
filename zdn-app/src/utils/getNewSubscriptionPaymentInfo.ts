@@ -5,6 +5,18 @@ import { assert } from './assert';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscriptionRefund';
+import { OrgSeats } from '../entity/OrgSeats';
+
+async function getMinSeats(m: EntityManager, orgId: string) {
+  const result = await m.createQueryBuilder()
+    .from(OrgSeats, 'x')
+    .where('"orgId" = :orgId', { orgId })
+    .andWhere('"userId" IS NOT NULL')
+    .select('COUNT(1) as count')
+    .getRawOne();
+
+  return +(result?.count) || 0;
+}
 
 export async function getNewSubscriptionPaymentInfo(
   m: EntityManager,
@@ -16,6 +28,7 @@ export async function getNewSubscriptionPaymentInfo(
   const unitPrice = getSubscriptionPrice();
   const currentCreditBalance = await getCreditBalance(m, orgId);
   const refundable = await getRefundableCredits(m, orgId);
+  const minSeats = await getMinSeats(m, orgId);
   const creditBalance = currentCreditBalance + refundable;
 
   let promotionPercentage = null;
@@ -36,6 +49,7 @@ export async function getNewSubscriptionPaymentInfo(
 
   const result = {
     unitPrice,
+    minSeats,
     seats,
     promotionPercentage,
     price,

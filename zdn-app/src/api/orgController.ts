@@ -12,6 +12,10 @@ import { SystemEmailSignature } from '../entity/SystemEmailSignature';
 import { OrgEmailSignature } from '../entity/OrgEmailSignature';
 import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
 import { createOrgTrialSubscription } from '../utils/createOrgTrialSubscription';
+import * as moment from 'moment';
+import { Subscription } from '../entity/Subscription';
+import { SubscriptionStatus } from '../types/SubscriptionStatus';
+import { SubscriptionType } from '../types/SubscriptionType';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -28,7 +32,7 @@ export const listOrg = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
+export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { user: { id } } = req as any;
   const { name, domain, businessName, country, address, tel, abn } = req.body;
@@ -37,7 +41,8 @@ export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
   const isFirstSave = !userEnitty.orgId;
 
   const org = new Org();
-  org.id = isFirstSave ? uuidv4() : userEnitty.orgId;
+  const orgId = isFirstSave ? uuidv4() : userEnitty.orgId;
+  org.id = orgId;
   org.name = name?.trim();
   org.domain = domain?.trim();
   org.businessName = businessName?.trim();
@@ -46,36 +51,36 @@ export const saveMyOrgProfile = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
-  const entities: any[] = [org];
-  if (isFirstSave) {
-    userEnitty.orgId = org.id;
-    entities.push(userEnitty);
-  }
-
   await getManager().transaction(async m => {
-
+    
+    if (isFirstSave) {
+      userEnitty.orgId = orgId;
+      userEnitty.orgOwner = true;
+      userEnitty.paid = false;
+      m.save(userEnitty);
+    }
     // Copy email templates to org
     const systemEmailTemplates = await m.getRepository(SystemEmailTemplate).find({});
     const orgEmailTemplates = systemEmailTemplates.map(x => {
-      const entity = new OrgEmailTemplate();
-      Object.assign(entity, x);
-      entity.id = uuidv4();
-      entity.orgId = org.id;
-      return entity;
+      const emailTemplateEntity = new OrgEmailTemplate();
+      Object.assign(emailTemplateEntity, x);
+      emailTemplateEntity.id = uuidv4();
+      emailTemplateEntity.orgId = orgId;
+      return emailTemplateEntity;
     })
 
     // Copy email signatures to org
     const systemEmailSignatures = await m.getRepository(SystemEmailSignature).find({});
     const orgEmailSignatures = systemEmailSignatures.map(x => {
-      const entity = new OrgEmailSignature();
-      Object.assign(entity, x);
-      entity.id = uuidv4();
-      entity.orgId = org.id;
-      return entity;
+      const orgEmailSignatureEntity = new OrgEmailSignature();
+      Object.assign(orgEmailSignatureEntity, x);
+      orgEmailSignatureEntity.id = uuidv4();
+      orgEmailSignatureEntity.orgId = orgId;
+      return orgEmailSignatureEntity;
     })
 
-    await m.save([...entities, ...orgEmailTemplates, ...orgEmailSignatures]);
-    await createOrgTrialSubscription(m, org.id);
+    await m.save([org, ...orgEmailTemplates, ...orgEmailSignatures]);
+    await createOrgTrialSubscription(m, orgId, userEnitty.id);
   })
 
   res.json();
