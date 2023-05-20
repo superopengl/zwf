@@ -43,6 +43,14 @@ const OrgSubscriptionHistoryPanel = (props) => {
       }
     },
     {
+      title: 'Licenses',
+      dataIndex: 'seats',
+      align: 'center',
+      render: (value, item) => {
+        return value
+      }
+    },
+    {
       title: 'Billing',
       dataIndex: 'payments',
       align: 'center',

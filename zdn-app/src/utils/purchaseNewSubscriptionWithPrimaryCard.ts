@@ -5,7 +5,7 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { CreditTransaction } from '../entity/CreditTransaction';
-import { calcNewSubscriptionPaymentInfo as calcNewSubscriptionPaymentInfo } from './calcNewSubscriptionPaymentInfo';
+import { calcNewSubscriptionPaymentInfo } from './calcNewSubscriptionPaymentInfo';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { assert } from './assert';
@@ -29,9 +29,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const end = now.add(1, 'month').add(-1, 'day').toDate();
 
   await getManager().transaction(async m => {
-    const { creditBalance, minSeats, seats: expectedSeats, price, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
-    assert(expectedSeats < minSeats, 400, `${minSeats} are being used in your organization. Please remove members before reducing license count.`);
-    assert(expectedSeats === minSeats, 400, `${minSeats} are being used in your organization. There is no need to adjust.`);
+    const { creditBalance, price, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
@@ -58,7 +56,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     await m.save(subscription);
 
     // Handle refund credit from current unfinished subscrption
-    if(refundable > 0) {
+    if (refundable > 0) {
       const refundCreditTransaction = new CreditTransaction();
       refundCreditTransaction.orgId = orgId;
       refundCreditTransaction.amount = refundable;

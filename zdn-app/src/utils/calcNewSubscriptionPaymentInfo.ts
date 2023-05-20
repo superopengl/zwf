@@ -1,24 +1,34 @@
 import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { getCreditBalance } from './getCreditBalance';
-import { EntityManager } from 'typeorm';
+import { EntityManager, In, IsNull } from 'typeorm';
 import { assert } from './assert';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscriptionRefund';
-import { OrgSeats } from '../entity/OrgSeats';
 import { User } from '../entity/User';
 import { Role } from '../types/Role';
+import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 
 async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
-  const result = await m.createQueryBuilder()
-    .from(User, 'u')
-    .where('"orgId" = :orgId', { orgId })
-    .andWhere('role = ANY(:...roles)', [Role.Admin, Role.Agent])
-    .andWhere('"deletedAt" IS NULL')
-    .select('COUNT(1) as count')
-    .getRawOne();
+  const count = await m.count(User, {
+    where: {
+      orgId,
+      deletedAt: IsNull(),
+      role: In([Role.Admin, Role.Agent])
+    }
+  })
 
-  return +(result?.count) || 0;
+  return count || 0;
+}
+
+async function getCurrentSubscriptionLicenseCount(m: EntityManager, orgId: string) {
+  const entity = await m.findOne(OrgAliveSubscription, {
+    where: {
+      orgId,
+    }
+  });
+
+  return +(entity?.seats) || 0;
 }
 
 export async function calcNewSubscriptionPaymentInfo(
@@ -28,10 +38,16 @@ export async function calcNewSubscriptionPaymentInfo(
   promotionCode: string,
 ) {
   assert(seats > 0, 400, `Invalid seats value ${seats}`);
+  const currentOccupied = await getCurrentOccupiedLicenseCount(m, orgId);
+  assert(seats !== currentOccupied, 400, `${currentOccupied} are being used in your organization. There is no need to adjust.`);
+  assert(currentOccupied < seats, 400, `${currentOccupied} are being used in your organization. Please remove members before reducing license count.`);
+  
+  // const currentSubscriptionSeats = await getCurrentSubscriptionLicenseCount(m, orgId);
+  // assert(seats !== currentSubscriptionSeats, 400, `Current subscription already has ${seats} licenses. No need to adjust.`);
+
   const unitPrice = getSubscriptionPrice();
   const currentCreditBalance = await getCreditBalance(m, orgId);
   const refundable = await getRefundableCredits(m, orgId);
-  const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
   const creditBalance = currentCreditBalance + refundable;
 
   let promotionPercentage = null;
@@ -52,7 +68,7 @@ export async function calcNewSubscriptionPaymentInfo(
 
   const result = {
     unitPrice,
-    minSeats,
+    currentOccupied,
     seats,
     promotionPercentage,
     price,

@@ -90,7 +90,12 @@ const PaymentStepperWidget = (props) => {
           <Text>Seats:</Text>
           <Space>
             <Text><MoneyAmount value={paymentInfo?.unitPrice} /> × </Text>
-            <InputNumber placeholder="seats" value={seats} onChange={num => setSeats(num)} min={1} step={1} />
+            <InputNumber placeholder="seats" 
+            defaultValue={paymentInfo?.currentOccupied + 1} 
+            value={seats}
+            onChange={num => setSeats(num)} 
+            min={paymentInfo?.currentOccupied + 1} 
+            step={1} />
           </Space>
         </Space>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
