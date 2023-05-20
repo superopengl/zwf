@@ -46,7 +46,6 @@ console.log('Backend API URL', API_BASE_URL, WEBSOCKET_URL);
 
 function getHeaders(responseType) {
   const headers = {
-    'x-zdn-device-id': getDeviceId(),
     'Content-Type': responseType === 'json' ? 'application/json; charset=utf-8' : 'text/plain; charset=utf-8',
   };
 
