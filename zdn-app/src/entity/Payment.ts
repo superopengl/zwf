@@ -52,6 +52,9 @@ export class Payment {
   @Column({ default: 1 })
   attempt: number;
 
+  @Column('json', { nullable: true })
+  geo: object;
+
   @ManyToOne(() => Subscription, subscription => subscription.payments, {onDelete: 'CASCADE'})
   @JoinColumn({name: 'subscriptionId', referencedColumnName: 'id'})
   subscription: Subscription;
@@ -65,7 +68,4 @@ export class Payment {
 
   @Column('uuid', { nullable: true })
   creditTransactionId: string;
-
-  @Column('json', { nullable: true })
-  geo: object;
 }

@@ -1,13 +1,10 @@
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
-import { PaymentMethod } from '../../types/PaymentMethod';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { SubscriptionType } from '../../types/SubscriptionType';
 import { Subscription } from '../Subscription';
-import { User } from '../User';
 import { Payment } from '../Payment';
 import { CreditTransaction } from '../CreditTransaction';
 import { PaymentStatus } from '../../types/PaymentStatus';
-import { UserProfile } from '../UserProfile';
 import { OrgBasicInformation } from '../views/OrgBasicInformation';
 import { OrgPaymentMethod } from '../OrgPaymentMethod';
 
@@ -25,11 +22,12 @@ import { OrgPaymentMethod } from '../OrgPaymentMethod';
     .select([
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
-      `p.geo ->> 'country' as country`,
       's.id as "subscriptionId"',
+      'c.id as "creditTransactionId"',
+      'p."orgId" as "orgId"',
+      `p.geo ->> 'country' as country`,
       's.type as "subscriptionType"',
       's.status as "subscriptionStatus"',
-      'p."orgId" as "orgId"',
       'org."ownerEmail" as email',
       `to_char(p."paidAt", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
       'p."paidAt" as "paidAt"',
@@ -50,19 +48,22 @@ export class ReceiptInformation {
   paymentSeq: string;
 
   @ViewColumn()
-  country: string;
+  subscriptionId: string;
 
   @ViewColumn()
-  subscriptionId: string;
+  creditTransactionId: string;
+
+  @ViewColumn()
+  orgId: string;
+
+  @ViewColumn()
+  country: string;
 
   @ViewColumn()
   subscriptionType: SubscriptionType;
 
   @ViewColumn()
   subscriptionStatus: SubscriptionStatus;
-
-  @ViewColumn()
-  orgId: string;
 
   @ViewColumn()
   email: string;

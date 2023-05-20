@@ -35,7 +35,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   await getManager().transaction(async m => {
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
-    const { creditBalance, price, payable, refundable, stripePaymentMethodId } = await getNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
+    const { creditBalance, price, payable, refundable, paymentMethodId, stripePaymentMethodId } = await getNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
     const stripeRawResponse = await chargeStripeForCardPayment(payable, stripeCustomerId, stripePaymentMethodId, true);
 
     // Terminate current subscription
@@ -89,6 +89,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.status = PaymentStatus.Paid;
     payment.auto = false;
     payment.geo = await getRequestGeoInfo(expressReq);
+    payment.orgPaymentMethodId = paymentMethodId;
     payment.creditTransaction = creditTransaction;
     payment.subscription = subscription;
 

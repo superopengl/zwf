@@ -1,13 +1,9 @@
 import Stripe from 'stripe';
-import { getRepository, getManager, EntityManager } from 'typeorm';
-import { Payment } from '../entity/Payment';
+import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { UserProfile } from '../entity/UserProfile';
-import { User } from '../entity/User';
-import { PaymentMethod } from '../types/PaymentMethod';
 import { Org } from '../entity/Org';
 import { getOrgOwner } from '../utils/getOrgOwner';
-import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 
 let stripe: Stripe = null;
 function getStripe() {

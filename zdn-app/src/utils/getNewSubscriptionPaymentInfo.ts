@@ -1,14 +1,9 @@
-import { SubscriptionType } from '../types/SubscriptionType';
 import { getSubscriptionPrice } from './getSubscriptionPrice';
 import { getCreditBalance } from './getCreditBalance';
 import { EntityManager } from 'typeorm';
 import { assert } from './assert';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
-import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
-import { Subscription } from '../entity/Subscription';
-import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { Payment } from '../entity/Payment';
 import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscriptionRefund';
 
 export async function getNewSubscriptionPaymentInfo(
@@ -53,7 +48,7 @@ export async function getNewSubscriptionPaymentInfo(
   return result;
 }
 
-async function getRefundableCredits(m: EntityManager, orgId: string) {
+async function getRefundableCredits(m: EntityManager, orgId: string): Promise<number> {
   const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { orgId });
-  return refundable?.refundableAmount || 0;
+  return +(refundable?.refundableAmount) || 0;
 }
