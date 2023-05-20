@@ -14,6 +14,9 @@ import { computeEmailHash } from '../utils/computeEmailHash';
 import { searchUser } from '../utils/searchUser';
 import { UserTag } from '../entity/UserTag';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { Payment } from '../entity/Payment';
+import { Subscription } from '../entity/Subscription';
+import { CreditTransaction } from '../entity/CreditTransaction';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -182,5 +185,49 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
   await repo.update(id, { secret: newSecret, salt: newSalt });
 
   res.json();
+});
+
+export const listMyCreditHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const orgId = getOrgIdFromReq(req);
+  const list = await getRepository(CreditTransaction)
+    .createQueryBuilder('uc')
+    .where('uc."orgId" = :orgId', { orgId })
+    // .andWhere('uc.amount != 0')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
+    .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
+    .orderBy('uc."createdAt"', 'DESC')
+    .select([
+      'uc."createdAt" as "createdAt"',
+      'uc.amount as amount',
+      'py.id as "paymentId"',
+      'sub.type as type'
+    ])
+    .execute();
+  res.json(list);
+});
+
+export const listUserCreditHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'system');
+  const { id } = req.params;
+  const list = await getRepository(CreditTransaction)
+    .createQueryBuilder('uc')
+    .where('uc."orgId" = :id', { id })
+    .leftJoin(q => q.from(User, 'u'), 'u', 'uc."referredUserId" = u.id')
+    .leftJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
+    .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
+    .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
+    .orderBy('uc."createdAt"', 'DESC')
+    .select([
+      'uc."createdAt" as "createdAt"',
+      'uc.amount as amount',
+      'uc."revertedCreditTransactionId" as "revertedCreditTransactionId"',
+      'uc.type as "creditType"',
+      'p.email as "referredUserEmail"',
+      'py.id as "paymentId"',
+      'sub.type as type'
+    ])
+    .execute();
+  res.json(list);
 });
 

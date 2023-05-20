@@ -163,20 +163,18 @@ const OrgAccountPage = (props) => {
           </Card>
           <Card
             bordered={false}
-            title={<FormattedMessage id="text.creditBalance" />}
+            title="Credits"
             extra={
               <Title><MoneyAmount type="success" value={account.credit} /></Title>
             }
           >
-            <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+            <Space style={{ width: '100%', justifyContent: 'space-between', alignItems: "flex-start" }}>
               <Paragraph type="secondary">
-                <FormattedMessage id="text.commissionBalanceDescription1" /><br />
-                <FormattedMessage id="text.commissionBalanceDescription2" values={{ amount: <MoneyAmount value={account.referralCommission * 29} /> }} /><br />
-                <FormattedMessage id="text.commissionBalanceDescription3" values={{ amount: <MoneyAmount value={account.referralCommission * 319} /> }} />
+                Credits can be granted by Zildedin for promotion purpose, or refund from previous unfinished subsccription when you choose to adjust licenses (adding or reducing seats).
               </Paragraph>
 
               <Button key={0} onClick={() => setCreditHistoryVisible(true)}>
-                <FormattedMessage id="text.creditHistory" />
+                Credit History
               </Button>
             </Space>
           </Card>
