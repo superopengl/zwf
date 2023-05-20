@@ -5,14 +5,13 @@ import { Subscription } from '../entity/Subscription';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { CreditTransaction } from '../entity/CreditTransaction';
-import { getNewSubscriptionPaymentInfo } from './getNewSubscriptionPaymentInfo';
+import { calcNewSubscriptionPaymentInfo as calcNewSubscriptionPaymentInfo } from './calcNewSubscriptionPaymentInfo';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { assert } from './assert';
 import { getRequestGeoInfo } from './getIpGeoLocation';
 import { chargeStripeForCardPayment, getOrgStripeCustomerId } from '../services/stripeService';
 import { User } from '../entity/User';
-import { setSeatsForOrg } from './setSeatsForOrg';
 
 export type PurchaseSubscriptionRequest = {
   orgId: string;
@@ -30,12 +29,9 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const end = now.add(1, 'month').add(-1, 'day').toDate();
 
   await getManager().transaction(async m => {
-    const { creditBalance, minSeats, seats: expectedSeats, price, payable, refundable, paymentMethodId, stripePaymentMethodId } = await getNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
+    const { creditBalance, minSeats, seats: expectedSeats, price, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
     assert(expectedSeats < minSeats, 400, `${minSeats} are being used in your organization. Please remove members before reducing license count.`);
     assert(expectedSeats === minSeats, 400, `${minSeats} are being used in your organization. There is no need to adjust.`);
-
-    // Set seats (add more or delete some)
-    await setSeatsForOrg(m, orgId, expectedSeats);
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
