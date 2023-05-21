@@ -1,16 +1,13 @@
 import React from 'react';
-import { Affix, Space, Button, Card, Typography, FloatButton } from 'antd';
-import { MdOutlinePrivacyTip } from 'react-icons/md';
+import { Affix, Space, Button, Card, Typography } from 'antd';
 import styled from 'styled-components';
-import { listMySupportMessages$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
-import { finalize, catchError } from 'rxjs/operators';
+import { listMySupportMessages$ } from 'services/supportService';
+import { finalize } from 'rxjs/operators';
 import { SupportMessageList } from '../components/SupportMessageList';
 import { SupportMessageInput } from '../components/SupportMessageInput';
 import { sendSupportMessage$ } from 'services/supportService';
-import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
-import { useAuthUser } from 'hooks/useAuthUser';
+import { CloseOutlined } from '@ant-design/icons';
 import { useZevent } from 'hooks/useZevent';
-import { ZeventNoticeableBadge } from '../components/ZeventNoticeableBadge';
 
 
 const { Paragraph, Title } = Typography;

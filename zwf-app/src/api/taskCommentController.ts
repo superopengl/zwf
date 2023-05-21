@@ -10,7 +10,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { createTaskComment } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
-import { ZeventType } from '../types/ZeventTypeDef';
+import { ZeventName } from '../types/ZeventName';
 
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
@@ -25,7 +25,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
     list = await m.find(TaskActivityInformation, {
       where: {
         taskId: id,
-        type: ZeventType.TaskComment,
+        type: ZeventName.TaskComment,
         ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {

@@ -194,26 +194,7 @@ const OrgTaskPage = () => {
           icon={<TaskIcon />}
           // content={<Paragraph type="secondary">{value.description}</Paragraph>}
           extra={[
-            // <ZeventNoticeableBadge key="refresh"
-            //   message="This task has changes. Click to refresh"
-            //   filter={z => z.type === 'task.change' && z.taskId === task.id}
-            // >
-            //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
-            // </ZeventNoticeableBadge>,
-            // <ZeventNoticeableBadge key="comment"
-            //   message="This task has unread comment"
-            //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
-            // >
-            //   <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
-            // </ZeventNoticeableBadge>,
-            // <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
-            // ,
-            // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
           ]}
-        // footer={[
-        //   <Button key="reset" onClick={handleReset}>Reset</Button>,
-        //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
-        // ]}
         >
           <Row gutter={[50, 40]} wrap={false} style={{ paddingTop: 30 }}>
             <Col flex="2 2 400px">

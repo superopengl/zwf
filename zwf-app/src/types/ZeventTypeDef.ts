@@ -1,128 +1,104 @@
 import { ZeventDef } from "../entity/ZeventDef";
 import { Role } from "./Role";
-
-export enum ZeventType {
-    TaskCreated = 'task-created',
-    TaskCreatedByRecurringly = 'task-created-recurringly',
-    TaskAssigned = 'task-assigned',
-    TaskRenamed = 'task-renamed',
-    TaskStatusToInProgress = 'task-status-started',
-    TaskStatusCompleted = 'task-status-completed',
-    TaskStatusArchived = 'task-status-archived',
-    TaskStatusMovedBackToDo = 'task-moved-back-todo',
-    TaskStatusAwaitClient = 'task-await-client',
-    TaskFormSchemaChanged = 'task-form-schema-changed',
-    TaskFieldValueChanged = 'task-field-value-changed',
-    TaskAddedDoc = 'task-added-doc',
-    TaskDeletedDoc = 'task-deleted-doc',
-    TaskGenedDoc = 'task-gened-doc',
-    RequestClientSignDoc = 'request-client-sign-doc',
-    UnrequestClientSignDoc = 'unrequest-client-sign-doc',
-    RequestClientFillForm = 'request-client-fill-form',
-    ClientSignedDoc = 'client-signed-doc',
-    ClientSubmittedForm = 'client-submitted-form',
-    ClientDownloadedDoc = 'client-downloaded-doc',
-    TaskComment = 'task-comment',
-    SupportMessage = 'support-message',
-}
+import { ZeventName } from "./ZeventName";
 
 export const ZEVENT_DEF_ENTITIES: ZeventDef[] = [
     {
-        name: ZeventType.TaskCreated,
+        name: ZeventName.TaskCreated,
     },
     {
-        name: ZeventType.TaskCreatedByRecurringly,
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin],
+        name: ZeventName.TaskCreatedByRecurringly,
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.TaskAssigned,
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin],
+        name: ZeventName.TaskAssigned,
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.TaskRenamed
+        name: ZeventName.TaskRenamed
     },
     {
-        name: ZeventType.TaskStatusToInProgress,
+        name: ZeventName.TaskStatusToInProgress,
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin],
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.TaskStatusCompleted,
+        name: ZeventName.TaskStatusCompleted,
         emailNotifyRoles: [Role.Client],
-        notifyCenterRoles: [Role.Client],
+        uiNotifyRoles: [Role.Client],
     },
     {
-        name: ZeventType.TaskStatusArchived,
+        name: ZeventName.TaskStatusArchived,
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin],
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.TaskStatusAwaitClient,
+        name: ZeventName.TaskStatusAwaitClient,
         emailNotifyRoles: [Role.Client],
-        notifyCenterRoles: [Role.Client],
+        uiNotifyRoles: [Role.Client],
     },
     {
-        name: ZeventType.TaskStatusMovedBackToDo,
+        name: ZeventName.TaskStatusMovedBackToDo,
     },
     {
-        name: ZeventType.TaskFormSchemaChanged,
+        name: ZeventName.TaskFormSchemaChanged,
     },
     {
-        name: ZeventType.TaskFieldValueChanged,
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin],
+        name: ZeventName.TaskFieldValueChanged,
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.TaskAddedDoc,
+        name: ZeventName.TaskAddedDoc,
     },
     {
-        name: ZeventType.TaskDeletedDoc,
+        name: ZeventName.TaskDeletedDoc,
     },
     {
-        name: ZeventType.TaskGenedDoc,
+        name: ZeventName.TaskGenedDoc,
     },
     {
-        name: ZeventType.RequestClientSignDoc,
+        name: ZeventName.RequestClientSignDoc,
         emailNotifyRoles: [Role.Client],
-        notifyCenterRoles: [Role.Client],
+        uiNotifyRoles: [Role.Client],
     },
     {
-        name: ZeventType.UnrequestClientSignDoc,
+        name: ZeventName.UnrequestClientSignDoc,
         emailNotifyRoles: [Role.Client],
-        notifyCenterRoles: [Role.Client],
+        uiNotifyRoles: [Role.Client],
     },
     {
-        name: ZeventType.RequestClientFillForm,
+        name: ZeventName.RequestClientFillForm,
         emailNotifyRoles: [Role.Client],
-        notifyCenterRoles: [Role.Client],
+        uiNotifyRoles: [Role.Client],
     },
     {
-        name: ZeventType.ClientSignedDoc,
+        name: ZeventName.ClientSignedDoc,
         emailNotifyRoles: [Role.Agent, Role.Admin],
-        notifyCenterRoles: [Role.Agent, Role.Admin],
+        uiNotifyRoles: [Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.ClientSubmittedForm,
+        name: ZeventName.ClientSubmittedForm,
         emailNotifyRoles: [Role.Agent, Role.Admin],
-        notifyCenterRoles: [Role.Agent, Role.Admin],
+        uiNotifyRoles: [Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.ClientDownloadedDoc,
+        name: ZeventName.ClientDownloadedDoc,
     },
     {
-        name: ZeventType.TaskComment,
+        name: ZeventName.TaskComment,
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin],
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
-        name: ZeventType.SupportMessage,
+        name: ZeventName.SupportMessage,
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin, Role.System],
-        notifyCenterRoles: [Role.Client, Role.Agent, Role.Admin, Role.System],
+        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin, Role.System],
     },
 ];
 
-export const ZeventTypeDefMap = ZEVENT_DEF_ENTITIES.reduce((pre, cur) => {
+export const ZEVENT_DEF_MAP = ZEVENT_DEF_ENTITIES.reduce((pre, cur) => {
     pre[cur.name] = cur;
     return pre;
 }, {}) as Record<string, ZeventDef>

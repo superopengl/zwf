@@ -1,5 +1,5 @@
 import { TaskInformation } from './TaskInformation';
-import { ZeventType } from '../../types/ZeventTypeDef';
+import { ZeventName } from '../../types/ZeventName';
 import { TaskEvent } from '../TaskEvent';
 import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { Task } from '../Task';
@@ -54,7 +54,7 @@ import { Task } from '../Task';
   by: string;
 
   @ViewColumn()
-  type: ZeventType;
+  type: ZeventName;
 
   @ViewColumn()
   info: any;

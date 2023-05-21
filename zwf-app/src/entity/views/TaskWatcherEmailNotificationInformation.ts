@@ -1,21 +1,4 @@
-import { TaskTagsTag } from '../TaskTagsTag';
-import { Role } from '../../types/Role';
-import { ViewEntity, DataSource, ViewColumn, IsNull } from 'typeorm';
-import { Femplate } from '../Femplate';
-import { Task } from '../Task';
-import { TaskStatus } from '../../types/TaskStatus';
-import { Org } from '../Org';
-import { User } from '../User';
-import { UserProfile } from '../UserProfile';
-import { Tag } from '../Tag';
-import { OrgClient } from '../OrgClient';
-import { TaskEvent } from '../TaskEvent';
-import { TaskWatcherEventAck } from '../TaskWatcherEventAck';
-import { OrgClientInformation } from './OrgClientInformation';
-import { ZeventType } from '../../types/ZeventTypeDef';
-import { OrgMemberInformation } from './OrgMemberInformation';
-import { TaskWatcher } from '../TaskWatcher';
-import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation';
+import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { UserInformation } from './UserInformation';
 import { TaskWatcherUiNotificationInformation } from './TaskWatcherUiNotificationInformation';
 

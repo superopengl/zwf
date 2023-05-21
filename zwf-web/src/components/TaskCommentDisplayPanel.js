@@ -24,9 +24,6 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [user] = useAuthUser();
-
-  const myUserId = user?.id;
 
   // React.useEffect(() => {
   //   scrollToBottom();
@@ -54,8 +51,6 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
         finalize(() => setLoading(false)),
       )
       .subscribe();
-
-
 
     return () => sub$.unsubscribe();
   }, []);
