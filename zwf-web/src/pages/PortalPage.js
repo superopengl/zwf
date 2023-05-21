@@ -131,7 +131,7 @@ export const PortalPage = () => {
         </Row>
       </Space>
     </Layout.Header>
-    <Layout.Content>
+    <Layout.Content style={{overflowX:'hidden'}}>
       <Outlet />
     </Layout.Content>
     <HomeFooter />
