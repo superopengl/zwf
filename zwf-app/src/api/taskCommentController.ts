@@ -25,7 +25,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
     list = await m.find(TaskActivityInformation, {
       where: {
         taskId: id,
-        type: ZeventType.Comment,
+        type: ZeventType.TaskComment,
         ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {

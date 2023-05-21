@@ -1,27 +1,21 @@
 import { SupportMessageLastSeen } from './../entity/SupportMessageLastSeen';
 import { SupportMessage } from './../entity/SupportMessage';
-import { In, IsNull, MoreThan } from 'typeorm';
+import { IsNull } from 'typeorm';
 import { db } from '../db';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { NotificationMessage } from "../entity/NotificationMessage";
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
-import { ZeventType, ZeventTypeDef } from '../types/ZeventTypeDef';
+import { ZEVENT_DEF_ENTITIES, ZeventTypeDefMap } from '../types/ZeventTypeDef';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
-import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { OrgMemberInformation } from '../entity/views/OrgMemberInformation';
 import { TaskWatcherEventAckInformation } from '../entity/views/TaskWatcherEventAckInformation';
-import { TaskWatcherEventNotificationInformation } from '../entity/views/TaskWatcherEventNotificationInformation';
-import { TaskEvent } from '../entity/TaskEvent';
-import { TaskWatcherEventAck } from '../entity/TaskWatcherEventAck';
 import { assert } from '../utils/assert';
 import { emitTaskEventAcks } from '../utils/emitTaskEventAcks';
 
-const def = Object.entries(ZeventTypeDef);
 
-const CLIENT_WATCH_EVENTS = def
+const CLIENT_WATCH_EVENTS = ZEVENT_DEF_ENTITIES
   .filter(([key, value]) => value.notifyClientWatcher)
   .map(([key, value]) => key);
 

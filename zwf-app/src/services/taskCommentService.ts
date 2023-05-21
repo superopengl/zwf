@@ -17,13 +17,13 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
   const comment = new TaskEvent();
   const { orgId, id: taskId } = task;
   comment.eventId = uuidv4();
-  comment.type = ZeventType.Comment;
+  comment.type = ZeventType.TaskComment;
   comment.taskId = taskId;
   comment.by = by;
   comment.info = { message };
   // const result = await m.save(comment);
 
-  await emitTaskEvent(m, ZeventType.Comment, taskId, by, { message });
+  await emitTaskEvent(m, ZeventType.TaskComment, taskId, by, { message });
 
   // const userId = (task as any).orgClient?.userId;
   // if (userId) {

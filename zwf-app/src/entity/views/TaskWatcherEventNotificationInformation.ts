@@ -16,38 +16,54 @@ import { ZeventType } from '../../types/ZeventTypeDef';
 import { OrgMemberInformation } from './OrgMemberInformation';
 import { TaskWatcher } from '../TaskWatcher';
 import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation';
+import { UserInformation } from './UserInformation';
 
 const events = [
-  ZeventType.ClientSubmitForm,
-  ZeventType.ClientSignDoc,
-  ZeventType.Comment,
-  ZeventType.CreatedByRecurring,
-  ZeventType.OrgStartProceed,
-  ZeventType.Assign,
-  ZeventType.Complete,
-  ZeventType.Archive,
+  ZeventType.ClientSubmittedForm,
+  ZeventType.ClientSignedDoc,
+  ZeventType.TaskComment,
+  ZeventType.TaskCreatedByRecurringly,
+  ZeventType.TaskStatusToInProgress,
+  ZeventType.TaskAssigned,
+  ZeventType.TaskStatusCompleted,
+  ZeventType.TaskStatusArchived,
 ].map(x => `'${x}'`).join(',');
 
 @ViewEntity({
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
-    .from(TaskWatcherEventAckInformation, 'x')
-    .where({ ackAt: IsNull() })
-    .orWhere(`"ackAt" > now() - interval '30 minutes'`)
-    .distinctOn(['x."taskId"', 'x."type"'])
-    .orderBy('x."taskId"', 'ASC')
-    .addOrderBy('x.type', 'ASC')
-    .addOrderBy('x."createdAt"', 'DESC'),
+    .from(q => q.from(TaskWatcherEventAckInformation, 'x')
+      .where({ ackAt: IsNull() })
+      // .orWhere(`"ackAt" > now() - interval '30 minutes'`)
+      .distinctOn(['x."taskId"', 'x."taskName"', 'x."userId"'])
+      .orderBy('x."taskId"', 'ASC')
+      .addOrderBy('x."taskName"', 'ASC')
+      .addOrderBy('x."userId"', 'ASC')
+      .addOrderBy('x."createdAt"', 'DESC')
+      .select([
+        `x."taskId" as "taskId"`,
+        `x."taskName" as "taskName"`,
+        `x."userId" as "userId"`,
+        `x."type" as "type"`,
+        `x."createdAt" as "lastEventAt"`,
+        `NOW() as "now"`,
+        `extract(day from NOW() - x."createdAt") AS "unackDays"`
+      ])
+      , 'x')
+    .innerJoin(UserInformation, 'u', `u.id = x."userId"`)
+    .where(`x."unackDays" IN (1, 3, 7, 15, 30)`)
+    .select([
+      `x."taskId" as "taskId"`,
+      `x."taskName" as "taskName"`,
+      `x."userId" as "userId"`,
+      `u."email" as "email"`,
+      `u."givenName" as "givenName"`,
+      `u."surname" as "surname"`,
+    ]),
   dependsOn: [TaskWatcherEventAckInformation]
 }) export class TaskWatcherEventNotificationInformation {
   @ViewColumn()
   userId: string;
-
-  @ViewColumn()
-  orgId: string;
-
-  @ViewColumn()
-  orgClientId: string;
 
   @ViewColumn()
   taskId: string;
@@ -56,17 +72,11 @@ const events = [
   taskName: string;
 
   @ViewColumn()
-  type: ZeventType;
+  email: string;
 
   @ViewColumn()
-  info: any;
+  givenName: string;
 
   @ViewColumn()
-  createdAt: Date;
-
-  @ViewColumn()
-  ackAt: Date;
-
-  @ViewColumn()
-  by: string;
+  surname: string;
 }

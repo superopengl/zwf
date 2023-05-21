@@ -52,6 +52,8 @@ import { TaskWatcherEventAck } from './entity/TaskWatcherEventAck';
 import { TaskWatcherEventAckInformation } from './entity/views/TaskWatcherEventAckInformation';
 import { TaskWatcher } from './entity/TaskWatcher';
 import { TaskWatcherEventNotificationInformation } from './entity/views/TaskWatcherEventNotificationInformation';
+import { ZeventDef } from './entity/ZeventDef';
+import { initializeZeventDef } from './utils/initializeZeventDef';
 dotenv.config();
 
 const views = [
@@ -92,6 +94,7 @@ export async function connectDatabase(shouldSyncSchema = false) {
 
 async function initializeData() {
   await initializeConfig();
+  await initializeZeventDef();
 }
 
 async function syncDatabaseSchema(db: DataSource) {
@@ -219,6 +222,7 @@ export const db = new DataSource({
     NotificationMessage,
     TaskWatcherEventAck,
     TaskWatcher,
+    ZeventDef,
     // Views below
     TaskInformation,
     UserInformation,
