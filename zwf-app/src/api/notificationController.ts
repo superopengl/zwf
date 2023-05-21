@@ -14,15 +14,6 @@ import { TaskWatcherEventAckInformation } from '../entity/views/TaskWatcherEvent
 import { assert } from '../utils/assert';
 import { emitTaskEventAcks } from '../utils/emitTaskEventAcks';
 
-
-const CLIENT_WATCH_EVENTS = ZEVENT_DEF_ENTITIES
-  .filter(([key, value]) => value.notifyClientWatcher)
-  .map(([key, value]) => key);
-
-const ORG_MEMBER_WATCH_EVENTS = def
-  .filter(([key, value]) => value.notifyOrgWatcher)
-  .map(([key, value]) => key);
-
 export const getMyNotifications = handlerWrapper(async (req, res) => {
   assertRole(req, ['client', 'agent', 'admin']);
 
@@ -34,13 +25,13 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const take = pageSize;
   const role = getRoleFromReq(req);
   const userId = getUserIdFromReq(req);
-  const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
+  // const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
 
   const taskEvents = await db
     .getRepository(TaskWatcherEventAckInformation)
     .createQueryBuilder('x')
     .where(`"userId" = :userId`, { userId })
-    .andWhere(`type IN (:...eventTypes)`, { eventTypes })
+    // .andWhere(`type IN (:...eventTypes)`, { eventTypes })
     // .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
     .andWhere(`"ackAt" IS NULL`)
     .select([
