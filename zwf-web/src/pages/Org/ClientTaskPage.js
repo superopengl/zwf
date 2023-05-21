@@ -28,8 +28,7 @@ const { useBreakpoint } = Grid;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
-  // background-color: yellow;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   // max-width: 1200px;
 
@@ -179,7 +178,7 @@ const ClientTaskPage = () => {
 
   const buttonSize = narrowScreen ? 'default' : 'large';
 
-  return (<Container>
+  return (<Container style={{backgroundColor: activePanel === 'chat' ? 'white' : 'transparent'}}>
     {!task ? <Skeleton active /> : <TaskContext.Provider value={{ task, setTask }} >
       <PageHeaderContainer
         loading={loading}
