@@ -74,22 +74,15 @@ const DEFAULT_LOCALE = getDefaultLocale();
 export const App = React.memo(() => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
-  const [notifications, setNotifications] = React.useState([]);
   const contextValueRef = React.useRef({
     zeventBus$: new Subject(),
     user: null,
-    notifications,
-    setNotifications,
     setLoading,
     setLocale: locale => {
       reactLocalStorage.set('locale', locale);
       setLocale(locale);
     },
   });
-
-  React.useEffect(() => {
-    console.log('notifications', notifications);
-  }, [notifications]);
 
   React.useEffect(() => {
     const sub$ = getAuthUser$()
