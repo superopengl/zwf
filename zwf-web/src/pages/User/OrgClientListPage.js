@@ -315,7 +315,7 @@ const OrgClientListPage = () => {
         title='Clients'
         extra={[
           <CheckboxButton key="refresh" danger icon={<SyncOutlined />} value={queryInfo.showDeactive} onChange={handleToggleDeactiveClients}>
-            Show deactive clients
+            Show inactive clients
           </CheckboxButton>,
           <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
           <Button key="invite" ghost icon={<Icon component={FaUserPlus} />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Add New Client</Button>
