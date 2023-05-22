@@ -27,10 +27,9 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import { NotificationButton } from 'components/NotificationButton';
 import { HelpDropdownMenu } from 'components/HelpDropdownMenu';
 import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
-import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
 import { TbClock, TbClockPlay, TbRepeat } from 'react-icons/tb';
 import { BiRepeat } from 'react-icons/bi';
-import { ZeventContext } from 'contexts/ZeventContext';
+import { ZeventContainer } from 'components/ZeventContainer';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -187,10 +186,8 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
   const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
-  const [zevents, setZevents] = React.useState([]);
 
   useDocumentTitle();
-  useEstablishZeventStream();
 
   const [user] = useAuthUser();
   const role = useRole();
@@ -212,7 +209,7 @@ export const AppLoggedInPage = React.memo(() => {
   const isAdmin = role === 'admin';
   const isClient = role === 'client';
 
-  return <ZeventContext.Provider value={{zevents, setZevents}}>
+  return <ZeventContainer>
     <StyledContainer className={isClient ? 'client-role' : ''}>
       <ProLayout
         token={{
@@ -273,6 +270,6 @@ export const AppLoggedInPage = React.memo(() => {
       {!isSystem && <UnimpersonatedFloatButton />}
       {supportContextHolder}
     </StyledContainer >
-  </ZeventContext.Provider >
+  </ZeventContainer>
 })
 

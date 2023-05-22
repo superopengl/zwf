@@ -13,6 +13,8 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
 import { ZeventContext } from 'contexts/ZeventContext';
 import { IoNotificationsOutline } from 'react-icons/io5';
+import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Text } = Typography;
 
@@ -59,112 +61,10 @@ export const NotificationButton = (props) => {
   }
 
   React.useEffect(() => {
-    const sub$ = load$();
-    return () => sub$.unsubscribe();
-  }, []);
-
-  /**
-   * Zevent source
-   */
-  const filterZevent = React.useCallback(() => true, []);
-
-  const handleZevent = React.useCallback(z => {
-    const { type } = z;
-    switch (type) {
-      case 'taskEvent':
-        setZevents(pre => [...pre, z])
-        break;
-      case 'taskEvent.ack':
-        // setZevents(pre => pre.filter(z => z.payload.eventId !== payload.eventId));
-        break;
-      case 'support':
-        break;
-      default:
-        break;
-    }
-  }, []);
-
-  useZevent(filterZevent, handleZevent, [user]);
-
-
-  React.useEffect(() => {
     if (supportOpen) {
       setUnreadSupportMsgCount(0);
     }
   }, [supportOpen]);
-
-  // const handleZeventTaskEvent = z => {
-  //   const taskEvent = z.payload;
-  //   setList([...list, taskEvent]);
-  //   const existing = list.find(x => x.taskId = taskEvent.taskId && x.type === taskEvent.type);
-  //   if (existing) {
-  //     existing.createdAt = taskEvent.createdAt;
-  //     setList([...list]);
-  //   } else {
-  //     setList(list => [taskEvent, ...list]);
-  //   }
-  // }
-
-  // useZevent(z => {
-  //   return z.payload.by !== userId;
-  // }, z => {
-  //   if (z.type === 'support') {
-  //     if (!supportOpen) {
-  //       setUnreadSupportMsgCount(pre => pre + 1)
-  //     }
-  //   } else if (z.type === 'taskEvent') {
-  //     handleZeventTaskEvent(z);
-  //   } else {
-  //     const exists = changedTasks.some((t => t.taskId === z.taskId));
-  //     if (!exists) {
-  //       setChangedTasks(pre => [...pre, {
-  //         taskId: z.taskId,
-  //         taskName: z.taskName,
-  //       }])
-  //     }
-  //   }
-  // }, [supportOpen]);
-
-
-  // const items = [];
-  // list.forEach((x, i) => {
-  //   const item = {
-  //     key: i,
-  //     // icon: <Icon component={MdDashboard} />,
-  //     icon: <TaskIcon size={14} />,
-  //     label: <StyledCompactSpace direction='vertical'>
-  //       <Text strong>{x.payload.taskName}</Text>
-  //       <Text strong={!x.payload.ackAt}>{getNotificationMessage(x)}</Text>
-  //       <TimeAgo strong={!x.payload.ackAt} value={x.payload.createdAt} direction="horizontal" />
-  //     </StyledCompactSpace>,
-  //     onClick: () => handleItemClick(x),
-  //   };
-
-  //   if (i !== 0) {
-  //     items.push({
-  //       type: 'divider'
-  //     });
-  //   }
-  //   items.push(item);
-  // })
-
-  // if (unreadSupportMsgCount) {
-  //   items.unshift({
-  //     key: 'support',
-  //     icon: <Text style={{ fontSize: 24, color: '#0FBFC4' }}><CommentOutlined /></Text>,
-  //     label: <>Unread support message <Badge count={unreadSupportMsgCount} /></>,
-  //     onClick: () => {
-  //       onSupportOpen()
-  //       setUnreadSupportMsgCount(0)
-  //     },
-  //   })
-  // }
-
-  // if (!items.length) {
-  //   items.push({
-  //     label: <Text type="secondary">No notifications</Text>
-  //   })
-  // }
 
   const handleClick = () => {
     load$();
@@ -180,7 +80,7 @@ export const NotificationButton = (props) => {
     });
   }
 
-  return <Badge showZero={false} count={zevents.filter(x => !x.payload.ackAt).length} offset={[-4, 6]}>
+  return <Badge showZero={false} count={zevents.length} offset={[-4, 6]}>
     <Button icon={<Icon component={IoNotificationsOutline} />} shape="circle" type="text" size="large" onClick={handleClick} />
     {/* <DebugJsonPanel value={notifications} /> */}
     <Drawer
@@ -195,6 +95,7 @@ export const NotificationButton = (props) => {
       bodyStyle={{ padding: '0 8px' }}
       onClick={() => setOpen(false)}
     >
+      {/* <DebugJsonPanel value={zevents} /> */}
       <List
         onClick={() => setOpen(false)}
         dataSource={zevents}
