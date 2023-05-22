@@ -34,6 +34,7 @@ import { TaskStatus } from '../../types/TaskStatus';
       'o."phone" as "phone"',
       'o."role" as "role"',
       'o."invitedAt" as "invitedAt"',
+      'o."active" as "active"',
       'o.tags as tags',
       `COALESCE(ti."countToDo", 0) as "countToDo"`,
       `COALESCE(ti."countInProgress", 0) as "countInProgress"`,
@@ -76,6 +77,9 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   invitedAt: Date;
+
+  @ViewColumn()
+  active: boolean;
 
   @ViewColumn()
   tags: string[];

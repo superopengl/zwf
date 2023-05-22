@@ -25,10 +25,13 @@ export class OrgClient {
   @Column()
   clientAlias: string;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   remark: string;
+  
+  @Column({ default: true })
+  active: boolean;
 
-  @Column('uuid', {nullable: true})
+  @Column('uuid', { nullable: true })
   femplateId: string;
 
   @CreateDateColumn()

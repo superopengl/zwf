@@ -52,9 +52,9 @@ export const updateOrgClient = handlerWrapper(async (req, res) => {
         entity.value = f.value;
         return entity;
       });
-  
+
       await m.save(fieldEntities);
-  
+
       client.fields = fieldEntities;
     }
 
@@ -96,6 +96,18 @@ export const setOrgClientAlias = handlerWrapper(async (req, res) => {
   assert(formattedAlias, 400, 'alias not provided');
 
   await db.manager.update(OrgClient, { id, orgId }, { clientAlias: formattedAlias })
+
+  res.json();
+});
+
+
+export const toggleOrgClientActive = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const { active } = req.body;
+
+  await db.manager.update(OrgClient, { id, orgId }, { active });
 
   res.json();
 });
@@ -181,6 +193,7 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
   const orderDirection = req.body.orderDirection || 'ASC';
   const text = req.body.text?.trim();
   const tags = (req.body.tags || []);
+  const showDeactive = !!req.body.showDeactive;
 
   const list = await searchOrgClients(
     orgId,
@@ -190,7 +203,8 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
       size,
       orderField,
       orderDirection,
-      tags
+      tags,
+      showDeactive
     });
 
   res.json(list);

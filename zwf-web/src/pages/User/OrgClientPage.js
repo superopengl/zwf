@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Input, Row, Col, Button, Typography } from 'antd';
-import { finalize } from 'rxjs/operators';
+import { finalize, switchMap } from 'rxjs/operators';
 import { TagSelect } from 'components/TagSelect';
 import Icon, { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -10,7 +10,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { ClientNameCard } from 'components/ClientNameCard';
 import PropTypes from 'prop-types';
-import { getOrgClient$, updateOrgClient$, refreshClientNameCardCache } from 'services/clientService';
+import { getOrgClient$, updateOrgClient$, refreshClientNameCardCache, toggleOrgClientActive$ } from 'services/clientService';
 import { OrgClientFieldsPanel } from 'pages/OrgBoard/OrgClientFieldsPanel';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
@@ -111,6 +111,13 @@ const OrgClientPage = React.memo(() => {
     load$()
   }
 
+  const handleReactivate = () => {
+    toggleOrgClientActive$(client.id, true)
+      .subscribe({
+        next: () => load$()
+      });
+  }
+
   return (<>
     <ContainerStyled>
       {client && <PageHeaderContainer
@@ -154,6 +161,13 @@ const OrgClientPage = React.memo(() => {
 
           <Col span={12}>
             <Row gutter={[10, 10]}>
+              {!client.active && <Col span={24}>
+                <ProCard title={<Text type="danger">Client inactive</Text>} ghost size="small"
+                  extra={<Button danger onClick={handleReactivate}>Re-activate this client</Button>}
+                >
+
+                </ProCard>
+              </Col>}
               <Col span={24}>
                 <ProCard title="Notes" ghost size="small">
                   <Input.TextArea
@@ -189,16 +203,19 @@ const OrgClientPage = React.memo(() => {
           ghost
         >
           <ProCard.TabPane key="profile" tab="Profile">
-              <OrgClientFieldsPanel femplateId={client.femplateId} fields={client.fields} onChange={handleFieldsChange} />
+            <OrgClientFieldsPanel femplateId={client.femplateId} fields={client.fields} onChange={handleFieldsChange} />
 
           </ProCard.TabPane>
           <ProCard.TabPane key="tasks" tab="Tasks"
           >
             <ProCard ghost
-              extra={<Button icon={<Icon component={MdDashboardCustomize} />}
+              extra={client.active ? <Button
+                icon={<Icon component={MdDashboardCustomize} />}
                 type="primary"
                 ghost
-                onClick={createTaskForClient}>New Task</Button>}
+                onClick={createTaskForClient}>
+                New Task
+              </Button> : null}
             >
               <TaskBoardPanel tasks={client.tasks ?? []} showClient={false} showTags={false} onChange={() => load$()} />
             </ProCard>

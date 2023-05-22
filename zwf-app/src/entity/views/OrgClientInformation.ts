@@ -23,6 +23,7 @@ import { UserStatus } from '../../types/UserStatus';
       'c.id as "id"',
       'o.id as "orgId"',
       'c."createdAt" as "invitedAt"',
+      'c."active" as "active"',
       'o.name as "orgName"',
       'c."clientAlias" as "clientAlias"',
       'c."remark" as "remark"',
@@ -48,6 +49,9 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   invitedAt: Date;
+
+  @ViewColumn()
+  active: boolean;
 
   @ViewColumn()
   orgName: string;

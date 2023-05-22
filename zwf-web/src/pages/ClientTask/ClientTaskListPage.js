@@ -13,7 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import { Descriptions } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
-import CheckboxButton from 'components/CheckboxButton';
+import {CheckboxButton} from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 import { NotificationContext } from 'contexts/NotificationContext';

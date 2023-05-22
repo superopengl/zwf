@@ -4,14 +4,13 @@ import { Typography, Button, Table, Input, Form } from 'antd';
 import Icon, {
   SyncOutlined,
   SearchOutlined,
-  ContactsFilled,
-  RightOutlined
+  RightOutlined,
+  MinusCircleOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setOrgClientTags$, searchOrgClients$, saveClientRemark$ } from 'services/clientService';
+import { setOrgClientTags$, searchOrgClients$, saveClientRemark$, toggleOrgClientActive$ } from 'services/clientService';
 import { TagSelect } from 'components/TagSelect';
-import DropdownMenu from 'components/DropdownMenu';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 import { finalize } from 'rxjs/operators';
 import { useLocalstorageState } from 'rooks';
@@ -20,15 +19,12 @@ import { TimeAgo } from 'components/TimeAgo';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
-import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { BsDatabaseFill, BsFillPersonVcardFill, BsFillSendFill } from 'react-icons/bs';
-import { OrgClientFieldsPanel } from 'pages/OrgBoard/OrgClientFieldsPanel';
-import { ClientInfoPanel } from 'pages/OrgBoard/ClientInfoPanel';
-import { HiDatabase, HiVariable } from 'react-icons/hi';
-import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate } from 'react-router-dom';
+import DropdownMenu from 'components/DropdownMenu';
+import { MdAddReaction, MdDashboardCustomize, MdOutlineAddReaction } from 'react-icons/md';
+import { CheckboxButton } from 'components/CheckboxButton';
 
 
 const { Paragraph, Text, Link: TextLink } = Typography;
@@ -41,6 +37,23 @@ const StyledTable = styled(Table)`
 .ant-table-cell {
   vertical-align: top;
 }
+
+.ant-table-cell:first-child {
+  border-left: 2px solid transparent;
+}
+
+.client-inactive {
+  
+  .ant-table-cell:first-child {
+    border-left: 2px solid red;
+  }
+
+  // &:hover {
+  //   .ant-table-cell {
+  //     background-color: yellow;
+  //   }
+  // }
+}
 `
 
 const DEFAULT_QUERY_INFO = {
@@ -49,7 +62,8 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 50,
   orderField: 'createdAt',
-  orderDirection: 'DESC'
+  orderDirection: 'DESC',
+  showDeactive: false,
 };
 
 const LOCAL_STORAGE_KEY = 'user_query';
@@ -111,11 +125,7 @@ const OrgClientListPage = () => {
 
   }
 
-  const createTaskForClient = (user) => {
-    openTaskCreator({
-      client: user,
-    });
-  }
+
 
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo$({ ...queryInfo, page: 1, tags });
@@ -138,6 +148,22 @@ const OrgClientListPage = () => {
       })
   }
 
+  const toggleClientActive = (item, active) => {
+    toggleOrgClientActive$(item.id, active)
+      .subscribe({
+        next: () => loadList$()
+      });
+  }
+
+  const handleCreateTaskForClient = (user) => {
+    openTaskCreator({
+      client: user,
+    });
+  }
+
+  const handleToggleDeactiveClients = (showDeactive) => {
+    searchByQueryInfo$({ ...queryInfo, showDeactive });
+  }
 
   const columnDef = [
     {
@@ -238,35 +264,39 @@ const OrgClientListPage = () => {
     //   align: 'right',
     //   render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'archived')}>{value}</TextLink> : null,
     // },
-    // {
-    //   width: 40,
-    //   align: 'right',
-    //   fixed: 'right',
-    //   render: (text, item) => <DropdownMenu
-    //     config={[
-    //       item.userId ? {
-    //         icon: <ContactsFilled />,
-    //         menu: `Client information`,
-    //         onClick: () => {
-    //           setCurrentClient(item)
-    //           setOpenInfo(true);
-    //         }
-    //       } : {
-    //         icon: <Icon component={BsFillSendFill} />,
-    //         menu: `Invite client to ZeeWorkflow`,
-    //         onClick: () => {
-    //           setCurrentClient(item)
-    //           setOpenInfo(true);
-    //         }
-    //       },
-    //     ]}
-    //   />
-    // },
     {
       width: 40,
       align: 'right',
-      render: (text, item) => <Button type="text" icon={<RightOutlined/>}/>
+      fixed: 'right',
+      render: (text, item) => <DropdownMenu
+        config={item.active ? [
+          {
+            icon: <Icon component={MdDashboardCustomize} />,
+            menu: 'Create task',
+            onClick: () => handleCreateTaskForClient(item)
+          },
+          {
+            menu: '-'
+          },
+          {
+            icon: <Text type="danger"><MinusCircleOutlined /></Text>,
+            menu: <Text type="danger">De-activate</Text>,
+            onClick: () => toggleClientActive(item, false)
+          }
+        ] : [
+          {
+            icon: <Icon component={MdAddReaction} />,
+            menu: 'Re-activate',
+            onClick: () =>  toggleClientActive(item, true)
+          }
+        ]}
+      />
     },
+    // {
+    //   width: 40,
+    //   align: 'right',
+    //   render: (text, item) => <Button type="text" icon={<RightOutlined/>}/>
+    // },
   ].filter(x => !!x);
 
   return (
@@ -284,6 +314,9 @@ const OrgClientListPage = () => {
         loading={loading}
         title='Clients'
         extra={[
+          <CheckboxButton key="refresh" danger icon={<SyncOutlined />} value={queryInfo.showDeactive} onChange={handleToggleDeactiveClients}>
+            Show deactive clients
+          </CheckboxButton>,
           <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
           <Button key="invite" ghost icon={<Icon component={FaUserPlus} />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Add New Client</Button>
         ]}
@@ -303,6 +336,7 @@ const OrgClientListPage = () => {
               <Button type="link" onClick={() => setInviteUserModalVisible(true)}>Add new client</Button>
             </div>
           }}
+          rowClassName={(item) => item.active ? '' : 'client-inactive'}
           onRow={(record, rowIndex) => {
             return {
               onClick: (event) => {
