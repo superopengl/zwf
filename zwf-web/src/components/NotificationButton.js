@@ -1,32 +1,17 @@
-import { useRef } from 'react'
-import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Drawer, Card, Form, Collapse, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
-import { ProCard } from '@ant-design/pro-components';
-import Field from '@ant-design/pro-field';
+import { Drawer, Card, Button, Tag, Typography } from 'antd';
 import React from 'react';
-import Icon, { BellOutlined, CloseCircleFilled, CommentOutlined, RightOutlined } from '@ant-design/icons';
-import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
-import { Divider } from 'antd';
-import { OptionsBuilder } from '../pages/Femplate/formBuilder/OptionsBuilder';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { ackTaskEventType$, getMyNotifications$, } from 'services/notificationService';
+import Icon, { CloseCircleFilled, RightOutlined } from '@ant-design/icons';
+import { ackTaskEventType$, loadMyUnackZevents$, } from 'services/zeventService';
 import { Badge } from 'antd';
 import { List } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { TaskIcon } from './entityIcon';
-import { HiOutlineChatAlt2 } from 'react-icons/hi';
-import { FaTasks } from 'react-icons/fa';
-import { MdDashboard, MdOpenInNew } from 'react-icons/md';
-import styled from 'styled-components';
 import { useZevent } from 'hooks/useZevent';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { NotificationContext } from 'contexts/NotificationContext';
-import { groupBy, orderBy, sortBy } from 'lodash';
+import { ZeventContext } from 'contexts/ZeventContext';
 import { IoNotificationsOutline } from 'react-icons/io5';
 
 const { Text } = Typography;
@@ -56,7 +41,7 @@ export const NotificationButton = (props) => {
   const [list, setList] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
-  const { zevents, setZevents } = React.useContext(NotificationContext);
+  const { zevents, setZevents } = React.useContext(ZeventContext);
   const [open, setOpen] = React.useState(false)
 
   // const { notifications, setNotifications } = context;
@@ -68,7 +53,7 @@ export const NotificationButton = (props) => {
    */
 
   const load$ = () => {
-    return getMyNotifications$()
+    return loadMyUnackZevents$()
       .pipe()
       .subscribe(setZevents);
   }

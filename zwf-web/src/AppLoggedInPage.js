@@ -30,7 +30,7 @@ import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
 import { TbClock, TbClockPlay, TbRepeat } from 'react-icons/tb';
 import { BiRepeat } from 'react-icons/bi';
-import { NotificationContext } from 'contexts/NotificationContext';
+import { ZeventContext } from 'contexts/ZeventContext';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -212,7 +212,7 @@ export const AppLoggedInPage = React.memo(() => {
   const isAdmin = role === 'admin';
   const isClient = role === 'client';
 
-  return <NotificationContext.Provider value={{zevents, setZevents}}>
+  return <ZeventContext.Provider value={{zevents, setZevents}}>
     <StyledContainer className={isClient ? 'client-role' : ''}>
       <ProLayout
         token={{
@@ -273,6 +273,6 @@ export const AppLoggedInPage = React.memo(() => {
       {!isSystem && <UnimpersonatedFloatButton />}
       {supportContextHolder}
     </StyledContainer >
-  </NotificationContext.Provider >
+  </ZeventContext.Provider >
 })
 

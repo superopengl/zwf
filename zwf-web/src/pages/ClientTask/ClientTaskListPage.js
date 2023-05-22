@@ -16,7 +16,7 @@ import { HighlightingText } from 'components/HighlightingText';
 import {CheckboxButton} from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { TaskStatusTag } from 'components/TaskStatusTag';
-import { NotificationContext } from 'contexts/NotificationContext';
+import { ZeventContext } from 'contexts/ZeventContext';
 
 const { Paragraph, Text } = Typography;
 
@@ -59,7 +59,7 @@ export const ClientTaskListPage = () => {
   const [searchText, setSearchText] = React.useState();
   const [query, setQuery] = useLocalstorageState(CLIENT_TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
   const navigate = useNavigate();
-  const { zevents } = React.useContext(NotificationContext);
+  const { zevents } = React.useContext(ZeventContext);
 
   const load$ = () => {
     setLoading(true);

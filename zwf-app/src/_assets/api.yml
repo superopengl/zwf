@@ -10,18 +10,7 @@ schemes:
 definitions:
   PingResponse:
     type: "object"
-paths:
-  /notification:
-    get:
-      operationId: getMyNotifications
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: ackTaskEventNotification
-      responses:
-        200:
-          description: OK          
+paths:    
   /support:
     get:
       operationId: listMySupportMessages
@@ -58,6 +47,17 @@ paths:
         200:
           description: OK
   /zevent:
+    get:
+      operationId: loadMyUnackZevents
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: ackZevent
+      responses:
+        200:
+          description: OK               
+  /zevent/establish:
     get:
       operationId: establishZeventStream
       responses:

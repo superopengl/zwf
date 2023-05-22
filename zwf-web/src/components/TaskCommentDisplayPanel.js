@@ -6,7 +6,7 @@ import * as moment from 'moment';
 import { css } from '@emotion/css'
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
-import { ackTaskEventType$ } from 'services/notificationService';
+import { ackTaskEventType$ } from 'services/zeventService';
 import { finalize, switchMap, tap } from 'rxjs';
 import { TaskCommentList } from './TaskCommentList';
 
