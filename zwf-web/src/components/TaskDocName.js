@@ -34,7 +34,7 @@ export const TaskDocName = props => {
         return 'default'
       }
     }
-  }, []);
+  }, [showOverlay, signedAt, signRequestedAt, hasFile]);
 
   const handleOpenTaskDoc = async (e) => {
     onClick?.();
