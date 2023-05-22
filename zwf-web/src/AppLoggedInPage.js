@@ -52,6 +52,12 @@ background: #ffffff;
     cursor: pointer !important;
   }
 }
+
+&.client-role {
+  .ant-pro-global-header-collapsed-button {
+    display: none;
+  }
+}
 `;
 
 
@@ -204,9 +210,10 @@ export const AppLoggedInPage = React.memo(() => {
   const canCreateNew = true && role === 'admin' || role === 'agent';
   const isSystem = role === 'system';
   const isAdmin = role === 'admin';
+  const isClient = role === 'client';
 
   return <NotificationContext.Provider value={{zevents, setZevents}}>
-    <StyledContainer>
+    <StyledContainer className={isClient ? 'client-role' : ''}>
       <ProLayout
         token={{
           header: {
