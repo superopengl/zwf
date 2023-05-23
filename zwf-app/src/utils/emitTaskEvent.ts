@@ -3,17 +3,9 @@ import { ZeventName } from "../types/ZeventName";
 import { TaskEvent } from "../entity/TaskEvent";
 import { Task } from "../entity/Task";
 import { publishZevent } from "../services/zeventSubPubService";
+import { ZEVENT_DEF_ENTITIES } from "../types/ZeventTypeDef";
 
-const ZEVENTABLE_TASKEENTTYPES = new Set([
-  ZeventName.ClientSignedDoc,
-  ZeventName.RequestClientSignDoc,
-  ZeventName.ClientSubmittedForm,
-  ZeventName.TaskFormSchemaChanged,
-  ZeventName.TaskFieldValueChanged,
-  ZeventName.TaskStatusCompleted,
-  ZeventName.TaskStatusArchived,
-  ZeventName.TaskComment,
-]);
+const ZEVENTABLE_TASKEENTTYPES = new Set(ZEVENT_DEF_ENTITIES.filter(z => true).map(z => z.name));
 
 export async function emitTaskEvent(m: EntityManager, taskEventType: ZeventName, taskId: string, by?: string, info?: any) {
   const task = await m.findOne(Task, {
