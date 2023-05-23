@@ -15,7 +15,7 @@ export const TaskRequestFillFormBadge = React.memo((props) => {
       && z.payload.type === 'request-client-fill-form'
   }, []);
 
-  return (<ZeventBadge {...others} selfEvent={false} showNumber={true} filter={handleZeventFilter}>
+  return (<ZeventBadge {...others} selfEvent={false} showNumber={false} filter={handleZeventFilter}>
     {children}
   </ZeventBadge>
   );
