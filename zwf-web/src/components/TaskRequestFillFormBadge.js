@@ -5,26 +5,19 @@ import { SyncOutlined } from '@ant-design/icons';
 import { Badge, Button, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { ZeventContext } from 'contexts/ZeventContext';
+import { ZeventBadge } from 'components/ZeventBadge';
 
 export const TaskRequestFillFormBadge = React.memo((props) => {
-  const { taskId, tooltip, offset, children } = props;
-  const [user] = useAuthUser();
-  const [count, setCount] = React.useState(0);
-  const { zevents } = React.useContext(ZeventContext);
+  const { taskId, children, ...others } = props;
 
-  React.useEffect(() => {
-    const num = zevents.filter(z => z.payload.taskId === taskId
+  const handleZeventFilter = React.useCallback(z => {
+    return z.payload.taskId === taskId
       && z.payload.type === 'request-client-fill-form'
-      && z.payload.by !== user.id
-      && !z.payload.ackAt).length;
-    setCount(num);
-  }, [zevents])
+  }, []);
 
-  return (<Tooltip title={count ? tooltip : null}>
-    <Badge count={count ? ' ' : 0} showZero={false} offset={offset}>
-      {children}
-    </Badge>
-  </Tooltip>
+  return (<ZeventBadge {...others} selfEvent={false} showNumber={true} filter={handleZeventFilter}>
+    {children}
+  </ZeventBadge>
   );
 });
 

@@ -197,6 +197,7 @@ const ClientTaskPage = () => {
               onClick={() => setActivePanel('chat')}
             >Chat</Button>
           </TaskUnreadCommentBadge>
+
           <TaskRequestFillFormBadge taskId={task.id} offset={[-8, 10]}>
             <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
               type={activePanel === 'form' ? 'primary' : 'text'}
@@ -205,6 +206,7 @@ const ClientTaskPage = () => {
               onClick={() => setActivePanel('form')}
             >Form</Button>
           </TaskRequestFillFormBadge>
+          
           <Button size={buttonSize} icon={<PaperClipOutlined />}
             type={activePanel === 'docs' ? 'primary' : 'text'}
             ghost={activePanel === 'docs'}

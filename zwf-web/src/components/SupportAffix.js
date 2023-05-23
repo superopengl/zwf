@@ -10,7 +10,7 @@ import { sendSupportMessage$ } from 'services/supportService';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
-import { ZeventNoticeableBadge } from './ZeventNoticeableBadge';
+import { ZeventBadge } from './ZeventBadge';
 
 
 const { Paragraph, Title } = Typography;
@@ -107,7 +107,7 @@ export const SupportAffix = () => {
       open={open}
       onOpenChange={handleFloatButtonOpenChange}
     >
-      <ZeventNoticeableBadge
+      <ZeventBadge
         message="You have unread messages"
         filter={z => z.type === 'support'}
       >
@@ -128,7 +128,7 @@ export const SupportAffix = () => {
           tooltip="Chat with ZeeWorkflow support"
           onClick={handleShowChat}
         />
-      </ZeventNoticeableBadge>
+      </ZeventBadge>
     </FloatButton.Group>
 
     {
