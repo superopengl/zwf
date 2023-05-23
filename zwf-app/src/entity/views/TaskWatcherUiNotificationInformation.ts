@@ -3,6 +3,7 @@ import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation
 import { UserInformation } from './UserInformation';
 import { ZeventDef } from '../ZeventDef';
 import { ZeventName } from '../../types/ZeventName';
+import { Role } from '../../types/Role';
 
 
 
@@ -18,15 +19,20 @@ import { ZeventName } from '../../types/ZeventName';
     .addOrderBy('x."userId"')
     .addOrderBy('x."createdAt"', 'DESC')
     .select([
+      `x."eventId" as "eventId"`,
       `x."taskId" as "taskId"`,
       `x."taskName" as "taskName"`,
       `x."userId" as "userId"`,
+      `u.role as role`,
       `x."type" as "type"`,
       `x."createdAt" as "lastEventAt"`,
       `extract(day from NOW() - x."createdAt") AS "unackDays"`
     ]),
   dependsOn: [TaskWatcherEventAckInformation]
 }) export class TaskWatcherUiNotificationInformation {
+  @ViewColumn()
+  eventId: string;
+
   @ViewColumn()
   taskId: string;
 
@@ -35,6 +41,9 @@ import { ZeventName } from '../../types/ZeventName';
 
   @ViewColumn()
   userId: string;
+
+  @ViewColumn()
+  role: Role;
 
   @ViewColumn()
   type: ZeventName;
