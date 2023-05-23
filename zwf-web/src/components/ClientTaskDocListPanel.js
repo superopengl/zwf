@@ -12,7 +12,7 @@ import { finalize } from 'rxjs';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
 import { List } from 'antd';
 import { FileIcon } from './FileIcon';
-import { openTaskDoc } from 'services/fileService';
+import { openTaskDoc$ } from 'services/fileService';
 
 const { Text } = Typography;
 
@@ -99,8 +99,8 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     onChange();
   }
 
-  const handleTaskDocOpen = async (item) => {
-    await openTaskDoc(item.id, item.name);
+  const handleTaskDocOpen = (item) => {
+    openTaskDoc$(item.id).subscribe();
   }
 
   //  <TaskDocDropableContainer taskId={taskId} onDone={onChange}>

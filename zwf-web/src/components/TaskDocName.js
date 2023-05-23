@@ -4,12 +4,13 @@ import styled from 'styled-components';
 import { Space, Typography, Tag } from 'antd';
 import { FileIcon } from './FileIcon';
 import { useDemplatePreviewModal } from './useDemplatePreviewModal';
-import { openTaskDoc } from 'services/fileService';
+import { openTaskDoc$ } from 'services/fileService';
 import { Loading } from './Loading';
 import { TaskContext } from 'contexts/TaskContext';
 import { Alert } from 'antd';
 import { LeftOutlined } from '@ant-design/icons';
 import { isEmpty } from 'lodash';
+import { finalize } from 'rxjs';
 
 const { Link, Text } = Typography
 
@@ -36,7 +37,7 @@ export const TaskDocName = props => {
     }
   }, [showOverlay, signedAt, signRequestedAt, hasFile]);
 
-  const handleOpenTaskDoc = async (e) => {
+  const handleOpenTaskDoc = (e) => {
     onClick?.();
     if (!allowDownload) {
       return;
@@ -46,14 +47,13 @@ export const TaskDocName = props => {
       return;
     }
     setLoading(true)
-    try {
-      const exists = await openTaskDoc(id, name);
-      if (!exists && demplateId) {
+    openTaskDoc$(id).pipe(
+      finalize(() => setLoading(false)),
+    ).subscribe(result => {
+      if (!result.fileUrl && demplateId) {
         openPreview(demplateId, name);
       }
-    } finally {
-      setLoading(false);
-    }
+    });
   }
 
   return <>

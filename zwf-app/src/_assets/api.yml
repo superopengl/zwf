@@ -963,7 +963,7 @@ paths:
           description: OK     
   /task/doc/{docId}:
     get:
-      operationId: downloadTaskDoc
+      operationId: getTaskDocFileInfo
       parameters: 
         - name: docId
           in: path

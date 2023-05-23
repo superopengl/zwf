@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { Badge, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { ZeventContext } from 'contexts/ZeventContext';
-import { ExclamationOutlined } from '@ant-design/icons';
 
 export const ZeventBadge = React.memo((props) => {
   const { filter, selfEvent, tooltip, showNumber, children, ...others } = props;

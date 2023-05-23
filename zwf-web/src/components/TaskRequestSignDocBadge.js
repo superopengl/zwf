@@ -2,12 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ZeventBadge } from 'components/ZeventBadge';
 
-export const TaskRequestFillFormBadge = React.memo((props) => {
+export const TaskRequestSignDocBadge = React.memo((props) => {
   const { taskId, children, ...others } = props;
 
   const handleZeventFilter = React.useCallback(z => {
     return z.payload.taskId === taskId
-      && z.payload.type === 'request-client-fill-form'
+      && ['request-client-sign-doc', 'unrequest-client-sign-doc'].includes(z.payload.type)
   }, []);
 
   return (<ZeventBadge {...others} selfEvent={false} showNumber={false} filter={handleZeventFilter}>
@@ -16,11 +16,11 @@ export const TaskRequestFillFormBadge = React.memo((props) => {
   );
 });
 
-TaskRequestFillFormBadge.propTypes = {
+TaskRequestSignDocBadge.propTypes = {
   taskId: PropTypes.string.isRequired,
   tooltip: PropTypes.string,
 };
 
-TaskRequestFillFormBadge.defaultProps = {
+TaskRequestSignDocBadge.defaultProps = {
 };
 

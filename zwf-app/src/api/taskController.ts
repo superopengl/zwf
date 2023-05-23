@@ -58,7 +58,9 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   const query: any = isClient ? {
     taskDoc: {
       task: {
-        userId,
+        orgClient: {
+          userId,
+        }
       }
     }
   } : {
@@ -74,7 +76,9 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
     },
     relations: {
       taskDoc: {
-        task: isClient
+        task: {
+          orgClient: true
+        }
       },
     }
   });
@@ -82,7 +86,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assert(file, 404);
 
   if (isClient) {
-    await emitTaskEvent(db.manager, ZeventName.ClientDownloadedDoc, userId);
+    await emitTaskEvent(db.manager, ZeventName.ClientDownloadedDoc, file.taskDoc.taskId, userId);
   }
 
   streamFileToResponse(file, res);
