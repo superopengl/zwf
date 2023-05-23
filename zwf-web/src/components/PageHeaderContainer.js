@@ -46,6 +46,7 @@ right: 0;
 left: 0;
 background-color: #FFFFFF;
 padding: 8px 1rem;
+z-index: 600;
 `
 
 export const PageHeaderContainer = React.memo((props) => {
