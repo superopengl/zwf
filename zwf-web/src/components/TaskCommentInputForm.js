@@ -76,13 +76,13 @@ export const TaskCommentInputForm = React.memo((props) => {
     <Form onFinish={handleSendMessage}
       form={form}>
       <Form.Item name="message"
-        extra="Enter to send"
+        // extra="Enter to send. '@' to mention team member"
         style={{ marginBottom: 0 }}
       >
         <Mentions
           autoSize={{ minRows: 3, maxRows: 20 }}
           maxLength={1000}
-          placeholder="Message"
+          placeholder="Enter to send. '@' to mention team member"
           options={options}
           autoFocus={true}
           disabled={loading}
@@ -91,7 +91,7 @@ export const TaskCommentInputForm = React.memo((props) => {
         />
 
       </Form.Item>
-      <Form.Item style={{ marginBottom: 0 }}>
+      <Form.Item style={{ marginTop: 10, marginBottom: 0 }}>
         <Row justify="end" gutter={8} style={{ position: 'relative' }}>
           <Col>
             <Button type="primary" htmlType="submit" disabled={loading}>Send</Button>
