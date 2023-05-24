@@ -1,2 +1,2 @@
 export const notes=`
-fix permission issue`
+able to assign client profile to a guest account`
