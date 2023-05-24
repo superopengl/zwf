@@ -15,8 +15,7 @@ const { Text } = Typography;
 const StyledList = styled(List)`
 .ant-list-item {
   border: none;
-  padding-left: 0;
-  padding-right: 0;
+  padding: 8px 0;
 }
 
 padding-left: 16px;
@@ -30,7 +29,7 @@ const ChatMessage = React.memo(props => {
   const currentUserId = user?.id;
   const isMe = userId === currentUserId;
 
-  return <Space style={{ flexDirection: isMe ? 'row-reverse' : 'column', alignItems: 'flex-start', width: '100%', gap: isMe ? 8 : 0 }} size="small">
+  return <Space.Compact style={{ flexDirection: isMe ? 'row-reverse' : 'column', alignItems: 'flex-start', width: '100%', gap: isMe ? 8 : 0 }} size="small">
     <UserNameCard userId={userId} showName={!isMe} showEmail={false} />
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: isMe ? 'flex-end' : 'flex-start', paddingLeft: isMe ? 0 : 42 }}>
       <Card
@@ -54,7 +53,7 @@ const ChatMessage = React.memo(props => {
         <small><TimeAgo value={createdAt} accurate={false} showTime={false} /></small>
       </Text>
     </div>
-  </Space>
+  </Space.Compact>
 });
 
 export const TaskCommentList = React.memo((props) => {
