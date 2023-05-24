@@ -85,8 +85,7 @@ export const TaskCommentInputForm = React.memo((props) => {
       <Form.Item name="message"
         style={{ marginBottom: 0 }}
       >
-        {isClient ? <Input.Textarea
-          showCount
+        {isClient ? <Input.TextArea
           autoSize={{ minRows: 3, maxRows: 20 }}
           maxLength={1000}
           placeholder="Enter to send."
