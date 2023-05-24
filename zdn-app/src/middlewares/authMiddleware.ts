@@ -1,8 +1,4 @@
 
-import { getRepository } from 'typeorm';
-import { User } from '../entity/User';
-import { getNow } from '../utils/getNow';
-import { getUtcNow } from '../utils/getUtcNow';
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
 import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
