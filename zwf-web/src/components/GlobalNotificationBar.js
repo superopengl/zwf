@@ -49,7 +49,7 @@ export const GlobalNotificationBar = () => {
       switchMap(() => listOrgPaymentMethods$()),
       filter(list => !list?.length),
       tap(() => {
-        notify.info(
+        notify.warning(
           PAYMENT_METHOD_NOT_SPECIFIED_KEY,
           <>
             <Paragraph>
