@@ -12,7 +12,7 @@ export async function getRequestGeoInfo(req) {
   // IpStack free plan only supports HTTP
   const url = `http://api.ipstack.com/${ip}?access_key=${ipstackKey}&output=json&fields=country_code,region_code,latitude,longitude`; 
 
-  const resp = await fetch(url);
+  const resp = await fetch(url, {timeout: 5000});
   const obj = await resp.json();
 
   return {
