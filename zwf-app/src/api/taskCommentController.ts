@@ -11,6 +11,7 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { createTaskComment } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
 import { ZeventName } from '../types/ZeventName';
+import { addTaskWatcher } from '../utils/addWTaskWatcher';
 
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
@@ -84,24 +85,29 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
   // assertRole(req, ['admin', 'agent', 'client']);
 
   const { id: taskId } = req.params;
-  const { message, mentioned } = req.body;
+  const { message, mentionedUserIds } = req.body;
   assert(message, 400, 'Empty message body');
 
-  const taskRepo = db.getRepository(Task);
-  const task = await taskRepo.findOne({
-    where: {
-      id: taskId
-    },
-    relations: {
-      orgClient: true
+  await db.transaction(async m => {
+    const taskRepo = db.getRepository(Task);
+    const task = await taskRepo.findOneOrFail({
+      where: {
+        id: taskId
+      },
+      relations: {
+        orgClient: true
+      }
+    });
+  
+    for(const userId of mentionedUserIds) {
+      await addTaskWatcher(m, taskId, userId, 'mentioned');
     }
-  });
-  assert(task, 404);
+    
+    const senderId = role === Role.Guest ? task.orgClient?.userId : getUserIdFromReq(req);
+  
+    await createTaskComment(m, task, senderId, message);
+  })
 
-  const senderId = role === Role.Guest ? task.orgClient?.userId : getUserIdFromReq(req);
-
-  const m = db.manager;
-  await createTaskComment(m, task, senderId, message);
 
   res.json();
 });

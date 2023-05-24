@@ -4,7 +4,7 @@ import { subscribeMembers } from 'services/memberService';
 import { UserSelect } from './UserSelect';
 
 export const MemberSelect = React.memo((props) => {
-  const { value, onChange, bordered } = props;
+  const { value, onChange, bordered, ...others } = props;
 
   const [dataSource, setDataSource] = React.useState([]);
 
@@ -25,6 +25,7 @@ export const MemberSelect = React.memo((props) => {
     onChange={handleChange}
     placeholder={'Select member'}
     bordered={bordered}
+    {...others}
   />
 });
 
