@@ -3,7 +3,7 @@ import { Button, Typography, List, Card, Image, Col, Row, Skeleton } from 'antd'
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
 import { listPublishedResourcePages$ } from 'services/resourcePageService';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
@@ -95,7 +95,7 @@ export const ResourceListPage = React.memo(props => {
     <Row justify="center">
       <Image src="/images/resource-list-poster.svg" alt="Resource list page poster" preview={false} />
     </Row>
-    <Row style={{marginTop: 24}}>
+    <Row style={{ marginTop: 24 }}>
       <List
         size="small"
         grid={{
@@ -111,39 +111,41 @@ export const ResourceListPage = React.memo(props => {
         dataSource={shouldShowSkelenton ? placeholderList : list}
         style={{ width: '100%' }}
         loading={loading}
-        renderItem={item => <List.Item style={{padding: 0}}>
-          {shouldShowSkelenton ? <SkeletonCard /> : <Card
-            bordered={false}
-            hoverable
-            title={null}
-            onClick={() => navigate(`/resource/${item.id}`)}
-            style={{ height: 430 }}
-          >
-            <div
-              style={{
-                width: '100%',
-                height: 200,
-                backgroundImage: `url("${item.imageBase64}")`,
-                backgroundRepeat: 'no-repeat',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center center',
-                borderRadius: 4,
-                // marginBottom: 16,
-              }}
-            ></div>
-            <Row justify="space-between" style={{ marginTop: 12 }}>
-              <Text type="secondary">
-                <small>
-                  <TimeAgo value={item.publishedAt} showTime={false} direction="horizontal" />
-                </small>
-              </Text>
-              <Text>
-                <Tag>Featured</Tag>
-              </Text>
-            </Row>
-            <Title level={3} style={{ fontSize: 16, marginTop: 12 }} ellipsis={{ rows: 2 }}>{item.title}</Title>
-            <Paragraph ellipsis={{ rows: 4 }}>{item.brief}</Paragraph>
-          </Card>}
+        renderItem={item => <List.Item style={{ padding: 0 }}>
+          {shouldShowSkelenton ? <SkeletonCard /> : <Link to={`/resource/${item.id}`}>
+            <Card
+              bordered={false}
+              hoverable
+              title={null}
+              // onClick={() => navigate(`/resource/${item.id}`)}
+              style={{ height: 430 }}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  height: 200,
+                  backgroundImage: `url("${item.imageBase64}")`,
+                  backgroundRepeat: 'no-repeat',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center center',
+                  borderRadius: 4,
+                  // marginBottom: 16,
+                }}
+              ></div>
+              <Row justify="space-between" style={{ marginTop: 12 }}>
+                <Text type="secondary">
+                  <small>
+                    <TimeAgo value={item.publishedAt} showTime={false} direction="horizontal" />
+                  </small>
+                </Text>
+                <Text>
+                  <Tag>Featured</Tag>
+                </Text>
+              </Row>
+              <Title level={3} style={{ fontSize: 16, marginTop: 12 }} ellipsis={{ rows: 2 }}>{item.title}</Title>
+              <Paragraph ellipsis={{ rows: 4 }}>{item.brief}</Paragraph>
+            </Card>
+          </Link>}
         </List.Item>}
       />
     </Row>
