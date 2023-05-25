@@ -13,6 +13,8 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { SupportMessage } from '../entity/SupportMessage';
 import { assertRole } from '../utils/assertRole';
 import { SupportMessageLastSeen } from '../entity/SupportMessageLastSeen';
+import { emitTaskEvent } from '../utils/emitTaskEvent';
+import { ZeventName } from '../types/ZeventName';
 
 export const listMySupportMessages = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Client, Role.Agent, Role.Admin], true);
@@ -116,13 +118,15 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
     sm.capturedUrl = capturedUrl;
   }
 
-  await db.manager.save(sm);
+  await db.transaction(async m => {
+    await m.save(sm);
 
-  publishZevent({
-    type: 'support',
-    userId: sm.userId,
-    payload: sm,
-  });
+    publishZevent({
+      type: 'support',
+      userId: sm.userId,
+      payload: sm,
+    });
+  })
 
   res.json();
 });
