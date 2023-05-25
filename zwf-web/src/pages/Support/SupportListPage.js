@@ -15,7 +15,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
 import DropdownMenu from 'components/DropdownMenu';
 import { searchUserSupports$ } from 'services/supportService';
-import { finalize } from 'rxjs/operators';
+import { filter, finalize } from 'rxjs/operators';
 import { SupportReplyDrawer } from 'components/SupportReplyDrawer';
 import { Subject } from 'rxjs';
 import { UserNameCard } from 'components/UserNameCard';
@@ -33,6 +33,7 @@ import { HiOutlineKey } from 'react-icons/hi';
 import { IoKeyOutline } from 'react-icons/io5';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from "hooks/useZevent";
+import { ZeventContext } from 'contexts/ZeventContext';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -91,18 +92,31 @@ const SupportListPage = () => {
   const [user, setAuthUser] = useAuthUser();
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
   const [modal, contextHolder] = Modal.useModal();
+  const { onNewZevent$ } = React.useContext(ZeventContext);
 
-  useZevent(z => z.type === 'support', z => {
-    const { userId, payload } = z;
-    setList(list => {
-      const item = list.find(x => x.userId === userId);
-      if (item) {
-        item.unreadCount += payload.by === userId ? 1 : 0;
-        return [...list];
-      }
-      return list;
-    })
-  });
+  React.useEffect(() => {
+    const sub$ = onNewZevent$().pipe(
+      filter(z => z.type === 'support')
+    ).subscribe(z => {
+      const { userId, payload } = z;
+      setList(list => {
+        const item = list.find(x => x.userId === userId);
+        if (item) {
+          if (payload.by === userId) {
+            // Message from support requestor
+            item.unreadCount += 1;
+          } else {
+            // Message from system
+            item.unreadCount = 0;
+          }
+          return [...list];
+        }
+        return list;
+      })
+    });
+
+    return () => sub$.unsubscribe()
+  }, []);
 
   const columnDef = [
     {
@@ -171,7 +185,9 @@ const SupportListPage = () => {
       render: (text, item) => {
         return <Row>
           <Tooltip title="Message">
-            <Button icon={<MessageOutlined />} type="text" onClick={() => handleChatWith(item)} disabled={item.role === 'system' || item.role === 'guest'} />
+            <Badge >
+              <Button icon={<MessageOutlined />} type="text" onClick={() => handleChatWith(item)} disabled={item.role === 'system' || item.role === 'guest'} />
+            </Badge>
           </Tooltip>
           <Tooltip title="Impersonate">
             <Button icon={<Icon component={GiDominoMask} />} type="text" onClick={() => handleImpersonante(item)} disabled={item.role === 'system' || item.role === 'guest'} />

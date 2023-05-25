@@ -269,7 +269,7 @@ export const AppLoggedInPage = React.memo(() => {
       </ProLayout>
       {isAdmin && <GlobalNotificationBar />}
       {!isSystem && <UnimpersonatedFloatButton />}
-      <SupportAffix />
+      {!isSystem && !isClient && <SupportAffix />}
     </StyledContainer >
   </ZeventContainer>
 })

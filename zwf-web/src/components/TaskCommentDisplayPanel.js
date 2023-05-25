@@ -4,8 +4,6 @@ import ScrollToBottom, { } from 'react-scroll-to-bottom';
 import { listTaskComment$, } from 'services/taskService';
 import * as moment from 'moment';
 import { css } from '@emotion/css'
-import { useAuthUser } from 'hooks/useAuthUser';
-import { useZevent } from 'hooks/useZevent';
 import { ackTaskEventType$ } from 'services/zeventService';
 import { filter, finalize, switchMap, tap } from 'rxjs';
 import { TaskCommentList } from './TaskCommentList';
@@ -25,7 +23,7 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const { getZevent$ } = React.useContext(ZeventContext);
+  const { onNewZevent$ } = React.useContext(ZeventContext);
 
   // React.useEffect(() => {
   //   scrollToBottom();
@@ -49,7 +47,7 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
   }, []);
   
   React.useEffect(() => {
-    const sub$ = getZevent$().pipe(
+    const sub$ = onNewZevent$().pipe(
       filter(z => z.type === 'taskEvent'),
       filter(z => z.payload.taskId === taskId),
       filter(z => z.payload.type === 'task-comment'),

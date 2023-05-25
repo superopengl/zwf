@@ -4,11 +4,8 @@ export function listMySupportMessages$() {
   return httpGet$(`/support`);
 }
 
-export function nudgeMyLastReadSupportMessage$(messageId) {
-  if(!messageId) {
-    throw new Error('messageId is not specified');
-  }
-  return httpPost$(`/support/nudge`, { messageId });
+export function nudgeMyLastReadSupportMessage$() {
+  return httpPost$(`/support/nudge`);
 }
 
 export function searchUserSupports$(queryInfo) {

@@ -25,6 +25,7 @@ export const ZeventContainer = (props) => {
         break;
       case 'support':
         zeventSourceRef.current.next(z);
+        setZevents(pre => [...pre, z])
         break;
       default:
         break;
@@ -50,7 +51,7 @@ export const ZeventContainer = (props) => {
    * Initial load
    */
 
-  const getZevent$ = React.useCallback(() => {
+  const onNewZevent$ = React.useCallback(() => {
     return zeventSourceRef.current;
   }, []);
 
@@ -99,7 +100,7 @@ export const ZeventContainer = (props) => {
 
   return <ZeventContext.Provider value={{
     zevents,
-    getZevent$,
+    onNewZevent$,
     ackEvent,
     reloadZevents$: load$,
   }}>
