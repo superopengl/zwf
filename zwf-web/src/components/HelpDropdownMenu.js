@@ -1,21 +1,7 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { logout$ } from 'services/authService';
-import { Button, Dropdown, Modal, Typography } from 'antd';
-import ProfileModal from 'pages/Profile/ProfileModal';
-import AboutModal from 'pages/About/AboutModal';
-import loadable from '@loadable/component'
-import { FormattedMessage } from 'react-intl';
-import { UserAvatar } from 'components/UserAvatar';
-import TermOfUsePage from 'pages/TermOfUsePage';
-import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import { CommentOutlined, QuestionCircleFilled, QuestionOutlined } from '@ant-design/icons';
-import { useAuthUser } from 'hooks/useAuthUser';
+import { Button, Dropdown, Typography } from 'antd';
+import { QuestionOutlined } from '@ant-design/icons';
 import { useRole } from 'hooks/useRole';
-import { SupportMessageInput } from './SupportMessageInput';
-import { SupportMessageList } from './SupportMessageList';
-import { MdOutlinePrivacyTip } from 'react-icons/md';
-import { useSupportChatWidget } from '../hooks/useSupportChatWidget';
 import styled from 'styled-components'
 
 const Container = styled.div`
@@ -52,7 +38,7 @@ export const HelpDropdownMenu = React.memo((props) => {
         label: <Link href="/terms_of_use" target="_blank">Terms of Use</Link>
       },
       {
-        key: 'home',
+        key: 'pp',
         // icon: <MdOutlinePrivacyTip />,
         label: <Link href="/privacy_policy" target="_blank">Privacy Policy</Link>,
       },
