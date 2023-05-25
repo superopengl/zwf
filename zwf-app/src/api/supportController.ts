@@ -12,7 +12,6 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { SupportMessage } from '../entity/SupportMessage';
 import { assertRole } from '../utils/assertRole';
-import { SupportMessageLastSeen } from '../entity/SupportMessageLastSeen';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 import { ZeventName } from '../types/ZeventName';
 
@@ -31,13 +30,6 @@ export const listMySupportMessages = handlerWrapper(async (req, res) => {
         createdAt: 'ASC'
       }
     });
-
-    await m.createQueryBuilder()
-      .insert()
-      .into(SupportMessageLastSeen)
-      .values({ userId, lastSeenAt: () => `NOW()` })
-      .orUpdate(['lastSeenAt'], ['userId'])
-      .execute();
   })
 
   res.json(list);

@@ -24,6 +24,7 @@ export const ZeventContainer = (props) => {
         setZevents(pre => pre.filter(x => x.payload.eventId !== z.payload.eventId));
         break;
       case 'support':
+        zeventSourceRef.current.next(z);
         break;
       default:
         break;
