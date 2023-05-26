@@ -6,8 +6,9 @@ import { getUserSupport$, sendSupportMessage$ } from 'services/supportService';
 import { SupportMessageList } from 'components/SupportMessageList';
 import { filter, finalize } from 'rxjs/operators';
 import { SupportMessageInput } from './SupportMessageInput';
-import { SyncOutlined } from '@ant-design/icons';
+import { CloseOutlined, SyncOutlined } from '@ant-design/icons';
 import { ZeventContext } from 'contexts/ZeventContext';
+import { FaLaptopHouse } from 'react-icons/fa';
 
 
 
@@ -63,8 +64,8 @@ export const SupportReplyDrawer = React.memo((props) => {
     closable={false}
     autoFocus
     maskClosable
-    width={500}
-    extra={<Button type="link" icon={<SyncOutlined />} onClick={handleReload} />}
+    // width={500}
+    extra={<Button type="text" icon={<CloseOutlined />} onClick={onClose} />}
     bodyStyle={{ padding: 0, height: 'calc(100vh - 55px)' }}
     footerStyle={{ padding: 0 }}
     footer={<SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />}
