@@ -6,7 +6,8 @@ import {
   SearchOutlined,
   ClearOutlined,
   CheckOutlined,
-  MessageOutlined
+  MessageOutlined,
+  CustomerServiceOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
@@ -124,10 +125,7 @@ const SupportListPage = () => {
       fixed: 'left',
       render: (_, item) => <Space>
         <ClickToCopyTooltip name="User ID" value={item.userId}><Icon component={IoKeyOutline} /></ClickToCopyTooltip>
-        <Tooltip title="Click to open messages">
           <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link" onClick={() => handleChatWith(item)} />
-        </Tooltip>
-        <Badge count={item.unreadCount} showZero={false} />
       </Space >
     },
     {
@@ -183,10 +181,10 @@ const SupportListPage = () => {
       align: 'right',
       fixed: 'right',
       render: (text, item) => {
-        return <Row>
-          <Tooltip title="Message">
-            <Badge >
-              <Button icon={<MessageOutlined />} type="text" onClick={() => handleChatWith(item)} disabled={item.role === 'system' || item.role === 'guest'} />
+        return <Space>
+          <Tooltip title="Support chat">
+            <Badge count={item.unreadCount} showZero={false}>
+              <Button icon={<CustomerServiceOutlined />} type="text" onClick={() => handleChatWith(item)} disabled={item.role === 'system' || item.role === 'guest'} />
             </Badge>
           </Tooltip>
           <Tooltip title="Impersonate">
@@ -205,7 +203,7 @@ const SupportListPage = () => {
               }
             ]}
           />
-        </Row>
+        </Space>
       },
     },
   ].filter(x => !!x);
@@ -354,9 +352,9 @@ const SupportListPage = () => {
           if (item === currentUser) {
             classNames.push('current-item');
           }
-          if (item.unreadCount) {
-            classNames.push('pending-reply');
-          }
+          // if (item.unreadCount) {
+          //   classNames.push('pending-reply');
+          // }
           return classNames.join(' ');
         }}
         onRow={item => {

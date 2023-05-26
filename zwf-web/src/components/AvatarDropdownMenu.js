@@ -132,7 +132,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       //   label: 'Invoices'
       // } : null,
       {
-        key: 'divider3',
+        key: 'divider4',
         type: 'divider',
       },
       {

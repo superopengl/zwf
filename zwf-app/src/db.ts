@@ -30,7 +30,6 @@ import { UserInformation } from './entity/views/UserInformation';
 import { OrgClientStatInformation } from './entity/views/OrgClientStatInformation';
 import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
-import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
 import { TaskActivityInformation } from './entity/views/TaskActivityInformation';
 import { TaskEvent } from './entity/TaskEvent';
 import { UserAudit } from './entity/UserAudit';
@@ -212,7 +211,6 @@ export const db = new DataSource({
     UserAudit,
     TaskTagsTag,
     Recurring,
-    SupportUserLastAccess,
     EmailSentOutTask,
     OrgTermination,
     SystemConfig,
