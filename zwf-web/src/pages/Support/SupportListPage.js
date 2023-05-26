@@ -179,7 +179,7 @@ const SupportListPage = () => {
     {
       width: 120,
       align: 'right',
-      fixed: 'right',
+      // fixed: 'right',
       render: (text, item) => {
         return <Space>
           <Tooltip title="Support chat">
