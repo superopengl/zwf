@@ -1,16 +1,13 @@
-import { Button, Typography, Row, Col, Skeleton } from 'antd';
+import { Button } from 'antd';
 import { useParams } from "react-router-dom";
 import React from 'react';
 import styled from 'styled-components';
-import { Loading } from 'components/Loading';
 import { ResourceEditorPanel } from './ResourceEditorPanel';
 import { v4 as uuidv4 } from 'uuid';
 import { finalize } from 'rxjs/operators';
 import { ResourcePageIcon } from 'components/entityIcon';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { getEditResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
-import { useDebouncedValue } from "rooks";
-import { PageContainer } from '@ant-design/pro-components';
 import { useNavigate } from 'react-router-dom';
 
 import { SavingAffix } from 'components/SavingAffix';
@@ -18,9 +15,6 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { SaveOutlined } from '@ant-design/icons';
 import { CheckboxButton } from 'components/CheckboxButton';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
-
-const { Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
