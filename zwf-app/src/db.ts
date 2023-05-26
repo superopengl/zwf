@@ -7,7 +7,6 @@ import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
 import { Payment } from './entity/Payment';
 import { EmailLog } from './entity/EmailLog';
-import { Message } from './entity/Message';
 import { Demplate } from './entity/Demplate';
 import { Femplate } from './entity/Femplate';
 import { UserProfile } from './entity/UserProfile';
@@ -42,7 +41,6 @@ import * as dotenv from 'dotenv';
 import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
-import { NotificationMessage } from './entity/NotificationMessage';
 import { OrgTermination } from './entity/OrgTermination';
 import { OrgClientField } from './entity/OrgClientField';
 import { OrgAllClientFieldsInformation } from './entity/views/OrgAllClientFieldsInformation';
@@ -200,7 +198,6 @@ export const db = new DataSource({
     Femplate,
     Demplate,
     EmailLog,
-    Message,
     Payment,
     OrgPaymentMethod,
     ResourcePage,
@@ -216,7 +213,6 @@ export const db = new DataSource({
     SystemConfig,
     LicenseTicket,
     OrgSubscriptionPeriod,
-    NotificationMessage,
     TaskWatcherEventAck,
     TaskWatcher,
     ZeventDef,
