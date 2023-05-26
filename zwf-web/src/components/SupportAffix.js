@@ -7,7 +7,7 @@ import { finalize, catchError, filter, tap, switchMap } from 'rxjs/operators';
 import { SupportMessageList } from './SupportMessageList';
 import { SupportMessageInput } from './SupportMessageInput';
 import { sendSupportMessage$ } from 'services/supportService';
-import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, DownOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { ZeventBadge } from './ZeventBadge';
 import { ZeventContext } from 'contexts/ZeventContext';
@@ -112,7 +112,7 @@ export const SupportAffix = () => {
                 Ask us anything, or share your feedback.
               </Paragraph>
             </>}
-            extra={<Button icon={<CloseOutlined />} onClick={() => setChatOpen(false)} type="text" />}
+            extra={<Button icon={<DownOutlined />} onClick={() => setChatOpen(false)} type="text" />}
             headStyle={{ backgroundColor: '#0FBFC4' }}
             bodyStyle={{ padding: 0 }}
           >
