@@ -16,7 +16,7 @@ import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill, BsFillTrash3Fill, BsRepeat, BsClock } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { ProLayout } from '@ant-design/pro-components';
-import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
+import { SubscriptionNotification } from 'components/SubscriptionNotification';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAssertUser } from 'hooks/useAssertUser';
 import { useAuthUser } from 'hooks/useAuthUser';
@@ -267,7 +267,7 @@ export const AppLoggedInPage = React.memo(() => {
       >
         <Outlet />
       </ProLayout>
-      {isAdmin && <GlobalNotificationBar />}
+      {isAdmin && <SubscriptionNotification />}
       {!isSystem && <UnimpersonatedFloatButton />}
       {!isSystem && !isClient && <SupportAffix />}
     </StyledContainer >
