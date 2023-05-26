@@ -2,7 +2,7 @@ import React from 'react';
 import { message, Typography, Button, Space } from 'antd';
 import { listOrgPaymentMethods$ } from 'services/orgPaymentMethodService';
 import { useAddPaymentMethodModal } from '../hooks/useAddPaymentMethodModal';
-import { delay, tap, of, filter, switchMap, forkJoin } from 'rxjs';
+import { delay, tap, of, filter, switchMap, forkJoin, timer } from 'rxjs';
 import { useAuthUser } from 'hooks/useAuthUser';
 import moment from 'moment';
 import { notify } from 'util/notify';
@@ -20,13 +20,12 @@ export const SubscriptionNotification = () => {
   const periodTo = moment(currentPeriodTo);
 
   const shouldPrompt = (beforeDays = 3) => {
-    debugger;
     return currentPlanType !== 'trial' || moment(periodTo).add(-beforeDays, 'days').isBefore();
   }
 
-  const source$ = of(null).pipe(
+  const source$ = timer(5000, 1000 * 3600 * 4).pipe(
     filter(() => role === 'admin'),
-    delay(5000),
+    filter(() => shouldPrompt()),
   )
 
   React.useEffect(() => {

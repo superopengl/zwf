@@ -68,6 +68,7 @@ export const SupportMessageList = React.memo((props) => {
       <StyledList
         loading={loading}
         dataSource={dataSource}
+        locale={{emptyText: 'No messages'}}
         renderItem={item => <List.Item>
           <ChatMessage userId={item.by} message={item.message} createdAt={item.createdAt} />
         </List.Item>} />
