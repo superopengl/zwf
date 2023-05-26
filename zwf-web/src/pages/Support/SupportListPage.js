@@ -41,7 +41,7 @@ const { Text, Link: TextLink } = Typography;
 const StyledTable = styled(Table)`
 .ant-table-tbody {
   .ant-table-cell:first-child {
-    border-left: 4px solid transparent;
+    border-left: 2px solid transparent;
   }
 }
 
@@ -59,6 +59,12 @@ const StyledTable = styled(Table)`
     .ant-table-cell {
       background-color: #cf222e33;
     }
+  }
+}
+
+.user-suspended {
+  .ant-table-cell:first-child {
+    border-left-color: #F53F3F;
   }
 }
 
@@ -352,9 +358,10 @@ const SupportListPage = () => {
           if (item === currentUser) {
             classNames.push('current-item');
           }
-          // if (item.unreadCount) {
-          //   classNames.push('pending-reply');
-          // }
+          if (item.suspended) {
+            classNames.push('user-suspended');
+          }
+
           return classNames.join(' ');
         }}
         onRow={item => {
