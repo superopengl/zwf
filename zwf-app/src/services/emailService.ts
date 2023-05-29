@@ -53,8 +53,6 @@ async function composeEmailOption(req: EmailRequest) {
 async function compileEmailBody(req: EmailRequest) {
   const { orgId, template, vars } = req;
   const emailTemplate = await getEmailTemplate(template as EmailTemplateType);
-  const subject = emailTemplate.subject || 'System notification';
-  const body = emailTemplate.html || '';
 
   const allVars = {
     ...vars,
@@ -63,8 +61,11 @@ async function compileEmailBody(req: EmailRequest) {
     year: moment().year(),
   };
 
-  const compiledBody = handlebars.compile(body);
+  const compiledBody = handlebars.compile(emailTemplate.html || '');
   const html = compiledBody(allVars);
+
+  const compiledSubject = handlebars.compile( emailTemplate.subject || 'System notification');
+  const subject = compiledSubject(allVars);
 
   return { subject, html, text: htmlToText(html) };
 }
