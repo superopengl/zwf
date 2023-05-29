@@ -38,12 +38,14 @@ export const TaskTimelinePanel = React.memo((props) => {
       items={list.map(x => ({
         // color: 
         children: <Space direction='vertical'>
-          <TimeAgo value={x.createdAt} direction="horizontal" accurate={true} showTime={true} />
+          <TimeAgo type="default" 
+          // prefix={<UserNameCard userId={x.by} showEmail={false} size={24} />} 
+          value={x.createdAt} direction="horizontal" accurate={true} showTime={true} />
           <Space>
             <UserNameCard userId={x.by} showEmail={false} size={24} />
-            emitted
             <Tag>{x.type}</Tag>
           </Space>
+            {x.type === 'comment' && <Text type="secondary">{x.info.message}</Text>}
         </Space>
       }))}
     />

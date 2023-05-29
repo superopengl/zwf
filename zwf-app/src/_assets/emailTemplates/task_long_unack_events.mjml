@@ -1,19 +1,19 @@
 <mjml>
   <mj-head>
-    <mj-title>Actions required about your task</mj-title>
+    <mj-title>There are updates to your task</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, task <strong>{{task}}</strong> requires further action</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, task <strong>{{taskName}}</strong> has recent updates</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          Your task <strong>{{task}}</strong>, being proceeded by {{org}}, requires further actions to be completed. You can click below button to view the task and find out what further information you need to provide..
+          Your task <strong>{{taskName}}</strong>, being proceeded by <strong>{{org}}</strong>, has been updated recently. You can click below button to view the task and find out what further information you need to provide.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
@@ -28,7 +28,7 @@
       </mj-column>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          Should you have any questions about this task, you can contact with {{org}} on the task page in ZeeWorkflow.
+          Should you have any questions about this task, you can contact with <strong>{{org}}</strong> on the task page in ZeeWorkflow.
         </mj-text>
       </mj-column>
     </mj-section>

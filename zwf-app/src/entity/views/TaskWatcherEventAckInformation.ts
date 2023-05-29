@@ -20,6 +20,7 @@ import { TaskWatcher } from '../TaskWatcher';
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(Task, 't')
+    .innerJoin(Org, 'o', 't."orgId" = o.id')
     .innerJoin(TaskEvent, 'e', `e."taskId" = t.id`)
     .innerJoin(TaskWatcher, 'w', `w."taskId" = t."id"`)
     .leftJoin(TaskWatcherEventAck, 'a', 'a."userId" = w."userId" AND a."eventId" = e."eventId"')
@@ -28,8 +29,10 @@ import { TaskWatcher } from '../TaskWatcher';
       'e."eventId" as "eventId"',
       'w."userId" as "userId"',
       't."orgId" as "orgId"',
+      'o.name as "orgName"',
       't."orgClientId" as "orgClientId"',
       't.id as "taskId"',
+      't."deepLinkId" as "deepLinkId"',
       't.name as "taskName"',
       'e."type" as "type"',
       'e."info" as "info"',
@@ -50,10 +53,16 @@ import { TaskWatcher } from '../TaskWatcher';
   orgId: string;
 
   @ViewColumn()
+  orgName: string;
+
+  @ViewColumn()
   orgClientId: string;
 
   @ViewColumn()
   taskId: string;
+
+  @ViewColumn()
+  deepLinkId: string;
 
   @ViewColumn()
   taskName: string;
