@@ -12,6 +12,7 @@ import { TaskWatcherEmailNotificationInformation } from '../src/entity/views/Tas
 import { EmailRequest } from '../src/types/EmailRequest';
 import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
 import { getEmailRecipientNameByNames } from '../src/utils/getEmailRecipientName';
+import { Role } from '../src/types/Role';
 
 const JOB_NAME = 'index-notify';
 
@@ -21,7 +22,7 @@ export async function handleEmailTasks() {
   console.log('Starting index-notify');
 
   const jobs = await db.getRepository(TaskWatcherEmailNotificationInformation).findBy({
-    unackDays: In([1, 3, 7, 10, 30]),
+    // unackDays: In([1, 3, 7, 10, 30]),
   });
 
   console.log(`Email task notification ${jobs.length} jobs to handle`);
@@ -33,7 +34,7 @@ export async function handleEmailTasks() {
   const emailRequests = jobs.map(j => {
     const request = new EmailRequest();
     request.to = j.email;
-    request.template = EmailTemplateType.TaskLongUnackEvents;
+    request.template = j.role === Role.Client ?  EmailTemplateType.TaskLongUnackEventsForClient : EmailTemplateType.TaskLongUnackEventsForOrg;
     request.vars = {
       toWhom: getEmailRecipientNameByNames(j.givenName, j.surname),
       taskName: j.taskName,
