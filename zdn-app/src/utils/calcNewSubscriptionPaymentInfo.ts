@@ -8,6 +8,7 @@ import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscrip
 import { User } from '../entity/User';
 import { Role } from '../types/Role';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import * as _ from 'lodash';
 
 async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
   const count = await m.count(User, {
@@ -34,46 +35,59 @@ async function getCurrentSubscriptionLicenseCount(m: EntityManager, orgId: strin
 export async function calcNewSubscriptionPaymentInfo(
   m: EntityManager,
   orgId: string,
-  seats: number,
+  seatsAfter: number,
   promotionCode: string,
 ) {
-  assert(seats > 0, 400, `Invalid seats value ${seats}`);
-  const currentOccupied = await getCurrentOccupiedLicenseCount(m, orgId);
-  assert(seats !== currentOccupied, 400, `${currentOccupied} are being used in your organization. There is no need to adjust.`);
-  assert(currentOccupied < seats, 400, `${currentOccupied} are being used in your organization. Please remove members before reducing license count.`);
-  
+  const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
+  const seatsBefore = await getCurrentSubscriptionLicenseCount(m, orgId);
+
+  assert(seatsAfter !== seatsBefore, 400, `${minSeats} are being used in your organization. There is no need to adjust.`);
+  assert(minSeats <= seatsAfter, 400, `${minSeats} are being used in your organization. Please remove members before reducing license count.`);
+
   // const currentSubscriptionSeats = await getCurrentSubscriptionLicenseCount(m, orgId);
   // assert(seats !== currentSubscriptionSeats, 400, `Current subscription already has ${seats} licenses. No need to adjust.`);
 
   const unitPrice = getSubscriptionPrice();
-  const currentCreditBalance = await getCreditBalance(m, orgId);
-  const refundable = await getRefundableCredits(m, orgId);
-  const creditBalance = currentCreditBalance + refundable;
+  const newSubscriptionFullPrice = unitPrice * seatsAfter;
 
-  let promotionPercentage = null;
+  // Get promotion data
+  let promotionDiscountPercentage = 0;
   if (promotionCode) {
     const promotion = await m.findOne(OrgPromotionCode, { code: promotionCode });
     if (promotion) {
-      promotionPercentage = promotion.percentage;
+      promotionDiscountPercentage = promotion.percentage;
     }
   }
-  const price = unitPrice * seats;
-
-  let payable = (promotionPercentage || 1) * price - creditBalance;
-  if (payable < 0) {
-    payable = 0;
+  const fullPayableAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * newSubscriptionFullPrice, 2);
+  
+  const creditBalance = await getCreditBalance(m, orgId);
+  const refundable = await getRefundableCredits(m, orgId);
+  const creditBalanceBefore = creditBalance + refundable;
+  
+  let payable = 0;
+  let deduction = 0;
+  if (creditBalanceBefore >= fullPayableAfterDiscount) {
+    payable = 0
+    deduction = -1 * fullPayableAfterDiscount;
+  } else {
+    payable = fullPayableAfterDiscount - creditBalanceBefore;
+    deduction = -1 * creditBalanceBefore;
   }
+
+
 
   const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { orgId, primary: true });
 
   const result = {
     unitPrice,
-    currentOccupied,
-    seats,
-    promotionPercentage,
-    price,
+    minSeats,
+    fullPrice: newSubscriptionFullPrice,
+    seatsAfter,
+    seatsBefore,
+    promotionDiscountPercentage,
     creditBalance,
     refundable,
+    deduction,
     payable,
     paymentMethodId: primaryPaymentMethod?.id,
     stripePaymentMethodId: primaryPaymentMethod?.stripePaymentMethodId,

@@ -1,6 +1,7 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, CreateDateColumn } from 'typeorm';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { SubscriptionType } from '../types/SubscriptionType';
+import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Payment } from './Payment';
 
 @Entity()
@@ -25,6 +26,9 @@ export class Subscription {
   @Column({ nullable: true })
   promotionCode: string;
 
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
+  unitPrice: number;
+  
   @Column('int')
   seats: number;
 

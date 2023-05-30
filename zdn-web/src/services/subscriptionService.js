@@ -25,8 +25,8 @@ export async function purchaseNewSubscription(seats, promotionCode) {
   return httpPost(`subscription`, {seats, promotionCode});
 }
 
-export function calculatePaymentDetail$(seats, promotionCode) {
-  return httpPost$(`subscription/preview`, { seats, promotionCode });
+export async function calculatePaymentDetail(seats, promotionCode) {
+  return httpPost(`subscription/preview`, { seats, promotionCode });
 }
 
 export async function fetchStripeCheckoutSession() {

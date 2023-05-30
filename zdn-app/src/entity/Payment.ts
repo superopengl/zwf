@@ -36,7 +36,7 @@ export class Payment {
   @Index()
   status: PaymentStatus;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   @Index()
   paidAt?: Date;
 
@@ -55,8 +55,8 @@ export class Payment {
   @Column('json', { nullable: true })
   geo: object;
 
-  @ManyToOne(() => Subscription, subscription => subscription.payments, {onDelete: 'CASCADE'})
-  @JoinColumn({name: 'subscriptionId', referencedColumnName: 'id'})
+  @ManyToOne(() => Subscription, subscription => subscription.payments, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'subscriptionId', referencedColumnName: 'id' })
   subscription: Subscription;
 
   @Column()
