@@ -312,8 +312,9 @@ export const reinviteOrgMember = handlerWrapper(async (req, res) => {
 
 export const addClientToOrg = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { alias, email } = req.body;
-  assert(alias, 400, 'No email address found');;
+  const { alias } = req.body;
+  assert(alias, 400, 'No client alias found');
+  const email = req.body.email || (isEmail(alias) ? alias : null);
   assert(!email || isEmail(email), 400, 'Invalid email address detected');
   const orgId = getOrgIdFromReq(req);
 
