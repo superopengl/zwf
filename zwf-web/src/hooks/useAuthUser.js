@@ -1,6 +1,6 @@
 import { GlobalContext } from 'contexts/GlobalContext';
 import React from 'react';
-import { Typography } from 'antd';
+import { Typography, Modal } from 'antd';
 import { logout$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { useNavigate } from 'react-router-dom';
@@ -21,20 +21,20 @@ export const useAuthUser = () => {
         logout$().subscribe(() => {
           context.user = null;
           navigate('/');
-          notify.error(
-            'Account has been suspended',
-            <>
+          Modal.error({
+            title: 'Account has been suspended',
+            content: <>
               <Paragraph>Your account and your organization's account have been suspended. </Paragraph>
               <Paragraph>Please contact your organization's administrators, as they should have received an email containing instructions on how to settle the outstanding bill and reactivate the accounts.</Paragraph>
             </>,
-            0
-          )
+            closable: true,
+          })
         });
         return;
       }
     }
 
-    if(pathAfter) {
+    if (pathAfter) {
       navigate(pathAfter);
     }
   }
