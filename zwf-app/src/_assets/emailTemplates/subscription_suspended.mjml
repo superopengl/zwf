@@ -1,13 +1,13 @@
 <mjml>
   <mj-head>
-    <mj-title>Organization accounts have been suspended</mj-title>
+    <mj-title>Organization has been suspended</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, account has been suspended.</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, your organization has been suspended.</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
