@@ -1,4 +1,4 @@
 export const notes=`
-bugfix onboarding
-allow task having no fields
-refine email templates`
+overflow fix
+refine task filters
+auto wire client account if alias is email`
