@@ -28,7 +28,7 @@ const LayoutStyled = styled(Space)`
   width: 100%;
 `;
 
-const TASK_QUERY_KEY = 'tasks.filter.list';
+const TASK_QUERY_KEY = 'tasks.filter.board';
 
 const DEFAULT_QUERY = {
   text: '',
@@ -41,7 +41,7 @@ const DEFAULT_QUERY = {
 };
 
 
-const OrgTaskListPage = () => {
+const OrgTaskBoardPage = () => {
   useAssertRole(['admin', 'agent']);
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
@@ -51,6 +51,15 @@ const OrgTaskListPage = () => {
     const subscription = reloadWithQueryInfo$(queryInfo)
     return () => subscription.unsubscribe()
   }, []);
+
+
+  // React.useEffect(() => {
+  //   if (viewMode === 'board') {
+  //     setMessage(<>Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see all tasks including archived ones.</>);
+  //   } else {
+  //     setMessage(null);
+  //   }
+  // }, [viewMode]);
 
 
   const reloadWithQueryInfo$ = (queryInfo) => {
@@ -68,6 +77,7 @@ const OrgTaskListPage = () => {
         setLoading(false);
       });
   }
+
 
   const handleReload = () => {
     reloadWithQueryInfo$(queryInfo)
@@ -94,7 +104,7 @@ const OrgTaskListPage = () => {
           name: 'Tasks'
         },
         {
-          name: 'List',
+          name: 'Board',
         },
       ]}
       loading={loading}
@@ -105,11 +115,12 @@ const OrgTaskListPage = () => {
           key="search"
           value={queryInfo}
           onChange={handleFilterSearch}
-          defaultQuery={DEFAULT_QUERY} />
+          defaultQuery={DEFAULT_QUERY} />,
       ]}
     >
+
       <LayoutStyled direction="vertical" size="large">
-        <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />
+        <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />
 
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
@@ -120,8 +131,8 @@ const OrgTaskListPage = () => {
   )
 }
 
-OrgTaskListPage.propTypes = {};
+OrgTaskBoardPage.propTypes = {};
 
-OrgTaskListPage.defaultProps = {};
+OrgTaskBoardPage.defaultProps = {};
 
-export default OrgTaskListPage;
+export default OrgTaskBoardPage;

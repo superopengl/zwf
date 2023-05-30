@@ -22,6 +22,9 @@ import { Error404 } from 'pages/Error404';
 import { LandingPage } from 'pages/LandingPage';
 import 'dayjs/locale/en-au';
 
+const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
+const OrgTaskBoardPage = loadable(() => import('pages/OrgBoard/OrgTaskBoardPage'));
+const OrgTaskListPage = loadable(() => import('pages/OrgBoard/OrgTaskListPage'));
 const OrgClientPage = loadable(() => import('pages/User/OrgClientPage'));
 const OrgArchivedTasksPage = loadable(() => import('pages/OrgBoard/OrgArchivedTasksPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -50,7 +53,6 @@ const FemplateListPage = loadable(() => import('pages/Femplate/FemplateListPage'
 const FemplatePage = loadable(() => import('pages/Femplate/FemplatePage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const TaskPage = loadable(() => import('pages/TaskPage'));
-const TaskListPage = loadable(() => import('pages/TaskListPage'));
 const ClientCommentListPage = loadable(() => import('pages/ClientTask/ClientCommentListPage'));
 const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
 const ResourceEditListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
@@ -125,7 +127,9 @@ export const App = React.memo(() => {
 
         <Route path="/" element={<AppLoggedInPage />} >
           <Route path="/sysboard" element={<SystemBoardPage />} />
-          <Route path="/task" element={<TaskListPage />} />
+          <Route path="/task/board" element={<OrgTaskBoardPage />} />
+          <Route path="/task/list" element={<OrgTaskListPage />} />
+          <Route path="/task" element={<ClientTaskListPage />} />
           <Route path="/task/:id" element={<TaskPage />} />
           <Route path="/task/:id/edit" element={<OrgTaskEditPage />} />
           <Route path="/activity" element={<ClientCommentListPage />} />

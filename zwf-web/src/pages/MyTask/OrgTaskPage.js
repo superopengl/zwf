@@ -172,10 +172,6 @@ const OrgTaskPage = () => {
               name: 'Tasks'
             },
             {
-              path: '/task',
-              name: 'Tasks',
-            },
-            {
               name: task?.name
             }
           ]}

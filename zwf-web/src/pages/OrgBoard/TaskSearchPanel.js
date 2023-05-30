@@ -10,7 +10,7 @@ import { OrgClientSelect } from 'components/OrgClientSelect';
 
 
 export const TaskSearchPanel = React.forwardRef((props, ref) => {
-  const { queryInfo, onSearch, showStatusFilter, defaultQuery } = props;
+  const { queryInfo, onSearch, showStatusFilter, showArchived } = props;
   const [form] = Form.useForm();
 
   React.useEffect(() => {
@@ -19,20 +19,25 @@ export const TaskSearchPanel = React.forwardRef((props, ref) => {
 
   const handleSearch = (allValues) => {
     // console.log(changed, allValues);
-    onSearch({...queryInfo, ...allValues});
+    onSearch({ ...queryInfo, ...allValues });
   }
 
-  const handleClear = () => {
-    form.setFieldsValue(defaultQuery);
-  }
+  // const handleClear = () => {
+  //   form.setFieldsValue(defaultQuery);
+  // }
 
-  const StatusSelectOptions = [
+  const statusSelectOptions = React.useMemo(() => [
     { label: 'To Do', value: 'todo' },
     { label: 'In Progress', value: 'in_progress' },
     { label: 'Action Required', value: 'action_required' },
     { label: 'Completed', value: 'done' },
     { label: 'Archived', value: 'archived' },
-  ]
+  ].filter(x => showArchived || x.value !== 'archived')
+    .map(x => ({
+      key: x.value,
+      value: x.value,
+      label: x.label,
+    })), [showArchived]);
 
   return (
     <>
@@ -45,7 +50,7 @@ export const TaskSearchPanel = React.forwardRef((props, ref) => {
         onFinish={handleSearch}
         initialValues={queryInfo}
         preserve={false}
-        style={{marginTop: 20}}
+        style={{ marginTop: 20 }}
       >
         <Form.Item label="Search text" name="text">
           <Input
@@ -60,11 +65,8 @@ export const TaskSearchPanel = React.forwardRef((props, ref) => {
             allowClear={false}
             style={{ width: '100%' }}
             placeholder="Status filter"
-          >
-            {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
-              {x.label}
-            </Select.Option>)}
-          </Select>
+            options={statusSelectOptions}
+          />
         </Form.Item>}
         <Form.Item label="Tags" name="tags">
           <TagSelect
@@ -88,11 +90,8 @@ export const TaskSearchPanel = React.forwardRef((props, ref) => {
         <Form.Item label="My watched tasks only" name="watchedOnly" valuePropName="checked">
           <Switch />
         </Form.Item>
-        <Form.Item style={{justifyContent: 'end', display: 'flex'}}>
-          <Space>
-            <Button onClick={handleClear} type="text">Clear</Button>
-            <Button htmlType="submit" type="primary">Search</Button>
-          </Space>
+        <Form.Item style={{ justifyContent: 'end', display: 'flex' }}>
+          <Button htmlType="submit" type="primary">Search</Button>
         </Form.Item>
       </Form>
     </>
@@ -111,10 +110,12 @@ TaskSearchPanel.propTypes = {
   onSearch: PropTypes.func,
   showStatusFilter: PropTypes.bool,
   span: PropTypes.number,
+  showArchived: PropTypes.bool,
 };
 
 TaskSearchPanel.defaultProps = {
   showStatusFilter: true,
   span: 24,
+  showArchived: false,
 };
 
