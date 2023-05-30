@@ -14,6 +14,7 @@ export async function createOrgTrialSubscription(m: EntityManager, orgId: string
   subscription.start = now.toDate();
   subscription.end = now.add(14, 'days').toDate();
   subscription.seats = 1;
+  subscription.unitPrice = 0;
   subscription.recurring = false;
   subscription.status = SubscriptionStatus.Alive;
 

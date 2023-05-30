@@ -4,7 +4,7 @@ import { Typography, Button, Divider, Input, Card, Tooltip } from 'antd';
 import { getAuthUser } from 'services/authService';
 import PropTypes from 'prop-types';
 import { Space } from 'antd';
-import Icon, { LeftOutlined } from '@ant-design/icons';
+import Icon, { LeftOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
@@ -16,8 +16,16 @@ import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';
 import { InputNumber } from 'antd';
 import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
+import { Descriptions } from 'antd';
+import styled from 'styled-components';
 
 const { Title, Text, Paragraph } = Typography;
+
+const Container = styled.div`
+.ant-descriptions-item-content {
+  justify-content: flex-end;
+}
+`;
 
 const PaymentStepperWidget = (props) => {
 
@@ -80,69 +88,91 @@ const PaymentStepperWidget = (props) => {
     }
   }
 
-  const handleGoToChangeReview = () => {
+  const handleGoToPromotionCode = () => {
     setCurrentStep(1);
+  }
 
+  const handleGoToChangeReview = () => {
+    setCurrentStep(2);
   }
 
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
-      <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-        <Text>Add or reduce licenses</Text>
-          {paymentInfo && <InputNumber placeholder="± seats"
+        <Title level={2}>Lcenses count</Title>
+        <Space style={{ width: '100%', justifyContent: 'center' }}>
+          <Button type="primary" size="large" icon={<MinusOutlined />}
+            style={{ width: 60 }}
+            onClick={() => setSeats(seats - 1)} disabled={seats <= paymentInfo?.minSeats} />
+          {paymentInfo && <Input placeholder="New licenses"
             size="large"
             value={seats}
-            onChange={num => setSeats(num)}
-            min={paymentInfo?.currentOccupied}
-            step={1} />}
+            onChange={e => setSeats(+e.targetValue)}
+            style={{ textAlign: 'center' }}
+          />}
+          <Button type="primary" size="large" icon={<PlusOutlined />}
+            style={{ width: 60 }}
+            onClick={() => setSeats(seats + 1)} />
+
+        </Space>
+        <Button type="primary" block
+          size="large"
+          style={{ marginTop: 20 }} onClick={handleGoToPromotionCode}>
+          Next
+        </Button>
       </Space>
-      <Button type="primary" block
-        size="large"
-        style={{ marginTop: 20 }} onClick={handleGoToChangeReview}>
-        Next
-      </Button>
-    </Space>
     },
     {
-      component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Licenses for new subscription:</Text>
-          <Space>
-            <Text><MoneyAmount value={paymentInfo?.unitPrice} /> × </Text>
-          </Space>
-        </Space>
-        {/* <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Total price:</Text>
-          {paymentInfo ? <MoneyAmount value={paymentInfo.price} /> : '-'}
-        </Space> */}
-        <Divider />
-        {paymentInfo?.creditBalance > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }} align="start">
-          <Text>Deduction (from previous unfinished subscription):</Text>
-          <div style={{ minWidth: 100, textAlign: 'right' }}>
-            <MoneyAmount value={paymentInfo.creditBalance * -1} />
-          </div>
-        </Space>}
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Promotion code {!!(promotionCode && paymentInfo?.promotionDiscountPercentage === null)} x</Text>
+      component: <Space direction="vertical" style={{ width: '100%', justifyContent: 'center' }} size="middle">
+        <Title level={2}>Promotion Code</Title>
+        <Space style={{ width: '100%', justifyContent: 'center' }}>
           <Tooltip
-            visible={!!(promotionCode && paymentInfo?.promotionDiscountPercentage === null)}
-            placement="bottom"
+            visible={promotionCode && !paymentInfo?.isValidPromotionCode}
+            placement="top"
             color="#ffffff"
             title={<Text type="danger">Invalid promotion code</Text>}
           >
-            <Input value={promotionCode} placeholder="Promotion code" onChange={e => setPromotionCode(e.target.value)} style={{ textAlign: 'right' }} />
+            <Input value={promotionCode} placeholder="Promotion code"
+              size="large"
+              onChange={e => setPromotionCode(e.target.value)} style={{ textAlign: 'center' }} />
           </Tooltip>
         </Space>
-        {paymentInfo?.promotionDiscountPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Promotion discount %</Text>
-          <Text>{Math.round((1 - paymentInfo?.promotionDiscountPercentage) * 100)} %</Text>
-        </Space>}
-        {paymentInfo?.promotionDiscountPercentage > 0 && <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Text>Promotion discount amount</Text>
-          <MoneyAmount value={paymentInfo.payable - paymentInfo.price} />
-        </Space>}
-        <Divider />
+        <Button type="primary" block
+          size="large"
+          style={{ marginTop: 20 }} onClick={handleGoToChangeReview}>
+          Next
+        </Button>
+      </Space>
+    },
+    {
+      component: !paymentInfo ? null : <Space direction="vertical" style={{ width: '100%' }} size="middle">
+        <Descriptions column={1}>
+          <Descriptions.Item label="Unit price" contentStyle={{ textAlign: 'right' }}>
+            <MoneyAmount value={paymentInfo.unitPrice} />
+          </Descriptions.Item>
+          <Descriptions.Item label="License count" contentStyle={{ textAlign: 'right' }}>
+            &times; {paymentInfo.seatsAfter}
+          </Descriptions.Item>
+          <Descriptions.Item label="Full price" contentStyle={{ textAlign: 'right' }}>
+            <MoneyAmount value={paymentInfo.fullPriceBeforeDiscount} />
+          </Descriptions.Item>
+          <Descriptions.Item label={<>Total price ({Math.round(paymentInfo.promotionDiscountPercentage * 100)}% off)</>} contentStyle={{ textAlign: 'right' }}>
+            <MoneyAmount strong value={paymentInfo.fullPriceAfterDiscount} />
+          </Descriptions.Item>
+        </Descriptions>
+        <hr />
+        <Descriptions column={1}>
+          <Descriptions.Item label="Credit balance" contentStyle={{ textAlign: 'right' }}>
+            <MoneyAmount value={paymentInfo.creditBalance} />
+          </Descriptions.Item>
+          <Descriptions.Item label="Refundable" contentStyle={{ textAlign: 'right' }}>
+            <MoneyAmount value={paymentInfo.refundable} />
+          </Descriptions.Item>
+          <Descriptions.Item label="Total deduction" contentStyle={{ textAlign: 'right' }}>
+            <MoneyAmount strong value={paymentInfo.deduction} />
+          </Descriptions.Item>
+        </Descriptions>
+        <hr />
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Text strong>Total payable amount:</Text>
           {paymentInfo ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentInfo.payable} /> : '-'}
@@ -162,7 +192,7 @@ const PaymentStepperWidget = (props) => {
         </Space>
         <Paragraph type="secondary">
           This card will be added to the payment methods for future auto renew payment automatically.
-          </Paragraph>
+        </Paragraph>
         <StripeCardPaymentWidget
           onOk={handlePayByNewCard}
           onLoading={loading => setLoading(loading)}
@@ -174,9 +204,10 @@ const PaymentStepperWidget = (props) => {
   const newPlanDef = subscriptionDef[1];
 
   return (
-    <Loading loading={loading} message={'In progress. Please do not close the window.'}>
-      <Space direction="vertical" size="large" style={{ width: '100%' }} >
-        <Card>
+    <Container>
+      <Loading loading={loading} message={'In progress. Please do not close the window.'}>
+        <Space direction="vertical" size="large" style={{ width: '100%' }} >
+          {/* <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between' }}>
             <Title level={3}>{newPlanDef.title}</Title>
             <div><Text strong type="success"><big>$ {newPlanDef.price}</big></Text> {newPlanDef.unit}</div>
@@ -184,12 +215,13 @@ const PaymentStepperWidget = (props) => {
           <div style={{ display: 'flex' }}>
             {newPlanDef.description}
           </div>
-        </Card>
-        <div style={{ width: '100%', marginTop: 16, marginBottom: 30 }}>
-          {stepDef[currentStep].component}
-        </div>
-      </Space>
-    </Loading>
+        </Card> */}
+          <div style={{ width: '100%', marginTop: 16, marginBottom: 30 }}>
+            {stepDef[currentStep].component}
+          </div>
+        </Space>
+      </Loading>
+    </Container>
   )
 }
 
