@@ -28,6 +28,10 @@ export const useAuthUser = () => {
               <Paragraph>Please contact your organization's administrators, as they should have received an email containing instructions on how to settle the outstanding bill and reactivate the accounts.</Paragraph>
             </>,
             closable: true,
+            destroyOnClose: true,
+            okButtonProps: {
+              type: 'default',
+            }
           })
         });
         return;
