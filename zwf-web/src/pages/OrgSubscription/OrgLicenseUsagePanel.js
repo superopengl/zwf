@@ -187,8 +187,8 @@ export const OrgLicenseUsagePanel = () => {
                 {period.promotionCode && <Alert
                   showIcon
                   type="success"
-                  message="Discount eligiable"
-                  description={<>Congratulations! Your organization is eligible for a discounted rate of <MoneyAmount value={period.promotionPlanPrice} strong underline /> per person-month, as opposed to the regular price of  <MoneyAmount value={period.planFullPrice} delete />.</>} />}
+                  message="Negotiated price eligiable"
+                  description={<>Your organization is eligible for a negotiated rate of <MoneyAmount value={period.promotionPlanPrice} strong underline /> per person-month, as opposed to the regular price of  <MoneyAmount value={period.planFullPrice} delete />.</>} />}
               </>}
             </ProCard>
             <ProCard title="Usage" extra={<Tooltip title={<>
