@@ -1,26 +1,23 @@
 
-import { getRepository } from 'typeorm';
+import { getManager, getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { getCreditBalance } from '../utils/getCreditBalance';
 
 
 const getAccountForOrg = async (orgId) => {
 
   const subscription = await getRepository(OrgAliveSubscription).findOne({ orgId })
 
-  const credit = await getRepository(CreditTransaction)
-    .createQueryBuilder()
-    .where({ orgId })
-    .select('SUM(amount) AS amount')
-    .getRawOne();
+  const credit = await getCreditBalance(getManager(), orgId);
 
   const result = {
     subscription,
-    credit: +credit?.amount || 0
+    credit
   };
 
   return result;
@@ -59,3 +56,4 @@ export const adjustCredit = handlerWrapper(async (req, res) => {
 
   res.json();
 });
+

@@ -21,6 +21,8 @@ import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import { inviteUserWithSendingEmail } from '../utils/inviteUserWithSendingEmail';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -254,31 +256,6 @@ export const impersonate = handlerWrapper(async (req, res) => {
   res.json(sanitizeUser(user));
 });
 
-export const handleInviteUser = async (user, profile) => {
-  const resetPasswordToken = uuidv4();
-  user.resetPasswordToken = resetPasswordToken;
-  user.status = UserStatus.ResetPassword;
-
-  await getManager().transaction(async m => {
-    await m.save(profile);
-    user.profile = profile;
-    await m.save(user);
-  })
-
-  const url = `${process.env.ZDN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  const email = profile.email;
-  await enqueueEmail({
-    to: email,
-    template: EmailTemplateType.InviteOrgMember,
-    vars: {
-      toWhom: getEmailRecipientName(user.profile),
-      email,
-      url
-    },
-    shouldBcc: false
-  });
-};
-
 export const inviteClient = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { email, role } = req.body;
@@ -292,26 +269,31 @@ export const inviteClient = handlerWrapper(async (req, res) => {
     role: Role.Client
   });
 
-  await handleInviteUser(user, profile);
+  await inviteUserWithSendingEmail(getManager(), user, profile);
 
   res.json();
 });
 
 export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { email, role } = req.body;
+  const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
   const existingUser = await getActiveUserByEmail(email);
   assert(!existingUser, 400, 'User exists');
-  assert(role === Role.Admin || role === Role.Agent, 400, `Invalid role ${role}`)
 
   const { user, profile } = createUserAndProfileEntity({
     email,
     orgId,
-    role
+    role: Role.Agent
   });
 
-  await handleInviteUser(user, profile);
+  await getManager().transaction(async m => {
+    const subscription = await m.findOne(OrgAliveSubscription, {orgId});
+    assert(subscription, 400, 'No active subscription');
+    const {seats, occupiedSeats} = subscription;
+    assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
+    await inviteUserWithSendingEmail(m, user, profile);
+  })
 
   res.json();
 });

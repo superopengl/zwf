@@ -266,6 +266,18 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/role:
+    post:
+      operationId: setUserRole
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /org:
     get:
       operationId: getMyOrgProfile

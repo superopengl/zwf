@@ -40,7 +40,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
       orgId,
       status: SubscriptionStatus.Alive
     }, {
-      end: now.toDate(),
+      end: start,
       status: SubscriptionStatus.Terminated
     });
 

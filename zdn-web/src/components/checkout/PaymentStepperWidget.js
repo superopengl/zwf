@@ -99,7 +99,8 @@ const PaymentStepperWidget = (props) => {
   const stepDef = [
     {
       component: <Space direction="vertical" style={{ width: '100%' }} size="middle">
-        <Title level={2}>Lcenses count</Title>
+        <Title level={2}>License count</Title>
+        <Paragraph>Your current subscription has <strong>{paymentInfo?.seatsBefore}</strong> licenses ({paymentInfo?.minSeats} being used).</Paragraph>
         <Space style={{ width: '100%', justifyContent: 'center' }}>
           <Button type="primary" size="large" icon={<MinusOutlined />}
             style={{ width: 60 }}

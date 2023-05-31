@@ -7,7 +7,7 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
-import { handleInviteUser } from './authController';
+import { inviteUserWithSendingEmail } from "../utils/inviteUserWithSendingEmail";
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
@@ -17,6 +17,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Payment } from '../entity/Payment';
 import { Subscription } from '../entity/Subscription';
 import { CreditTransaction } from '../entity/CreditTransaction';
+import { Role } from '../types/Role';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -61,7 +62,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
       user.emailHash = newEmailHash;
       user.profile.email = email;
 
-      await handleInviteUser(user, user.profile);
+      await inviteUserWithSendingEmail(getManager(), user, user.profile);
     }
   }
 
@@ -170,6 +171,24 @@ export const setUserTags = handlerWrapper(async (req, res) => {
     user.tags = [];
   }
   await repo.save(user);
+  res.json();
+});
+
+export const setUserRole = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const { role } = req.body;
+  assert([Role.Admin, Role.Agent].includes(role), 400, `Invalid role ${role}`);
+
+  await getManager().update(User, {
+    id,
+    orgId,
+    orgOwner: false,
+    role: Not(role)
+  }, {
+    role
+  });
   res.json();
 });
 

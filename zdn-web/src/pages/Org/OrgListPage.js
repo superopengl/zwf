@@ -53,7 +53,6 @@ const OrgListPage = () => {
   const [currentOrg, setCurrentOrg] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
-  const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
@@ -246,10 +245,6 @@ const OrgListPage = () => {
     setPromotionCodeDrawerVisible(true);
   }
 
-  const handleNewUser = () => {
-    setInviteVisible(true);
-  }
-
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo({ ...queryInfo, page: 1, tags });
   }
@@ -278,7 +273,6 @@ const OrgListPage = () => {
           />
           <Space>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Invite Member</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
