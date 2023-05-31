@@ -21,7 +21,7 @@ import { Role } from '../../types/Role';
       'm."type" as "type"',
       'm."planFullPrice" as "planFullPrice"',
       'COALESCE(m."promotionPlanPrice", m."planFullPrice") as "realUnitPrice"',
-      'p.email as email',
+      'COALESCE(p.email, t.email) as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'u.role as role',
