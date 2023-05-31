@@ -104,15 +104,20 @@ const AgentUserListPage = () => {
       dataIndex: 'loginType',
       render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
     },
+    // {
+    //   title: 'Tags',
+    //   dataIndex: 'tags',
+    //   render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
+    // },
+    // {
+    //   title: 'Last Logged In At',
+    //   dataIndex: 'lastLoggedInAt',
+    //   render: (text) => <TimeAgo value={text} />,
+    // },
     {
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
-    },
-    {
-      title: 'Last Logged In At',
-      dataIndex: 'lastLoggedInAt',
-      render: (text) => <TimeAgo value={text} />,
+      title: 'Status',
+      dataIndex: 'status',
+      render: (text) => text,
     },
     {
       // title: 'Action',
@@ -128,14 +133,14 @@ const AgentUserListPage = () => {
                 menu: 'Update profile',
                 onClick: () => openProfileModal(user)
               },
-              {
+              user.loginType === 'local' ? {
                 menu: 'Set password',
                 onClick: () => openSetPasswordModal(user)
-              },
-              {
-                menu: 'Tags',
-                onClick: () => openSetPasswordModal(user)
-              },
+              } : null,
+              // {
+              //   menu: 'Tags',
+              //   onClick: () => openSetPasswordModal(user)
+              // },
               {
                 menu: 'Resend invite',
                 onClick: () => openSetPasswordModal(user)
