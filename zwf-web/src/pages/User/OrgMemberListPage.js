@@ -2,14 +2,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Drawer, Select, Row } from 'antd';
 import Icon, {
-  UserAddOutlined, QuestionOutlined, SyncOutlined, QuestionCircleOutlined
+  SyncOutlined, QuestionCircleOutlined
 } from '@ant-design/icons';
 import { deleteUser$, setPasswordForUser, setUserRole } from 'services/userService';
-import { inviteMember$, impersonate$, reinviteMember$ } from 'services/authService';
+import { inviteMember$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import DropdownMenu from 'components/DropdownMenu';
-import loadable from '@loadable/component'
 import { listOrgMembers$ } from 'services/memberService';
 import { finalize } from 'rxjs/operators';
 import { UserNameCard } from 'components/UserNameCard';
@@ -19,7 +18,6 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { MdGroupAdd } from 'react-icons/md';
 
-const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
 const { Text, Paragraph } = Typography;
 
@@ -34,10 +32,8 @@ const OrgMemberListPage = () => {
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
-  const [modalVisible, setModalVisible] = React.useState(false);
-  const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
-  const [user, setAuthUser] = useAuthUser();
+  const [user] = useAuthUser();
   const [modal, contextHolder] = Modal.useModal();
 
   const showRoleHelp = () => {
@@ -200,15 +196,6 @@ const OrgMemberListPage = () => {
     });
   }
 
-  const handlePaymentOk = async () => {
-    setModalVisible(false);
-    await loadList$();
-  }
-
-  const handleCancelPayment = () => {
-    setModalVisible(false);
-  }
-
   const handleUserRoleChange = async (item, role) => {
     if (role && role !== item.role) {
       await setUserRole(item.id, role);
@@ -333,22 +320,6 @@ const OrgMemberListPage = () => {
 
         {currentUser && <ProfileForm user={currentUser} onOk={handleMemberProfileUpdate} refreshAfterLocaleChange={false} />}
       </Drawer>
-      <Modal
-        open={modalVisible}
-        closable={!paymentLoading}
-        maskClosable={false}
-        title="Buy licenses"
-        destroyOnClose
-        footer={null}
-        width={420}
-        onOk={handleCancelPayment}
-        onCancel={handleCancelPayment}
-      >
-        <PaymentStepperWidget
-          onComplete={handlePaymentOk}
-          onLoading={loading => setPaymentLoading(loading)}
-        />
-      </Modal>
       {contextHolder}
     </ContainerStyled>
 

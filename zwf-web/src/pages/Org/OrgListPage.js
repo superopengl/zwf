@@ -142,7 +142,7 @@ const OrgListPage = () => {
               //   onClick: () => handleOpenBilling(org)
               // },
               {
-                menu: 'Promotion code',
+                menu: 'Negotiated price',
                 onClick: () => handleOpenPromotionCode(org)
               },
             ]}
@@ -305,7 +305,7 @@ const OrgListPage = () => {
           open={promotionCodeDrawerVisible}
           destroyOnClose={true}
           maskClosable={true}
-          title={<>{currentOrg?.name} - Promotion Codes</>}
+          title={<>{currentOrg?.name} - Negotiated Price</>}
           onClose={() => setPromotionCodeDrawerVisible(false)}
           footer={null}
           width={700}
