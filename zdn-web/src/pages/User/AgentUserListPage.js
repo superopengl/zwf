@@ -75,7 +75,7 @@ const AgentUserListPage = () => {
       dataIndex: 'email',
       fixed: 'left',
       render: (text, item) => <Space>
-      <HighlightingText search={queryInfo.text} value={text} /> <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />
+        <HighlightingText search={queryInfo.text} value={text} /> <HighlightingText search={queryInfo.text} value={`${item.givenName || ''} ${item.surname || ''}`} />
       </Space>,
     },
     isSystem ? {
@@ -310,7 +310,7 @@ const AgentUserListPage = () => {
   }
 
   const handleUserRoleChange = async (item, role) => {
-    if(role && role !== item.role) {
+    if (role && role !== item.role) {
       await setUserRole(item.id, role);
       loadList();
     }
@@ -333,7 +333,12 @@ const AgentUserListPage = () => {
           <Space>
             {subscription && <div>{subscription.seats - subscription.occupiedSeats} licenses left - <Button type="link" onClick={() => handleBuyLicense()} style={{ paddingLeft: 0 }}>Buy more</Button></div>}
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => handleNewUser()} icon={<UserAddOutlined />} disabled={!subscription || subscription.occupiedSeats >= subscription.seats}>Add Member</Button>
+            <Button type="primary" ghost
+              onClick={() => handleNewUser()}
+              icon={<UserAddOutlined />}
+              disabled={!subscription || subscription.occupiedSeats >= subscription.seats}>
+              Add Member
+            </Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>

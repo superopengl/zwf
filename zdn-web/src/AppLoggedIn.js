@@ -27,6 +27,7 @@ import { RiCoinsLine, RiBarChartFill } from 'react-icons/ri';
 import { HiOutlineViewBoards } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
+import { UserAvatar } from 'components/UserAvatar';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
@@ -294,9 +295,14 @@ const AppLoggedIn = props => {
       <div style={{ marginLeft: 16 }}>
         <Dropdown overlay={avatarMenu} trigger={['click']}>
           <a onClick={e => e.preventDefault()}>
-            <Avatar size={40}
+            {/* <Avatar size={40}
               icon={<UserOutlined style={{ fontSize: 20 }} />}
               style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+            /> */}
+            <UserAvatar 
+            size={40} 
+            value={user.profile.avatarFileId}
+            style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
             />
           </a>
         </Dropdown>

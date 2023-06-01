@@ -25,6 +25,6 @@ export class File {
   @Column({ nullable: true })
   lastReadAt?: Date;
 
-  // @Column({ nullable: true })
-  // signedAt?: Date;
+  @Column({ default: false })
+  public?: boolean;
 }

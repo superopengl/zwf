@@ -39,14 +39,11 @@ const LayoutStyled = styled(Layout)`
 export const DocTemplatePage = () => {
   const columnDef = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      render: (text) => text
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      render: (text) => text
+      render: (text, item) => <Text>
+        <big>{item.name}</big>
+        <br/>
+        <Text type="secondary">{item.description}</Text>
+      </Text>
     },
     {
       title: <>Variables</>,
@@ -100,7 +97,7 @@ export const DocTemplatePage = () => {
     e.stopPropagation();
     const { id, name } = item;
     Modal.confirm({
-      title: <>Delete Jot Template <strong>{name}</strong>?</>,
+      title: <>Delete Dot Template <strong>{name}</strong>?</>,
       onOk: async () => {
         setLoading(true);
         await deleteDocTemplate(id);

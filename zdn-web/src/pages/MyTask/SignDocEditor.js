@@ -4,7 +4,7 @@ import FileLink from 'components/FileLink';
 import { TimeAgo } from 'components/TimeAgo';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { openFile, searchFile } from 'services/fileService';
+import { openFile, getFileMetaList } from 'services/fileService';
 import { getTask, signTaskDoc } from 'services/taskService';
 import styled from 'styled-components';
 import * as _ from 'lodash';

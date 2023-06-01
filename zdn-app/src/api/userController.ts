@@ -39,10 +39,10 @@ export const changePassword = handlerWrapper(async (req, res) => {
 });
 
 export const saveProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'member');
+  assertRole(req, 'system', 'admin', 'agent', 'cient');
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
-  if (role !== 'admin') {
+  if (role !== Role.System) {
     assert(id === loginUserId, 403);
   }
   const { email } = req.body;
@@ -50,7 +50,10 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   const user = await repo.findOne(id, { relations: ['profile'] });
   assert(user, 404);
 
-  Object.assign(user.profile, req.body);
+  user.profile.avatarFileId = req.body.avatar;
+  user.profile.givenName = req.body.givenName;
+  user.profile.surname = req.body.surname;
+  user.profile.locale = req.body.locale;
 
   let hasEmailChange = false;
   if (email) {
@@ -103,7 +106,7 @@ export const searchUserList = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-const BUILTIN_ADMIN_EMIAL_HASH = computeEmailHash('system@easyvaluecheck.com');
+const BUILTIN_ADMIN_EMIAL_HASH = computeEmailHash('admin@ziledin.com');
 
 export const listAllUsers = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');

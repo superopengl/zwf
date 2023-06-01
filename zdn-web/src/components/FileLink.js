@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography, Spin, Space } from 'antd';
-import { getFile } from 'services/fileService';
+import { getFileMeta } from 'services/fileService';
 import { FileIcon } from './FileIcon';
 import { from, Subscription } from 'rxjs';
 import { Loading } from './Loading';
@@ -20,7 +20,7 @@ const FileLink = props => {
       setLoading(false);
     } else if (id) {
       setLoading(true);
-      const file$ = from(getFile(id)).subscribe(file => {
+      const file$ = from(getFileMeta(id)).subscribe(file => {
         setFileName(file.fileName);
         setFileUrl(file.location);
         setLoading(false);
