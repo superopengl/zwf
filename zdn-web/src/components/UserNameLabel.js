@@ -48,13 +48,14 @@ padding: 8px;
 
 
 export const UserNameLabel = (props) => {
-  const { avatar, email, givenName, surname, userId, role } = props;
+  const {userId, profile} = props;
+  const { avatarFileId, email, givenName, surname, role } = profile;
 
   const name = `${givenName || ''} ${surname || ''}`.trim();
 
   return (
     <Space>
-      <UserAvatar size={40} value={avatar} userId={userId} givenName={givenName} surname={surname} />
+      <UserAvatar size={40} value={avatarFileId} userId={userId} givenName={givenName} surname={surname} />
       <div style={{display: 'flex', flexDirection: 'column'}}>
         <Text><big>{name || email}</big></Text>
         <Text type="secondary">{email}</Text>
@@ -65,12 +66,14 @@ export const UserNameLabel = (props) => {
 }
 
 UserNameLabel.propTypes = {
-  userId: PropTypes.string,
-  avatar: PropTypes.string,
-  email: PropTypes.string,
-  givenName: PropTypes.string,
-  surname: PropTypes.string,
-  role: PropTypes.string,
+  userId: PropTypes.string.isRequired,
+  profile: PropTypes.shape({
+    avatarFileId: PropTypes.string,
+    email: PropTypes.string,
+    givenName: PropTypes.string,
+    surname: PropTypes.string,
+    role: PropTypes.string,
+  }).isRequired,
 };
 
 UserNameLabel.defaultProps = {

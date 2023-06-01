@@ -69,6 +69,7 @@ export async function searchUser(orgId: string, queryInfo: StockUserParams) {
       'u."orgOwner" as "orgOwner"',
       'tg.tags as tags',
       'u."lastLoggedInAt"',
+      'u."lastNudgedAt"',
       'u."createdAt" as "createdAt"'
     ]);
 

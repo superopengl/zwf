@@ -34,14 +34,14 @@ padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(0,0,0,0.1);
-  color: rgba(255,255,255,0.75);
+  background-color: rgba(0,0,0,0.2);
+  color: rgba(255,255,255,1);
 }
 
 &:hover {
   .edit-text {
-    background-color: rgba(0,0,0,0.3);
-    color: rgba(255,255,255,0.85);
+    background-color: rgba(0,0,0,0.1);
+    color: rgba(0,0,0,0.45);
   }
 }
 `;
