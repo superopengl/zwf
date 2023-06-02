@@ -196,7 +196,7 @@ export const OrgLicenseUsagePanel = () => {
             </>}>
               <Button icon={<QuestionCircleOutlined />}
                 type="link"
-                href="/resource/5f3158de-671f-43f3-b250-85b8c0f2dd87"
+                href="/resource/45a7740b-2403-47c6-89c4-43213161a5bf"
                 target="_blank"
               />
             </Tooltip>}>
