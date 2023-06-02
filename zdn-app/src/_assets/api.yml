@@ -73,7 +73,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /file:
     post:
       operationId: uploadFile
@@ -139,6 +139,30 @@ paths:
       responses:
         200:
           description: OK
+  /auth/org/{token}/approve:
+    get:
+      operationId: approveOrgAuth
+      parameters:
+        - name: token
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /auth/org/{token}/reject:
+    get:
+      operationId: rejectOrgAuth
+      parameters:
+        - name: token
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
   /auth/r/{token}:
     get:
       operationId: retrievePassword
@@ -178,12 +202,6 @@ paths:
   /user:
     get:
       operationId: listAllUsers
-      responses:
-        200:
-          description: OK
-  /user/search:
-    post:
-      operationId: searchUserList
       responses:
         200:
           description: OK
@@ -291,7 +309,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /org:
     get:
       operationId: getMyOrgProfile
@@ -303,6 +321,18 @@ paths:
       responses:
         200:
           description: OK
+  /org/member:
+    post:
+      operationId: searchOrgMemberUserList
+      responses:
+        200:
+          description: OK          
+  /org/client:
+    post:
+      operationId: searchOrgClientUserList
+      responses:
+        200:
+          description: OK            
   /org/list:
     get:
       operationId: listOrg
@@ -861,7 +891,7 @@ paths:
       operationId: listMyCreditHistory
       responses:
         200:
-          description: OK          
+          description: OK
   /subscription:
     get:
       operationId: getMyCurrnetSubscription

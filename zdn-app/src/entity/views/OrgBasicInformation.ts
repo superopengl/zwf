@@ -61,4 +61,3 @@ export class OrgBasicInformation {
   seats: number;
 }
 
-

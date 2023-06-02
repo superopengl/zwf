@@ -17,18 +17,21 @@ import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { logUserLogin } from '../utils/loginLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
 import { computeEmailHash } from '../utils/computeEmailHash';
-import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
+import { getActiveUserByEmailWithProfile } from '../utils/getActiveUserByEmailWithProfile';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
-import { inviteUserWithSendingEmail } from '../utils/inviteUserWithSendingEmail';
+import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSendingEmail';
+import { UserAuthOrg } from '../entity/UserAuthOrg';
+import { inviteNewClientWithSendingEmail } from '../utils/inviteNewClientWithSendingEmail';
+import { inviteExistingClientWithSendingEmail } from '../utils/inviteExistingClientWithSendingEmail';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
   if (user) {
     const email = user.profile.email;
-    user = await getActiveUserByEmail(email);
+    user = await getActiveUserByEmailWithProfile(email);
     attachJwtCookie(user, res);
   }
   res.json(user || null);
@@ -37,7 +40,7 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
 export const login = handlerWrapper(async (req, res) => {
   const { name, password } = req.body;
 
-  const user = await getActiveUserByEmail(name);
+  const user = await getActiveUserByEmailWithProfile(name);
 
   assert(user, 400, 'User or password is not valid');
 
@@ -85,8 +88,8 @@ function createUserAndProfileEntity(payload): { user: User; profile: UserProfile
   user.secret = computeUserSecret(thePassword, salt);
   user.salt = salt;
   user.role = role;
-  user.orgId = role === Role.Client ? null : orgId,
-    user.status = UserStatus.Enabled;
+  user.orgId = role === Role.Client ? null : orgId;
+  user.status = UserStatus.Enabled;
   user.profileId = profileId;
   user.orgOwner = !!orgOwner;
 
@@ -193,7 +196,7 @@ async function setUserToResetPasswordStatus(user: User) {
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
   const { email } = req.body;
-  const user = await getActiveUserByEmail(email);
+  const user = await getActiveUserByEmailWithProfile(email);
   if (!user) {
     res.json();
     return;
@@ -248,7 +251,7 @@ export const impersonate = handlerWrapper(async (req, res) => {
   assert(email, 400, 'Invalid email');
   const { user: { role } } = req as any;
 
-  const user = await getActiveUserByEmail(email);
+  const user = await getActiveUserByEmailWithProfile(email);
   if (role === Role.Admin) {
     const orgId = getOrgIdFromReq(req);
     assert(user.orgId === orgId, 404, 'User not found');
@@ -262,19 +265,25 @@ export const impersonate = handlerWrapper(async (req, res) => {
 });
 
 export const inviteClient = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { email, role } = req.body;
   const orgId = getOrgIdFromReq(req);
-  const existingUser = await getActiveUserByEmail(email);
-  assert(!existingUser, 400, 'User exists');
+  let clientUser = await getActiveUserByEmailWithProfile(email);
+  assert(!clientUser || clientUser.role === Role.Client, 400, 'The user is not of client role');
 
-  const { user, profile } = createUserAndProfileEntity({
-    email,
-    orgId: null,
-    role: Role.Client
-  });
+  if (!clientUser) {
+    // Not existing user
+    const { user, profile } = createUserAndProfileEntity({
+      email,
+      orgId: null,
+      role: Role.Client
+    });
 
-  await inviteUserWithSendingEmail(getManager(), user, profile);
+    await inviteNewClientWithSendingEmail(getManager(), orgId, user, profile);
+  } else {
+    await inviteExistingClientWithSendingEmail(getManager(), orgId, clientUser, clientUser.profile);
+  }
+
 
   res.json();
 });
@@ -283,7 +292,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
-  const existingUser = await getActiveUserByEmail(email);
+  const existingUser = await getActiveUserByEmailWithProfile(email);
   assert(!existingUser, 400, 'User exists');
 
   const { user, profile } = createUserAndProfileEntity({
@@ -297,7 +306,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
     assert(subscription, 400, 'No active subscription');
     const { seats, occupiedSeats } = subscription;
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
-    await inviteUserWithSendingEmail(m, user, profile);
+    await inviteOrgMemberWithSendingEmail(m, user, profile);
   })
 
   res.json();
@@ -317,7 +326,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  let user = await getActiveUserByEmail(email);
+  let user = await getActiveUserByEmailWithProfile(email);
 
   const isNewUser = !user;
   const now = getUtcNow();
@@ -357,4 +366,27 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   logUserLogin(user, req, 'google');
 
   res.json(sanitizeUser(user));
+});
+
+async function changeUserAuthOrgStatus(id, newStatus: 'ok' | 'ng') {
+  const userAuthOrg = await getRepository(UserAuthOrg).findOne({
+    id,
+    status: 'pending'
+  });
+  assert(userAuthOrg, 404);
+
+  userAuthOrg.status = newStatus;
+  await getManager().save(userAuthOrg);
+}
+
+export const approveOrgAuth = handlerWrapper(async (req, res) => {
+  const { token } = req.params;
+  await changeUserAuthOrgStatus(token, 'ok');
+  res.redirect(process.env.ZDN_DOMAIN_NAME);
+});
+
+export const rejectOrgAuth = handlerWrapper(async (req, res) => {
+  const { token } = req.params;
+  await changeUserAuthOrgStatus(token, 'ng');
+  res.redirect(process.env.ZDN_DOMAIN_NAME);
 });

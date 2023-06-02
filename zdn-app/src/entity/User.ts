@@ -1,10 +1,9 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, ManyToOne, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
 import { UserProfile } from './UserProfile';
 import { UserTag } from './UserTag';
-
 @Entity()
 @Index('user_unique_email', { synchronize: false })
 export class User {
@@ -75,4 +74,3 @@ export class User {
   @Column({default: false})
   paid: boolean;
 }
-

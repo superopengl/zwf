@@ -57,7 +57,7 @@ export const UserNameLabel = (props) => {
     <Space>
       <UserAvatar size={40} value={avatarFileId} userId={userId} givenName={givenName} surname={surname} />
       <div style={{display: 'flex', flexDirection: 'column'}}>
-        <Text><big>{name || email}</big></Text>
+        <Text type={!role ? 'success' : null}><big>{name || email}</big></Text>
         <Text type="secondary">{email}</Text>
       </div>
     </Space>

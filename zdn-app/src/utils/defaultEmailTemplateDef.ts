@@ -65,6 +65,18 @@ Please click below link to reset your password.
 Congratulations! Your portfolio {{portfolioName}} was created.
 `,
   },
+  [EmailTemplateType.RequireClientAuthorizing]: {
+    vars: ['website', 'toWhom', 'email', 'okUrl', 'ngUrl', 'orgName'],
+    subject: '[Ziledin] Authorize Organization',
+    body: `Dear {{toWhom}}
+    <br/>
+Organization <strong>{{orgName}}</strong> is asking to access your portfolios.
+<br/>
+Clicking to authorize {{okUrl}}
+<br/>
+Clicking to reject {{ngUrl}}
+`,
+  },
 }
 
 export default defaultEmailTemplateDef;

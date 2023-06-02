@@ -7,17 +7,18 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { validatePasswordStrength } from '../utils/validatePasswordStrength';
-import { inviteUserWithSendingEmail } from "../utils/inviteUserWithSendingEmail";
+import { inviteOrgMemberWithSendingEmail } from "../utils/inviteOrgMemberWithSendingEmail";
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
-import { searchUser } from '../utils/searchUser';
+import { searchOrgMembers } from '../utils/searchOrgMembers';
 import { UserTag } from '../entity/UserTag';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Payment } from '../entity/Payment';
 import { Subscription } from '../entity/Subscription';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { Role } from '../types/Role';
+import { searchOrgClients } from '../utils/searchOrgClients';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -77,7 +78,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
       user.emailHash = newEmailHash;
       user.profile.email = email;
 
-      await inviteUserWithSendingEmail(getManager(), user, user.profile);
+      await inviteOrgMemberWithSendingEmail(getManager(), user, user.profile);
     }
   }
 
@@ -92,7 +93,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const searchUserList = handlerWrapper(async (req, res) => {
+export const searchOrgMemberUserList = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin');
 
   const orgId = getOrgIdFromReq(req);
@@ -104,7 +105,33 @@ export const searchUserList = handlerWrapper(async (req, res) => {
   const text = req.body.text?.trim();
   const tags = (req.body.tags || []);
 
-  const list = await searchUser(
+  const list = await searchOrgMembers(
+    orgId,
+    {
+      text,
+      page,
+      size,
+      orderField,
+      orderDirection,
+      tags
+    });
+
+  res.json(list);
+});
+
+export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
+  assertRole(req, 'system', 'admin');
+
+  const orgId = getOrgIdFromReq(req);
+
+  const page = +req.body.page;
+  const size = +req.body.size;
+  const orderField = req.body.orderBy || 'email';
+  const orderDirection = req.body.orderDirection || 'ASC';
+  const text = req.body.text?.trim();
+  const tags = (req.body.tags || []);
+
+  const list = await searchOrgClients(
     orgId,
     {
       text,

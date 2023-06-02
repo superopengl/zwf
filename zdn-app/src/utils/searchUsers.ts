@@ -16,7 +16,7 @@ export type StockUserParams = {
   tags: string[];
 };
 
-export async function searchUser(orgId: string, queryInfo: StockUserParams) {
+export async function searchUsers(orgId: string, queryInfo: StockUserParams) {
   const { text, page, size, orderField, orderDirection, tags } = queryInfo;
 
   const pageNo = page || 1;
@@ -26,7 +26,9 @@ export async function searchUser(orgId: string, queryInfo: StockUserParams) {
   let query = getRepository(User)
     .createQueryBuilder('u')
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
-    .where('1 = 1');
+    .where('u."deletedAt" IS NULL')
+    .andWhere('"orgId" = :orgId', { orgId })
+    .andWhere('role IN (:...roles)', { roles: [Role.Admin, Role.Agent] });
 
   if (orgId) {
     // For the requests from org admins

@@ -1,7 +1,7 @@
 
 import { verifyJwtFromCookie, attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import * as moment from 'moment';
-import { getActiveUserByEmail } from '../utils/getActiveUserByEmail';
+import { getActiveUserByEmailWithProfile } from '../utils/getActiveUserByEmailWithProfile';
 import { nudgeUser } from '../utils/nudgeUser';
 
 export const authMiddleware = async (req, res, next) => {
@@ -14,7 +14,7 @@ export const authMiddleware = async (req, res, next) => {
       const { expires } = user;
       if (moment(expires).isBefore()) {
         // JWT token expired. Needs to refresh
-        const existingUser = await getActiveUserByEmail(user.profile.email);
+        const existingUser = await getActiveUserByEmailWithProfile(user.profile.email);
         if (!existingUser) {
           // User not existing anymore
           clearJwtCookie(res);
