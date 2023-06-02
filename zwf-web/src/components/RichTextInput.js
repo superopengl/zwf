@@ -21,12 +21,6 @@ export const RichTextInput = React.memo((props) => {
     }
   }, [])
 
-  const handleCustomImageInsert = (insertImgFn, result) => {
-    const { id, fileName } = result;
-    const url = `${API_BASE_URL}/file/${id}/data`;
-    insertImgFn(url, fileName, url);
-  }
-
   const log = () => {
     if (editorRef.current) {
       // console.log(editorRef.current.getContent());
@@ -40,7 +34,7 @@ export const RichTextInput = React.memo((props) => {
   const imagesUploadHandler = (blobInfo, progress) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
-      reader.onload = function () {
+      reader.onload = () => {
         const base64Data = reader.result.split(',')[1]; // Extract the base64 data from the FileReader result
         // window.tinymce.activeEditor.insertContent('<img src="' + `data:${blobInfo.blob().type};base64, ${base64Data}` + '">');
         // resolve();
@@ -63,9 +57,9 @@ export const RichTextInput = React.memo((props) => {
         init={{
           // height: 'calc(100vh - 240px)',
           height: 800,
-          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize',
+          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars link template table charmap nonbreaking anchor advlist lists autoresize',
           menubar: false, //'file edit view insert format tools table tc help',
-          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | image table',
+          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | table',
           toolbar_sticky: false,
           // extended_valid_elements: 'img[src|alt|width|height]',
           content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
@@ -86,7 +80,7 @@ export const RichTextInput = React.memo((props) => {
           branding: false,
           elementpath: false,
           statusbar: false,
-          // contextmenu: 'table',
+          contextmenu: false,
           variable_class: "editor-variable",
           paste_data_images: true,
           link_default_target: '_blank',
@@ -99,6 +93,8 @@ export const RichTextInput = React.memo((props) => {
           onpageload: handleEditorLoad,
           images_upload_handler: imagesUploadHandler,
           image_description: false,
+          image_dimensions: false,
+          typeahead_urls: false,
           // images_upload_handler2: (blobInfo, success, failure, progress) => {
           //   const imageSize = blobInfo.blob().size;
           //   const maxSize = 1 * 1000 * 1000;
