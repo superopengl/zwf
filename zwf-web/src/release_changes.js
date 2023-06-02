@@ -1,2 +1,2 @@
 export const notes=`
-ui refine`
+fix email notify`
