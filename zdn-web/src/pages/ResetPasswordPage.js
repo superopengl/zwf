@@ -46,7 +46,7 @@ const ResetPasswordPage = props => {
       .subscribe(
         () => {
           notify.success('Successfully reset password');
-          props.history.push('/');
+          props.history.push('/login');
         },
         err => setLoading(false)
       );
