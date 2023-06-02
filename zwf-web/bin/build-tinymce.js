@@ -9,7 +9,7 @@ fse.copySync(
 );
 
 fse.copySync(
-  path.join(topDir, '..', 'node_modules', '@zwf/img64upload', 'build'),
+  path.join(topDir, '..', '..', 'zwf-img64upload'),
   path.join(topDir, '..', 'public', 'tinymce', 'plugins', 'img64upload'),
   { dereference: true, overwrite: true }
 );
