@@ -22,7 +22,7 @@ export const ZEVENT_DEF_ENTITIES: ZeventDef[] = [
     {
         name: ZeventName.TaskStatusToInProgress,
         emailNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
-        uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
+        // uiNotifyRoles: [Role.Client, Role.Agent, Role.Admin],
     },
     {
         name: ZeventName.TaskStatusCompleted,
