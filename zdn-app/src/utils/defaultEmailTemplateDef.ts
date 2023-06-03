@@ -72,9 +72,7 @@ Congratulations! Your portfolio {{portfolioName}} was created.
     <br/>
 Organization <strong>{{orgName}}</strong> is asking to access your portfolios.
 <br/>
-Clicking to authorize {{okUrl}}
-<br/>
-Clicking to reject {{ngUrl}}
+Clicking to {{url}} to approve or reject.
 `,
   },
 }

@@ -10,8 +10,7 @@ export async function inviteExistingClientWithSendingEmail(m: EntityManager, org
   const org = await m.findOne(Org, orgId);
   const authId = await createUserAuthOrgEntity(m, user.id, orgId);
 
-  const okUrl = `${process.env.ZDN_DOMAIN_NAME}/auth/org/${authId}`;
-  const ngUrl = `${process.env.ZDN_DOMAIN_NAME}/auth/org/${authId}`;
+  const url = `${process.env.ZDN_DOMAIN_NAME}/auth/org/${authId}`;
   const email = profile.email;
   await enqueueEmail({
     to: email,
@@ -19,8 +18,7 @@ export async function inviteExistingClientWithSendingEmail(m: EntityManager, org
     vars: {
       toWhom: getEmailRecipientName(profile),
       email,
-      okUrl,
-      ngUrl,
+      url,
       orgName: org.name
     },
     shouldBcc: false
