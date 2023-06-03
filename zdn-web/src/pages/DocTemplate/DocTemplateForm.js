@@ -7,7 +7,7 @@ import { notify } from 'util/notify';
 import { SampleMarkdown } from './SampleMarkdown';
 import { BuiltInFieldDef } from 'components/FieldDef';
 import { Loading } from 'components/Loading';
-import RickTextInput from 'components/RickTextInput';
+import RickTextInput from 'components/RichTextInput';
 
 const { Paragraph, Text } = Typography;
 
@@ -63,7 +63,7 @@ const DocTemplateForm = (props) => {
         <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
       </Form.Item>
       <Paragraph type="secondary">
-        Refer to <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">https://www.markdownguide.org/basic-syntax/</a> for Markdown basic syntax. Use double curly braces to express the field variables. The variables that can be automatically filled from portfolios are {BuiltInFieldDef.map(f => <><Text code>{`{{${f.name}}}`}</Text>, </>)}<Text code>{'{{now}}'}</Text>.
+        Refer to <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">https://www.markdownguide.org/basic-syntax/</a> for Markdown basic syntax. Use double curly braces to express the field variables. The variables that can be automatically filled from portfolios are {BuiltInFieldDef.map((f, i) => <Text key={i}><Text code>{`{{${f.name}}}`}</Text>, </Text>)}<Text code>{'{{now}}'}</Text>.
         </Paragraph>
       <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
        <RickTextInput />

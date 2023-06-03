@@ -11,7 +11,7 @@ const DEFAULT_SAMPLE = ``;
 
 const RichTextInput = (props) => {
 
-  const { value, disabled, onChange } = props;
+  const { value, disabled, onChange, shared } = props;
   let editorRef = React.useRef(null);
 
   React.useEffect(() => {
@@ -42,7 +42,7 @@ const RichTextInput = (props) => {
         'xx-large': { name: '24px', value: '6' },
         'xxx-large': { name: '32px', value: '7' },
       },
-      uploadImgServer: `${API_BASE_URL}/file`,
+      uploadImgServer: `${API_BASE_URL}/file${shared ? '?public=1' : ''}`,
       uploadImgMaxLength: 1,
       withCredentials: true,
       uploadFileName: 'file',
@@ -84,12 +84,14 @@ RichTextInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
+  shared: PropTypes.bool,
 };
 
 RichTextInput.defaultProps = {
   value: DEFAULT_SAMPLE,
   onChange: () => { },
   disabled: false,
+  shared: false,
 };
 
 export default withRouter(RichTextInput);

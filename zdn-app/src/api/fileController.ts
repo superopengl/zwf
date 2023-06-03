@@ -1,5 +1,5 @@
 
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, Brackets } from 'typeorm';
 import { File } from '../entity/File';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -74,11 +74,14 @@ export const getPrivateFileStream = handlerWrapper(async (req, res) => {
     case Role.Agent:
       const orgId = getOrgIdFromReq(req);
       queryBuilder = queryBuilder.andWhere(
-        existsQuery(m
-          .getRepository(UserAuthOrg)
-          .createQueryBuilder('a')
-          .where(`a."userId" = f.owner`)
-          .andWhere(`a."orgId" = :orgId`, { orgId })
+        new Brackets(qb => qb
+          .where(`owner = :userId`, { userId })
+          .orWhere(existsQuery(m
+            .getRepository(UserAuthOrg)
+            .createQueryBuilder('a')
+            .where(`a."userId" = f.owner`)
+            .andWhere(`a."orgId" = '${orgId}'`)
+          ))
         )
       );
       break;
