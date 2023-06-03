@@ -83,7 +83,12 @@ export const UserAvatar = (props) => {
 
   let avatarComponent = null;
   if (avatarFileId) {
-    avatarComponent = <Avatar size={size} src={<Image alt="avatar" preview={false} src={getPublicFileUrl(avatarFileId)} />} />
+    avatarComponent = <Avatar size={size} src={<Image
+      alt="avatar"
+      preview={false}
+      src={getPublicFileUrl(avatarFileId)}
+      fallback="/images/avatar-fallback.png"
+    />} />
   } else {
     const { color: backgroundColor, isLight } = uniqolor(userId, { differencePoint: 160 });
     const color = isLight ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.85)';
@@ -110,7 +115,7 @@ export const UserAvatar = (props) => {
       onChange={handleChange}
     >
       <Container>
-       {avatarComponent}
+        {avatarComponent}
         <div className="edit-text">
           edit
         </div>

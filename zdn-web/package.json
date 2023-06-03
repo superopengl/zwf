@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@ant-design/charts": "^1.1.2",
-    "@ant-design/icons": "^4.5.0",
+    "@ant-design/icons": "^4.6.2",
     "@ant-design/pro-layout": "^6.16.3",
     "@loadable/component": "^5.14.1",
     "@react-hook/window-size": "^3.0.7",
@@ -19,6 +19,7 @@
     "file-saver": "^2.0.2",
     "form-data": "^3.0.0",
     "history": "^5.0.0",
+    "i18next": "^20.3.2",
     "javascript-time-ago": "^2.3.4",
     "lodash": "^4.17.21",
     "markdown-it": "^11.0.1",
@@ -53,12 +54,11 @@
     "rxjs": "^6.6.3",
     "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.2.1",
-    "suneditor": "^2.38.8",
-    "suneditor-react": "^2.16.4",
     "tfn": "^1.0.0",
     "uniqolor": "^1.0.1",
     "uuid": "^8.3.2",
-    "validator": "^13.1.1"
+    "validator": "^13.1.1",
+    "wangeditor-for-react": "^1.4.0"
   },
   "scripts": {
     "start": "cross-env PORT=6003 REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",

@@ -7,8 +7,8 @@ export class File {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @Column({ default: 'system' })
-  createdBy?: string;
+  @Column('uuid')
+  owner?: string;
 
   @Column()
   fileName: string;
