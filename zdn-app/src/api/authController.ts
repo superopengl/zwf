@@ -367,26 +367,3 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
   res.json(sanitizeUser(user));
 });
-
-async function changeUserAuthOrgStatus(id, newStatus: 'ok' | 'ng') {
-  const userAuthOrg = await getRepository(UserAuthOrg).findOne({
-    id,
-    status: 'pending'
-  });
-  assert(userAuthOrg, 404);
-
-  userAuthOrg.status = newStatus;
-  await getManager().save(userAuthOrg);
-}
-
-export const approveOrgAuth = handlerWrapper(async (req, res) => {
-  const { token } = req.params;
-  await changeUserAuthOrgStatus(token, 'ok');
-  res.redirect(process.env.ZDN_DOMAIN_NAME);
-});
-
-export const rejectOrgAuth = handlerWrapper(async (req, res) => {
-  const { token } = req.params;
-  await changeUserAuthOrgStatus(token, 'ng');
-  res.redirect(process.env.ZDN_DOMAIN_NAME);
-});

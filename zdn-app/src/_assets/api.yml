@@ -73,7 +73,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK
   /file/public/{id}/data:
     get:
       operationId: getPublicFileStream
@@ -150,30 +150,6 @@ paths:
   /auth/reset_password:
     post:
       operationId: resetPassword
-      responses:
-        200:
-          description: OK
-  /auth/org/{token}/approve:
-    get:
-      operationId: approveOrgAuth
-      parameters:
-        - name: token
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /auth/org/{token}/reject:
-    get:
-      operationId: rejectOrgAuth
-      parameters:
-        - name: token
-          in: path
-          type: string
-          format: uuid
-          required: true
       responses:
         200:
           description: OK
@@ -340,16 +316,52 @@ paths:
       operationId: searchOrgMemberUserList
       responses:
         200:
-          description: OK          
+          description: OK
   /org/client:
     post:
       operationId: searchOrgClientUserList
       responses:
         200:
-          description: OK            
+          description: OK
   /org/list:
     get:
       operationId: listOrg
+      responses:
+        200:
+          description: OK
+  /org/auth/{token}/approve:
+    post:
+      operationId: approveOrgAuth
+      parameters:
+        - name: token
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /org/auth/{token}/reject:
+    post:
+      operationId: rejectOrgAuth
+      parameters:
+        - name: token
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /org/auth/:token:
+    get:
+      operationId: getUserAuthOrg
+      parameters:
+        - name: token
+          in: path
+          type: string
+          format: uuid
+          required: true
       responses:
         200:
           description: OK
