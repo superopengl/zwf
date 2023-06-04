@@ -1,5 +1,4 @@
 export const notes=`
-update release notes
-refine manifest
-refine manifest file
-wording`
+test notification
+register service workder
+fix manifest path`
