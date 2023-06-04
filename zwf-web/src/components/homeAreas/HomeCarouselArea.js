@@ -90,10 +90,10 @@ export const HomeCarouselArea = () => {
           >
             <Space direction="vertical" style={{ maxWidth: 500, margin: '40px auto' }}>
               <Title style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 800 }}>
-                <span style={{ color: '#0FBFC4' }}>All in one system</span> for file, doc, job, task, e-sign, CMS, and workflow management.
+                <span style={{ color: '#0FBFC4' }}>All in one system</span> for file, doc, task, e-sign, CRM, and workflow management.
               </Title>
               <Paragraph style={{fontSize: 16}}>
-                Join today to experience a comprehensive management system for files, documents, jobs, tasks, and workflows, all in one place!
+                Join today to experience a comprehensive management system for files, documents, tasks, and workflows, all in one place!
               </Paragraph>
               <OrgRegisterInput />
             </Space>
