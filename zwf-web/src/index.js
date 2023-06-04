@@ -5,7 +5,7 @@ import './index.less';
 import { App } from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
-import './service-worker';
+// import './service-worker';
 
 console.log('env', process.env);
 
