@@ -41,6 +41,7 @@ export async function calcNewSubscriptionPaymentInfo(
   const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
   const seatsBefore = await getCurrentSubscriptionLicenseCount(m, orgId);
 
+  seatsAfter = seatsAfter ?? seatsBefore;
   // assert(seatsAfter !== seatsBefore, 400, `${minSeats} is the minimum licenses required in your organization. There is no need to adjust.`);
   assert(minSeats <= seatsAfter, 400, `${minSeats} is the minimum licenses required in your organization. Please remove members before reducing license count.`);
 
@@ -75,8 +76,6 @@ export async function calcNewSubscriptionPaymentInfo(
     payable = _.round(fullPriceAfterDiscount - creditBalanceBefore, 2);
     deduction = -1 * creditBalanceBefore;
   }
-
-
 
   const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { orgId, primary: true });
 
