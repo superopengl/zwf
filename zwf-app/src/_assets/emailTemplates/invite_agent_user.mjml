@@ -16,16 +16,22 @@
           You are invited to be a memeber {{org}} in ZeeWorkflow. Please click below button to accept the invitation and activate the account.
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-button align="left" background-color="#14C9C9" padding="20px 0" inner-padding="16px 36px" border-radius="4px" font-size="18px" href="{{url}}">
           Activate Account
         </mj-button>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           Once you open ZeeWorkflow, you can follow the instructions on the page to complete the process, which includes setting up a password. This email address will be used as your account in ZeeWorkflow.

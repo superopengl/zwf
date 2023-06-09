@@ -16,11 +16,15 @@
           We regret to inform you that we have received your termination request for your organization <strong>{{org}}</strong>. Please be informed that all accounts information and personal identifiable information (PII) associated with your organization have been permanently deleted from ZeeWorkflow as per our data privacy policy.
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           We would like to confirm that our system has processed the final billing payment, and you should have received an email containing the payment invoices. Please let us know if you have any questions or concerns about the billing process.
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           We understand that this decision may not have been easy for you, and we want to thank you for your time with us. We hope that your experience with our system has been positive overall, and we wish you all the best in your future endeavors.

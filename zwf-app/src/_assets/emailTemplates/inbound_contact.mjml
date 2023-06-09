@@ -16,8 +16,11 @@
           We have received your below contact. We will get you back soon.
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column css-class="contact-body" width="100%" padding="16px">
         <mj-text align="left" font-size="18px" font-weight="400">
+
           {{body}}
         </mj-text>
       </mj-column>
