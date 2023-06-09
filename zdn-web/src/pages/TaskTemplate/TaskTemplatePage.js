@@ -48,7 +48,7 @@ export const TaskTemplatePage = props => {
     setCurrentId(id);
     setDrawerVisible(true);
   }
-  
+
   const handleClickTemplate = (e, id) => {
     e.stopPropagation();
     handleEditOne(id);
@@ -77,10 +77,10 @@ export const TaskTemplatePage = props => {
         <Space size="small">
           <Tooltip placement="bottom" title="Edit task template">
 
-          <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
+            <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
           </Tooltip>
           <Tooltip placement="bottom" title="Delete task template">
-          <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
+            <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
           </Tooltip>
         </Space>
       ),
@@ -144,35 +144,37 @@ export const TaskTemplatePage = props => {
 
   return (
     <LayoutStyled>
-      
-        <Space direction="vertical" style={{ width: '100%' }} size="large">
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
-          </Space>
-          <Table columns={columnDef}
-            size="small"
-            dataSource={list}
-            rowKey="id"
-            loading={loading}
-            pagination={false}
-            // onChange={handleTableChange}
-            onRow={(record) => ({
-              onDoubleClick: () => handleEditOne(record.id)
-            })}
-          />
+
+      <Space direction="vertical" style={{ width: '100%' }} size="large">
+        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
         </Space>
-        <StyledDrawer
-          title={!currentId ? 'New Task Template' : 'Edit Task Template'}
-          placement="right"
-          closable={true}
-          visible={drawerVisible}
+        <Table columns={columnDef}
+          size="small"
+          dataSource={list}
+          rowKey="id"
+          loading={loading}
+          pagination={false}
+          // onChange={handleTableChange}
+          onRow={(record) => ({
+            onDoubleClick: () => handleEditOne(record.id)
+          })}
+        />
+      </Space>
+      <StyledDrawer
+        title={!currentId ? 'New Task Template' : 'Edit Task Template'}
+        placement="right"
+        closable={true}
+        visible={drawerVisible}
+        onClose={() => handleDrawerClose()}
+        destroyOnClose={true}
+        width={900}
+        footer={null}
+      >
+        <TaskTemplateForm id={currentId}
           onClose={() => handleDrawerClose()}
-          destroyOnClose={true}
-          width={900}
-          footer={null}
-        >
-          <TaskTemplateForm id={currentId} onClose={() => handleDrawerClose()} onOk={() => {handleDrawerClose(); loadList()}}></TaskTemplateForm>
-        </StyledDrawer>
+          onOk={() => { handleDrawerClose(); loadList() }} />
+      </StyledDrawer>
     </LayoutStyled >
   );
 };

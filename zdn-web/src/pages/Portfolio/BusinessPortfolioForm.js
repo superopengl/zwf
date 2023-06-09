@@ -11,7 +11,7 @@ import { Loading } from 'components/Loading';
 const { Text } = Typography;
 
 
-const PortfolioForm = (props) => {
+const BusinessPortfolioForm = (props) => {
   const { id, type: portfolioType, onOk, onCancel } = props;
   const isNew = !id;
 
@@ -112,15 +112,14 @@ const PortfolioForm = (props) => {
   );
 };
 
-PortfolioForm.propTypes = {
+BusinessPortfolioForm.propTypes = {
   id: PropTypes.string,
-  userId: PropTypes.string,
   type: PropTypes.string,
   loading: PropTypes.bool.isRequired,
 };
 
-PortfolioForm.defaultProps = {
+BusinessPortfolioForm.defaultProps = {
   loading: false
 };
 
-export default withRouter(PortfolioForm);
+export default withRouter(BusinessPortfolioForm);

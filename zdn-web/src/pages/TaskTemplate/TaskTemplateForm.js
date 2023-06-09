@@ -8,6 +8,7 @@ import FieldEditor from 'components/FieldEditor';
 import { listDocTemplate } from 'services/docTemplateService';
 import * as _ from 'lodash';
 import { Loading } from 'components/Loading';
+import { FormBuilder } from 'components/formBuilder/FormBuilder';
 
 const DEFAULT_ENTITY = {
   docTemplateIds: [],
@@ -22,6 +23,7 @@ const TaskTemplateForm = (props) => {
   const [entity, setEntity] = React.useState(DEFAULT_ENTITY);
   const [form] = Form.useForm();
   const [docTemplateOptions, setDocTemplateOptions] = React.useState([]);
+  const [formSchema, setFormSchema] = React.useState({});
 
   const loadEntity = async () => {
     setLoading(true);
@@ -63,25 +65,15 @@ const TaskTemplateForm = (props) => {
 
   return (
     <Space direction="vertical" size="small" style={{ width: '100%' }}>
-      <Form
+      {/* <Form
         layout="vertical"
         onFinish={handleSave}
-        // onValuesChange={handleFormValueChange}
         initialValues={entity}
         form={form}
       >
         <Form.Item label="Task Template Name" name="name" rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
           <Input placeholder="Task Template Name" />
         </Form.Item>
-        {/* <Form.Item label="Upload documents is required?" name="hasUploadDocs" valuePropName="checked">
-          <Checkbox>Upload documents is required?</Checkbox>
-        </Form.Item> */}
-        {/* <Form.Item label="Has documents to sign?" name="hasSignDocs" valuePropName="checked">
-          <Checkbox>Has documents to sign?</Checkbox>
-        </Form.Item> */}
-        {/* <Form.Item label="Has feedback documents?" name="hasFeedbackDocs" valuePropName="checked">
-          <Checkbox>Has feedback documents?</Checkbox>
-        </Form.Item> */}
         <Form.Item label="Doc Templates to Apply" name="docTemplateIds">
           <Select
             mode="multiple"
@@ -102,7 +94,18 @@ const TaskTemplateForm = (props) => {
             <Button type="primary" htmlType="submit">Save</Button>
           </Space>
         </Form.Item>
-      </Form>
+      </Form> */}
+
+<FormBuilder 
+   formStructure={formSchema}
+   onSave={schema => {
+     // onSave form schema received here.
+     setFormSchema(schema);
+   }}
+   onError={error => console.log(error)}
+/>
+
+<pre>{JSON.stringify(formSchema, null, 2)}</pre>
     </Space>
   );
 };

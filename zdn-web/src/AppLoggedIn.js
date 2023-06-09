@@ -28,6 +28,7 @@ import { HiOutlineViewBoards } from 'react-icons/hi';
 import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
 import OrgListPage from 'pages/Org/OrgListPage';
 import { UserAvatar } from 'components/UserAvatar';
+import {HiOutlineUserGroup} from 'react-icons/hi';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
@@ -91,6 +92,18 @@ const ROUTES = [
     roles: ['client']
   },
   {
+    path: '/portfolio',
+    name: <FormattedMessage id="menu.portfolio" />,
+    icon: <TeamOutlined />,
+    roles: ['admin', 'agent'],
+  },
+  {
+    path: '/scheduler',
+    name: <FormattedMessage id="menu.scheduler" />,
+    icon: <ClockCircleOutlined />,
+    roles: ['admin']
+  },
+  {
     path: '/task_template',
     name: <FormattedMessage id="menu.taskTemplate" />,
     icon: <Icon component={() => <FaTasks />} />,
@@ -100,12 +113,6 @@ const ROUTES = [
     path: '/doc_template',
     name: <FormattedMessage id="menu.docTemplate" />,
     icon: <FileOutlined />,
-    roles: ['admin']
-  },
-  {
-    path: '/scheduler',
-    name: <FormattedMessage id="menu.scheduler" />,
-    icon: <ClockCircleOutlined />,
     roles: ['admin']
   },
   {
@@ -127,20 +134,10 @@ const ROUTES = [
     roles: ['system']
   },
   {
-    path: '/user',
-    name: <FormattedMessage id="menu.users" />,
-    icon: <TeamOutlined />,
-    roles: ['system', 'admin'],
-    routes: [
-      {
-        path: '/user/agent',
-        name: <FormattedMessage id="menu.agent" />,
-      },
-      {
-        path: '/user/client',
-        name: <FormattedMessage id="menu.client" />,
-      },
-    ]
+    path: '/team',
+    name: <FormattedMessage id="menu.team" />,
+    icon: <Icon component={() => <HiOutlineUserGroup/>} />,
+    roles: ['admin'],
   },
   {
     path: '/account',
@@ -328,8 +325,8 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/user/agent" component={AgentUserListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/user/client" component={ClientUserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/team" component={AgentUserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/portfolio" component={ClientUserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
