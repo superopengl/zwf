@@ -9,8 +9,6 @@ const RenderOptions = ({ value: { type, options = [] }, onChange }) => {
   const addNewButton = (
     <Button
       type="ghost"
-      title="Add"
-      icon="plus"
       size="small"
       style={{ marginTop: 10 }}
       onClick={() => {
@@ -26,7 +24,7 @@ const RenderOptions = ({ value: { type, options = [] }, onChange }) => {
         onChange(newOptions);
       }}
     >
-      ADD NEW
+      Add option
     </Button>
   );
 
@@ -119,8 +117,7 @@ const RenderOptions = ({ value: { type, options = [] }, onChange }) => {
           </div>
         );
       })}
-      {(type === 'checkbox' || type === 'radio' || type === 'select') &&
-        addNewButton}
+      {['checkbox', 'radio', 'select'].includes(type) && addNewButton}
     </div>
   );
 };

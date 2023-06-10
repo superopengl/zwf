@@ -1,7 +1,7 @@
 import React from 'react';
 import { SortableElement, sortableHandle } from 'react-sortable-hoc';
-import { Card, Switch, Row, Input, Form, Col, Select } from 'antd';
-import Icon, { UploadOutlined } from '@ant-design/icons'
+import { Card, Switch, Row, Input, Form, Col, Select, Space } from 'antd';
+import Icon, { DeleteOutlined, UploadOutlined } from '@ant-design/icons'
 import { find } from 'lodash';
 import {
   FaTextWidth,
@@ -29,7 +29,8 @@ const getRule = rules => {
 };
 
 const FieldDefEditorCard = (props) => {
-  const { value: { index, items, ...value }, onDelete, onChange } = props;
+  const { value, index, items, onDelete, onChange } = props;
+
   // Bubble up changes to parent.
   const handleChange = (field = '', change) => {
     // Updated schema with changes.
@@ -39,9 +40,9 @@ const FieldDefEditorCard = (props) => {
       allFields[index] = { ...value, [field]: change };
     } else {
       // replace property
-      allFields[index] = { ...change, field: value.field };
+      allFields[index] = { ...change };
     }
-    if (onChange) onChange(allFields);
+    if (onChange) onChange([...allFields]);
   };
 
   const handleOptionChange = change => {
@@ -49,142 +50,109 @@ const FieldDefEditorCard = (props) => {
   };
 
   return (
-    <Row type="flex" style={{ zIndex: 1000, margin: 10 }}>
-      <Card
-        title={<DragHandle />}
-        style={{ width: '100%' }}
-        actions={[
-          <Icon
-            type="delete"
-            key="delete"
-            onClick={() => {
-              if (onDelete) onDelete(value);
-            }}
-          />,
-
-          <Switch
-            checkedChildren="Required"
-            unCheckedChildren="Not required"
-            checked={getRule(value.rules).required}
-            onChange={checked => {
-              if (value && value.rules && value.rules.length) {
-                const ruleIndex = value.rules.indexOf(getRule(value.rules));
-                if (ruleIndex > -1) {
-                  // Copy previous rule.
-                  const updatedRules = value.rules;
-                  // Update rule
-                  updatedRules[ruleIndex].required = checked;
-                  updatedRules[ruleIndex].message = 'Field is required';
-                  handleChange('schema', updatedRules);
-                }
-              }
-            }}
-          />,
-          <Icon type="ellipsis" key="ellipsis" />,
-        ]}
-      >
-        <Row gutter={16}>
-          <Col span={12}>
-            <Form.Item required label="Field">
-              {value && value.type === 'textarea' ? (
-                <Input.TextArea
-                  placeholder="Add field"
-                  value={value.label || ''}
-                  autosize={{ minRows: 2, maxRows: 6 }}
-                  onChange={e => {
-                    handleChange('label', e.target.value);
-                  }}
-                />
-              ) : (
-                <Input
-                  value={value.label || ''}
-                  placeholder="Add Question Here"
-                  onChange={e => {
-                    handleChange('label', e.target.value);
-                  }}
-                />
-              )}
-            </Form.Item>
-
-            <Form.Item>
-              <RenderOptions value={value} onChange={handleOptionChange} />
-            </Form.Item>
-          </Col>
-          <Col span={12}>
-            <Row>
-              <Form.Item required label="Type">
-                <Select
-                  value={value.type || ''}
-                  style={{ width: 250 }}
-                  onSelect={selected => {
-                    // On change, reset.
-                    const newField = {
-                      label: value.label || ``,
-                      placeholder: 'Add Question Here',
-                      field: value.field,
-                      type: selected,
-                      rules: [
-                        { required: false, message: 'Field is required' },
-                      ],
-                    };
-                    if (
-                      selected === 'checkbox' ||
-                      selected === 'radio' ||
-                      selected === 'select'
-                    ) {
-                      newField.options = [];
-                    }
-                    handleChange('', newField);
-                  }}
-                >
-                  <Select.Option key="input" value="input">
-                    <Icon component={() => <FaTextWidth />} />
-                    <span style={{ marginLeft: 10 }}>Text</span>
-                  </Select.Option>
-                  <Select.Option key="textarea" value="textarea">
-                    <Icon component={() => <FaAlignLeft />} />
-                    <span style={{ marginLeft: 10 }}>Paragraph (multiple lines)</span>
-                  </Select.Option>
-                  <Select.Option key="upload" value="upload">
-                    <UploadOutlined />
-                    <span style={{ marginLeft: 10 }}>Upload</span>
-                  </Select.Option>
-                  <Select.Option key="radio" value="radio">
-                    <Icon component={() => <FaDotCircle />} />
-                    <span style={{ marginLeft: 10 }}>Multiple choice</span>
-                  </Select.Option>
-                  <Select.Option key="checkbox" value="checkbox">
-                    <Icon component={() => <FaCheckSquare />} />
-                    <span style={{ marginLeft: 10 }}>Checkboxes</span>
-                  </Select.Option>
-                  <Select.Option key="select" value="select">
-                    <Icon component={() => <FaChevronCircleDown />} />
-                    <span style={{ marginLeft: 10 }}>Dropdown</span>
-                  </Select.Option>
-                  <Select.Option key="date" value="date">
-                    <Icon component={() => <FaCalendarAlt />} />
-                    <span style={{ marginLeft: 10 }}>Date</span>
-                  </Select.Option>
-                  <Select.Option key="month" value="month">
-                    <Icon component={() => <FaCalendarAlt />} />
-                    <span style={{ marginLeft: 10 }}>Month</span>
-                  </Select.Option>
-                  <Select.Option key="quarter" value="quarter">
-                    <Icon component={() => <FaCalendarAlt />} />
-                    <span style={{ marginLeft: 10 }}>Quarter</span>
-                  </Select.Option>
-                  <Select.Option key="year" value="year">
-                    <Icon component={() => <FaCalendarAlt />} />
-                    <span style={{ marginLeft: 10 }}>Year</span>
-                  </Select.Option>
-
-                </Select>
-              </Form.Item>
-            </Row>
-          </Col>
-        </Row>
-      </Card>
-    </Row>
+    <Card
+      size="small"
+      title={<DragHandle />}
+      style={{ width: '100%' }}
+      extra={<Space>
+        <DeleteOutlined
+          onClick={() => {
+            if (onDelete) onDelete(value);
+          }}
+        />
+      </Space>}
+    >
+      <Row gutter={16}>
+        <Col span={12}>
+          <Form.Item required label="Field name">
+            <Input
+              value={value.label || ''}
+              placeholder="Add Question Here"
+              onChange={e => {
+                handleChange('label', e.target.value);
+              }}
+            />
+          </Form.Item>
+          <Form.Item label="Description">
+            <Input.TextArea
+              placeholder="Add description"
+              value={value.description || ''}
+              autosize={{ minRows: 2, maxRows: 6 }}
+              onChange={e => {
+                handleChange('description', e.target.value);
+              }}
+            />
+          </Form.Item>
+          <Form.Item>
+            <RenderOptions value={value} onChange={handleOptionChange} />
+          </Form.Item>
+        </Col>
+        <Col span={12}>
+          <Form.Item required label="Type">
+            <Select
+              value={value.type || ''}
+              style={{ width: 250 }}
+              onSelect={selectedType => {
+                // On change, reset.
+                value.type = selectedType;
+                value.options = ['checkbox', 'radio', 'select'].includes(selectedType) ? (value.options ?? []) : [];
+                onChange([...items]);
+              }}
+            >
+              <Select.Option key="input" value="input">
+                <Icon component={() => <FaTextWidth />} />
+                <span style={{ marginLeft: 10 }}>Text</span>
+              </Select.Option>
+              <Select.Option key="textarea" value="textarea">
+                <Icon component={() => <FaAlignLeft />} />
+                <span style={{ marginLeft: 10 }}>Paragraph (multiple lines)</span>
+              </Select.Option>
+              <Select.Option key="upload" value="upload">
+                <UploadOutlined />
+                <span style={{ marginLeft: 10 }}>Upload</span>
+              </Select.Option>
+              <Select.Option key="radio" value="radio">
+                <Icon component={() => <FaDotCircle />} />
+                <span style={{ marginLeft: 10 }}>Multiple choice</span>
+              </Select.Option>
+              <Select.Option key="checkbox" value="checkbox">
+                <Icon component={() => <FaCheckSquare />} />
+                <span style={{ marginLeft: 10 }}>Checkboxes</span>
+              </Select.Option>
+              <Select.Option key="select" value="select">
+                <Icon component={() => <FaChevronCircleDown />} />
+                <span style={{ marginLeft: 10 }}>Dropdown</span>
+              </Select.Option>
+              <Select.Option key="date" value="date">
+                <Icon component={() => <FaCalendarAlt />} />
+                <span style={{ marginLeft: 10 }}>Date</span>
+              </Select.Option>
+              <Select.Option key="month" value="month">
+                <Icon component={() => <FaCalendarAlt />} />
+                <span style={{ marginLeft: 10 }}>Month</span>
+              </Select.Option>
+              <Select.Option key="quarter" value="quarter">
+                <Icon component={() => <FaCalendarAlt />} />
+                <span style={{ marginLeft: 10 }}>Quarter</span>
+              </Select.Option>
+              <Select.Option key="year" value="year">
+                <Icon component={() => <FaCalendarAlt />} />
+                <span style={{ marginLeft: 10 }}>Year</span>
+              </Select.Option>
+            </Select>
+          </Form.Item>
+          <Form.Item label="Required">
+            <Switch
+              checked={value.required}
+              onChange={checked => {
+                value.required = checked;
+                onChange([...items]);
+              }}
+            />
+          </Form.Item>
+        </Col>
+      </Row>
+    </Card>
   );
 };
 
