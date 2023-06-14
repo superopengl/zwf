@@ -50,7 +50,7 @@ export const DroppableFieldList = (props) => {
         {(provided, snapshot) => (
           <Row
             type="flex"
-            gutter={[10, 10]}
+            gutter={[16, 16]}
             {...provided.droppableProps}
             ref={provided.innerRef}
             style={getListStyle(snapshot.isDraggingOver)}
