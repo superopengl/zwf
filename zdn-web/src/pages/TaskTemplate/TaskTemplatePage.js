@@ -6,11 +6,11 @@ import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography } from
 import { TimeAgo } from 'components/TimeAgo';
 import TaskTemplateForm from 'pages/TaskTemplate/TaskTemplateForm';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import { deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
 
-const { Title, Link } = Typography;
+const { Title, Paragraph, Link: TextLink } = Typography;
 
 const StyledDrawer = styled(Drawer)`
 
@@ -58,7 +58,7 @@ export const TaskTemplatePage = props => {
     {
       title: 'Name',
       dataIndex: 'name',
-      render: (text, record) => <Link onClick={e => handleClickTemplate(e, record.id)}>{text}</Link>
+      render: (text, record) => <TextLink onClick={e => handleClickTemplate(e, record.id)}>{text}</TextLink>
     },
     {
       title: 'Created At',
@@ -161,6 +161,14 @@ export const TaskTemplatePage = props => {
           onRow={(record) => ({
             onDoubleClick: () => handleEditOne(record.id)
           })}
+          locale={{
+            emptyText: <div style={{margin: '30px auto'}}>
+            <Paragraph type="secondary">
+              There is no defined task template. Let's start from creating a new task template.
+            </Paragraph>
+            <Link to="/task_template/new">Create new task template</Link>
+            </div>
+          }}
         />
       </Space>
       <StyledDrawer
