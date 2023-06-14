@@ -14,19 +14,13 @@ import {
   FaClock,
 } from 'react-icons/fa';
 import RenderOptions from './RenderOptions';
+import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 
 const DragHandle = sortableHandle(() => (
   <Row className="drag-handle" type="flex" align="middle" justify="center">
     <span>:::</span>
   </Row>
 ));
-
-const getRule = rules => {
-  let required = false;
-  if (rules && rules.length)
-    required = find(rules, r => r.required === true || r.required === false);
-  return required;
-};
 
 const FieldDefEditorCard = (props) => {
   const { value, index, items, onDelete, onChange } = props;
@@ -64,91 +58,47 @@ const FieldDefEditorCard = (props) => {
     >
       <Row gutter={16}>
         <Col span={12}>
-          <Form.Item required label="Field name">
-            <Input
-              value={value.label || ''}
-              placeholder="Add Question Here"
-              onChange={e => {
-                handleChange('label', e.target.value);
-              }}
-            />
+          <Form.Item label="Field name"
+            name={['fields', index, 'name']}
+            rules={[{ required: true, whitespace: true, message: ' ', max: 50 }]}>
+            <Input placeholder="" />
           </Form.Item>
-          <Form.Item label="Description">
+          <Form.Item label="Description"
+            name={['fields', index, 'description']}
+            rules={[{ required: false, whitespace: true, message: ' ', max: 300 }]}>
             <Input.TextArea
               placeholder="Add description"
-              value={value.description || ''}
               autosize={{ minRows: 2, maxRows: 6 }}
-              onChange={e => {
-                handleChange('description', e.target.value);
-              }}
             />
           </Form.Item>
-          <Form.Item>
-            <RenderOptions type={value.type} options={value.options} onChange={handleOptionChange} />
-          </Form.Item>
+
         </Col>
         <Col span={12}>
-          <Form.Item required label="Type">
-            <Select
-              value={value.type || ''}
-              style={{ width: 250 }}
-              onSelect={selectedType => {
-                // On change, reset.
-                value.type = selectedType;
-                value.options = ['checkbox', 'radio', 'select'].includes(selectedType) ? (value.options ?? []) : [];
-                onChange([...items]);
-              }}
+          <Form.Item label="Type"
+            name={['fields', index, 'type']}
+            rules={[{ required: true, message: ' ' }]}>
+            <Select style={{ width: 250 }}
+            // onSelect={selectedType => {
+            //   // On change, reset.
+            //   debugger;
+            //   value.type = selectedType;
+            //   value.options = ['checkbox', 'radio', 'select'].includes(selectedType) ? (value.options ?? []) : undefined;
+            //   onChange([...items]);
+            // }}
             >
-              <Select.Option key="input" value="input">
-                <Icon component={() => <FaTextWidth />} />
-                <span style={{ marginLeft: 10 }}>Text</span>
-              </Select.Option>
-              <Select.Option key="textarea" value="textarea">
-                <Icon component={() => <FaAlignLeft />} />
-                <span style={{ marginLeft: 10 }}>Paragraph (multiple lines)</span>
-              </Select.Option>
-              <Select.Option key="upload" value="upload">
-                <UploadOutlined />
-                <span style={{ marginLeft: 10 }}>Upload</span>
-              </Select.Option>
-              <Select.Option key="radio" value="radio">
-                <Icon component={() => <FaDotCircle />} />
-                <span style={{ marginLeft: 10 }}>Multiple choice</span>
-              </Select.Option>
-              <Select.Option key="checkbox" value="checkbox">
-                <Icon component={() => <FaCheckSquare />} />
-                <span style={{ marginLeft: 10 }}>Checkboxes</span>
-              </Select.Option>
-              <Select.Option key="select" value="select">
-                <Icon component={() => <FaChevronCircleDown />} />
-                <span style={{ marginLeft: 10 }}>Dropdown</span>
-              </Select.Option>
-              <Select.Option key="date" value="date">
-                <Icon component={() => <FaCalendarAlt />} />
-                <span style={{ marginLeft: 10 }}>Date</span>
-              </Select.Option>
-              <Select.Option key="month" value="month">
-                <Icon component={() => <FaCalendarAlt />} />
-                <span style={{ marginLeft: 10 }}>Month</span>
-              </Select.Option>
-              <Select.Option key="quarter" value="quarter">
-                <Icon component={() => <FaCalendarAlt />} />
-                <span style={{ marginLeft: 10 }}>Quarter</span>
-              </Select.Option>
-              <Select.Option key="year" value="year">
-                <Icon component={() => <FaCalendarAlt />} />
-                <span style={{ marginLeft: 10 }}>Year</span>
-              </Select.Option>
+              {TaskTemplateWidgetDef.map((d, i) => <Select.Option key={i} value={d.type}>
+                <Icon component={() => d.icon} />
+                <span style={{ marginLeft: 10 }}>{d.label}</span>
+              </Select.Option>)}
             </Select>
           </Form.Item>
-          <Form.Item label="Required">
-            <Switch
-              checked={value.required}
-              onChange={checked => {
-                value.required = checked;
-                onChange([...items]);
-              }}
-            />
+          <Form.Item label="Required" name={['fields', index, 'required']} >
+            <Switch />
+          </Form.Item>
+        </Col>
+        <Col span={24}>
+          <Form.Item>
+            <RenderOptions type={value.type} options={value.options} onChange={handleOptionChange} />
           </Form.Item>
         </Col>
       </Row>

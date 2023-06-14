@@ -42,6 +42,7 @@ const ChangePasswordModal = loadable(() => import('components/ChangePasswordModa
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
+const TaskTemplateBuilderPage = loadable(() => import('pages/TaskTemplate/TaskTemplateBuilderPage'));
 const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
 const MyTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
@@ -322,6 +323,8 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAdmin} exact path="/task/new" component={MyTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
+      <RoleRoute visible={isAdmin} exact path="/task_template/new" component={TaskTemplateBuilderPage} />
+      <RoleRoute visible={isAdmin} exact path="/task_template/:id" component={TaskTemplateBuilderPage} />
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />

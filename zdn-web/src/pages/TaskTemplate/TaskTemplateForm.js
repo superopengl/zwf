@@ -8,7 +8,7 @@ import FieldEditor from 'components/FieldEditor';
 import { listDocTemplate } from 'services/docTemplateService';
 import * as _ from 'lodash';
 import { Loading } from 'components/Loading';
-import { FormBuilder } from 'components/formBuilder/FormBuilder';
+import { TaskTemplateBuilder } from 'components/formBuilder/TaskTemplateBuilder';
 
 const DEFAULT_ENTITY = {
   docTemplateIds: [],
@@ -64,49 +64,14 @@ const TaskTemplateForm = (props) => {
   }
 
   return (
-    <Space direction="vertical" size="small" style={{ width: '100%' }}>
-      {/* <Form
-        layout="vertical"
-        onFinish={handleSave}
-        initialValues={entity}
-        form={form}
-      >
-        <Form.Item label="Task Template Name" name="name" rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
-          <Input placeholder="Task Template Name" />
-        </Form.Item>
-        <Form.Item label="Doc Templates to Apply" name="docTemplateIds">
-          <Select
-            mode="multiple"
-            allowClear
-            style={{ width: '100%' }}
-            placeholder="Doc Templates to apply"
-          >
-            {docTemplateOptions.map((x, i) => (<Select.Option key={i} value={x.id}>{x.name}</Select.Option>))}
-          </Select>
-        </Form.Item>
-        <Form.Item label="Fields" name="fields">
-          <FieldEditor loading={loading}/>
-        </Form.Item>
-        <Form.Item>
-          <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-
-            <Button type="link" onClick={handleClose}>Cancel</Button>
-            <Button type="primary" htmlType="submit">Save</Button>
-          </Space>
-        </Form.Item>
-      </Form> */}
-
-<FormBuilder 
-   formStructure={formSchema}
-   onSave={schema => {
-     // onSave form schema received here.
-     setFormSchema(schema);
-   }}
-   onError={error => console.log(error)}
-/>
-
-<pre>{JSON.stringify(formSchema, null, 2)}</pre>
-    </Space>
+      <TaskTemplateBuilder
+        formStructure={formSchema}
+        onChange={schema => {
+          // onSave form schema received here.
+          setFormSchema(schema);
+        }}
+        onError={error => console.log(error)}
+      />
   );
 };
 

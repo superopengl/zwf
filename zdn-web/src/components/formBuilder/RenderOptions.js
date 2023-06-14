@@ -19,10 +19,7 @@ const RenderOptions = ({ type, options: propOptions, onChange }) => {
       onClick={() => {
         const newOptions = [
           ...options,
-          {
-            value: `Option ${options.length + 1}`,
-            label: `Option ${options.length + 1}`,
-          },
+          `Option ${options.length + 1}`,
         ];
         handleOptionsChange(newOptions);
       }}
@@ -32,7 +29,7 @@ const RenderOptions = ({ type, options: propOptions, onChange }) => {
   );
 
   const handleOptionsChange = (newOptions) => {
-    const sanitizedOptions = uniq(newOptions.filter(x => x.value), x => x.value);
+    const sanitizedOptions = uniq(newOptions.filter(x => x));
     onChange(sanitizedOptions);
   }
 
@@ -43,13 +40,13 @@ const RenderOptions = ({ type, options: propOptions, onChange }) => {
           <div style={{ marginTop: '5px' }} key={index}>
             <Row type="flex" justify="start" align="middle" gutter={16}>
               <Col span={1}>
-                {type === 'radio' && <Radio disabled />}
+                {type === 'radio' && <Radio disabled></Radio>}
                 {type === 'checkbox' && <Checkbox disabled />}
                 {type === 'select' && <span>{index + 1}</span>}
               </Col>
-              <Col span={10}>
+              <Col span={21}>
                 <Input
-                  value={option.value}
+                  value={option}
                   // autoFocus
                   style={{
                     width: '100%',
@@ -58,16 +55,12 @@ const RenderOptions = ({ type, options: propOptions, onChange }) => {
                     handleOptionsChange(options);
                   }}
                   onChange={e => {
-                    const optionValue = e.target.value;
-                    options[index] = {
-                      label: optionValue,
-                      value: optionValue
-                    };
+                    options[index] = e.target.value;
                     setOptions([...options]);
                   }}
                 />
               </Col>
-              <Col span={1}>
+              <Col span={2}>
                 <Button
                   type="link"
                   icon={<DeleteOutlined />}
