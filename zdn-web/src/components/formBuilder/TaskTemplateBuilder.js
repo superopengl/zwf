@@ -1,62 +1,13 @@
-import React, { useState } from 'react';
-import { Form, Row, Button, Input, List, Col, Alert } from 'antd';
-import { camelCase, isEmpty } from 'lodash';
+import React from 'react';
+import { Form, Button, Input } from 'antd';
+import { isEmpty } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 // import arrayMove from 'array-move';
-import { SortableContainer } from 'react-sortable-hoc';
-import {
-  DndContext,
-  closestCenter,
-  KeyboardSensor,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from '@dnd-kit/core';
-import {
-  useSortable,
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
-import { CSS } from '@dnd-kit/utilities';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 // Import style
-import FieldDefEditorCard from './FieldDefEditorCard';
-import { PlusOutlined } from '@ant-design/icons';
+import { FieldList } from './FieldList';
 
-const SortableItem = ({ index, value, onDelete, onChange }) => (
-  <FieldDefEditorCard
-    onDelete={onDelete}
-    onChange={onChange}
-    index={index}
-    value={value}
-  />
-);
-
-const SortableElem = (props) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-  } = useSortable({ id: props.id });
-
-  const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-  };
-
-  return (
-    <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      hahah
-    </div>
-  );
-}
-
-const reorder = (list, startIndex, endIndex) => {
+export const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
   const [removed] = result.splice(startIndex, 1);
   result.splice(endIndex, 0, removed);
@@ -66,94 +17,13 @@ const reorder = (list, startIndex, endIndex) => {
 
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
-  // some basic styles to make the items look a bit nicer
-  userSelect: "none",
-  padding: grid * 2,
-  // margin: `0 0 ${grid}px 0`,
-
-  // change background colour if dragging
-  background: isDragging ? "lightgreen" : "none",
-
-  // styles we need to apply on draggables
-  ...draggableStyle
-});
-
-const getListStyle = isDraggingOver => ({
+export const getListStyle = isDraggingOver => ({
   background: isDraggingOver ? "#13c2c222" : "rgba(255,255,255,0)",
   padding: grid,
   width: '100%'
 });
 
-const FieldListEditor = (props) => {
-
-  const { items, header, onChange } = props;
-
-  const onDragEnd = (result) => {
-    // dropped outside the list
-    if (!result.destination) {
-      return;
-    }
-
-    const newItems = reorder(
-      items,
-      result.source.index,
-      result.destination.index
-    );
-
-    onChange(newItems);
-  }
-
-  const handleDeleteField = (index) => {
-    items.splice(index, 1);
-    onChange([...items]);
-  }
-
-  return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Droppable droppableId="droppable">
-        {(provided, snapshot) => (
-          <Row
-            type="flex"
-            gutter={[10, 10]}
-            {...provided.droppableProps}
-            ref={provided.innerRef}
-            style={getListStyle(snapshot.isDraggingOver)}
-          >
-            {items.map((item, index) => (
-              <Draggable key={item.id} draggableId={item.id} index={index}>
-                {(provided, snapshot) => (
-                  <Col
-                    span={24}
-                    ref={provided.innerRef}
-                    {...provided.draggableProps}
-                    {...provided.dragHandleProps}
-                  // style={getItemStyle(
-                  //   snapshot.isDragging,
-                  //   provided.draggableProps.style
-                  // )}
-                  >
-                    <FieldDefEditorCard
-                      index={index}
-                      items={items}
-                      value={item}
-                      onChange={onChange}
-                      onDelete={() => handleDeleteField(index)}
-                    />
-                  </Col>
-
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </Row>
-        )}
-      </Droppable>
-    </DragDropContext>
-  );
-};
-
-const createEmptyField = () => {
+export const createEmptyField = () => {
   return {
     id: uuidv4(),
     widget: 'input',
@@ -187,51 +57,6 @@ const checkOptions = items => {
     }
   }
   return true;
-};
-
-const FieldList = (props) => {
-  const { value, onChange, header } = props;
-  // const bottomRef = useRef(null);
-  const handleChange = change => {
-    onChange(change);
-  };
-  return (
-    <>
-      <Row style={{ background: '#ECECEC' }}>
-        <FieldListEditor
-          items={value}
-          onChange={handleChange}
-          header={header}
-          onSortEnd={({ oldIndex, newIndex }) => {
-            // Re-assigned avoid mutation.
-            let updatedSchema = value;
-            updatedSchema = arrayMove(updatedSchema, oldIndex, newIndex);
-            updatedSchema.forEach((e, index) => {
-              e.field = camelCase(`Question ${index + 1}`);
-            });
-            handleChange(updatedSchema);
-          }}
-        />
-      </Row>
-      <Row>
-        <Button
-          style={{ marginTop: 10 }}
-          type="primary"
-          icon={<PlusOutlined />}
-          // block
-          onClick={() => {
-            const updatedList = [
-              ...value,
-              createEmptyField(),
-            ];
-            handleChange(updatedList);
-          }}
-        >
-          Add field
-        </Button>
-      </Row>
-    </>
-  );
 };
 
 export const TaskTemplateBuilder = (props) => {
