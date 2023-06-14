@@ -3,10 +3,11 @@ import { Card, Switch, Row, Input, Form, Col, Select, Space, Typography, Button 
 import Icon, { DeleteFilled, DeleteOutlined } from '@ant-design/icons'
 import RenderOptions from './RenderOptions';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
+import PropTypes from 'prop-types';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
-const FieldDefEditorCard = (props) => {
+const FieldEditCard = (props) => {
   const { value, index, items, onDelete, onChange } = props;
 
   // Bubble up changes to parent.
@@ -31,14 +32,14 @@ const FieldDefEditorCard = (props) => {
     <Card
       size="small"
       title={<Row className="drag-handle" type="flex" align="middle" justify="center">
-      <Text type="secondary">:::</Text>
-    </Row>}
+        <Text type="secondary">:::</Text>
+      </Row>}
       type="inner"
       style={{ width: '100%' }}
-      extra={<Button size="small" icon={<DeleteFilled/>} danger type="link" onClick={() => onDelete(value)}></Button>}
+      extra={<Button size="small" icon={<DeleteFilled />} danger type="link" onClick={() => onDelete(value)}></Button>}
     >
       <Row gutter={16}>
-        <Col span={12}>
+        <Col span={14}>
           <Form.Item label="Field name"
             name={['fields', index, 'name']}
             rules={[{ required: true, whitespace: true, message: ' ', max: 50 }]}>
@@ -53,19 +54,11 @@ const FieldDefEditorCard = (props) => {
             />
           </Form.Item>
         </Col>
-        <Col span={12}>
+        <Col span={10}>
           <Form.Item label="Type"
             name={['fields', index, 'type']}
             rules={[{ required: true, message: ' ' }]}>
-            <Select style={{ width: 250 }}
-            // onSelect={selectedType => {
-            //   // On change, reset.
-            //   debugger;
-            //   value.type = selectedType;
-            //   value.options = ['checkbox', 'radio', 'select'].includes(selectedType) ? (value.options ?? []) : undefined;
-            //   onChange([...items]);
-            // }}
-            >
+            <Select style={{ maxWidth: 240 }} >
               {TaskTemplateWidgetDef.map((d, i) => <Select.Option key={i} value={d.type}>
                 <Icon component={() => d.icon} />
                 <span style={{ marginLeft: 10 }}>{d.label}</span>
@@ -75,13 +68,24 @@ const FieldDefEditorCard = (props) => {
           <Form.Item label="Required" valuePropName="checked" name={['fields', index, 'required']} >
             <Switch />
           </Form.Item>
-        </Col>
-        <Col span={24}>
-            <RenderOptions type={value.type} options={value.options} onChange={handleOptionChange} />
+          {['radio', 'checkbox', 'select'].includes(value.type) &&
+            <RenderOptions type={value.type} fieldIndex={index} options={value.options} onChange={handleOptionChange} />
+          }
         </Col>
       </Row>
     </Card>
   );
 };
 
-export default FieldDefEditorCard;
+FieldEditCard.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  value: PropTypes.object.isRequired,
+  index: PropTypes.number.isRequired,
+  items: PropTypes.array.isRequired,
+};
+
+FieldEditCard.defaultProps = {
+};
+
+export default FieldEditCard;

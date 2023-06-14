@@ -1,13 +1,14 @@
 import React from 'react';
 import { Row, Col } from 'antd';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import FieldDefEditorCard from './FieldDefEditorCard';
+import FieldEditCard from './FieldEditCard';
 import { reorder, getListStyle } from './TaskTemplateBuilder';
+import PropTypes from 'prop-types';
 
 
-export const FieldListEditor = (props) => {
+export const DroppableFieldList = (props) => {
 
-  const { items, header, onChange } = props;
+  const { items, onChange } = props;
 
   const onDragEnd = (result) => {
     // dropped outside the list
@@ -50,7 +51,7 @@ export const FieldListEditor = (props) => {
                     {...provided.draggableProps}
                     {...provided.dragHandleProps}
                   >
-                    <FieldDefEditorCard
+                    <FieldEditCard
                       index={index}
                       items={items}
                       value={item}
@@ -68,3 +69,11 @@ export const FieldListEditor = (props) => {
     </DragDropContext>
   );
 }
+
+DroppableFieldList.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  items: PropTypes.array.isRequired
+};
+
+DroppableFieldList.defaultProps = {
+};

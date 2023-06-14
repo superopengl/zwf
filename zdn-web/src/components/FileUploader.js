@@ -85,7 +85,7 @@ const FileIconWithOverlay = props => {
 }
 
 export const FileUploader = (props) => {
-  const { onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList } = props;
+  const { onUploadingChange, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
@@ -122,6 +122,7 @@ export const FileUploader = (props) => {
 
     if(file.status === 'done') {
       props.onAdd( _.get(file, 'response.id', file.uid));
+      onChange(fileList.map(f => f.id));
     }
 
     const uploading = file.status === 'uploading';
@@ -183,6 +184,7 @@ export const FileUploader = (props) => {
 
 FileUploader.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
+  onChange: PropTypes.func,
   size: PropTypes.number,
   disabled: PropTypes.bool,
   showsLastReadAt: PropTypes.bool,

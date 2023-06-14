@@ -65,7 +65,7 @@ const TaskTemplateForm = (props) => {
 
   return (
       <TaskTemplateBuilder
-        formStructure={formSchema}
+        value={formSchema}
         onChange={schema => {
           // onSave form schema received here.
           setFormSchema(schema);
