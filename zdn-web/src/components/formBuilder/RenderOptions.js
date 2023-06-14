@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Radio, Button, Checkbox, Input, Col, Row, Form, Typography } from 'antd';
 import { filter, uniq } from 'lodash';
-import { DeleteOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 const { Text } = Typography;
@@ -40,27 +40,16 @@ const RenderOptions = (props) => {
             </Col>
             <Col flex="auto">
               <Form.Item noStyle name={['fields', fieldIndex, 'options', index]} rules={[{ required: true, message: ' ' }]}>
-                <Input
-                  // value={option}
-                  // autoFocus
-                  style={{
-                    width: '100%',
-                  }}
-                // onBlur={e => {
-                //   handleOptionsChange(options);
-                // }}
-                // onChange={e => {
-                //   options[index] = e.target.value;
-                //   setOptions([...options]);
-                // }}
-                />
+                <Input autoFocus />
               </Form.Item>
             </Col>
             <Col>
               <Button
                 type="link"
-                icon={<DeleteOutlined />}
+                size="small"
+                icon={<CloseOutlined />}
                 danger
+                style={{ position: 'relative', top: 4 }}
                 onClick={() => {
                   options.splice(index, 1);
                   handleOptionsChange(options);
@@ -88,7 +77,7 @@ const RenderOptions = (props) => {
             Add option
           </Button>
         </Col>
-        <Col flex="32px" />
+        <Col flex="24px" />
       </Row>
 
     </Container>
