@@ -18,6 +18,8 @@ import { notify } from 'util/notify';
 import DropdownMenu from 'components/DropdownMenu';
 import { Descriptions } from 'antd';
 import HighlightingText from 'components/HighlightingText';
+import { FaTasks } from 'react-icons/fa';
+import TaskTemplateIcon from './TaskTemplateIcon';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -146,13 +148,24 @@ export const TaskTemplatePage = props => {
           }}
           dataSource={filteredList}
           loading={loading}
+          locale={{
+            emptyText: <div style={{ margin: '30px auto'}}>
+              <Paragraph type="secondary">
+                There is no task template. Let's start from a one!
+              </Paragraph>
+              <Link to="/task_template/new">Create new task template</Link>
+            </div>
+          }}
           renderItem={item => <List.Item>
             <Card
               // size="small"
               bordered={true}
               hoverable
               // type="inner"
-              title={<div onClick={() => handleEdit(item)}         ><HighlightingText search={searchText} value={item.name} /></div>}
+              title={<Space onClick={() => handleEdit(item)} >
+                <TaskTemplateIcon />
+                <HighlightingText search={searchText} value={item.name} />
+              </Space>}
               extra={<DropdownMenu
                 config={[
                   {

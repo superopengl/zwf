@@ -92,12 +92,7 @@ export const TaskTemplateBuilder = (props) => {
           showCount
         />
       </Form.Item>
-      <Alert
-        message="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
-        showIcon
-        type="info"
-        style={{ marginBottom: 20, marginTop: 30 }}
-      />
+
       <Form.Item name="fields" noStyle rules={[
         {
           required: true,
