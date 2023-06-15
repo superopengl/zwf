@@ -173,10 +173,10 @@ export const TaskTemplatePage = props => {
             >
               <div onClick={() => handleEdit(item)}              >
                 <Space size="large">
-                  <TimeAgo key="1" value={item.createdAt} showTime={false} prefix="Created" direction="horizontal" />
-                  <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix="Updated" direction="horizontal" />
+                  <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
+                  <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
                 </Space>
-                <Paragraph type="secondary" style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph>
+                <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph>
               </div>
             </Card>
           </List.Item>}
