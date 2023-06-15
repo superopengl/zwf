@@ -1,35 +1,32 @@
 import React from 'react';
-import { Form, Typography, Input , Alert} from 'antd';
+import { Form, Typography, Input, Alert } from 'antd';
 import { isEmpty } from 'lodash';
-import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import { FieldList } from './FieldList';
-import { QuestionCircleOutlined } from '@ant-design/icons';
 // import arrayMove from 'array-move';
 
-const {Paragraph} = Typography;
+const { Paragraph } = Typography;
 // Import style
 
 export const createEmptyField = () => {
   return {
-    id: uuidv4(),
-    widget: 'input',
-    label: '',
-    extra: '',
+    type: 'input',
+    name: '',
+    description: '',
   }
 }
 
 const checkLabels = items => {
-  return items.every(x => x.label && x.widget);
+  return items.every(x => x.label && x.type);
 };
 
 const checkOptions = items => {
   for (let i = 0; i < items.length; i += 1) {
     const currQuestion = items[i];
     if (
-      currQuestion.widget === 'radio' ||
-      currQuestion.widget === 'checkbox' ||
-      currQuestion.widget === 'select'
+      currQuestion.type === 'radio' ||
+      currQuestion.type === 'checkbox' ||
+      currQuestion.type === 'select'
     ) {
       const currOptions = currQuestion.options;
       if (currOptions.length === 0) {
@@ -57,7 +54,7 @@ export const TaskTemplateBuilder = (props) => {
 
   const handleValueChange = (changedValues, allValues) => {
     allValues.fields.forEach(f => {
-      if(!['radio', 'checkbox', 'select'].includes(f.type)) {
+      if (!['radio', 'checkbox', 'select'].includes(f.type)) {
         delete f.options;
       }
     })
@@ -95,11 +92,11 @@ export const TaskTemplateBuilder = (props) => {
           showCount
         />
       </Form.Item>
-      <Alert 
-      message="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members." 
-      showIcon 
-      type="info" 
-      style={{marginBottom: 20, marginTop: 30}}
+      <Alert
+        message="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
+        showIcon
+        type="info"
+        style={{ marginBottom: 20, marginTop: 30 }}
       />
       <Form.Item name="fields" noStyle rules={[
         {

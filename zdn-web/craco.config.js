@@ -6,6 +6,10 @@ const darkTheme = getThemeVariables({
   compact: false, // Enable compact mode
 });
 
+/**
+ * https://github.com/ant-design/ant-design/blob/master/components/style/themes/default.less
+ */
+
 const modifyVars = {
   ...darkTheme,
   '@primary-color': '#13c2c2', // rgb(19,194,194)

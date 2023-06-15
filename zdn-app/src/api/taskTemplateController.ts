@@ -47,6 +47,8 @@ export const listTaskTemplates = handlerWrapper(async (req, res) => {
       select: [
         'id',
         'name',
+        'description',
+        'fields',
         'createdAt',
         'lastUpdatedAt',
         'docTemplateIds'

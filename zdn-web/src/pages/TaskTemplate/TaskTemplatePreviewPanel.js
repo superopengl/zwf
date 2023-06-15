@@ -10,7 +10,8 @@ const { Title, Paragraph } = Typography;
 
 
 const Container = styled.div`
-  // margin: 0 auto 0 auto;
+  margin: 0 auto 0 auto;
+  max-width: 600px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   // height: 100%;
@@ -19,13 +20,14 @@ const Container = styled.div`
 
 const convertTaskTemplateFieldsToFormFieldsSchema = (ttFields, official) => {
   return ttFields
-    .filter(t => !!t.official === official)
-    .map(t => {
+    .map((t, i) => {
+      if(!!t.official !== official) return null;
       const widgetDef = TaskTemplateWidgetDef.find(x => x.type === t.type);
+      const name = t.name || `Unnamed (field ${i + 1})`;
       return {
-        key: t.name,
-        label: t.name,
-        name: t.name,
+        key: name,
+        label: name,
+        name: name,
         required: t.required,
         extra: t.description,
         options: t.options,
@@ -33,25 +35,32 @@ const convertTaskTemplateFieldsToFormFieldsSchema = (ttFields, official) => {
         widget: widgetDef.widget,
         widgetProps: widgetDef.widgetPorps
       }
-    });
+    })
+    .filter(t => t);
+
 }
 
 export const TaskTemplatePreviewPanel = props => {
 
   const { value, type, debug } = props;
 
-  const [clientFieldSchema, setClientFieldSchema] = React.useState(value);
-  const [agentFieldSchema, setAgentFieldSchema] = React.useState(value);
+  const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
+  const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
   const previewFormRef = React.createRef();
 
   const officialMode = type === 'agent';
 
   React.useEffect(() => {
+    if(!value) return;
     const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, false);
     setClientFieldSchema(clientFields);
     const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, true);
     setAgentFieldSchema(agentFields);
   }, [value]);
+
+  if(!value) {
+    return null;
+  }
 
   return (
     <Container style={props.style}>
