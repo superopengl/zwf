@@ -1,16 +1,25 @@
 import {
-  DeleteOutlined, EditOutlined, PlusOutlined
+  DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography } from 'antd';
+import { Button, Drawer, Card, List, Modal, Space, Row, Input, Typography } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
-import TaskTemplateForm from 'pages/TaskTemplate/TaskTemplateForm';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
+import Icon, { SaveFilled } from '@ant-design/icons';
+import { VscOpenPreview } from 'react-icons/vsc';
+import { MdOpenInNew } from 'react-icons/md';
+import { getTaskTemplate, saveTaskTemplate } from 'services/taskTemplateService';
+import { v4 as uuidv4 } from 'uuid';
+import ReactDOM from 'react-dom';
+import { notify } from 'util/notify';
+import DropdownMenu from 'components/DropdownMenu';
+import { Descriptions } from 'antd';
+import HighlightingText from 'components/HighlightingText';
 
-const { Paragraph, Link: TextLink } = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 
 
 const LayoutStyled = styled.div`
@@ -18,67 +27,48 @@ const LayoutStyled = styled.div`
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
+
+  .ant-list-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
 `;
 
 
 
 export const TaskTemplatePage = props => {
+  const [list, setList] = React.useState([]);
+  const [searchText, setSearchText] = React.useState('');
+  const [filteredList, setFilteredList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  const loadList = async () => {
+    setLoading(true);
+    const list = await listTaskTemplate();
+    setList(list);
+    setLoading(false);
+  }
+
+  React.useEffect(() => {
+    loadList();
+  }, [])
+
+  React.useEffect(() => {
+    setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
+  }, [list, searchText])
 
   const handleEditOne = (id) => {
     props.history.push(`/task_template/${id}`);
   }
 
-  const handleClickTemplate = (e, id) => {
-    e.stopPropagation();
-    handleEditOne(id);
+  const handleEdit = (item) => {
+    handleEditOne(item.id);
   }
 
-  const columnDef = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      render: (text, record) => <TextLink onClick={e => handleClickTemplate(e, record.id)}>{text}</TextLink>
-    },
-    {
-      title: 'Created At',
-      dataIndex: 'createdAt',
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      title: 'Updated At',
-      dataIndex: 'lastUpdatedAt',
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      // title: 'Action',
-      align: 'right',
-      render: (text, record) => (
-        <Space size="small">
-          <Tooltip placement="bottom" title="Edit task template">
-
-            <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(e, record)} />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Delete task template">
-            <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, record)} />
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
-
-  const taskTemplateId = props.match.params.id;
-
-  const [list, setList] = React.useState([]);
-  const [loading, setLoading] = React.useState(true);
-  const [currentId, setCurrentId] = React.useState(taskTemplateId);
-
-  const handleEdit = (e, item) => {
-    e.stopPropagation();
-    setCurrentId(item.id);
+  const handlePreview = (item) => {
   }
 
-  const handleDelete = async (e, item) => {
-    e.stopPropagation();
+  const handleDelete = async (item) => {
     const { id, name } = item;
     Modal.confirm({
       title: <>Delete Doc Template <strong>{name}</strong>?</>,
@@ -96,29 +86,35 @@ export const TaskTemplatePage = props => {
     });
   }
 
-  const loadList = async () => {
-    setLoading(true);
-    const list = await listTaskTemplate();
-    setList(list);
-    setLoading(false);
-  }
-
-  React.useEffect(() => {
-    loadList();
-  }, [])
-
   const handleCreateNew = () => {
     props.history.push('/task_template/new');
   }
 
+  const span = {
+    xs: 24,
+    sm: 24,
+    md: 24,
+    lg: 12,
+    xl: 12,
+    xxl: 12
+  }
+
+  const handleSearchFilter = (text) => {
+    setSearchText(text);
+  }
+
   return (
     <LayoutStyled>
-
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+        <Row justify="space-between">
+          <Input placeholder="Filter task name"
+            onChange={e => handleSearchFilter(e.target.value)}
+            allowClear
+            prefix={<Text type="secondary"><SearchOutlined /></Text>}
+            style={{ width: 240 }} />
           <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
-        </Space>
-        <Table columns={columnDef}
+        </Row>
+        {/* <Table columns={columnDef}
           size="small"
           dataSource={list}
           rowKey="id"
@@ -129,13 +125,61 @@ export const TaskTemplatePage = props => {
             onDoubleClick: () => handleEditOne(record.id)
           })}
           locale={{
-            emptyText: <div style={{margin: '30px auto', fontSize: 14}}>
-            <Paragraph type="secondary">
-              There is no defined task template. Let's start from creating a new task template.
-            </Paragraph>
-            <Link to="/task_template/new">Create new task template</Link>
+            emptyText: <div style={{ margin: '30px auto', fontSize: 14 }}>
+              <Paragraph type="secondary">
+                There is no defined task template. Let's start from creating a new task template.
+              </Paragraph>
+              <Link to="/task_template/new">Create new task template</Link>
             </div>
           }}
+        /> */}
+        <List
+          size="small"
+          grid={{
+            gutter: 16,
+            xs: 1,
+            sm: 1,
+            md: 1,
+            lg: 1,
+            xl: 2,
+            xxl: 3
+          }}
+          dataSource={filteredList}
+          loading={loading}
+          renderItem={item => <List.Item>
+            <Card
+              // size="small"
+              bordered={true}
+              hoverable
+              // type="inner"
+              title={<div onClick={() => handleEdit(item)}         ><HighlightingText search={searchText} value={item.name} /></div>}
+              extra={<DropdownMenu
+                config={[
+                  {
+                    menu: 'Edit',
+                    onClick: () => handleEdit(item)
+                  },
+                  {
+                    menu: 'Preview',
+                    onClick: () => handlePreview(item)
+                  },
+                  {
+                    menu: <Text type="danger">Delete</Text>,
+                    onClick: () => handleDelete(item)
+                  },
+                ].filter(x => !!x)}
+              />}
+              bodyStyle={{ paddingTop: 16 }}
+            >
+              <div onClick={() => handleEdit(item)}              >
+                <Space size="large">
+                  <TimeAgo key="1" value={item.createdAt} showTime={false} prefix="Created" direction="horizontal" />
+                  <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix="Updated" direction="horizontal" />
+                </Space>
+                <Paragraph type="secondary" style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph>
+              </div>
+            </Card>
+          </List.Item>}
         />
       </Space>
     </LayoutStyled >

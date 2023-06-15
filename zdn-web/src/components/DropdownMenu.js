@@ -31,6 +31,7 @@ const DropdownMenu = (props) => {
   return (
     <StyledDropdown
       overlay={menu}
+      placement="bottomRight"
       trigger="click"
     >
       <Button icon={<SettingOutlined />} style={{ paddingLeft: 8, paddingRight: 8 }}>
