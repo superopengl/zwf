@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { Radio, Button, Checkbox, Input, Col, Row, Form, Typography } from 'antd';
+import { Radio, Button, Tooltip, Input, Col, Row, Form, Typography } from 'antd';
 import { filter, uniq } from 'lodash';
-import { CloseOutlined, DeleteOutlined } from '@ant-design/icons';
+import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 const { Text } = Typography;
 
 const Container = styled.div`
-padding: 10px;
-// border: 1px solid rgba(0,0,0,0.1);
-// border-radius: 4px;
+padding: 16px;
+border: 1px solid rgb(217,217,217);
+background-color: rgb(250,250,250);
+border-radius: 4px;
 `;
 
 const RenderOptions = (props) => {
@@ -31,19 +32,21 @@ const RenderOptions = (props) => {
       {options.map((option, index) => {
         return (
           <Row key={index} justify="start" align="top" style={{ marginBottom: 16 }}>
-            <Col flex="24px">
+            {/* <Col flex="24px">
               <div style={{ position: 'relative', top: 4 }}>
                 {type === 'radio' && <Radio disabled></Radio>}
                 {type === 'checkbox' && <Checkbox disabled />}
                 {type === 'select' && <Text type="secondary"><small>{index + 1}</small></Text>}
               </div>
-            </Col>
+            </Col> */}
             <Col flex="auto">
-              <Form.Item noStyle name={['fields', fieldIndex, 'options', index]} rules={[{ required: true, message: ' ' }]}>
-                <Input autoFocus />
+              <Form.Item noStyle 
+              name={['fields', fieldIndex, 'options', index]} rules={[{ required: true, message: ' ' }]}>
+                <Input autoFocus maxLength={100}/>
               </Form.Item>
             </Col>
             <Col>
+            <Tooltip title="Delete option" placement="topLeft">
               <Button
                 type="link"
                 size="small"
@@ -55,17 +58,17 @@ const RenderOptions = (props) => {
                   handleOptionsChange(options);
                 }}
               />
+              </Tooltip>
             </Col>
           </Row>
         );
       })}
       <Row>
-        <Col flex="24px" />
+        {/* <Col flex="24px" /> */}
         <Col flex="auto">
           <Button
-            type="primary"
             block
-            ghost
+            icon={<PlusOutlined/>}
             onClick={() => {
               const newOptions = [
                 ...options,

@@ -61,6 +61,7 @@ export const TaskTemplatePreviewPanel = props => {
       <Form
         ref={previewFormRef}
         layout="horizontal"
+        colon={false}
       >
         <FormBuilder meta={clientFieldSchema} form={previewFormRef} />
         {officialMode && <>

@@ -162,7 +162,7 @@ export const TaskTemplatePage = props => {
             onDoubleClick: () => handleEditOne(record.id)
           })}
           locale={{
-            emptyText: <div style={{margin: '30px auto'}}>
+            emptyText: <div style={{margin: '30px auto', fontSize: 14}}>
             <Paragraph type="secondary">
               There is no defined task template. Let's start from creating a new task template.
             </Paragraph>

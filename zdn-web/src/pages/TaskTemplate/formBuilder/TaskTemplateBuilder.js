@@ -1,9 +1,10 @@
 import React from 'react';
-import { Form, Typography, Input } from 'antd';
+import { Form, Typography, Input , Alert} from 'antd';
 import { isEmpty } from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import PropTypes from 'prop-types';
 import { FieldList } from './FieldList';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 // import arrayMove from 'array-move';
 
 const {Paragraph} = Typography;
@@ -81,7 +82,7 @@ export const TaskTemplateBuilder = (props) => {
       <Form.Item
         name="name"
         rules={[{ required: true, message: ' ' }]}>
-        <Input placeholder="Task template name" />
+        <Input placeholder="Task template name" maxLength={200} allowClear autoFocus size="large" />
       </Form.Item>
       <Form.Item
         name="description"
@@ -89,11 +90,17 @@ export const TaskTemplateBuilder = (props) => {
         <Input.TextArea
           placeholder="Task template description"
           autosize={{ minRows: 2, maxRows: 6 }}
+          maxLength={1000}
+          allowClear
+          showCount
         />
       </Form.Item>
-      <Paragraph type="secondary">
-        Drag and drop field cards to adjust the order.
-      </Paragraph>
+      <Alert 
+      message="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members." 
+      showIcon 
+      type="info" 
+      style={{marginBottom: 20, marginTop: 30}}
+      />
       <Form.Item name="fields" noStyle rules={[
         {
           required: true,

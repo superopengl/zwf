@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Switch, Row, Input, Form, Col, Select, Space, Typography, Button } from 'antd';
+import { Card, Switch, Row, Input, Form, Col, Select, Tooltip, Typography, Button } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined } from '@ant-design/icons'
 import RenderOptions from './RenderOptions';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
@@ -28,40 +28,54 @@ const FieldEditCard = (props) => {
     handleChange('options', change);
   };
 
+  const formItemLayoutProps = {
+    labelCol: { span: 6 },
+    wrapperCol: { span: 18 },
+  }
+
   return (
     <Card
       size="small"
-      title={<Row className="drag-handle" type="flex" align="middle" justify="center">
-        <Text type="secondary">:::</Text>
+      title={<Row type="flex" align="middle" justify="space-between">
+        <Text type="secondary">{index + 1}</Text>
+        <Text type="secondary"><big>:::</big></Text>
+        <Tooltip title="Delete field" placement="topRight">
+          <Button size="small" icon={<DeleteFilled />} danger type="link" onClick={() => onDelete(value)}></Button>
+          </Tooltip>
       </Row>}
       type="inner"
       style={{ width: '100%' }}
-      extra={<Button size="small" icon={<CloseOutlined />} danger type="link" onClick={() => onDelete(value)}></Button>}
     >
       <Row gutter={32}>
-        <Col span={14}>
+        <Col flex="auto">
           <Form.Item label="Field name"
+            {...formItemLayoutProps}
             name={['fields', index, 'name']}
             rules={[{ required: true, whitespace: true, message: ' ', max: 50 }]}>
-            <Input placeholder="" />
+            <Input placeholder="" allowClear maxLength={100}/>
           </Form.Item>
           <Form.Item label="Description"
+            {...formItemLayoutProps}
             name={['fields', index, 'description']}
             rules={[{ required: false, whitespace: true, message: ' ', max: 300 }]}>
             <Input.TextArea
               placeholder="Add description"
-              autosize={{ minRows: 2, maxRows: 6 }}
+              maxLength={1000}
+              showCount
+              allowClear
+              autosize={{ minRows: 3, maxRows: 20 }}
             />
           </Form.Item>
-          <Form.Item label="Required" valuePropName="checked" name={['fields', index, 'required']} >
-            <Switch />
-          </Form.Item>
-          <Form.Item label="Official only" valuePropName="official" name={['fields', index, 'official']} >
-            <Switch />
-          </Form.Item>
+          {['radio', 'checkbox', 'select'].includes(value.type) &&
+            <Form.Item label="Options" required
+              {...formItemLayoutProps}>
+              <RenderOptions type={value.type} fieldIndex={index} options={value.options} onChange={handleOptionChange} />
+            </Form.Item>
+          }
         </Col>
-        <Col span={10}>
+        <Col flex="0 0 380px">
           <Form.Item label="Type"
+            {...formItemLayoutProps}
             name={['fields', index, 'type']}
             rules={[{ required: true, message: ' ' }]}>
             <Select style={{ maxWidth: 240 }} >
@@ -71,10 +85,17 @@ const FieldEditCard = (props) => {
               </Select.Option>)}
             </Select>
           </Form.Item>
-
-          {['radio', 'checkbox', 'select'].includes(value.type) &&
-            <RenderOptions type={value.type} fieldIndex={index} options={value.options} onChange={handleOptionChange} />
-          }
+          <Form.Item label="Required"
+            {...formItemLayoutProps}
+            valuePropName="checked" name={['fields', index, 'required']} >
+            <Switch />
+          </Form.Item>
+          <Form.Item label="Official only"
+            {...formItemLayoutProps}
+            help="Official only fields are only visible to organasation members."
+            valuePropName="checked" name={['fields', index, 'official']} >
+            <Switch />
+          </Form.Item>
         </Col>
       </Row>
     </Card>
