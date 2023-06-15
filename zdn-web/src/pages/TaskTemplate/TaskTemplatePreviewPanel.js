@@ -85,7 +85,7 @@ export const TaskTemplatePreviewPanel = props => {
 };
 
 TaskTemplatePreviewPanel.propTypes = {
-  value: PropTypes.object.isRequired,
+  value: PropTypes.object,
   type: PropTypes.oneOf(['client', 'agent']).isRequired,
   debug: PropTypes.bool.isRequired
 };
