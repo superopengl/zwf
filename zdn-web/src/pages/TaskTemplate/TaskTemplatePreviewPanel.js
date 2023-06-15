@@ -17,57 +17,71 @@ const Container = styled.div`
 `;
 
 
-const convertTaskTemplateFieldsToFormFieldsSchema = (ttFields) => {
-  return ttFields.map(t => {
-    const widgetDef = TaskTemplateWidgetDef.find(x => x.type === t.type);
-    return {
-      key: t.name,
-      label: t.name,
-      name: t.name,
-      required: t.required,
-      extra: t.description,
-      options: t.options,
-      forwardRef: t.forwardRef,
-      widget: widgetDef.widget,
-      widgetProps: widgetDef.widgetPorps
-    }
-  });
+const convertTaskTemplateFieldsToFormFieldsSchema = (ttFields, official) => {
+  return ttFields
+    .filter(t => !!t.official === official)
+    .map(t => {
+      const widgetDef = TaskTemplateWidgetDef.find(x => x.type === t.type);
+      return {
+        key: t.name,
+        label: t.name,
+        name: t.name,
+        required: t.required,
+        extra: t.description,
+        options: t.options,
+        forwardRef: t.forwardRef,
+        widget: widgetDef.widget,
+        widgetProps: widgetDef.widgetPorps
+      }
+    });
 }
 
 export const TaskTemplatePreviewPanel = props => {
 
-  const {value, debug} = props;
+  const { value, type, debug } = props;
 
-  const [fieldSchema, setFieldSchema] = React.useState(value);
+  const [clientFieldSchema, setClientFieldSchema] = React.useState(value);
+  const [agentFieldSchema, setAgentFieldSchema] = React.useState(value);
   const previewFormRef = React.createRef();
 
+  const officialMode = type === 'agent';
+
   React.useEffect(() => {
-    const filedSchema = convertTaskTemplateFieldsToFormFieldsSchema(value.fields);
-    setFieldSchema(filedSchema);
+    const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, false);
+    setClientFieldSchema(clientFields);
+    const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, true);
+    setAgentFieldSchema(agentFields);
   }, [value]);
 
   return (
     <Container style={props.style}>
       <Title level={3}>{value.name}</Title>
       <Paragraph type="secondary">{value.description}</Paragraph>
-      <Divider />
+      <Divider style={{ marginTop: 4 }} />
       <Form
         ref={previewFormRef}
-        layout="vertical"
+        layout="horizontal"
       >
-        <FormBuilder meta={fieldSchema} form={previewFormRef} />
+        <FormBuilder meta={clientFieldSchema} form={previewFormRef} />
+        {officialMode && <>
+          <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
+          <Divider style={{ marginTop: 4 }} />
+          <FormBuilder meta={agentFieldSchema} form={previewFormRef} />
+        </>}
       </Form>
-      {debug && <pre><small>{JSON.stringify(fieldSchema, null, 2)}</small></pre>}
+      {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}
     </Container >
   );
 };
 
 TaskTemplatePreviewPanel.propTypes = {
   value: PropTypes.object.isRequired,
+  type: PropTypes.oneOf(['client', 'agent']).isRequired,
   debug: PropTypes.bool.isRequired
 };
 
 TaskTemplatePreviewPanel.defaultProps = {
+  type: 'client',
   debug: false
 };
 

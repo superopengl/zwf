@@ -8,7 +8,7 @@ import FieldEditor from 'components/FieldEditor';
 import { listDocTemplate } from 'services/docTemplateService';
 import * as _ from 'lodash';
 import { Loading } from 'components/Loading';
-import { TaskTemplateBuilder } from 'components/formBuilder/TaskTemplateBuilder';
+import { TaskTemplateBuilder } from 'pages/TaskTemplate/formBuilder/TaskTemplateBuilder';
 
 const DEFAULT_ENTITY = {
   docTemplateIds: [],

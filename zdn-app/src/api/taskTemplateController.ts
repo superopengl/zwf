@@ -16,15 +16,16 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   const taskTemplate = new TaskTemplate();
   const orgId = getOrgIdFromReq(req);
 
-  const { id, name, docTemplateIds, fields } = req.body;
+  const { id, name, description, docTemplateIds, fields } = req.body;
   assert(name, 400, 'name is empty');
   assert(fields?.length || docTemplateIds?.length, 400, 'Neither fields nor doc templates is specified.');
 
   taskTemplate.id = id || uuidv4();
   taskTemplate.orgId = orgId;
   taskTemplate.name = name;
+  taskTemplate.description = description;
   taskTemplate.docTemplateIds = docTemplateIds;
-  taskTemplate.fields = fields.filter(f => f.name?.trim() && f.type?.trim());
+  taskTemplate.fields = fields;
 
   const repo = getRepository(TaskTemplate);
   await repo.save(taskTemplate);

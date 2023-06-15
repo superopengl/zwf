@@ -2,7 +2,7 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import { TaskTemplateBuilder } from 'components/formBuilder/TaskTemplateBuilder';
+import { TaskTemplateBuilder } from 'pages/TaskTemplate/formBuilder/TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 
 const Container = styled.div`
