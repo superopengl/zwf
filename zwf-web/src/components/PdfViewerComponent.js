@@ -13,14 +13,15 @@ export const PdfViewerComponent = (props) => {
 
       const baseUrl = `${window.location.protocol}//${window.location.host}/${process.env.PUBLIC_URL}`;
 
-      const pdfResponse = await fetch('http://localhost:6004/api/v1/task/file/9733ddbe-0847-432e-95b2-a219e1d91eb0', { credentials: 'include' });
-      const documentBuffer = await pdfResponse.arrayBuffer();
+      // const pdfResponse = await fetch('http://localhost:6004/api/v1/task/file/6a26c143-6a33-43c7-ab35-65c989d74126', { credentials: 'include' });
+      // const documentBuffer = await pdfResponse.arrayBuffer();
 
       instance = await PSPDFKit.load({
         // Container where PSPDFKit should be mounted.
         container,
         // The document to open.
-        document: documentBuffer,
+        // document: documentBuffer,
+        document,
         // Use the public directory URL as a base URL. PSPDFKit will download its library assets from here.
         baseUrl,
         // baseUrl: `${process.env.PUBLIC_URL}`
