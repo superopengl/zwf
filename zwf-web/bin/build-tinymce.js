@@ -13,3 +13,9 @@ fse.copySync(
   path.join(topDir, '..', 'public', 'tinymce', 'plugins', 'img64upload'),
   { dereference: true, overwrite: true }
 );
+
+fse.copySync(
+  path.join(topDir, '..', '..', 'zwf-export'),
+  path.join(topDir, '..', 'public', 'tinymce', 'plugins', 'export'),
+  { dereference: true, overwrite: true }
+);
