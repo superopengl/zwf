@@ -1,7 +1,7 @@
 import {
   PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Row, Input, Typography } from 'antd';
+import { Button, Card, List, Modal, Space, Row, Col, Input, Typography } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -10,7 +10,8 @@ import { deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateServi
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import HighlightingText from 'components/HighlightingText';
-import {TaskTemplateIcon} from '../../components/entityIcon';
+import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
+import { Divider } from 'antd';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -29,7 +30,7 @@ const LayoutStyled = styled.div`
 
 
 
-export const TaskTemplatePage = props => {
+export const TaskTemplateListPage = props => {
   const [list, setList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [filteredList, setFilteredList] = React.useState([]);
@@ -140,7 +141,7 @@ export const TaskTemplatePage = props => {
           dataSource={filteredList}
           loading={loading}
           locale={{
-            emptyText: <div style={{ margin: '30px auto'}}>
+            emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
                 There is no task template. Let's start from a one!
               </Paragraph>
@@ -153,7 +154,7 @@ export const TaskTemplatePage = props => {
               bordered={true}
               hoverable
               // type="inner"
-              title={<Space onClick={() => handleEdit(item)} >
+              title={<Space>
                 <TaskTemplateIcon />
                 <HighlightingText search={searchText} value={item.name} />
               </Space>}
@@ -174,14 +175,18 @@ export const TaskTemplatePage = props => {
                 ].filter(x => !!x)}
               />}
               bodyStyle={{ paddingTop: 16 }}
+              onClick={() => handleEdit(item)}
             >
-              <div onClick={() => handleEdit(item)}              >
-                <Space size="large">
-                  <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                  <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-                </Space>
-                <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph>
-              </div>
+              <Space size="large">
+                <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
+                <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
+              </Space>
+              {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
+              {item.docNames?.length && <Space size="small" direction="vertical" style={{ marginTop: 20 }}>
+                {item.docNames?.map((d, i) => <div key={i}>
+                  <DocTemplateIcon />{d}
+                </div>)}
+              </Space>}
             </Card>
           </List.Item>}
         />
@@ -190,8 +195,8 @@ export const TaskTemplatePage = props => {
   );
 };
 
-TaskTemplatePage.propTypes = {};
+TaskTemplateListPage.propTypes = {};
 
-TaskTemplatePage.defaultProps = {};
+TaskTemplateListPage.defaultProps = {};
 
-export default withRouter(TaskTemplatePage);
+export default withRouter(TaskTemplateListPage);

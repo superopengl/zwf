@@ -50,9 +50,9 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   const portfolio = await portfolioRepo.findOne(portfolioId);
   assert(portfolio, 404, 'portfolio is not found');
 
-  const docTemplates = taskTemplate.docTemplateIds.length ?
-    await getRepository(DocTemplate).find({ where: { id: In(taskTemplate.docTemplateIds) } }) :
-    [];
+  // const docTemplates = taskTemplate.docTemplateIds.length ?
+  //   await getRepository(DocTemplate).find({ where: { id: In(taskTemplate.docTemplateIds) } }) :
+  //   [];
 
   const task = new Task();
 
@@ -64,7 +64,7 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   task.taskTemplateId = taskTemplateId;
   task.portfolioId = portfolioId;
   task.fields = fields;
-  task.docs = mapDocTemplatesToGenDocs(docTemplates);
+  // task.docs = mapDocTemplatesToGenDocs(docTemplates);
   task.status = TaskStatus.TODO;
 
   return task;

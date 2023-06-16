@@ -33,6 +33,7 @@ const DropdownMenu = (props) => {
       overlay={menu}
       placement="bottomRight"
       trigger="click"
+      onClick={e => e.stopPropagation()}
     >
       <Button icon={<SettingOutlined />} style={{ paddingLeft: 8, paddingRight: 8 }}>
         <CaretDownOutlined />
