@@ -6,6 +6,7 @@ import * as _ from 'lodash';
 import { listDocTemplate } from 'services/docTemplateService';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
+import {VarTag} from './VarTag';
 
 const { Paragraph } = Typography;
 
@@ -30,7 +31,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const DocTemplateSelect = props => {
-  const { value, onChange, placeholder, showVariables } = props;
+  const { value, onChange, onVariableChange, placeholder, showVariables } = props;
   const [loading, setLoading] = React.useState(true);
   const [docTemplateOptions, setDocTemplateOptions] = React.useState([]);
   const [allVars, setAllVars] = React.useState([]);
@@ -55,7 +56,8 @@ const DocTemplateSelect = props => {
     .value();
 
     setAllVars(allVariables);
-  }, [value]);
+    onVariableChange(allVariables);
+  }, [value, docTemplateOptions]);
 
   const handleChange = (selectedIds, options) => {
     onChange(selectedIds);
@@ -77,7 +79,7 @@ const DocTemplateSelect = props => {
     </StyledSelect>
     {showVariables && <Paragraph style={{marginTop: 10}}>
       Required fields are{' '}
-      {allVars.map(v => <Tag color="#00474f" key={v}>{v}</Tag>)}
+      {allVars.map(v => <VarTag key={v}>{v}</VarTag>)}
       </Paragraph>}
   </Loading>
 }
