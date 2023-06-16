@@ -16,6 +16,8 @@ import * as md5 from 'md5';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { isRole } from '../utils/isRole';
 import { Role } from '../types/Role';
+import { renderHtmlWithFields } from '../services/genDocService';
+import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 
 function extractVariables(html: string) {
   const pattern = /\{\{[a-zA-Z0-9 ]+\}\}/ig;
@@ -25,7 +27,7 @@ function extractVariables(html: string) {
 }
 
 export const saveDemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, ['admin', 'agent']);
 
   const { id, name, description, html } = req.body;
   assert(name, 400, 'name is empty');
@@ -45,7 +47,7 @@ export const saveDemplate = handlerWrapper(async (req, res) => {
 });
 
 export const listDemplates = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, ['admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
 
   const list = await db.getRepository(Demplate).find({
@@ -69,7 +71,7 @@ export const listDemplates = handlerWrapper(async (req, res) => {
 });
 
 export const getDemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'client', 'agent']);
+  assertRole(req, ['admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
   const demplate = await db.getRepository(Demplate).findOne({ where: query });
@@ -79,7 +81,7 @@ export const getDemplate = handlerWrapper(async (req, res) => {
 });
 
 export const deleteDemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, ['admin', 'agent']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   await db.getRepository(Demplate).delete({ id, orgId });
@@ -88,7 +90,7 @@ export const deleteDemplate = handlerWrapper(async (req, res) => {
 });
 
 export const renameDemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, ['admin', 'agent']);
   const { name } = req.body;
   assert(name, 400, 'name is empty');
   const { id } = req.params;
@@ -112,7 +114,7 @@ async function getUniqueCopyName(m: EntityManager, orgId: string, preferredName:
 }
 
 export const cloneDemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, ['admin', 'agent']);
   const { id } = req.params;
   const { name } = req.body;
   const preferredName = name?.trim();
@@ -133,4 +135,20 @@ export const cloneDemplate = handlerWrapper(async (req, res) => {
   });
 
   res.json(demplate);
+});
+
+
+export const previewDemplatePdf = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { html } = req.body;
+
+  assert(html, 400, 'No html provided');
+
+  const pdfData = await generatePdfBufferFromHtml(html);
+
+  res.setHeader('Content-type', 'application/pdf');
+  // res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+  // res.setHeader('Content-disposition', `attachment; filename="${fileName}"`);
+  // res.json(Buffer.from(pdfData).toJSON());
+  res.send(pdfData);
 });
