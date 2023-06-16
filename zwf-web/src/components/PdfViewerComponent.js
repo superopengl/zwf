@@ -62,7 +62,7 @@ export const PdfViewerComponent = (props) => {
     })();
 
     return () => PSPDFKit && PSPDFKit.unload(container);
-  }, []);
+  }, [document]);
 
   return (
     <div ref={containerRef} style={{ width: "100%", height: "100vh" }} />

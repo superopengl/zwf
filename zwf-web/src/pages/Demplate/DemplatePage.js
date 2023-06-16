@@ -73,7 +73,7 @@ export const DemplatePage = () => {
   const [dirty, setDirty] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
   const [cloneAction, cloneContextHolder] = useCloneDemplateModal();
-
+  const editorRef = React.useRef(null);
   const navigate = useNavigate();
   const debugMode = false;
 
@@ -104,13 +104,13 @@ export const DemplatePage = () => {
     saveDemplate$(entity).pipe(
       tap(() => setDirty(false)),
     )
-    .subscribe({
-      next: () => {
-        notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
-        navigate(-1)
-      },
-      error: () => { }
-    });
+      .subscribe({
+        next: () => {
+          notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
+          navigate(-1)
+        },
+        error: () => { }
+      });
 
   }
 
@@ -196,7 +196,7 @@ export const DemplatePage = () => {
       loading={loading}
       icon={<DemplateIcon />}
       onBack={goBack}
-      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={demplateName} size={22} onChange={handleRename} maxLength={100} bordered={true}/>}
+      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={demplateName} size={22} onChange={handleRename} maxLength={100} bordered={true} />}
       extra={[
         <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => setShowingHelp(true)} /></Tooltip>,
         <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
@@ -215,7 +215,7 @@ export const DemplatePage = () => {
         closable onClose={() => setShowingHelp(false)} />}
       {!loading && <Row gutter={20} wrap={false}>
         <Col flex={"auto"}>
-          <RichTextInput value={html} onChange={handleChangeHtml} editorConfig={{ min_height: 842 }} />
+          <RichTextInput value={html} ref={editorRef} onChange={handleChangeHtml} editorConfig={{ min_height: 842 }} />
         </Col>
         <Col flex="320px">
           <Card
@@ -240,7 +240,7 @@ export const DemplatePage = () => {
     <Drawer
       title="Doc Template Preview"
       closable
-      closeIcon={<LeftOutlined/>}
+      closeIcon={<LeftOutlined />}
       maskClosable
       destroyOnClose
       open={previewSider}
@@ -252,6 +252,7 @@ export const DemplatePage = () => {
         debug={debugMode}
         type="agent"
         allowTest={true}
+        editorElement={editorRef.current}
       />
     </Drawer>
     {cloneContextHolder}

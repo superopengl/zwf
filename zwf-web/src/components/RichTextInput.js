@@ -8,10 +8,10 @@ const { Paragraph, Text } = Typography
 
 const DEFAULT_SAMPLE = ``;
 
-export const RichTextInput = React.memo((props) => {
+export const RichTextInput = React.memo(React.forwardRef((props, editorRef) => {
 
   const { value, disabled, onChange, placeholder, editorConfig } = props;
-  const editorRef = React.useRef(null);
+  // const editorRef = React.useRef(null);
   const [ready, setReady] = React.useState(false);
   const [initValue, setInitValue] = React.useState(value);
 
@@ -50,16 +50,18 @@ export const RichTextInput = React.memo((props) => {
       <TinymceReact
         // apiKey='3bmfxh7ddj07yqd2q0zicz9kckvcshqd1dwypp5tws9snpam'
         tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.min.js'}
-        onInit={(evt, editor) => editorRef.current = editor}
+        onInit={(evt, editor) => {
+          editorRef.current = editor
+        }}
         // initialValue={initValue}
         value={value}
         onEditorChange={onChange}
         init={{
           // height: 'calc(100vh - 240px)',
           height: 800,
-          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars link template table charmap nonbreaking anchor advlist lists autoresize img64upload',
+          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars link template table charmap nonbreaking anchor advlist lists autoresize img64upload export',
           menubar: false, //'file edit view insert format tools table tc help',
-          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | img64upload table',
+          toolbar: 'export | blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | img64upload table',
           toolbar_sticky: false,
           // extended_valid_elements: 'img[src|alt|width|height]',
           content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
@@ -115,7 +117,7 @@ export const RichTextInput = React.memo((props) => {
       {/* <Button onClick={log}>Log editor content</Button> */}
     </>
   );
-});
+}));
 
 RichTextInput.propTypes = {
   value: PropTypes.string,

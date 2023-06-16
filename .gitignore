@@ -10,3 +10,4 @@ zwf-app/src/_assets/keys/localhost.key
 zwf-app/package-lock.json
 .DS_Store
 zwf-web/public/pspdfkit-lib
+zwf-web/public/tinymce
