@@ -14,7 +14,8 @@ const DropdownMenu = (props) => {
   const { config } = props;
 
   const handleMenuClick = (e) => {
-    const { key } = e;
+    const { key, domEvent } = e;
+    domEvent.stopPropagation();
     const item = config[key];
     item?.onClick();
   }
@@ -23,7 +24,7 @@ const DropdownMenu = (props) => {
     mode="vertical"
     // theme="dark"
     onClick={handleMenuClick}>
-    {config.map((x, i) => <Menu.Item key={i} icon={x.icon} disabled={x.disabled}>
+    {config.map((x, i) => <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
       {x.menu}
     </Menu.Item>)}
   </Menu>
