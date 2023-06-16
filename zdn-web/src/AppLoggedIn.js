@@ -37,9 +37,10 @@ const ClientUserListPage = loadable(() => import('pages/User/ClientUserListPage'
 const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
+const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
-const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
-const TaskTemplateBuilderPage = loadable(() => import('pages/TaskTemplate/TaskTemplateEditorPage'));
+const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
+const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
 const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
 const MyTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
@@ -318,10 +319,12 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isAgent || isAdmin} exact path="/dashboard" component={isSystem ? SystemBoardPage : AdminBoardPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={MyTaskPage} />
-      <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplatePage} />
-      <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplatePage} />
-      <RoleRoute visible={isAdmin} exact path="/task_template/new" component={TaskTemplateBuilderPage} />
-      <RoleRoute visible={isAdmin} exact path="/task_template/:id" component={TaskTemplateBuilderPage} />
+      <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
+      <RoleRoute visible={isAdmin} exact path="/doc_template/new" component={DocTemplatePage} />
+      <RoleRoute visible={isAdmin} exact path="/doc_template/:id" component={DocTemplatePage} />
+      <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplateListPage} />
+      <RoleRoute visible={isAdmin} exact path="/task_template/new" component={TaskTemplatePage} />
+      <RoleRoute visible={isAdmin} exact path="/task_template/:id" component={TaskTemplatePage} />
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />

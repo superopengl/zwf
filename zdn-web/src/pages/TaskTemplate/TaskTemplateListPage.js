@@ -11,9 +11,8 @@ import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import HighlightingText from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
-import { Divider } from 'antd';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
+const { Text, Paragraph } = Typography;
 
 
 const LayoutStyled = styled.div`
@@ -130,7 +129,7 @@ export const TaskTemplateListPage = props => {
         <List
           size="small"
           grid={{
-            gutter: 24,
+            gutter: [24, 24],
             xs: 1,
             sm: 1,
             md: 1,

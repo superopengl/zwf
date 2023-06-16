@@ -56,7 +56,7 @@ const EmptyTaskTamplateSchema = {
   ]
 };
 
-export const TaskTemplateEditorPage = props => {
+export const TaskTemplatePage = props => {
 
   const routeParamId = props.match.params.id;
   const taskTemplateId = routeParamId || uuidv4();
@@ -166,8 +166,8 @@ export const TaskTemplateEditorPage = props => {
   );
 };
 
-TaskTemplateEditorPage.propTypes = {};
+TaskTemplatePage.propTypes = {};
 
-TaskTemplateEditorPage.defaultProps = {};
+TaskTemplatePage.defaultProps = {};
 
-export default withRouter(TaskTemplateEditorPage);
+export default withRouter(TaskTemplatePage);
