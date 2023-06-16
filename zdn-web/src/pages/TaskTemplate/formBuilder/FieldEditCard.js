@@ -73,7 +73,7 @@ const FieldEditCard = (props) => {
             </Form.Item>
           }
         </Col>
-        <Col flex="auto">
+        <Col flex="1 1 320px">
           <Form.Item label="Type"
             {...formItemLayoutProps}
             name={['fields', index, 'type']}

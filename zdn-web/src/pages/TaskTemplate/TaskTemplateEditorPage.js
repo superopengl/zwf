@@ -66,7 +66,7 @@ export const TaskTemplateEditorPage = props => {
   const [preview, setPreview] = React.useState(false);
   const [previewSider, setPreviewSider] = React.useState(false);
 
-  const [schema, setSchema] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
+  const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
 
   const load = async () => {
     if (!isNew) {
@@ -75,11 +75,7 @@ export const TaskTemplateEditorPage = props => {
         setLoading(true);
         const taskTemplate = await getTaskTemplate(taskTemplateId);
         ReactDOM.unstable_batchedUpdates(() => {
-          setSchema({
-            name: taskTemplate.name,
-            description: taskTemplate.description,
-            fields: taskTemplate.fields
-          })
+          setTaskTemplate(taskTemplate)
           setLoading(false);
         })
       } catch {
@@ -97,13 +93,13 @@ export const TaskTemplateEditorPage = props => {
   }
 
   const handleSave = async () => {
-    const taskTemplate = {
+    const entity = {
+      ...taskTemplate,
       id: taskTemplateId,
-      ...schema
     };
 
-    await saveTaskTemplate(taskTemplate);
-    notify.success(<>Successfully saved task template <strong>{schema.name}</strong></>)
+    await saveTaskTemplate(entity);
+    notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
     goBack();
   }
 
@@ -124,10 +120,10 @@ export const TaskTemplateEditorPage = props => {
                 <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
               ]}
             >
-              {schema && <TaskTemplateEditorPanel
-                value={schema}
+              {taskTemplate && <TaskTemplateEditorPanel
+                value={taskTemplate}
                 onChange={schema => {
-                  setSchema(schema);
+                  setTaskTemplate(schema);
                 }}
                 debug={debugMode}
               />}
@@ -140,7 +136,7 @@ export const TaskTemplateEditorPage = props => {
                 <Text type="warning">Preview</Text>
               </Row>
               <TaskTemplatePreviewPanel
-                value={schema}
+                value={taskTemplate}
                 debug={debugMode}
                 type="agent"
               />
@@ -160,7 +156,7 @@ export const TaskTemplateEditorPage = props => {
         >
 
           <TaskTemplatePreviewPanel
-            value={schema}
+            value={taskTemplate}
             debug={debugMode}
             type="agent"
           />

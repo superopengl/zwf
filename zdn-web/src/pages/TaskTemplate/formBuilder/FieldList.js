@@ -15,20 +15,18 @@ export const FieldList = (props) => {
   };
   return (
     <>
-      {/* <Row style={{ background: '#ffffff', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 4 }}> */}
-        <DroppableFieldList
-          items={value}
-          onChange={handleChange}
-          onSortEnd={({ oldIndex, newIndex }) => {
-            // Re-assigned avoid mutation.
-            let updatedSchema = value;
-            updatedSchema = arrayMove(updatedSchema, oldIndex, newIndex);
-            updatedSchema.forEach((e, index) => {
-              e.field = camelCase(`Question ${index + 1}`);
-            });
-            handleChange(updatedSchema);
-          }} />
-      {/* </Row> */}
+      <DroppableFieldList
+        items={value}
+        onChange={handleChange}
+        onSortEnd={({ oldIndex, newIndex }) => {
+          // Re-assigned avoid mutation.
+          let updatedSchema = value;
+          updatedSchema = arrayMove(updatedSchema, oldIndex, newIndex);
+          updatedSchema.forEach((e, index) => {
+            e.field = camelCase(`Question ${index + 1}`);
+          });
+          handleChange(updatedSchema);
+        }} />
       <Row justify="end">
         <Button
           style={{ marginTop: 16 }}
@@ -56,6 +54,6 @@ FieldList.propTypes = {
 };
 
 FieldList.defaultProps = {
-  onChange: () => {},
+  onChange: () => { },
   value: [],
 };

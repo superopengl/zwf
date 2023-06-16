@@ -3,9 +3,10 @@ import { Form, Typography, Input, Alert } from 'antd';
 import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import { FieldList } from './FieldList';
+import DocTemplateSelect from 'components/DocTemplateSelect';
 // import arrayMove from 'array-move';
 
-const { Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 // Import style
 
 export const createEmptyField = () => {
@@ -49,6 +50,7 @@ export const TaskTemplateBuilder = (props) => {
   const initialValues = {
     name: template?.name || '',
     description: template?.description || '',
+    docTemplateIds: template?.docTemplateIds || [],
     fields: isEmpty(template?.fields) ? [createEmptyField()] : template.fields
   };
 
@@ -60,6 +62,12 @@ export const TaskTemplateBuilder = (props) => {
     })
     onChange(allValues);
   };
+
+  const formItemLayoutProps = {
+    labelCol: { span: 4 },
+    wrapperCol: { span: 20 },
+    labelAlign: 'left'
+  }
 
   return <>
     <Form
@@ -77,12 +85,16 @@ export const TaskTemplateBuilder = (props) => {
     // id={formId}
     >
       <Form.Item
+        label="Name"
         name="name"
+        {...formItemLayoutProps}
         rules={[{ required: true, message: ' ' }]}>
         <Input placeholder="Task template name" maxLength={200} allowClear autoFocus size="large" />
       </Form.Item>
       <Form.Item
+        label="Description"
         name="description"
+        {...formItemLayoutProps}
         rules={[{ required: false, message: ' ' }]}>
         <Input.TextArea
           placeholder="Task template description"
@@ -90,26 +102,37 @@ export const TaskTemplateBuilder = (props) => {
           maxLength={1000}
           allowClear
           showCount
+          rows={5}
         />
       </Form.Item>
-
-      <Form.Item name="fields" noStyle rules={[
-        {
-          required: true,
-          validator: async (rule, value, callback) => {
-            if (!checkLabels(value)) {
-              throw new Error(
-                'All fields are required.'
-              );
-            }
-            if (!checkOptions(value)) {
-              throw new Error(
-                'Please provide options for questions. All options require names.'
-              );
-            }
+      <Form.Item
+        label="Doc templates"
+        name="docTemplateIds"
+        {...formItemLayoutProps}
+      >
+        <DocTemplateSelect showVariables={true}/>
+      </Form.Item>
+      <Form.Item 
+        label="Fields"
+        name="fields"
+        {...formItemLayoutProps}
+        rules={[
+          {
+            required: true,
+            validator: async (rule, value, callback) => {
+              if (!checkLabels(value)) {
+                throw new Error(
+                  'All fields are required.'
+                );
+              }
+              if (!checkOptions(value)) {
+                throw new Error(
+                  'Please provide options for questions. All options require names.'
+                );
+              }
+            },
           },
-        },
-      ]}>
+        ]}>
         <FieldList />
       </Form.Item>
       {/* <Form.Item>

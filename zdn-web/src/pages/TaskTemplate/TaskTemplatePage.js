@@ -1,25 +1,16 @@
 import {
-  DeleteOutlined, EditOutlined, PlusOutlined, SearchOutlined
+  PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Card, List, Modal, Space, Row, Input, Typography } from 'antd';
+import { Button, Card, List, Modal, Space, Row, Input, Typography } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
 import { deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
-import Icon, { SaveFilled } from '@ant-design/icons';
-import { VscOpenPreview } from 'react-icons/vsc';
-import { MdOpenInNew } from 'react-icons/md';
-import { getTaskTemplate, saveTaskTemplate } from 'services/taskTemplateService';
-import { v4 as uuidv4 } from 'uuid';
-import ReactDOM from 'react-dom';
-import { notify } from 'util/notify';
 import DropdownMenu from 'components/DropdownMenu';
-import { Descriptions } from 'antd';
 import HighlightingText from 'components/HighlightingText';
-import { FaTasks } from 'react-icons/fa';
-import TaskTemplateIcon from './TaskTemplateIcon';
+import {TaskTemplateIcon} from '../../components/entityIcon';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
