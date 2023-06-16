@@ -49,7 +49,7 @@ const SignUpForm = (props) => {
   return (
     <ContainerStyled>
       <Title level={2}>
-        <FormattedMessage id="menu.signUp" />
+        <FormattedMessage id="menu.join" />
       </Title>
       <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ role: 'member' }}>
         <Form.Item>
@@ -78,7 +78,7 @@ const SignUpForm = (props) => {
         />
         <Form.Item style={{ marginTop: '1rem' }}>
           <Button block type="primary" htmlType="submit" disabled={loading}>
-            <FormattedMessage id="menu.signUp" />
+            <FormattedMessage id="menu.join" />
           </Button>
         </Form.Item>
         {/* <Form.Item>

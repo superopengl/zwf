@@ -121,8 +121,8 @@ const HomePage = (props) => {
       visible: true,
     },
     {
-      path: '/signup',
-      name: <FormattedMessage id="menu.signUp" />,
+      path: '/signup/org',
+      name: <FormattedMessage id="menu.join" />,
       visible: !isLoggedIn,
     },
     {

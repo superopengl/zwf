@@ -130,7 +130,7 @@ export const TaskTemplateListPage = props => {
         <List
           size="small"
           grid={{
-            gutter: 16,
+            gutter: 24,
             xs: 1,
             sm: 1,
             md: 1,
