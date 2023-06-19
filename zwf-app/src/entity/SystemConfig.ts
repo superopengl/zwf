@@ -6,7 +6,7 @@ export class SystemConfig {
   @PrimaryColumn()
   key: string;
 
-  @Column('jsonb', {nullable: true})
-  value: any;
+  @Column('text', {nullable: true})
+  value: string;
 }
 

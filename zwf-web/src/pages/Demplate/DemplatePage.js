@@ -65,6 +65,7 @@ export const DemplatePage = () => {
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(true);
+  const [saving, setSaving] = React.useState(false);
   const [showingHelp, setShowingHelp] = React.useState(false);
   const [demplate, setDemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
   const [previewSider, setPreviewSider] = React.useState(false);
@@ -101,8 +102,10 @@ export const DemplatePage = () => {
       name: demplateName,
     };
 
+    setSaving(true)
     saveDemplate$(entity).pipe(
       tap(() => setDirty(false)),
+      finalize(() => setSaving(false))
     )
       .subscribe({
         next: () => {
@@ -200,7 +203,7 @@ export const DemplatePage = () => {
       extra={[
         <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => setShowingHelp(true)} /></Tooltip>,
         <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
-        <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
+        <Button key="save" type="primary" icon={<SaveFilled />} loading={saving} onClick={() => handleSave()}>Save</Button>
       ]}
     >
       {contextHolder}

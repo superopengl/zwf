@@ -35,7 +35,7 @@ const ConfigListPage = () => {
           allowClear
           autoFocus
           value={text}
-          onChange={e => handleNewItemKeyChange(item, e.target.value)}
+          onBlur={e => handleNewItemKeyChange(item, e.target.value)}
         />
         : text,
     },
@@ -47,7 +47,7 @@ const ConfigListPage = () => {
       // },
       render: (value, item) => <Input.TextArea
         autoSize={{ minRows: 1, maxRows: 3 }}
-        value={JSON.stringify(value)}
+        value={value}
         allowClear={item.isNew}
         onChange={e => handleInputChange(item, e.target.value)}
         onBlur={e => handleInputBlur(item, e.target.value)}
@@ -76,7 +76,7 @@ const ConfigListPage = () => {
 
   const handleInputBlur = async (item, value) => {
     if (item.isNew) return;
-    await saveConfig(item.key, JSON.parse(value));
+    await saveConfig(item.key, value);
     // await loadList();
   }
 
@@ -100,7 +100,7 @@ const ConfigListPage = () => {
     if (!isItemValid(item)) return;
     try {
       setLoading(true);
-      await saveConfig(item.key, JSON.parse(item.value));
+      await saveConfig(item.key, item.value);
       await loadList();
     } finally {
       setLoading(false);
