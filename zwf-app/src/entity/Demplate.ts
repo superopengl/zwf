@@ -27,6 +27,9 @@ export class Demplate {
   @Column({ type: 'text' })
   html: string;
 
+  @Column({ type: 'bytea', nullable: true })
+  pdfBuffer: Buffer;
+
   @Column({ type: 'varchar', array: true, default: '{}' })
   refFieldNames: string[];
 }

@@ -1,7 +1,7 @@
 import Icon, {
   CloseOutlined, EditOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { Button, Modal, Typography } from 'antd';
+import { Button, Modal, Typography, Row, Col } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { deleteDemplate$, listDemplate$ } from 'services/demplateService';
@@ -16,6 +16,7 @@ import { Descriptions } from 'antd';
 import { useCloneDemplateModal } from './useCloneDemplateModal';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { IoDuplicateOutline } from 'react-icons/io5';
+import { PdfPreview } from 'components/PdfPreview';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -114,6 +115,9 @@ export const DemplateListPage = () => {
     avatar: <DemplateIcon />,
     content: <>
       <Descriptions size="small">
+      <Descriptions.Item span={24}>
+          <PdfPreview file={item.pdfBuffer} thumbnail={true} />
+        </Descriptions.Item>
         <Descriptions.Item label="created" span={12}>
           <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
         </Descriptions.Item>
@@ -157,9 +161,9 @@ export const DemplateListPage = () => {
         locale={{
           emptyText: <div style={{ margin: '30px auto' }}>
             <Paragraph type="secondary">
-              There is no doc template. Let's <TextLink underline onClick={()=> navigate("/demplate/new")}>create a new doc template</TextLink>!
+              There is no doc template. Let's <TextLink underline onClick={() => navigate("/demplate/new")}>create a new doc template</TextLink>!
             </Paragraph>
-            
+
           </div>
         }}
         onItem={(row) => {
