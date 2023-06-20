@@ -124,11 +124,11 @@ export const DemplateListPage = () => {
       <Descriptions.Item span={24}>
           <PdfPreview file={item.pdfBuffer} thumbnail={true} />
         </Descriptions.Item>
-        <Descriptions.Item label="created" span={12}>
-          <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
+        <Descriptions.Item span={12}>
+          <TimeAgo prefix="Created" value={item.createdAt} showTime={false} direction="horizontal" />
         </Descriptions.Item>
-        <Descriptions.Item label="updated" span={12}>
-          <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
+        <Descriptions.Item span={12}>
+          <TimeAgo prefix="Updated" value={item.updatedAt} showTime={false} direction="horizontal" />
         </Descriptions.Item>
       </Descriptions>
     </>
