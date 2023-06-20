@@ -65,7 +65,6 @@ export const listDemplates = handlerWrapper(async (req, res) => {
       refFieldNames: true,
       createdAt: true,
       updatedAt: true,
-      pdfBuffer: true,
     }
   });
 
@@ -153,4 +152,14 @@ export const previewDemplatePdf = handlerWrapper(async (req, res) => {
   // res.setHeader('Content-disposition', `attachment; filename="${fileName}"`);
   // res.json(Buffer.from(pdfData).toJSON());
   res.send(pdfData);
+});
+
+export const getDemplatePdfBuffer = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { id } = req.params;
+
+  const demplate = await db.manager.findOneByOrFail(Demplate, {id});
+
+  res.setHeader('Content-type', 'application/pdf');
+  res.send(demplate.pdfBuffer);
 });

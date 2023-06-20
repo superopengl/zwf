@@ -27,3 +27,7 @@ export function renameDemplate$(id, name) {
 export function previewDemplatePdf$(html) {
   return request$('POST', `/demplate/preview`, null, { html }, 'blob');
 }
+
+export function getDemplatePdfBuffer$(id) {
+  return request$('GET', `/demplate/${id}/pdf`, null, null, 'blob');
+}
