@@ -1,2 +1,2 @@
 export const notes=`
-bugfix`
+pdf preview`
