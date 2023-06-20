@@ -24,7 +24,7 @@ const Container = styled.div`
 .react-pdf__Document {
   overflow: hidden;
   width: 100%;
-  gap: 8px;
+  gap: 24px;
   display: flex;
   flex-direction: column;
 }
@@ -62,7 +62,7 @@ export const PdfPreview = (props) => {
   return (
     <Container>
       <div className="page">
-        <Document file={file} onLoadSuccess={onDocumentLoadSuccess} noData={<Loading />} loading={<Loading />}>
+        <Document file={file} onLoadSuccess={onDocumentLoadSuccess} noData={null} loading={null}>
           {pages}
         </Document>
       </div>
