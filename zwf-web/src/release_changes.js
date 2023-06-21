@@ -1,2 +1,2 @@
 export const notes=`
-add client link`
+typo fix`
