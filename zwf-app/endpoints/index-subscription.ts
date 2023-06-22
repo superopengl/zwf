@@ -63,27 +63,31 @@ function logProgress(message: string, index: number, period: OrgSubscriptionPeri
 }
 
 async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
-  const { orgId } = period;
+  const { orgId, periodTo } = period;
   const resurgingCode = uuidv4();
 
   await m.update(User, { orgId }, { suspended: true });
   await m.update(Org, { id: orgId, suspended: false }, { suspended: true, resurgingCode });
 
-  const adminUsers = await getOrgAdminUsers(m, orgId);
-  const emailRequests = adminUsers.map(user => {
-    const ret: EmailRequest = {
-      to: user.email,
-      template: EmailTemplateType.SubscriptionSuspended,
-      shouldBcc: true,
-      vars: {
-        toWhom: getEmailRecipientName(user),
-        url: `${process.env.ZWF_WEB_DOMAIN_NAME}/resurge/${resurgingCode}`
-      }
-    };
-    return ret;
-  });
+  const daysPassed = moment().diff(moment(periodTo), 'days');
 
-  await enqueueEmailInBulk(m, emailRequests);
+  if ([0, 1, 3, 7, 15, 30].includes(daysPassed)) {
+    const adminUsers = await getOrgAdminUsers(m, orgId);
+    const emailRequests = adminUsers.map(user => {
+      const ret: EmailRequest = {
+        to: user.email,
+        template: EmailTemplateType.SubscriptionSuspended,
+        shouldBcc: true,
+        vars: {
+          toWhom: getEmailRecipientName(user),
+          url: `${process.env.ZWF_WEB_DOMAIN_NAME}/resurge/${resurgingCode}`
+        }
+      };
+      return ret;
+    });
+
+    await enqueueEmailInBulk(m, emailRequests);
+  }
 }
 
 start(JOB_NAME, async () => {
