@@ -64,15 +64,16 @@ function logProgress(message: string, index: number, period: OrgSubscriptionPeri
 
 async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const { orgId, periodTo } = period;
-  const resurgingCode = uuidv4();
 
   await m.update(User, { orgId }, { suspended: true });
-  await m.update(Org, { id: orgId, suspended: false }, { suspended: true, resurgingCode });
+  await m.update(Org, { id: orgId, suspended: false }, { suspended: true, resurgingCode: uuidv4() });
 
   const daysPassed = moment().diff(moment(periodTo), 'days');
 
   if ([0, 1, 3, 7, 15, 30].includes(daysPassed)) {
     const adminUsers = await getOrgAdminUsers(m, orgId);
+    const { resurgingCode } = await m.findOneBy(Org, { id: orgId });
+
     const emailRequests = adminUsers.map(user => {
       const ret: EmailRequest = {
         to: user.email,
