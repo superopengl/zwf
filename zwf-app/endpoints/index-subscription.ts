@@ -67,7 +67,7 @@ async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const resurgingCode = uuidv4();
 
   await m.update(User, { orgId }, { suspended: true });
-  await m.update(Org, { id: orgId }, { suspended: true, resurgingCode });
+  await m.update(Org, { id: orgId, suspended: false }, { suspended: true, resurgingCode });
 
   const adminUsers = await getOrgAdminUsers(m, orgId);
   const emailRequests = adminUsers.map(user => {
