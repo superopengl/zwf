@@ -13,12 +13,14 @@ import { useNavigate } from 'react-router-dom';
 import { Descriptions } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
-import {CheckboxButton} from 'components/CheckboxButton';
+import { CheckboxButton } from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 import { ZeventContext } from 'contexts/ZeventContext';
+import { Image } from 'antd';
+import { getPublicFileUrl } from 'services/fileService';
 
-const { Paragraph, Text } = Typography;
+const { Paragraph, Text, Link: TextLink } = Typography;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
@@ -236,14 +238,21 @@ export const ClientTaskListPage = () => {
           rowKey="id"
           renderItem={item => <List.Item>
             <Card
-              title={<><HighlightingText value={item.name} search={query.text} /></>}
+              title={<HighlightingText value={item.name} search={query.text} />}
+
               // headStyle={{paddingRight: 8}}
               extra={[
-                <Tag key="org">{item.orgName}</Tag>,
-                <Badge key="count" showZero={false} 
-                count={zevents.find(z => z.payload.taskId === item.id && !z.payload.ackAt) ? '!' : 0} 
-                style={{position: 'absolute'}}
-                offset={[30, -32]}
+                <TextLink href={item.orgWebsiteUrl} target="_blank"
+                  key="org"
+                  onClick={e => e.stopPropagation()}
+                >{item.orgLogoFileId ?
+                  <Image src={getPublicFileUrl(item.orgLogoFileId)} height={32} preview={false} alt={item.orgName} /> :
+                  <Text type="secondary">{item.orgName}</Text>}
+                </TextLink>,
+                <Badge key="count" showZero={false}
+                  count={zevents.find(z => z.payload.taskId === item.id && !z.payload.ackAt) ? '!' : 0}
+                  style={{ position: 'absolute' }}
+                  offset={[30, -32]}
                 />
               ]}
               onClick={() => navigate(`/task/${item.id}`)}

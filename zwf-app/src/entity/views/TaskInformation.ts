@@ -36,6 +36,8 @@ import { OrgClient } from '../OrgClient';
       'u.id as "userId"',
       't."orgId" as "orgId"',
       'o."name" as "orgName"',
+      'o."logoFileId" as "orgLogoFileId"',
+      'o."websiteUrl" as "orgWebsiteUrl"',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
@@ -74,6 +76,12 @@ import { OrgClient } from '../OrgClient';
 
   @ViewColumn()
   orgName: string;
+
+  @ViewColumn()
+  orgLogoFileId: string;
+
+  @ViewColumn()
+  orgWebsiteUrl: string;
 
   @ViewColumn()
   email: string;
