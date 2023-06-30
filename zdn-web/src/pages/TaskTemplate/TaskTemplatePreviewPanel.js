@@ -6,7 +6,7 @@ import FormBuilder from 'antd-form-builder'
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 
 const Container = styled.div`
@@ -65,7 +65,7 @@ export const TaskTemplatePreviewPanel = props => {
   return (
     <Container style={props.style}>
       <Title level={3}>{value.name}</Title>
-      <Paragraph type="secondary">{value.description}</Paragraph>
+      <p type="secondary">{value.description}</p>
       <Divider style={{ marginTop: 4 }} />
       <Form
         ref={previewFormRef}
