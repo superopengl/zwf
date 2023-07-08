@@ -19,7 +19,7 @@ export const listConfig = handlerWrapper(async (req, res) => {
 });
 
 export const saveConfig = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'system', 'admin');
   const orgId = getOrgIdFromReq(req);
   const { key, value } = req.body;
   assert(key, 400, 'Translation value is empty');
