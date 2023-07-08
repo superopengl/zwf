@@ -8,6 +8,7 @@ import PropTypes from 'prop-types';
 import RawHtmlDisplay from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
+import {isEmpty} from 'lodash';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -105,7 +106,7 @@ export const DocTemplatePreviewPanel = props => {
   }
   return (
     <Container style={props.style}>
-      <StyledCard title="Test by setting variables" style={{ marginBottom: 30 }}
+      {!isEmpty(state.varBag) && <StyledCard title="Test by setting variables" style={{ marginBottom: 30 }}
         extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
         // size="small"
       >
@@ -119,7 +120,7 @@ export const DocTemplatePreviewPanel = props => {
             <Input placeholder="var value"/>
           </Form.Item>)}
         </Form>
-      </StyledCard>
+      </StyledCard>}
       <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
       <Paragraph type="secondary" style={{ textAlign: 'center' }}>{docTemplate?.description}</Paragraph>
       <Divider style={{ marginTop: 4 }} />
