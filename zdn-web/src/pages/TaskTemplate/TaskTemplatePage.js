@@ -101,7 +101,6 @@ export const TaskTemplatePage = props => {
 
     await saveTaskTemplate(entity);
     notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
-    goBack();
   }
 
   const debugMode = false;

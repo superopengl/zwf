@@ -1,10 +1,13 @@
-import { Typography, Form, Divider } from 'antd';
+import { Typography, Form, Divider, Input, Card, Button } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FormBuilder from 'antd-form-builder'
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
+import RawHtmlDisplay from 'components/RawHtmlDisplay';
+import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
+import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -17,27 +20,101 @@ const Container = styled.div`
   // height: 100%;
 `;
 
+const getInitState = (html, initVarBag) => {
+  const { vars, invalidVars } = extractVarsFromDocTemplateBody(html);
+  const varBag = vars.reduce((pre, cur) => {
+    pre[cur] = '';
+    return pre;
+  }, {});
+
+  if (initVarBag) {
+    for (const k in varBag) {
+      varBag[k] = initVarBag[k];
+    }
+  }
+
+  return {
+    varBag,
+    invalidVars,
+    html,
+    rendered: renderDocTemplateBodyWithVarBag(html, varBag)
+  }
+}
 
 export const DocTemplatePreviewPanel = props => {
 
-  const { value, type, debug } = props;
+  const { value: docTemplate, type, debug } = props;
 
   const [clientFieldSchema, setClientFieldSchema] = React.useState([]);
   const [agentFieldSchema, setAgentFieldSchema] = React.useState([]);
-  const previewFormRef = React.createRef();
+  const [html, setHtml] = React.useState('');
+  const [vars, setVars] = React.useState([]);
+  const [invalidVars, setInvalidVars] = React.useState([]);
+  const form = React.createRef();
+
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'setValue':
+        const varBag = {
+          ...state.varBag,
+          ...action.value
+        };
+        return {
+          ...state,
+          varBag,
+          rendered: renderDocTemplateBodyWithVarBag(state.html, varBag)
+        }
+      case 'load':
+        const oldVarBag = state.varBag;
+        const html = action.value;
+        const newState = getInitState(html, oldVarBag);
+        return newState;
+      case 'reset': {
+        form.current?.resetFields();
+        return getInitState(state.html);
+      }
+      default:
+        return state;
+    }
+  }
+
+  const [state, dispatch] = React.useReducer(reducer, getInitState(docTemplate?.html));
 
   const officialMode = type === 'agent';
 
-  if(!value) {
-    return null;
+  React.useEffect(() => {
+    if (docTemplate) {
+      dispatch({ type: 'load', value: docTemplate.html });
+    }
+  }, [docTemplate]);
+
+  const handleVarValueChange = (changedValue, allValues) => {
+    dispatch({ type: 'setValue', value: changedValue });
   }
 
+  const handleResetVarBag = () => {
+    dispatch({ type: 'reset' });
+  }
   return (
     <Container style={props.style}>
-      <Title level={3}>{value.name}</Title>
-      <p type="secondary">{value.description}</p>
+      <Card title="Test by setting variables" style={{ marginBottom: 30 }}
+      extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
+      >
+        <Form
+          ref={form}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          onValuesChange={handleVarValueChange}
+        >
+          {Object.entries(state.varBag || {}).map(([k, v]) => <Form.Item key={k} label={k} name={k}>
+            <Input />
+          </Form.Item>)}
+        </Form>
+      </Card>
+      <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
+      <Paragraph type="secondary" style={{ textAlign: 'center' }}>{docTemplate?.description}</Paragraph>
       <Divider style={{ marginTop: 4 }} />
-      <pre><small>{JSON.stringify(value.html, null, 2)}</small></pre>
+      <RawHtmlDisplay value={state.rendered} />
       {debug && <pre><small>{JSON.stringify(clientFieldSchema, null, 2)}</small></pre>}
     </Container >
   );

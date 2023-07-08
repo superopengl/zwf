@@ -137,7 +137,6 @@ export const DocTemplatePage = (props) => {
 
     await saveDocTemplate(entity);
     notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
-    goBack();
   }
 
   return <LayoutStyled>
