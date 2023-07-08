@@ -12,14 +12,16 @@ import { getTaskTemplate, saveTaskTemplate } from 'services/taskTemplateService'
 import { v4 as uuidv4 } from 'uuid';
 import ReactDOM from 'react-dom';
 import { notify } from 'util/notify';
+import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 
 const { Title, Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto;
-  // background-color: #ffffff;
+  // background-color: #ffff00;
   // height: calc(100vh - 64px);
-  height: 100%;
+  height: calc(100vh - 48px - 48px);
+  overflow: hidden;
   // max-width: 900px;
 
   .ant-page-header-content {
@@ -106,10 +108,12 @@ export const TaskTemplatePage = props => {
   const debugMode = false;
 
   return (
+    // <PageContainer>
+
     <LayoutStyled>
       <Loading loading={loading}>
-        <Layout style={{ height: '100%' }}>
-          <Layout.Content>
+        <Layout style={{height: 'calc(100vh - 48px - 48px)', overflow: 'hidden'}}>
+          <Layout.Content style={{overflowY: 'auto'}}>
             <PageHeader
               style={{ maxWidth: 900, margin: '0 auto' }}
               title={isNew ? 'New Task Template' : 'Edit Task Template'}
@@ -129,9 +133,8 @@ export const TaskTemplatePage = props => {
               />}
             </PageHeader>
           </Layout.Content>
-          <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} >
+          <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{overflowY: 'auto', marginLeft: 30}}>
             <div style={{ padding: 16 }}>
-
               <Row justify="center" style={{ marginBottom: 40 }}>
                 <Text type="warning">Preview</Text>
               </Row>
@@ -163,6 +166,8 @@ export const TaskTemplatePage = props => {
         </Modal>
       </Loading>
     </LayoutStyled >
+    // </PageContainer>
+
   );
 };
 
