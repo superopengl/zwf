@@ -9,8 +9,15 @@ import MoneyAmount from 'components/MoneyAmount';
 import { orderBy } from 'lodash';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 const {Text} = Typography;
+
+const StyledReceiptTable = styled(Table)`
+.ant-table {
+  margin: -8px !important;
+}
+`;
 
 const OrgSubscriptionHistoryPanel = (props) => {
   const { data } = props;
@@ -69,7 +76,7 @@ const OrgSubscriptionHistoryPanel = (props) => {
       align: 'center',
       width: 370,
       render: (payments, item) => {
-        return <Table
+        return <StyledReceiptTable
           columns={[
             {
               title: 'link',
@@ -99,7 +106,6 @@ const OrgSubscriptionHistoryPanel = (props) => {
           dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
-          style={{ margin: 0 }}
           locale={{
             emptyText: '1 license 14 day trial'
           }}
