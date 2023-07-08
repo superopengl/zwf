@@ -66,10 +66,7 @@ const DocTemplateForm = (props) => {
       <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
        <RickTextInput />
       </Form.Item>
-      {/* <Form.Item name="md" rules={[{ required: true, message: ' ' }]}>
-        <MarkdownEditor style={{ height: windowHeight - 340 }}
-        />
-      </Form.Item> */}
+
     </Form >
     // </Space>
   );
