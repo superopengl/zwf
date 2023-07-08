@@ -20,6 +20,14 @@ const Container = styled.div`
   // height: 100%;
 `;
 
+const StyledCard = styled(Card)`
+// box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+.ant-card-body, .ant-card-head {
+  background-color: rgba(0,0,0,0.05);
+  // padding: 16px;
+}
+`;
+
 const getInitState = (html, initVarBag) => {
   const { vars, invalidVars } = extractVarsFromDocTemplateBody(html);
   const varBag = vars.reduce((pre, cur) => {
@@ -97,8 +105,9 @@ export const DocTemplatePreviewPanel = props => {
   }
   return (
     <Container style={props.style}>
-      <Card title="Test by setting variables" style={{ marginBottom: 30 }}
-      extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
+      <StyledCard title="Test by setting variables" style={{ marginBottom: 30 }}
+        extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
+        // size="small"
       >
         <Form
           ref={form}
@@ -107,10 +116,10 @@ export const DocTemplatePreviewPanel = props => {
           onValuesChange={handleVarValueChange}
         >
           {Object.entries(state.varBag || {}).map(([k, v]) => <Form.Item key={k} label={k} name={k}>
-            <Input />
+            <Input placeholder="var value"/>
           </Form.Item>)}
         </Form>
-      </Card>
+      </StyledCard>
       <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
       <Paragraph type="secondary" style={{ textAlign: 'center' }}>{docTemplate?.description}</Paragraph>
       <Divider style={{ marginTop: 4 }} />

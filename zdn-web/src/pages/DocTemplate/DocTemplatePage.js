@@ -179,7 +179,7 @@ export const DocTemplatePage = (props) => {
         visible={preview}
         onOk={() => setPreview(false)}
         onCancel={() => setPreview(false)}
-        closable
+        closable={false}
         destroyOnClose
         maskClosable
         footer={null}

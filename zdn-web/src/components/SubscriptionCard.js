@@ -9,7 +9,7 @@ import { Divider } from 'antd';
 
 const { Title, Text } = Typography;
 
-  const StyledCard = styled(Card)`
+const StyledCard = styled(Card)`
 padding: 10px;
 text-align: center;
 height: 100%;
@@ -37,10 +37,10 @@ export const SubscriptionCard = props => {
   const { onClick, title, description, icon, price, unit, active, interactive } = props;
 
   const classNameArray = [];
-  if(active){
+  if (active) {
     classNameArray.push('subscription-active');
   }
-  if(interactive) {
+  if (interactive) {
     classNameArray.push('interactive');
   }
 
@@ -49,7 +49,7 @@ export const SubscriptionCard = props => {
       className={classNameArray.join(' ')}
       title={<>
         {/* {icon} */}
-        <div style={{textTransform: 'uppercase', fontSize: 14}}>{title}</div>
+        <div style={{ textTransform: 'uppercase', fontSize: 14 }}>{title}</div>
       </>}
       hoverable={interactive && !active}
       onClick={onClick}
@@ -62,9 +62,9 @@ export const SubscriptionCard = props => {
         title={<div style={{ display: 'flex', flexDirection: 'column' }}>
           {/* <Text style={{ fontSize: '2.2rem', margin: '0 4px', color: '#13c2c2' }}><sup><small>$</small></sup> {price}</Text> */}
           <div>
-            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }}  value={price} />
-            </div>
-          <Text style={{fontSize: 14}} type="secondary">{unit}</Text>
+            <MoneyAmount style={{ fontSize: '2.2rem', margin: '0 4px' }} value={price} />
+          </div>
+          <Text style={{ fontSize: 14 }} type="secondary">{unit}</Text>
           <Divider />
         </div>}
         description={description}
