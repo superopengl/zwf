@@ -29,6 +29,7 @@ import {HiOutlineUserGroup} from 'react-icons/hi';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
+const ClientBoardPage = loadable(() => import('pages/ClientBoard/ClientBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
@@ -82,7 +83,7 @@ const ROUTES = [
     path: '/dashboard',
     name: <FormattedMessage id="menu.board" />,
     icon: <Icon component={() => <HiOutlineViewBoards />} />,
-    roles: ['admin', 'agent']
+    roles: ['admin', 'agent', 'client']
   },
   {
     path: '/watchlist',
@@ -199,7 +200,6 @@ const AppLoggedIn = props => {
   const isAdmin = role === 'admin';
   const isAgent = role === 'agent';
   const isClient = role === 'client';
-  const isGuest = role === 'guest';
 
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
@@ -316,7 +316,8 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute visible={isAgent || isAdmin} exact path="/dashboard" component={isSystem ? SystemBoardPage : AdminBoardPage} />
+      <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage :
+        isAdmin || isAgent ? AdminBoardPage : ClientBoardPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={MyTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
@@ -334,7 +335,7 @@ const AppLoggedIn = props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      <Redirect to={(isSystem || isAdmin || isAgent) ? '/dashboard' : '/stock'} />
+      <Redirect to={(isSystem || isAdmin || isAgent) ? '/dashboard' : '/dashboard'} />
     </Switch>
 
     <ChangePasswordModal
