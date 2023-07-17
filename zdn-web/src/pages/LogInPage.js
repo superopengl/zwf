@@ -36,7 +36,7 @@ const LogoContainer = styled.div`
 
 const { Title } = Typography;
 const LogInPage = props => {
-  const [sending, setLoading] = React.useState(false);
+  const [loading, setLoading] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
 
@@ -49,7 +49,7 @@ const LogInPage = props => {
   }
 
   const handleSubmit = values => {
-    if (sending) {
+    if (loading) {
       return;
     }
 
@@ -110,13 +110,13 @@ const LogInPage = props => {
           <Form.Item label="Email" name="name"
             rules={[{ required: true, validator: validateName, whitespace: true, max: 100, message: 'Please input valid email address' }]}
           >
-            <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={sending} autoFocus={true} />
+            <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={loading} autoFocus={true} />
           </Form.Item>
           <Form.Item label="Password" name="password" autoComplete="current-password" rules={[{ required: true, message: 'Please input password' }]}>
-            <Input.Password placeholder="Password" autoComplete="current-password" maxLength="50" disabled={sending} />
+            <Input.Password placeholder="Password" autoComplete="current-password" maxLength="50" disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={sending}>Log In</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Log In</Button>
           </Form.Item>
 
           {/* <Form.Item>
