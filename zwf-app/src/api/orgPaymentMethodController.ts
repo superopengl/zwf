@@ -47,7 +47,7 @@ export const deleteOrgPaymentMethod = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
-  await db.getRepository(OrgPaymentMethod).softDelete({
+  await db.getRepository(OrgPaymentMethod).delete({
     id,
     orgId,
     primary: false

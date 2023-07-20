@@ -33,6 +33,7 @@ import { Tag } from "../entity/Tag";
 import { SystemConfig } from "../entity/SystemConfig";
 import { Femplate } from "../entity/Femplate";
 import { Demplate } from "../entity/Demplate";
+import { sendReactivatingEmailForOrg } from "../utils/sendReactivatingEmailForOrg";
 
 const TRIAL_PERIOD_DAYS = 14;
 
@@ -219,3 +220,14 @@ async function createBuiltInTemplate(m: EntityManager, orgId: any) {
     }
   }
 }
+
+
+export const sendReactivatingEmail = handlerWrapper(async (req, res) => {
+  assertRole(req, ['system']);
+  const { id } = req.params;
+
+  await sendReactivatingEmailForOrg(db.manager, id);
+
+  res.json();
+});
+

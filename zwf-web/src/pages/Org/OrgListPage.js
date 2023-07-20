@@ -5,7 +5,8 @@ import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
   ClearOutlined,
-  CheckOutlined
+  CheckOutlined,
+  SendOutlined
 } from '@ant-design/icons';
 
 import { impersonate$ } from 'services/authService';
@@ -13,7 +14,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { HighlightingText } from 'components/HighlightingText';
 import TagFilter from 'components/TagFilter';
-import { listOrgs$ } from 'services/orgService';
+import { listOrgs$, sendReactivatingEmail$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
 import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -24,6 +25,8 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
 import { IoKeyOutline } from 'react-icons/io5';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { BsFillSendFill } from 'react-icons/bs';
+import { notify } from 'util/notify';
 
 const Container = styled.div`
 
@@ -145,6 +148,10 @@ const OrgListPage = () => {
                 menu: 'Negotiated price',
                 onClick: () => handleOpenPromotionCode(org)
               },
+              org.suspended ? {
+                menu: 'Send reactivating email',
+                onClick: () => handleResendReactivateEmail(org)
+              } : null,
             ]}
           />
         </Row>
@@ -237,6 +244,28 @@ const OrgListPage = () => {
   const handleOpenPromotionCode = (org) => {
     setCurrentOrg(org);
     setPromotionCodeDrawerVisible(true);
+  }
+
+  const handleResendReactivateEmail = (org) => {
+    modal.confirm({
+      title: 'Send Reactivating Email',
+      icon: <Icon component={BsFillSendFill} />,
+      content: <>Send reactivating email to the admins of org <Text code>{org.name}</Text>?</>,
+      okText: 'Yes, send',
+      closable: true,
+      maskClosable: true,
+      autoFocusButton: 'cancel',
+      onOk: () => {
+        sendReactivatingEmail$(org.id).subscribe({
+          next: () => {
+            notify.success('Successfully sent out', <>The reactivating email has been sent out to the admins of org <Text code>{org.name}</Text>.</>)
+          }
+        });
+      },
+      cancelButtonProps: {
+        type: 'text'
+      }
+    });
   }
 
   const handleTagFilterChange = (tags) => {

@@ -526,6 +526,19 @@ paths:
           required: true
       responses:
         200:
+          description: OK
+  /org/reactivating_email/:id:
+    post:
+      operationId: sendReactivatingEmail
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /tag:
     get:
       operationId: listTags

@@ -20,3 +20,7 @@ export function terminateOrg$(payload) {
   return httpDelete$(`/org`, payload);
 }
 
+export function sendReactivatingEmail$(orgId) {
+  return httpPost$(`/org/reactivating_email/${orgId}`);
+}
+
