@@ -3,3 +3,4 @@ devops/.terraform
 devops/.env.prod
 *.map
 .env
+zdn-web/build
