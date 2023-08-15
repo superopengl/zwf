@@ -39,7 +39,7 @@ export async function searchOrgClients(orgId: string, queryInfo: StockUserParams
   const count = await query.getCount();
 
   const data = await query.orderBy(orderField, orderDirection)
-    .addOrderBy('email', 'ASC')
+    // .addOrderBy('email', 'ASC')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .getMany();

@@ -1,5 +1,5 @@
 
-import { getRepository, In } from 'typeorm';
+import { getRepository, In, getManager } from 'typeorm';
 import { assert } from './assert';
 import * as _ from 'lodash';
 import { Task } from '../entity/Task';
@@ -10,16 +10,17 @@ import { TaskStatus } from '../types/TaskStatus';
 import { guessDisplayNameFromFields } from './guessDisplayNameFromFields';
 import { DocTemplate } from '../entity/DocTemplate';
 import { TaskDoc } from '../types/TaskDoc';
+import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 
 
 function prefillFieldsWithProtofolio(taskTemplateFields, portfolioFields) {
   if (!portfolioFields) return taskTemplateFields;
 
   const map = new Map(portfolioFields.map(({ name, value }) => [name, value]));
-  const fields = taskTemplateFields.map(taskTemplate => (
+  const fields = taskTemplateFields.map(f => (
     {
-      ...taskTemplate,
-      value: map.get(taskTemplate.name)
+      ...f,
+      value: map.get(f.name)
     }
   ));
 
@@ -66,6 +67,37 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   task.fields = fields;
   // task.docs = mapDocTemplatesToGenDocs(docTemplates);
   task.status = TaskStatus.TODO;
+
+  return task;
+};
+
+export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email) => {
+  assert(taskTemplateId, 400, 'taskTemplateId is not specified');
+  assert(email, 400, 'email is not specified');
+
+  let task: Task;
+  await getManager().transaction(async m => {
+    const taskTemplate = await m.findOne(TaskTemplate, taskTemplateId);
+    assert(taskTemplate, 404, 'taskTemplate is not found');
+
+    const user = await ensureClientOrGuestUser(m, email);
+
+    task = new Task();
+  
+    const fields = prefillFieldsWithProtofolio(taskTemplate.fields, null);
+  
+    // task.id = uuidv4();
+    task.name = taskTemplate.name;
+    task.userId = user.id;
+    task.taskTemplateId = taskTemplateId;
+    task.portfolioId = null;
+    task.fields = fields;
+    task.orgId = taskTemplate.orgId;
+    // task.docs = mapDocTemplatesToGenDocs(docTemplates);
+    task.status = TaskStatus.TODO;
+
+    await m.insert(Task, task);
+  });
 
   return task;
 };
