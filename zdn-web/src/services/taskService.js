@@ -1,7 +1,11 @@
-import { httpGet, httpPost, httpDelete, httpPut$ } from './http';
+import { httpGet, httpPost, httpDelete, httpPut$, httpGet$ } from './http';
 
 export async function getTask(id) {
   return httpGet(`task/${id}`);
+}
+
+export function getTask$(id) {
+  return httpGet$(`task/${id}`);
 }
 
 export async function saveTask(item) {

@@ -1,3 +1,4 @@
+import { TaskInformation } from './../entity/views/TaskInformation';
 
 import * as moment from 'moment';
 import { getManager, getRepository, Not, QueryRunner } from 'typeorm';
@@ -24,6 +25,10 @@ import { sendTodoEmail } from '../utils/sendTodoEmail';
 import { TaskComment } from '../entity/TaskComment';
 import { sendSignedEmail } from '../utils/sendSignedEmail';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { Role } from '../types/Role';
+import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
+import { getRoleFromReq } from '../utils/getRoleFromReq';
+import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const generateTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -246,10 +251,26 @@ export const listTask = handlerWrapper(async (req, res) => {
 });
 
 export const getTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  // assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
-  const repo = getRepository(Task);
-  const task = await repo.findOne(id);
+  const role = getRoleFromReq(req);
+  const repo = getRepository(TaskInformation);
+  let task: TaskInformation;
+  switch (role) {
+    case Role.Guest:
+      task = await repo.findOne({ id, role: Role.Guest });
+      break;
+    case Role.Admin:
+    case Role.Agent:
+      task = await repo.findOne({ id, orgId: getOrgIdFromReq(req) });
+      break;
+    case Role.Client:
+      task = await repo.findOne({ id, userId: getUserIdFromReq(req) });
+      break;
+    default:
+      break;
+  }
+
   assert(task, 404);
 
   res.json(task);
