@@ -14,6 +14,7 @@ import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import TaskClientSelectModal from 'components/TaskClientSelectModal';
 import { createNewTask } from 'services/taskService';
 import { notify } from 'util/notify';
+import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -39,6 +40,7 @@ export const TaskTemplateListPage = props => {
   const [loading, setLoading] = React.useState(true);
   const [selectClientVisible, setSelectClientVisible] = React.useState(false);
   const [currentTemplateId, setCurrentTemplateId] = React.useState();
+  const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
 
   const loadList = async () => {
     setLoading(true);
@@ -182,6 +184,12 @@ export const TaskTemplateListPage = props => {
               extra={<DropdownMenu
                 config={[
                   {
+                    menu: 'Preview',
+                    onClick: () => {
+                      setPreviewTaskTemplate(item);
+                    }
+                  },
+                  {
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
                   },
@@ -224,6 +232,20 @@ export const TaskTemplateListPage = props => {
         onOk={handleCreateTask}
         onCancel={handleCancelCreateTask}
       />
+      <Modal
+          visible={!!previewTaskTemplate}
+          onOk={() => setPreviewTaskTemplate(null)}
+          onCancel={() => setPreviewTaskTemplate(null)}
+          closable
+          destroyOnClose
+          maskClosable
+          footer={null}
+        >
+          <TaskTemplatePreviewPanel
+            value={previewTaskTemplate}
+            type="agent"
+          />
+        </Modal>
     </LayoutStyled >
   );
 };
