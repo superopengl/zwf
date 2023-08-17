@@ -21,6 +21,7 @@ import { TaskStatus } from '../../types/TaskStatus';
     .innerJoin(UserProfile, 'p', `u."profileId" = p.id`)
     .select([
       't.id as id',
+      't."deepLinkId" as "deepLinkId"',
       't.name as name',
       't.fields as fields',
       't.docs as docs',
@@ -34,6 +35,9 @@ import { TaskStatus } from '../../types/TaskStatus';
 }) export class TaskInformation {
   @ViewColumn()
   id: string;
+
+  @ViewColumn()
+  deepLinkId: string;
 
   @ViewColumn()
   name: string;

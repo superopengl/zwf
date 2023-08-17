@@ -8,6 +8,10 @@ export function getTask$(id) {
   return httpGet$(`task/${id}`);
 }
 
+export function getDeepLinkedTask$(deepLinkId) {
+  return httpGet$(`task/deep/${deepLinkId}`);
+}
+
 export async function saveTask(item) {
   return httpPost('task', item);
 }

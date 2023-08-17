@@ -597,6 +597,19 @@ paths:
       responses:
         200:
           description: OK
+  /task/deep/{deepLinkId}:
+    get:
+      operationId: getDeepLinkedTask
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: deepLinkId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
   /task/search:
     post:
       operationId: searchTask
