@@ -6,13 +6,13 @@ import { Button, Card, List, Modal, Space, Row, Col, Input, Typography } from 'a
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
+import { cloneTaskTemplate$, deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import HighlightingText from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import TaskClientSelectModal from 'components/TaskClientSelectModal';
-import { createNewTask } from 'services/taskService';
+import { createNewTask$ } from 'services/taskService';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 
@@ -90,10 +90,19 @@ export const TaskTemplateListPage = props => {
     props.history.push('/task_template/new');
   }
 
+  const handleClone = item => {
+    cloneTaskTemplate$(item.id)
+    .subscribe(cloned => {
+      // console.log(task);
+      notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/task_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
+      loadList();
+    })
+  }
+
   const handleCreateTask = async clientEmail => {
     const templateId = currentTemplateId;
 
-    createNewTask(templateId, clientEmail)
+    createNewTask$(templateId, clientEmail)
       .subscribe(task => {
         // console.log(task);
         handleCancelCreateTask();
@@ -192,6 +201,10 @@ export const TaskTemplateListPage = props => {
                   {
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
+                  },
+                  {
+                    menu: 'Clone',
+                    onClick: () => handleClone(item)
                   },
                   // {
                   //   menu: 'Preview',

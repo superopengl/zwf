@@ -23,6 +23,7 @@ import { TaskStatus } from '../../types/TaskStatus';
       't.id as id',
       't."deepLinkId" as "deepLinkId"',
       't.name as name',
+      't.description as description',
       't.fields as fields',
       't.docs as docs',
       't.status as status',
@@ -41,6 +42,9 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   name: string;
+
+  @ViewColumn()
+  description: string;
 
   @ViewColumn()
   fields: any;

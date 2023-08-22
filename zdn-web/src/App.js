@@ -30,7 +30,7 @@ const AppLoggedIn = loadable(() => import('AppLoggedIn'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const AuthorizePage = loadable(() => import('pages/UserAuthOrgPage'));
-const GuestTaskPage = loadable(() => import('pages/MyTask/DeepLinkTaskPage'))
+const GuestTaskPage = loadable(() => import('pages/MyTask/GuestTaskPage'))
 
 const localeDic = {
   'en-US': {

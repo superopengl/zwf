@@ -285,6 +285,36 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
+export const saveDeepLinkedTask = handlerWrapper(async (req, res) => {
+  const role = getRoleFromReq(req);
+  assert(role === Role.Guest, 404);
+  const { deepLinkId } = req.params;
+  const payload = req.body;
+
+  let task: Task;
+  await getManager().transaction(async m => {
+    task = await m.findOne(Task, { deepLinkId });
+    assert(task, 404);
+
+    let hasChanged = false;
+    for(const field of task.fields) {
+      const {name, value: oldValue} = field;
+      const newValue = payload[name];
+      if(oldValue !== newValue) {
+        hasChanged = true;
+        field.value = newValue;
+      }
+    }
+
+    if(hasChanged) {
+      await m.save(task);
+    }
+  });
+
+
+  res.json();
+});
+
 export const deleteTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
