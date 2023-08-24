@@ -1,8 +1,7 @@
 import {
   PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Row, Col, Input, Typography } from 'antd';
-
+import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -162,13 +161,13 @@ export const TaskTemplateListPage = props => {
         <List
           size="small"
           grid={{
-            gutter: [24, 24],
+            gutter: [12, 12],
             xs: 1,
             sm: 1,
             md: 1,
-            lg: 2,
-            xl: 3,
-            xxl: 4
+            lg: 1,
+            xl: 2,
+            xxl: 3
           }}
           dataSource={filteredList}
           loading={loading}
@@ -186,10 +185,7 @@ export const TaskTemplateListPage = props => {
               bordered={true}
               hoverable
               // type="inner"
-              title={<Space>
-                <TaskTemplateIcon />
-                <HighlightingText search={searchText} value={item.name} />
-              </Space>}
+              title={<Tooltip title={item.name}><Text><TaskTemplateIcon /><HighlightingText search={searchText} value={item.name} /></Text></Tooltip>}
               extra={<DropdownMenu
                 config={[
                   {
@@ -226,16 +222,17 @@ export const TaskTemplateListPage = props => {
               bodyStyle={{ paddingTop: 16 }}
               onClick={() => handleEdit(item)}
             >
+              <Paragraph>{item.description}</Paragraph>
               <Space size="large">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
                 <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-              {item.docNames?.length && <Space size="small" direction="vertical" style={{ marginTop: 20 }}>
-                {item.docNames?.map((d, i) => <div key={i}>
+              {item.docNames?.length && <Row style={{ marginTop: 20 }}>
+                {item.docNames?.map((d, i) => <Col key={i}>
                   <DocTemplateIcon />{d}
-                </div>)}
-              </Space>}
+                </Col>)}
+              </Row>}
             </Card>
           </List.Item>}
         />
