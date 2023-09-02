@@ -1,6 +1,6 @@
 import { httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$ } from './http';
 
-export async function getTask(id) {
+export function getTask(id) {
   return httpGet(`task/${id}`);
 }
 

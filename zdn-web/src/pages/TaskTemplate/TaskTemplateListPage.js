@@ -18,6 +18,7 @@ import TaskClientSelectModal from 'components/TaskClientSelectModal';
 import { createNewTask$ } from 'services/taskService';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
+import { CreateNewTaskModal } from 'pages/MyTask/CreateNewTaskModal';
 
 const { Title, Text, Paragraph, Link: TextLink } = Typography;
 
@@ -42,8 +43,9 @@ export const TaskTemplateListPage = props => {
   const [filteredList, setFilteredList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [selectClientVisible, setSelectClientVisible] = React.useState(false);
-  const [currentTemplateId, setCurrentTemplateId] = React.useState();
+  const [currentTemplate, setCurrentTemplate] = React.useState();
   const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
+  const [newTaskVisible, setNewTaskVisible] = React.useState(false);
 
   const loadList = async () => {
     setLoading(true);
@@ -102,8 +104,8 @@ export const TaskTemplateListPage = props => {
       })
   }
 
-  const handleCreateTask = async clientEmail => {
-    const templateId = currentTemplateId;
+  const handleCreateTask2 = async clientEmail => {
+    const templateId = currentTemplate;
 
     createNewTask$(templateId, clientEmail)
       .subscribe(task => {
@@ -113,10 +115,10 @@ export const TaskTemplateListPage = props => {
       })
 
   }
-  const handleCancelCreateTask = () => {
-    setSelectClientVisible(false);
-    setCurrentTemplateId(null);
-  }
+  // const handleCancelCreateTask = () => {
+  //   setSelectClientVisible(false);
+  //   setCurrentTemplate(null);
+  // }
 
   const span = {
     xs: 24,
@@ -129,6 +131,14 @@ export const TaskTemplateListPage = props => {
 
   const handleSearchFilter = (text) => {
     setSearchText(text);
+  }
+
+  const handleCreateTask = (item) => {
+    setCurrentTemplate(item);
+  }
+
+  const handleCancelCreateTask = () => {
+    setCurrentTemplate(null);
   }
 
 
@@ -196,20 +206,19 @@ export const TaskTemplateListPage = props => {
                 {/* <HighlightingText search={searchText} value={item.name} /> */}
               </>}
               extra={<Space size="small">
-                {/* <Button icon={<PlusOutlined />} shape="circle" type="primary" onClick={(e) => {
-                e.stopPropagation();
-                                      setSelectClientVisible(true);
-                                      setCurrentTemplateId(item.id)
-              }}></Button> */}
+                <Tooltip title="Create task with this task template">
+                <Button icon={<PlusOutlined />} type="text"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleCreateTask(item)
+                  }}></Button>
+                  </Tooltip>
                 <DropdownMenu
                   config={[
                     {
                       icon: <PlusOutlined />,
                       menu: 'Create task',
-                      onClick: () => {
-                        setSelectClientVisible(true);
-                        setCurrentTemplateId(item.id)
-                      }
+                      onClick: () => handleCreateTask(item),
                     },
                     {
                       menu: '-'
@@ -279,6 +288,12 @@ export const TaskTemplateListPage = props => {
           type="agent"
         />
       </Modal>
+      <CreateNewTaskModal
+        visible={!!currentTemplate}
+        taskTemplateId={currentTemplate?.id}
+        onOk={() => setCurrentTemplate(null)}
+        onCancel={handleCancelCreateTask}
+      />
     </LayoutStyled >
   );
 };

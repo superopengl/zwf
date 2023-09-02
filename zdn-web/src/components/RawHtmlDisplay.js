@@ -11,7 +11,7 @@ const ContainerStyled = styled.div`
   // background-color: rgb(240, 242, 245);
   // border-radius: 4px;
   // border: 1px solid rgba(0,0,0,0.05);
-  color: rgba(0,0,0,0.65);
+  // color: rgba(0,0,0,0.65);
 `;
 
 

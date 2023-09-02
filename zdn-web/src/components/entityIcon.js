@@ -4,6 +4,7 @@ import React from 'react';
 import { withRouter } from 'react-router-dom';
 import Icon, { BorderOutlined, FileOutlined } from '@ant-design/icons';
 import { FaTasks } from 'react-icons/fa';
+import { ImInsertTemplate } from 'react-icons/im';
 import PropTypes from 'prop-types';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
@@ -32,7 +33,8 @@ EntityIcon.defaultProps = {
   color: '#555555',
 };
 
-export const TaskTemplateIcon = (props) => <EntityIcon icon={<FaTasks />} color="#9254de" style={props.style} /> 
+export const TaskIcon = (props) => <EntityIcon icon={<FaTasks />} color="#fadb14" style={props.style} /> 
+export const TaskTemplateIcon = (props) => <EntityIcon icon={<ImInsertTemplate />} color="#9254de" style={props.style} /> 
 export const DocTemplateIcon = (props) => <EntityIcon icon={<FileOutlined />} color="#096dd9" style={props.style} /> 
 
 

@@ -81,7 +81,7 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   return task;
 };
 
-export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email) => {
+export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email, fieldValues) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
   assert(email, 400, 'email is not specified');
 
@@ -94,7 +94,7 @@ export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email) =>
 
     task = new Task();
   
-    const fields = prefillFieldsWithProtofolio(taskTemplate.fields, null);
+    const fields = prefillFieldsWithProtofolio(taskTemplate.fields, fieldValues);
   
     task.id = uuidv4();
     task.deepLinkId = generateDeepLinkId();
