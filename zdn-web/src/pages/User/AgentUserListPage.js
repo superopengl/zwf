@@ -27,6 +27,7 @@ import DropdownMenu from 'components/DropdownMenu';
 import { UserNameLabel } from 'components/UserNameLabel';
 import loadable from '@loadable/component'
 import { getMyCurrentSubscription } from 'services/subscriptionService';
+import useLocalStorageState from 'use-local-storage-state'
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -61,7 +62,7 @@ const AgentUserListPage = () => {
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
-  const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
+  const [queryInfo, setQueryInfo] = useLocalStorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
 
   const columnDef = [
     {
@@ -180,7 +181,7 @@ const AgentUserListPage = () => {
       text
     }
 
-    await loadList(newQueryInfo);
+    await searchByQueryInfo(newQueryInfo);
   }
 
   const searchByQueryInfo = async (queryInfo) => {

@@ -24,7 +24,7 @@ const Container = styled.div`
 const StyledCard = styled(Card)`
 // box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 .ant-card-body, .ant-card-head {
-  // background-color: rgba(0,0,0,0.05);
+  background-color: rgba(0,0,0,0.05);
   // padding: 16px;
 }
 `;

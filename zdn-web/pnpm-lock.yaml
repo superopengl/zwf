@@ -71,6 +71,7 @@ specifiers:
   styled-components: ^5.2.1
   tfn: ^1.0.0
   uniqolor: ^1.0.1
+  use-local-storage-state: ^11.0.0
   uuid: ^8.3.2
   validator: ^13.1.1
   wangeditor-for-react: ^1.4.0
@@ -151,6 +152,7 @@ dependencies:
   styled-components: 5.3.0_281a4fa50a045c9112baf635f3bc27a7
   tfn: 1.0.0
   uniqolor: 1.0.1
+  use-local-storage-state: 11.0.0_react@17.0.2
   uuid: 8.3.2
   validator: 13.6.0
   wangeditor-for-react: 1.4.0
@@ -14549,6 +14551,15 @@ packages:
     resolution: {integrity: sha512-xPadt5yMRbEmVfOSGFSMqjjICrq7nLbfSH3rYIXsrtcuFX7PmbYDN/ku8ObBn3v8o/yZelO1OxUS5+5TI3+fUw==}
     peerDependencies:
       react: '>=16.9.0'
+    dependencies:
+      react: 17.0.2
+    dev: false
+
+  /use-local-storage-state/11.0.0_react@17.0.2:
+    resolution: {integrity: sha512-laYWubKi/OX0WMiyZIfjBBQ4YA+lXH8bXuHq+nR5rtrlSNipJOsbCjFz18GYphf5EYSr+8b7Mnx6v6mLdfUlUg==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16.8.0'
     dependencies:
       react: 17.0.2
     dev: false
