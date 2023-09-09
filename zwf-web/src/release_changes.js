@@ -1,2 +1,4 @@
 export const notes=`
-able to set org log and website`
+request to add payment method upon org setup
+pnpm@8
+system able to send reactivating email by hand`
