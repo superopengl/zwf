@@ -48,7 +48,7 @@ import { TaskWatcherEventAck } from './entity/TaskWatcherEventAck';
 import { TaskWatcherEventAckInformation } from './entity/views/TaskWatcherEventAckInformation';
 import { TaskWatcher } from './entity/TaskWatcher';
 import { TaskWatcherEmailNotificationInformation } from './entity/views/TaskWatcherEmailNotificationInformation';
-import { TaskWatcherUiNotificationInformation } from "./entity/views/TaskWatcherUiNotificationInformation";
+import { TaskWatcherUiNotificationInformation } from './entity/views/TaskWatcherUiNotificationInformation';
 import { ZeventDef } from './entity/ZeventDef';
 import { initializeZeventDef } from './utils/initializeZeventDef';
 dotenv.config();

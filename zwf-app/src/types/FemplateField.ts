@@ -7,4 +7,4 @@ export type FemplateField = {
   options?: string[];
   official: boolean;
   value: any;
-}
+};

@@ -12,7 +12,7 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 
 export const getPrivateFileStream = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'system', 'admin', 'client', 'agent']);
+  assertRole(req, [ 'system', 'admin', 'client', 'agent']);
   const { id } = req.params;
   const user = (req as any).user;
   const userId = user.id;
@@ -70,7 +70,7 @@ export const searchFileMetaList = handlerWrapper(async (req, res) => {
 
 
 export const uploadPublicFile = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'system', 'admin', 'client', 'agent']);
+  assertRole(req, [ 'system', 'admin', 'client', 'agent']);
   const { file } = (req as any).files;
   assert(file, 400, 'No file to upload');
   const { name, data, mimetype, md5 } = file;

@@ -1,4 +1,4 @@
-import { OrgSubscriptionPeriod } from "./../entity/OrgSubscriptionPeriod";
+import { OrgSubscriptionPeriod } from './../entity/OrgSubscriptionPeriod';
 import { db } from './../db';
 import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
@@ -13,27 +13,27 @@ import { createNewTicketForUser } from '../utils/createNewTicketForUser';
 import { getUtcNow } from '../utils/getUtcNow';
 import { Payment } from '../entity/Payment';
 import moment = require('moment');
-import { getRoleFromReq } from "../utils/getRoleFromReq";
-import { Role } from "../types/Role";
-import { clearJwtCookie } from "../utils/jwt";
-import { OrgTermination } from "../entity/OrgTermination";
-import { OrgClient } from "../entity/OrgClient";
-import { OrgPaymentMethod } from "../entity/OrgPaymentMethod";
-import { OrgPromotionCode } from "../entity/OrgPromotionCode";
-import { UserInformation } from "../entity/views/UserInformation";
-import { UserProfile } from "../entity/UserProfile";
-import { EntityManager, In } from "typeorm";
-import { checkoutSubscriptionPeriod } from "../utils/checkoutSubscriptionPeriod";
-import { getOrgAdminUsers } from "../../endpoints/helpers/getOrgAdminUsers";
-import { enqueueEmailInBulk } from "../services/emailService";
-import { EmailRequest } from "../types/EmailRequest";
-import { EmailTemplateType } from "../types/EmailTemplateType";
-import { getEmailRecipientName } from "../utils/getEmailRecipientName";
-import { Tag } from "../entity/Tag";
-import { SystemConfig } from "../entity/SystemConfig";
-import { Femplate } from "../entity/Femplate";
-import { Demplate } from "../entity/Demplate";
-import { sendReactivatingEmailForOrg } from "../utils/sendReactivatingEmailForOrg";
+import { getRoleFromReq } from '../utils/getRoleFromReq';
+import { Role } from '../types/Role';
+import { clearJwtCookie } from '../utils/jwt';
+import { OrgTermination } from '../entity/OrgTermination';
+import { OrgClient } from '../entity/OrgClient';
+import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
+import { OrgPromotionCode } from '../entity/OrgPromotionCode';
+import { UserInformation } from '../entity/views/UserInformation';
+import { UserProfile } from '../entity/UserProfile';
+import { EntityManager, In } from 'typeorm';
+import { checkoutSubscriptionPeriod } from '../utils/checkoutSubscriptionPeriod';
+import { getOrgAdminUsers } from '../../endpoints/helpers/getOrgAdminUsers';
+import { enqueueEmailInBulk } from '../services/emailService';
+import { EmailRequest } from '../types/EmailRequest';
+import { EmailTemplateType } from '../types/EmailTemplateType';
+import { getEmailRecipientName } from '../utils/getEmailRecipientName';
+import { Tag } from '../entity/Tag';
+import { SystemConfig } from '../entity/SystemConfig';
+import { Femplate } from '../entity/Femplate';
+import { Demplate } from '../entity/Demplate';
+import { sendReactivatingEmailForOrg } from '../utils/sendReactivatingEmailForOrg';
 
 const TRIAL_PERIOD_DAYS = 14;
 
@@ -43,7 +43,7 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   let org: Org = null;
   if (orgId) {
     assertRole(req, ['admin']);
-    org = await db.manager.findOneBy(Org, { id: orgId })
+    org = await db.manager.findOneBy(Org, { id: orgId });
   } else {
     assert(role === Role.Admin, 403);
     // When user hasn't been onboard.
@@ -97,7 +97,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
-  const period = new OrgSubscriptionPeriod()
+  const period = new OrgSubscriptionPeriod();
   period.id = uuidv4();
   period.periodFrom = now;
   period.periodTo = moment(now).add(TRIAL_PERIOD_DAYS - 1, 'days').toDate();
@@ -157,7 +157,7 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
       select: {
         profileId: true,
       }
-    })
+    });
     const profileIds = userInfos.map(u => u.profileId);
 
     await m.delete(UserProfile, { id: In(profileIds) });

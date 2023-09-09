@@ -56,7 +56,7 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   remark: string;
-  
+
   @ViewColumn()
   orgId: string;
 

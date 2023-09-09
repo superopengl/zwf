@@ -116,7 +116,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
     // }
 
     await m.save(user.profile);
-  })
+  });
 
   res.json();
 });

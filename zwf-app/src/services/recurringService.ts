@@ -20,7 +20,7 @@ export async function testRunRecurring(recurringId: string, orgId: string, execu
     const recurring = await m.getRepository(Recurring).findOneBy({ id: recurringId, orgId });
     assert(recurring, 404);
     task = await executeRecurring(m, recurring, executorId, false);
-  })
+  });
   return task;
 }
 
@@ -31,10 +31,10 @@ export async function executeRecurring(m: EntityManager, recurring: Recurring, e
 
   const task = await createTaskForClient(m, femplateId, taskName, orgClientId, executorId, null, orgId);
   task.status = TaskStatus.TODO;
-  
+
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
-  
-  const entitiesToSave: any[] = [task]
+
+  const entitiesToSave: any[] = [task];
 
   if (resetNextRunAt) {
     recurring.lastRunAt = new Date();

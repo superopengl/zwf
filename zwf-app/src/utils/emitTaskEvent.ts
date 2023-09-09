@@ -1,9 +1,9 @@
-import { EntityManager } from "typeorm";
-import { ZeventName } from "../types/ZeventName";
-import { TaskEvent } from "../entity/TaskEvent";
-import { Task } from "../entity/Task";
-import { publishZevent } from "../services/zeventSubPubService";
-import { ZEVENT_DEF_ENTITIES } from "../types/ZeventTypeDef";
+import { EntityManager } from 'typeorm';
+import { ZeventName } from '../types/ZeventName';
+import { TaskEvent } from '../entity/TaskEvent';
+import { Task } from '../entity/Task';
+import { publishZevent } from '../services/zeventSubPubService';
+import { ZEVENT_DEF_ENTITIES } from '../types/ZeventTypeDef';
 
 const ZEVENTABLE_TASKEENTTYPES = new Set(ZEVENT_DEF_ENTITIES.filter(z => true).map(z => z.name));
 
@@ -39,7 +39,7 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: ZeventName,
         type: 'taskEvent',
         userId,
         payload: taskEvent,
-      })
+      });
     }
   }
 }

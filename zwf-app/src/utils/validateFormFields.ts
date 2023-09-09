@@ -10,7 +10,7 @@ export function validateFormFields(fields: any) {
   for (const field of fields) {
     const { name } = field;
     if (set.has(name)) {
-      dups.push(name)
+      dups.push(name);
     } else {
       set.add(name);
     }

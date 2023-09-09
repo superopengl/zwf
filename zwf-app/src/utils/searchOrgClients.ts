@@ -23,7 +23,7 @@ export async function searchOrgClients(orgId: string, queryInfo: SearchOrgClient
 
   let query = db.getRepository(OrgClientStatInformation)
     .createQueryBuilder()
-    .where('"orgId" = :orgId', { orgId })
+    .where('"orgId" = :orgId', { orgId });
 
   if (text) {
     query = query.andWhere('("clientAlias" ILIKE :text OR email ILIKE :text OR "givenName" ILIKE :text OR "surname" ILIKE :text)', { text: `%${text}%` });

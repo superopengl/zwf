@@ -40,10 +40,10 @@ export class TaskDoc {
   file: File;
 
   @Column('uuid', { nullable: true, select: false })
-  uploadedBy: string;// For 'upload' type only
+  uploadedBy: string; // For 'upload' type only
 
   @Column('uuid', { nullable: true })
-  demplateId: string;// For 'autogen' type only
+  demplateId: string; // For 'autogen' type only
 
   @Column({ nullable: true })
   generatedAt: Date; // For 'autogen' type only

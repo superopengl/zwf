@@ -15,6 +15,6 @@ export type Zevent = {
   type: 'taskEvent.ack',
   userId: string,
   payload: TaskWatcherEventAck,
-};;
+};
 
 

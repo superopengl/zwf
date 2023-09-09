@@ -66,17 +66,17 @@ export class Task {
 
 /**
  * statusBefore => status
- * 
+ *
  * NULL => TODO
- * 
+ *
  * TODO => DONE
  * TODO => ARCIVED
  * TODO => IN_PROGRESS
  * TODO => ACTION_REQUIRED
- * 
+ *
  * ANY => ACTION_REQUIRED // Kick the ball to client
- * 
+ *
  * ACTION_REQUIRED => IN_PROGRESS // Kick the ball to agent
- * 
+ *
  */
 

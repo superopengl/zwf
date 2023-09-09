@@ -27,7 +27,7 @@ export class OrgClient {
 
   @Column({ nullable: true })
   remark: string;
-  
+
   @Column({ default: true })
   active: boolean;
 

@@ -41,7 +41,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   let task: Task = null;
   await db.transaction(async m => {
     task = await createTaskForClient(m, femplateId, name, orgClientId, creatorId, id, orgId);
-  })
+  });
 
   res.json(task);
 });
@@ -67,7 +67,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
     taskDoc: {
       orgId: getOrgIdFromReq(req)
     }
-  }
+  };
 
   const file = await db.getRepository(File).findOne({
     where: {
@@ -161,11 +161,11 @@ export const watchTask = handlerWrapper(async (req, res) => {
       await addTaskWatcher(m, id, userId, 'watch');
     } else {
       // unwatch task
-      assert(task.assigneeId !== userId, 400, 'Cannot unwatch because you are the assignee of this task.')
+      assert(task.assigneeId !== userId, 400, 'Cannot unwatch because you are the assignee of this task.');
       await m.getRepository(TaskWatcher).delete({
         taskId: id,
         userId,
-      })
+      });
     }
   });
 
@@ -247,7 +247,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
         await emitTaskEvent(m, ZeventName.ClientSubmittedForm, id, userId, fields);
       }
     }
-  })
+  });
 
   res.json();
 });
@@ -297,7 +297,7 @@ export const listMyCases = handlerWrapper(async (req, res) => {
     where: {
       userId,
       status: In([
-        // TaskStatus.TODO, 
+        // TaskStatus.TODO,
         TaskStatus.IN_PROGRESS,
         TaskStatus.ACTION_REQUIRED,
         TaskStatus.DONE
@@ -392,14 +392,14 @@ export const getTask = handlerWrapper(async (req, res) => {
       const watched = await m.getRepository(TaskWatcher).findOneBy({ taskId: task.id, userId });
       (task as any).watched = !!watched;
     }
-  })
+  });
 
   res.json(task);
 });
 
 export const addDemplateToTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { demplateIds } = req.body
+  const { demplateIds } = req.body;
   assert(demplateIds?.length, 400, 'demplateIds is empty');
   const userId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
@@ -421,7 +421,7 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
     }
     const fieldCount = await m.getRepository(TaskField).countBy({
       taskId
-    })
+    });
 
     const fieldsNamesToAdd = new Set<string>();
     demplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
@@ -457,7 +457,7 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
         return pre;
       }, {});
       return taskDoc;
-    })
+    });
 
     await m.save(taskDocs);
 
@@ -539,7 +539,7 @@ export const renameTask = handlerWrapper(async (req, res) => {
     if (result.affected) {
       await emitTaskEvent(m, ZeventName.TaskRenamed, id, getUserIdFromReq(req), { name });
     }
-  })
+  });
 
   res.json();
 });
@@ -619,7 +619,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
 
     const eventType = statusMapping.get(`${oldStatus}>${newStatus}`);
 
-    await emitTaskEvent(m, eventType, id, userId, { statusBefore: oldStatus, statusAfter: newStatus })
+    await emitTaskEvent(m, eventType, id, userId, { statusBefore: oldStatus, statusAfter: newStatus });
   });
 
 
@@ -735,7 +735,7 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
         docName: taskDoc.name
       });
     }
-  })
+  });
 
   res.json(taskDoc);
 });
@@ -760,12 +760,12 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.signRequestedAt = null;
     taskDoc.signRequestedBy = null;
 
-    await m.save(taskDoc)
+    await m.save(taskDoc);
     await emitTaskEvent(m, ZeventName.UnrequestClientSignDoc, taskDoc.task.id, userId, {
       docId: taskDoc.id,
       docName: taskDoc.name
     });
-  })
+  });
 
   res.json(taskDoc);
 });

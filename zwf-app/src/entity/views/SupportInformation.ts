@@ -53,7 +53,7 @@ export class SupportInformation {
 
   @ViewColumn()
   suspended: boolean;
-  
+
   @ViewColumn()
   unreadCount: number;
 }

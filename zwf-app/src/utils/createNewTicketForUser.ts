@@ -1,7 +1,7 @@
-import { OrgSubscriptionPeriod } from "./../entity/OrgSubscriptionPeriod";
+import { OrgSubscriptionPeriod } from './../entity/OrgSubscriptionPeriod';
 import { LicenseTicket } from '../entity/LicenseTicket';
 import { assert } from './assert';
-import { getUtcNow } from "./getUtcNow";
+import { getUtcNow } from './getUtcNow';
 
 
 export function createNewTicketForUser(userId: string, period: OrgSubscriptionPeriod) {
