@@ -16,11 +16,11 @@ const OrgSubscriptionPage = () => {
           name: 'Others'
         },
         {
-          name: 'Subscription',
+          name: 'Billings',
         },
       ]}
       maxWidth={1200}
-      title='Subscription & Billings'
+      title='Billings'
       style={{
         maxWidth: 1200,
       }}

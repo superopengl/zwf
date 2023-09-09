@@ -241,7 +241,7 @@ export const DemplatePage = () => {
       </Row>}
     </PageHeaderContainer>
     <Drawer
-      title="Doc Template Preview"
+      title={"Preview"}
       closable
       closeIcon={<LeftOutlined />}
       maskClosable

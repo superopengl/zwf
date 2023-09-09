@@ -32,6 +32,7 @@ import { BiRepeat } from 'react-icons/bi';
 import { ZeventContainer } from 'components/ZeventContainer';
 import { SupportAffix } from 'components/SupportAffix';
 import { HiViewBoards, HiViewList } from 'react-icons/hi';
+import { PaymentMethodNotification } from 'components/PaymentMethodNotification';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -158,8 +159,8 @@ const ROUTES = [
         roles: ['system'],
       },
       {
-        path: '/subscription',
-        name: 'Subscription',
+        path: '/billings',
+        name: 'Billings',
         icon: <CreditCardFilled />,
         roles: ['admin'],
       },
@@ -274,7 +275,8 @@ export const AppLoggedInPage = React.memo(() => {
       >
         <Outlet />
       </ProLayout>
-      {isAdmin && <SubscriptionNotification />}
+      {/* {isAdmin && <SubscriptionNotification />} */}
+      {isAdmin && <PaymentMethodNotification />}
       {!isSystem && <UnimpersonatedFloatButton />}
       {!isSystem && !isClient && <SupportAffix />}
     </StyledContainer >

@@ -144,7 +144,7 @@ export const App = React.memo(() => {
           <Route path="/client" element={<OrgClientListPage />} />
           <Route path="/client/:id" element={<OrgClientPage />} />
           <Route path="/tags" element={<OrgTagListPage />} />
-          <Route path="/subscription" element={<OrgSubscriptionPage />} />
+          <Route path="/billings" element={<OrgSubscriptionPage />} />
           <Route path="/team" element={<OrgMemberListPage />} />
           <Route path="/config" element={<ConfigListPage />} />
           <Route path="/org" element={<OrgListPage />} />

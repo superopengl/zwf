@@ -145,10 +145,10 @@ export const FemplateListPage = () => {
           name: 'Templates'
         },
         {
-          name: 'Form Template',
+          name: 'Form Builder',
         }
       ]}
-      title='Form Template'
+      title='Form Builder'
       loading={loading}
       extra={[
         // <Segmented key="views"
@@ -164,7 +164,7 @@ export const FemplateListPage = () => {
         //       value: 'list'
         //     },
         //   ]} />,
-        <Button key="new" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Form Template</Button>
+        <Button key="new" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Form</Button>
       ]}
     >
       <ProList

@@ -28,7 +28,7 @@ margin: 0 auto;
 const { Paragraph } = Typography;
 
 const EMPTY_FEMPLATE = {
-  name: 'New form template',
+  name: 'Untitled form',
   fields: [
     {
       id: uuidv4(),
@@ -65,7 +65,7 @@ export const FemplatePage = () => {
 
   const [loading, setLoading] = React.useState(!isNew);
   const [openPreview, setOpenPreview] = React.useState(false);
-  const [femplateName, setFemplateName] = React.useState('New Form Template');
+  const [femplateName, setFemplateName] = React.useState('New Form');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [femplate, setFemplate] = React.useState(isNew ? EMPTY_FEMPLATE : null);
   const [fields, setFields] = React.useState([]);
@@ -140,7 +140,7 @@ export const FemplatePage = () => {
         },
         {
           path: '/femplate',
-          name: 'Form Template',
+          name: 'Form Builder',
           // menu: [
           //   'hi',
           //   'hi2'
@@ -154,7 +154,7 @@ export const FemplatePage = () => {
       loading={loading}
       ghost={true}
       icon={<FemplateIcon />}
-      title={<ClickToEditInput placeholder={isNew ? 'New Form Template' : "Form template name"} value={femplateName} size={22} onChange={handleRename} maxLength={100} />}
+      title={<ClickToEditInput placeholder={isNew ? 'New Form' : "Form name"} value={femplateName} size={22} onChange={handleRename} maxLength={100} />}
       extra={[
         <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
