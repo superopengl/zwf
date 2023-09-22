@@ -106,11 +106,11 @@ export const DocTemplatePage = (props) => {
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >
-            <DocTemplateEditorPanel
+            {!loading && <DocTemplateEditorPanel
               value={docTemplate}
               onChange={d => setDocTemplate(d)}
               debug={debugMode}
-            />
+            />}
           </PageHeader>
         </Layout.Content>
         <Layout.Sider theme="light" width="50%" collapsed={!previewSider} collapsedWidth={0} style={{ overflowY: 'auto', marginLeft: 30 }}>
