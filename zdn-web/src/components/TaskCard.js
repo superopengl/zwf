@@ -1,13 +1,19 @@
-import { Space, Card } from 'antd';
+import { Space, Card, Modal, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { Draggable } from 'react-beautiful-dnd';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import PropTypes from 'prop-types';
 import { MailOutlined, MessageOutlined } from '@ant-design/icons';
 import { UnreadMessageIcon } from './UnreadMessageIcon';
+import { TaskIcon } from './entityIcon';
+import AdminTaskModal from 'pages/MyTask/AdminTaskModal';
+import { MdOpenInNew } from 'react-icons/md';
+import Icon from '@ant-design/icons';
+
+const {Link: TextLink} = Typography;
 
 const StyledCard = styled(Card)`
 position: relative;
@@ -33,8 +39,14 @@ const TaskCard = (props) => {
   });
 
 
-  const handleEditTask = (id) => {
-    props.history.push(`/tasks/${id}/proceed?${lastUnreadMessageAt ? 'chat=1' : ''}`);
+  const showTaskModal = (id) => {
+    // props.history.push(`/tasks/${id}/proceed?${lastUnreadMessageAt ? 'chat=1' : ''}`);
+    AdminTaskModal.show(id, name);
+  }
+
+  const goToTask = (e, id) => {
+    e.stopPropagation();
+    props.history.push(`/task/${id}`);
   }
 
   return <Draggable draggableId={id} index={index}>
@@ -44,11 +56,17 @@ const TaskCard = (props) => {
           {...provided.draggableProps}
           {...provided.dragHandleProps}
           style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}>
-          <StyledCard hoverable onDoubleClick={() => handleEditTask(id)} className={lastUnreadMessageAt ? 'unread' : ''}>
-            {lastUnreadMessageAt && <UnreadMessageIcon style={{position: 'absolute', right: 16, top: 16}}/>}
+          <StyledCard
+            title={<><TaskIcon /> {name}</>}
+            extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
+            size="small"
+            hoverable
+            onClick={() => showTaskModal(id, name)}
+            className={lastUnreadMessageAt ? 'unread' : ''}
+          >
+            {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
             <Space direction="vertical" style={{ width: '100%' }}>
-              <Text>{name}</Text>
-              <Text type="secondary">{taskTemplateName}</Text>
+              <Text type="secondary"><small>{taskTemplateName}</small></Text>
               <Space style={{ width: '100%', justifyContent: 'space-between' }}>
                 <Space style={{ lineHeight: '0.5rem', padding: 0 }}>
                   <PortfolioAvatar value={forWhom} id={task.portfolioId} size={32} />
@@ -68,6 +86,9 @@ const TaskCard = (props) => {
               </Tooltip>
             </div> */}
           </StyledCard>
+          <Modal>
+
+          </Modal>
         </div>
       )
     }

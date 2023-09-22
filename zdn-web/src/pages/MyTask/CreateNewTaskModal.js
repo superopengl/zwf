@@ -108,11 +108,11 @@ export const CreateNewTaskModal = props => {
       title={<><TaskIcon /> Create task</>}
       onCancel={props.onCancel}
       onOk={props.onOk}
-      footer={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
+      footer={<Space style={{ width: '100%', justifyContent: 'space-between', paddingTop: 8, paddingBottom: 8 }}>
         <Button disabled={loading} onClick={handleFormReset}>Reset</Button>
         <Space>
           <Button disabled={loading} type="text" onClick={props.onCancel}>Cancel</Button>
-          <Button disabled={loading} onClick={handlCreateAndAnother}>Create Task & Another</Button>
+          <Button disabled={loading} type="primary" ghost onClick={handlCreateAndAnother}>Create Task & Another</Button>
           <Button disabled={loading} type="primary" onClick={handlCreateTask}>Create Task</Button>
         </Space>
       </Space>}
