@@ -5,7 +5,8 @@ import {
   EyeOutlined,
   PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip } from 'antd';
+import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip, Radio } from 'antd';
+import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { withRouter, Link } from 'react-router-dom';
@@ -19,6 +20,8 @@ import { createNewTask$ } from 'services/taskService';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import { CreateNewTaskModal } from 'pages/MyTask/CreateNewTaskModal';
+import {BiGridAlt} from 'react-icons/bi';
+import {HiViewList} from 'react-icons/hi';
 
 const { Title, Text, Paragraph, Link: TextLink } = Typography;
 
@@ -46,6 +49,7 @@ export const TaskTemplateListPage = props => {
   const [currentTemplate, setCurrentTemplate] = React.useState();
   const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
   const [newTaskVisible, setNewTaskVisible] = React.useState(false);
+  const [viewMode, setViewMode] = React.useState('grid');
 
   const loadList = async () => {
     setLoading(true);
@@ -151,7 +155,22 @@ export const TaskTemplateListPage = props => {
             allowClear
             prefix={<Text type="secondary"><SearchOutlined /></Text>}
             style={{ width: 240 }} />
+          <Space>
+    <Radio.Group 
+    optionType="button"
+    buttonStyle="solid"
+    defaultValue={viewMode}
+    onChange={e => setViewMode(e.target.value)}
+    >
+      <Radio.Button value="grid">
+        <Icon component={() => <BiGridAlt/>} />
+      </Radio.Button>
+      <Radio.Button value="list">
+        <Icon component={() => <HiViewList/>} />
+      </Radio.Button>
+    </Radio.Group>
           <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
+          </Space>
         </Row>
         {/* <Table columns={columnDef}
           size="small"
@@ -174,7 +193,7 @@ export const TaskTemplateListPage = props => {
         /> */}
         <List
           size="small"
-          grid={{
+          grid={viewMode === 'grid' ? {
             gutter: [12, 12],
             xs: 1,
             sm: 1,
@@ -182,6 +201,9 @@ export const TaskTemplateListPage = props => {
             lg: 1,
             xl: 2,
             xxl: 3
+          } : {
+            gutter: [12, 12],
+            column: 1
           }}
           dataSource={filteredList}
           loading={loading}
@@ -260,9 +282,9 @@ export const TaskTemplateListPage = props => {
                 <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-              {item.docNames?.length && <Row style={{ marginTop: 20 }}>
+              {item.docNames?.length && <Row style={{ marginTop: 20 }} gutter={[20, 20]}>
                 {item.docNames?.map((d, i) => <Col key={i}>
-                  <DocTemplateIcon />{d}
+                  <DocTemplateIcon style={{fontSize: 10, position: 'relative', top: -3}} />{d}
                 </Col>)}
               </Row>}
             </Card>
