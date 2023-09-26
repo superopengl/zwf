@@ -87,11 +87,15 @@ export const UserAvatar = React.memo((props) => {
       alt="avatar"
       preview={false}
       src={getPublicFileUrl(avatarFileId)}
+      // shape="square"
       // icon={<UserOutlined />}
       fallback="/images/avatar-fallback.png"
     />} />
   } else {
-    avatarComponent = <StyledAvatar size={size} style={{ ...style, lineHeight: size - 4, backgroundColor }}>
+    avatarComponent = <StyledAvatar
+      // shape="square"
+      size={size}
+      style={{ ...style, lineHeight: size - 4, backgroundColor }}>
       <Text style={{ color: 'rgba(255,255,255,0.85)' }}>
         {fallbackIcon || <UserOutlined />}
       </Text>

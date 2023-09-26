@@ -113,8 +113,8 @@ export function getTaskTimeline$(taskId) {
   return httpGet$(`/task/${taskId}/timeline`);
 }
 
-export function listTaskComment$(taskId) {
-  return httpGet$(`/task/${taskId}/comment`);
+export function getTaskTalk$(taskId) {
+  return httpGet$(`/task/${taskId}/talk`);
 }
 
 export function getTaskDeepLinkUrl(taskDeepLinkId) {

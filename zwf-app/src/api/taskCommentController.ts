@@ -8,10 +8,12 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-import { createTaskComment } from '../services/taskCommentService';
+import { insertTaskTalkText } from '../services/createTaskTalkText';
 import { assertRole } from '../utils/assertRole';
 import { ZeventName } from '../types/ZeventName';
 import { addTaskWatcher } from '../utils/addWTaskWatcher';
+import { TaskTalk } from '../entity/TaskTalk';
+import { emitTaskTalkEvent } from '../utils/emitTaskEvent';
 
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
@@ -48,38 +50,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 });
 
 
-export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) => {
-  assertRole(req, ['client']);
-  const userId = getUserIdFromReq(req);
-  const page = +req.query.page || 1;
-  const size = +req.query.size || 50;
-
-  const list = await db.getRepository(TaskActivityInformation).find({
-    where: {
-      userId,
-    },
-    order: {
-      createdAt: 'DESC'
-    },
-    skip: (page - 1) * size,
-    take: size,
-    select: [
-      'eventId',
-      'taskId',
-      'taskName',
-      'orgId',
-      'orgName',
-      'createdAt',
-      'by',
-      'type',
-      'info',
-    ]
-  });
-
-  res.json(list);
-});
-
-export const addTaskComment = handlerWrapper(async (req, res) => {
+export const createTaskTalkText = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   // assertRole(req, ['admin', 'agent', 'client']);
@@ -107,7 +78,14 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
 
     const senderId = role === Role.Guest ? task.orgClient?.userId : getUserIdFromReq(req);
 
-    await createTaskComment(m, task, senderId, message);
+    const talk = new TaskTalk()
+    talk.taskId = taskId;
+    talk.by = senderId;
+    talk.text = message;
+    talk.type = 'text';
+    await m.save(talk);
+
+    await emitTaskTalkEvent(m, taskId, talk);
   });
 
 

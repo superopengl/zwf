@@ -4,7 +4,7 @@ import { ZeventName } from '../types/ZeventName';
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
-import { TaskField } from './../entity/TaskField';
+import { TaskFormField } from '../entity/TaskFormField';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
 import { In, IsNull, Not } from 'typeorm';
@@ -21,7 +21,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { createTaskComment } from '../services/taskCommentService';
+import { insertTaskTalkText } from '../services/createTaskTalkText';
 import { File } from '../entity/File';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { EmailTemplateType } from '../types/EmailTemplateType';
@@ -31,6 +31,7 @@ import { emitTaskEvent } from '../utils/emitTaskEvent';
 import { TaskWatcher } from '../entity/TaskWatcher';
 import { searchTaskList } from '../utils/searchTaskList';
 import { addTaskWatcher } from '../utils/addWTaskWatcher';
+import { TaskTalk } from '../entity/TaskTalk';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -104,19 +105,19 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   const query: any = { id, orgId: getOrgIdFromReq(req) };
   const task = await db.getRepository(Task).findOne({
     where: query,
-    relations: {
-      fields: true,
-    },
-    select: {
-      id: true,
-      fields: {
-        id: true
-      },
-      orgId: true,
-      orgClient: {
-        userId: true,
-      },
-    }
+    // relations: {
+    //   fields: true,
+    // },
+    // select: {
+    //   id: true,
+    //   fields: {
+    //     id: true
+    //   },
+    //   orgId: true,
+    //   orgClient: {
+    //     userId: true,
+    //   },
+    // }
   });
   assert(task, 404);
 
@@ -125,7 +126,9 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   // const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
 
   await db.transaction(async m => {
-    const existingFields = await m.getRepository(TaskField).findBy({ taskId: id });
+    const existingFields = await m.getRepository(TaskFormField).findBy({
+      // taskId: id 
+    });
     const valueMap = new Map(existingFields.map(x => [x.name, x]));
     fields.forEach((f, index) => {
       const existingField = valueMap.get(f.name);
@@ -134,8 +137,8 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
       f.value = existingField?.value;
     });
 
-    await m.getRepository(TaskField).delete({ taskId: id });
-    await m.getRepository(TaskField).save(fields);
+    // await m.getRepository(TaskFormField).delete({ taskId: id });
+    await m.getRepository(TaskFormField).save(fields);
 
     await emitTaskEvent(m, ZeventName.TaskFormSchemaChanged, id, userId, fields);
   });
@@ -227,21 +230,21 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
       where: query,
       relations: {
         orgClient: isClient,
-        fields: true,
+        // fields: true,
       }
     });
     assert(task, 404);
 
-    const fieldToSave: TaskField[] = [];
-    task.fields.forEach(f => {
-      if (f.id in fields) {
-        f.value = fields[f.id];
-        fieldToSave.push(f);
-      }
-    });
+    const fieldToSave: TaskFormField[] = [];
+    // task.fields.forEach(f => {
+    //   if (f.id in fields) {
+    //     f.value = fields[f.id];
+    //     fieldToSave.push(f);
+    //   }
+    // });
 
     if (fieldToSave.length) {
-      await m.getRepository(TaskField).save(fieldToSave);
+      await m.getRepository(TaskFormField).save(fieldToSave);
       await emitTaskEvent(m, ZeventName.TaskFieldValueChanged, id, userId, fields);
       if (isClient) {
         await emitTaskEvent(m, ZeventName.ClientSubmittedForm, id, userId, fields);
@@ -318,6 +321,26 @@ export const listMyCases = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+export const getTaskTalk = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent', 'client']);
+  const { taskId } = req.params;
+
+  let list;
+  await db.manager.transaction(async m => {
+    list = await m.find(TaskTalk, {
+      where: {
+        taskId,
+      },
+      order: {
+        createdAt: 'ASC'
+      },
+      relations: ['doc', 'form']
+    });
+  });
+
+  res.json(list);
+});
+
 
 export const getTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
@@ -327,9 +350,9 @@ export const getTask = handlerWrapper(async (req, res) => {
 
   let query: any;
   let relations = {
-    fields: true,
+    // fields: true,
     tags: true,
-    docs: true,
+    // docs: true,
     orgClient: false,
   };
 
@@ -370,14 +393,14 @@ export const getTask = handlerWrapper(async (req, res) => {
     task = await m.getRepository(Task).findOne({
       where: query,
       relations,
-      order: {
-        fields: {
-          ordinal: 'ASC'
-        },
-        docs: {
-          createdAt: 'ASC'
-        }
-      }
+      // order: {
+      //   fields: {
+      //     ordinal: 'ASC'
+      //   },
+      //   docs: {
+      //     createdAt: 'ASC'
+      //   }
+      // }
     });
     assert(task, 404);
     if (role === Role.Client) {
@@ -387,7 +410,7 @@ export const getTask = handlerWrapper(async (req, res) => {
       (task as any).orgWebsiteUrl = websiteUrl;
       (task as any).orgLogoFileId = logoFileId;
 
-      task.docs = task.docs.filter(d => d.fileId);
+      // task.docs = task.docs.filter(d => d.fileId);
     } else {
       const watched = await m.getRepository(TaskWatcher).findOneBy({ taskId: task.id, userId });
       (task as any).watched = !!watched;
@@ -419,15 +442,15 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
     if (!demplates.length) {
       return;
     }
-    const fieldCount = await m.getRepository(TaskField).countBy({
-      taskId
+    const fieldCount = await m.getRepository(TaskFormField).countBy({
+      // taskId
     });
 
     const fieldsNamesToAdd = new Set<string>();
     demplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
     const taskFields = Array.from(fieldsNamesToAdd).map((fieldName, index) => {
-      const taskField = new TaskField();
-      taskField.taskId = taskId;
+      const taskField = new TaskFormField();
+      // taskField.taskId = taskId;
       taskField.name = fieldName;
       taskField.type = 'text';
       taskField.ordinal = fieldCount + 1 + index;
@@ -438,7 +461,7 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
 
     await m.createQueryBuilder()
       .insert()
-      .into(TaskField)
+      .into(TaskFormField)
       .values(taskFields)
       .orUpdate(['required', 'official'], ['taskId', 'name'])
       .execute();
@@ -694,7 +717,7 @@ export const deleteTaskDoc = handlerWrapper(async (req, res) => {
         id: docId, orgId
       },
       relations: {
-        task: true,
+        // task: true,
       }
     });
     assert(taskDoc, 404);
@@ -702,7 +725,7 @@ export const deleteTaskDoc = handlerWrapper(async (req, res) => {
 
     await m.softDelete(TaskDoc, { id: docId });
 
-    await emitTaskEvent(m, ZeventName.TaskDeletedDoc, taskDoc.task.id, userId, { docId });
+    // await emitTaskEvent(m, ZeventName.TaskDeletedDoc, taskDoc.task.id, userId, { docId });
   });
 
   res.json();
@@ -719,7 +742,7 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc = await m.getRepository(TaskDoc).findOneOrFail({
       where: { id: docId, orgId },
       relations: {
-        task: true
+        // task: true
       }
     });
     assert(taskDoc, 404);
@@ -730,10 +753,10 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
       taskDoc.signRequestedBy = userId;
       await m.save(taskDoc);
 
-      await emitTaskEvent(m, ZeventName.RequestClientSignDoc, taskDoc.task.id, userId, {
-        docId: taskDoc.id,
-        docName: taskDoc.name
-      });
+      // await emitTaskEvent(m, ZeventName.RequestClientSignDoc, taskDoc.task.id, userId, {
+      //   docId: taskDoc.id,
+      //   docName: taskDoc.name
+      // });
     }
   });
 
@@ -751,7 +774,7 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc = await m.getRepository(TaskDoc).findOneOrFail({
       where: { id: docId, orgId },
       relations: {
-        task: true
+        // task: true
       }
     });
     assert(taskDoc, 404);
@@ -761,10 +784,10 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.signRequestedBy = null;
 
     await m.save(taskDoc);
-    await emitTaskEvent(m, ZeventName.UnrequestClientSignDoc, taskDoc.task.id, userId, {
-      docId: taskDoc.id,
-      docName: taskDoc.name
-    });
+    // await emitTaskEvent(m, ZeventName.UnrequestClientSignDoc, taskDoc.task.id, userId, {
+    //   docId: taskDoc.id,
+    //   docName: taskDoc.name
+    // });
   });
 
   res.json(taskDoc);

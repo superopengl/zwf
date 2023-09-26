@@ -21,7 +21,8 @@ import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
 import { TaskEvent } from '../entity/TaskEvent';
 import { ZeventName } from '../types/ZeventName';
-import { emitTaskEvent } from '../utils/emitTaskEvent';
+import { emitTaskEvent, emitTaskTalkEvent } from '../utils/emitTaskEvent';
+import { TaskTalk } from '../entity/TaskTalk';
 
 export const generateDemplateDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -37,9 +38,9 @@ export const generateDemplateDoc = handlerWrapper(async (req, res) => {
         orgId,
       },
       relations: {
-        task: {
-          fields: true
-        }
+        // task: {
+        //   fields: true
+        // }
       }
     });
 
@@ -59,7 +60,7 @@ export const generateDemplateDoc = handlerWrapper(async (req, res) => {
   res.json(result);
 });
 
-export const uploadTaskFile = handlerWrapper(async (req, res) => {
+export const createTaskTalkDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { file } = (req as any).files;
   assert(file, 400, 'No file to upload');
@@ -99,8 +100,8 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     fileEntity.public = false;
 
     await m.save(fileEntity);
-
     const docId = uuidv4();
+
     const taskDoc = new TaskDoc();
     taskDoc.id = docId;
     taskDoc.taskId = taskId;
@@ -110,9 +111,16 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     taskDoc.fileId = fileId;
     taskDoc.uploadedBy = userId;
 
-    await m.save(taskDoc);
+    const talk = new TaskTalk();
+    talk.taskId = taskId;
+    talk.by = userId;
+    talk.type = 'doc';
+    talk.doc = taskDoc;
 
-    await emitTaskEvent(m, ZeventName.TaskAddedDoc, task.id, userId, { docId });
+    await m.save([taskDoc, talk]);
+
+    // await emitTaskEvent(m, ZeventName.TaskAddedDoc, task.id, userId, taskDoc);
+    await emitTaskTalkEvent(m, taskId, talk);
   });
 
   res.json({
@@ -148,15 +156,15 @@ export const getTaskDocFileInfo = handlerWrapper(async (req, res) => {
       id: docId
     },
     relations: {
-      task: {
-        orgClient: true,
-      },
+      // task: {
+      //   orgClient: true,
+      // },
       file: true,
     }
   });
 
   assert(doc, 404);
-  assert(role !== Role.Client || doc.task.orgClient?.userId === getUserIdFromReq(req), 404);
+  // assert(role !== Role.Client || doc.task.orgClient?.userId === getUserIdFromReq(req), 404);
 
   const { file, demplateId } = doc;
 
@@ -210,13 +218,13 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
       },
       relations: {
         file: true,
-        task: {
-          orgClient: true,
-        },
+        // task: {
+        //   orgClient: true,
+        // },
       },
     });
 
-    assert(docs[0]?.task?.orgClient?.userId === userId, 404);
+    // assert(docs[0]?.task?.orgClient?.userId === userId, 404);
 
     const now = getUtcNow();
     docs.forEach(d => {
@@ -225,7 +233,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
       d.esign = computeTaskFileSignedHash(d.file.md5, userId, now);
     })
 
-    const taskId = docs[0].task.id;
+    const taskId = null //docs[0].task.id;
     await m.save([...docs]);
 
     await emitTaskEvent(m, ZeventName.ClientSignedDoc, taskId, userId, docs.map(d => ({

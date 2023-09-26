@@ -28,7 +28,7 @@ export const TaskFileUpload = React.memo((props) => {
 
   return (<Upload
       multiple={true}
-      action={`${API_BASE_URL}/task/${taskId}/file`}
+      action={`${API_BASE_URL}/task/${taskId}/talk/doc`}
       withCredentials={true}
       accept="*/*"
       listType="text"

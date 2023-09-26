@@ -12,7 +12,7 @@ import { emitTaskEvent } from '../utils/emitTaskEvent';
 export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 
 
-export async function createTaskComment(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
+export async function insertTaskTalkText(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
   assert(task, 500);
   const comment = new TaskEvent();
   const { orgId, id: taskId } = task;

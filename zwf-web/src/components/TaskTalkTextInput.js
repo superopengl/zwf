@@ -2,7 +2,7 @@ import { Button, Form, Typography, Row, Col, Mentions, Input } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { addTaskComment$ } from 'services/taskCommentService';
+import { createTaskTalkText$ } from 'services/taskCommentService';
 import { finalize } from 'rxjs/operators';
 import { subscribeMembers } from 'services/memberService';
 import { UserNameCard } from './UserNameCard';
@@ -11,7 +11,7 @@ import { useRole } from 'hooks/useRole';
 const { Text } = Typography;
 
 
-export const TaskCommentInputForm = React.memo((props) => {
+export const TaskTalkTextInput = React.memo((props) => {
   const { taskId, loading: propLoading, onDone } = props;
 
   const [loading, setLoading] = React.useState(propLoading);
@@ -70,7 +70,7 @@ export const TaskCommentInputForm = React.memo((props) => {
 
     setLoading(true)
     const memberIds = extractMentions(message);
-    addTaskComment$(taskId, message, memberIds).pipe(
+    createTaskTalkText$(taskId, message, memberIds).pipe(
       finalize(() => setLoading(false))
     ).subscribe(() => {
       onDone?.()
@@ -113,13 +113,13 @@ export const TaskCommentInputForm = React.memo((props) => {
   </>
 });
 
-TaskCommentInputForm.propTypes = {
+TaskTalkTextInput.propTypes = {
   taskId: PropTypes.string.isRequired,
   loading: PropTypes.bool,
   onDone: PropTypes.func,
 };
 
-TaskCommentInputForm.defaultProps = {
+TaskTalkTextInput.defaultProps = {
   width: 500,
   loading: false,
   onDone: () => { },

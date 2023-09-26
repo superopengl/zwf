@@ -2,6 +2,7 @@ import { TaskDoc } from './../entity/TaskDoc';
 import { TaskEvent } from '../entity/TaskEvent';
 import { SupportMessage } from '../entity/SupportMessage';
 import { TaskWatcherEventAck } from '../entity/TaskWatcherEventAck';
+import { TaskTalk } from '../entity/TaskTalk';
 
 export type Zevent = {
   type: 'support';
@@ -15,6 +16,10 @@ export type Zevent = {
   type: 'taskEvent.ack',
   userId: string,
   payload: TaskWatcherEventAck,
+} | {
+  type: 'taskTalk',
+  userId: string,
+  payload: TaskTalk,
 };
 
 

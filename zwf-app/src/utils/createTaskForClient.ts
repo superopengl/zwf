@@ -1,5 +1,5 @@
 import { OrgClient } from '../entity/OrgClient';
-import { TaskField } from '../entity/TaskField';
+import { TaskFormField } from '../entity/TaskFormField';
 import { UserProfile } from '../entity/UserProfile';
 
 import { assert } from './assert';
@@ -42,9 +42,9 @@ function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
 }
 
 const createTaskFieldByFemplateField = (taskId: string, ordinal: number, femplateField: FemplateField, defaultValueMap: Map<string, any>) => {
-  const field = new TaskField();
+  const field = new TaskFormField();
   field.id = uuidv4();
-  field.taskId = taskId;
+  // field.taskId = taskId;
   field.ordinal = ordinal;
   field.name = femplateField.name;
   field.description = femplateField.description;

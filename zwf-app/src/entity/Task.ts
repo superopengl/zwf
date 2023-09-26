@@ -3,10 +3,12 @@ import { OrgClientInformation } from './views/OrgClientInformation';
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany, JoinColumn, OneToOne, ManyToOne } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { Tag } from './Tag';
-import { TaskField } from './TaskField';
+import { TaskFormField } from './TaskFormField';
 import { File } from './File';
 import { OrgClient } from './OrgClient';
 import { TaskWatcher } from './TaskWatcher';
+import { TaskForm } from './TaskForm';
+import { TaskTalk } from './TaskTalk';
 // import { TaskField } from '../types/TaskField';
 
 @Entity()
@@ -50,11 +52,14 @@ export class Task {
   @JoinColumn({ name: 'orgClientId', referencedColumnName: 'id' })
   orgClient: OrgClient;
 
-  @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
-  fields: TaskField[];
+  @OneToMany(() => TaskForm, form => form.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
+  forms: TaskForm[];
 
   @OneToMany(() => TaskDoc, doc => doc.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   docs: TaskDoc[];
+
+  @OneToMany(() => TaskTalk, tt => tt.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
+  talks: TaskTalk[];
 
   @ManyToMany(() => Tag, { onDelete: 'CASCADE' })
   @JoinTable()

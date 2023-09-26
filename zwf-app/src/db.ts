@@ -10,7 +10,7 @@ import { EmailLog } from './entity/EmailLog';
 import { Demplate } from './entity/Demplate';
 import { Femplate } from './entity/Femplate';
 import { UserProfile } from './entity/UserProfile';
-import { TaskField } from './entity/TaskField';
+import { TaskFormField } from './entity/TaskFormField';
 import { Task } from './entity/Task';
 import { Tag } from './entity/Tag';
 import { SysLog } from './entity/SysLog';
@@ -31,6 +31,7 @@ import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
 import { TaskActivityInformation } from './entity/views/TaskActivityInformation';
 import { TaskEvent } from './entity/TaskEvent';
+import { TaskTalk } from './entity/TaskTalk';
 import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
 import { OrgClientInformation } from './entity/views/OrgClientInformation';
@@ -51,6 +52,8 @@ import { TaskWatcherEmailNotificationInformation } from './entity/views/TaskWatc
 import { TaskWatcherUiNotificationInformation } from './entity/views/TaskWatcherUiNotificationInformation';
 import { ZeventDef } from './entity/ZeventDef';
 import { initializeZeventDef } from './utils/initializeZeventDef';
+import { TaskForm } from './entity/TaskForm';
+import { TaskField } from './entity/TaskField';
 dotenv.config();
 
 const views = [
@@ -192,7 +195,9 @@ export const db = new DataSource({
     SysLog,
     Tag,
     Task,
-    TaskField,
+    TaskTalk,
+    TaskForm,
+    TaskFormField,
     TaskDoc,
     File,
     Femplate,

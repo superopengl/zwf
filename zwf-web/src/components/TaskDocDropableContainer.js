@@ -109,7 +109,7 @@ export const TaskDocDropableContainer = React.memo((props) => {
       <CoverUploadDragger
         class="upload"
         multiple={true}
-        action={`${API_BASE_URL}/task/${taskId}/file`}
+        action={`${API_BASE_URL}/task/${taskId}/talk/doc`}
         withCredentials={true}
         accept="*/*"
         listType="text"

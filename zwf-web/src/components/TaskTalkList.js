@@ -9,6 +9,7 @@ import { RawHtmlDisplay } from './RawHtmlDisplay';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { UserNameCard } from './UserNameCard';
+import { TaskDocName } from 'components/TaskDocName';
 
 const { Text } = Typography;
 
@@ -23,8 +24,24 @@ padding-right: 16px;
 
 `;
 
-const ChatMessage = React.memo(props => {
-  const { userId, message, createdAt } = props;
+const renderItemContent = (talk) => {
+  const { type, text, doc, form } = talk;
+
+  switch (type) {
+    case 'text':
+      return text;
+    case 'doc':
+      return <TaskDocName taskDoc={doc} />
+    case 'form':
+      return <p>A from</p>
+    default:
+      return `Unknown type ${type}`;
+  }
+}
+
+const ThreadItem = React.memo(props => {
+  const { talk } = props;
+  const { by: userId, type, text, doc, form, createdAt } = talk;
   const [user] = useAuthUser();
   const currentUserId = user?.id;
   const isMe = userId === currentUserId;
@@ -47,7 +64,7 @@ const ChatMessage = React.memo(props => {
           backgroundColor: isMe ? '#0FBFC499' : 'rgb(236, 236, 236)',
           borderRadius: 12,
         }}>
-        {message}
+        {renderItemContent(talk)}
       </Card>
       <Text type="secondary">
         <small><TimeAgo value={createdAt} accurate={false} showTime={false} /></small>
@@ -56,21 +73,21 @@ const ChatMessage = React.memo(props => {
   </Space.Compact>
 });
 
-export const TaskCommentList = React.memo((props) => {
+export const TaskTalkList = React.memo((props) => {
   const { dataSource, loading } = props;
   return <StyledList
     loading={loading}
     dataSource={dataSource}
     locale={{ emptyText: 'No messages' }}
     renderItem={item => <List.Item>
-      <ChatMessage userId={item.by} message={item.info.message} createdAt={item.createdAt} />
+      <ThreadItem userId={item.by} type={item.type} createdAt={item.createdAt} talk={item} />
     </List.Item>} />
 });
 
-TaskCommentList.propTypes = {
+TaskTalkList.propTypes = {
   dataSource: PropTypes.array,
   loading: PropTypes.bool,
 };
 
-TaskCommentList.defaultProps = {
+TaskTalkList.defaultProps = {
 };

@@ -2,12 +2,12 @@ import { Drawer, Tabs } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { listTaskComment$ } from 'services/taskService';
-import { TaskCommentDisplayPanel } from './TaskCommentDisplayPanel';
+import { getTaskTalk$ } from 'services/taskService';
+import { TaskTalkDisplayPanel } from './TaskTalkDisplayPanel';
 import { HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
 import { TaskTimelinePanel } from './TaskTimelinePanel';
-import { TaskCommentInputForm } from './TaskCommentInputForm';
+import { TaskTalkTextInput } from './TaskTalkTextInput';
 
 
 
@@ -15,7 +15,7 @@ export const ClientTaskCommentDrawer = React.memo((props) => {
   const { taskId, open, onClose, width } = props;
 
   const handleMessageSent = () => {
-    listTaskComment$(taskId).subscribe();
+    getTaskTalk$(taskId).subscribe();
   }
 
   return <Drawer
@@ -30,7 +30,7 @@ export const ClientTaskCommentDrawer = React.memo((props) => {
   // bodyStyle={{ padding: 0 }}
   // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <TaskCommentDisplayPanel taskId={taskId} />
+    <TaskTalkDisplayPanel taskId={taskId} />
   </Drawer>
 });
 

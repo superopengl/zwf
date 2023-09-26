@@ -11,7 +11,6 @@ export enum ZeventName {
     TaskStatusAwaitClient = 'task-await-client',
     TaskFormSchemaChanged = 'task-form-schema-changed',
     TaskFieldValueChanged = 'task-field-value-changed',
-    TaskAddedDoc = 'task-added-doc',
     TaskDeletedDoc = 'task-deleted-doc',
     TaskGenedDoc = 'task-gened-doc',
     RequestClientSignDoc = 'request-client-sign-doc',
@@ -22,4 +21,10 @@ export enum ZeventName {
     ClientDownloadedDoc = 'client-downloaded-doc',
     TaskComment = 'task-comment',
     SupportMessage = 'support-message',
+    
+    TaskAddedDoc = 'task-added-doc',
+    TaskAddedForm = 'task-added-form',
+    TaskRequestSign = 'task-request-sign',
+    TaskSubmitForm = 'task-submit-form',
+    TaskSigned = 'task-signed',
 }

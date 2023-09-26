@@ -17,6 +17,7 @@ export const ZeventContainer = (props) => {
   const handleNewEvent = React.useCallback((z) => {
     switch (z.type) {
       case 'taskEvent':
+      case 'taskTalk':
         zeventSourceRef.current.next(z);
         setZevents(pre => [...pre, z])
         break;

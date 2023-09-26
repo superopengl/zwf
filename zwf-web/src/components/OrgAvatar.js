@@ -11,7 +11,6 @@ img {
 }
 `;
 
-
 export const OrgAvatar = React.memo((props) => {
   const { orgName, orgLogoFileId } = props;
 

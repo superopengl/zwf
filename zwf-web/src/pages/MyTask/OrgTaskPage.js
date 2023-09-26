@@ -21,7 +21,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
 import { ZeventBadge } from 'components/ZeventBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
+import { TaskTalkDisplayPanel } from 'components/TaskTalkDisplayPanel';
 import { TaskTimelineDrawer } from 'components/TaskTimelineDrawer';
 import { BsFillSendFill, BsFillTrash3Fill, BsInputCursorText } from 'react-icons/bs';
 import { Descriptions } from 'antd';
@@ -35,8 +35,9 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { ZeventContext } from 'contexts/ZeventContext';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
-import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
+import { TaskTalkTextInput } from 'components/TaskTalkTextInput';
 import { TaskContext } from 'contexts/TaskContext';
+import { OrgTaskAddDocButton } from 'components/OrgTaskAddDocButton';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -190,6 +191,14 @@ const OrgTaskPage = () => {
             <Col flex="2 2 400px">
               <Row gutter={[40, 40]}>
                 <Col span={24}>
+                  <ProCard >
+                    <TaskTalkDisplayPanel taskId={task.id} />
+                    <TaskTalkTextInput taskId={task.id} />
+                    <OrgTaskAddDocButton />
+                  </ProCard>
+
+                </Col>
+                <Col span={24}>
                   <OrgTaskDocListPanel onChange={() => load$()} />
                 </Col>
                 <Col span={24}>
@@ -197,7 +206,7 @@ const OrgTaskPage = () => {
                     <Button onClick={handleRequestAction} icon={<Icon component={BsFillSendFill} />}>Request client to fill</Button>
                     <Button onClick={handleEditFields} icon={<Icon component={MdEditNote} />}>Edit fields</Button>
                   </Space>}>
-                    {task?.fields.length > 0 ?
+                    {task?.fields?.length > 0 ?
                       <AutoSaveTaskFormPanel mode="agent" onSavingChange={setSaving} autoSave={true} submitText="Save" /> :
                       <Row justify="center">
                         <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
@@ -209,7 +218,7 @@ const OrgTaskPage = () => {
             </Col>
             <Col flex="0 0 340px">
               <ProCard ghost>
-                <Link to={`/client/${task?.orgClientId}`} style={{color: 'inherit'}}>
+                <Link to={`/client/${task?.orgClientId}`} style={{ color: 'inherit' }}>
                   <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
                 </Link>
                 <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }} colon={false}>
@@ -236,8 +245,7 @@ const OrgTaskPage = () => {
                         <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
                       </Tooltip>}
                       <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                      <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]} /></Button>
-                      <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
+                      {/* <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button> */}
                       <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                       {/* <Divider />
                       <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button> */}
@@ -252,21 +260,8 @@ const OrgTaskPage = () => {
           </Row>
           {/* <DebugJsonPanel value={task.fields} /> */}
         </PageHeaderContainer>
-        <TaskTimelineDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />
+        {/* <TaskTimelineDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} /> */}
         {saving && <SavingAffix />}
-        <Drawer
-          title="Comments"
-          open={commentsOpen}
-          onClose={() => setCommentsOpen(false)}
-          // mask={false}
-          destroyOnClose={true}
-          placement='right'
-          // height="90vh"
-          bodyStyle={{ padding: 0 }}
-          footer={<TaskCommentInputForm taskId={task.id} />}
-        >
-          <TaskCommentDisplayPanel taskId={task.id} />
-        </Drawer>
         {deepLinkContextHolder}
         <div>
           {requestActionContextHolder}

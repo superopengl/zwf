@@ -8,7 +8,7 @@ import { uploadToS3 } from '../utils/uploadToS3';
 import { EntityManager } from 'typeorm';
 import { File } from '../entity/File';
 import { createHash } from 'crypto';
-import { TaskField } from '../entity/TaskField';
+import { TaskFormField } from '../entity/TaskFormField';
 import * as moment from 'moment';
 import * as hash from 'object-hash';
 import { assert } from '../utils/assert';
@@ -44,7 +44,7 @@ function formatHtmlForRendering(html) {
   return `<body style="font-size: 14px;font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;">${html}</body>`;
 }
 
-export async function renderHtmlWithFields(html: string, refFieldNames: string[], fields: TaskField[]) {
+export async function renderHtmlWithFields(html: string, refFieldNames: string[], fields: TaskFormField[]) {
   let renderedHtml = formatHtmlForRendering(html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
   const usedFieldBag = {};
@@ -65,7 +65,7 @@ export async function renderHtmlWithFields(html: string, refFieldNames: string[]
   return { renderedHtml, usedFieldBag, missingFields };
 }
 
-async function generatePdfDataFromDemplate(demplate: Demplate, fields: TaskField[]) {
+async function generatePdfDataFromDemplate(demplate: Demplate, fields: TaskFormField[]) {
   const { renderedHtml, usedFieldBag, missingFields } = await renderHtmlWithFields(demplate.html, demplate.refFieldNames, fields);
 
   const pdfData = missingFields.length === 0 ? await generatePdfBufferFromHtml(renderedHtml) : null;
@@ -82,9 +82,9 @@ export async function generatePdfTaskDocFile(m: EntityManager, docId: string, ge
   const doc = await m.findOne(TaskDoc, {
     where: { id: docId },
     relations: {
-      task: {
-        fields: true,
-      },
+      // task: {
+      //   fields: true,
+      // },
     }
   });
 
@@ -95,7 +95,8 @@ export async function generatePdfTaskDocFile(m: EntityManager, docId: string, ge
   const demplate = await m.findOneBy(Demplate, { id: doc.demplateId });
   assert(demplate, 500, 'demplate not found');
 
-  const { pdfData, fileName, usedFieldBag, missingFields } = await generatePdfDataFromDemplate(demplate, doc.task.fields);
+  // const { pdfData, fileName, usedFieldBag, missingFields } = await generatePdfDataFromDemplate(demplate, doc.task.fields);
+  const { pdfData, fileName, usedFieldBag, missingFields } = await generatePdfDataFromDemplate(demplate, null);
 
   if (pdfData) {
     const id = uuidv4();

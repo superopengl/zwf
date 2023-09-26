@@ -791,14 +791,6 @@ paths:
       responses:
         200:
           description: OK
-  /task/comment:
-    get:
-      operationId: listAllMyHistoricalTaskComments
-      # security:
-      #   - authLoggedInUser: []
-      responses:
-        200:
-          description: OK
   /task/deep/{deepLinkId}:
     get:
       operationId: getDeepLinkedTask
@@ -906,9 +898,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/comment:
+  /task/{id}/talk:
     get:
-      operationId: listTaskComment
+      operationId: getTaskTalk
       parameters:
         - name: id
           in: path
@@ -918,8 +910,9 @@ paths:
       responses:
         200:
           description: OK
+  /task/{id}/talk/text:
     post:
-      operationId: addTaskComment
+      operationId: createTaskTalkText
       parameters:
         - name: id
           in: path
@@ -928,7 +921,19 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: OK     
+  /task/{taskId}/talk/doc:
+    post:
+      operationId: createTaskTalkDoc
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true        
+      responses:
+        200:
+          description: OK          
   /task/{id}/fields:
     post:
       operationId: updateTaskFields
@@ -984,18 +989,6 @@ paths:
       responses:
         200:
           description: OK      
-  /task/{taskId}/file:
-    post:
-      operationId: uploadTaskFile
-      parameters:
-        - name: taskId
-          in: path
-          type: string
-          format: uuid
-          required: true        
-      responses:
-        200:
-          description: OK     
   /task/doc/{docId}:
     get:
       operationId: getTaskDocFileInfo

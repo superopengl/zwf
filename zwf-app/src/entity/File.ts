@@ -1,7 +1,5 @@
 import { TaskDoc } from './TaskDoc';
-import { TaskField } from './TaskField';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, OneToOne } from 'typeorm';
-import { Task } from './Task';
 @Entity()
 export class File {
   @PrimaryGeneratedColumn('uuid')

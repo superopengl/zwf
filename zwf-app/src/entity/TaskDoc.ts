@@ -3,12 +3,12 @@ import { File } from './File';
 import { Task } from './Task';
 
 @Entity()
-@Index('idex_taskField_taskId_createdAt', ['taskId', 'createdAt'])
+@Index('idex_taskDoc_taskId_createdAt', ['taskId', 'createdAt'])
 export class TaskDoc {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
+  @Column('text')
   name: string;
 
   @CreateDateColumn()

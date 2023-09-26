@@ -6,8 +6,8 @@ import { Typography, Row, Badge, Skeleton, Button, Grid, Image, Tooltip } from '
 
 import { getTask$ } from 'services/taskService';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
-import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
+import { TaskTalkTextInput } from 'components/TaskTalkTextInput';
+import { TaskTalkDisplayPanel } from 'components/TaskTalkDisplayPanel';
 import { finalize } from 'rxjs/operators';
 import Icon, { CommentOutlined, ExclamationCircleFilled, PaperClipOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
@@ -23,6 +23,7 @@ import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 import { TaskContext } from 'contexts/TaskContext';
 import { TaskRequestFillFormBadge } from 'components/TaskRequestFillFormBadge';
 import { getPublicFileUrl } from 'services/fileService';
+import { OrgAvatar } from 'components/OrgAvatar';
 
 const { Text, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -199,20 +200,6 @@ const ClientTaskPage = () => {
             >Chat</Button>
           </TaskUnreadCommentBadge>
 
-          <TaskRequestFillFormBadge taskId={task.id} offset={[-8, 10]}>
-            <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
-              type={activePanel === 'form' ? 'primary' : 'text'}
-              ghost={activePanel === 'form'}
-              disabled={!task.fields.length}
-              onClick={() => setActivePanel('form')}
-            >Form</Button>
-          </TaskRequestFillFormBadge>
-
-          <Button size={buttonSize} icon={<PaperClipOutlined />}
-            type={activePanel === 'docs' ? 'primary' : 'text'}
-            ghost={activePanel === 'docs'}
-            onClick={() => setActivePanel('docs')}
-          >Docs</Button>
           <Badge showZero={false} count={docsToSign.length} offset={[-8, 10]}>
             <Button size={buttonSize} icon={
               <Icon component={RiQuillPenFill} />}
@@ -228,9 +215,8 @@ const ClientTaskPage = () => {
           <Tooltip title={`Service provided by ${task.orgName}`} key="org">
             <TextLink href={task.orgWebsiteUrl} target="_blank"
               onClick={e => e.stopPropagation()}
-            >{task.orgLogoFileId ?
-              <Image src={getPublicFileUrl(task.orgLogoFileId)} height={36} preview={false} alt={task.orgName} /> :
-              <Text type="secondary">{task.orgName}</Text>}
+            >
+              <OrgAvatar orgName={task.orgName} orgLogoFileId={task.orgLogoFileId} />
             </TextLink>
           </Tooltip>
         ]}
@@ -243,15 +229,6 @@ const ClientTaskPage = () => {
             autoSave={false}
           />
         </ProCard>}
-        {activePanel === 'docs' && <ProCard ghost>
-          <ClientTaskDocListPanel
-            task={task}
-            onSavingChange={setSaving}
-            onChange={handleDocChange}
-            disabled={!canEdit}
-            placeholder="Upload attachments"
-          />
-        </ProCard>}
         {activePanel === 'sign' && <ProCard
           title={`${docsToSign.length} Document Waiting for Your Signature`}
           bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
@@ -259,12 +236,19 @@ const ClientTaskPage = () => {
         >
           <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
         </ProCard>}
-        {activePanel === 'chat' && <ProCard size="small" ghost ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
-          <TaskCommentDisplayPanel taskId={task.id} />
+        <ProCard size="small" ghost ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
+          <TaskTalkDisplayPanel taskId={task.id} />
           <div style={{ padding: 12 }}>
-            <TaskCommentInputForm taskId={task.id} />
+            <TaskTalkTextInput taskId={task.id} />
           </div>
-        </ProCard>}
+          <ClientTaskDocListPanel
+            task={task}
+            onSavingChange={setSaving}
+            onChange={handleDocChange}
+            disabled={!canEdit}
+            placeholder="Upload attachments"
+          />
+        </ProCard>
         {saving && <SavingAffix />}
       </PageHeaderContainer>
     </TaskContext.Provider >}

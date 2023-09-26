@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
 import { listTaskComment$, signTaskDocs$ } from 'services/taskService';
-import { TaskCommentDisplayPanel } from './TaskCommentDisplayPanel';
+import { TaskTalkDisplayPanel } from './TaskTalkDisplayPanel';
 import { CloseOutlined, HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
 import { TaskTimelinePanel } from './TaskTimelinePanel';
