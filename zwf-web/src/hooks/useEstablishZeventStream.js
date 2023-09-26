@@ -8,12 +8,7 @@ export function useEstablishZeventStream(handler) {
   }, [handler]);
 
   React.useEffect(() => {
-    const es = establishZeventRawStream();
-
-    es.onmessage = (e) => {
-      const event = JSON.parse(e.data);
-      zeventHanlder(event);
-    }
+    const es = establishZeventRawStream(zeventHanlder);
 
     return () => {
       es?.close()
