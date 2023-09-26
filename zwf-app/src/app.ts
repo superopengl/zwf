@@ -88,7 +88,9 @@ export function createAppInstance() {
   // }));
 
   app.use(fileUpload({
-    createParentPath: true
+    createParentPath: true,
+    defCharset: 'utf8',
+    defParamCharset: 'utf8',
   }));
 
   // // Redirect HTTP to HTTPS
