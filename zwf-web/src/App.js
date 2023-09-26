@@ -53,7 +53,6 @@ const FemplateListPage = loadable(() => import('pages/Femplate/FemplateListPage'
 const FemplatePage = loadable(() => import('pages/Femplate/FemplatePage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const TaskPage = loadable(() => import('pages/TaskPage'));
-const ClientCommentListPage = loadable(() => import('pages/ClientTask/ClientCommentListPage'));
 const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
 const ResourceEditListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
 const OrgTaskEditPage = loadable(() => import('pages/MyTask/OrgTaskEditPage'));
@@ -132,7 +131,6 @@ export const App = React.memo(() => {
           <Route path="/task" element={<ClientTaskListPage />} />
           <Route path="/task/:id" element={<TaskPage />} />
           <Route path="/task/:id/edit" element={<OrgTaskEditPage />} />
-          <Route path="/activity" element={<ClientCommentListPage />} />
           <Route path="/demplate" element={<DemplateListPage />} />
           <Route path="/demplate/new" element={<DemplatePage />} />
           <Route path="/demplate/:id" element={<DemplatePage />} />
