@@ -100,8 +100,7 @@ export const UserAvatar = React.memo((props) => {
   }
 
   if (!editable) {
-
-    return <>{avatarComponent}</>
+    return avatarComponent
   }
 
   return (
