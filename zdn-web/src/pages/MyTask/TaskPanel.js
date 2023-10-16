@@ -13,13 +13,12 @@ import { TaskIcon } from 'components/entityIcon';
 const { Title, Paragraph, Text } = Typography;
 
 
-export const TaskDetailModal = React.memo(React.forwardRef((props, ref) => {
+export const TaskDetailModal = React.memo((props) => {
 
   const { taskId, name, type, visible: propVisbile, onClose } = props;
 
   const [task, setTask] = React.useState();
   const [visible, setVisible] = React.useState(propVisbile);
-  const previewFormRef = React.createRef();
 
   React.useEffect(() => {
     if(!taskId) {
@@ -57,11 +56,11 @@ export const TaskDetailModal = React.memo(React.forwardRef((props, ref) => {
       </Row>}
     </Modal>
   );
-}));
+});
 
 TaskDetailModal.propTypes = {
-  taskId: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
+  taskId: PropTypes.string,
+  name: PropTypes.string,
   type: PropTypes.oneOf(['client', 'agent']).isRequired,
   visible: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
