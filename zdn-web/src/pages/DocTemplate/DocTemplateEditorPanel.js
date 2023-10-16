@@ -26,21 +26,21 @@ export const DocTemplateEditorPanel = props => {
 
   return (
     <Container>
-    <Form 
-    // onFinish={handleSave} 
-    onValuesChange={(changedValues, allValues) => onChange(allValues)}
-    initialValues={entity}
-     style={{ position: 'relative' }}>
-      <Form.Item name="name" rules={[{ required: true, message: ' ', max: 100 }]}>
-        <Input placeholder="Doc Template Name" />
-      </Form.Item>
-      <Form.Item name="description" rules={[{ required: true, message: ' ' }]}>
-        <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
-      </Form.Item>
-      <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
-       <RickTextInput />
-      </Form.Item>
-    </Form >
+      <Form
+        // onFinish={handleSave} 
+        onValuesChange={(changedValues, allValues) => onChange(allValues)}
+        initialValues={entity}
+        style={{ position: 'relative' }}>
+        <Form.Item name="name" rules={[{ required: true, message: ' ', max: 100 }]}>
+          <Input placeholder="Doc Template Name" />
+        </Form.Item>
+        <Form.Item name="description" rules={[{ required: true, message: ' ' }]}>
+          <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
+        </Form.Item>
+        <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
+          <RickTextInput />
+        </Form.Item>
+      </Form>
     </Container >
   );
 };

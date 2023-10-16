@@ -49,7 +49,7 @@ function getLabel(givenName, surname) {
   return initials.substring(0, maxLength);
 }
 
-export const UserAvatar = (props) => {
+export const UserAvatar = React.memo((props) => {
   const { editable, size, value: avatarFileId, userId, givenName, surname, onChange, style } = props;
 
   const [fileList, setFileList] = React.useState([]);
@@ -122,12 +122,11 @@ export const UserAvatar = (props) => {
       </Container>
     </Upload>
   );
-
-}
+});
 
 UserAvatar.propTypes = {
   userId: PropTypes.string,
-  value: PropTypes.string,
+  value: PropTypes.string, // avatarFileId
   givenName: PropTypes.string,
   surname: PropTypes.string,
   size: PropTypes.number,
