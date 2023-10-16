@@ -6,7 +6,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { MessageBox } from 'react-chat-elements';
 import 'react-chat-elements/dist/main.css';
-import { withRouter } from 'react-router-dom';
 import { listTaskMessages, sendTaskMessage$, subscribeTaskMessage } from 'services/taskService';
 import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
@@ -67,12 +66,9 @@ const SentMessage = (props) => <StyledSentMessageBox {...props} position="right"
 
 const ReceivedMessage = (props) => <StyledReceivedMessageBox {...props} position="left" />
 
-const TaskChatPanel = (props) => {
-  const { taskId, visible, readonly } = props;
-  // const { name, id, fields } = value || {};
+export const TaskChatPanel = React.memo((props) => {
+  const { taskId, currentUserId, readonly } = props;
 
-  const context = React.useContext(GlobalContext);
-  const myUserId = context.user.id;
   const [loading, setLoading] = React.useState(true);
   const [form] = Form.useForm();
   const textareaRef = React.useRef(null);
@@ -113,7 +109,7 @@ const TaskChatPanel = (props) => {
     const newMessage = {
       id: messageId,
       createdAt: new Date(),
-      senderId: myUserId,
+      senderId: currentUserId,
       message
     };
 
@@ -132,7 +128,7 @@ const TaskChatPanel = (props) => {
   return <Container>
     <div className="message-list" style={{ padding: '0 0 16px', verticalAlign: 'bottom' }}>
       {list.map(item => {
-        const MessageComponent = item.senderId === myUserId ? SentMessage : ReceivedMessage;
+        const MessageComponent = item.senderId === currentUserId ? SentMessage : ReceivedMessage;
         return <MessageComponent
             key={item.id}
             // avatar={getPublicFileUrl(item.avatarFileId)}
@@ -167,17 +163,15 @@ const TaskChatPanel = (props) => {
       </Form>}
     </div>
   </Container>
-};
+});
 
 TaskChatPanel.propTypes = {
   taskId: PropTypes.string.isRequired,
-  visible: PropTypes.bool.isRequired,
+  currentUserId: PropTypes.string.isRequired,
   readonly: PropTypes.bool.isRequired,
 };
 
 TaskChatPanel.defaultProps = {
-  visible: true,
   readonly: false
 };
 
-export default withRouter(TaskChatPanel);

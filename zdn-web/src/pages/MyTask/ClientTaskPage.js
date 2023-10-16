@@ -12,7 +12,7 @@ import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
-import TaskChatPanel from 'components/TaskChatPanel';
+import {TaskChatPanel} from 'components/TaskChatPanel';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 4rem auto 0 auto;
