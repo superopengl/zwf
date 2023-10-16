@@ -51,7 +51,6 @@ specifiers:
   typescript: ^4.2.4
   uuid: ^8.3.0
   voucher-code-generator: ^1.1.1
-  ws: ^7.3.1
   yamljs: ^0.3.0
 
 dependencies:
@@ -97,7 +96,6 @@ dependencies:
   typeorm: 0.2.32
   uuid: 8.3.2
   voucher-code-generator: 1.1.1
-  ws: 7.4.5
   yamljs: 0.3.0
 
 devDependencies:
