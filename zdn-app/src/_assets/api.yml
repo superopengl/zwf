@@ -189,6 +189,17 @@ paths:
       responses:
         200:
           description: OK
+  /event:
+    get:
+      operationId: subscribeEvent
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: publishEvent
+      responses:
+        200:
+          description: OK          
   /user:
     get:
       operationId: listAllUsers
@@ -716,6 +727,41 @@ paths:
       responses:
         200:
           description: OK
+  /task/{taskId}/message:
+    get:
+      operationId: listTaskMessages
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: newTaskMessage
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK       
+  /task/{taskId}/message/subscribe:
+    get:
+      operationId: subscribeTaskMessage
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK             
   /task/{id}/assign:
     post:
       operationId: assignTask

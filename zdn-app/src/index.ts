@@ -8,7 +8,7 @@ import * as WebSocket from 'ws';
 
 function validateEnvVars() {
   const requiredEnvVars = [
-    'ZDN_DOMAIN_NAME',
+    'ZDN_WEB_DOMAIN_NAME',
     'ZDN_S3_BUCKET',
     'AWS_DEFAULT_REGION',
     'ZDN_FILE_PREFIX',

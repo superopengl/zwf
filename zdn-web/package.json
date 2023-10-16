@@ -36,7 +36,7 @@
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.1.0",
     "react-big-calendar": "^0.32.0",
-    "react-chat-elements": "^10.14.0",
+    "react-chat-elements": "^10.15.0",
     "react-cookie-consent": "^6.2.3",
     "react-copy-to-clipboard": "^5.0.3",
     "react-dom": "^17.0.1",

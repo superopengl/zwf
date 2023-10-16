@@ -1,4 +1,8 @@
+import { getEventChannel } from './../services/globalEventSubPubService';
+import { TaskThreadInformation } from './../entity/views/TaskThreadInformation';
+import { getUtcNow } from './../utils/getUtcNow';
 import { TaskInformation } from './../entity/views/TaskInformation';
+import { filter, map } from 'rxjs/operators';
 
 import * as moment from 'moment';
 import { getManager, getRepository, Not, QueryRunner } from 'typeorm';
@@ -29,6 +33,9 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
+import { publishEvent } from '../services/globalEventSubPubService';
+import { TaskMessage } from '../entity/TaskMessage';
+import { assertTaskAccess } from '../utils/assertTaskAccess';
 
 export const generateTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -297,16 +304,16 @@ export const saveDeepLinkedTask = handlerWrapper(async (req, res) => {
     assert(task, 404);
 
     let hasChanged = false;
-    for(const field of task.fields) {
-      const {name, value: oldValue} = field;
+    for (const field of task.fields) {
+      const { name, value: oldValue } = field;
       const newValue = payload[name];
-      if(oldValue !== newValue) {
+      if (oldValue !== newValue) {
         hasChanged = true;
         field.value = newValue;
       }
     }
 
-    if(hasChanged) {
+    if (hasChanged) {
       await m.save(task);
     }
   });
@@ -356,6 +363,108 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
 
   await taskRepo.save(task);
   await handleTaskStatusChange(oldStatus, task);
+
+  res.json();
+});
+
+
+export const listTaskMessages = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const role = getRoleFromReq(req);
+  const { taskId } = req.params;
+
+  let query;
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent:
+      const orgId = getOrgIdFromReq(req);
+      query = {
+        orgId,
+        taskId
+      }
+      break;
+    case Role.Client:
+      query = {
+        taskId,
+        taskUserId: getUserIdFromReq(req)
+      }
+      break;
+    default:
+      assert(false, 404);
+  }
+
+  const list = await getRepository(TaskThreadInformation).find({
+    where: query,
+    order: {
+      createdAt: 'DESC'
+    }
+  });
+
+  res.json(list);
+});
+
+const TASK_MESSAGE_EVENT_TYPE = 'zdn.task.message'
+
+export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { taskId } = req.params;
+
+  await assertTaskAccess(req, taskId);
+
+  // const { user: { id: userId } } = req as any;
+  const isProd = process.env.NODE_ENV === 'prod';
+  if (!isProd) {
+    res.setHeader('Access-Control-Allow-Origin', process.env.ZDN_WEB_DOMAIN_NAME);
+  }
+  res.sse();
+  // res.setHeader('Content-Type', 'text/event-stream');
+  // res.setHeader('Cache-Control', 'no-cache');
+  // res.flushHeaders();
+
+  // res.writeHead(200, {
+  //   // Connection: 'keep-alive',
+  //   // 'Content-Type': 'text/event-stream',
+  //   // 'Cache-Control': 'no-cache',
+  //   'Access-Control-Allow-Origin': 'http://localhost:6007'
+  // });
+  // res.flushHeaders();
+
+  const channelSubscription$ = getEventChannel(TASK_MESSAGE_EVENT_TYPE)
+    .pipe(
+      filter(x => x?.taskId === taskId)
+    )
+    .subscribe((event) => {
+      res.write(`data: ${JSON.stringify(event)}\n\n`);
+      (res as any).flush();
+    });
+
+  res.on('close', () => {
+    channelSubscription$.unsubscribe();
+    res.end();
+  });
+});
+
+
+export const newTaskMessage = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const message = req.body.message;
+  assert(message, 400, 'Empty message body');
+  const { taskId } = req.params;
+  const taskRepo = getRepository(Task);
+  const task = await taskRepo.findOne(taskId);
+  assert(task, 404);
+  const senderId = getUserIdFromReq(req);
+  const orgId = task.orgId;
+
+  const taskMessage = new TaskMessage();
+  taskMessage.orgId = orgId;
+  taskMessage.senderId = senderId;
+  taskMessage.taskId = taskId;
+  taskMessage.message = message;
+
+  await getRepository(TaskMessage).insert(taskMessage);
+
+  publishEvent(TASK_MESSAGE_EVENT_TYPE, taskMessage);
 
   res.json();
 });

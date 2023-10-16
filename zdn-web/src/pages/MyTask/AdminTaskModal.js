@@ -11,14 +11,15 @@ import TaskFormWizard from './TaskFormWizard';
 import MyTaskReadView from './MyTaskReadView';
 import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
-import TaskChatPanel from 'pages/AdminTask/TaskChatPanel';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';
 import { TaskIcon } from 'components/entityIcon';
 import { catchError } from 'rxjs/operators';
 import { TaskFormPanel } from './TaskFormPanel';
+import TaskChatPanel from 'components/TaskChatPanel';
+import TaskDetailModal from './TaskPanel';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -128,7 +129,7 @@ export function show(taskId, title) {
     )
     .subscribe(task => {
       modalRef.update({
-        content: <TaskFormPanel value={task} type='agent' />,
+        content: <TaskDetailModal task={task} type='client'/>,
         afterClose: () => {
           subscription$.unsubscribe();
         }
