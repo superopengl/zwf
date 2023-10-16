@@ -7,8 +7,11 @@ import React from 'react';
 import { MessageBox } from 'react-chat-elements';
 import 'react-chat-elements/dist/main.css';
 import { withRouter } from 'react-router-dom';
-import { listTaskMessages, sendTaskMessage, subscribeTaskMessage } from 'services/taskService';
+import { listTaskMessages, sendTaskMessage$, subscribeTaskMessage } from 'services/taskService';
 import styled from 'styled-components';
+import { v4 as uuidv4 } from 'uuid';
+import { uniqBy, orderBy } from 'lodash';
+import { getPublicFileUrl } from 'services/fileService';
 
 const Container = styled.div`
 // background-color: rgba(0,0,0,0.05);
@@ -87,10 +90,11 @@ const TaskChatPanel = (props) => {
     const eventSource = subscribeTaskMessage(taskId);
     eventSource.onmessage = (message) => {
       const event = JSON.parse(message.data);
-      if (event.senderId !== myUserId) {
-        event.createdAt = moment.utc(event.createdAt).local().toDate();
-        setList(list => [event, ...list]);
-      }
+      event.createdAt = moment.utc(event.createdAt).local().toDate();
+      setList(list => {       
+        list.push(event);
+        return orderBy(uniqBy(list, x => x.id), ['createdAt'], ['desc']);
+      });
     }
 
     return () => {
@@ -105,7 +109,9 @@ const TaskChatPanel = (props) => {
       return;
     }
 
+    const messageId = uuidv4();
     const newMessage = {
+      id: messageId,
       createdAt: new Date(),
       senderId: myUserId,
       message
@@ -113,8 +119,8 @@ const TaskChatPanel = (props) => {
 
     const others = [...list];
 
-    sendTaskMessage(taskId, message).subscribe(() => {
-      setList([{ ...newMessage, status: 'sent' }, ...others]);
+    sendTaskMessage$(taskId, messageId, message).subscribe(() => {
+      setList(list => list.map(x => x.id === messageId ? { ...x, status: 'sent' } : x));
     })
 
     setList([{ ...newMessage, status: 'waiting' }, ...others]);
@@ -125,16 +131,17 @@ const TaskChatPanel = (props) => {
 
   return <Container>
     <div className="message-list" style={{ padding: '0 0 16px', verticalAlign: 'bottom' }}>
-      {list.map((x, i) => {
-        const MessageComponent = x.senderId === myUserId ? SentMessage : ReceivedMessage;
-        return <div key={i}>
-          <MessageComponent
+      {list.map(item => {
+        const MessageComponent = item.senderId === myUserId ? SentMessage : ReceivedMessage;
+        return <MessageComponent
+            key={item.id}
+            // avatar={getPublicFileUrl(item.avatarFileId)}
             type="text"
-            text={x.message}
-            date={moment(x.createdAt).toDate()}
-            status={x.status || 'sent'} // waiting, sent, received, read
+            text={item.message}
+            date={moment.utc(item.createdAt).local().toDate()}
+            status={item.status || 'sent'} // waiting, sent, received, read
             notch={false}
-          /></div>
+          />
       })}
     </div>
     <div style={{ padding: '16px 0' }}>

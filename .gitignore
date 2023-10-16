@@ -4,3 +4,5 @@ devops/.env.prod
 *.map
 .env
 zdn-web/build
+zdn-app/src/_assets/keys/localhost.crt
+zdn-app/src/_assets/keys/localhost.key

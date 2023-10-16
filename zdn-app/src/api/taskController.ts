@@ -447,7 +447,7 @@ export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
 
 export const newTaskMessage = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const message = req.body.message;
+  const { id, message } = req.body;
   assert(message, 400, 'Empty message body');
   const { taskId } = req.params;
   const taskRepo = getRepository(Task);
@@ -457,6 +457,7 @@ export const newTaskMessage = handlerWrapper(async (req, res) => {
   const orgId = task.orgId;
 
   const taskMessage = new TaskMessage();
+  taskMessage.id = id || uuidv4();
   taskMessage.orgId = orgId;
   taskMessage.senderId = senderId;
   taskMessage.taskId = taskId;
