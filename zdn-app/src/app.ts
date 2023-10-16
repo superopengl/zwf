@@ -1,6 +1,5 @@
 import * as express from 'express';
 import * as compression from 'compression';
-import * as bodyParser from 'body-parser';
 import * as listEndpoints from 'express-list-endpoints';
 import * as cors from 'cors';
 import * as path from 'path';
@@ -11,6 +10,7 @@ import * as api from './api';
 import { authMiddleware } from './middlewares/authMiddleware';
 import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
+import { sseMiddleware } from 'express-sse-middleware';
 import * as serveStatic from 'serve-static';
 
 
@@ -67,8 +67,10 @@ export function createAppInstance() {
   //     return req.cookies['jwt'] || null;
   //   }
   // }));
-  app.use(bodyParser.json({ limit: '8mb' }));
-  app.use(bodyParser.urlencoded({ extended: true, limit: '20mb' }));
+  app.use(sseMiddleware);
+
+  app.use(express.json({ limit: '8mb' }));
+  app.use(express.urlencoded({ extended: true, limit: '20mb' }));
   // app.use(expressSession({
   //   name: 'session',
   //   secret: 'zdn',
