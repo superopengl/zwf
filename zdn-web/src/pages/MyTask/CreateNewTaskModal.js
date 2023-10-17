@@ -67,17 +67,21 @@ export const CreateNewTaskModal = props => {
   }
 
   const saveTask = async values => {
+    debugger;
   }
 
   const handlCreateTask = async () => {
+    let values;
     try {
-      const values = await formRef.current.validateFields();
-      setLoading(true);
-      await saveTask(values);
-      props.onOk();
+      values = await formRef.current.validateFields();
     } catch {
       // validation errors
+      return;
     }
+    
+    setLoading(true);
+    await saveTask(values);
+    props.onOk();
   }
 
   const handleFormReset = () => {
