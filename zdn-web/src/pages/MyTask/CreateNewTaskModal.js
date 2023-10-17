@@ -7,7 +7,7 @@ import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 import PropTypes from 'prop-types';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TaskFormPanel } from './TaskFormPanel';
-import { getTask$, saveTask } from 'services/taskService';
+import { createNewTask$, getTask$, notifyTask, saveTask } from 'services/taskService';
 import { catchError } from 'rxjs/operators';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertTaskTemplateFieldsToFormFieldsSchema';
@@ -15,10 +15,13 @@ import ClientAutoComplete from 'components/ClientAutoComplete';
 import { TaskIcon, TaskTemplateIcon } from 'components/entityIcon';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { Loading } from 'components/Loading';
+import { notify } from 'util/notify';
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph, Text, Link: TextLink } = Typography;
 
 export const CreateNewTaskModal = props => {
+
+  const {taskTemplateId} = props;
 
   const [loading, setLoading] = React.useState(true);
   const [visible, setVisible] = React.useState(props.visible);
@@ -28,11 +31,11 @@ export const CreateNewTaskModal = props => {
   const formRef = React.createRef();
 
   React.useEffect(() => {
-    if (!props.taskTemplateId) {
+    if (!taskTemplateId) {
       setLoading(true);
       return;
     }
-    const subscription$ = getTaskTemplate$(props.taskTemplateId)
+    const subscription$ = getTaskTemplate$(taskTemplateId)
       .pipe(
         catchError(() => setLoading(false))
       )
@@ -52,7 +55,7 @@ export const CreateNewTaskModal = props => {
       subscription$.unsubscribe();
     }
 
-  }, [props.taskTemplateId]);
+  }, [taskTemplateId]);
 
   React.useEffect(() => {
     setVisible(props.visible);
@@ -67,7 +70,17 @@ export const CreateNewTaskModal = props => {
   }
 
   const saveTask = async values => {
-    debugger;
+    const payload = {
+      ...values,
+      taskTemplateId
+    }
+
+    createNewTask$(payload)
+      .subscribe(task => {
+        // console.log(task);
+        // handleCancelCreateTask();
+        notify.success('Created task', <>Successfully created task <TextLink target="_blank" href={`/task/${task.id}`}>{task.name}</TextLink></>, 20);
+      })
   }
 
   const handlCreateTask = async () => {
@@ -78,7 +91,7 @@ export const CreateNewTaskModal = props => {
       // validation errors
       return;
     }
-    
+
     setLoading(true);
     await saveTask(values);
     props.onOk();
@@ -130,13 +143,13 @@ export const CreateNewTaskModal = props => {
           colon={false}
         // initialValues={{ name: taskTemplate.name }}
         >
-          <Form.Item label="Task name" name="name" rules={[{ required: true, message: ' ' }]}>
+          <Form.Item label="Task name" name="taskName" rules={[{ required: true, message: ' ' }]}>
             <Input />
           </Form.Item>
           {/* <Form.Item label="Task template" name="taskTemplateId">
           <TaskTemplateSelect />
         </Form.Item> */}
-          <Form.Item label="client" name="client">
+          <Form.Item label="client" name="clientEmail" rules={[{ required: true, message: ' ' }]}>
             <ClientAutoComplete />
           </Form.Item>
           <Title level={5} type="secondary" style={{ marginTop: 40 }}>Client fields</Title>

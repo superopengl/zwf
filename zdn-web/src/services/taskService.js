@@ -21,8 +21,8 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function createNewTask$(taskTemplateId, clientEmail) {
-  return httpPut$('task', { taskTemplateId, clientEmail });
+export function createNewTask$(payload) {
+  return httpPut$('task', payload);
 }
 
 export async function deleteTask(id) {

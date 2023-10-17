@@ -16,7 +16,6 @@ import DropdownMenu from 'components/DropdownMenu';
 import HighlightingText from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import TaskClientSelectModal from 'components/TaskClientSelectModal';
-import { createNewTask$ } from 'services/taskService';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import { CreateNewTaskModal } from 'pages/MyTask/CreateNewTaskModal';
@@ -106,18 +105,6 @@ export const TaskTemplateListPage = props => {
         notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/task_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
         loadList();
       })
-  }
-
-  const handleCreateTask2 = async clientEmail => {
-    const templateId = currentTemplate;
-
-    createNewTask$(templateId, clientEmail)
-      .subscribe(task => {
-        // console.log(task);
-        handleCancelCreateTask();
-        notify.success('Created task', <>Successfully created task <TextLink target="_blank" href={`/task/${task.id}`}>{task.name}</TextLink></>, 20);
-      })
-
   }
   // const handleCancelCreateTask = () => {
   //   setSelectClientVisible(false);

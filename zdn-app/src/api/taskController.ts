@@ -44,9 +44,9 @@ export const generateTask = handlerWrapper(async (req, res) => {
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
-  const { taskTemplateId, clientEmail, name, fields } = req.body;
+  const { taskTemplateId, clientEmail, taskName, fields } = req.body;
 
-  const task = await createTaskByTaskTemplateAndEmail(taskTemplateId, clientEmail, fields);
+  const task = await createTaskByTaskTemplateAndEmail(taskTemplateId, taskName, clientEmail, fields);
 
   res.json(task);
 });

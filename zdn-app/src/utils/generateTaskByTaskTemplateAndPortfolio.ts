@@ -23,14 +23,13 @@ function generateDeepLinkId() {
   return result[0];
 }
 
-function prefillFieldsWithProtofolio(taskTemplateFields, portfolioFields) {
-  if (!portfolioFields) return taskTemplateFields;
+function prefillTaskTemplateFields(taskTemplateFields, inputFields: object) {
+  if (!inputFields) return taskTemplateFields;
 
-  const map = new Map(portfolioFields.map(({ name, value }) => [name, value]));
   const fields = taskTemplateFields.map(f => (
     {
       ...f,
-      value: map.get(f.name)
+      value: inputFields[f.name]
     }
   ));
 
@@ -67,7 +66,7 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
 
   const task = new Task();
 
-  const fields = prefillFieldsWithProtofolio(taskTemplate.fields, portfolio.fields);
+  const fields = prefillTaskTemplateFields(taskTemplate.fields, portfolio.fields);
 
   // task.id = uuidv4();
   task.name = genName(taskTemplate, portfolio);
@@ -81,24 +80,23 @@ export const generateTaskByTaskTemplateAndPortfolio = async (taskTemplateId, por
   return task;
 };
 
-export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, email, fieldValues) => {
+export const createTaskByTaskTemplateAndEmail = async (taskTemplateId, taskName, email, fieldValues) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
+  assert(taskName, 400, 'name is not specified');
   assert(email, 400, 'email is not specified');
 
   let task: Task;
   await getManager().transaction(async m => {
     const taskTemplate = await m.findOne(TaskTemplate, taskTemplateId);
     assert(taskTemplate, 404, 'taskTemplate is not found');
+    const fields = prefillTaskTemplateFields(taskTemplate.fields, fieldValues);
 
     const user = await ensureClientOrGuestUser(m, email);
-
+    
     task = new Task();
-  
-    const fields = prefillFieldsWithProtofolio(taskTemplate.fields, fieldValues);
-  
     task.id = uuidv4();
     task.deepLinkId = generateDeepLinkId();
-    task.name = taskTemplate.name;
+    task.name = taskName || taskTemplate.name;
     task.description = taskTemplate.description;
     task.userId = user.id;
     task.taskTemplateId = taskTemplateId;
