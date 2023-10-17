@@ -115,7 +115,7 @@ export const CreateNewTaskModal = props => {
           <Button disabled={loading} type="primary" onClick={handlCreateTask}>Create Task</Button>
         </Space>
       </Space>}
-      width={800}
+      width={600}
     >
       <Loading loading={loading}>
         <Title type="success" level={3}>{taskTemplate.name}</Title>

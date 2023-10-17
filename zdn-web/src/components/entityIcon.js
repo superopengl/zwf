@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
-export const EntityIcon = props => {
+export const EntityIcon = React.memo(props => {
   const {icon, color, style} = props;
   return <Icon style={{
     color: '#ffffffdd',
@@ -20,7 +20,7 @@ export const EntityIcon = props => {
     marginRight: 10,
     ...style
   }} component={() => icon} />
-};
+});
 
 EntityIcon.propTypes = {
   color: PropTypes.string,
