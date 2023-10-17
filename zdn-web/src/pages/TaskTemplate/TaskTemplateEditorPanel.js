@@ -19,13 +19,6 @@ export const TaskTemplateEditorPanel = props => {
 
   return (
     <Container>
-      <Alert
-        description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
-        showIcon
-        closable
-        type="info"
-        style={{ marginBottom: 20 }}
-      />
       <TaskTemplateBuilder
         value={schema}
         onChange={onChange}
