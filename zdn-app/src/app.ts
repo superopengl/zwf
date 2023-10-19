@@ -97,8 +97,6 @@ export function createAppInstance() {
   app.use(authMiddleware);
   app.use((req, res, next) => {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-    res.header('Expires', '-1');
-    res.header('Pragma', 'no-cache');
     next();
   });
   // app.use(passport.initialize());
@@ -118,7 +116,7 @@ export function createAppInstance() {
   app.use('/', serveStatic(staticWwwDir, {
     cacheControl: true,
     setHeaders: (res, path) => {
-      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+      res.setHeader('Cache-Control', 'public, max-age=36536000, immutable');
     }
   }));
 
