@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import FormBuilder from 'antd-form-builder'
 import PropTypes from 'prop-types';
-import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertTaskTemplateFieldsToFormFieldsSchema';
+import { convertTaskTemplateFieldsToFormFieldsSchema } from '../util/convertTaskTemplateFieldsToFormFieldsSchema';
 
 const { Title, Paragraph, Text } = Typography;
 

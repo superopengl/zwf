@@ -39,8 +39,8 @@ import { assertTaskAccess } from '../utils/assertTaskAccess';
 
 
 export const listTaskMessages = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
   const role = getRoleFromReq(req);
+  assert(role !== Role.System, 404);
   const { taskId } = req.params;
 
   let query;
@@ -57,6 +57,11 @@ export const listTaskMessages = handlerWrapper(async (req, res) => {
       query = {
         taskId,
         taskUserId: getUserIdFromReq(req)
+      }
+      break;
+    case Role.Guest:
+      query = {
+        taskId,
       }
       break;
     default:
@@ -76,7 +81,9 @@ export const listTaskMessages = handlerWrapper(async (req, res) => {
 const TASK_MESSAGE_EVENT_TYPE = 'zdn.task.message'
 
 export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  // assertRole(req, 'admin', 'agent', 'client', 'guest');
+  const role = getRoleFromReq(req);
+  assert(role !== Role.System, 404);
   const { taskId } = req.params;
 
   await assertTaskAccess(req, taskId);
@@ -116,14 +123,16 @@ export const subscribeTaskMessage = handlerWrapper(async (req, res) => {
 
 
 export const newTaskMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  const role = getRoleFromReq(req);
+  assert(role !== Role.System, 404);
+
   const { id, message } = req.body;
   assert(message, 400, 'Empty message body');
   const { taskId } = req.params;
   const taskRepo = getRepository(Task);
   const task = await taskRepo.findOne(taskId);
   assert(task, 404);
-  const senderId = getUserIdFromReq(req);
+  const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
   const orgId = task.orgId;
 
   const taskMessage = new TaskMessage();
