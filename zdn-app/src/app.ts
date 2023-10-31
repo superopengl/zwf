@@ -12,6 +12,7 @@ import * as cookieParser from 'cookie-parser';
 import { logError } from './utils/logger';
 import { sseMiddleware } from 'express-sse-middleware';
 import * as serveStatic from 'serve-static';
+import { taskDirectLinkHanlder } from './api/taskDirectLinkHanlder';
 
 
 function errorHandler(err, req, res, next) {
@@ -110,6 +111,8 @@ export function createAppInstance() {
   app.get('/healthcheck', (req, res) => res.send('OK'));
 
   app.get('/r/:token', (req, res) => res.redirect(`/api/v1/auth/r/${req.params.token}`));
+
+  app.get('/t/:token', taskDirectLinkHanlder);
 
   // app.get('/env', (req, res) => res.json(process.env));
   // app.get('/routelist', (req, res) => res.json(listEndpoints(app)));

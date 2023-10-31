@@ -35,7 +35,7 @@ const ContainerStyled = styled.div`
   height: 100%;
 `;
 
-const GuestTaskPage = (props) => {
+const TaskDirectPage = (props) => {
   const id = props.match.params.id;
 
   const { chat, portfolioId } = queryString.parse(props.location.search);
@@ -117,14 +117,14 @@ const GuestTaskPage = (props) => {
   );
 };
 
-GuestTaskPage.propTypes = {
+TaskDirectPage.propTypes = {
   // id: PropTypes.string.isRequired
   loading: PropTypes.bool.isRequired,
 };
 
-GuestTaskPage.defaultProps = {
+TaskDirectPage.defaultProps = {
   loading: true,
   // taskId: 'new'
 };
 
-export default withRouter(GuestTaskPage);
+export default withRouter(TaskDirectPage);
