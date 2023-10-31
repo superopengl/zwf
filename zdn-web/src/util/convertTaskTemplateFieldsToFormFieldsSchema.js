@@ -1,7 +1,7 @@
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 
 export function convertTaskTemplateFieldsToFormFieldsSchema(fields, official) {
-  return fields
+  const fieldList = fields
     .map((t, i) => {
       if (!!t.official !== official)
         return null;
@@ -21,4 +21,8 @@ export function convertTaskTemplateFieldsToFormFieldsSchema(fields, official) {
     })
     .filter(t => t);
 
+  return {
+    formItemLayout: [24,24],
+    fields: fieldList
+  }
 }
