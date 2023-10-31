@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
-import { sendEmail } from '../services/emailService';
+import { sendEmailImmediately } from '../services/emailService';
 import { File } from '../entity/File';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { getUserEmailAddress } from './getUserEmailAddress';
@@ -19,7 +19,7 @@ export async function sendSignedEmail(task: Task) {
       .execute() :
     undefined;
 
-  await sendEmail({
+  await sendEmailImmediately({
     to: user.profile.email,
     // bcc: [await getUserEmailAddress(task.agentId), SYSTEM_EMAIL_SENDER],
     template: 'taskSigned',

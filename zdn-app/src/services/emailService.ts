@@ -101,7 +101,7 @@ async function compileEmailBody(req: EmailRequest) {
   return { subject, html, text: htmlToText(html) };
 }
 
-export async function sendEmail(req: EmailRequest) {
+export async function sendEmailImmediately(req: EmailRequest) {
   const { to, template, vars } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
@@ -152,7 +152,7 @@ export async function enqueueEmailToUserId(userId: string, template: EmailTempla
     if (!user) {
       return;
     }
-    const toWhom = getEmailRecipientName(user.profile);
+    const toWhom = getEmailRecipientName(user);
     const { profile: { email } } = user;
     const request: EmailRequest = {
       to: email,
