@@ -22,10 +22,4 @@ export class OrgEmailTemplate {
 
   @Column({ nullable: true })
   body: string;
-
-  @Column('text', { array: true, default: '{}' })
-  vars: string[];
-
-  @Column({ default: true })
-  bcc: boolean;
 }

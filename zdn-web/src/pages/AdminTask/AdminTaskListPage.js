@@ -9,7 +9,6 @@ import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { assignTask, deleteTask, searchTask } from '../../services/taskService';
-import { listAgents } from 'services/userService';
 import styled from 'styled-components';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
@@ -19,6 +18,7 @@ import * as moment from 'moment';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import PortfolioSelect from 'components/PortfolioSelect';
 import ClientSelect from 'components/ClientSelect';
+import { AssigneeSelect } from 'components/AssigneeSelect';
 
 const { Title } = Typography;
 
@@ -163,16 +163,20 @@ const AdminTaskListPage = (props) => {
       // filters: agentList.map(a => ({ text: `${a.givenName} ${a.surname}`, value: a.id })),
       // onFilter: (value, record) => record.agentId === value,
       sorter: () => 0,
-      render: (text, record) => <Select
-        size="small"
-        placeholder="Select an agent"
-        style={{ width: 130 }}
-        onChange={value => assignTaskToAgent(record, value)}
+      // render: (text, record) => <Select
+      //   size="small"
+      //   placeholder="Select an agent"
+      //   style={{ width: 130 }}
+      //   onChange={value => assignTaskToAgent(record, value)}
+      //   value={text}
+      // >
+      //   <Select.Option key={-1} value={null}>{' '}</Select.Option>
+      //   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
+      // </Select>,
+      render: (text, record) => <AssigneeSelect
+        onChange={x => assignTaskToAgent(record, x)}
         value={text}
-      >
-        <Select.Option key={-1} value={null}>{' '}</Select.Option>
-        {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
-      </Select>
+      />
     },
     {
       // title: 'Action',
@@ -232,12 +236,7 @@ const AdminTaskListPage = (props) => {
     try {
       setLoading(true);
       await loadTaskWithQuery(queryInfo);
-      const agentList = await listAgents();
-      ReactDom.unstable_batchedUpdates(() => {
-        setAgentList(agentList);
-        setLoading(false);
-      });
-    } catch {
+    } finally {
       setLoading(false);
     }
   }

@@ -143,7 +143,7 @@ const defaultSearch: ISearchTaskQuery = {
 };
 
 export const searchTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req, 'admin', 'agent', 'client');
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
   const { text, status, page, assignee, orderDirection, orderField, dueDateRange, taskTemplateId, portfolioId, clientId } = option;
@@ -157,6 +157,9 @@ export const searchTask = handlerWrapper(async (req, res) => {
     .where(`1 = 1`);
   if (role === 'client') {
     query = query.andWhere(`x."userId" = :id`, { id });
+  } else {
+    const orgId = getOrgIdFromReq(req);
+    query = query.andWhere(`x."orgId" = :orgId`, { orgId });
   }
   if (status?.length) {
     query = query.andWhere(`x.status IN (:...status)`, { status });

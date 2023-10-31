@@ -1,3 +1,4 @@
+import { OrgEmailTemplateInformation } from './../entity/views/OrgEmailTemplateInformation';
 
 import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -16,7 +17,7 @@ export const listEmailTemplate = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
 
   const whereClause = orgId ? { where: { orgId } } : null;
-  const list = await getRepository(orgId ? OrgEmailTemplate : SystemEmailTemplate).find({
+  const list = await getRepository(orgId ? OrgEmailTemplateInformation : SystemEmailTemplate).find({
     ...whereClause,
     order: {
       key: 'ASC',
@@ -35,8 +36,19 @@ export const saveEmailTemplate = handlerWrapper(async (req, res) => {
   const { subject, body } = req.body;
 
   if (orgId) {
-    await getRepository(OrgEmailTemplate)
-      .update({ key, locale: locale as Locale, orgId }, { subject, body });
+    const entity = new OrgEmailTemplate();
+    entity.orgId = orgId;
+    entity.key = key;
+    entity.locale = locale;
+    entity.subject = subject;
+    entity.body = body;
+    await getManager()
+      .createQueryBuilder()
+      .insert()
+      .into(OrgEmailTemplate)
+      .values(entity)
+      .onConflict(`("orgId", key, locale) DO UPDATE SET subject = excluded.subject, body = excluded.body`)
+      .execute();
   } else {
     await getRepository(SystemEmailTemplate)
       .update({ key, locale: locale as Locale }, { subject, body });

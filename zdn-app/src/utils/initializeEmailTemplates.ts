@@ -2,7 +2,7 @@ import { SystemEmailTemplate } from "../entity/SystemEmailTemplate";
 import { getManager } from 'typeorm';
 import { EmailTemplateType } from "../types/EmailTemplateType";
 import { Locale } from '../types/Locale';
-import defaultEmailTemplateDef from './defaultEmailTemplateDef';
+import { defaultEmailTemplateDef } from './defaultEmailTemplateDef';
 
 export async function initializeEmailTemplates() {
   const entities = Object.entries(defaultEmailTemplateDef).map(([key, def]) => {
@@ -20,6 +20,6 @@ export async function initializeEmailTemplates() {
     .insert()
     .into(SystemEmailTemplate)
     .values(entities)
-    .onConflict(`(key, locale) DO NOTHING`)
+    .orIgnore()
     .execute();
 }

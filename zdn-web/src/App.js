@@ -51,14 +51,17 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
+  // const [members, setMembers] = React.useState([]);
   const [event$] = React.useState(new Subject());
 
 
   const globalContextValue = {
     event$,
-    user: null,
     role: 'guest',
+    user,
     setUser,
+    // members,
+    // setMembers,
     setLoading,
     setLocale: locale => {
       reactLocalStorage.set('locale', locale);

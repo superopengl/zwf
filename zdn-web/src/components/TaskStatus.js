@@ -39,10 +39,11 @@ export const TaskStatus = ({ status, shape, name, portfolioId, avatar, ...props 
   const label = getLabelFromStatus(status);
   if (shape === 'circle') {
     return <Progress
-      type="circle"
+      // type="circle"
+      steps={4}
       percent={percentage[status]}
       // steps={4}
-      strokeWidth={3}
+      strokeWidth={6}
       status={progressStatus[status]}
       format={() => avatar ? <PortfolioAvatar value={name} id={portfolioId} size={52} /> : <Text type="secondary"><small>{label}</small></Text>}
       {...props}

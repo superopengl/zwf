@@ -32,10 +32,15 @@ import { TaskStatus } from '../../types/TaskStatus';
       'p.email as email',
       't."taskTemplateId" as "taskTemplateId"',
       'u.role as role',
+      't."agentId" as "agentId"',
+      't."createdAt" as "createdAt"',
     ])
 }) export class TaskInformation {
   @ViewColumn()
   id: string;
+
+  @ViewColumn()
+  orgId: string;
 
   @ViewColumn()
   deepLinkId: string;
@@ -45,6 +50,9 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   description: string;
+
+  @ViewColumn()
+  taskTemplateId: string;
 
   @ViewColumn()
   fields: any;
@@ -59,14 +67,11 @@ import { TaskStatus } from '../../types/TaskStatus';
   userId: string;
 
   @ViewColumn()
-  orgId: string;
-
-  @ViewColumn()
   email: string;
 
   @ViewColumn()
-  taskTemplateId: string;
+  role: Role;
 
   @ViewColumn()
-  role: Role;
+  agentId: string;
 }
