@@ -1,12 +1,12 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Layout, Row, Col, Space, Spin, Typography } from 'antd';
+import { Button, Layout, Row, Col, Space, Spin, Typography, List } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { saveTask, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import {TaskDraggableCard} from '../../components/TaskDraggableCard';
+import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
 import { TaskCard } from 'components/TaskCard';
 
@@ -18,49 +18,6 @@ const LayoutStyled = styled.div`
   height: 100%;
 `;
 
-const ContainerStyled = styled.div`
-  margin: 6rem 1rem 2rem 1rem;
-`;
-
-const StyledRow = styled(Row)`
-  height: 100%;
-  min-height: calc(100vh - 180px);
-`;
-
-const StyledColumn = styled(Space)`
-border-radius: 4px;
-background-color: rgb(250,250,250);
-height: 100%;
-width: 100%;
-padding: 8px;
-`;
-
-const COLUMN_DEFS = [
-  {
-    status: 'todo',
-    label: 'To Do',
-    bgColor: '#f5f5f5',
-    hoverColor: '#bfbfbf',
-  },
-  {
-    status: 'to_sign',
-    label: 'To Sign',
-    bgColor: '#f5f5f5',
-    hoverColor: '#ff4d4f',
-  },
-  {
-    status: 'signed',
-    label: 'Signed',
-    bgColor: '#f5f5f5',
-    hoverColor: '#1890ff',
-  },
-  {
-    status: 'complete',
-    label: 'Completed',
-    bgColor: '#f5f5f5',
-    hoverColor: '#73d13d',
-  },
-]
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -72,7 +29,7 @@ const DEFAULT_QUERY_INFO = {
   orderDirection: 'DESC'
 };
 
-const AdminBoardPage = props => {
+const AdminBoardPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [queryInfo] = React.useState(DEFAULT_QUERY_INFO)
@@ -94,10 +51,22 @@ const AdminBoardPage = props => {
 
   return (
     <LayoutStyled>
-      <Loading loading={loading}>
-        {/* {list?.map((task, index) => <TaskCard key={task.id} index={index} task={task} onChange={() => loadSignalRef.current++} />)} */}
-        {list?.map((task, index) => <TaskCard task={task} />)}
-      </Loading>
+      <List
+        loading={loading}
+        dataSource={list}
+        grid={{
+          gutter: 24,
+          xs: 1,
+          sm: 1,
+          md: 2,
+          lg: 2,
+          xl: 3,
+          xxl: 3,
+        }}
+        renderItem={item => <List.Item>
+          <TaskCard task={item} />
+          </List.Item>}
+      />
     </LayoutStyled>
   )
 }
