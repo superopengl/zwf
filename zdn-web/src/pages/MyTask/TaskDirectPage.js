@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Modal, Button, Alert, Typography , Space} from 'antd';
+import { Layout, Modal, Button, Alert, Typography, Space } from 'antd';
 
 import { getDeepLinkedTask$, getTask, saveDeepLinkedTask$ } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
@@ -128,7 +128,7 @@ const TaskDirectPage = (props) => {
       closable={false}
       maskClosable
       destroyOnClose
-      title={<Space align="center"><Logo size={28}/> {isClientUser ? "Sign Up" : "Log In"}</Space>}
+      title={<Space align="center"><Logo size={28} /> {isClientUser ? "Log In" : "Sign Up"}</Space>}
       visible={loginModalVisible}
       onOk={() => setLoginModalVisible(false)}
       onCancel={() => setLoginModalVisible(false)}
@@ -137,13 +137,13 @@ const TaskDirectPage = (props) => {
     >
       {isClientUser ?
         <>
-          <Paragraph>Organazation <strong>{userInfo?.orgName}</strong> invite you to join Ziledin to complete this task. Please click below button to set a password and sign up to Ziledin.</Paragraph>
-          <ForgotPasswordPanel email={userInfo?.email} />
+          <Paragraph>It appears this task belongs to an existing user. Please login and continue to have better experience.</Paragraph>
+          <LogInPanel email={userInfo?.email} />
         </>
         :
         <>
-          <Paragraph>It appears this task belongs to an existing user. Please login and continue to have better experience.</Paragraph>
-          <LogInPanel email={userInfo?.email} />
+          <Paragraph>Organazation <strong>{userInfo?.orgName}</strong> invite you to join Ziledin to complete this task. Please click below button to set a password and sign up to Ziledin.</Paragraph>
+          <ForgotPasswordPanel email={userInfo?.email} onFinish={() => setLoginModalVisible(false)} />
         </>
       }
       <Button block type="link" onClick={() => setLoginModalVisible(false)}>Continue as anonymous user</Button>

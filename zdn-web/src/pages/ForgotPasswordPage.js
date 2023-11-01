@@ -26,39 +26,16 @@ const LogoContainer = styled.div`
 
 const { Title } = Typography;
 const ForgotPasswordPage = props => {
-  const [loading, setLoading] = React.useState(false);
-
 
   const goBack = () => {
     props.history.goBack();
-  }
-
-  const handleSubmit = async values => {
-    if (loading) {
-      return;
-    }
-
-    setLoading(true);
-
-    const { email } = values;
-
-    forgotPassword$(email).subscribe(
-      () => {
-        notify.success(
-          'Successfully sent out email',
-          <>An email with the reset password link was sent out to your registration email <strong>{email}</strong></>
-        );
-        props.history.push('/')
-      },
-      err => setLoading(false)
-    );
   }
 
   return <LayoutStyled>
     <ContainerStyled>
       <LogoContainer><Logo /></LogoContainer>
       <Title level={2}>Forgot Password</Title>
-      <ForgotPasswordPanel />
+      <ForgotPasswordPanel onFinish={() => props.history.push('/')} />
       <Form.Item >
         <Button block type="link" onClick={() => goBack()}>Cancel</Button>
       </Form.Item>

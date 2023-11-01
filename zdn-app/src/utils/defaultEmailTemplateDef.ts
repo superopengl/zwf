@@ -49,7 +49,7 @@ Please click below link to accept the invite.
   },
   [EmailTemplateType.ResetPassword]: {
     vars: ['website', 'toWhom', 'email', 'url',],
-    subject: '[Ziledin] Reset Password',
+    subject: '[Ziledin] Set Password',
     body: `Dear {{toWhom}}
     <br/>
 Please click below link to reset your password.

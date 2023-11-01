@@ -362,7 +362,7 @@ const AgentUserListPage = () => {
         maskClosable={false}
         onOk={() => setSetPasswordVisible(false)}
         onCancel={() => setSetPasswordVisible(false)}
-        title={<>Reset Password</>}
+        title={<>Set Password</>}
         footer={null}
         width={400}
       >
@@ -374,7 +374,7 @@ const AgentUserListPage = () => {
             <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={loading}>Reset Password</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Set Password</Button>
           </Form.Item>
         </Form>
       </Modal>
