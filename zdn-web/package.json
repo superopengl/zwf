@@ -23,7 +23,7 @@
     "file-saver": "^2.0.2",
     "form-data": "^3.0.0",
     "i18next": "^20.3.2",
-    "javascript-time-ago": "^2.3.4",
+    "javascript-time-ago": "^2.3.10",
     "lodash": "^4.17.21",
     "mgr-pdf-viewer-react": "^1.0.3",
     "moment": "^2.25.3",
@@ -52,7 +52,7 @@
     "react-select-country-list": "^2.2.3",
     "react-sortable-hoc": "^2.0.0",
     "react-step-wizard": "^5.3.6",
-    "react-time-ago": "^6.2.2",
+    "react-time-ago": "^7.1.3",
     "react-to-print": "^2.12.3",
     "react-tradingview-widget": "^1.3.2",
     "reactjs-localstorage": "^1.0.1",
@@ -83,8 +83,8 @@
   "scripts": {
     "start": "cross-env PORT=6003 REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",
     "start:prod": "pnpm build:prod && cross-env PORT=6003 serve -s build",
-    "build": "npm run clean && cross-env CLIENT_ENV=development GENERATE_SOURCEMAP=true craco build",
-    "build:prod": "npm run clean && npm run compile",
+    "build": "pnpm run clean && cross-env CLIENT_ENV=development GENERATE_SOURCEMAP=true craco build",
+    "build:prod": "pnpm run clean && npm run compile",
     "compile": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=false REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco build",
     "compile:prod": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=false craco build",
     "clean": "rm -rf build",
@@ -95,7 +95,8 @@
     "watch": "npm-watch",
     "g": "npx generate-react-cli component --",
     "p": "npx generate-react-cli component -- --type=page",
-    "upload": " aws s3 sync build s3://zdn-web/"
+    "upload": " aws s3 sync build s3://zdn-web/",
+    "analyze": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=true craco build && source-map-explorer 'build/static/js/*.js'"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -121,7 +122,8 @@
     "nodemon": "^2.0.7",
     "prop-types": "^15.7.2",
     "react-scripts": "4.0.2",
-    "serve": "^12.0.0"
+    "serve": "^12.0.0",
+    "source-map-explorer": "^2.5.2"
   },
   "watch": {
     "build": {
