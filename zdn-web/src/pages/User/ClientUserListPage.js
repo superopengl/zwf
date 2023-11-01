@@ -52,7 +52,6 @@ const ClientUserListPage = () => {
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
-  const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
   const [inviteForm] = Form.useForm();
@@ -217,17 +216,6 @@ const ClientUserListPage = () => {
     setLoading(false);
   }
 
-  const handleNewUser = () => {
-    setInviteVisible(true);
-  }
-
-  const handleInviteUser = async values => {
-    const { email } = values;
-    await inviteClient(email);
-    notify.success(<>Successfully sent out the invite to user <strong>{email}</strong></>);
-    inviteForm.current.resetFields();
-  }
-
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo({ ...queryInfo, page: 1, tags });
   }
@@ -256,7 +244,6 @@ const ClientUserListPage = () => {
           />
           <Space>
             <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" onClick={() => handleNewUser()} icon={<UserAddOutlined />}>Add Portfolio</Button>
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
@@ -306,29 +293,6 @@ const ClientUserListPage = () => {
           </Form.Item>
           <Form.Item>
             <Button block type="primary" htmlType="submit" disabled={loading}>Reset Password</Button>
-          </Form.Item>
-        </Form>
-      </Modal>
-      <Modal
-        visible={inviteVisible}
-        destroyOnClose={true}
-        maskClosable={false}
-        onOk={() => setInviteVisible(false)}
-        onCancel={() => setInviteVisible(false)}
-        title={<>Invite Client</>}
-        footer={null}
-        width={500}
-      >
-        <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
-        <Form ref={inviteForm} layout="vertical" onFinish={handleInviteUser}>
-          <Form.Item label="Email" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-            <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
-          </Form.Item>
-          <Form.Item label="Tags" name="tags">
-            <TagSelect tags={tags} onSave={saveUserTag} />
-          </Form.Item>
-          <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={loading}>Invite</Button>
           </Form.Item>
         </Form>
       </Modal>

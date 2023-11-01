@@ -22,9 +22,6 @@ import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSendingEmail';
-import { UserAuthOrg } from '../entity/UserAuthOrg';
-import { inviteNewClientWithSendingEmail } from '../utils/inviteNewClientWithSendingEmail';
-import { inviteExistingClientWithSendingEmail } from '../utils/inviteExistingClientWithSendingEmail';
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
@@ -233,30 +230,6 @@ export const impersonate = handlerWrapper(async (req, res) => {
   attachJwtCookie(user, res);
 
   res.json(sanitizeUser(user));
-});
-
-export const inviteClient = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { email, role } = req.body;
-  const orgId = getOrgIdFromReq(req);
-  let clientUser = await getActiveUserByEmailWithProfile(email);
-  assert(!clientUser || clientUser.role === Role.Client, 400, 'The user is not of client role');
-
-  if (!clientUser) {
-    // Not existing user
-    const { user, profile } = createUserAndProfileEntity({
-      email,
-      orgId: null,
-      role: Role.Client
-    });
-
-    await inviteNewClientWithSendingEmail(getManager(), orgId, user, profile);
-  } else {
-    await inviteExistingClientWithSendingEmail(getManager(), orgId, clientUser, clientUser.profile);
-  }
-
-
-  res.json();
 });
 
 export const inviteOrgMember = handlerWrapper(async (req, res) => {

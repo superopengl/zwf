@@ -12,7 +12,6 @@ import { Role } from '../types/Role';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { existsQuery } from '../utils/existsQuery';
-import { UserAuthOrg } from '../entity/UserAuthOrg';
 
 function streamFileToResponse(file: File, res) {
   assert(file, 404);
@@ -72,16 +71,9 @@ export const getPrivateFileStream = handlerWrapper(async (req, res) => {
   switch (role) {
     case Role.Admin:
     case Role.Agent:
-      const orgId = getOrgIdFromReq(req);
       queryBuilder = queryBuilder.andWhere(
         new Brackets(qb => qb
           .where(`owner = :userId`, { userId })
-          .orWhere(existsQuery(m
-            .getRepository(UserAuthOrg)
-            .createQueryBuilder('a')
-            .where(`a."userId" = f.owner`)
-            .andWhere(`a."orgId" = '${orgId}'`)
-          ))
         )
       );
       break;

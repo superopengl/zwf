@@ -4,6 +4,9 @@ import { TaskDoc } from '../types/TaskDoc';
 import { Org } from './Org';
 
 @Entity()
+@Index('idex_task_orgId_userId', ['orgId', 'userId'])
+@Index('idex_task_orgId_status', ['orgId', 'status'])
+@Index('idex_task_userId_status', ['userId', 'status'])
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -13,7 +16,6 @@ export class Task {
   deepLinkId: string;
 
   @Column('uuid')
-  @Index()
   orgId: string;
 
   @CreateDateColumn()
@@ -23,6 +25,9 @@ export class Task {
   @Index()
   lastUpdatedAt: Date;
 
+  @Column({ nullable: true })
+  authorizedAt: Date;
+
   @Column()
   name: string;
 
@@ -30,7 +35,6 @@ export class Task {
   description: string;
 
   @Column({ default: TaskStatus.TODO })
-  @Index()
   status: TaskStatus;
 
   @Column('uuid')
@@ -46,7 +50,6 @@ export class Task {
   agentId?: string;
 
   @Column('uuid')
-  @Index()
   userId: string;
 
   @Column({ type: 'json' })

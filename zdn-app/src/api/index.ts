@@ -19,4 +19,3 @@ export * from './orgPaymentMethodController';
 export * from './accountController';
 export * from './subscriptionController';
 export * from './promotionController';
-export * from './userAuthOrgController';

@@ -141,12 +141,6 @@ paths:
       responses:
         200:
           description: OK
-  /auth/invite/client:
-    post:
-      operationId: inviteClient
-      responses:
-        200:
-          description: OK
   /auth/reset_password:
     post:
       operationId: resetPassword
@@ -329,42 +323,6 @@ paths:
   /org/list:
     get:
       operationId: listOrg
-      responses:
-        200:
-          description: OK
-  /org/auth/{token}/approve:
-    post:
-      operationId: approveOrgAuth
-      parameters:
-        - name: token
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /org/auth/{token}/reject:
-    post:
-      operationId: rejectOrgAuth
-      parameters:
-        - name: token
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /org/auth/:token:
-    get:
-      operationId: getUserAuthOrg
-      parameters:
-        - name: token
-          in: path
-          type: string
-          format: uuid
-          required: true
       responses:
         200:
           description: OK

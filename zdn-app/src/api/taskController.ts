@@ -12,7 +12,7 @@ import { sendEmailImmediately } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskByTaskTemplateAndEmail, generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
+import { createTaskByTaskTemplateAndUserEmail, generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
 import { getNow } from '../utils/getNow';
 import { Portfolio } from '../entity/Portfolio';
 import * as _ from 'lodash';
@@ -46,7 +46,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
   const { taskTemplateId, clientEmail, taskName, fields } = req.body;
 
-  const task = await createTaskByTaskTemplateAndEmail(taskTemplateId, taskName, clientEmail, fields);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, fields);
 
   res.json(task);
 });
@@ -64,7 +64,7 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
   } else if (status === TaskStatus.SIGNED) {
     // Task signed
     await sendSignedEmail(task);
-  } else if (status === TaskStatus.COMPLETE) {
+  } else if (status === TaskStatus.DONE) {
     // Task completed
     await sendCompletedEmail(task);
   } else if (status === TaskStatus.TO_SIGN) {
