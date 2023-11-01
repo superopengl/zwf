@@ -37,6 +37,10 @@ export async function searchTask(query) {
   return httpPost('task/search', query);
 }
 
+export function searchTask$(query) {
+  return httpPost$('task/search', query);
+}
+
 export async function signTaskDoc(id, fileIds) {
   return httpPost(`task/${id}/sign`, { files: fileIds });
 }
