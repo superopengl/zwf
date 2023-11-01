@@ -13,6 +13,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { showTaskModal } from 'components/showTaskModal';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { UserAvatar } from './UserAvatar';
 
 const { Link: TextLink } = Typography;
 
@@ -56,7 +57,7 @@ export const TaskCard = withRouter((props) => {
       <Text type="secondary"><small>{taskTemplateName}</small></Text>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <Space style={{ lineHeight: '0.5rem', padding: 0 }}>
-          <PortfolioAvatar value={forWhom} id={task.portfolioId} size={32} />
+          <UserAvatar userId={task.userId} />
           <Space direction="vertical">
             <small>{forWhom}</small>
             <small>{email}</small>
@@ -64,6 +65,7 @@ export const TaskCard = withRouter((props) => {
         </Space>
       </Space>
     </Space>
+    {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
   </StyledCard>
 });
 
