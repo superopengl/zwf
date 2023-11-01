@@ -149,7 +149,7 @@ async function setUserToResetPasswordStatus(user: User) {
   user.status = UserStatus.ResetPassword;
 
   const url = `${process.env.ZDN_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await enqueueEmail({
+  await sendEmailImmediately({
     to: user.profile.email,
     template: EmailTemplateType.ResetPassword,
     vars: {
@@ -209,7 +209,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 
   assert(user, 401, 'Token expired');
 
-  const url = `${process.env.ZDN_API_DOMAIN_NAME}/reset_password?token=${token}`;
+  const url = `${process.env.ZDN_WEB_DOMAIN_NAME}/reset_password?token=${token}`;
   res.redirect(url);
 });
 
