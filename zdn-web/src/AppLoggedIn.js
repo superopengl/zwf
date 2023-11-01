@@ -89,12 +89,6 @@ const ROUTES = [
     roles: ['admin', 'agent', 'client']
   },
   {
-    path: '/watchlist',
-    name: <FormattedMessage id="menu.watchlist" />,
-    icon: <StarOutlined />,
-    roles: ['client']
-  },
-  {
     path: '/client',
     name: <FormattedMessage id="menu.client" />,
     icon: <TeamOutlined />,
