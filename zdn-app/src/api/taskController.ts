@@ -280,7 +280,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   assert(role === Role.Guest, 404);
   const { deepLinkId } = req.params;
 
-  const task = await getRepository(Task).findOne({ deepLinkId });
+  const task = await getRepository(TaskInformation).findOne({ deepLinkId });
 
   assert(task, 404);
 

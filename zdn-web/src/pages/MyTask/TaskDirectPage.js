@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Space, Button, Alert } from 'antd';
+import { Layout, Modal, Button, Alert, Typography } from 'antd';
 
 import { getDeepLinkedTask$, getTask, saveDeepLinkedTask$ } from 'services/taskService';
 import MyTaskSign from './MyTaskSign';
@@ -20,7 +20,9 @@ import PropTypes from 'prop-types';
 import { TaskChatPanel } from 'components/TaskChatPanel';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskWorkPanel } from 'components/TaskWorkPanel';
+import { LogInPanel } from 'pages/LogInPanel';
 
+const { Paragraph } = Typography
 
 const LayoutStyled = styled(Layout)`
 // margin: 0 auto 0 auto;
@@ -44,6 +46,9 @@ const TaskDirectPage = (props) => {
   const [chatVisible, setChatVisible] = React.useState(Boolean(chat));
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
+  const [userInfo, setUserInfo] = React.useState();
+  const [loginModalVisible, setLoginModalVisible] = React.useState(false);
+  const [passwordModalVisible, setPasswordModalVisible] = React.useState(false);
   const formRef = React.createRef();
 
   React.useEffect(() => {
@@ -51,32 +56,22 @@ const TaskDirectPage = (props) => {
       .pipe(
         catchError(() => setLoading(false))
       )
-      .subscribe(task => {
+      .subscribe(taskInfo => {
+        const { email, role, userId, ...task } = taskInfo;
+        setUserInfo({
+          email,
+          role,
+          userId
+        })
+        setLoginModalVisible(role === 'client');
+        setPasswordModalVisible(role === 'guest');
         setTask(task);
         setLoading(false);
       });
     return () => {
       subscription$.unsubscribe();
     }
-  }, [])
-
-  const onOk = () => {
-    props.history.push('/tasks');
-  }
-  const onCancel = () => {
-    props.history.goBack();
-  }
-
-  const handleSave = values => {
-    getDeepLinkedTask$(token)
-      .pipe(
-        catchError(() => setLoading(false))
-      )
-      .subscribe(task => {
-        saveDeepLinkedTask$(task);
-        setLoading(false);
-      });
-  }
+  }, []);
 
   const handleSubmit = () => {
     formRef.current.submit();
@@ -84,6 +79,15 @@ const TaskDirectPage = (props) => {
 
   const handleReset = () => {
     formRef.current.resetFields();
+  }
+
+  const handleLogin = () => {
+    setLoginModalVisible(true);
+    // if (role === 'guest') {
+    //   // Set password and login
+    // } else if (role === 'client') {
+    //   // Login
+    // }
   }
 
   return (<LayoutStyled>
@@ -95,7 +99,7 @@ const TaskDirectPage = (props) => {
         icon={<Icon component={() => <Logo size={48} />} />}
         message={<>Welcome to Ziledin</>}
         description={<>Log in or sign up to have better experience</>}
-        action={<Button type="primary">Log in</Button>}
+        action={<Button type="primary" onClick={handleLogin}>Log in</Button>}
       />
     </Layout.Header>
     <ContainerStyled>
@@ -117,6 +121,20 @@ const TaskDirectPage = (props) => {
         <TaskWorkPanel ref={formRef} task={task} type="client" />
       </PageContainer>}
     </ContainerStyled>
+    <Modal
+      closable={false}
+      maskClosable
+      destroyOnClose
+      title="Log In"
+      visible={loginModalVisible}
+      onOk={() => setLoginModalVisible(false)}
+      onCancel={() => setLoginModalVisible(false)}
+      footer={null}
+      width={400}
+    >
+      <Paragraph>It appears this task belongs to an existing user. Please login and continue to have better experience.</Paragraph>
+      <LogInPanel email={userInfo?.email} />
+    </Modal>
   </LayoutStyled>
   );
 };
