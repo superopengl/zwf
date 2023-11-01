@@ -48,6 +48,7 @@ export const login = handlerWrapper(async (req, res) => {
   user.lastLoggedInAt = getUtcNow();
   user.resetPasswordToken = null;
   user.status = UserStatus.Enabled;
+  user.role = user.role === Role.Guest ? Role.Client : user.role;
 
   await getRepository(User).save(user);
 
@@ -278,6 +279,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     loginType: 'google',
     lastLoggedInAt: now,
     referredBy: referralCode,
+    role: Role.Client,
   };
 
   if (isNewUser) {

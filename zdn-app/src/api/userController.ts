@@ -40,7 +40,7 @@ export const changePassword = handlerWrapper(async (req, res) => {
 });
 
 export const saveProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'agent', 'cient');
+  assertRole(req, Role.System, Role.Admin, Role.Agent, Role.Client);
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
   const repo = getRepository(User);
