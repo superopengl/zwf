@@ -35,7 +35,7 @@ const OrgOnBoardPage = (props) => {
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe(() => {
-      props.history.push('/dashboard');
+      props.history.push('/app');
     });
   }
 

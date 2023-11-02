@@ -234,8 +234,8 @@ const AppLoggedIn = props => {
   </StyledMenu>
 
   return <StyledLayout
-    title={<Image src="/images/brand.svg" preview={false} width={110} />}
-    // title={null}
+    // title={<Image src="/images/brand.svg" preview={false} width={110} />}
+    title={"ZILEDIN"}
     logo="/images/logo.svg"
     // logo="/header-logo.png"
     route={{ routes }}
@@ -313,7 +313,7 @@ const AppLoggedIn = props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/dashboard" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientTaskListPage} />
+      <RoleRoute exact path="/app" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : AdminTaskPage} />
