@@ -29,8 +29,8 @@ export async function deleteTask(id) {
   return httpDelete(`task/${id}`);
 }
 
-export async function listTask() {
-  return httpGet('task');
+export function listTask$() {
+  return httpGet$('task');
 }
 
 export async function searchTask(query) {

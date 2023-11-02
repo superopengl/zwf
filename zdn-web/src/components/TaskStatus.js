@@ -35,23 +35,25 @@ function getLabelFromStatus(status) {
   return <small>{(status || '').replace(/_/g, ' ')}</small>
 }
 
-export const TaskStatus = ({ status, shape, name, portfolioId, avatar, ...props }) => {
+export const TaskStatus = React.memo(({ status, shape, name, portfolioId, avatar, ...props }) => {
   const label = getLabelFromStatus(status);
   if (shape === 'circle') {
-    return <Progress
-      // type="circle"
-      steps={4}
-      percent={percentage[status]}
-      // steps={4}
-      strokeWidth={6}
-      status={progressStatus[status]}
-      format={() => avatar ? <PortfolioAvatar value={name} id={portfolioId} size={52} /> : <Text type="secondary"><small>{label}</small></Text>}
-      {...props}
-    />
+    return <>
+      <Progress
+        type="circle"
+        // steps={4}
+        percent={percentage[status]}
+        // steps={4}
+        strokeWidth={6}
+        status={progressStatus[status]}
+        format={() => status}
+        format={() => avatar ? <PortfolioAvatar value={name} id={portfolioId} size={52} /> : <Text type="secondary"><small>{status}</small></Text>}
+        {...props}
+      /></>
   }
 
   return <Tag color={tagColor[status]}>{label}</Tag>
-}
+});
 
 TaskStatus.propTypes = {
   status: PropTypes.string.isRequired,
@@ -64,5 +66,5 @@ TaskStatus.propTypes = {
 
 TaskStatus.defaultProps = {
   shape: 'circle',
-  avatar: true,
+  avatar: false,
 }

@@ -20,7 +20,7 @@ font-size: 0.8rem;
 }
 `
 
-export const TimeAgo = props => {
+export const TimeAgo = React.memo(props => {
   const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type, toLocalTime } = props;
   if (!value) {
     return defaultContent || null;
@@ -37,7 +37,7 @@ export const TimeAgo = props => {
     </Space>
     {extra}
   </StyledSpace>
-}
+})
 
 TimeAgo.propTypes = {
   prefix: PropTypes.any,

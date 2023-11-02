@@ -202,36 +202,25 @@ export const searchTask = handlerWrapper(async (req, res) => {
 
 export const listTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
-  const clientId = (req as any).user.id;
+  const userId = getUserIdFromReq(req);
 
-  const query = getManager()
-    .createQueryBuilder()
-    .from(Task, 'j')
-    .where({
-      userId: clientId,
-      status: Not(TaskStatus.ARCHIVE)
-    })
-    .leftJoin(q => q.from(Message, 'x')
-      .where(`"clientUserId" = :id`, { id: clientId })
-      .andWhere(`"readAt" IS NULL`)
-      .orderBy('"taskId"')
-      .addOrderBy('"createdAt"', 'DESC')
-      .distinctOn(['"taskId"'])
-      , 'x', `j.id = x."taskId"`)
-    .orderBy('j."lastUpdatedAt"', 'DESC')
-    .select([
-      `j.id as id`,
-      `j.name as name`,
-      `j."forWhom" as "forWhom"`,
-      `j."portfolioId" as "portfolioId"`,
-      `j."createdAt" as "createdAt"`,
-      `j."lastUpdatedAt" as "lastUpdatedAt"`,
-      `j."agentId" as "agentId"`,
-      `j.status as status`,
-      `x."createdAt" as "lastUnreadMessageAt"`
-    ]);
+  const list = await getRepository(TaskInformation).find({
+    where: {
+      userId
+    },
+    select: [
+      'id',
+      'name',
+      'description',
+      'status',
+      'orgName',
+      'taskTemplateName',
+      'authorizedAt',
+      'createdAt',
+      'lastUpdatedAt'
+    ]
+  })
 
-  const list = await query.execute();
   res.json(list);
 });
 

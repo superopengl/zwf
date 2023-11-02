@@ -3,12 +3,12 @@ import { Button, Layout, Row, Col, Space, Spin, Typography, List } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { saveTask, searchTask$ } from '../../services/taskService';
+import { saveTask, listTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
-import { TaskCard } from 'components/TaskCard';
+import { TaskClientCard } from 'components/TaskClientCard';
 
 const { Title } = Typography;
 
@@ -19,27 +19,15 @@ const LayoutStyled = styled.div`
 `;
 
 
-const DEFAULT_QUERY_INFO = {
-  text: '',
-  page: 1,
-  size: 200,
-  total: 0,
-  status: ['todo', 'review', 'held', 'to_sign', 'signed', 'complete'],
-  orderField: 'lastUpdatedAt',
-  orderDirection: 'DESC'
-};
-
-const AdminBoardPage = () => {
+const ClientTaskListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
-  const [queryInfo] = React.useState(DEFAULT_QUERY_INFO)
   const loadSignalRef = React.useRef(0);
 
 
   React.useEffect(() => {
-    const sub$ = searchTask$(queryInfo)
-      .subscribe(resp => {
-        const { data } = resp;
+    const sub$ = listTask$()
+      .subscribe(data => {
         setList(data);
         setLoading(false);
       });
@@ -64,15 +52,15 @@ const AdminBoardPage = () => {
           xxl: 3,
         }}
         renderItem={item => <List.Item>
-          <TaskCard task={item} />
+          <TaskClientCard task={item} />
           </List.Item>}
       />
     </LayoutStyled>
   )
 }
 
-AdminBoardPage.propTypes = {};
+ClientTaskListPage.propTypes = {};
 
-AdminBoardPage.defaultProps = {};
+ClientTaskListPage.defaultProps = {};
 
-export default withRouter(AdminBoardPage);
+export default withRouter(ClientTaskListPage);
