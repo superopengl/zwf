@@ -51,7 +51,6 @@ const App = () => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
-  // const [members, setMembers] = React.useState([]);
   const [event$] = React.useState(new Subject());
 
 
@@ -71,14 +70,6 @@ const App = () => {
   }
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);
-
-  // const Initalize = async () => {
-  //   const user = await getAuthUser();
-  //   ReactDOM.unstable_batchedUpdates(() => {
-  //     setUser(user);
-  //     setLoading(false);
-  //   })
-  // }
 
   const Initalize = () => {
     return getAuthUser$()
