@@ -10,8 +10,8 @@ import { GlobalContext } from 'contexts/GlobalContext';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
-export const AssigneeSelect = props => {
-  const { onChange, value } = props;
+export const AssigneeSelect = React.memo(props => {
+  const { placeholder, onChange, value } = props;
   const [list, setList] = React.useState([]);
   const [page, setPage] = React.useState(1);
   const [text, setText] = React.useState('');
@@ -53,7 +53,7 @@ export const AssigneeSelect = props => {
   }, [list]);
 
   return <Select
-    placeholder="Filter assignee"
+    placeholder={placeholder}
     showSearch
     showArrow
     style={{ width: 140 }}
@@ -62,14 +62,16 @@ export const AssigneeSelect = props => {
     value={value}
     options={options}
   />
-};
+});
 
 AssigneeSelect.propTypes = {
   onChange: PropTypes.func,
   value: PropTypes.string,
+  placeholder: PropTypes.string,
 };
 
 AssigneeSelect.defaultProps = {
-  onSelect: () => { }
+  onSelect: () => { },
+  placeholder: ""
 };
 

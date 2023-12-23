@@ -381,16 +381,10 @@ const OrgTaskListPage = (props) => {
             <Col>
               <Space>
                 <Label>Assignee</Label>
-
-                <Select
+                <AssigneeSelect
                   placeholder="Filter assignee"
-                  style={{ width: 140 }}
                   onChange={handleAssigneeChange}
-                  value={queryInfo?.assignee}
-                >
-                  <Select.Option key={-1} value={null}>{' '}</Select.Option>
-                  {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
-                </Select>
+                />
               </Space>
             </Col>
             <Col>
@@ -402,8 +396,6 @@ const OrgTaskListPage = (props) => {
               </Space>
             </Col>
           </Row>
-
-
         </Card>
 
         <Table columns={columnDef}
