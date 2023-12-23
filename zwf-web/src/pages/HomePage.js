@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown, Button } from 'antd';
+import { Menu, Dropdown, Button, Modal, Alert } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
@@ -18,6 +18,7 @@ import { FormattedMessage } from 'react-intl';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import logoSvg from '../logo.svg';
+import * as queryString from 'query-string';
 
 smoothscroll.polyfill();
 
@@ -90,7 +91,6 @@ const HomePage = (props) => {
   const [collapsed, setCollapsed] = React.useState(false);
   const context = React.useContext(GlobalContext);
   const intl = useIntl();
-
 
   const handleLocaleChange = locale => {
     context.setLocale(locale);

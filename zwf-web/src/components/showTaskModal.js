@@ -9,7 +9,6 @@ import { getTask, getTask$ } from 'services/taskService';
 import MyTaskSign from '../pages/MyTask/MyTaskSign';
 import TaskFormWizard from '../pages/MyTask/TaskFormWizard';
 import MyTaskReadView from '../pages/MyTask/MyTaskReadView';
-import * as queryString from 'query-string';
 import { MessageFilled } from '@ant-design/icons';
 import { TaskStatus } from 'components/TaskStatus';
 import { Loading } from 'components/Loading';

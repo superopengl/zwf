@@ -6,7 +6,6 @@ import { signUp$ } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
-import * as queryString from 'query-string';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import { TeamOutlined } from '@ant-design/icons';
