@@ -3,13 +3,13 @@ ORANGE='\033[0;33m'
 GREEN='\033[0;32m'
 NC='\033[0m'
 
-echo -e "${ORANGE}ZDN${NC}"
+echo -e "${ORANGE}ZWF${NC}"
 
-alias ahome='cd /Users/jshao/github/zdn'
+alias ahome='cd /Users/jshao/github/zwf'
 alias bs='ahome; npm run bs'
 alias fs='ahome; npm run fs'
 
-export AWS_PROFILE=zdn
+export AWS_PROFILE=zwf
 
 ssh-add -K ~/.ssh/superopengl_id_rsa
 

@@ -1,0 +1,1025 @@
+swagger: "2.0"
+info:
+  description: ZWF backend API
+  version: "1.0.0"
+  title: "ZWF API"
+basePath: "/api/v1"
+schemes:
+  - http
+  - https
+definitions:
+  PingResponse:
+    type: "object"
+paths:
+  /contact:
+    post:
+      operationId: saveContact
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /file/download/task/{taskId}/file/{fileId}:
+    get:
+      operationId: downloadFile
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+        - name: fileId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /file/meta:
+    post:
+      operationId: searchFileMetaList
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /file/{id}:
+    get:
+      operationId: getFileMeta
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /file/{id}/data:
+    get:
+      operationId: getPrivateFileStream
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /file/public/{id}/data:
+    get:
+      operationId: getPublicFileStream
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /file:
+    post:
+      operationId: uploadFile
+      responses:
+        200:
+          description: OK
+  /auth/login:
+    post:
+      operationId: login
+      # security:
+      # - authAnyRole: []
+      #   - business: []
+      #   - individual: []
+      #   - admin: []
+      responses:
+        200:
+          description: OK
+  /auth/logout:
+    post:
+      operationId: logout
+      # security:
+      #   - authAnyRole: []
+      # security:
+      #   - business: []
+      #   - individual: []
+      #   - admin: []
+      responses:
+        200:
+          description: OK
+  /auth/forgot_password:
+    post:
+      operationId: forgotPassword
+      # security:
+      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK
+  /auth/impersonate:
+    post:
+      operationId: impersonate
+      # security:
+      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK
+  /auth/invite:
+    post:
+      operationId: inviteOrgMember
+      # security:
+      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK
+  /auth/reset_password:
+    post:
+      operationId: resetPassword
+      responses:
+        200:
+          description: OK
+  /auth/r/{token}:
+    get:
+      operationId: retrievePassword
+      parameters:
+        - name: token
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /auth/signup:
+    post:
+      operationId: signUp
+      responses:
+        200:
+          description: OK
+  /auth/signup/org:
+    post:
+      operationId: signUpOrg
+      responses:
+        200:
+          description: OK
+  /auth/user:
+    get:
+      operationId: getAuthUser
+      responses:
+        200:
+          description: OK
+  /auth/sso/google:
+    post:
+      operationId: ssoGoogle
+      responses:
+        200:
+          description: OK
+  /event:
+    get:
+      operationId: subscribeEvent
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: publishEvent
+      responses:
+        200:
+          description: OK          
+  /user:
+    get:
+      operationId: listAllUsers
+      responses:
+        200:
+          description: OK
+  /user/:id:
+    delete:
+      operationId: deleteUser
+      # security:
+      #   - authAdminOrAgent: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /user/:id/portfolio:
+    get:
+      operationId: listPortfolioForUser
+      # security:
+      #   - authAdminOrAgent: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: savePortfolio
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+  /user/:id/profile:
+    post:
+      operationId: saveProfile
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+  /user/:id/set_password:
+    post:
+      operationId: setUserPassword
+      # security:
+      #   - authAdminOrAgent: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /user/agent:
+    get:
+      operationId: listAgents
+      # security:
+      #   - authAdminOrAgent: []
+      responses:
+        200:
+          description: OK
+  /user/change_password:
+    post:
+      operationId: changePassword
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /user/:id/tags:
+    post:
+      operationId: setUserTags
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /user/:id/role:
+    post:
+      operationId: setUserRole
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /org:
+    get:
+      operationId: getMyOrgProfile
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: createMyOrg
+      responses:
+        200:
+          description: OK
+  /org/member:
+    post:
+      operationId: searchOrgMemberUserList
+      responses:
+        200:
+          description: OK
+  /org/client:
+    post:
+      operationId: searchOrgClientUserList
+      responses:
+        200:
+          description: OK
+  /org/list:
+    get:
+      operationId: listOrg
+      responses:
+        200:
+          description: OK
+  /org/payment_method:
+    get:
+      operationId: listOrgPaymentMethods
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveOrgPaymentMethod
+      responses:
+        200:
+          description: OK
+  /org/payment_method/secret:
+    get:
+      operationId: getOrgStripeClientSecret
+      responses:
+        200:
+          description: OK
+  /org/payment_method/:id:
+    delete:
+      operationId: deleteOrgPaymentMethod
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /org/payment_method/:id/primary:
+    post:
+      operationId: setOrgPrimaryPaymentMethod
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /usertag:
+    get:
+      operationId: listUserTags
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveUserTag
+      responses:
+        200:
+          description: OK
+  /usertag/:id:
+    delete:
+      operationId: deleteUserTag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task_template:
+    post:
+      operationId: saveTaskTemplate
+      # security:
+      #   - authAdmin: []
+      responses:
+        200:
+          description: OK
+    get:
+      operationId: listTaskTemplates
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /task_template/{id}:
+    get:
+      operationId: getTaskTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteTaskTemplate
+      # security:
+      #   - authAdmin: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task_template/{id}/clone:
+    put:
+      operationId: cloneTaskTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
+  /doc_template:
+    post:
+      operationId: saveDocTemplate
+      # security:
+      #   - authAdmin: []
+      responses:
+        200:
+          description: OK
+    get:
+      operationId: listDocTemplates
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /doc_template/{id}:
+    get:
+      operationId: getDocTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /doc_template/{id}/apply:
+    post:
+      operationId: applyDocTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /doc_template/{id}/pdf:
+    post:
+      operationId: createPdfFromDocTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteDocTemplate
+      # security:
+      #   - authAdmin: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /portfolio:
+    post:
+      operationId: savePortfolio
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+    get:
+      operationId: listPortfolio
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+  /portfolio/{id}:
+    get:
+      operationId: getPortfolio
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deletePortfolio
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task:
+    put:
+      operationId: createNewTask
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK        
+    post:
+      operationId: saveTask
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+    get:
+      operationId: listTask
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /task/deep/{deepLinkId}:
+    get:
+      operationId: getDeepLinkedTask
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: deepLinkId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK          
+    post:
+      operationId: saveDeepLinkedTask
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: deepLinkId
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK              
+  /task/search:
+    post:
+      operationId: searchTask
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK
+  /task/generate:
+    post:
+      operationId: generateTask
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK      
+  /task/{id}:
+    get:
+      operationId: getTask
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteTask
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK        
+  /task/{id}/sign:
+    post:
+      operationId: signTaskDoc
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task/{id}/comment:
+    get:
+      operationId: getComments
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: newComment
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task/{taskId}/message:
+    get:
+      operationId: listTaskMessages
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: newTaskMessage
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK       
+  /task/{taskId}/message/subscribe:
+    get:
+      operationId: subscribeTaskMessage
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK             
+  /task/{id}/assign:
+    post:
+      operationId: assignTask
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task/{id}/notify:
+    get:
+      operationId: listTaskNotifies
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: notifyTask
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task/{id}/notify/read:
+    post:
+      operationId: markTaskNotifyRead
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /recurring:
+    get:
+      operationId: listRecurring
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveRecurring
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+  /recurring/healthcheck:
+    get:
+      operationId: healthCheckRecurring
+      responses:
+        200:
+          description: OK
+  /recurring/:id:
+    get:
+      operationId: getRecurring
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteRecurring
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /recurring/:id/run:
+    post:
+      operationId: runRecurring
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /message:
+    post:
+      operationId: listMessage
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+  /message/count/unread:
+    get:
+      operationId: getMessageUnreadCount
+      responses:
+        200:
+          description: OK
+  /message/:id:
+    get:
+      operationId: getMessage
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /stats:
+    get:
+      operationId: getAdminStats
+      responses:
+        200:
+          description: OK
+  /blog/:
+    get:
+      operationId: listBlog
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveBlog
+      responses:
+        200:
+          description: OK
+  /blog/:id:
+    get:
+      operationId: getBlog
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteBlog
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /email_template:
+    get:
+      operationId: listEmailTemplate
+      responses:
+        200:
+          description: OK
+  /email_template/:locale/:key:
+    post:
+      operationId: saveEmailTemplate
+      parameters:
+        - name: locale
+          in: path
+          type: string
+          required: true
+        - name: key
+          in: path
+          type: string
+          required: true
+      responses:
+        200:
+          description: OK
+  /email_template/signature:
+    get:
+      operationId: getEmailTemplateSignature
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveEmailTemplateSignature
+      responses:
+        200:
+          description: OK
+  /config:
+    get:
+      operationId: listConfig
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveConfig
+      responses:
+        200:
+          description: OK
+  /account:
+    get:
+      operationId: getMyAccount
+      responses:
+        200:
+          description: OK
+  /credit/history:
+    get:
+      operationId: listMyCreditHistory
+      responses:
+        200:
+          description: OK
+  /subscription:
+    get:
+      operationId: getMyCurrnetSubscription
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: purchaseSubscription
+      responses:
+        200:
+          description: OK
+  /subscription/preview:
+    post:
+      operationId: previewSubscriptionPayment
+      responses:
+        200:
+          description: OK
+  /subscription/history:
+    get:
+      operationId: listMySubscriptionHistory
+      responses:
+        200:
+          description: OK
+  /subscription/recurring/off:
+    post:
+      operationId: turnOffSubscriptionRecurring
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /subscription/:id/receipt:
+    get:
+      operationId: downloadPaymentReceipt
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /promotion:
+    get:
+      operationId: listPromotionCode
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: savePromotion
+      responses:
+        200:
+          description: OK
+    put:
+      operationId: newPromotionCode
+      responses:
+        200:
+          description: OK
