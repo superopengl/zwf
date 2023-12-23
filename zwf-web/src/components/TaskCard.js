@@ -35,6 +35,7 @@ export const TaskCard = withRouter((props) => {
   const context = React.useContext(GlobalContext);
 
   const myUserId = context.user.id;
+  const myRole = context.user.role;
 
   const goToTask = (e, id) => {
     e.stopPropagation();
@@ -46,7 +47,7 @@ export const TaskCard = withRouter((props) => {
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
-    onClick={() => showTaskModal(id, name, myUserId)}
+    onClick={() => showTaskModal(id, name, myUserId, myRole)}
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
@@ -54,7 +55,7 @@ export const TaskCard = withRouter((props) => {
       <Text type="secondary"><small>{taskTemplateName}</small></Text>
       <Space style={{ width: '100%', justifyContent: 'space-between' }}>
         <Space style={{ lineHeight: '0.5rem', padding: 0 }}>
-          <UserAvatar userId={task.userId} />
+          <UserAvatar userId={task.userId} size={40}/>
           <Space direction="vertical">
             <small>{forWhom}</small>
             <small>{email}</small>
