@@ -6,7 +6,8 @@ import {
   FaDotCircle,
   FaCalendarAlt,
 } from 'react-icons/fa';
-import { UploadOutlined } from '@ant-design/icons'
+import {TiSortNumerically} from 'react-icons/ti'
+import Icon, { UploadOutlined } from '@ant-design/icons'
 import { FileUploader } from 'components/FileUploader';
 
 export const TaskTemplateWidgetDef = Object.freeze([
@@ -18,6 +19,16 @@ export const TaskTemplateWidgetDef = Object.freeze([
     widgetPorps: {
       allowClear: true,
       maxLength: 150,
+    },
+  },
+  {
+    type: 'number',
+    label: 'Number',
+    icon: <Icon component={() => <small style={{position:'relative', top: -4}}><strong>123</strong></small>} />,
+    widget: 'number',
+    widgetPorps: {
+      allowClear: true,
+      min: 0,
     },
   },
   {
