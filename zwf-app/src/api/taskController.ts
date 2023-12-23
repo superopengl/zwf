@@ -67,7 +67,7 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
   } else if (status === TaskStatus.DONE) {
     // Task completed
     await sendCompletedEmail(task);
-  } else if (status === TaskStatus.TO_SIGN) {
+  } else if (status === TaskStatus.PENDING_SIGN) {
     const hasDocToSign = task.docs?.filter(d => d.fileId && d.requiresSign && !d.signedAt).length;
     assert(hasDocToSign, 400, 'Cannot change status because there is no document to sign.');
     // Require sign
@@ -137,7 +137,7 @@ interface ISearchTaskQuery {
 const defaultSearch: ISearchTaskQuery = {
   page: 1,
   size: 50,
-  status: [TaskStatus.TODO, TaskStatus.TO_SIGN],
+  status: [TaskStatus.TODO, TaskStatus.PENDING_SIGN],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
