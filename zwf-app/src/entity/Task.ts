@@ -41,14 +41,6 @@ export class Task {
   @Index()
   taskTemplateId: string;
 
-  @Column('uuid', { nullable: true })
-  @Index()
-  portfolioId: string;
-
-  @Column('uuid', { nullable: true })
-  @Index()
-  agentId?: string;
-
   @Column('uuid')
   userId: string;
 
@@ -69,9 +61,5 @@ export class Task {
 
   @Column({ type: 'json', default: [] })
   docs: TaskDoc[];
-
-  @Column({ nullable: true })
-  @Index()
-  dueDate: Date;
 }
 

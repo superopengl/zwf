@@ -67,7 +67,7 @@ const DEFAULT_QUERY_INFO = {
   orderDirection: 'DESC'
 };
 
-const AdminTaskListPage = (props) => {
+const OrgTaskListPage = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
@@ -352,10 +352,12 @@ const AdminTaskListPage = (props) => {
 
   const StatusSelectOptions = [
     { label: 'To Do', value: 'todo' },
-    { label: 'To Sign', value: 'to_sign' },
+    { label: 'In Progress', value: 'in_progress' },
+    { label: 'Pending Fix', value: 'pending_fix' },
+    { label: 'Pending Sign', value: 'pending_sign' },
     { label: 'Signed', value: 'signed' },
-    { label: 'Complete', value: 'complete' },
-    { label: 'Archive', value: 'archive' },
+    { label: 'Done', value: 'done' },
+    { label: 'Archived', value: 'archived' },
   ]
 
   return (
@@ -480,8 +482,8 @@ const AdminTaskListPage = (props) => {
   );
 };
 
-AdminTaskListPage.propTypes = {};
+OrgTaskListPage.propTypes = {};
 
-AdminTaskListPage.defaultProps = {};
+OrgTaskListPage.defaultProps = {};
 
-export default AdminTaskListPage;
+export default OrgTaskListPage;

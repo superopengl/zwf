@@ -1,3 +1,4 @@
+import { TaskAssignment } from '../TaskAssignment';
 import { Role } from './../../types/Role';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { TaskTemplate } from '../TaskTemplate';
@@ -16,6 +17,10 @@ import { UserProfile } from '../UserProfile';
     .innerJoin(TaskTemplate, 'l', `t."taskTemplateId" = l.id`)
     .innerJoin(User, 'u', `u.id = t."userId"`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
+    .leftJoin(q => q.from(TaskAssignment, 'ta')
+      .distinctOn(['"taskId"', '"createdAt"'])
+      .orderBy('"createdAt"', 'DESC')
+      , 'a', 'a."taskId" = t.id')
     .select([
       't.id as id',
       't."deepLinkId" as "deepLinkId"',
@@ -35,7 +40,7 @@ import { UserProfile } from '../UserProfile';
       't."name" as "taskTemplateName"',
       'u.role as role',
       't."authorizedAt" as "authorizedAt"',
-      't."agentId" as "agentId"',
+      'a."assigneeId" as "assigneeId"',
       't."createdAt" as "createdAt"',
       't."lastUpdatedAt" as "lastUpdatedAt"'
     ])
@@ -95,7 +100,7 @@ import { UserProfile } from '../UserProfile';
   authorizedAt: Date;
 
   @ViewColumn()
-  agentId: string;
+  assigneeId: string;
 
   @ViewColumn()
   createdAt: Date;

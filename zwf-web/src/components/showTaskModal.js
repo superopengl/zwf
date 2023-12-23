@@ -44,6 +44,7 @@ export function showTaskModal(taskId, taskName, currentUserId, currentUserRole) 
     .subscribe(task => {
       const type = currentUserRole === 'admin' || currentUserRole === 'agent'  ? 'agent' : 'client';
       modalRef.update({
+        title: <><TaskIcon /> {taskName}</>,
         content: <TaskWorkPanel task={task} type={type} currentUserId={currentUserId} />,
         afterClose: () => {
           subscription$.unsubscribe();

@@ -41,7 +41,7 @@ const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplate
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
-const AdminTaskListPage = loadable(() => import('pages/AdminTask/AdminTaskListPage'));
+const OrgTaskListPage = loadable(() => import('pages/OrgTask/OrgTaskListPage'));
 const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
@@ -261,7 +261,7 @@ export const AppLoggedIn = React.memo(props => {
   >
     <Switch>
       <RoleRoute exact path="/app" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientTaskListPage} />
-      <RoleRoute visible={isAdmin} exact path="/task" component={AdminTaskListPage} />
+      <RoleRoute visible={isAdmin} exact path="/task" component={OrgTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : AdminTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />

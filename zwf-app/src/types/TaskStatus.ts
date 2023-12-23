@@ -6,5 +6,5 @@ export enum TaskStatus {
   PENDING_SIGN = 'pending_sign',
   SIGNED = 'signed',
   DONE = 'done',
-  ARCHIVE = 'archive',
+  ARCHIVED = 'archived',
 }

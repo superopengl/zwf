@@ -13,15 +13,6 @@ export const CLIENT_TZ = 'Australia/Sydney';
 
 export const CRON_EXECUTE_TIME = process.env.NODE_ENV === 'dev' ? moment().add(2, 'minute').format('HH:mm') : '5:00';
 
-function trySetTaskDueDateField(task: Task, dueDay: number) {
-  if (!dueDay) return;
-  const dueDateField = task.fields.find(x => x.name === 'Due_Date');
-  if (!dueDateField) return;
-  const dueDateMoment = moment().add(dueDay, 'day');
-  dueDateField.value = dueDateMoment.format('DD/MM/YYYY');
-  task.dueDate = dueDateMoment.toDate();
-}
-
 export async function testRunRecurring(recurringId: string) {
   const recurring = await getRepository(Recurring).findOne(recurringId);
   assert(recurring, 404);
@@ -41,8 +32,6 @@ export async function executeRecurring(recurring: Recurring, resetNextRunAt: boo
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
 
   task.status = TaskStatus.TODO;
-
-  trySetTaskDueDateField(task, recurring.dueDay);
 
   sendNewTaskCreatedEmail(task);
 
