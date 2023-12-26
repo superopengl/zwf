@@ -11,7 +11,7 @@ import { TaskFormPanel } from 'components/TaskFormPanel';
 
 
 export const TaskWorkPanel = React.forwardRef((props, ref) => {
-  const { task, type, currentUserId } = props;
+  const { task, type, currentUserId, onChangeLoading } = props;
 
   const [chatPanelWidth, setChatPanelWidth] = React.useState(300);
 
@@ -24,7 +24,7 @@ export const TaskWorkPanel = React.forwardRef((props, ref) => {
 
   return <Row gutter={[20, 20]}>
     <Col style={{ overflowY: 'auto', flexGrow: 1 }}>
-      <TaskFormPanel ref={ref} value={task} type={type} />
+      <TaskFormPanel ref={ref} value={task} type={type} onChangeLoading={onChangeLoading} />
     </Col>
     <Resizable
       style={{ marginLeft: 16, paddingLeft: 16 }}
@@ -49,9 +49,11 @@ TaskWorkPanel.propTypes = {
   type: PropTypes.string,
   currentUserId: PropTypes.string,
   ref: PropTypes.ref,
+  onChangeLoading: PropTypes.func,
 };
 
 TaskWorkPanel.defaultProps = {
-  type: 'client'
+  type: 'client',
+  onChangeLoading: () => {}
 };
 
