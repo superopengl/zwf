@@ -27,7 +27,7 @@ import { ImInsertTemplate } from 'react-icons/im';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
-const AdminBoardPage = loadable(() => import('pages/AdminBoard/AdminBoardPage'));
+const OrgBoardPage = loadable(() => import('pages/OrgBoard/OrgBoardPage'));
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
@@ -266,7 +266,7 @@ export const AppLoggedIn = React.memo(props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/app" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? AdminBoardPage : ClientTaskListPage} />
+      <RoleRoute exact path="/app" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgBoardPage : ClientTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task" component={OrgTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />

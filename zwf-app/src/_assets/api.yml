@@ -648,6 +648,24 @@ paths:
       responses:
         200:
           description: OK        
+  /task/{id}/status/{status}:
+    post:
+      operationId: changeTaskStatus
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+        - name: status
+          in: path
+          type: string
+          required: true          
+      responses:
+        200:
+          description: OK          
   /task/{id}/sign:
     post:
       operationId: signTaskDoc

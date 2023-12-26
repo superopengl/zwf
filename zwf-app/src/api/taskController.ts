@@ -309,6 +309,16 @@ export const assignTask = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const changeTaskStatus = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { id, status } = req.params;
+
+  const taskStatus = status as TaskStatus;
+  await getRepository(Task).update(id, { status: taskStatus });
+
+  res.json();
+});
+
 export const signTaskDoc = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const { id } = req.params;

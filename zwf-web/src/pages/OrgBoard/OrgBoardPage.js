@@ -3,11 +3,12 @@ import { Button, Layout, Row, Col, Space, Spin, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { saveTask, searchTask } from '../../services/taskService';
+import { changeTaskStatus$, saveTask, searchTask, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
-import {TaskDraggableCard} from '../../components/TaskDraggableCard';
+import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
+import { switchMap, switchMapTo } from 'rxjs/operators';
 
 const { Title } = Typography;
 
@@ -42,22 +43,34 @@ const COLUMN_DEFS = [
     hoverColor: '#bfbfbf',
   },
   {
-    status: 'to_sign',
-    label: 'To Sign',
-    bgColor: '#f5f5f5',
-    hoverColor: '#ff4d4f',
+    status: 'in_progress',
+    label: 'In Progress',
+    bgColor: '#1890ff11',
+    hoverColor: '#1890ff',
+  },
+  {
+    status: 'pending_fix',
+    label: 'Await client reply',
+    bgColor: '#06117811',
+    hoverColor: '#061178',
+  },
+  {
+    status: 'pending_sign',
+    label: 'Await client sign',
+    bgColor: '#f5222d11',
+    hoverColor: '#f5222d',
   },
   {
     status: 'signed',
     label: 'Signed',
-    bgColor: '#f5f5f5',
-    hoverColor: '#1890ff',
+    bgColor: '#5c001111',
+    hoverColor: '#5c0011',
   },
   {
-    status: 'complete',
-    label: 'Completed',
-    bgColor: '#f5f5f5',
-    hoverColor: '#73d13d',
+    status: 'done',
+    label: 'Done',
+    bgColor: '#52c41a11',
+    hoverColor: '#52c41a',
   },
 ]
 
@@ -66,26 +79,36 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 200,
   total: 0,
-  status: ['todo', 'review', 'held', 'to_sign', 'signed', 'complete'],
+  status: ['todo', 'in_progress', 'pending_fix', 'pending_sign', 'signed', 'done'],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
 
-const AdminBoardPage = props => {
+const OrgBoardPage = props => {
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
   const [queryInfo] = React.useState(DEFAULT_QUERY_INFO)
 
-  const loadList = async () => {
-    setLoading(true);
-    const { data } = await searchTask(queryInfo);
-    setTaskList(data);
-    setLoading(false);
-  }
+
 
   React.useEffect(() => {
-    loadList();
+    const subscription = searchTask$(queryInfo).subscribe(list => {
+      setTaskList(list.data);
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    }
   }, []);
+
+  const loadList = () => {
+    setLoading(true);
+    searchTask$(queryInfo).subscribe(list => {
+      setTaskList(list.data);
+      setLoading(false);
+    });
+  }
 
   const onDragEnd = async result => {
     const { draggableId: taskId, destination: { droppableId: status } } = result;
@@ -93,12 +116,14 @@ const AdminBoardPage = props => {
     if (task.status !== status) {
       task.status = status;
       setLoading(true);
-      try {
-        await saveTask(task);
-      } finally {
-        await loadList();
-        setLoading(false);
-      }
+      changeTaskStatus$(task.id, status)
+        .pipe(
+          switchMap(() => searchTask$(queryInfo))
+        )
+        .subscribe(list => {
+          setTaskList(list.data);
+          setLoading(false);
+        });
     }
   }
 
@@ -116,9 +141,14 @@ const AdminBoardPage = props => {
           <StyledRow gutter={10}>
             {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
               {(provided, snapshot) => (
-                <Col span={6}
+                <Col span={4}
                   ref={provided.innerRef}>
-                  <StyledColumn direction="vertical" style={{ backgroundColor: s.bgColor, border: `2px dashed ${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}` }}>
+                  <StyledColumn direction="vertical" style={{
+                    backgroundColor: s.bgColor,
+                    borderWidth: 2,
+                    borderStyle: `${snapshot.isDraggingOver ? 'dashed' : 'solid'}`,
+                    borderColor: `${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}`
+                  }}>
                     <Space style={{ width: '100%', justifyContent: 'space-between' }}>
                       <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }} type="secondary">{s.label}</Title>
                       <Text strong>{taskList.filter(j => j.status === s.status).length}</Text>
@@ -142,8 +172,8 @@ const AdminBoardPage = props => {
   )
 }
 
-AdminBoardPage.propTypes = {};
+OrgBoardPage.propTypes = {};
 
-AdminBoardPage.defaultProps = {};
+OrgBoardPage.defaultProps = {};
 
-export default withRouter(AdminBoardPage);
+export default withRouter(OrgBoardPage);
