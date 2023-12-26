@@ -8,7 +8,7 @@ import React from 'react';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { assignTask, deleteTask, searchTask$ } from '../../services/taskService';
+import { assignTask, changeTaskStatus$, deleteTask, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
@@ -18,6 +18,7 @@ import * as moment from 'moment';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import ClientSelect from 'components/ClientSelect';
 import { AssigneeSelect } from 'components/AssigneeSelect';
+import { TaskStatusButton } from 'components/TaskStatusButton';
 
 const { Title } = Typography;
 
@@ -54,6 +55,19 @@ const OrgTaskListPage = (props) => {
   const context = React.useContext(GlobalContext);
   const myUserId = context.user.id;
 
+  React.useEffect(() => {
+    const subscription = loadList$();
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, []);
+
+  const handleTaskStatusChange = (taskId, newStatus) => {
+    changeTaskStatus$(taskId, newStatus)
+    .subscribe(() => {
+      loadList$();
+    })
+  }
   const columnDef = [
     {
       title: 'Task Name',
@@ -79,7 +93,9 @@ const OrgTaskListPage = (props) => {
       title: 'Status',
       dataIndex: 'status',
       sorter: () => 0,
-      render: (text, record) => <TaskStatus width={40} status={record.status} name={record.forWhom} portfolioId={record.portfolioId} avatar={false}></TaskStatus>,
+      render: (value, record) => <small>
+      <TaskStatusButton size="small" value={value} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)}/>
+      </small>,
       ellipsis: false
     },
     {
@@ -176,21 +192,21 @@ const OrgTaskListPage = (props) => {
       newQueryInfo.orderDirection = sorter.order === 'ascend' ? 'ASC' : 'DESC';
     }
 
-    await loadTaskWithQuery(newQueryInfo);
+    await loadTaskWithQuery$(newQueryInfo);
   }
 
   const clearAllFilters = () => {
-    loadTaskWithQuery({ ...DEFAULT_QUERY_INFO });
+    loadTaskWithQuery$({ ...DEFAULT_QUERY_INFO });
   }
 
   const assignTaskToAgent = async (task, agentId) => {
     await assignTask(task.id, agentId);
-    await loadList();
+    await loadList$();
   }
 
-  const loadTaskWithQuery = (queryInfo) => {
+  const loadTaskWithQuery$ = (queryInfo) => {
     setLoading(true);
-    searchTask$(queryInfo).subscribe(resp => {
+    return searchTask$(queryInfo).subscribe(resp => {
       const { data, pagination: { total } } = resp;
       setTaskList(data);
       updateQueryInfo({ ...queryInfo, total })
@@ -198,13 +214,8 @@ const OrgTaskListPage = (props) => {
     })
   }
 
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      await loadTaskWithQuery(queryInfo);
-    } finally {
-      setLoading(false);
-    }
+  const loadList$ = () => {
+    return loadTaskWithQuery$(queryInfo);
   }
 
   const handleDelete = async (e, item) => {
@@ -215,7 +226,7 @@ const OrgTaskListPage = (props) => {
       okText: 'Yes, Archive it',
       onOk: async () => {
         await deleteTask(id);
-        loadList();
+        loadList$();
       },
       maskClosable: true,
       okButtonProps: {
@@ -233,7 +244,7 @@ const OrgTaskListPage = (props) => {
       text
     }
 
-    await loadTaskWithQuery(newQueryInfo);
+    await loadTaskWithQuery$(newQueryInfo);
   }
 
   const handleStatusFilter = async (status) => {
@@ -242,7 +253,7 @@ const OrgTaskListPage = (props) => {
       page: 1,
       status
     }
-    await loadTaskWithQuery(newQueryInfo);
+    await loadTaskWithQuery$(newQueryInfo);
   }
 
   const handleSearchTextChange = text => {
@@ -260,7 +271,7 @@ const OrgTaskListPage = (props) => {
       page: 1,
       assignee
     }
-    loadTaskWithQuery(newQueryInfo);
+    loadTaskWithQuery$(newQueryInfo);
   }
 
   const handleDueDateRangeChange = (dates, dateStrings) => {
@@ -269,7 +280,7 @@ const OrgTaskListPage = (props) => {
       page: 1,
       dueDateRange: dateStrings && dateStrings[0] && dateStrings[1] ? dateStrings : null
     }
-    loadTaskWithQuery(newQueryInfo);
+    loadTaskWithQuery$(newQueryInfo);
   }
 
   const handlePaginationChange = async (page, size) => {
@@ -278,7 +289,7 @@ const OrgTaskListPage = (props) => {
       page,
       size
     }
-    await loadTaskWithQuery(newQueryInfo);
+    await loadTaskWithQuery$(newQueryInfo);
   }
 
   const handleTaskTemplateIdChange = async (taskTemplateId) => {
@@ -287,7 +298,7 @@ const OrgTaskListPage = (props) => {
       taskTemplateId,
       page: 1,
     }
-    await loadTaskWithQuery(newQueryInfo);
+    await loadTaskWithQuery$(newQueryInfo);
   }
 
   const handleClientIdChange = async (clientId) => {
@@ -296,16 +307,14 @@ const OrgTaskListPage = (props) => {
       clientId,
       page: 1,
     }
-    await loadTaskWithQuery(newQueryInfo);
+    await loadTaskWithQuery$(newQueryInfo);
   }
 
   const handleCreateTask = () => {
     props.history.push('/task/new');
   }
 
-  React.useEffect(() => {
-    loadList();
-  }, []);
+
 
   const StatusSelectOptions = [
     { label: 'To Do', value: 'todo' },
@@ -339,7 +348,7 @@ const OrgTaskListPage = (props) => {
             </Space>
             <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
               <Button danger ghost onClick={() => clearAllFilters()} icon={<CloseOutlined />}>Reset Filters</Button>
-              <Button onClick={() => loadList()} icon={<SyncOutlined />}>Refresh</Button>
+              <Button onClick={() => loadList$()} icon={<SyncOutlined />}>Refresh</Button>
               <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>New Task</Button>
             </Space>
           </Space>
