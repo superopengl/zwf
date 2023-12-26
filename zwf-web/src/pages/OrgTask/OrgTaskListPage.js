@@ -170,11 +170,13 @@ const OrgTaskListPage = (props) => {
         <DropdownMenu 
           config={[
             {
+              icon: <EditOutlined />,
               menu: 'Edit',
               onClick: () => props.history.push(`/tasks/${record.id}`)
             },
             {
-              menu: 'Archive',
+              icon: <Text type="danger"><DeleteOutlined /></Text>,
+              menu: <Text type="danger">Archive</Text>,
               onClick: () => handleDelete(record)
             }
           ]}
