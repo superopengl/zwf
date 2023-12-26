@@ -8,7 +8,7 @@ import React from 'react';
 import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { assignTask, deleteTask, searchTask } from '../../services/taskService';
+import { assignTask, deleteTask, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
@@ -188,15 +188,14 @@ const OrgTaskListPage = (props) => {
     await loadList();
   }
 
-  const loadTaskWithQuery = async (queryInfo) => {
+  const loadTaskWithQuery = (queryInfo) => {
     setLoading(true);
-    const { data, pagination: { total } } = await searchTask(queryInfo);
-
-    ReactDom.unstable_batchedUpdates(() => {
+    searchTask$(queryInfo).subscribe(resp => {
+      const { data, pagination: { total } } = resp;
       setTaskList(data);
       updateQueryInfo({ ...queryInfo, total })
       setLoading(false);
-    });
+    })
   }
 
   const loadList = async () => {

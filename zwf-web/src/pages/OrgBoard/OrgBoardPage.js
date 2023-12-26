@@ -1,14 +1,14 @@
 import { PlusOutlined } from '@ant-design/icons';
-import { Button, Layout, Row, Col, Space, Spin, Typography } from 'antd';
+import { Button, Row, Col, Space, Typography } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
-import { changeTaskStatus$, saveTask, searchTask, searchTask$ } from '../../services/taskService';
+import { changeTaskStatus$, searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
-import { switchMap, switchMapTo } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 const { Title } = Typography;
 
