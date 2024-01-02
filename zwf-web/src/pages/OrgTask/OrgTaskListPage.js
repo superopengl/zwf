@@ -40,7 +40,7 @@ const DEFAULT_QUERY_INFO = {
   page: 1,
   size: 50,
   total: 0,
-  status: ['todo', 'signed', 'to_sign', 'complete'],
+  status: ['todo', 'in_progress', 'pending_fix', 'signed', 'pending_sign', 'done'],
   assignee: null,
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
@@ -375,13 +375,13 @@ const OrgTaskListPage = (props) => {
                 </Select>
               </Space>
             </Col>
-            <Col>
+            {/* <Col>
               <Space>
                 <Label>Due Date</Label>
                 <DatePicker.RangePicker
                   value={queryInfo.dueDateRange?.map(x => moment(x, 'DD/MM/YYYY'))} onChange={handleDueDateRangeChange} format="DD/MM/YYYY" />
               </Space>
-            </Col>
+            </Col> */}
             <Col>
               <Space>
                 <Label>Task Template</Label>
