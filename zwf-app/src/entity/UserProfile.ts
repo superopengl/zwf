@@ -27,6 +27,9 @@ export class UserProfile {
   @Column({ default: 'en-US' })
   locale: string;
 
-  @Column('uuid', {nullable: true})
+  @Column('uuid', { nullable: true })
   avatarFileId: string;
+
+  @Column({ nullable: true })
+  avatarColorHex: string;
 }

@@ -1,4 +1,4 @@
-import { httpGet, httpPost, request } from './http';
+import { httpGet, httpGet$, httpPost, request } from './http';
 
 export async function getFileStream(id) {
   return httpGet(`file/${id}/data`);
@@ -6,6 +6,10 @@ export async function getFileStream(id) {
 
 export async function getFileMeta(id) {
   return httpGet(`file/${id}`);
+}
+
+export function getFileMeta$(id) {
+  return httpGet$(`file/${id}`);
 }
 
 export async function getFileMetaList(ids) {

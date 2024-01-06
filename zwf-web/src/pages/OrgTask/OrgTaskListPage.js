@@ -20,6 +20,7 @@ import ClientSelect from 'components/ClientSelect';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import DropdownMenu from 'components/DropdownMenu';
+import { UserDisplayName } from 'components/UserDisplayName';
 
 const { Title } = Typography;
 
@@ -57,11 +58,17 @@ const OrgTaskListPage = (props) => {
   const myUserId = context.user.id;
 
   React.useEffect(() => {
-    const subscription = loadList$();
+    const subscription = loadList$().pipe(
+      
+    );
     return () => {
       subscription.unsubscribe();
     }
   }, []);
+
+  const loadAgentList$ = () => {
+
+  }
 
   const handleTaskStatusChange = (taskId, newStatus) => {
     changeTaskStatus$(taskId, newStatus)
@@ -110,7 +117,12 @@ const OrgTaskListPage = (props) => {
       title: 'User',
       dataIndex: 'email',
       sorter: () => 0,
-      render: (text) => <Text><Highlighter highlightClassName="search-highlighting" searchWords={[queryInfo.text]} autoEscape={true} textToHighlight={text || ''} /></Text>
+      render: (text, item) => <UserDisplayName 
+      email={item.email} 
+      surname={item.surname}
+      givenName={item.givenName}
+      searchText={queryInfo.text}
+      />
     },
     {
       title: 'Created At',
@@ -134,12 +146,12 @@ const OrgTaskListPage = (props) => {
         return <TimeAgo value={text} />;
       }
     },
-    {
-      title: 'Due Date',
-      dataIndex: 'dueDate',
-      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-      render: (value) => value && <TimeAgo value={value} />
-    },
+    // {
+    //   title: 'Due Date',
+    //   dataIndex: 'dueDate',
+    //   sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+    //   render: (value) => value && <TimeAgo value={value} />
+    // },
     {
       title: 'Assignee',
       dataIndex: 'agentId',
@@ -158,7 +170,8 @@ const OrgTaskListPage = (props) => {
       //   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
       // </Select>,
       render: (text, record) => <AssigneeSelect
-        onChange={x => assignTaskToAgent(record, x)}
+        options={agentList}
+        onChange={agentId => assignTaskToAgent(record, agentId)}
         value={text}
       />
     },

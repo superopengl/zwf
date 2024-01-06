@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Image } from 'antd';
+import { Upload, Image, Tooltip } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
-import { getFileMeta, getPublicFileUrl } from 'services/fileService';
+import { getFileMeta, getFileMeta$, getPublicFileUrl } from 'services/fileService';
 import { Typography, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import * as abbreviate from 'abbreviate';
 import uniqolor from 'uniqolor';
+import { empty, EMPTY } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -43,24 +44,17 @@ const StyledAvatar = styled(Avatar)`
   border: 1px solid rgba(0,0,0,0.2);
 `;
 
-function getLabel(givenName, surname) {
-  const maxLength = 6;
-  const words = [givenName, surname].filter(x => !!x);
-  if (words.length === 1) {
-    return abbreviate(words[0], { length: maxLength }).toUpperCase();
-  }
-  const initials = words.map(w => w.charAt(0).toUpperCase()).join('');
-  return initials.substring(0, maxLength);
-}
 
 export const UserAvatar = React.memo((props) => {
-  const { editable, size, value: avatarFileId, userId, givenName, surname, onChange, style } = props;
+  const { editable, size, value: avatarFileId, onChange, style, color: backgroundColor } = props;
 
   const [fileList, setFileList] = React.useState([]);
 
-  const load = async () => {
-    if (avatarFileId) {
-      const mata = await getFileMeta(avatarFileId);
+  const load$ = () => {
+    if (!avatarFileId) {
+      return EMPTY.subscribe();
+    }
+    return getFileMeta$(avatarFileId).subscribe(mata => {
       const fileList = [{
         uid: mata.id,
         name: mata.fileName,
@@ -68,11 +62,14 @@ export const UserAvatar = React.memo((props) => {
         url: mata.location,
       }];
       setFileList(fileList);
-    }
+    })
   }
 
   React.useEffect(() => {
-    load()
+    const subscription = load$();
+    return () => {
+      subscription.unsubscribe();
+    }
   }, []);
 
   const handleChange = (info) => {
@@ -94,12 +91,11 @@ export const UserAvatar = React.memo((props) => {
       fallback="/images/avatar-fallback.png"
     />} />
   } else {
-    const { color: backgroundColor, isLight } = uniqolor(userId, { differencePoint: 160 });
-    const color = isLight ? 'rgba(0,0,0,0.85)' : 'rgba(255,255,255,0.85)';
-    const name = getLabel(givenName, surname) || <UserOutlined />;
     const fontSize = 28 * size / 64;
     avatarComponent = <StyledAvatar size={size} style={{ ...style, backgroundColor }}>
-      <Text style={{ fontSize, color }}>{name}</Text>
+      <Text style={{ fontSize, color: 'rgba(255,255,255,0.85)' }}>
+        <UserOutlined />
+      </Text>
     </StyledAvatar>
   }
 
@@ -128,7 +124,7 @@ export const UserAvatar = React.memo((props) => {
 });
 
 UserAvatar.propTypes = {
-  userId: PropTypes.string,
+  color: PropTypes.string,
   value: PropTypes.string, // avatarFileId
   givenName: PropTypes.string,
   surname: PropTypes.string,
@@ -139,6 +135,7 @@ UserAvatar.propTypes = {
 };
 
 UserAvatar.defaultProps = {
+  color: '#00232944',
   size: 64,
   editable: false,
 };

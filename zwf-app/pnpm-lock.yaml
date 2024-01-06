@@ -49,6 +49,7 @@ specifiers:
   tslint: ^6.1.2
   typeorm: ^0.2.25
   typescript: ^4.2.4
+  uniqolor: ^1.0.1
   uuid: ^8.3.0
   voucher-code-generator: ^1.1.1
   yamljs: ^0.3.0
@@ -94,6 +95,7 @@ dependencies:
   swagger-routes-express: 3.3.0
   tfn: 1.0.0
   typeorm: 0.2.32
+  uniqolor: 1.0.1
   uuid: 8.3.2
   voucher-code-generator: 1.1.1
   yamljs: 0.3.0
@@ -6967,6 +6969,10 @@ packages:
       is-extendable: 0.1.1
       set-value: 2.0.1
     dev: true
+
+  /uniqolor/1.0.1:
+    resolution: {integrity: sha512-g/lITZI/O2PKXoerNZJCrq8P5WAzO2Cjl04fmrSzEy1k7WQ2DwzHVFx6wRHOd0ycQum43k5SCVgMWwYTkXenYw==}
+    dev: false
 
   /unique-string/2.0.0:
     resolution: {integrity: sha512-uNaeirEPvpZWSgzwsPGtU2zVSTrn/8L5q/IexZmH0eH6SA73CmAA5U4GwORTxQAZs95TAXLNqeLoPPNO5gZfWg==}

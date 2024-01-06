@@ -13,14 +13,13 @@ const { Text, Paragraph, Link: TextLink } = Typography;
 export const AssigneeSelect = React.memo(props => {
   const { placeholder, onChange, value } = props;
   const [list, setList] = React.useState([]);
-  const [page, setPage] = React.useState(1);
   const [text, setText] = React.useState('');
   const { user } = React.useContext(GlobalContext);
 
   const myUserId = user.id;
 
   React.useEffect(() => {
-    const sub$ = searchAssigneeList$(page, text)
+    const sub$ = searchAssigneeList$(0, text)
       .subscribe(respData => {
         setList(respData.data);
       });
@@ -28,7 +27,7 @@ export const AssigneeSelect = React.memo(props => {
     return () => {
       sub$?.unsubscribe();
     }
-  }, [page, text]);
+  }, [text]);
 
   const handleSearch = (input) => {
     setText(input?.trim());
@@ -65,12 +64,18 @@ export const AssigneeSelect = React.memo(props => {
 });
 
 AssigneeSelect.propTypes = {
+  options: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    givenName: PropTypes.string,
+    surname: PropTypes.string,
+  })).isRequired,
   onChange: PropTypes.func,
   value: PropTypes.string,
   placeholder: PropTypes.string,
 };
 
 AssigneeSelect.defaultProps = {
+  options: [],
   onSelect: () => { },
   placeholder: ""
 };
