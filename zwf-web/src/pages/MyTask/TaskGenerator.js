@@ -7,6 +7,9 @@ import { listTaskTemplate } from 'services/taskTemplateService';
 import { listPortfolio } from 'services/portfolioService';
 import StepWizard from 'react-step-wizard';
 import { Loading } from 'components/Loading';
+import PropTypes from 'prop-types';
+import TaskTemplateSelect from 'components/TaskTemplateSelect';
+import ClientSelect from 'components/ClientSelect';
 
 const { Title, Text } = Typography;
 
@@ -35,71 +38,25 @@ const StyledTitleRow = styled.div`
  width: 100%;
 `
 
-const TaskGenerator = props => {
-  const { portfolioId } = props;
-
-  const [loading, setLoading] = React.useState(true);
-  const [taskTemplateList, setTaskTemplateList] = React.useState([]);
-  const [portfolioList, setPortfolioList] = React.useState([]);
+export const TaskGenerator = props => {
   const [taskTemplateId, setTaskTemplateId] = React.useState();
   const wizardRef = React.useRef(null);
 
-  const loadData = async () => {
-    setLoading(true);
-    const taskTemplateList = await listTaskTemplate() || [];
-    setTaskTemplateList(taskTemplateList);
-
-    if (!portfolioId) {
-      const portfolioList = await listPortfolio() || [];
-      setPortfolioList(portfolioList);
-    }
-    setLoading(false);
+  const handleTaskTypeChange = taskTemplateId => {
+    wizardRef.current.nextStep();
+    setTaskTemplateId(taskTemplateId);
   }
 
-  React.useEffect(() => {
-    loadData();
-  }, []);
-
-  const handleTaskTypeChange = e => {
-    const taskTemplateId = e.target.value;
-    if (portfolioId) {
-      const data = {
-        taskTemplateId,
-        portfolioId
-      };
-      props.onChange(data);
-    } else {
-      wizardRef.current.nextStep();
-      setTaskTemplateId(taskTemplateId);
-    }
-
-  }
-
-  const handlePortfolioChange = e => {
+  const handlePortfolioChange = clientId => {
     const data = {
       taskTemplateId,
-      portfolioId: e.target.value
+      clientId
     };
     props.onChange(data);
-  }
-
-  const handleNoPortfolio = () => {
-    const data = {
-      taskTemplateId,
-      portfolioId: null
-    };
-    props.onChange(data);
-  }
-
-  if (loading) {
-    return <Loading />
   }
 
   return (
     <Container>
-      <StyledTitleRow>
-        <Title level={2} style={{ margin: 'auto' }}>Tasks</Title>
-      </StyledTitleRow>
       {/* <Steps progressDot current={currentStep}>
         <Steps.Step title="Choose task type" />
         <Steps.Step title="Choose portfolio" />
@@ -108,33 +65,25 @@ const TaskGenerator = props => {
         <div>
           <Space size="middle" direction="vertical" style={{ width: '100%' }}>
             <Text type="secondary">Choose task type</Text>
-            <Radio.Group buttonStyle="outline" style={{ width: '100%' }} onChange={handleTaskTypeChange}>
-              {taskTemplateList.map((t, i) => <Radio.Button key={i} value={t.id}>{t.name}</Radio.Button>)}
-            </Radio.Group>
+            <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTypeChange} />
           </Space>
         </div>
-        {!portfolioId && <div>
+        <div>
           <Space size="middle" direction="vertical" style={{ width: '100%' }}>
             <Text type="secondary">Choose portfolio to fill the task automatically</Text>
-            <Radio.Group buttonStyle="outline" style={{ width: '100%' }} onChange={handlePortfolioChange}>
-              {portfolioList.map((p, i) => <Radio.Button className="portfolio" key={i} value={p.id}>
-                <Space>
-                  <PortfolioAvatar value={p.name} id={p.id} size={40} />
-                  <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-                    <div>{p.name}</div>
-                    {p.email && <Text type="secondary"><small>{p.email}</small></Text>}
-                  </div>
-                </Space>
-              </Radio.Button>)}
-            </Radio.Group>
-              <Button block type="link" onClick={handleNoPortfolio}>
-                Fill without portfolio
-              </Button>
+            <ClientSelect style={{ width: '100%' }} onChange={handlePortfolioChange} />
           </Space>
-        </div>}
+        </div>
       </StepWizard>
     </Container>
   );
 };
 
-export default TaskGenerator;
+
+TaskGenerator.propTypes = {
+  onChange: PropTypes.func
+};
+
+TaskGenerator.defaultProps = {
+  onChange: () => { }
+};

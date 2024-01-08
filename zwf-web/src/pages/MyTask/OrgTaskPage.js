@@ -2,20 +2,13 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Space, Button, Skeleton } from 'antd';
+import { Layout, Skeleton } from 'antd';
 
-import { changeTaskStatus$, getTask, getTask$ } from 'services/taskService';
-import MyTaskSign from './MyTaskSign';
-import TaskFormWizard from './TaskFormWizard';
-import MyTaskReadView from './MyTaskReadView';
+import { changeTaskStatus$, getTask$ } from 'services/taskService';
 import * as queryString from 'query-string';
-import { MessageFilled } from '@ant-design/icons';
-import { TaskStatus } from 'components/TaskStatus';
-import { Loading } from 'components/Loading';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TaskWorkPanel } from 'components/TaskWorkPanel';
 import { catchError } from 'rxjs/operators';
-import ProCard from '@ant-design/pro-card';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 
 const ContainerStyled = styled(Layout.Content)`

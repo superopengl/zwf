@@ -6,7 +6,6 @@ import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
-import { Portfolio } from '../entity/Portfolio';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Recurring } from '../entity/Recurring';
@@ -45,7 +44,6 @@ export const listRecurring = handlerWrapper(async (req, res) => {
   const list = await getRepository(Recurring)
     .createQueryBuilder('x')
     .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
-    .leftJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
     .orderBy('x."lastUpdatedAt"', 'DESC', 'NULLS LAST')
     .addOrderBy('j.name', 'ASC')
@@ -60,7 +58,6 @@ export const listRecurring = handlerWrapper(async (req, res) => {
       'u.email as email',
       'j.name as "taskTemplateName"',
       `j.id as "taskTemplateId"`,
-      'p.name as "portfolioName"',
       'x."lastRunAt" as "lastRunAt"',
       'x."nextRunAt" as "nextRunAt"',
       'x."lastUpdatedAt" as "lastUpdatedAt"'

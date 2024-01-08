@@ -1,6 +1,6 @@
 import React from 'react';
 import { generateTask, saveTask } from 'services/taskService';
-import TaskGenerator from './TaskGenerator';
+import { TaskGenerator } from './TaskGenerator';
 import StepWizard from 'react-step-wizard';
 import TaskFieldsEditor from './TaskFieldsEditor';
 import GenDocFieldStep from './GenDocFieldStep';
@@ -15,7 +15,7 @@ import { Loading } from 'components/Loading';
 
 const { Text } = Typography;
 
-const TaskFormWizard = props => {
+export const TaskFormWizard = props => {
   const { value, portfolioId } = props;
 
   const [loading, setLoading] = React.useState(false);
@@ -39,11 +39,11 @@ const TaskFormWizard = props => {
     });
   }
 
-  const handleTaskGenerated = async (values) => {
+  const handleGenerateTask = async (values) => {
     setLoading(true);
-    const { taskTemplateId, portfolioId } = values;
-    const task = await generateTask(taskTemplateId, portfolioId);
-    const portfolio = await getPortfolio(portfolioId);
+    const { taskTemplateId, portfolioId: clientId } = values;
+    const task = await generateTask(taskTemplateId, clientId);
+    const portfolio = await getPortfolio(clientId);
 
     setTask(task);
     setVariableContextDic(portfolio.fields.reduce((pre, cur) => {
@@ -150,7 +150,7 @@ const TaskFormWizard = props => {
 
   return <Loading loading={loading}>
     <StepWizard ref={generatorRef}>
-      {!task && <TaskGenerator onChange={handleTaskGenerated} portfolioId={portfolioId} />}
+      {!task && <TaskGenerator onChange={handleGenerateTask} />}
       {task && <><Space size="large" direction="vertical" style={{ width: '100%' }}>
         <div style={{ textAlign: 'center', fontSize: '2rem' }}>
           <Text type="secondary">{progess.current} / {progess.total}</Text>
@@ -180,9 +180,6 @@ const TaskFormWizard = props => {
         </StepWizard>
       </Space></>}
     </StepWizard>
-{/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
+    {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
   </Loading>
-
-
 }
-export default withRouter(TaskFormWizard);
