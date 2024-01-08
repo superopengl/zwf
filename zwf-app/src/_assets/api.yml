@@ -503,13 +503,6 @@ paths:
       responses:
         200:
           description: OK        
-    post:
-      operationId: saveTask
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
     get:
       operationId: listTask
       # security:
@@ -572,6 +565,17 @@ paths:
       responses:
         200:
           description: OK
+    post:
+      operationId: updateTask
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
     delete:
       operationId: deleteTask
       # security:

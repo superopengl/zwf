@@ -66,40 +66,44 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
   }
 }
 
-export const saveTask = handlerWrapper(async (req, res) => {
+export const updateTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-
-  const { } = req as any;
-
-  const { id, name, taskTemplateId, portfolioId, fields, status, docs } = req.body;
+  const { name, userId, fields, status, docs } = req.body;
   assert(name, 400, 'name is empty');
+  const { id } = req.params;
 
-  const portfolio = await getRepository(Portfolio).findOne(portfolioId);
-  assert(name, 404, 'portfolio is not found');
+  let task: Task;
+  let query: any = { taskId: id };
+  const role = getRoleFromReq(req);
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent:
+      query = {
+        ...query,
+        orgId: getOrgIdFromReq(req),
+      }
+      break;
+    case Role.Client:
+      query = {
+        ...query,
+        userId: getUserIdFromReq(req),
+      }
+    default:
+      assert(task, 404, 'Task is not found');
+  }
 
   const repo = getRepository(Task);
-  let oldStatus;
-  let task: Task;
-  if (id) {
-    // Existing task save
-    task = await repo.findOne(id);
-    assert(task, 404, 'Task is not found');
-    oldStatus = task.status;
-  } else {
-    // New task
-    task = new Task();
-    task.id = uuidv4();
-    task.userId = portfolio.userId;
-    task.taskTemplateId = taskTemplateId;
-  }
+  task = await repo.findOne(id);
+  assert(task, 404, 'Task is not found');
+  const oldStatus = task.status;
 
   task.name = name;
   task.fields = fields;
   task.docs = docs;
   task.status = status;
 
-  await handleTaskStatusChange(oldStatus, task);
   await repo.save(task);
+  await handleTaskStatusChange(oldStatus, task);
 
   res.json();
 });

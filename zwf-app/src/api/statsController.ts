@@ -24,24 +24,6 @@ async function getUserStats() {
   });
 }
 
-async function getPortfolioStat() {
-  const result = await getRepository(Portfolio)
-    .createQueryBuilder('x')
-    .where({ deleted: false })
-    .select('x.type as name')
-    .addSelect(`COUNT(1) AS count`)
-    .groupBy('x.type')
-    .execute();
-
-  return result.reduce((pre, cur) => {
-    pre[cur.name] = +cur.count;
-    return pre;
-  }, {
-    individual: 0,
-    business: 0,
-  });
-}
-
 async function getTaskStat() {
   const result = await getRepository(Task)
     .createQueryBuilder('x')
@@ -74,7 +56,6 @@ export const getAdminStats = handlerWrapper(async (req, res) => {
 
   const stats = {
     user: await getUserStats(),
-    portfolio: await getPortfolioStat(),
     task: await getTaskStat(),
   };
 
