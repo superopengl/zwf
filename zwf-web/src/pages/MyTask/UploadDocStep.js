@@ -7,7 +7,7 @@ import StepButtonSet from './StepBottonSet';
 
 const { Title } = Typography;
 
-const UploadDocStep = (props) => {
+export const UploadDocStep = (props) => {
   const { task, onFinish, onBack, isActive } = props;
   const [loading, setLoading] = React.useState(false);
 
@@ -59,4 +59,3 @@ UploadDocStep.defaultProps = {
   disabled: false
 };
 
-export default withRouter(UploadDocStep);

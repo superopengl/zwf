@@ -1,3 +1,4 @@
+import { UserProfile } from './../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 import { getRepository, getManager } from 'typeorm';
@@ -15,6 +16,7 @@ import { User } from '../entity/User';
 import { enqueueEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
+import { UserInformation } from '../entity/views/UserInformation';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -50,9 +52,15 @@ function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[]): TaskDoc[] {
   });
 }
 
+function generateTaskDefaultName (taskTemplateName, profile: UserProfile) {
+  assert(profile, 500, 'User profile is not specified');
+  const clientName = `${profile.givenName} ${profile.surname}`;
+  const displayName = clientName.trim() ? clientName : profile.email;
+  return `${taskTemplateName} - ${displayName}`;
+}
+
 export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, fieldValues) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
-  assert(taskName, 400, 'name is not specified');
   assert(email, 400, 'email is not specified');
 
   let task: Task;
@@ -67,7 +75,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     task = new Task();
     task.id = uuidv4();
     task.deepLinkId = generateDeepLinkId();
-    task.name = taskName || taskTemplate.name;
+    task.name = taskName || generateTaskDefaultName(taskTemplate.name, user.profile);
     task.description = taskTemplate.description;
     task.userId = user.id;
     task.taskTemplateId = taskTemplateId;

@@ -36,11 +36,9 @@ export const TaskFormPanel = React.memo(props => {
   }
 
   const handleValuesChange = (value, allValues) => {
-    debugger;
   }
 
   const handleFieldsChange = (changedField, allFields) => {
-    debugger;
   }
 
   return (

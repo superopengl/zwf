@@ -71,12 +71,16 @@ const OrgTaskListPage = (props) => {
 
   }
 
+  const postArchieveMessage = () => {
+    notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
+  }
+
   const handleTaskStatusChange = (taskId, newStatus) => {
     changeTaskStatus$(taskId, newStatus)
     .subscribe(() => {
       loadList$();
       if(newStatus === 'archived' && !queryInfo.status.includes('archived')) {
-        notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
+        postArchieveMessage();
       }
     })
   }
@@ -251,6 +255,7 @@ const OrgTaskListPage = (props) => {
       title: <>Archive task <Text strong>{name}</Text>?</>,
       okText: 'Yes, Archive it',
       onOk: () => {
+        postArchieveMessage();
         deleteTask$(id).subscribe(() => loadList$());
       },
       maskClosable: true,
@@ -342,7 +347,6 @@ const OrgTaskListPage = (props) => {
 
   return (
     <LayoutStyled>
-
       <Space direction="vertical" style={{ width: '100%' }} size="large">
         <Card>
           <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16 }}>
