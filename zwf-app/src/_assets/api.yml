@@ -613,14 +613,14 @@ paths:
       responses:
         200:
           description: OK
-  /task/generate:
-    post:
-      operationId: generateTask
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK      
+  # /task/generate:
+  #   post:
+  #     operationId: generateTask
+  #     # security:
+  #     #   - authClient: []
+  #     responses:
+  #       200:
+  #         description: OK      
   /task/{id}:
     get:
       operationId: getTask

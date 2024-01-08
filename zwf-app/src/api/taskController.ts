@@ -13,7 +13,7 @@ import { sendEmailImmediately } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskByTaskTemplateAndUserEmail, generateTaskByTaskTemplateAndPortfolio } from '../utils/generateTaskByTaskTemplateAndPortfolio';
+import { createTaskByTaskTemplateAndUserEmail } from '../utils/generateTaskByTaskTemplateAndPortfolio';
 import { getNow } from '../utils/getNow';
 import { Portfolio } from '../entity/Portfolio';
 import * as _ from 'lodash';
@@ -29,19 +29,6 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-
-export const generateTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client');
-  const { taskTemplateId, portfolioId } = req.body;
-
-  const Task = await generateTaskByTaskTemplateAndPortfolio(
-    taskTemplateId,
-    portfolioId,
-    (j, p) => `${p.name} ${j.name}`
-  );
-
-  res.json(Task);
-});
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');

@@ -1,3 +1,4 @@
+import { UserInformation } from './../entity/views/UserInformation';
 
 import { getRepository } from 'typeorm';
 import { User } from '../entity/User';
@@ -15,19 +16,18 @@ import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunA
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { id, portfolioId, taskTemplateId, cron, dueDay, startFrom, every, period } = req.body;
+  const { id, clientId, taskTemplateId, startFrom, every, period } = req.body;
 
-  const portfolio = await getRepository(Portfolio).findOne(portfolioId);
-  assert(portfolio, 404, 'Porotofolio is not found');
+  const user = await getRepository(UserInformation).findOne(clientId);
+  assert(user, 404, 'User is not found');
   const taskTemplate = await getRepository(TaskTemplate).findOne(taskTemplateId);
   assert(taskTemplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
   recurring.id = id || uuidv4();
-  recurring.nameTemplate = `${portfolio.name} ${taskTemplate.name} {{createdDate}}`;
-  recurring.portfolioId = portfolioId;
+  recurring.nameTemplate = `${user.surname} ${taskTemplate.name} {{createdDate}}`;
+  recurring.userId = clientId;
   recurring.taskTemplateId = taskTemplateId;
-  recurring.dueDay = dueDay;
   recurring.startFrom = startFrom ? moment.tz(`${startFrom} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
