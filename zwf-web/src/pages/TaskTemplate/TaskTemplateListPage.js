@@ -18,7 +18,7 @@ import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import TaskClientSelectModal from 'components/TaskClientSelectModal';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
-import { CreateNewTaskModal } from 'pages/MyTask/CreateNewTaskModal';
+import { NewTaskOnTemplateModal } from 'pages/TaskTemplate/NewTaskOnTemplateModal';
 import {BiGridAlt} from 'react-icons/bi';
 import {HiViewList} from 'react-icons/hi';
 
@@ -297,7 +297,7 @@ export const TaskTemplateListPage = props => {
           type="agent"
         />
       </Modal>
-      <CreateNewTaskModal
+      <NewTaskOnTemplateModal
         visible={!!currentTemplate}
         taskTemplateId={currentTemplate?.id}
         onOk={() => setCurrentTemplate(null)}
