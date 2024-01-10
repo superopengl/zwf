@@ -26,7 +26,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const TaskTemplateSelect = (props) => {
-  const { value, onChange, onLoadingChange, ...other } = props;
+  const { value, onChange, onLoadingChange, showIcon, ...other } = props;
 
   const [options, setOptions] = React.useState([]);
 
@@ -44,7 +44,7 @@ const TaskTemplateSelect = (props) => {
 
   const convertToOptions = (taskTemplateList) => {
     return taskTemplateList.map(x => ({
-      label: <><TaskTemplateIcon /> {x.name}</>,
+      label: <>{showIcon && <TaskTemplateIcon />}{x.name}</>,
       value: x.id,
       key: x.id
     }))
@@ -52,7 +52,7 @@ const TaskTemplateSelect = (props) => {
 
   return (<StyledSelect
     options={options}
-    placeholder={<><TaskTemplateIcon />Select a task template</>}
+    placeholder={<>{showIcon && <TaskTemplateIcon />}Select a task template</>}
     allowClear
     value={value}
     onChange={onChange}
@@ -64,10 +64,12 @@ TaskTemplateSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onLoadingChange: PropTypes.func,
+  showIcon: PropTypes.bool,
 };
 
 TaskTemplateSelect.defaultProps = {
-  onLoadingChange: () => { }
+  onLoadingChange: () => { },
+  showIcon: true,
 };
 
 export default TaskTemplateSelect;

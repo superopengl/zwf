@@ -5,6 +5,8 @@ import styled from 'styled-components';
 import { listOrgExistingClients } from 'services/orgService';
 import { UserDisplayName } from './UserDisplayName';
 import isEmail from 'validator/lib/isEmail';
+import Icon, { BorderOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
+import { UserAvatar } from './UserAvatar';
 
 const { Text } = Typography;
 
@@ -69,7 +71,7 @@ const ClientSelect = (props) => {
     <StyledSelect
       showSearch
       allowClear
-      placeholder="Search a client by name or email"
+      placeholder={<>Search a client by name or email</>}
       // optionFilterProp="searchText"
       value={value}
       onChange={handleChange}
@@ -80,23 +82,23 @@ const ClientSelect = (props) => {
         return email?.includes(input) || givanName?.includes(input) || surname?.includes(input);
       }}
       notFoundContent={
-          isValidEmail ? <Space>
-            Seems like this email isn't a client in your organization.
-            <Button
-              type="primary"
-              onClick={handleNewEmailInput}
-            >Click to invite by this email</Button>
-          </Space> : <>User not found. Typing in a valid email address can invite a user client.</>
-        }
+        isValidEmail ? <Space>
+          Seems like this email isn't a client in your organization.
+          <Button
+            type="primary"
+            onClick={handleNewEmailInput}
+          >Click to invite by this email</Button>
+        </Space> : <>User not found. Typing in a valid email address can invite a user client.</>
+      }
       {...other}
     >
       {clientList.map(c => (<Select.Option key={c.email} value={c.email} item={c}>
-        <UserDisplayName
-          surname={c.surname}
-          givenName={c.givenName}
-          email={c.email}
-          searchText={searchText}
-        />
+          <UserDisplayName
+            surname={c.surname}
+            givenName={c.givenName}
+            email={c.email}
+            searchText={searchText}
+          />
       </Select.Option>))}
     </StyledSelect>
   )
