@@ -185,6 +185,7 @@ export const FileUploader = (props) => {
 FileUploader.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func,
+  onAdd: PropTypes.func,
   size: PropTypes.number,
   disabled: PropTypes.bool,
   showsLastReadAt: PropTypes.bool,
@@ -194,6 +195,8 @@ FileUploader.propTypes = {
 
 FileUploader.defaultProps = {
   disabled: false,
+  onChange: () => {},
+  onAdd: () => {},
   showsLastReadAt: false,
   showsSignedAt: false,
   showUploadList: {
