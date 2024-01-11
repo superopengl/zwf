@@ -5,10 +5,10 @@ import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, FileOutlined
+  BankOutlined, QuestionOutlined, FileOutlined, PlusOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
-import { Space, Menu, Typography, Modal } from 'antd';
+import { Space, Menu, Typography, Modal, Button, AutoComplete, Row, Col } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import ContactForm from 'components/ContactForm';
@@ -25,6 +25,9 @@ import OrgListPage from 'pages/Org/OrgListPage';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { ImInsertTemplate } from 'react-icons/im';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
+import { notify } from 'util/notify';
+import { showCreateTaskModal } from 'components/showCreateTaskModal';
+import { SmartSearch } from 'components/SmartSearch';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const OrgBoardPage = loadable(() => import('pages/OrgBoard/OrgBoardPage'));
@@ -174,8 +177,6 @@ function getSanitizedPathName(pathname) {
 }
 
 export const AppLoggedIn = React.memo(props => {
-
-
   const context = React.useContext(GlobalContext);
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
@@ -197,6 +198,12 @@ export const AppLoggedIn = React.memo(props => {
 
 
   const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
+
+  const handleCreateTask = () => {
+    showCreateTaskModal(null, () => {
+      notify.info('Task created', <>blah</>);
+    });
+  }
 
   return <StyledLayout
     // title={<Image src="/images/brand.svg" preview={false} width={110} />}
@@ -231,7 +238,7 @@ export const AppLoggedIn = React.memo(props => {
     //   ]
     // }}
     headerContentRender={() => (
-      <Space>
+      <Row gutter={10} wrap={false} justify="center">
         {/* <div
             onClick={() => setCollapsed(!collapsed)}
             style={{
@@ -245,9 +252,15 @@ export const AppLoggedIn = React.memo(props => {
               color: 'white'
             }}
           >
-            {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
+          {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
           </div> */}
-      </Space>
+        <Col>
+          <SmartSearch />
+        </Col>
+        <Col>
+          <Button onClick={() => handleCreateTask()} type="primary" icon={<PlusOutlined />}>Create Task</Button>
+        </Col>
+      </Row>
     )}
     rightContentRender={() => (
       <div style={{ marginLeft: 16 }}>
