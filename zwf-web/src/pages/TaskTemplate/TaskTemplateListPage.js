@@ -269,9 +269,9 @@ export const TaskTemplateListPage = props => {
                 <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-              {item.docNames?.length && <Row style={{ marginTop: 20 }} gutter={[20, 20]}>
-                {item.docNames?.map((d, i) => <Col key={i}>
-                  <DocTemplateIcon style={{fontSize: 10, position: 'relative', top: -3}} />{d}
+              {item.docs?.length && <Row style={{ marginTop: 20 }} gutter={[20, 20]}>
+                {item.docs?.map((d, i) => <Col key={i}>
+                  <DocTemplateIcon style={{fontSize: 10, position: 'relative', top: -3}} />{d.name}
                 </Col>)}
               </Row>}
             </Card>
