@@ -142,7 +142,7 @@ export const TaskGenerator = props => {
           onLoadingChange={setLoading}
           value={clientInfo?.email} />
         <Text type="secondary">Choose a task template to begin with.</Text>
-        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={false} value={taskTemplateId} />
+        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
         <Text type="secondary">Input a meaningful task name. This name will appear in the emails to the client.</Text>
         <Input style={{ height: 50 }}
           placeholder="Task name"

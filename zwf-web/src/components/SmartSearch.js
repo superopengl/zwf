@@ -132,8 +132,11 @@ export const SmartSearch = withRouter((props) => {
     setSearchText(text);
   }
 
-  const handleDomainSelected = (domain) => {
-    setDomain(domain);
+  React.useEffect(() => {
+    if(!domain || !searchText?.trim()) {
+      setOptionsWithinDomain(null)
+      return;
+    }
 
     const config = DOMAIN_CONFIG[domain];
 
@@ -149,6 +152,10 @@ export const SmartSearch = withRouter((props) => {
 
       setOptionsWithinDomain(options);
     })
+  }, [domain, searchText])
+
+  const handleDomainSelected = (domain) => {
+    setDomain(domain);
   }
 
   const handleSearchWithinDomain = () => {
