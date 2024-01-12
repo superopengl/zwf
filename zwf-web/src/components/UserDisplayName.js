@@ -31,8 +31,8 @@ export const UserDisplayName = (props) => {
 };
 
 UserDisplayName.propTypes = {
-  surname: PropTypes.string.isRequired,
-  givenName: PropTypes.string.isRequired,
+  surname: PropTypes.string,
+  givenName: PropTypes.string,
   email: PropTypes.string.isRequired,
   searchText: PropTypes.string,
 };
