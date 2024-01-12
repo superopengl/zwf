@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
 import { listOrgExistingClients } from 'services/orgService';
-import { UserDisplayName } from './UserDisplayName';
+import { UserDisplayName } from 'components/UserDisplayName';
 import isEmail from 'validator/lib/isEmail';
 import Icon, { BorderOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
 import { UserAvatar } from './UserAvatar';
