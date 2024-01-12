@@ -134,7 +134,6 @@ const OrgBoardPage = props => {
     <LayoutStyled>
       <Space style={{ width: '100%', justifyContent: 'flex-end', marginBottom: '1rem' }}>
         <Link to="/task"><Button type="link">All Tasks</Button></Link>
-        <Button type="primary" onClick={() => handleCreateTask()} icon={<PlusOutlined />}>New Task</Button>
       </Space>
       <DragDropContext onDragEnd={onDragEnd}>
         <Loading loading={loading}>
