@@ -28,6 +28,7 @@ export function showCreateTaskModal(taskTemplateId, onFinish) {
     destroyOnClose: true,
     footer: null,
     width: 600,
+    focusTriggerAfterClose: false,
     okButtonProps: {
       style: {
         display: 'none'
