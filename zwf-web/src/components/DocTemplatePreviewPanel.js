@@ -1,8 +1,8 @@
-import { Typography, Form, Input, Card, Button } from 'antd';
+import { Row, Typography, Form, Input, Card, Button, Collapse } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import {RawHtmlDisplay} from 'components/RawHtmlDisplay';
+import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
@@ -21,19 +21,21 @@ const Container = styled.div`
 const StyledCard = styled(Card)`
 // box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 .ant-card-body, .ant-card-head {
-  background-color: rgba(0,0,0,0.05);
+  // background-color: rgba(0,0,0,0.05);
   // padding: 16px;
 }
 `;
 
-const PreviewDocContainer = styled.div`
-background-color: rgba(0,0,0,0.05);
-padding: 2rem;
+const PreviewDocContainer = styled(Card)`
+// background-color: rgba(0,0,0,0.05);
+// padding: 0;
+margin-top: 20px;
+box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 `;
 
 const PreviewDocPage = styled.div`
 background-color: rgba(255,255,255);
-padding: 1rem;
+padding: 2rem;
 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 `;
 
@@ -108,27 +110,31 @@ export const DocTemplatePreviewPanel = props => {
   }
   return (
     <Container style={props.style}>
-      {!isEmpty(state.varBag) && <StyledCard title="Test by setting variables" size="small" style={{ marginBottom: 30 }}
-        extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
-      // size="small"
-      >
-        <Form
-          ref={form}
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
-          onValuesChange={handleVarValueChange}
-        >
-          {Object.entries(state.varBag || {}).map(([k]) => <Form.Item key={k} label={k} name={k}>
-            <Input placeholder="var value" />
-          </Form.Item>)}
-        </Form>
-      </StyledCard>}
-      <PreviewDocContainer>
-        <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
-        <Paragraph type="secondary" style={{ textAlign: 'center' }}>{docTemplate?.description}</Paragraph>
-        <PreviewDocPage>
-          <RawHtmlDisplay value={state.rendered} />
-        </PreviewDocPage>
+      {!isEmpty(state.varBag) && <Collapse bordered={false} expandIconPosition="right">
+        <Collapse.Panel key="1"
+          header="Test variables"
+          style={{border: 'none'}}
+          // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
+          >
+          <Form
+            style={{marginTop: 20}}
+            ref={form}
+            labelCol={{ span: 8 }}
+            wrapperCol={{ span: 16 }}
+            onValuesChange={handleVarValueChange}
+          >
+            {Object.entries(state.varBag || {}).map(([k]) => <Form.Item key={k} label={k} name={k}>
+              <Input placeholder="var value" />
+            </Form.Item>)}
+          </Form>
+        </Collapse.Panel>
+      </Collapse>}
+      {/* <PreviewDocContainer>
+          <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
+          <Paragraph type="secondary">{docTemplate?.description}</Paragraph>
+      </PreviewDocContainer> */}
+      <PreviewDocContainer bordered>
+        <RawHtmlDisplay value={state.rendered} />
       </PreviewDocContainer>
     </Container >
   );
