@@ -6,7 +6,7 @@ import { saveDocTemplate, getDocTemplate } from 'services/docTemplateService';
 import { notify } from 'util/notify';
 import { BuiltInFieldDef } from 'components/FieldDef';
 import { Loading } from 'components/Loading';
-import {RickTextInput} from 'components/RichTextInput';
+import {RichTextInput} from 'components/RichTextInput';
 
 const { Paragraph, Text } = Typography;
 
@@ -64,7 +64,7 @@ const DocTemplateForm = (props) => {
         Refer to <a href="https://www.markdownguide.org/basic-syntax/" target="_blank" rel="noopener noreferrer">https://www.markdownguide.org/basic-syntax/</a> for Markdown basic syntax. Use double curly braces to express the field variables. The variables that can be automatically filled from portfolios are {BuiltInFieldDef.map((f, i) => <Text key={i}><Text code>{`{{${f.name}}}`}</Text>, </Text>)}<Text code>{'{{now}}'}</Text>.
         </Paragraph>
       <Form.Item name="html" rules={[{ required: true, message: ' ' }]}>
-       <RickTextInput />
+       <RichTextInput />
       </Form.Item>
 
     </Form >

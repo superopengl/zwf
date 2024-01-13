@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
 import { API_BASE_URL } from 'services/http';
 import { extend } from 'wangeditor-for-react';
 import i18next from 'i18next';
@@ -54,7 +53,7 @@ export const RichTextInput = (props) => {
         'head',
         'bold',
         'fontSize',
-        'fontName',
+        // 'fontName',
         'italic',
         'underline',
         'strikeThrough',

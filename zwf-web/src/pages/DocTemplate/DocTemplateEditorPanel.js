@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { TaskTemplateBuilder } from 'pages/TaskTemplate/formBuilder/TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
-import {RickTextInput} from 'components/RichTextInput';
+import {RichTextInput} from 'components/RichTextInput';
 import { EditTitleInput } from 'components/EditTitleInput';
 
 const Container = styled.div`
@@ -41,7 +41,7 @@ export const DocTemplateEditorPanel = props => {
           <Input.TextArea allowClear autoSize={{ minRows: 3 }} placeholder="Doc template description. This will be shown on the create task wizard to help users fill required fields to generate this document." />
         </Form.Item>
         <Form.Item name="html" label="Body" rules={[{ required: true, message: ' ' }]}>
-          <RickTextInput />
+          <RichTextInput />
         </Form.Item>
       </Form>
     </Container >
