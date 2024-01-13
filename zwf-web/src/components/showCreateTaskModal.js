@@ -34,4 +34,6 @@ export function showCreateTaskModal(taskTemplateId, onFinish) {
       }
     }
   });
+
+  return modalRef;
 }

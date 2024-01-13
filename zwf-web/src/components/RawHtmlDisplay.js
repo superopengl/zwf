@@ -15,7 +15,7 @@ const ContainerStyled = styled.div`
 `;
 
 
-const RawHtmlDisplay = (props) => {
+export const RawHtmlDisplay = (props) => {
 
   return (
     <ContainerStyled
@@ -32,4 +32,3 @@ RawHtmlDisplay.defaultProps = {
   value: ''
 };
 
-export default withRouter(RawHtmlDisplay);
