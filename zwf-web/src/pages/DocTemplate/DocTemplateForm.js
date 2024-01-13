@@ -6,7 +6,7 @@ import { saveDocTemplate, getDocTemplate } from 'services/docTemplateService';
 import { notify } from 'util/notify';
 import { BuiltInFieldDef } from 'components/FieldDef';
 import { Loading } from 'components/Loading';
-import RickTextInput from 'components/RichTextInput';
+import {RickTextInput} from 'components/RichTextInput';
 
 const { Paragraph, Text } = Typography;
 

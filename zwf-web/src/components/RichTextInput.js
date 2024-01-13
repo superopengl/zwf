@@ -9,7 +9,7 @@ const ReactWEditor = extend({ i18next });
 
 const DEFAULT_SAMPLE = ``;
 
-const RichTextInput = (props) => {
+export const RichTextInput = (props) => {
 
   const { value, disabled, onChange, shared } = props;
   let editorRef = React.useRef(null);
@@ -94,4 +94,3 @@ RichTextInput.defaultProps = {
   shared: false,
 };
 
-export default withRouter(RichTextInput);
