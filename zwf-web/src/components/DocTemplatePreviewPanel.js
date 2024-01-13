@@ -51,18 +51,23 @@ const getPendingVarBag = (html, seedVarBag) => {
 
 export const DocTemplatePreviewPanel = props => {
   const { value: docTemplate, varBag: propVarBag } = props;
-  
-  const html = docTemplate?.html;
-  const [varBag, setVarBag] = React.useState(getPendingVarBag(html, propVarBag));
+
+  const [varBag, setVarBag] = React.useState(getPendingVarBag(docTemplate?.html, propVarBag));
+  const [html, setHtml] = React.useState(docTemplate?.html);
   const [renderedHtml, setRenderedHtml] = React.useState();
   const form = React.createRef();
+
+  React.useEffect(() => {
+    setHtml(docTemplate?.html);
+    setVarBag(getPendingVarBag(docTemplate?.html, propVarBag));
+  }, [docTemplate, propVarBag])
 
   React.useEffect(() => {
     const newVarBag = getPendingVarBag(html, varBag);
     const renderedHtml = renderDocTemplateBodyWithVarBag(html, newVarBag);
 
     setRenderedHtml(renderedHtml);
-  }, [varBag]);
+  }, [html, varBag]);
 
   const handleVarValueChange = (changedValue, allValues) => {
     setVarBag({ ...allValues });
@@ -84,15 +89,11 @@ export const DocTemplatePreviewPanel = props => {
             onValuesChange={handleVarValueChange}
           >
             {Object.entries(varBag).map(([k]) => <Form.Item key={k} label={k} name={k}>
-              <Input placeholder={`Value of ${k}`}/>
+              <Input placeholder={`Value of ${k}`} />
             </Form.Item>)}
           </Form>
         </Collapse.Panel>
       </Collapse>}
-      {/* <PreviewDocContainer>
-          <Title level={3} style={{ textAlign: 'center' }}>{docTemplate?.name}</Title>
-          <Paragraph type="secondary">{docTemplate?.description}</Paragraph>
-      </PreviewDocContainer> */}
       <PreviewDocContainer bordered>
         <RawHtmlDisplay value={renderedHtml} />
       </PreviewDocContainer>
@@ -102,7 +103,6 @@ export const DocTemplatePreviewPanel = props => {
 
 DocTemplatePreviewPanel.propTypes = {
   value: PropTypes.shape({
-    id: PropTypes.string.isRequired,
     html: PropTypes.string.isRequired,
     variables: PropTypes.arrayOf(PropTypes.string),
   }),
