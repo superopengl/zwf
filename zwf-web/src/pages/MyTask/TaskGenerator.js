@@ -25,8 +25,8 @@ import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewMo
 const { Title, Text, Paragraph } = Typography;
 
 const DocListItem = styled(List.Item)`
-padding-left: 12px;
-padding-right: 12px;
+padding-left: 12px !important;
+padding-right: 12px !important;
 
 &:hover {
   cursor: pointer;
