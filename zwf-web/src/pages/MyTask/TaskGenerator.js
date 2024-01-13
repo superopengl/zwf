@@ -62,6 +62,21 @@ export const TaskGenerator = props => {
   }, [clientInfo, taskTemplate])
 
   React.useEffect(() => {
+    if (taskTemplateId) {
+      getTaskTemplate$(taskTemplateId)
+        .pipe(
+          catchError(() => setLoading(false))
+        )
+        .subscribe(taskTemplate => {
+          setTaskTemplate(taskTemplate)
+          setLoading(false)
+        });
+    } else {
+      setTaskTemplate(null)
+    }
+  }, [taskTemplateId])
+
+  React.useEffect(() => {
     if (taskTemplate) {
       const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(taskTemplate.fields, false);
       clientFields.fields.forEach(f => {
@@ -77,15 +92,6 @@ export const TaskGenerator = props => {
   const handleTaskTemplateChange = taskTemplateIdValue => {
     // wizardRef.current.nextStep();
     setTaskTemplateId(taskTemplateIdValue);
-
-    getTaskTemplate$(taskTemplateIdValue)
-      .pipe(
-        catchError(() => setLoading(false))
-      )
-      .subscribe(taskTemplate => {
-        setTaskTemplate(taskTemplate)
-        setLoading(false)
-      })
   }
 
   const handleClientChange = client => {
@@ -129,8 +135,10 @@ export const TaskGenerator = props => {
   }
 
   const handlePreviewDocTemplate = docId => {
+    setLoading(true)
     getDocTemplate$(docId).subscribe(docTemplate => {
       showDocTemplatePreviewModal(docTemplate);
+      setLoading(false)
     })
   }
   const steps = [
