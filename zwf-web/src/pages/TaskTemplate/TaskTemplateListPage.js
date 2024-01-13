@@ -13,16 +13,14 @@ import { withRouter, Link } from 'react-router-dom';
 import { cloneTaskTemplate$, deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import HighlightingText from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
-import TaskClientSelectModal from 'components/TaskClientSelectModal';
 import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
-import { NewTaskOnTemplateModal } from 'pages/TaskTemplate/NewTaskOnTemplateModal';
-import {BiGridAlt} from 'react-icons/bi';
-import {HiViewList} from 'react-icons/hi';
+import { BiGridAlt } from 'react-icons/bi';
+import { HiViewList } from 'react-icons/hi';
+import { showCreateTaskModal } from 'components/showCreateTaskModal';
 
-const { Title, Text, Paragraph, Link: TextLink } = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 
 
 const LayoutStyled = styled.div`
@@ -44,10 +42,7 @@ export const TaskTemplateListPage = props => {
   const [searchText, setSearchText] = React.useState('');
   const [filteredList, setFilteredList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [selectClientVisible, setSelectClientVisible] = React.useState(false);
-  const [currentTemplate, setCurrentTemplate] = React.useState();
   const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
-  const [newTaskVisible, setNewTaskVisible] = React.useState(false);
   const [viewMode, setViewMode] = React.useState('grid');
 
   const loadList = async () => {
@@ -73,8 +68,6 @@ export const TaskTemplateListPage = props => {
     handleEditOne(item.id);
   }
 
-  const handlePreview = (item) => {
-  }
 
   const handleDelete = async (item) => {
     const { id, name } = item;
@@ -106,32 +99,14 @@ export const TaskTemplateListPage = props => {
         loadList();
       })
   }
-  // const handleCancelCreateTask = () => {
-  //   setSelectClientVisible(false);
-  //   setCurrentTemplate(null);
-  // }
-
-  const span = {
-    xs: 24,
-    sm: 24,
-    md: 24,
-    lg: 12,
-    xl: 12,
-    xxl: 12
-  }
 
   const handleSearchFilter = (text) => {
     setSearchText(text);
   }
 
   const handleCreateTask = (item) => {
-    setCurrentTemplate(item);
+    showCreateTaskModal(item.id);
   }
-
-  const handleCancelCreateTask = () => {
-    setCurrentTemplate(null);
-  }
-
 
   return (
     <LayoutStyled>
@@ -143,41 +118,22 @@ export const TaskTemplateListPage = props => {
             prefix={<Text type="secondary"><SearchOutlined /></Text>}
             style={{ width: 240 }} />
           <Space>
-    <Radio.Group 
-    optionType="button"
-    buttonStyle="solid"
-    defaultValue={viewMode}
-    onChange={e => setViewMode(e.target.value)}
-    >
-      <Radio.Button value="grid">
-        <Icon component={() => <BiGridAlt/>} />
-      </Radio.Button>
-      <Radio.Button value="list">
-        <Icon component={() => <HiViewList/>} />
-      </Radio.Button>
-    </Radio.Group>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
+            <Radio.Group
+              optionType="button"
+              buttonStyle="solid"
+              defaultValue={viewMode}
+              onChange={e => setViewMode(e.target.value)}
+            >
+              <Radio.Button value="grid">
+                <Icon component={() => <BiGridAlt />} />
+              </Radio.Button>
+              <Radio.Button value="list">
+                <Icon component={() => <HiViewList />} />
+              </Radio.Button>
+            </Radio.Group>
+            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
           </Space>
         </Row>
-        {/* <Table columns={columnDef}
-          size="small"
-          dataSource={list}
-          rowKey="id"
-          loading={loading}
-          pagination={false}
-          // onChange={handleTableChange}
-          onRow={(record) => ({
-            onDoubleClick: () => handleEditOne(record.id)
-          })}
-          locale={{
-            emptyText: <div style={{ margin: '30px auto', fontSize: 14 }}>
-              <Paragraph type="secondary">
-                There is no defined task template. Let's start from creating a new task template.
-              </Paragraph>
-              <Link to="/task_template/new">Create new task template</Link>
-            </div>
-          }}
-        /> */}
         <List
           size="small"
           grid={viewMode === 'grid' ? {
@@ -216,12 +172,12 @@ export const TaskTemplateListPage = props => {
               </>}
               extra={<Space size="small">
                 <Tooltip title="Create task with this task template">
-                <Button icon={<PlusOutlined />} type="text"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleCreateTask(item)
-                  }}></Button>
-                  </Tooltip>
+                  <Button icon={<PlusOutlined />} type="text"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleCreateTask(item)
+                    }}></Button>
+                </Tooltip>
                 <DropdownMenu
                   config={[
                     {
@@ -271,18 +227,13 @@ export const TaskTemplateListPage = props => {
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
               {item.docs?.length && <Row style={{ marginTop: 20 }} gutter={[20, 20]}>
                 {item.docs?.map((d, i) => <Col key={i}>
-                  <DocTemplateIcon style={{fontSize: 10, position: 'relative', top: -3}} />{d.name}
+                  <DocTemplateIcon style={{ fontSize: 10, position: 'relative', top: -3 }} />{d.name}
                 </Col>)}
               </Row>}
             </Card>
           </List.Item>}
         />
       </Space>
-      <TaskClientSelectModal
-        visible={selectClientVisible}
-        onOk={handleCreateTask}
-        onCancel={handleCancelCreateTask}
-      />
       <Modal
         visible={!!previewTaskTemplate}
         onOk={() => setPreviewTaskTemplate(null)}
@@ -297,12 +248,6 @@ export const TaskTemplateListPage = props => {
           type="agent"
         />
       </Modal>
-      <NewTaskOnTemplateModal
-        visible={!!currentTemplate}
-        taskTemplateId={currentTemplate?.id}
-        onOk={() => setCurrentTemplate(null)}
-        onCancel={handleCancelCreateTask}
-      />
     </LayoutStyled >
   );
 };
