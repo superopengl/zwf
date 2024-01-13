@@ -30,7 +30,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const ClientSelect = (props) => {
-  const { value, onChange, onLoadingChange, ...other } = props;
+  const { value, valueProp, onChange, onLoadingChange, ...other } = props;
 
   const [clientList, setClientList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
@@ -58,7 +58,7 @@ const ClientSelect = (props) => {
   }
 
   const handleSelect = (value) => {
-    const item = clientList.find(x => x.email === value);
+    const item = clientList.find(x => x[valueProp] === value);
     onChange(item);
   }
 
@@ -95,7 +95,7 @@ const ClientSelect = (props) => {
       }
       {...other}
     >
-      {clientList.map(c => (<Select.Option key={c.email} value={c.email} item={c}>
+      {clientList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
         <Space size="small">
           <UserAvatar value={c.avatarFileId} color={c.avatarColorHex} size={28} />
           <UserDisplayName
@@ -114,10 +114,12 @@ ClientSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onLoadingChange: PropTypes.func,
+  valueProp: PropTypes.oneOf(['id', 'email']),
 };
 
 ClientSelect.defaultProps = {
-  onLoadingChange: () => { }
+  onLoadingChange: () => { },
+  valueProp: 'id', 
 };
 
 export default ClientSelect;
