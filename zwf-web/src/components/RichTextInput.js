@@ -26,6 +26,7 @@ export const RichTextInput = (props) => {
   }
 
   return <ReactWEditor
+    className="rich-editor"
     ref={editorRef}
     defaultValue={value}
     onChange={onChange}
@@ -52,7 +53,7 @@ export const RichTextInput = (props) => {
       menus: [
         'head',
         'bold',
-        'fontSize',
+        // 'fontSize',
         // 'fontName',
         'italic',
         'underline',
