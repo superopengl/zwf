@@ -52,7 +52,7 @@ export const TaskCard = withRouter((props) => {
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
-      <Paragraph type="secondary" style={{lineHeight: 0.8}}><small>{taskTemplateName}</small></Paragraph>
+      {/* <Paragraph type="secondary" style={{lineHeight: 0.8}}><small>{taskTemplateName}</small></Paragraph> */}
       <Tooltip title={getUserDisplayName(email, givenName, surname)} placement='bottom'>
         <Row gutter={10} wrap={false} style={{ width: '100%' }}>
           <Col>
