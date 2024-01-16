@@ -40,6 +40,7 @@ specifiers:
   react-beautiful-dnd: ^13.1.0
   react-big-calendar: ^0.32.0
   react-chat-elements: ^10.15.0
+  react-color: ^2.19.3
   react-cookie-consent: ^6.2.3
   react-copy-to-clipboard: ^5.0.3
   react-dom: ^17.0.2
@@ -121,6 +122,7 @@ dependencies:
   react-beautiful-dnd: 13.1.0_react-dom@17.0.2+react@17.0.2
   react-big-calendar: 0.32.0_react-dom@17.0.2+react@17.0.2
   react-chat-elements: 10.16.0_75cb922c19ee1b7939faae9b4d1f4cf7
+  react-color: 2.19.3_react@17.0.2
   react-cookie-consent: 6.4.1_react@17.0.2
   react-copy-to-clipboard: 5.0.4_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
@@ -884,7 +886,7 @@ packages:
       rc-dropdown: 3.3.0_react-dom@17.0.2+react@17.0.2
       rc-util: 4.21.1
       react: 17.0.2
-      react-color: 2.17.3_react@17.0.2
+      react-color: 2.19.3_react@17.0.2
       react-dom: 17.0.2_react@17.0.2
       react-resize-detector: 6.7.8_react-dom@17.0.2+react@17.0.2
       ua-parser-js: 0.7.31
@@ -11298,6 +11300,21 @@ packages:
       tinycolor2: 1.4.2
     transitivePeerDependencies:
       - react
+    dev: false
+
+  /react-color/2.19.3_react@17.0.2:
+    resolution: {integrity: sha512-LEeGE/ZzNLIsFWa1TMe8y5VYqr7bibneWmvJwm1pCn/eNmrabWDh659JSPn9BuaMpEfU83WTOJfnCcjDZwNQTA==}
+    peerDependencies:
+      react: '*'
+    dependencies:
+      '@icons/material': 0.2.4_react@17.0.2
+      lodash: 4.17.21
+      lodash-es: 4.17.21
+      material-colors: 1.2.6
+      prop-types: 15.8.1
+      react: 17.0.2
+      reactcss: 1.2.3
+      tinycolor2: 1.4.2
     dev: false
 
   /react-content-loader/5.1.4_react@17.0.2:

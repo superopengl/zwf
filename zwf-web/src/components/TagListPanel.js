@@ -4,19 +4,22 @@ import { Button, Table, Input, Switch, InputNumber, Typography } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
 import { ConfirmDeleteButton } from 'components/ConfirmDeleteButton';
+import { CirclePicker } from 'react-color';
+import { concat } from 'rxjs';
+import { switchMapTo } from 'rxjs/operators';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const NEW_TAG_ITEM = Object.freeze({
   isNew: true,
   name: '',
+  color: null,
 });
 
-const TagManagementPanel = (props) => {
-  const { onList, onSave, onDelete, showOfficialOnly } = props;
+export const TagListPanel = React.memo((props) => {
+  const { onLoadList, onSave, onDelete, showColor } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([{ ...NEW_TAG_ITEM }]);
@@ -36,13 +39,10 @@ const TagManagementPanel = (props) => {
         onBlur={e => handleInputBlur(item, e.target.value)}
       />
     },
-    showOfficialOnly ? {
-      title: 'Official use only',
-      dataIndex: 'officialOnly',
-      render: (value, item) => <Switch
-        defaultChecked={value}
-        onChange={(checked) => handleOfficialUseChange(item, checked)}
-      />
+    showColor ? {
+      title: 'Color',
+      dataIndex: 'colorHex',
+      render: (colorHex, item) => <CirclePicker color={colorHex} onChangeComplete={color => handleColorChange(item, color)} />
     } : null,
     {
       render: (text, item) => <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
@@ -53,7 +53,7 @@ const TagManagementPanel = (props) => {
   ].filter(x => !!x);
 
   const isItemValid = (item) => {
-    return !!item.name?.trim();
+    return !!item.name?.trim() && (!showColor || item.colorHex);
   }
 
   const handleInputChange = (item, value) => {
@@ -61,71 +61,82 @@ const TagManagementPanel = (props) => {
     setList([...list]);
   }
 
-  const handleInputBlur = async (item, value) => {
-    if (item.isNew) return;
-    item.name = value;
-    await onSave(item);
-  }
-
-  const handleDelete = async (item) => {
-    await onDelete(item.id);
-    await loadList();
-  }
-
-  const handleOfficialUseChange = async (item, checked) => {
-    item.officialOnly = checked;
-    if (item.isNew) return;
-    await onSave(item);
-  }
-
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      const data = await onList();
-      data.unshift({ ...NEW_TAG_ITEM });
-      setList(data);
-    } finally {
+  const saveTagItem = (item) => {
+    setLoading(true);
+    onSave(item).pipe(
+      switchMapTo(onLoadList())
+    ).subscribe(list => {
+      setList([{ ...NEW_TAG_ITEM }, ...list]);
       setLoading(false);
+    })
+  }
+
+  const handleInputBlur = (item, value) => {
+    if (item.isNew) return;
+    saveTagItem(item);
+  }
+
+  const handleDelete = (item) => {
+    setLoading(true);
+    onDelete(item.id).pipe(
+      switchMapTo(onLoadList())
+    ).subscribe(list => {
+      setList([{ ...NEW_TAG_ITEM }, ...list]);
+      setLoading(false);
+    })
+  }
+
+  const handleColorChange = (item, color) => {
+    if (item.colorHex === color.hex) {
+      return
     }
+    item.colorHex = color.hex;
+    setList([...list]);
+    if (item.isNew) return;
+    saveTagItem(item);
+  }
+
+  const loadList = () => {
+    setLoading(true);
+    return onLoadList().subscribe(list => {
+      setList([{ ...NEW_TAG_ITEM }, ...list]);
+      setLoading(false);
+    })
   }
 
   React.useEffect(() => {
-    loadList();
+    const subscription = loadList();
+    return () => {
+      subscription.unsubscribe();
+    }
   }, []);
 
 
-  const handleSaveNew = async (item) => {
+  const handleSaveNew = (item) => {
     if (!isItemValid(item)) return;
-    try {
-      setLoading(true);
-      await onSave(item);
-      await loadList();
-    } finally {
-      setLoading(false);
-    }
+    saveTagItem(item);
   }
 
   return (
     <Table columns={columnDef}
+    bordered={false}
       showHeader={true}
       dataSource={list}
-      size="small"
       rowKey="id"
       loading={loading}
       pagination={false}
     />
   );
-};
+});
 
-TagManagementPanel.propTypes = {
-  onList: PropTypes.func.isRequired,
+TagListPanel.propTypes = {
+  onLoadList: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  showOfficialOnly: PropTypes.bool,
+  showColor: PropTypes.bool,
 };
 
-TagManagementPanel.defaultProps = {
-  showOfficialOnly: true
+TagListPanel.defaultProps = {
+  showColor: false
 };
 
-export default withRouter(TagManagementPanel);

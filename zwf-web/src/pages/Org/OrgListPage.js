@@ -20,7 +20,7 @@ import ProfileForm from 'pages/Profile/ProfileForm';
 import HighlightingText from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import TagSelect from 'components/TagSelect';
-import { listUserTags, saveUserTag } from 'services/userTagService';
+import { listUserTags$, saveUserTag$ } from 'services/userTagService';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';
