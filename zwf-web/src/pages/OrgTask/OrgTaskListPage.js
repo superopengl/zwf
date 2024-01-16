@@ -323,7 +323,7 @@ const OrgTaskListPage = (props) => {
   const handleClientIdChange = async (client) => {
     const newQueryInfo = {
       ...queryInfo,
-      clientId: client.id,
+      clientId: client?.id,
       page: 1,
     }
     await loadTaskWithQuery$(newQueryInfo);

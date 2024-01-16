@@ -69,6 +69,10 @@ const ClientSelect = (props) => {
     ref?.current?.blur();
   }
 
+  const handleClear = () => {
+    handleSelect(null);
+  }
+
   return (
     <StyledSelect
       ref={ref}
@@ -80,6 +84,7 @@ const ClientSelect = (props) => {
       onChange={handleChange}
       onSelect={handleSelect}
       onSearch={val => setSearchText(val)}
+      onClear={handleClear}
       filterOption={(input, option) => {
         const { givanName, surname, email } = option.item;
         return email?.includes(input) || givanName?.includes(input) || surname?.includes(input);
