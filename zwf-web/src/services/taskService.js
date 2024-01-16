@@ -45,6 +45,10 @@ export async function signTaskDoc(id, fileIds) {
   return httpPost(`task/${id}/sign`, { files: fileIds });
 }
 
+export function updateTaskTags$(id, tags) {
+  return httpPost$(`task/${id}/tags`, { tags });
+}
+
 export async function assignTask(taskId, agentId) {
   return httpPost(`task/${taskId}/assign`, { agentId });
 }
