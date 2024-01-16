@@ -1,11 +1,6 @@
 
 import React from 'react';
-import styled from 'styled-components';
-import { Radio, Space, Typography, Button, Steps, Form, Divider, Row, Col, Input, Alert, List } from 'antd';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
-import { listTaskTemplate } from 'services/taskTemplateService';
-import { listPortfolio } from 'services/portfolioService';
-import StepWizard from 'react-step-wizard';
+import { Space, Typography, Button, Steps, Form, Divider, Row, Input } from 'antd';
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
@@ -14,30 +9,12 @@ import { convertTaskTemplateFieldsToFormFieldsSchema } from '../../util/convertT
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import FormBuilder from 'antd-form-builder'
 import { catchError } from 'rxjs/operators';
-import { DoubleRightOutlined, EyeFilled, EyeOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import FinalReviewStep from './FinalReviewStep';
+import { RightOutlined } from '@ant-design/icons';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { createNewTask$ } from 'services/taskService';
-import { DocTemplateIcon } from 'components/entityIcon';
-import { getDocTemplate$ } from 'services/docTemplateService';
-import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
+import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 
 const { Title, Text, Paragraph } = Typography;
-
-const DocListItem = styled(List.Item)`
-padding-left: 12px !important;
-padding-right: 12px !important;
-
-&:hover {
-  cursor: pointer;
-  background-color: #F5F5F5;
-
-  &:after {
-    content: "click to view";
-    color: #8abcd1;
-  }
-}
-`;
 
 const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
@@ -134,13 +111,7 @@ export const TaskGenerator = props => {
     })
   }
 
-  const handlePreviewDocTemplate = docId => {
-    setLoading(true)
-    getDocTemplate$(docId).subscribe(docTemplate => {
-      showDocTemplatePreviewModal(docTemplate);
-      setLoading(false)
-    })
-  }
+
   const steps = [
     {
       title: 'Setup',
@@ -155,15 +126,7 @@ export const TaskGenerator = props => {
         <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
         {taskTemplate?.docs.length > 0 && <>
           <StyledDescription value="Associated docs that will be auto-generated based on the form fields." />
-          <List
-            size="small"
-            bordered
-            rowKey="id"
-            dataSource={taskTemplate.docs}
-            renderItem={doc => <DocListItem onClick={() => handlePreviewDocTemplate(doc.id)}>
-              <div><DocTemplateIcon /><Text>{doc.name}</Text></div>
-            </DocListItem>}
-          />
+          <DocTemplateListPanel value={taskTemplate.docs} />
         </>}
         <StyledDescription value="Input a meaningful task name. This name will appear in the emails to the client." />
         <Input style={{ height: 50 }}
