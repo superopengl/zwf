@@ -1,3 +1,4 @@
+import { TaskTaskTag } from './../TaskTaskTag';
 import { TaskAssignment } from '../TaskAssignment';
 import { Role } from './../../types/Role';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
@@ -8,11 +9,37 @@ import { TaskStatus } from '../../types/TaskStatus';
 import { Org } from '../Org';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
+import { TaskTag } from '../TaskTag';
+
+@ViewEntity({
+  expression: (connection: Connection) => connection
+    .createQueryBuilder()
+    .from(TaskTaskTag, 'x')
+    .leftJoin(TaskTag, 't', 'x."tagId" = t.id')
+    .groupBy('x."taskId"')
+    .select([
+      'x."taskId" as "taskId"',
+      `array_agg(json_build_object('id', t.id, 'name', t.name)) as tags`,
+    ])
+}) export class TaskTagInformation {
+  @ViewColumn()
+  taskId: string;
+
+  @ViewColumn()
+  tags: Array<{ id: string, name: string }>;
+}
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(Task, 't')
+    .leftJoin(q => q.from(TaskTaskTag, 'x')
+      .leftJoin(TaskTag, 't', 'x."tagId" = t.id')
+      .groupBy('x."taskId"')
+      .select([
+        'x."taskId" as "taskId"',
+        `array_agg(json_build_object('id', t.id, 'name', t.name)) as tags`,
+      ]), 'tag', 'tag."taskId" = t.id')
     .innerJoin(Org, 'o', 't."orgId" = o.id')
     .innerJoin(TaskTemplate, 'l', `t."taskTemplateId" = l.id`)
     .innerJoin(User, 'u', `u.id = t."userId"`)
@@ -42,7 +69,8 @@ import { UserProfile } from '../UserProfile';
       't."authorizedAt" as "authorizedAt"',
       'a."assigneeId" as "assigneeId"',
       't."createdAt" as "createdAt"',
-      't."lastUpdatedAt" as "lastUpdatedAt"'
+      't."lastUpdatedAt" as "lastUpdatedAt"',
+      `coalesce(tag.tags, '{}'::json[]) as tags`,
     ])
 }) export class TaskInformation {
   @ViewColumn()
@@ -107,4 +135,7 @@ import { UserProfile } from '../UserProfile';
 
   @ViewColumn()
   lastUpdatedAt: Date;
+
+  @ViewColumn()
+  tags: Array<{ id: string, name: string }>;
 }
