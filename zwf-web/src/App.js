@@ -6,7 +6,7 @@ import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import { ContactWidget } from 'components/ContactWidget';
-import { combineLatest, Subject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
 import ReactDOM from 'react-dom';
 import { ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
@@ -17,9 +17,11 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import {AppClient} from 'AppClient';
-import {AppLoggedIn} from 'AppLoggedIn';
+import { AppClient } from 'AppClient';
+import { AppLoggedIn } from 'AppLoggedIn';
 import { listTaskTags$ } from 'services/taskTagService';
+import { last, tap, switchMap, share } from 'rxjs/operators';
+import { concat, EMPTY, of } from 'rxjs';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const Error404 = loadable(() => import('pages/Error404'));
@@ -52,11 +54,15 @@ export const App = React.memo(() => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
-  const [event$] = React.useState(new Subject());
-  const [taskTags, setTaskTags] = React.useState([]);
+  const event$ = React.useRef(new Subject()).current;
+  const taskTagsSource$ = React.useRef(new BehaviorSubject(null)).current;
 
   const globalContextValue = {
     event$,
+    taskTags$: taskTagsSource$,
+    updateContextTaskTags: (tags) => {
+      taskTagsSource$.next(tags)
+    },
     role: 'guest',
     user,
     setUser,
@@ -67,29 +73,28 @@ export const App = React.memo(() => {
       reactLocalStorage.set('locale', locale);
       setLocale(locale);
     },
-    setNotifyCount: count => {},
-    taskTags,
-    reloadTaskTags: () => {
-      listTaskTags$().subscribe(setTaskTags)
-    },
+    setNotifyCount: count => { },
   }
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);
 
   const Initalize = () => {
-    const list = [getAuthUser$(), listTaskTags$()];
-    return combineLatest(list).subscribe(([user, taskTags]) => {
+    return getAuthUser$().subscribe(user => {
       setUser(user);
-      setTaskTags(taskTags);
       setLoading(false);
     })
   }
 
   React.useEffect(() => {
-    const load$ = Initalize();
-    return () => {
-      load$.unsubscribe();
-    }
+    const sub$ = Initalize();
+    return () => sub$.unsubscribe()
+  }, []);
+
+  React.useEffect(() => {
+    const sub$ = listTaskTags$().subscribe(tags => {
+      taskTagsSource$.next(tags)
+    });
+    return () => sub$.unsubscribe()
   }, []);
 
   React.useEffect(() => {
@@ -104,13 +109,6 @@ export const App = React.memo(() => {
       contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
     }
   }, [user]);
-
-  React.useEffect(() => {
-    setContextValue({
-      ...contextValue,
-      taskTags,
-    })
-  }, [taskTags])
 
   const role = contextValue.role || 'guest';
   const isGuest = role === 'guest';

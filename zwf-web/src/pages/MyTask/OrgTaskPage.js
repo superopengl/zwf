@@ -14,6 +14,8 @@ import { TaskTagSelect } from 'components/TaskTagSelect';
 import { combineLatest } from 'rxjs';
 import { listTaskTags$ } from 'services/taskTagService';
 import Tag from 'components/Tag';
+import TagSelect from 'components/TagSelect';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -33,22 +35,13 @@ height: 100%;
 `;
 
 
-const LayoutStyled = styled.div`
-  margin: 0 auto 0 auto;
-  background-color: #ffffff;
-  height: 100%;
-`;
-
-
-
 const OrgTaskPage = React.memo((props) => {
   const id = props.match.params.id;
-  const isNew = !id || id === 'new';
 
-  const { chat, portfolioId } = queryString.parse(props.location.search);
-  const [chatVisible, setChatVisible] = React.useState(Boolean(chat));
+  const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
+
   const formRef = React.createRef();
 
   React.useEffect(() => {
@@ -64,41 +57,10 @@ const OrgTaskPage = React.memo((props) => {
       subscription$.unsubscribe();
     }
   }, []);
-  // const loadEntity = async () => {
-  //   setLoading(true);
-  //   if (id && !isNew) {
-  //     const task = await getTask(id);
-  //     setTask(task);
-  //   }
-  //   setLoading(false);
-  // }
 
-  // React.useEffect(() => {
-  //   loadEntity();
-  // }, [])
-
-  const onOk = () => {
-    props.history.push('/tasks');
-  }
   const handleGoBack = () => {
     props.history.goBack();
   }
-
-  const toggleChatPanel = () => {
-    setChatVisible(!chatVisible);
-  }
-
-  const handleSubmit = () => {
-    formRef.current.submit();
-  }
-
-  const handleReset = () => {
-    formRef.current.resetFields();
-  }
-
-  const showsEditableForm = isNew || task?.status === 'todo';
-  const showsSign = task?.status === 'to_sign';
-  const showsChat = !isNew;
 
   const handleStatusChange = newStatus => {
     if (newStatus !== task.status) {
@@ -111,13 +73,7 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleTagsChange = tagIds => {
-    setLoading(true);
-    updateTaskTags$(task.id, tagIds).pipe(
-      switchMapTo(getTask$(task.id))
-    ).subscribe(task => {
-      setTask(task);
-      setLoading(false);
-    })
+    updateTaskTags$(task.id, tagIds).subscribe()
   }
 
   return (<>
