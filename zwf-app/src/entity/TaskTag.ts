@@ -14,7 +14,6 @@ export class TaskTag {
   orgId: string;
 
   @Column()
-  @Index()
   name: string;
 
   @Column()

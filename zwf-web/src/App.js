@@ -6,7 +6,7 @@ import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import { ContactWidget } from 'components/ContactWidget';
-import { Subject } from 'rxjs';
+import { combineLatest, Subject } from 'rxjs';
 import ReactDOM from 'react-dom';
 import { ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
@@ -19,6 +19,7 @@ import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import {AppClient} from 'AppClient';
 import {AppLoggedIn} from 'AppLoggedIn';
+import { listTaskTags$ } from 'services/taskTagService';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const Error404 = loadable(() => import('pages/Error404'));
@@ -52,7 +53,7 @@ const App = () => {
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
   const [event$] = React.useState(new Subject());
-
+  const [taskTags, setTaskTags] = React.useState([]);
 
   const globalContextValue = {
     event$,
@@ -66,17 +67,22 @@ const App = () => {
       reactLocalStorage.set('locale', locale);
       setLocale(locale);
     },
-    setNotifyCount: count => {}
+    setNotifyCount: count => {},
+    taskTags,
+    reloadTaskTags: () => {
+      listTaskTags$().subscribe(setTaskTags)
+    },
   }
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);
 
   const Initalize = () => {
-    return getAuthUser$()
-      .subscribe(user => {
-        setUser(user);
-        setLoading(false);
-      });
+    const list = [getAuthUser$(), listTaskTags$()];
+    return combineLatest(list).subscribe(([user, taskTags]) => {
+      setUser(user);
+      setTaskTags(taskTags);
+      setLoading(false);
+    })
   }
 
   React.useEffect(() => {
@@ -98,6 +104,13 @@ const App = () => {
       contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
     }
   }, [user]);
+
+  React.useEffect(() => {
+    setContextValue({
+      ...contextValue,
+      taskTags,
+    })
+  }, [taskTags])
 
   const role = contextValue.role || 'guest';
   const isGuest = role === 'guest';

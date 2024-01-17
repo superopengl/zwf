@@ -4,12 +4,16 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Layout, Skeleton } from 'antd';
 
-import { changeTaskStatus$, getTask$ } from 'services/taskService';
+import { changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
 import { TaskWorkPanel } from 'components/TaskWorkPanel';
-import { catchError } from 'rxjs/operators';
+import { catchError, switchMapTo } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
+import { TaskTagSelect } from 'components/TaskTagSelect';
+import { combineLatest } from 'rxjs';
+import { listTaskTags$ } from 'services/taskTagService';
+import Tag from 'components/Tag';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -35,7 +39,9 @@ const LayoutStyled = styled.div`
   height: 100%;
 `;
 
-const OrgTaskPage = (props) => {
+
+
+const OrgTaskPage = React.memo((props) => {
   const id = props.match.params.id;
   const isNew = !id || id === 'new';
 
@@ -46,11 +52,10 @@ const OrgTaskPage = (props) => {
   const formRef = React.createRef();
 
   React.useEffect(() => {
-    const subscription$ = getTask$(id)
-      .pipe(
-        catchError(() => setLoading(false))
-      )
-      .subscribe(taskInfo => {
+    const subscription$ = getTask$(id).pipe(
+      catchError(() => setLoading(false))
+    )
+      .subscribe((taskInfo) => {
         const { email, role, userId, orgId, orgName, ...task } = taskInfo;
         setTask(task);
         setLoading(false);
@@ -75,7 +80,7 @@ const OrgTaskPage = (props) => {
   const onOk = () => {
     props.history.push('/tasks');
   }
-  const onCancel = () => {
+  const handleGoBack = () => {
     props.history.goBack();
   }
 
@@ -105,10 +110,21 @@ const OrgTaskPage = (props) => {
     }
   }
 
+  const handleTagsChange = tagIds => {
+    setLoading(true);
+    updateTaskTags$(task.id, tagIds).pipe(
+      switchMapTo(getTask$(task.id))
+    ).subscribe(task => {
+      setTask(task);
+      setLoading(false);
+    })
+  }
+
   return (<>
     <ContainerStyled>
       {task && <PageContainer
         loading={loading}
+        onBack={handleGoBack}
         fixedHeader
         header={{
           title: task?.name || <Skeleton paragraph={false} />
@@ -124,12 +140,13 @@ const OrgTaskPage = (props) => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
+        <TaskTagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
         <TaskWorkPanel ref={formRef} task={task} type="agent" />
       </PageContainer>}
     </ContainerStyled>
   </>
   );
-};
+});
 
 OrgTaskPage.propTypes = {
   // id: PropTypes.string.isRequired

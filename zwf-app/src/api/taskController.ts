@@ -285,11 +285,12 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
 
   await getManager().transaction(async m => {
     await m.delete(TaskTaskTag, { taskId: id });
-    if(tags?.length) {
-      const entities = tags.map(tagId => {
-        const entity =  new TaskTaskTag();
+    if (tags?.length) {
+      const entities = tags.filter(x => !!x).map(tagId => {
+        const entity = new TaskTaskTag();
         entity.taskId = id;
         entity.tagId = tagId;
+        return entity;
       })
       await m.save(entities);
     }
