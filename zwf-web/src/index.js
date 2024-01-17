@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.less';
-import App from './App';
+import { App } from './App';
 import * as serviceWorkerRegistration from './serviceWorkerRegistration';
 import reportWebVitals from './reportWebVitals';
 
@@ -9,7 +9,7 @@ console.log(process.env);
 
 ReactDOM.render(
   // <React.StrictMode>
-    <App />
+  <App />
   // </React.StrictMode>
   ,
   document.getElementById('root')

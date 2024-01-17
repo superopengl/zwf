@@ -48,7 +48,7 @@ const localeDic = {
 
 const DEFAULT_LOCALE = getDefaultLocale();
 
-const App = () => {
+export const App = React.memo(() => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
@@ -148,6 +148,5 @@ const App = () => {
       </ConfigProvider>
     </GlobalContext.Provider>
   );
-}
+});
 
-export default App;
