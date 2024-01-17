@@ -4,7 +4,6 @@ import {
 import { Button, Drawer, Layout, Modal, Space, PageHeader, Row, Typography, Input } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
-import DocTemplateForm from './DocTemplateForm';
 import React from 'react';
 import { deleteDocTemplate, listDocTemplate } from 'services/docTemplateService';
 import { withRouter } from 'react-router-dom';
