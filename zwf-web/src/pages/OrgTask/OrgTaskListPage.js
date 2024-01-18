@@ -24,6 +24,7 @@ import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from 'components/UserAvatar';
 import { notify } from 'util/notify';
 import { showCreateTaskModal } from 'components/showCreateTaskModal';
+import { TaskTagSelect } from 'components/TaskTagSelect';
 
 const { Title } = Typography;
 
@@ -132,6 +133,11 @@ const OrgTaskListPage = (props) => {
       searchText={queryInfo.text}
       />
       </Space>
+    },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      render: (tags, item) => <TaskTagSelect readonly={true} value={tags.map(t => t.id)}/>
     },
     {
       title: 'Created At',

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Tag as AntdTag, Tooltip } from 'antd';
-import Tag from './Tag';
 import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
@@ -10,7 +9,7 @@ import uniqolor from 'uniqolor';
 const Option = props => {
   const { data, innerProps } = props;
   return <div {...innerProps} style={{ padding: 6 }}>
-    {data.color ? <AntdTag color={data.color}>{data.label}</AntdTag> : data.label}
+    {data.color ? <AntdTag color={data.color} style={{color: getFontColor(data.color)}}>{data.label}</AntdTag> : data.label}
   </div>;
 }
 
@@ -25,6 +24,30 @@ const Input = (props) => {
       </Tooltip>
     </div>
   );
+};
+
+const getFontColor = (bgColorHex) => {
+
+  // If a leading # is provided, remove it
+  if (bgColorHex.slice(0, 1) === '#') {
+    bgColorHex = bgColorHex.slice(1);
+  }
+
+  // If a three-character hexcode, make six-character
+  if (bgColorHex.length === 3) {
+    bgColorHex = bgColorHex.split('').map(hex => hex + hex).join('');
+  }
+
+  // Convert to RGB value
+  const r = parseInt(bgColorHex.substr(0, 2), 16);
+  const g = parseInt(bgColorHex.substr(2, 2), 16);
+  const b = parseInt(bgColorHex.substr(4, 2), 16);
+
+  // Get YIQ ratio
+  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+  // Check contrast
+  return (yiq >= 128) ? 'black' : 'white';
 };
 
 
@@ -84,14 +107,14 @@ const colourStyles = {
   multiValue: (styles, { data }) => {
     return {
       ...styles,
-      color: 'white',
+      color: getFontColor(data.color),
       backgroundColor: data.color,
     };
   },
   multiValueLabel: (styles, { data }) => ({
     ...styles,
     // width: '100%',
-    color: 'white',
+    color: getFontColor(data.color),
     backgroundColor: data.color,
     borderRadius: '4px 0 0 4px',
   }),
@@ -101,8 +124,8 @@ const colourStyles = {
       // color: data.color,
       borderRadius: '0 4px 4px 0',
       ':hover': {
+        color: getFontColor(data.color),
         backgroundColor: data.color, //color.alpha(0.5).css(),
-        color: 'white',
       },
     }
   },
@@ -181,7 +204,7 @@ const TagSelect = React.memo((props) => {
   }
 
   if (readonly) {
-    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color={x.color}>{x.label}</AntdTag>)}</>
+    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color={x.color} style={{color: getFontColor(x.color)}}>{x.label}</AntdTag>)}</>
   }
 
   return <CreatableSelect
