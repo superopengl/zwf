@@ -4,11 +4,12 @@ import { Button, Table, Input, Switch, InputNumber, Typography } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { Space } from 'antd';
+import { Space, Tag } from 'antd';
 import { ConfirmDeleteButton } from 'components/ConfirmDeleteButton';
-import { CirclePicker } from 'react-color';
+import { CirclePicker, GithubPicker } from 'react-color';
 import { concat } from 'rxjs';
 import { switchMapTo } from 'rxjs/operators';
+import { getFontColor } from 'util/getFontColor';
 
 const { Text } = Typography;
 
@@ -26,11 +27,14 @@ export const TagListPanel = React.memo((props) => {
 
   const columnDef = [
     {
-      title: 'Tag name',
+      render: (value, item) => <Tag color={item.colorHex} style={item.colorHex ? {color: getFontColor(item.colorHex)} : null}>{item.name}</Tag>
+    },
+    {
+      title: 'Name',
       dataIndex: 'name',
-      sorter: {
-        compare: (a, b) => (a.name || '').localeCompare(b.name)
-      },
+      // sorter: {
+      //   compare: (a, b) => (a.name || '').localeCompare(b.name)
+      // },
       render: (value, item) => <Input
         value={value}
         allowClear={item.isNew}
@@ -42,7 +46,7 @@ export const TagListPanel = React.memo((props) => {
     showColor ? {
       title: 'Color',
       dataIndex: 'colorHex',
-      render: (colorHex, item) => <CirclePicker color={colorHex} onChangeComplete={color => handleColorChange(item, color)} />
+      render: (colorHex, item) => <GithubPicker color={colorHex} onChangeComplete={color => handleColorChange(item, color)} />
     } : null,
     {
       render: (text, item) => <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
@@ -119,8 +123,8 @@ export const TagListPanel = React.memo((props) => {
 
   return (
     <Table columns={columnDef}
+      showHeader={false}
       bordered={false}
-      showHeader={true}
       dataSource={list}
       rowKey={item => item.id || 'new'}
       loading={loading}

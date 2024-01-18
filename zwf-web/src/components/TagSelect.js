@@ -5,6 +5,7 @@ import CreatableSelect from 'react-select/creatable';
 import { components } from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
 import uniqolor from 'uniqolor';
+import { getFontColor } from 'util/getFontColor';
 
 const Option = props => {
   const { data, innerProps } = props;
@@ -25,31 +26,6 @@ const Input = (props) => {
     </div>
   );
 };
-
-const getFontColor = (bgColorHex) => {
-
-  // If a leading # is provided, remove it
-  if (bgColorHex.slice(0, 1) === '#') {
-    bgColorHex = bgColorHex.slice(1);
-  }
-
-  // If a three-character hexcode, make six-character
-  if (bgColorHex.length === 3) {
-    bgColorHex = bgColorHex.split('').map(hex => hex + hex).join('');
-  }
-
-  // Convert to RGB value
-  const r = parseInt(bgColorHex.substr(0, 2), 16);
-  const g = parseInt(bgColorHex.substr(2, 2), 16);
-  const b = parseInt(bgColorHex.substr(4, 2), 16);
-
-  // Get YIQ ratio
-  const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
-
-  // Check contrast
-  return (yiq >= 128) ? 'black' : 'white';
-};
-
 
 const colourStyles = {
   control: styles => ({

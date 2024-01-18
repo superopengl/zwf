@@ -34,7 +34,7 @@ export const listTaskTags = handlerWrapper(async (req, res) => {
       'name',
       'colorHex',
     ],
-    order: { name: 'ASC' }
+    // order: { name: 'ASC' }
   });
   res.json(list);
 });
