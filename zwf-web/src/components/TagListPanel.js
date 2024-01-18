@@ -122,7 +122,7 @@ export const TagListPanel = React.memo((props) => {
       bordered={false}
       showHeader={true}
       dataSource={list}
-      rowKey="id"
+      rowKey={item => item.id || 'new'}
       loading={loading}
       pagination={false}
     />
