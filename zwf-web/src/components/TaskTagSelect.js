@@ -6,7 +6,7 @@ import isString from 'lodash/isString';
 import { forEach } from 'lodash';
 import { concat, EMPTY, of } from 'rxjs';
 import { switchMap, switchMapTo, tap } from 'rxjs/operators';
-import { listTaskTags$, saveTaskTag$ } from 'services/taskTagService';
+import { listTaskTags$, saveTaskTag$, subscribeTaskTags } from 'services/taskTagService';
 import { v4 as uuidv4 } from 'uuid';
 import { GlobalContext } from 'contexts/GlobalContext';
 import TagSelect from './TagSelect';
@@ -23,21 +23,15 @@ export const TaskTagSelect = React.memo((props) => {
 
   const [tags, setTags] = React.useState();
   const [value, setValue] = React.useState(propValues);
-  const context = React.useContext(GlobalContext);
-  const { taskTags$, updateContextTaskTags } = context;
 
   React.useEffect(() => {
-    const sub$ = taskTags$.pipe(
-      switchMap(tags =>  tags ? of(tags) : listTaskTags$()),
-      tap(setTags),
-    ).subscribe();
+    const sub$ = subscribeTaskTags(setTags);
     return () => sub$.unsubscribe()
   }, [])
 
   const handleCreateNewTag = tag => {
     saveTaskTag$(tag).pipe(
       switchMapTo(listTaskTags$()),
-      tap(updateContextTaskTags),
     ).subscribe();
   }
 

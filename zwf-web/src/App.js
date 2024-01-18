@@ -55,14 +55,9 @@ export const App = React.memo(() => {
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
   const event$ = React.useRef(new Subject()).current;
-  const taskTagsSource$ = React.useRef(new BehaviorSubject(null)).current;
 
   const globalContextValue = {
     event$,
-    taskTags$: taskTagsSource$,
-    updateContextTaskTags: (tags) => {
-      taskTagsSource$.next(tags)
-    },
     role: 'guest',
     user,
     setUser,
@@ -87,13 +82,6 @@ export const App = React.memo(() => {
 
   React.useEffect(() => {
     const sub$ = Initalize();
-    return () => sub$.unsubscribe()
-  }, []);
-
-  React.useEffect(() => {
-    const sub$ = listTaskTags$().subscribe(tags => {
-      taskTagsSource$.next(tags)
-    });
     return () => sub$.unsubscribe()
   }, []);
 

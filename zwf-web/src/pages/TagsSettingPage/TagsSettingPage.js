@@ -27,11 +27,8 @@ const Container = styled.div`
 
 const TagsSettingPage = () => {
   const context = React.useContext(GlobalContext);
-  const { updateContextTaskTags } = context;
 
-  const handleLoadTaskTags = () => listTaskTags$().pipe(
-    tap(updateContextTaskTags)
-  )
+  const handleLoadTaskTags = () => listTaskTags$()
 
   return (
     <Container>
