@@ -83,7 +83,6 @@ export const TaskSearchDrawer = props => {
           <Input
             style={{ width: '100%' }}
             placeholder="Task name, client name, or client email"
-            enterButton={<><SearchOutlined /> Search</>}
             onPressEnter={e => handleSearch(e.target.value)}
             onChange={e => handleSearch(e.target.value)}
             value={queryInfo.text}

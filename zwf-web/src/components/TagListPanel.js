@@ -1,68 +1,112 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Table, Input, Switch, InputNumber, Typography } from 'antd';
-import {
-  PlusOutlined
-} from '@ant-design/icons';
+import { Button, Table, Input, Typography } from 'antd';
+import { SyncOutlined } from '@ant-design/icons';
 import { Space, Tag } from 'antd';
 import { ConfirmDeleteButton } from 'components/ConfirmDeleteButton';
-import { CirclePicker, GithubPicker } from 'react-color';
-import { concat } from 'rxjs';
 import { switchMapTo } from 'rxjs/operators';
 import { getFontColor } from 'util/getFontColor';
+import { generateRandomColorHex } from 'util/generateRandomColorHex';
 
 const { Text } = Typography;
 
-const NEW_TAG_ITEM = Object.freeze({
+const NEW_TAG_ITEM = {
   isNew: true,
   name: '',
-  color: null,
-});
+  colorHex: generateRandomColorHex(),
+}
 
 export const TagListPanel = React.memo((props) => {
-  const { onLoadList, onSave, onDelete, showColor } = props;
+  const { onLoadList, onSave, onDelete } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([{ ...NEW_TAG_ITEM }]);
+  const [editingKey, setEditingKey] = React.useState('');
 
   const columnDef = [
     {
-      render: (value, item) => <Tag color={item.colorHex} style={item.colorHex ? {color: getFontColor(item.colorHex)} : null}>{item.name}</Tag>
-    },
-    {
-      title: 'Name',
       dataIndex: 'name',
-      // sorter: {
-      //   compare: (a, b) => (a.name || '').localeCompare(b.name)
-      // },
-      render: (value, item) => <Input
-        value={value}
-        allowClear={item.isNew}
-        placeholder={item.isNew ? 'New tag name' : 'Tag name'}
-        onChange={e => handleInputChange(item, e.target.value)}
-        onBlur={e => handleInputBlur(item, e.target.value)}
-      />
+      render: (value, item) => {
+        const isEditing = editingKey === item.id;
+        const isNew = item.isNew;
+        if (isEditing || isNew) {
+          return <Input
+            style={{ width: 200 }}
+            maxLength={100}
+            value={value}
+            allowClear={item.isNew}
+            placeholder={item.isNew ? 'New tag name' : 'Tag name'}
+            onChange={e => handleInputChange(item, e.target.value)}
+          // onBlur={e => {
+          //   if (isNew) {
+          //     handleInputChange(item, e.target.value)
+          //   } else {
+          //     saveTagItem(item)
+          //     setEditingKey(null);
+          //   }
+          // }}
+          />
+        }
+        return <Tag color={item.colorHex} style={{ color: getFontColor(item.colorHex) }}>{item.name}</Tag>
+      }
     },
-    showColor ? {
-      title: 'Color',
-      dataIndex: 'colorHex',
-      render: (colorHex, item) => <GithubPicker color={colorHex} onChangeComplete={color => handleColorChange(item, color)} />
-    } : null,
+    // {
+    //   title: 'Name',
+    //   dataIndex: 'name',
+    //   // sorter: {
+    //   //   compare: (a, b) => (a.name || '').localeCompare(b.name)
+    //   // },
+    //   render: (value, item) => <Input
+    //     value={value}
+    //     allowClear={item.isNew}
+    //     placeholder={item.isNew ? 'New tag name' : 'Tag name'}
+    //     onChange={e => handleInputChange(item, e.target.value)}
+    //   />
+    // },
     {
-      render: (text, item) => <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-        {item.isNew && <Button type="primary" icon={<PlusOutlined />} disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}></Button>}
-        {item.builtIn ? <Text type="secondary"><small>builtin</small></Text> : item.isNew ? null : <ConfirmDeleteButton shape="circle" onOk={() => handleDelete(item)} />}
-      </Space>
+      dataIndex: 'colorHex',
+      render: (colorHex, item) => {
+        const isEditing = editingKey === item.id;
+        const isNew = item.isNew;
+        return isEditing || isNew ? <Button icon={<SyncOutlined />} ghost style={{ backgroundColor: colorHex, color: getFontColor(colorHex) }} onClick={() => handleColorChange(item)} /> : null
+      }
+    },
+    {
+      render: (text, item) => {
+        const isNew = item.isNew;
+        const isEditing = editingKey === item.id;
+        return <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
+          {isNew && <Button type="text" disabled={!isItemValid(item)} onClick={() => handleSaveNew(item)}>create</Button>}
+          {isEditing ? <Button type="link" onClick={() => handleSaveName(item)}>save</Button> : null}
+          {isEditing ? <Button type="link" onClick={() => handleCancelEdit(item)}>cancel</Button> : null}
+          {isNew || isEditing ? null : <Button type="text" onClick={() => handleEdit(item)}>edit</Button>}
+          {isNew || isEditing ? null : <ConfirmDeleteButton onOk={() => handleDelete(item)}
+            message={<>Delete tag <Tag color={item.colorHex} style={{ color: getFontColor(item.colorHex) }}>{item.name}</Tag>?</>}>
+            delete
+          </ConfirmDeleteButton>}
+        </Space>
+      }
     },
   ].filter(x => !!x);
 
   const isItemValid = (item) => {
-    return !!item.name?.trim() && (!showColor || item.colorHex);
+    return !!item.name?.trim() && item.colorHex;
   }
 
   const handleInputChange = (item, value) => {
     item.name = value;
     setList([...list]);
+  }
+
+  const handleCancelEdit = () => {
+    setEditingKey(null);
+    onLoadList().subscribe(list => {
+      setList([{ ...NEW_TAG_ITEM }, ...list]);
+    })
+  }
+
+  const handleEdit = (item) => {
+    setEditingKey(item.id);
   }
 
   const saveTagItem = (item) => {
@@ -75,9 +119,9 @@ export const TagListPanel = React.memo((props) => {
     })
   }
 
-  const handleInputBlur = (item, value) => {
-    if (item.isNew) return;
+  const handleSaveName = (item) => {
     saveTagItem(item);
+    setEditingKey(null);
   }
 
   const handleDelete = (item) => {
@@ -90,14 +134,9 @@ export const TagListPanel = React.memo((props) => {
     })
   }
 
-  const handleColorChange = (item, color) => {
-    if (item.colorHex === color.hex) {
-      return
-    }
-    item.colorHex = color.hex;
+  const handleColorChange = (item) => {
+    item.colorHex = generateRandomColorHex();
     setList([...list]);
-    if (item.isNew) return;
-    saveTagItem(item);
   }
 
   const loadList = () => {
@@ -119,6 +158,7 @@ export const TagListPanel = React.memo((props) => {
   const handleSaveNew = (item) => {
     if (!isItemValid(item)) return;
     saveTagItem(item);
+    NEW_TAG_ITEM.colorHex = generateRandomColorHex();
   }
 
   return (
@@ -137,10 +177,8 @@ TagListPanel.propTypes = {
   onLoadList: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  showColor: PropTypes.bool,
 };
 
 TagListPanel.defaultProps = {
-  showColor: false
 };
 

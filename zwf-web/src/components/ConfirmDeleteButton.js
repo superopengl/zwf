@@ -25,15 +25,15 @@ export const ConfirmDeleteButton = (props) => {
     visible={visible}
     onVisibleChange={handleVisibleChange}
     content={<>
-      <Button onClick={() => setVisible(false)} disabled={loading}>Cancel</Button>
+      <Button type="text" onClick={() => setVisible(false)} disabled={loading}>Cancel</Button>
       <Button style={{ marginLeft: 10 }}
-        type="primary"
+        type="text"
         {...props.okButtonProps}
         onClick={handleDelete}
         disabled={loading}>{props.okText || 'OK'}</Button>
     </>}
   >
-    <Button type="link" danger icon={<CloseOutlined style={{ fontSize: '0.8rem' }} />} disabled={loading} />
+    <Button type="text" danger icon={props.icon} disabled={loading}>{props.children}</Button>
   </Popover>
 }
 
@@ -41,6 +41,7 @@ ConfirmDeleteButton.propTypes = {
   onOk: PropTypes.func.isRequired,
   okButtonProps: PropTypes.object,
   okText: PropTypes.string,
+  icon: PropTypes.object,
   message: PropTypes.any
 };
 
