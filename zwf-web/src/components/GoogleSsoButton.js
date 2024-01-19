@@ -33,7 +33,7 @@ const GoogleSsoButton = props => {
           if (user) {
             setUser(user);
             setNotifyCount(count);
-            props.history.push('/app');
+            props.history.push('/task');
           }
         },
         err => notify.error('Failed to log in with Google')

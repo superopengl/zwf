@@ -29,7 +29,7 @@ import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
-const OrgBoardPage = loadable(() => import('pages/OrgBoard/OrgBoardPage'));
+const OrgBoardPage = loadable(() => import('pages/OrgBoard/TaskBoardPanel'));
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
@@ -43,7 +43,7 @@ const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplate
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
-const OrgTaskListPage = loadable(() => import('pages/OrgTask/OrgTaskListPage'));
+const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const NewTaskPage = loadable(() => import('pages/MyTask/MyTaskPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
@@ -76,12 +76,6 @@ const StyledLayout = styled(ProLayout)`
 
 
 const ROUTES = [
-  {
-    path: '/app',
-    name: <FormattedMessage id="menu.board" />,
-    icon: <Icon component={() => <HiOutlineViewBoards />} />,
-    roles: ['admin', 'agent', 'client']
-  },
   {
     path: '/task',
     name: <FormattedMessage id="menu.tasks" />,
@@ -272,8 +266,7 @@ export const AppLoggedIn = React.memo(props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/app" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgBoardPage : ClientTaskListPage} />
-      <RoleRoute visible={isAdmin} exact path="/task" component={OrgTaskListPage} />
+      <RoleRoute exact path="/task" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgTaskListPage : ClientTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
       <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
@@ -291,7 +284,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      <Redirect to={(isSystem || isAdmin || isAgent) ? '/app' : '/app'} />
+      <Redirect to={(isSystem || isAdmin || isAgent) ? '/task' : '/task'} />
     </Switch>
 
     <ChangePasswordModal

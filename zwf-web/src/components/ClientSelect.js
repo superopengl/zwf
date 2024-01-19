@@ -30,7 +30,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const ClientSelect = (props) => {
-  const { value, valueProp, onChange, onLoadingChange, ...other } = props;
+  const { value, valueProp, onChange, onLoadingChange, allowInput, ...other } = props;
 
   const [clientList, setClientList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
@@ -76,9 +76,9 @@ const ClientSelect = (props) => {
   return (
     <StyledSelect
       ref={ref}
-      showSearch
+      showSearch={allowInput}
       allowClear
-      placeholder={<>Search a client by name or email</>}
+      placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
       // optionFilterProp="searchText"
       value={value}
       onChange={handleChange}
@@ -120,11 +120,13 @@ ClientSelect.propTypes = {
   onChange: PropTypes.func,
   onLoadingChange: PropTypes.func,
   valueProp: PropTypes.oneOf(['id', 'email']),
+  allowInput: PropTypes.bool,
 };
 
 ClientSelect.defaultProps = {
   onLoadingChange: () => { },
   valueProp: 'id', 
+  allowInput: true,
 };
 
 export default ClientSelect;

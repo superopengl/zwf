@@ -1,16 +1,20 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Tag as AntdTag, Tooltip } from 'antd';
+import { Tag as AntdTag, Tooltip, Typography } from 'antd';
 import CreatableSelect from 'react-select/creatable';
+import Select from 'react-select';
 import { components } from 'react-select';
 import { v4 as uuidv4 } from 'uuid';
 import uniqolor from 'uniqolor';
 import { getFontColor } from 'util/getFontColor';
+import { DownOutlined } from '@ant-design/icons';
+
+const {Text} = Typography
 
 const Option = props => {
   const { data, innerProps } = props;
   return <div {...innerProps} style={{ padding: 6 }}>
-    {data.color ? <AntdTag color={data.color} style={{color: getFontColor(data.color)}}>{data.label}</AntdTag> : data.label}
+    {data.color ? <AntdTag color={data.color} style={{ color: getFontColor(data.color) }}>{data.label}</AntdTag> : data.label}
   </div>;
 }
 
@@ -27,9 +31,15 @@ const Input = (props) => {
   );
 };
 
+const DropdownIndicator = props => <components.DropdownIndicator {...props}>
+  <DownOutlined />
+</components.DropdownIndicator>
+
 const colourStyles = {
   control: styles => ({
     ...styles,
+    width: '100%',
+    height: '48px',
     backgroundColor: 'white',
     boxShadow: 'none',
     border: '1px solid rgb(217, 217, 217)',
@@ -121,7 +131,7 @@ function convertTagsToOptions(tags) {
 
 const TagSelect = React.memo((props) => {
 
-  const { value: selectedTagIds, readonly, onChange, tags, onSave } = props;
+  const { value: selectedTagIds, readonly, allowCreate, onChange, tags, onSave } = props;
   const allOptions = convertTagsToOptions(tags);
 
   const [loading, setLoading] = React.useState(false);
@@ -180,13 +190,16 @@ const TagSelect = React.memo((props) => {
   }
 
   if (readonly) {
-    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color={x.color} style={{color: getFontColor(x.color)}}>{x.label}</AntdTag>)}</>
+    return <>{selectedOptions.map((x, i) => <AntdTag key={i} color={x.color} style={{ color: getFontColor(x.color) }}>{x.label}</AntdTag>)}</>
   }
 
-  return <CreatableSelect
+  const Component = allowCreate ? CreatableSelect : Select;
+
+  return <Component
     isMulti
+    placeholder={<Text type="secondary">Select tags</Text>}
     closeMenuOnSelect={false}
-    components={{ Option, Input }}
+    components={{ Option, Input, DropdownIndicator , IndicatorSeparator: () => null}}
     isClearable={false}
     isSearchable={true}
     isLoading={loading}
@@ -195,6 +208,7 @@ const TagSelect = React.memo((props) => {
     value={selectedOptions}
     styles={colourStyles}
     options={options}
+    isSearchable={allowCreate}
   />
 });
 
@@ -203,6 +217,7 @@ TagSelect.propTypes = {
   tags: PropTypes.arrayOf(PropTypes.object),
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
+  allowCreate: PropTypes.bool,
   onChange: PropTypes.func,
   onSave: PropTypes.func,
 };
@@ -211,6 +226,7 @@ TagSelect.defaultProps = {
   tags: [],
   value: [],
   readonly: false,
+  allowCreate: true,
   onChange: (ids) => { },
   onSave: (tag) => { },
 };

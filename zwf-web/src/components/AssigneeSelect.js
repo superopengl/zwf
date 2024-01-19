@@ -1,14 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Select } from 'antd';
-import { withRouter } from 'react-router-dom';
-import Icon, { BorderOutlined, FileOutlined } from '@ant-design/icons';
-import { FaTasks } from 'react-icons/fa';
-import { ImInsertTemplate } from 'react-icons/im';
+import { Select } from 'antd';
 import { searchAssigneeList$ } from 'services/userService';
 import { GlobalContext } from 'contexts/GlobalContext';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
 
 export const AssigneeSelect = React.memo(props => {
   const { placeholder, onChange, value } = props;
