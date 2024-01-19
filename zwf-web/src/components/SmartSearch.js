@@ -1,40 +1,17 @@
-import { AutoComplete, Typography, Input, Select, Space, Row, Col } from 'antd';
-import PropTypes from 'prop-types';
+import { AutoComplete, Typography, Space, Row, Col } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
-import { listOrgExistingClients } from 'services/orgService';
-import getInnerText from 'react-innertext';
 import HighlightingText from './HighlightingText';
 import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
-import innerText from 'react-innertext';
-import { EnterOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { EnterOutlined, SearchOutlined } from '@ant-design/icons';
 import Tag from './Tag';
-import { searchTask$ } from 'services/taskService';
 import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
 import { withRouter } from 'react-router-dom';
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from './UserAvatar';
+import Hotkeys from 'react-hot-keys';
+
 const { Text } = Typography;
-
-const StyledSelect = styled(AutoComplete)`
-  .ant-select-selector {
-    height: 50px !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-    // display: flex;
-    // align-items: center;
-  }
-
-  .ant-select-selection-search {
-    display: flex;
-    align-items: center;
-  }
-
-  .ant-select-selection-placeholder {
-    margin-top: 6px;
-  }
-`;
-
 
 const DOMAIN_CONFIG = {
   'task': {
@@ -81,19 +58,15 @@ const DOMAIN_CONFIG = {
 }
 
 export const SmartSearch = withRouter((props) => {
-  const { value, onChange, ...other } = props;
-
   const [searchText, setSearchText] = React.useState();
   const [optionsWithinDomain, setOptionsWithinDomain] = React.useState([]);
   const [domain, setDomain] = React.useState();
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
-  const ref = React.useRef();
+  const [innerDropdownOpen, setInnerDropdownOpen] = React.useState(false);
+  const [outerDropdownOpen, setOuterDropdownOpen] = React.useState(false);
+  const innerRef = React.useRef();
+  const outerRef = React.useRef();
 
   const getOptions = React.useCallback(() => {
-    if (!searchText?.trim()) {
-      return null;
-    }
-
     const labels = [
       {
         key: 'task',
@@ -152,7 +125,7 @@ export const SmartSearch = withRouter((props) => {
       }));
 
       setOptionsWithinDomain(options);
-      setDropdownOpen(true);
+      setInnerDropdownOpen(true);
     })
   }, [domain, searchText])
 
@@ -189,18 +162,24 @@ export const SmartSearch = withRouter((props) => {
     }
   }
 
+  const handleHotKeyUp = (keyName, e, handle) => {
+    e.preventDefault();
+    outerRef.current.focus();
+    setOuterDropdownOpen(true)
+  }
+
   if (domain && searchText) {
     return <AutoComplete
-      ref={ref}
+      ref={innerRef}
       showSearch
       allowClear
       style={{ minWidth: 300, width: '100%' }}
       options={optionsWithinDomain}
       value={searchText}
-      open={dropdownOpen}
+      open={innerDropdownOpen}
       dropdownMatchSelectWidth={false}
-      onFocus={() => setDropdownOpen(true)}
-      onBlur={() => setDropdownOpen(false)}
+      onFocus={() => setInnerDropdownOpen(true)}
+      onBlur={() => setInnerDropdownOpen(false)}
       onChange={handleValueChangeWithinDomain}
       onSearch={handleSearchWithinDomain}
       onSelect={handleSelectWithinDomain}
@@ -208,16 +187,22 @@ export const SmartSearch = withRouter((props) => {
     />
   }
 
-  return <AutoComplete
-    showSearch
-    allowClear
-    placeholder="Search"
-    style={{ minWidth: 300, width: '100%' }}
-    options={getOptions()}
-    dropdownMatchSelectWidth={false}
-    onSearch={handleSearch}
-    onSelect={handleDomainSelected}
-  />
+  return <Hotkeys keyName="option+f,alt+f" onKeyUp={handleHotKeyUp}>
+    <AutoComplete
+      ref={outerRef}
+      showSearch
+      open={outerDropdownOpen}
+      onFocus={() => setOuterDropdownOpen(true)}
+      onBlur={() => setOuterDropdownOpen(false)}
+      allowClear
+      placeholder="Search"
+      style={{ minWidth: 300, width: '100%' }}
+      options={getOptions()}
+      dropdownMatchSelectWidth={false}
+      onSearch={handleSearch}
+      onSelect={handleDomainSelected}
+    />
+  </Hotkeys>
 });
 
 SmartSearch.propTypes = {
