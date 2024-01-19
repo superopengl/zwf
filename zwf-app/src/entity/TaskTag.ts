@@ -10,7 +10,7 @@ export class TaskTag {
   @CreateDateColumn()
   createdAt?: Date;
 
-  @Column('uuid', {nullable: true})
+  @Column('uuid')
   orgId: string;
 
   @Column()
