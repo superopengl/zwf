@@ -47,7 +47,7 @@ export const TaskCard = withRouter((props) => {
   const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
 
   return <StyledCard
-    title={<Tooltip title={name}><TaskIcon /> {name}</Tooltip>}
+    title={<Tooltip title={name} placement="bottom">{name}</Tooltip>}
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
