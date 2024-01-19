@@ -32,14 +32,15 @@ const Input = (props) => {
 };
 
 const DropdownIndicator = props => <components.DropdownIndicator {...props}>
-  <DownOutlined />
+  <DownOutlined style={{ fontSize: 12 }} />
 </components.DropdownIndicator>
 
 const colourStyles = {
   control: styles => ({
     ...styles,
     width: '100%',
-    height: '48px',
+    height: 32,
+    minHeight: 32,
     backgroundColor: 'white',
     boxShadow: 'none',
     border: '1px solid rgb(217, 217, 217)',
@@ -53,6 +54,10 @@ const colourStyles = {
       boxShadow: '0 0 0 2px rgb(138 188 209 / 20%)',
       outline: 0,
     }
+  }),
+  valueContainer: styles => ({
+    ...styles,
+    padding: '1px 2px',
   }),
   // option: (styles, { data, isDisabled, isFocused, isSelected }) => {
   //   const color = chroma(data.color);
@@ -87,22 +92,22 @@ const colourStyles = {
   container: (styles) => {
     return {
       ...styles,
-      minWidth: '180px'
+      minWidth: 180
     }
   },
   multiValue: (styles, { data }) => {
     return {
       ...styles,
-      fontSize: '12px',
-    borderRadius: '4px',
-    color: getFontColor(data.color),
+      fontSize: 12,
+      borderRadius: 4,
+      color: getFontColor(data.color),
       backgroundColor: data.color,
     };
   },
   multiValueLabel: (styles, { data }) => ({
     ...styles,
     // width: '100%',
-    fontSize: '12px',
+    fontSize: 12,
     color: getFontColor(data.color),
     backgroundColor: data.color,
     borderRadius: '4px 0 0 4px',
@@ -111,7 +116,7 @@ const colourStyles = {
     return {
       ...styles,
       // color: data.color,
-      fontSize: '12px',
+      fontSize: 12,
       borderRadius: '0 4px 4px 0',
       ':hover': {
         color: getFontColor(data.color),
