@@ -309,7 +309,7 @@ export const AppLoggedIn = React.memo(props => {
       <ContactForm onDone={() => setContactVisible(false)}></ContactForm>
     </Modal>
     <Modal
-      title="Organisation Profile"
+      title="Organization Profile"
       visible={orgProfileVisible}
       onOk={() => setOrgProfileVisible(false)}
       onCancel={() => setOrgProfileVisible(false)}

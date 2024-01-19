@@ -13,8 +13,7 @@ import { impersonate$ } from 'services/authService';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProfileForm from 'pages/Profile/ProfileForm';
-import TagSelect from 'components/TagSelect';
-import { listUserTags$, saveUserTag$ } from 'services/userTagService';
+import {TagSelect} from 'components/TagSelect';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
@@ -45,7 +44,6 @@ const ClientUserListPage = () => {
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
-  const [tags, setTags] = React.useState([]);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
   const handleTagChange = async (user, tags) => {
@@ -66,7 +64,7 @@ const ClientUserListPage = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag$} value={value} onChange={tags => handleTagChange(item, tags)} />
+      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} />
     },
     {
       // title: 'Action',
@@ -105,7 +103,6 @@ const ClientUserListPage = () => {
     try {
       setLoading(true);
       await searchByQueryInfo(queryInfo)
-      listUserTags$().subscribe(tags => setTags(tags));
     } catch {
       setLoading(false);
     }
@@ -235,7 +232,7 @@ const ClientUserListPage = () => {
             <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
           </Space>
         </Space>
-        {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
+        <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />
         <Table columns={columnDef}
           dataSource={list}
           size="small"

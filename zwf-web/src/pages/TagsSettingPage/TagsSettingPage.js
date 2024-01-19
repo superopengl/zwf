@@ -1,9 +1,8 @@
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import { deleteUserTag$, listUserTags$, saveUserTag$ } from 'services/userTagService';
 import { TagListPanel } from 'components/TagListPanel';
 import styled from 'styled-components';
-import { deleteTaskTag$, listTaskTags$, saveTaskTag$ } from 'services/taskTagService';
+import { deleteTag$, listTags$, saveTag$ } from 'services/taskTagService';
 import { Card, Space } from 'antd';
 import { tap } from 'rxjs/operators';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -28,28 +27,18 @@ const Container = styled.div`
 const TagsSettingPage = () => {
   const context = React.useContext(GlobalContext);
 
-  const handleLoadTaskTags = () => listTaskTags$()
+  const handleLoadTaskTags = () => listTags$()
 
   return (
     <Container>
       <Space direction="vertical" style={{ width: '100%', justifyContent: 'center', maxWidth: 600 }}>
-
         <Card  type="inner"
         title="Task tags" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
           <TagListPanel
             onLoadList={handleLoadTaskTags}
-            onSave={saveTaskTag$}
-            onDelete={deleteTaskTag$}
+            onSave={saveTag$}
+            onDelete={deleteTag$}
             showColor={true}
-          />
-        </Card>
-
-        <Card type="inner" title="User tags" bordered={true} style={{ width: '100%' }} bodyStyle={{padding: 0}}>
-          <TagListPanel
-            onLoadList={listUserTags$}
-            onSave={saveUserTag$}
-            onDelete={deleteUserTag$}
-            showColor={false}
           />
         </Card>
       </Space>

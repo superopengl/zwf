@@ -9,13 +9,13 @@ import { TaskStatus } from '../../types/TaskStatus';
 import { Org } from '../Org';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
-import { TaskTag } from '../TaskTag';
+import { Tag } from '../Tag';
 
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
     .from(TaskTaskTag, 'x')
-    .leftJoin(TaskTag, 't', 'x."tagId" = t.id')
+    .leftJoin(Tag, 't', 'x."tagId" = t.id')
     .groupBy('x."taskId"')
     .select([
       'x."taskId" as "taskId"',
@@ -34,7 +34,7 @@ import { TaskTag } from '../TaskTag';
     .createQueryBuilder()
     .from(Task, 't')
     .leftJoin(q => q.from(TaskTaskTag, 'x')
-      .leftJoin(TaskTag, 't', 'x."tagId" = t.id')
+      .leftJoin(Tag, 't', 'x."tagId" = t.id')
       .groupBy('x."taskId"')
       .select([
         'x."taskId" as "taskId"',

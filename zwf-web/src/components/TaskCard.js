@@ -12,7 +12,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 import { getUserDisplayName } from 'util/getDisplayName';
-import { TaskTagSelect } from './TaskTagSelect';
+import { TagSelect } from './TagSelect';
 
 const { Link: TextLink, Text, Paragraph } = Typography;
 
@@ -73,7 +73,7 @@ export const TaskCard = withRouter((props) => {
         </Row>
       </Tooltip>
       {/* <pre>{JSON.stringify(task, null, 2)}</pre> */}
-      {tagIds.length > 0 && <TaskTagSelect readonly={true} value={tagIds} />}
+      {tagIds.length > 0 && <TagSelect readonly={true} value={tagIds} />}
     </Space>
 
   </StyledCard>

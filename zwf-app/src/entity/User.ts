@@ -1,9 +1,9 @@
+import { Tag } from './Tag';
 import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
 import { UserProfile } from './UserProfile';
-import { UserTag } from './UserTag';
 @Entity()
 @Index('user_unique_email', { synchronize: false })
 export class User {
@@ -62,9 +62,9 @@ export class User {
   @Column('uuid')
   profileId: string;
 
-  @ManyToMany(type => UserTag, { onDelete: 'CASCADE' })
+  @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
-  tags: UserTag[];
+  tags: Tag[];
 
   @Column({default: false})
   isProfileComplete: boolean;

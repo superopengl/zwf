@@ -4,23 +4,23 @@ import { switchMap, switchMapTo, tap } from 'rxjs/operators';
 
 const taskTagsSource$  = new BehaviorSubject(null)
 
-export function listTaskTags$() {
-  return httpGet$(`/tasktag`).pipe(
+export function listTags$() {
+  return httpGet$(`/tag`).pipe(
     tap(tags => taskTagsSource$.next(tags))
   );
 }
 
-export function deleteTaskTag$(id) {
-  return httpDelete$(`/tasktag/${id}`);
+export function deleteTag$(id) {
+  return httpDelete$(`/tag/${id}`);
 }
 
-export function saveTaskTag$(tag) {
+export function saveTag$(tag) {
   const { id, name, colorHex } = tag;
-  return httpPost$(`/tasktag`, { id, name, colorHex });
+  return httpPost$(`/tag`, { id, name, colorHex });
 }
 
-export function subscribeTaskTags(func) {
+export function subscribeTags(func) {
   return taskTagsSource$.pipe(
-    switchMap(tags =>  tags ? of(tags) : listTaskTags$()),
+    switchMap(tags =>  tags ? of(tags) : listTags$()),
   ).subscribe(tags => func(tags));
 }

@@ -345,44 +345,20 @@ paths:
           required: true
       responses:
         200:
-          description: OK
-  /usertag:
+  /tag:
     get:
-      operationId: listUserTags
+      operationId: listTags
       responses:
         200:
           description: OK
     post:
-      operationId: saveUserTag
+      operationId: saveTag
       responses:
         200:
           description: OK
-  /usertag/:id:
+  /tag/:id:
     delete:
-      operationId: deleteUserTag
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /tasktag:
-    get:
-      operationId: listTaskTags
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: saveTaskTag
-      responses:
-        200:
-          description: OK
-  /tasktag/:id:
-    delete:
-      operationId: deleteTaskTag
+      operationId: deleteTag
       parameters:
         - name: id
           in: path

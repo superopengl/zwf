@@ -10,11 +10,10 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { TaskWorkPanel } from 'components/TaskWorkPanel';
 import { catchError, switchMapTo } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
-import { TaskTagSelect } from 'components/TaskTagSelect';
 import { combineLatest } from 'rxjs';
-import { listTaskTags$ } from 'services/taskTagService';
+import { listTags$ } from 'services/taskTagService';
 import Tag from 'components/Tag';
-import TagSelect from 'components/TagSelect';
+import {TagSelect} from 'components/TagSelect';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 const ContainerStyled = styled(Layout.Content)`
@@ -30,7 +29,7 @@ height: 100%;
   left: -60px;
   width: 40px;
   border: 1px solid rgb(217,217,217);
-  border-radius:4px;
+border-radius:4px;
 }
 `;
 
@@ -96,7 +95,7 @@ const OrgTaskPage = React.memo((props) => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <TaskTagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
+        <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
         <TaskWorkPanel ref={formRef} task={task} type="agent" />
       </PageContainer>}
     </ContainerStyled>

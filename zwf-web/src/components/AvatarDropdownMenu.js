@@ -87,7 +87,10 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
     </Menu.Item>
     {isAdmin && <Menu.Divider />}
     {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
-      Organisation Profile
+      Organization Profile
+    </Menu.Item>}
+    {isAdmin && <Menu.Item key="subscription_billing" onClick={() => props.history.push('/account')}>
+      Subscription & Billings
     </Menu.Item>}
     <Menu.Divider />
     <Menu.Item key="logout" danger onClick={handleLogout}>
@@ -159,7 +162,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <PrivacyPolicyPage />
     </Modal>
     <Modal
-      title="Organisation Profile"
+      title="Organization Profile"
       visible={orgProfileVisible}
       onOk={() => setOrgProfileVisible(false)}
       onCancel={() => setOrgProfileVisible(false)}

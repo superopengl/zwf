@@ -7,7 +7,7 @@ import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import ClientSelect from 'components/ClientSelect';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 import PropTypes from 'prop-types';
-import { TaskTagSelect } from 'components/TaskTagSelect';
+import { TagSelect } from 'components/TagSelect';
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -105,7 +105,7 @@ export const TaskSearchDrawer = props => {
           </Select>
         </Descriptions.Item>
         <Descriptions.Item label="Tags">
-          <TaskTagSelect
+          <TagSelect
             style={{ width: '100%' }}
             allowCreate={false}
             value={queryInfo.tags}

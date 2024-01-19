@@ -2,7 +2,7 @@ import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, Update
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
 import { Org } from './Org';
-import { TaskTag } from './TaskTag';
+import { Tag } from './Tag';
 
 @Entity()
 @Index('idex_task_orgId_userId', ['orgId', 'userId'])
@@ -62,5 +62,9 @@ export class Task {
 
   @Column({ type: 'json', default: [] })
   docs: TaskDoc[];
+
+  @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: Tag[];
 }
 
