@@ -1,4 +1,4 @@
-import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer } from 'antd';
+import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography } from 'antd';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { searchTask$ } from '../../services/taskService';
@@ -13,6 +13,7 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { IoRefreshOutline } from 'react-icons/io5';
 import { TaskSearchDrawer } from './TaskSearchPanel';
 
+const {Link: TextLink} = Typography;
 
 const LayoutStyled = styled(Space)`
   margin: 0 auto 0 auto;
@@ -37,6 +38,7 @@ const TaskListPage = () => {
   const [viewMode, setViewMode] = React.useState('board');
   const [queryInfo, setQueryInfo] = React.useState(DEFAULT_QUERY_INFO)
   const [filterVisible, setFilterVisible] = React.useState(false);
+  const [message, setMessage] = React.useState();
 
   React.useEffect(() => {
     const subscription = reloadWithQueryInfo$(queryInfo)
@@ -45,7 +47,18 @@ const TaskListPage = () => {
 
   React.useEffect(() => {
     reactLocalStorage.setObject('query', queryInfo);
+
+    if(queryInfo.status?.includes('archived') && viewMode === 'board') {
+      setMessage(<>The current filter contains status "Archived". Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see archived tasks.</>);
+    } else {
+      setMessage(null);
+    }
   }, [queryInfo]);
+
+  const handleSwitchToListView = () => {
+    setViewMode('list');
+    setMessage(null);
+  }
 
   const reloadWithQueryInfo$ = (queryInfo) => {
     setLoading(true);
@@ -88,8 +101,8 @@ const TaskListPage = () => {
   return (
     <Loading loading={loading} >
       <LayoutStyled direction="vertical" size="large">
-        <Space style={{ width: '100%', justifyContent: 'flex-start', marginBottom: '1rem' }}>
-          <Tooltip title="Filters">
+        <Space style={{ width: '100%', justifyContent: 'flex-start' }}>
+          <Tooltip title="Filter">
             <Button icon={<FilterFilled />} onClick={() => setFilterVisible(true)} >Filter</Button>
           </Tooltip>
           <Radio.Group buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
@@ -107,8 +120,8 @@ const TaskListPage = () => {
           <Tooltip title="Refresh">
             <Button icon={<SyncOutlined />} onClick={handleReload} />
           </Tooltip>
-
         </Space>
+        {message && <Alert type="warning" showIcon closable message={message}/>}
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
