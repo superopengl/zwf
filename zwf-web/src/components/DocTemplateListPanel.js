@@ -24,12 +24,16 @@ padding-right: 12px !important;
 `;
 
 export const DocTemplateListPanel = (props) => {
-  const { value: docs, allowTest, varBag, ...otherProps } = props;
+  const { value: docs, allowTest, varBag, showWarning, ...otherProps } = props;
 
   const handlePreviewDocTemplate = docId => {
     getDocTemplate$(docId).subscribe(docTemplate => {
-      showDocTemplatePreviewModal(docTemplate, { allowTest, varBag });
+      showDocTemplatePreviewModal(docTemplate, { allowTest, varBag, showWarning });
     })
+  }
+
+  const getDocMissingVars = (doc) => {
+    
   }
 
   return docs?.length > 0 && <List
@@ -40,6 +44,7 @@ export const DocTemplateListPanel = (props) => {
     dataSource={docs}
     renderItem={doc => <DocListItem onClick={() => handlePreviewDocTemplate(doc.id)}>
       <div><DocTemplateIcon /><Text>{doc.name}</Text></div>
+     {showWarning && <div>{getDocMissingVars(doc)}</div>}
     </DocListItem>}
   />
 };
@@ -47,12 +52,14 @@ export const DocTemplateListPanel = (props) => {
 DocTemplateListPanel.propTypes = {
   value: PropTypes.array,
   allowTest: PropTypes.bool,
+  showWarning: PropTypes.bool,
   varBag: PropTypes.object,
 };
 
 DocTemplateListPanel.defaultProps = {
   value: null,
   allowTest: false,
+  showWarning: false,
   varBag: {},
 };
 

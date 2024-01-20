@@ -7,8 +7,6 @@ import * as _ from 'lodash';
 import { Task } from '../entity/Task';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { TaskStatus } from '../types/TaskStatus';
-import { DocTemplate } from '../entity/DocTemplate';
-import { TaskDoc } from '../types/TaskDoc';
 import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 import { v4 as uuidv4 } from 'uuid';
 import * as voucherCodes from 'voucher-code-generator';
@@ -16,7 +14,6 @@ import { User } from '../entity/User';
 import { enqueueEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
-import { UserInformation } from '../entity/views/UserInformation';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -38,18 +35,6 @@ function prefillTaskTemplateFields(taskTemplateFields, inputFields: object) {
   ));
 
   return fields;
-}
-
-function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[]): TaskDoc[] {
-  return docTemplates.map(x => {
-    const taskDoc = new TaskDoc();
-    taskDoc.docTemplateId = x.id;
-    // docTemplateName: x.name,
-    // docTemplateDescription: x.description,
-    taskDoc.variables = x.variables.map(name => ({ name, value: undefined }));
-    taskDoc.fileName = `${x.name}.pdf`;
-    return taskDoc;
-  });
 }
 
 function generateTaskDefaultName (taskTemplateName, profile: UserProfile) {

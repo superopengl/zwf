@@ -21,7 +21,7 @@ const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text ty
 export const TaskGenerator = props => {
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(null);
-  const [fields, setFields] = React.useState([]);
+  const [fieldBag, setFieldBag] = React.useState({});
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [taskName, setTaskName] = React.useState();
   const [current, setCurrent] = React.useState(0);
@@ -80,7 +80,7 @@ export const TaskGenerator = props => {
   }
 
   const handleFormValueChange = (changeValues, allValues) => {
-    setFields(allValues.fields);
+    setFieldBag(allValues.fields);
   }
 
   const handleNameEnter = (e) => {
@@ -93,7 +93,7 @@ export const TaskGenerator = props => {
   }
 
   const handleCreateTask = () => {
-    createTaskWithFields(fields);
+    createTaskWithFields(fieldBag);
   }
 
   const createTaskWithFields = (fields = {}) => {
@@ -111,6 +111,13 @@ export const TaskGenerator = props => {
     })
   }
 
+  const varBag = React.useMemo(() => {
+    if (!fieldBag || !taskTemplate) return {};
+    return taskTemplate.fields.reduce((bag, f) => {
+      bag[f.var] = fieldBag[f.name]
+      return bag;
+    }, {});
+  }, [fieldBag, taskTemplate]);
 
   const steps = [
     {
@@ -158,7 +165,7 @@ export const TaskGenerator = props => {
             Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
           </Paragraph>
           <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-          <DocTemplateListPanel value={taskTemplate?.docs} />
+            <DocTemplateListPanel value={taskTemplate?.docs} allowTest={false} varBag={varBag} />
           </Form.Item>
           {agentFieldSchema?.fields?.length > 0 && <>
             <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
@@ -200,16 +207,17 @@ export const TaskGenerator = props => {
         {/* <Button block icon={<LeftOutlined />} disabled={current === 0} onClick={() => setCurrent(x => x - 1)}></Button> */}
         {/* <Button block icon={<RightOutlined />} disable={current === steps.length - 1} onClick={() => setCurrent(x => x + 1)}></Button> */}
         <Row justify='space-between'>
-          <Button type="text" danger onClick={props.onCancel}>Cancel</Button>
+          <Button type="text" onClick={props.onCancel}>Cancel</Button>
           <Space>
+
+            {current === 0 && <Button type="primary"
+              disabled={!clientInfo || !taskTemplate || !taskName}
+              onClick={handleCreateEmptyTask}>Create Empty Task</Button>}
             {current === 0 && <Button type="primary" ghost
               disabled={!clientInfo || !taskTemplate || !taskName}
               onClick={() => setCurrent(x => x + 1)}
               icon={<RightOutlined />}
             >Prefill Fields</Button>}
-            {current === 0 && <Button type="primary"
-              disabled={!clientInfo || !taskTemplate || !taskName}
-              onClick={handleCreateEmptyTask}>Create Empty Task</Button>}
             {/* {current === steps.length - 1 && <Button type="primary" ghost disabled={current !== steps.length - 1}>Create Task & Another</Button>} */}
             {current === steps.length - 1 && <Button type="primary"
               onClick={handleCreateTask}
