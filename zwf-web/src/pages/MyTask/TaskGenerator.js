@@ -153,6 +153,13 @@ export const TaskGenerator = props => {
           </Paragraph>
           <Divider style={{ marginTop: 4 }} />
           <FormBuilder meta={clientFieldSchema} form={formRef} />
+          <Title level={5} type="secondary" style={{ marginTop: 20 }}>Docs</Title>
+          <Paragraph type="secondary">
+            Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
+          </Paragraph>
+          <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
+          <DocTemplateListPanel value={taskTemplate?.docs} />
+          </Form.Item>
           {agentFieldSchema?.fields?.length > 0 && <>
             <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
             <Paragraph type="secondary">

@@ -35,7 +35,7 @@ EntityIcon.defaultProps = {
 
 export const TaskIcon = (props) => <EntityIcon icon={<FaTasks />} color="#fadb14" style={props.style} /> 
 export const TaskTemplateIcon = (props) => <EntityIcon icon={<ImInsertTemplate />} color="#9254de" style={props.style} /> 
-export const DocTemplateIcon = (props) => <EntityIcon icon={<FileOutlined />} color="#096dd9" style={props.style} /> 
+export const DocTemplateIcon = (props) => <EntityIcon icon={<FileOutlined />} color="#cf1322" style={props.style} /> 
 export const ClientIcon = (props) => <EntityIcon icon={<UserOutlined />} color="#00232944" style={props.style} /> 
 
 
