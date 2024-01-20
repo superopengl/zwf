@@ -14,7 +14,7 @@ export const VarTag = (props) => {
 
   const { children } = props;
   return (
-    <StyledTag color="#00474f">{children}</StyledTag>
+    <StyledTag color="processing">{children}</StyledTag>
   );
 };
 
