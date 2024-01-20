@@ -5,8 +5,9 @@ import { CaretDownOutlined } from '@ant-design/icons';
 import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
 import { showCreateTaskModal } from 'components/showCreateTaskModal';
 import { notify } from 'util/notify';
+import { withRouter } from 'react-router-dom';
 
-export const CreateNewButton = React.memo(props => {
+export const CreateNewButton = React.memo(withRouter(props => {
   const { size } = props;
 
   const handleMenuSelected = (e) => {
@@ -44,7 +45,7 @@ export const CreateNewButton = React.memo(props => {
   >
     Create Task
   </Dropdown.Button>
-});
+}));
 
 CreateNewButton.propTypes = {
   siza: PropTypes.oneOf(['small', 'middle', 'large'])
