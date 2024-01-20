@@ -62,7 +62,7 @@ const COLUMN_DEFS = [
 ]
 
 export const TaskBoardPanel = props => {
-  const { tasks, onChange } = props;
+  const { tasks, onChange, searchText } = props;
 
   const onDragEnd = result => {
     const { draggableId: taskId, destination: { droppableId: status } } = result;
@@ -94,7 +94,7 @@ export const TaskBoardPanel = props => {
                 {tasks.filter(j => j.status === s.status).map((task, index) => {
                   // if (task.statusId === status.id)
                   return (
-                    <TaskDraggableCard key={task.id} index={index} task={task} onChange={onChange} />
+                    <TaskDraggableCard key={task.id} index={index} task={task} onChange={onChange} searchText={searchText} />
                   );
                 })
                 }

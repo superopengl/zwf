@@ -8,7 +8,7 @@ import React from 'react';
 import { deleteDocTemplate, listDocTemplate, listDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import HighlightingText from 'components/HighlightingText';
+import {HighlightingText} from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { withRouter, Link } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';

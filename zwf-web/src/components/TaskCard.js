@@ -1,4 +1,4 @@
-import { Space, Card, Typography, Row, Col, Tooltip } from 'antd';
+import { Space, Card, Typography, Row, Col, Tooltip, Grid } from 'antd';
 import React from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
@@ -13,8 +13,11 @@ import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { TagSelect } from './TagSelect';
+import {HighlightingText} from 'components/HighlightingText';
 
 const { Link: TextLink, Text, Paragraph } = Typography;
+
+const { useBreakpoint } = Grid;
 
 const StyledCard = styled(Card)`
 position: relative;
@@ -31,8 +34,10 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 
 export const TaskCard = withRouter((props) => {
 
-  const { task } = props;
-  const { id, name, givenName, surname, email, lastUnreadMessageAt, taskTemplateName, tags } = task;
+  const { task, searchText } = props;
+  const { id, name, givenName, surname, email, lastUnreadMessageAt, tags } = task;
+  
+  const screens = useBreakpoint();
 
   const context = React.useContext(GlobalContext);
 
@@ -43,11 +48,10 @@ export const TaskCard = withRouter((props) => {
     e.stopPropagation();
     props.history.push(`/task/${id}`);
   }
-
   const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
 
   return <StyledCard
-    title={<Tooltip title={name} placement="bottom">{name}</Tooltip>}
+    title={<Tooltip title={name} placement="bottom"><HighlightingText value={name} search={searchText}></HighlightingText></Tooltip>}
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
@@ -55,19 +59,19 @@ export const TaskCard = withRouter((props) => {
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     <Space direction='vertical' size="middle" style={{width: '100%'}}>
-
       {lastUnreadMessageAt && <UnreadMessageIcon style={{ position: 'absolute', right: 16, top: 16 }} />}
       {/* <Paragraph type="secondary" style={{lineHeight: 0.8}}><small>{taskTemplateName}</small></Paragraph> */}
       <Tooltip title={getUserDisplayName(email, givenName, surname)} placement='bottom'>
         <Row gutter={10} wrap={false} style={{ width: '100%' }}>
-          <Col>
+          {screens?.xxl === true && <Col>
             <UserAvatar userId={task.userId} size={40} />
-          </Col>
+          </Col>}
           <Col flex='auto'>
             <UserDisplayName
               email={email}
               surname={surname}
               givenName={givenName}
+              searchText={searchText}
             />
           </Col>
         </Row>
@@ -80,7 +84,8 @@ export const TaskCard = withRouter((props) => {
 });
 
 TaskCard.propTypes = {
-  task: PropTypes.any.isRequired
+  task: PropTypes.any.isRequired,
+  searchText: PropTypes.string,
 };
 
 TaskCard.defaultProps = {};

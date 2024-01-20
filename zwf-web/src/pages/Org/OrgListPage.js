@@ -1,25 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
+import { Typography, Button, Table, Input, Modal, Tag, Drawer } from 'antd';
 import {
-  DeleteOutlined, SafetyCertificateOutlined, UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
+  SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  UserOutlined,
-  ClearOutlined,
-  MinusOutlined
-} from '@ant-design/icons';
+  ClearOutlined} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
-import { Space, Pagination } from 'antd';
-import { searchOrgMemberUsers, deleteUser, setPasswordForUser, setUserTags } from 'services/userService';
-import { inviteUser$, impersonate$ } from 'services/authService';
+import { Space } from 'antd';
+import { searchOrgMemberUsers, deleteUser, setUserTags } from 'services/userService';
+import { impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
-import { FaTheaterMasks } from 'react-icons/fa';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { GlobalContext } from 'contexts/GlobalContext';
-import ProfileForm from 'pages/Profile/ProfileForm';
-import HighlightingText from 'components/HighlightingText';
-import CheckboxButton from 'components/CheckboxButton';
-import TagSelectComponent from 'components/TagSelectComponent';
+import {HighlightingText} from 'components/HighlightingText';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import { listOrgs$ } from 'services/orgService';

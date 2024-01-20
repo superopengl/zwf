@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Highlighter from "react-highlight-words";
 
-const HighlightingText = (props) => {
+export const HighlightingText = (props) => {
 
   const { search, value } = props;
 
@@ -26,4 +26,3 @@ HighlightingText.defaultProps = {
   search: '',
 };
 
-export default HighlightingText;
