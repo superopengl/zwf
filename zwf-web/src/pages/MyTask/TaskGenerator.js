@@ -51,7 +51,6 @@ export const TaskGenerator = props => {
   }, [clientInfo, taskTemplate])
 
   const handleTaskTemplateChange = taskTemplateIdValue => {
-    // wizardRef.current.nextStep();
     setTaskTemplateId(taskTemplateIdValue);
   }
 
