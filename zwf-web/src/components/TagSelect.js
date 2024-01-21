@@ -59,14 +59,14 @@ export const TagSelect = React.memo((props) => {
   );
 });
 
-TagSelectComponent.propTypes = {
+TagSelect.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   allowCreate: PropTypes.bool,
   onChange: PropTypes.func,
 };
 
-TagSelectComponent.defaultProps = {
+TagSelect.defaultProps = {
   readonly: false,
   allowCreate: true,
   onChange: () => { }
