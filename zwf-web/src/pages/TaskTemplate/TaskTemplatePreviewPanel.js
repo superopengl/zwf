@@ -30,9 +30,9 @@ export const TaskTemplatePreviewPanel = props => {
 
   React.useEffect(() => {
     if(!value) return;
-    const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, false);
+    const clientFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, {}, false);
     setClientFieldSchema(clientFields);
-    const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, true);
+    const agentFields = convertTaskTemplateFieldsToFormFieldsSchema(value.fields, {}, true);
     setAgentFieldSchema(agentFields);
   }, [value]);
 

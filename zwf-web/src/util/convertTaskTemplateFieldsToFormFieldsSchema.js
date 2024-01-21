@@ -1,20 +1,21 @@
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 
-export function convertTaskTemplateFieldsToFormFieldsSchema(fields, official) {
+export function convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, official) {
   const fieldList = fields
-    .map((t, i) => {
-      if (!!t.official !== official)
+    .map((f, i) => {
+      if (!!f.official !== official)
         return null;
-      const widgetDef = TaskTemplateWidgetDef.find(x => x.type === t.type);
-      const name = t.name || `Unnamed (field ${i + 1})`;
+      const widgetDef = TaskTemplateWidgetDef.find(x => x.type === f.type);
+      const name = f.name || `Unnamed (field ${i + 1})`;
       return {
         key: name,
         label: name,
-        name: ['fields', name],
-        required: t.required,
-        extra: t.description,
-        options: t.options,
-        forwardRef: t.forwardRef,
+        name: [name],
+        initialValue: varBag?.[f.var],
+        required: f.required,
+        extra: f.description,
+        options: f.options,
+        forwardRef: f.forwardRef,
         widget: widgetDef.widget,
         widgetProps: widgetDef.widgetPorps
       };

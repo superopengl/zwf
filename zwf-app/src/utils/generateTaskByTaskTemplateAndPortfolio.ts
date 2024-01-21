@@ -24,13 +24,13 @@ function generateDeepLinkId() {
   return result[0];
 }
 
-function prefillTaskTemplateFields(taskTemplateFields, inputFields: object) {
-  if (!inputFields) return taskTemplateFields;
+function prefillTaskTemplateFields(taskTemplateFields, varBag: {[key: string]: any}) {
+  if (!varBag) return taskTemplateFields;
 
   const fields = taskTemplateFields.map(f => (
     {
       ...f,
-      value: inputFields[f.name]
+      value: varBag[f.var]
     }
   ));
 
@@ -44,7 +44,7 @@ function generateTaskDefaultName (taskTemplateName, profile: UserProfile) {
   return `${taskTemplateName} - ${displayName}`;
 }
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, fieldValues) => {
+export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: {[key: string]: any}) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
   assert(email, 400, 'email is not specified');
 
@@ -53,7 +53,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
   await getManager().transaction(async m => {
     const taskTemplate = await m.findOne(TaskTemplate, taskTemplateId);
     assert(taskTemplate, 404, 'taskTemplate is not found');
-    const fields = prefillTaskTemplateFields(taskTemplate.fields, fieldValues);
+    const fields = prefillTaskTemplateFields(taskTemplate.fields, varBag);
 
     user = await ensureClientOrGuestUser(m, email);
 

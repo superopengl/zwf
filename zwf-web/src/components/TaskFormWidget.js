@@ -9,47 +9,39 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, docs, type, onChange } = props;
+  const { fields, docs, varBag, type, onChange } = props;
 
   const clientFieldSchema = React.useMemo(() => {
-    const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
+    const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, false);
     schema.fields.forEach(f => {
       f.required = false;
     });
     return schema;
-  }, [fields]);
+  }, [fields, varBag]);
 
   const agentFieldSchema = React.useMemo(() => {
-    return type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, true) : null;
-  }, [fields, type]);
-
-  const varBag = React.useMemo(() => {
-    return fields.reduce((bag, f) => {
-      bag[f.var] = f.value;
-      return bag;
-    }, {})
-  }, [fields]);
+    return type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, true) : null;
+  }, [fields, varBag, type]);
 
   const showDocs = docs?.length > 0;
   const showOfficialFields = agentFieldSchema?.fields?.length > 0;
 
   const handleFormValueChange = (changedValues, allValues) => {
-    Object.entries(changedValues.fields).forEach(([name, value]) => {
+    Object.entries(changedValues).forEach(([name, value]) => {
       const field = fields.find(f => f.name === name);
-      field.value = value;
       varBag[field.var] = value;
     })
 
-    onChange([...fields]);
+    onChange({ ...varBag });
   }
 
+  debugger;
   return (
     <Form
       ref={ref}
       onValuesChange={handleFormValueChange}
       layout="horizontal"
       colon={false}
-    // initialValues={{ name: taskTemplate.name }}
     >
       <Title level={5} type="secondary" style={{ marginTop: 20 }}>Client fields</Title>
       <Paragraph type="secondary">
@@ -81,6 +73,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   docs: PropTypes.arrayOf(PropTypes.object),
+  varBag: PropTypes.object,
   readonly: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
@@ -88,7 +81,8 @@ TaskFormWidget.propTypes = {
 
 TaskFormWidget.defaultProps = {
   readonly: false,
+  varBag: {},
   type: 'agent',
-  onChange: (fields, docs, varBag) => { },
+  onChange: (varBag) => { },
 };
 
