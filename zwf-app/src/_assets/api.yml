@@ -453,6 +453,20 @@ paths:
       responses:
         200:
           description: OK
+  /doc_template/{id}/clone:
+    put:
+      operationId: cloneDocTemplate
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /doc_template/{id}/apply:
     post:
       operationId: applyDocTemplate

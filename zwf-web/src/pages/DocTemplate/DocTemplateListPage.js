@@ -1,19 +1,20 @@
 import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, SearchOutlined
+  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate, listDocTemplate, listDocTemplate$ } from 'services/docTemplateService';
+import { deleteDocTemplate, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import {HighlightingText} from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { withRouter, Link } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
+import { notify } from 'util/notify';
 
-const { Text, Paragraph } = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -161,6 +162,15 @@ export const DocTemplateListPage = props => {
   const handlePreview = (item) => {
   }
 
+  const handleClone = item => {
+    cloneDocTemplate$(item.id)
+      .subscribe(cloned => {
+        // console.log(task);
+        notify.success('Cloned task', <>Successfully cloned doc template. The new doc template is  <TextLink target="_blank" href={`/doc_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
+        loadList();
+      })
+  }
+
   return (<>
     <LayoutStyled>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
@@ -217,6 +227,7 @@ export const DocTemplateListPage = props => {
               extra={<DropdownMenu
                 config={[
                   {
+                    icon: <EditOutlined/>,
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
                   },
@@ -225,6 +236,15 @@ export const DocTemplateListPage = props => {
                   //   onClick: () => handlePreview(item)
                   // },
                   {
+                    icon: <CopyOutlined />,
+                    menu: 'Clone',
+                    onClick: () => handleClone(item)
+                  },
+                  {
+                    menu: '-'
+                  },
+                  {
+                    icon: <Text type="danger"><DeleteOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(item)
                   },
