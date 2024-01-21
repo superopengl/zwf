@@ -1,6 +1,6 @@
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 
-export function convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, official) {
+export function convertTaskTemplateFieldsToFormFieldsSchema(fields, official) {
   const fieldList = fields
     .map((f, i) => {
       if (!!f.official !== official)
@@ -11,7 +11,7 @@ export function convertTaskTemplateFieldsToFormFieldsSchema(fields, varBag, offi
         key: name,
         label: name,
         name: [name],
-        initialValue: varBag?.[f.var],
+        initialValue: f.value,
         required: f.required,
         extra: f.description,
         options: f.options,
