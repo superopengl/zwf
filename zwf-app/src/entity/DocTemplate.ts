@@ -1,4 +1,4 @@
-import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, DeleteDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -18,6 +18,9 @@ export class DocTemplate {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @UpdateDateColumn()
   lastUpdatedAt: Date;
