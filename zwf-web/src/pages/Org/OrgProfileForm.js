@@ -86,16 +86,16 @@ const OrgProfileForm = (props) => {
     initialValues={org}>
       <Form.Item label="Organization name"
         name="name"
-        help={<>The name of your organisation in ZeeWorkFlow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
+        help={<>The name of your organisation in ZeeWorkflow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
         rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>
-        <Input allowClear={true} placeholder="ZeeWorkFlow" autoComplete="organization" />
+        <Input allowClear={true} placeholder="ZeeWorkflow" autoComplete="organization" />
       </Form.Item>
 
       <Form.Item label="Organization legal name"
         name="businessName"
         help={<>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>}
         rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
-        <Input placeholder="ZeeWorkFlow Inc." allowClear={true} autoComplete="organization" />
+        <Input placeholder="ZeeWorkflow Inc." allowClear={true} autoComplete="organization" />
       </Form.Item>
       <Form.Item label="Organization registration country" name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
         <CountrySelector defaultValue="AU"/>

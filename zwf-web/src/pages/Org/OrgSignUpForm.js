@@ -48,7 +48,7 @@ const OrgSignUpForm = (props) => {
         // Guest
         notify.success(
           '🎉 Successfully signed up!',
-          <>Congratulations and thank you very much for signing up ZeeWorkFlow. The invitation email has been sent out to <Text strong>{email}</Text>.</>
+          <>Congratulations and thank you very much for signing up ZeeWorkflow. The invitation email has been sent out to <Text strong>{email}</Text>.</>
         );
       }
     ).add(() => {

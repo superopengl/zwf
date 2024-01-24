@@ -24,7 +24,7 @@ const DeclarationPage = () => (
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
     <Title style={{ textAlign: 'center' }}>Techseeding Pty Ltd Declaration</Title>
     <p>I declare that the information provided for the preparation of the task is true and correct.</p>
-    <p>For the document where it is to be lodged to the ATO electronically. I, the business owner, authorise J.Z. Accounting trading as ZeeWorkFlow to give the e-signed document to the commissioner of Taxation. The agent is authorised to lodge this form.</p>
+    <p>For the document where it is to be lodged to the ATO electronically. I, the business owner, authorise J.Z. Accounting trading as ZeeWorkflow to give the e-signed document to the commissioner of Taxation. The agent is authorised to lodge this form.</p>
     <p>It is the responsibility of the taxpayer to retain this declaration for a period of five years after the declaration is made, penalties may apply for failure to do so.</p>
 
   </ContainerStyled>

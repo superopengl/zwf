@@ -105,7 +105,7 @@ const HomeCarouselAreaRaw = props => {
         <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
           <Space size="large">
             <Logo />
-            <Title style={{ fontSize: catchPhraseSize, color: '#5cdbd3' }} >ZEEWORKFLOW</Title>
+            <Title style={{ fontSize: catchPhraseSize, color: '#5cdbd3' }} >ZeeWorkflow</Title>
           </Space>
           <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
             All in one system for file, doc, job, task and workflow management. Come on, join us today!!

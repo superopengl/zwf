@@ -4,7 +4,7 @@ import innerText from 'react-innertext';
 // function createBrowserNotification(title, content) {
 //   try {
 //     const message = content || title;
-//     const notifTitle = content ? `[ZeeWorkFlow] ${title}` : `ZeeWorkFlow`;
+//     const notifTitle = content ? `[ZeeWorkflow] ${title}` : `ZeeWorkflow`;
 //     const options = {
 //       body: message,
 //       icon: `/images/logo-tile.png`,
