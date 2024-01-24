@@ -27,6 +27,10 @@ export class TaskTemplate {
 
   @Column({ type: 'json' })
   fields: any;
+
+  @ManyToMany(type => DocTemplate, { onDelete: 'CASCADE' })
+  @JoinTable()
+  docs: DocTemplate[];
 }
 
 
