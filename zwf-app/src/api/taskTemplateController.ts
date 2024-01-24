@@ -72,7 +72,7 @@ export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   const repo = getRepository(TaskTemplate);
-  await repo.delete({ id, orgId });
+  await repo.softDelete({ id, orgId });
 
   res.json();
 });
@@ -96,7 +96,7 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   let taskTemplate: TaskTemplate;
   await getManager().transaction(async m => {
-    taskTemplate = await m.findOne(TaskTemplate, { id, orgId });
+    taskTemplate = await m.findOne(TaskTemplate, { id, orgId }, {relations: ['docs']});
     assert(taskTemplate, 404);
 
     const sourceTaskTemplateId = taskTemplate.id;
@@ -105,7 +105,6 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
     taskTemplate.createdAt = getUtcNow();
     taskTemplate.lastUpdatedAt = getUtcNow();
     taskTemplate.name = await getUniqueCopyName(m, taskTemplate);
-    taskTemplate.version = 1;
 
     const taskTemplateDocTemplateList = await m.find(TaskTemplateDocTemplate, { taskTemplateId: sourceTaskTemplateId });
     taskTemplateDocTemplateList.forEach(x => {

@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Task } from './Task';
 @Entity()
 export class File {
   @PrimaryGeneratedColumn('uuid')
@@ -7,6 +8,10 @@ export class File {
   @CreateDateColumn()
   createdAt?: Date;
 
+  /**
+   * User ID of the uploader. 
+   * For auto-gen doc, it's the org ID.
+   */
   @Column('uuid')
   owner?: string;
 
@@ -27,4 +32,7 @@ export class File {
 
   @Column({ default: false })
   public?: boolean;
+
+  @ManyToOne(() => Task, task => task.docs)
+  task?: Task;
 }

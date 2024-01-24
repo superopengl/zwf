@@ -1,3 +1,5 @@
+import { TaskField } from './../types/TaskField';
+import { getUtcNow } from './getUtcNow';
 import { UserProfile } from './../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
@@ -14,6 +16,9 @@ import { User } from '../entity/User';
 import { enqueueEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
+import { DocTemplate } from '../entity/DocTemplate';
+import { TaskDoc } from '../types/TaskDoc';
+import { tryGenDocFile } from '../services/genDocService';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -24,34 +29,48 @@ function generateDeepLinkId() {
   return result[0];
 }
 
-function prefillTaskTemplateFields(taskTemplateFields, varBag: {[key: string]: any}) {
+function prefillTaskTemplateFields(taskTemplateFields, varBag: { [key: string]: any }) {
   if (!varBag) return taskTemplateFields;
 
   const fields = taskTemplateFields.map(f => (
     {
       ...f,
-      value: varBag[f.var]
+      value: varBag[f.varName]
     }
   ));
 
   return fields;
 }
 
-function generateTaskDefaultName (taskTemplateName, profile: UserProfile) {
+function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
   assert(profile, 500, 'User profile is not specified');
   const clientName = `${profile.givenName} ${profile.surname}`;
   const displayName = clientName.trim() ? clientName : profile.email;
   return `${taskTemplateName} - ${displayName}`;
 }
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: {[key: string]: any}) => {
+async function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[], fields: TaskField[], userId: string): Promise<TaskDoc[]> {
+  const docs: TaskDoc[] = [];
+  for(const docTemplate of docTemplates) {
+    const taskDoc = new TaskDoc();
+    taskDoc.id = docTemplate.id;
+    taskDoc.name = docTemplate.name;
+    taskDoc.createdAt = getUtcNow();
+    const file = await tryGenDocFile(docTemplate, fields, userId);
+    taskDoc.fileId = file?.id;
+    docs.push(taskDoc);
+  }
+  return docs;
+}
+
+export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: { [key: string]: any }) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
   assert(email, 400, 'email is not specified');
 
   let task: Task;
   let user: User;
   await getManager().transaction(async m => {
-    const taskTemplate = await m.findOne(TaskTemplate, taskTemplateId);
+    const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, taskTemplateId, { relations: ['docs'] });
     assert(taskTemplate, 404, 'taskTemplate is not found');
     const fields = prefillTaskTemplateFields(taskTemplate.fields, varBag);
 
@@ -66,7 +85,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     task.taskTemplateId = taskTemplateId;
     task.fields = fields;
     task.orgId = taskTemplate.orgId;
-    // task.docs = mapDocTemplatesToGenDocs(docTemplates);
+    task.docs = await mapDocTemplatesToGenDocs(taskTemplate.docs, fields, user.id);
     task.status = TaskStatus.TODO;
     await m.insert(Task, task);
   });

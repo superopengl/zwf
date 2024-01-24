@@ -20,6 +20,7 @@ export class DocTemplate {
   createdAt: Date;
 
   @DeleteDateColumn()
+  @Index()
   deletedAt: Date;
 
   @UpdateDateColumn()

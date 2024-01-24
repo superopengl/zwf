@@ -8,18 +8,10 @@ import * as _ from 'lodash';
 import { SubscriptionType } from '../types/SubscriptionType';
 import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
+import { generatePdfStreamFromHtml } from '../utils/generatePdfStreamFromHtml';
 
 const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_template.html`);
 const compiledTemplate = handlebars.compile(receiptTemplateHtml.toString());
-
-async function generatePdfStream(html, options) {
-  return new Promise<any>((res, rej) => {
-    pdf.create(html, options).toStream((err, stream) => {
-      if (err) return rej(err);
-      res(stream);
-    })
-  })
-}
 
 function getPaymentMethodName(cardLast4: string) {
   return `Card ends with ${cardLast4}`;
@@ -37,7 +29,7 @@ function getSubscriptionDescription(receipt: ReceiptInformation) {
   return `${subscriptionName} (${start} - ${end})`;
 }
 
-function getVars(receipt: ReceiptInformation) {
+function getVarBag(receipt: ReceiptInformation): {[key:string]: any} {
   const subscriptionPrice = (+receipt.payable || 0) + (+receipt.deduction || 0);
   return {
     receiptNumber: receipt.receiptNumber,
@@ -51,12 +43,12 @@ function getVars(receipt: ReceiptInformation) {
 }
 
 export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream: Stream, fileName: string }> {
-  const vars = getVars(receipt);
-  const html = compiledTemplate(vars);
+  const varBag = getVarBag(receipt);
+  const html = compiledTemplate(varBag);
   const options = { format: 'A4' };
 
-  const pdfStream = await generatePdfStream(html, options);
-  const fileName = `Receipt_${vars.receiptNumber}.pdf`;
+  const pdfStream = await generatePdfStreamFromHtml(html, options);
+  const fileName = `Receipt_${varBag.receiptNumber}.pdf`;
 
   return { pdfStream, fileName };
 }

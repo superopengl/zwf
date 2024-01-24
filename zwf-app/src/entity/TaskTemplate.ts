@@ -1,8 +1,9 @@
-import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
+import { TaskField } from "../types/TaskField";
 import { DocTemplate } from './DocTemplate';
 
 @Entity()
-@Unique('idx_task_template_org_name_version_unique', ['orgId', 'name', 'version'])
+@Unique('idx_task_template_org_name_unique', ['orgId', 'name'])
 export class TaskTemplate {
   @PrimaryColumn('uuid')
   id: string;
@@ -13,24 +14,28 @@ export class TaskTemplate {
   @Column()
   name: string;
 
-  @Column('int', { default: 1 })
-  version: number;
-
   @Column({ nullable: true })
   description: string;
 
   @CreateDateColumn()
   createdAt: Date;
 
+  @DeleteDateColumn()
+  @Index()
+  deletedAt: Date;
+
   @UpdateDateColumn()
   lastUpdatedAt: Date;
 
-  @Column({ type: 'json' })
-  fields: any;
+  @Column('json', { default: '[]' })
+  fields: TaskField[];
 
   @ManyToMany(type => DocTemplate, { onDelete: 'CASCADE' })
   @JoinTable()
   docs: DocTemplate[];
+
+  @Column({ default: true })
+  allowAttachments: boolean;
 }
 
 

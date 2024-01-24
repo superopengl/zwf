@@ -1,8 +1,8 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToOne, JoinTable, ManyToMany } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { TaskDoc } from '../types/TaskDoc';
-import { Org } from './Org';
 import { Tag } from './Tag';
+import { TaskField } from '../types/TaskField';
 
 @Entity()
 @Index('idex_task_orgId_userId', ['orgId', 'userId'])
@@ -45,26 +45,15 @@ export class Task {
   @Column('uuid')
   userId: string;
 
-  @Column({ type: 'json' })
-  fields: any;
-
-  // @Column({ type: 'json', default: [] })
-  // genDocs: GenDoc[];
-
-  // @Column({ type: 'varchar', array: true, default: '{}' })
-  // uploadDocs: string[];
-
-  // @Column({ type: 'varchar', array: true, default: '{}' })
-  // signDocs: string[];
-
-  // @Column({ type: 'varchar', array: true, default: '{}' })
-  // feedbackDocs: string[];
-
-  @Column({ type: 'json', default: [] })
-  docs: TaskDoc[];
+  @Column('json', { default: '[]' })
+  fields: TaskField[];
 
   @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: Tag[];
+
+  @Column('json', {default: '[]'})
+  docs: TaskDoc[];
 }
+
 

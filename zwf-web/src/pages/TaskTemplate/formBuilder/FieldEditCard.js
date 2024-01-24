@@ -92,7 +92,7 @@ const FieldEditCard = (props) => {
           </Form.Item>     
           <Form.Item label="Variable"
             {...formItemLayoutProps}
-            name={['fields', index, 'var']}
+            name={['fields', index, 'varName']}
             rules={[{ required: false }]}>
             <Select
               allowClear

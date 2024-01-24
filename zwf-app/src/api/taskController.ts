@@ -100,7 +100,7 @@ export const updateTask = handlerWrapper(async (req, res) => {
 
   task.name = name;
   task.fields = fields;
-  task.docs = docs;
+  // task.docs = docs;
   task.status = status;
 
   await repo.save(task);

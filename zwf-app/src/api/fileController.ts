@@ -12,6 +12,7 @@ import { Role } from '../types/Role';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { existsQuery } from '../utils/existsQuery';
+import { getRoleFromReq } from '../utils/getRoleFromReq';
 
 function streamFileToResponse(file: File, res) {
   assert(file, 404);
@@ -32,7 +33,7 @@ export const downloadFile = handlerWrapper(async (req, res) => {
   const { user: { id: userId, role } } = req as any;
 
   const taskRepo = getRepository(Task);
-  const task = await taskRepo.findOne(taskId);
+  const task = await taskRepo.findOne(taskId, {relations: ['files']});
   assert(task, 404);
 
   const fileRepo = getRepository(File);
@@ -115,11 +116,12 @@ export const searchFileMetaList = handlerWrapper(async (req, res) => {
 
 
 export const uploadFile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin', 'client', 'agent');
+  assertRole(req, 'admin', 'client', 'agent');
   const { file } = (req as any).files;
   assert(file, 404, 'No file to upload');
   const { name, data, mimetype, md5 } = file;
   const userId = getUserIdFromReq(req);
+  const role = getRoleFromReq(req);
 
   const id = uuidv4();
   const location = await uploadToS3(id, name, data);
