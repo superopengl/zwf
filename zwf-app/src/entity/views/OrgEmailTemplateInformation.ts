@@ -1,6 +1,6 @@
 import { OrgEmailTemplate } from './../OrgEmailTemplate';
 import { SystemEmailTemplate } from './../SystemEmailTemplate';
-import { SystemConfig } from './../Config';
+import { SystemConfig } from '../SystemConfig';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { Org } from '../Org';
 import { User } from '../User';

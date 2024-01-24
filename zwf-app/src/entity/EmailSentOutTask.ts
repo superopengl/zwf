@@ -31,10 +31,10 @@ export class EmailSentOutTask {
   @Column()
   template: string;
 
-  @Column('json')
+  @Column('jsonb', { nullable: true })
   vars: object;
 
-  @Column('json', { nullable: true })
+  @Column('jsonb', { nullable: true })
   attachments: object;
 
   @Column({ default: true })

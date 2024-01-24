@@ -17,10 +17,10 @@ export class SysLog {
     @Column({ nullable: true })
     message?: string;
 
-    @Column({ type: 'json', nullable: true })
+    @Column({ type: 'jsonb', nullable: true })
     req: any;
 
-    @Column({ type: 'json', nullable: true })
+    @Column({ type: 'jsonb', nullable: true })
     data: any;
 }
 

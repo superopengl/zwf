@@ -19,6 +19,6 @@ export class Portfolio {
   @Column()
   name: string;
 
-  @Column({type: 'json'})
+  @Column({type: 'jsonb'})
   fields: any;
 }

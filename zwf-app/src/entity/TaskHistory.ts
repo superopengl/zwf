@@ -22,9 +22,9 @@ export class TaskHistory {
   @Column('uuid', { nullable: true })
   agentId?: string;
 
-  @Column({ type: 'json' })
+  @Column({ type: 'jsonb', nullable: true })
   fields: any;
 
-  @Column({ type: 'json', default: [] })
+  @Column({ type: 'jsonb', default: [] })
   docs: TaskDoc[];
 }

@@ -3,7 +3,7 @@ import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { SystemConfig } from '../entity/Config';
+import { SystemConfig } from '../entity/SystemConfig';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgConfig } from '../entity/OrgConfig';
 
