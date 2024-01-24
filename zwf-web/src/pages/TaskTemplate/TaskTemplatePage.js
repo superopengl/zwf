@@ -128,13 +128,6 @@ export const TaskTemplatePage = props => {
           ]
         }}
       >
-        <Alert
-          description="Drag and drop field cards to adjust the order. Official only fields are only visible to organasation members."
-          showIcon
-          closable
-          type="info"
-          style={{ marginBottom: 20 }}
-        />
         <div style={{ height: 'calc(100vh - 48px - 72px - 30px)', overflow: 'hidden', display: 'flex', flexDirection: 'row' }}>
           <div style={{ overflowY: 'auto', flexGrow: 1 }}>
             {taskTemplate && <TaskTemplateEditorPanel
@@ -149,7 +142,7 @@ export const TaskTemplatePage = props => {
             style={{ marginLeft: 30 }}
             size={{ width: previewWidth, height: '100%' }}
             minWidth={300}
-            maxWidth={600}
+            maxWidth={800}
             enable={{ top: false, right: false, bottom: false, left: true }}
             handleClasses={{ left: 'resize-handler' }}
             onResizeStop={(e, direction, ref, d) => {
