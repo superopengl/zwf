@@ -24,37 +24,37 @@ padding: 8px;
 
 const COLUMN_DEFS = [
   {
-    status: 'todo',
+    status: ['todo'],
     label: 'To Do',
     bgColor: '#f5f5f5',
     hoverColor: '#bfbfbf',
   },
   {
-    status: 'in_progress',
+    status: ['in_progress', 'signed'],
     label: 'In Progress',
     bgColor: '#1890ff11',
     hoverColor: '#1890ff',
   },
   {
-    status: 'pending_fix',
+    status: ['pending_fix', 'pending_sign'],
     label: 'Await client reply',
     bgColor: '#06117811',
     hoverColor: '#061178',
   },
+  // {
+  //   status: 'pending_sign',
+  //   label: 'Await client sign',
+  //   bgColor: '#f5222d11',
+  //   hoverColor: '#f5222d',
+  // },
+  // {
+  //   status: 'signed',
+  //   label: 'Signed',
+  //   bgColor: '#5c001111',
+  //   hoverColor: '#5c0011',
+  // },
   {
-    status: 'pending_sign',
-    label: 'Await client sign',
-    bgColor: '#f5222d11',
-    hoverColor: '#f5222d',
-  },
-  {
-    status: 'signed',
-    label: 'Signed',
-    bgColor: '#5c001111',
-    hoverColor: '#5c0011',
-  },
-  {
-    status: 'done',
+    status: ['done'],
     label: 'Done',
     bgColor: '#52c41a11',
     hoverColor: '#52c41a',
@@ -76,10 +76,12 @@ export const TaskBoardPanel = props => {
   }
 
   return <DragDropContext onDragEnd={onDragEnd}>
-      <StyledRow gutter={10}>
-        {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
-          {(provided, snapshot) => (
-            <Col span={4}
+    <StyledRow gutter={10}>
+      {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
+        {(provided, snapshot) => {
+          const tasksInCol = tasks.filter(j => s.status.includes(j.status));
+          return (
+            <Col span={6}
               ref={provided.innerRef}>
               <StyledColumn direction="vertical" style={{
                 backgroundColor: s.bgColor,
@@ -89,9 +91,9 @@ export const TaskBoardPanel = props => {
               }}>
                 <Space style={{ width: '100%', justifyContent: 'space-between' }}>
                   <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }} type="secondary">{s.label}</Title>
-                  <Text strong>{tasks.filter(j => j.status === s.status).length}</Text>
+                  <Text strong>{tasksInCol.length}</Text>
                 </Space>
-                {tasks.filter(j => j.status === s.status).map((task, index) => {
+                {tasksInCol.map((task, index) => {
                   // if (task.statusId === status.id)
                   return (
                     <TaskDraggableCard key={task.id} index={index} task={task} onChange={onChange} searchText={searchText} />
@@ -101,9 +103,10 @@ export const TaskBoardPanel = props => {
                 {provided.placeholder}
               </StyledColumn>
             </Col>
-          )}
-        </Droppable>)}
-      </StyledRow>
+          )
+        }}
+      </Droppable>)}
+    </StyledRow>
   </DragDropContext>
 
 }
