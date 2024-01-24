@@ -14,7 +14,7 @@ import { sendEmailImmediately } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskByTaskTemplateAndUserEmail } from '../utils/generateTaskByTaskTemplateAndPortfolio';
+import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { getNow } from '../utils/getNow';
 import { Portfolio } from '../entity/Portfolio';
 import * as _ from 'lodash';

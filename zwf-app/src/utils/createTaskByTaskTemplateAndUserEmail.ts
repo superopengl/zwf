@@ -1,6 +1,6 @@
-import { TaskField } from './../types/TaskField';
+import { TaskField } from '../types/TaskField';
 import { getUtcNow } from './getUtcNow';
-import { UserProfile } from './../entity/UserProfile';
+import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 import { getRepository, getManager } from 'typeorm';
