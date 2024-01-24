@@ -54,6 +54,7 @@ async function mapDocTemplatesToGenDocs(docTemplates: DocTemplate[], fields: Tas
   for(const docTemplate of docTemplates) {
     const taskDoc = new TaskDoc();
     taskDoc.id = docTemplate.id;
+    taskDoc.type = 'doc-template';
     taskDoc.name = docTemplate.name;
     taskDoc.createdAt = getUtcNow();
     const file = await tryGenDocFile(docTemplate, fields, userId);

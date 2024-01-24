@@ -1,6 +1,6 @@
 export class TaskDoc {
   
-  type: 'auto-gen' | 'client-upload' | 'org-upload';
+  type: 'doc-template' | 'client-upload' | 'org-upload';
   
   createdAt?: Date;
   
@@ -19,5 +19,7 @@ export class TaskDoc {
    * singedHash = hash(`${file.md5}.${userId}.${signedAt_UTC}`)
    */
   signedHash?: string;
+
+  status: 'error' | 'proceeding' | 'done' | 'read' | 'signed';
 }
 
