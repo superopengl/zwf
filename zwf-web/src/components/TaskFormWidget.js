@@ -9,7 +9,7 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, docs, type, onChange } = props;
+  const { fields, docs, type, mode, onChange } = props;
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
@@ -60,7 +60,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
           Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
         </Paragraph>
         <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-          <DocTemplateListPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} />
+          <DocTemplateListPanel value={docs} allowTest={false} varBag={varBag} showWarning={true} mode={mode}/>
         </Form.Item>
       </>}
       {showOfficialFields && <>
@@ -81,11 +81,13 @@ TaskFormWidget.propTypes = {
   readonly: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
+  mode: PropTypes.oneOf(['taskTemplate', 'task']),
 };
 
 TaskFormWidget.defaultProps = {
   readonly: false,
   type: 'agent',
   onChange: (fields) => { },
+  mode: 'taskTemplate',
 };
 

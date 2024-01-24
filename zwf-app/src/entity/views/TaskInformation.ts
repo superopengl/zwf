@@ -1,10 +1,10 @@
-import { TaskTaskTag } from './../TaskTaskTag';
+import { TaskTagsTag } from '../TaskTagsTag';
 import { TaskAssignment } from '../TaskAssignment';
 import { Role } from './../../types/Role';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { TaskTemplate } from '../TaskTemplate';
 import { Task } from '../Task';
-import { TaskDoc } from '../../types/TaskDoc';
+import { TaskDoc } from '../TaskDoc';
 import { TaskStatus } from '../../types/TaskStatus';
 import { Org } from '../Org';
 import { User } from '../User';
@@ -14,26 +14,8 @@ import { Tag } from '../Tag';
 @ViewEntity({
   expression: (connection: Connection) => connection
     .createQueryBuilder()
-    .from(TaskTaskTag, 'x')
-    .leftJoin(Tag, 't', 'x."tagId" = t.id')
-    .groupBy('x."taskId"')
-    .select([
-      'x."taskId" as "taskId"',
-      `array_agg(json_build_object('id', t.id, 'name', t.name)) as tags`,
-    ])
-}) export class TaskTagInformation {
-  @ViewColumn()
-  taskId: string;
-
-  @ViewColumn()
-  tags: Array<{ id: string, name: string }>;
-}
-
-@ViewEntity({
-  expression: (connection: Connection) => connection
-    .createQueryBuilder()
     .from(Task, 't')
-    .leftJoin(q => q.from(TaskTaskTag, 'x')
+    .leftJoin(q => q.from(TaskTagsTag, 'x')
       .leftJoin(Tag, 't', 'x."tagId" = t.id')
       .groupBy('x."taskId"')
       .select([
@@ -45,7 +27,7 @@ import { Tag } from '../Tag';
     .innerJoin(User, 'u', `u.id = t."userId"`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(q => q.from(TaskAssignment, 'ta')
-      .distinctOn(['"taskId"', '"createdAt"'])
+      .distinctOn(['ta."taskId"', 'ta."createdAt"'])
       .orderBy('"createdAt"', 'DESC')
       , 'a', 'a."taskId" = t.id')
     .select([
@@ -54,7 +36,6 @@ import { Tag } from '../Tag';
       't.name as name',
       't.description as description',
       't.fields as fields',
-      't.docs as docs',
       't.status as status',
       't."userId" as "userId"',
       't."orgId" as "orgId"',
@@ -87,9 +68,6 @@ import { Tag } from '../Tag';
 
   @ViewColumn()
   fields: any;
-
-  @ViewColumn()
-  docs: TaskDoc[];
 
   @ViewColumn()
   status: TaskStatus;

@@ -1,4 +1,3 @@
-import { TaskTaskTag } from './../entity/TaskTaskTag';
 import { TaskAssignment } from './../entity/TaskAssignment';
 import { TaskInformation } from './../entity/views/TaskInformation';
 
@@ -30,6 +29,7 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
+import { Tag } from '../entity/Tag';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -217,20 +217,20 @@ export const getTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
   const role = getRoleFromReq(req);
-  const repo = getRepository(TaskInformation);
-  let task: TaskInformation;
+  let query: any = { id };
   switch (role) {
     case Role.Admin:
     case Role.Agent:
-      task = await repo.findOne({ id, orgId: getOrgIdFromReq(req) });
+      query = { id, orgId: getOrgIdFromReq(req) };
       break;
     case Role.Client:
-      task = await repo.findOne({ id, userId: getUserIdFromReq(req) });
+      query = { id, userId: getUserIdFromReq(req) };
       break;
     default:
       break;
   }
 
+  const task = await getRepository(Task).findOne(query, { relations: ['tags', 'docs'] });
   assert(task, 404);
 
   res.json(task);
@@ -241,7 +241,7 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   assert(role === Role.Guest, 404);
   const { deepLinkId } = req.params;
 
-  const task = await getRepository(TaskInformation).findOne({ deepLinkId });
+  const task = await getRepository(Task).findOne({ deepLinkId }, { relations: ['tags', 'docs'] });
 
   assert(task, 404);
 
@@ -281,19 +281,12 @@ export const saveDeepLinkedTask = handlerWrapper(async (req, res) => {
 export const updateTaskTags = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const { tags } = req.body;
+  const { tags: tagIds } = req.body;
 
   await getManager().transaction(async m => {
-    await m.delete(TaskTaskTag, { taskId: id });
-    if (tags?.length) {
-      const entities = tags.filter(x => !!x).map(tagId => {
-        const entity = new TaskTaskTag();
-        entity.taskId = id;
-        entity.tagId = tagId;
-        return entity;
-      })
-      await m.save(entities);
-    }
+    const task = await m.findOne(Task, id);
+    task.tags = await m.findByIds(Tag, tagIds);
+    await m.save(task);
   });
 
   res.json();

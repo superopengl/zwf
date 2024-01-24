@@ -1,6 +1,6 @@
 import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
-import { TaskDoc } from '../types/TaskDoc';
+import { TaskDoc } from './TaskDoc';
 
 @Entity()
 export class TaskHistory {

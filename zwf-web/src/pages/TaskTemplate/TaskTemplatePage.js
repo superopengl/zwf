@@ -119,7 +119,7 @@ export const TaskTemplatePage = props => {
         loading={loading}
         ghost={true}
         header={{
-          title: isNew ? 'New Task Template' : 'Edit Task Template',
+          title: isNew ? 'New Task Template' : taskTemplate?.name,
           onBack: goBack,
           extra: [
             <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
