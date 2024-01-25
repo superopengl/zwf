@@ -120,9 +120,9 @@ export const FileUploader = (props) => {
     const { file, fileList } = info;
     setFileList(fileList);
 
-    if(file.status === 'done') {
-      props.onAdd( _.get(file, 'response.id', file.uid));
-      onChange(fileList.map(f => f.id));
+    if(file.status === 'done' || file.status === 'removed') {
+      props.onAdd?.( _.get(file, 'response.id', file.uid));
+      onChange(fileList.map(f => f.id || f.response.id));
     }
 
     const uploading = file.status === 'uploading';
@@ -136,7 +136,7 @@ export const FileUploader = (props) => {
   }
 
   const handleRemove = file => {
-    props.onRemove(file.uid);
+    props.onRemove?.(file.uid);
   }
 
   const { size, disabled } = props;
