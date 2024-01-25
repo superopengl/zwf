@@ -1,12 +1,7 @@
-import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined
-} from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, PageHeader, Row, Typography, Col } from 'antd';
+import { Button, Layout, PageHeader, Row, Col } from 'antd';
 
-import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate, listDocTemplate, renameDocTemplate$ } from 'services/docTemplateService';
-import { withRouter } from 'react-router-dom';
+import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import DocTemplateEditorPanel from './DocTemplateEditorPanel';
@@ -14,11 +9,8 @@ import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
 import Icon, { SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
-import { getTaskTemplate, saveTaskTemplate } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
-import ReactDOM from 'react-dom';
 import { notify } from 'util/notify';
-import ProLayout, { PageContainer } from '@ant-design/pro-layout';
 import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
@@ -26,23 +18,6 @@ import { DocTemplateIcon } from 'components/entityIcon';
 import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 
-const { Text } = Typography;
-
-const StyledDrawer = styled(Drawer)`
-
-.ant-drawer-content-wrapper {
-  max-width: 90vw;
-  min-width: 350px;
-}
-
-.rce-mbox {
-  padding-bottom: 2rem;
-
-  .rce-mbox-time {
-    bottom: -1.5rem;
-  }
-}
-`;
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
