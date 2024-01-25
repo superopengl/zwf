@@ -8,7 +8,6 @@ import Highlighter from "react-highlight-words";
 import { Link } from 'react-router-dom';
 import { assignTask$, changeTaskStatus$, deleteTask$ } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
-import { AssigneeSelect } from 'components/AssigneeSelect';
 import { TaskStatusButton } from 'components/TaskStatusButton';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserDisplayName } from 'components/UserDisplayName';
@@ -16,6 +15,7 @@ import { UserAvatar } from 'components/UserAvatar';
 import { notify } from 'util/notify';
 import { TagSelect } from 'components/TagSelect';
 import PropTypes from 'prop-types';
+import { MemberSelect } from 'components/MemberSelect';
 
 
 export const TaskListPanel = (props) => {
@@ -76,7 +76,7 @@ export const TaskListPanel = (props) => {
       dataIndex: 'email',
       sorter: () => 0,
       render: (text, item) => <Space direction='horizontal'>
-        <UserAvatar userId={item.userId} size={40} />
+        <UserAvatar value={item.avatarId} color={item.avatarColorHex} size={32} />
         <UserDisplayName
           email={item.email}
           surname={item.surname}
@@ -86,41 +86,8 @@ export const TaskListPanel = (props) => {
       </Space>
     },
     {
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (tags) => <TagSelect readonly={true} value={tags.map(t => t.id)} />
-    },
-    {
-      title: 'Created At',
-      dataIndex: 'createdAt',
-      sorter: () => 0,
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      title: 'Last Update At',
-      dataIndex: 'lastUpdatedAt',
-      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-      render: (text) => {
-        return <TimeAgo value={text} />;
-      }
-    },
-    {
-      title: 'Last Unread Message',
-      dataIndex: 'lastUnreadMessageAt',
-      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-      render: (text) => {
-        return <TimeAgo value={text} />;
-      }
-    },
-    // {
-    //   title: 'Due Date',
-    //   dataIndex: 'dueDate',
-    //   sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
-    //   render: (value) => value && <TimeAgo value={value} />
-    // },
-    {
       title: 'Assignee',
-      dataIndex: 'agentId',
+      dataIndex: 'assigneeId',
       // filteredValue: filteredInfo.agentId || null,
       // filters: agentList.map(a => ({ text: `${a.givenName} ${a.surname}`, value: a.id })),
       // onFilter: (value, record) => record.agentId === value,
@@ -135,10 +102,44 @@ export const TaskListPanel = (props) => {
       //   <Select.Option key={-1} value={null}>{' '}</Select.Option>
       //   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
       // </Select>,
-      render: (text, record) => <AssigneeSelect
-        onChange={agentId => assignTaskToAgent(record, agentId)}
-        value={text}
+      render: (value, record) => <MemberSelect
+        onChange={agent => assignTaskToAgent(record, agent.id)}
+        value={value}
+        bordered={false}
       />
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      sorter: () => 0,
+      render: (text) => <TimeAgo value={text} accurate={false} showTime={false} />
+    },
+    {
+      title: 'Last Update At',
+      dataIndex: 'lastUpdatedAt',
+      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+      render: (text) => {
+        return <TimeAgo value={text} accurate={false} showTime={false}/>;
+      }
+    },
+    {
+      title: 'Last Unread Message',
+      dataIndex: 'lastUnreadMessageAt',
+      sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+      render: (text) => {
+        return <TimeAgo value={text} accurate={false} showTime={false}/>;
+      }
+    },
+    // {
+    //   title: 'Due Date',
+    //   dataIndex: 'dueDate',
+    //   sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
+    //   render: (value) => value && <TimeAgo value={value} />
+    // },
+    {
+      title: 'Tags',
+      dataIndex: 'tags',
+      render: (tags) => <TagSelect readonly={true} value={tags.map(t => t.id)} />
     },
     {
       // title: 'Action',
@@ -161,6 +162,7 @@ export const TaskListPanel = (props) => {
         />
       ),
     },
+    
   ];
 
   const assignTaskToAgent = (task, agentId) => {
