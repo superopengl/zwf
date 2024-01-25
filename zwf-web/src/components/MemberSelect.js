@@ -1,28 +1,24 @@
-import { Typography } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { map } from 'rxjs/operators';
-import { listOrgMembers$ } from 'services/memberService';
-import { listOrgExistingClients$ } from 'services/orgService';
+import { subscribeMembers } from 'services/memberService';
 import { UserSelect } from './UserSelect';
 
-const { Text } = Typography;
-
-
 export const MemberSelect = (props) => {
-  const { value, valueProp, onChange, onLoadingChange, allowInput } = props;
+  const { value, onChange } = props;
 
-  const handleOnLoad = React.useCallback(() => {
-    return listOrgMembers$();
-  })
+  const [dataSource, setDataSource] = React.useState([]);
+
+  React.useEffect(() => {
+    const sub$ = subscribeMembers(setDataSource);
+    return () => sub$.unsubscribe();
+  }, [])
 
   return <UserSelect
-    onLoad={handleOnLoad}
     value={value}
+    dataSource={dataSource}
     allowInput={false}
     valueProp={'id'}
     onChange={onChange}
-    onLoadingChange={onLoadingChange}
     placeholder={'Select a member by name or email'}
   />
 };
@@ -30,11 +26,9 @@ export const MemberSelect = (props) => {
 MemberSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
-  onLoadingChange: PropTypes.func,
 };
 
 MemberSelect.defaultProps = {
-  onChange: () => {},
-  onLoadingChange: () => { },
+  onChange: () => { },
 };
 

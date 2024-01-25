@@ -29,24 +29,16 @@ width: 100%;
 `;
 
 export const UserSelect = React.memo((props) => {
-  const { value, valueProp, placeholder, onLoad, onChange, onLoadingChange, allowInput, ...other } = props;
+  const { value, valueProp, placeholder, onChange, allowInput, dataSource, ...other } = props;
 
-  const [userList, setUserList] = React.useState([]);
+  const [userList, setUserList] = React.useState(dataSource);
   const [searchText, setSearchText] = React.useState();
   const [isValidEmail, setIsValidEmail] = React.useState(false);
   const ref = React.useRef();
 
   React.useEffect(() => {
-    onLoadingChange(true);
-    const subscription$ = onLoad()
-      .subscribe(data => {
-        setUserList(data ?? [])
-        onLoadingChange(false)
-      })
-    return () => {
-      subscription$.unsubscribe();
-    }
-  }, []);
+    setUserList(dataSource);
+  }, [dataSource])
 
   React.useEffect(() => {
     setIsValidEmail(searchText && isEmail(searchText));
@@ -117,17 +109,15 @@ export const UserSelect = React.memo((props) => {
 UserSelect.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.string,
-  onLoad: PropTypes.func,
   onChange: PropTypes.func,
-  onLoadingChange: PropTypes.func,
   valueProp: PropTypes.oneOf(['id', 'email']),
   allowInput: PropTypes.bool,
+  dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
 UserSelect.defaultProps = {
-  onLoad: () => { },
-  onLoadingChange: () => { },
   valueProp: 'id',
+  loading: false,
   allowInput: true,
 };
 
