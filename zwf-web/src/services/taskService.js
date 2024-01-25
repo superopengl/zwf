@@ -25,6 +25,10 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
+export function saveTaskFields$(task) {
+  return httpPost$(`/task/${task.id}`, task);
+}
+
 export function createNewTask$(payload) {
   return httpPut$('task', payload);
 }

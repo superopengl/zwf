@@ -32,6 +32,6 @@ MemberSelect.propTypes = {
 
 MemberSelect.defaultProps = {
   onChange: () => { },
-  bordered: false
+  bordered: true
 };
 

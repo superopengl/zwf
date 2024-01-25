@@ -40,7 +40,13 @@ padding: 8px;
 }
 `;
 
+const StyledAvatar = styled(Avatar)`
+border: 1px solid rgba(0,0,0,0.2);
 
+.ant-avatar-string {
+  line-height: ${28}px !important;
+}
+`
 
 
 export const UserAvatar = React.memo((props) => {
@@ -58,13 +64,7 @@ export const UserAvatar = React.memo((props) => {
     }
   }, []);
 
-  const StyledAvatar = styled(Avatar)`
-  border: 1px solid rgba(0,0,0,0.2);
 
-  .ant-avatar-string {
-    line-height: ${size - 4}px !important;
-  }
-`
 
   const load$ = () => {
     if (!avatarFileId) {
