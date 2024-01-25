@@ -93,13 +93,6 @@ export const TaskTemplateBuilder = (props) => {
     // id={formId}
     >
       <Form.Item
-        // label="Name"
-        name="name"
-        // {...formItemLayoutProps}
-        rules={[{ required: true, message: ' ' }]}>
-        <Input placeholder="Task template name" maxLength={200} allowClear autoFocus className='edit-title-input'/>
-      </Form.Item>
-      <Form.Item
         label="Description"
         name="description"
         {...formItemLayoutProps}

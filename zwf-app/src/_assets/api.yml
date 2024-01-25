@@ -424,6 +424,20 @@ paths:
       responses:
         200:
           description: OK
+  /task_template/{id}/rename:
+    post:
+      operationId: renameTaskTemplate
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                  
   /doc_template:
     post:
       operationId: saveDocTemplate
@@ -479,7 +493,21 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK      
+  /doc_template/{id}/rename:
+    post:
+      operationId: renameDocTemplate
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                 
   /doc_template/{id}/apply:
     post:
       operationId: applyDocTemplate
@@ -593,7 +621,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: OK  
   /task/{id}/status/{status}:
     post:
       operationId: changeTaskStatus

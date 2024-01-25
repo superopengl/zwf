@@ -38,6 +38,20 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+
+export const renameTaskTemplate = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { name } = req.body;
+  assert(name, 400, 'name is empty');
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+
+  await getRepository(TaskTemplate).update({ id, orgId }, { name });
+
+  res.json();
+});
+
+
 export const listTaskTemplates = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);

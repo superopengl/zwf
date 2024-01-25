@@ -88,6 +88,19 @@ export const deleteDocTemplate = handlerWrapper(async (req, res) => {
   res.json();
 });
 
+export const renameDocTemplate = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent');
+  const { name } = req.body;
+  assert(name, 400, 'name is empty');
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+
+  await getRepository(DocTemplate).update({ id, orgId }, { name });
+
+  res.json();
+});
+
+
 export const applyDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
