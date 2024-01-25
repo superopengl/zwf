@@ -3,7 +3,6 @@ import React from 'react';
 import { Modal } from 'antd';
 
 import { TaskIcon } from 'components/entityIcon';
-import { TaskFormWizard } from 'pages/MyTask/TaskFormWizard';
 import { TaskGenerator } from 'pages/MyTask/TaskGenerator';
 
 
@@ -38,3 +37,4 @@ export function showCreateTaskModal(taskTemplateId, onFinish) {
 
   return modalRef;
 }
+

@@ -13,7 +13,7 @@ const Container = styled.div`
 }
 `;
 
-const ClickToCopyTooltip = (props) => {
+export const ClickToCopyTooltip = React.memo((props) => {
 
   const { value } = props;
   const MESSAGE_BEFORE_COPY = 'Click to copy to clipboard';
@@ -42,7 +42,7 @@ const ClickToCopyTooltip = (props) => {
       </CopyToClipboard>
     </Tooltip>
   )
-};
+});
 
 ClickToCopyTooltip.propTypes = {
   value: PropTypes.string,
@@ -51,4 +51,3 @@ ClickToCopyTooltip.propTypes = {
 ClickToCopyTooltip.defaultProps = {
 };
 
-export default ClickToCopyTooltip;

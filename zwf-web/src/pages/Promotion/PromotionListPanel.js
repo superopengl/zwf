@@ -10,7 +10,7 @@ import { listPromotions$, savePromotion$, newPromotionCode$ } from 'services/pro
 import { TimeAgo } from 'components/TimeAgo';
 import { DatePicker } from 'antd';
 import PropTypes from 'prop-types';
-import ClickToCopyTooltip from 'components/ClickToCopyTooltip';
+import {ClickToCopyTooltip} from 'components/ClickToCopyTooltip';
 import { compareDates } from 'util/compareDates';
 
 const { Text, Paragraph } = Typography;

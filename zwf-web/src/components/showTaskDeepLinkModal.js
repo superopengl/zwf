@@ -1,0 +1,57 @@
+import React from 'react';
+import { Modal, Typography, Input, Row, Col, Avatar } from 'antd';
+import { TaskIcon } from 'components/entityIcon';
+import { getTaskDeepLinkUrl } from 'services/taskService';
+import { ClickToCopyTooltip } from './ClickToCopyTooltip';
+import { ShareAltOutlined } from '@ant-design/icons';
+
+const { Text, Paragraph } = Typography;
+
+const Content = props => {
+  const { url } = props;
+  const ref = React.useRef();
+
+  React.useEffect(()=> {
+    ref.current.focus({cursor: 'all'})
+  }, []);
+
+  return <>
+    <Paragraph type="secondary" style={{ marginTop: '1rem' }}>
+      This URL can be accessed anonymously. Please make sure that it will be shared with trusted people.
+    </Paragraph>
+    <Paragraph type="secondary" >
+      Click below link to copy to clipboard.
+    </Paragraph>
+    <Row >
+      <Col flex={1}>
+        <ClickToCopyTooltip value={url} style={{ marginTop: 20 }}>
+          <Input ref={ref} autoFocus value={url} />
+        </ClickToCopyTooltip>
+      </Col>
+    </Row>
+  </>
+}
+
+export function showTaskDeepLinkModal(taskDeepLinkId) {
+  const url = getTaskDeepLinkUrl(taskDeepLinkId);
+  const modalRef = Modal.info({
+    title: <><Avatar icon={<ShareAltOutlined />} style={{ backgroundColor: '#8abcd1' }}/>  Share this task with client or other people</>,
+    content: <Content url={url} />,
+    afterClose: () => {
+    },
+    icon: null,
+    closable: true,
+    maskClosable: true,
+    destroyOnClose: true,
+    footer: null,
+    width: 600,
+    focusTriggerAfterClose: true,
+    okButtonProps: {
+      style: {
+        display: 'none'
+      }
+    }
+  });
+
+  return modalRef;
+}
