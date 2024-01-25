@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Select } from 'antd';
 import { searchAssigneeList$ } from 'services/userService';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { subscribeMembers } from 'services/memberService';
 
 
 export const AssigneeSelect = React.memo(props => {
@@ -14,15 +15,9 @@ export const AssigneeSelect = React.memo(props => {
   const myUserId = user.id;
 
   React.useEffect(() => {
-    const sub$ = searchAssigneeList$(0, text)
-      .subscribe(respData => {
-        setList(respData.data);
-      });
-
-    return () => {
-      sub$?.unsubscribe();
-    }
-  }, [text]);
+    const sub$ = subscribeMembers(setList)
+    return () => sub$.unsubscribe()
+  }, []);
 
   const handleSearch = (input) => {
     setText(input?.trim());

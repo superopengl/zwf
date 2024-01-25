@@ -302,20 +302,21 @@ export const deleteTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  const repo = getRepository(Task);
+  const userId = getUserIdFromReq(req);
 
   await getManager().transaction(async m => {
     await m.update(Task, { id, orgId }, { status: TaskStatus.ARCHIVED });
-    await logTaskAction(m, id, TaskActionType.Archive);
+    await logTaskAction(m, id, TaskActionType.Archive, userId);
   })
 
   res.json();
 });
 
-async function logTaskAction(m: EntityManager, taskId: string, action: TaskActionType, extra: any = null) {
+async function logTaskAction(m: EntityManager, taskId: string, action: TaskActionType, executorId: string, extra: any = null) {
   const taskAction = new TaskAction();
   taskAction.taskId = taskId;
   taskAction.action = action;
+  taskAction.by = executorId;
   taskAction.extra = extra;
   await m.save(taskAction);
 }
@@ -325,10 +326,11 @@ export const assignTask = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { agentId } = req.body;
   const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
 
   await getManager().transaction(async m => {
     await m.update(Task, { id, orgId }, { agentId });
-    await logTaskAction(m, id, TaskActionType.Assign);
+    await logTaskAction(m, id, TaskActionType.Assign, userId);
   });
 
   res.json();

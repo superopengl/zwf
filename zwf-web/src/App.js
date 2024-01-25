@@ -19,7 +19,7 @@ import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppClient } from 'AppClient';
 import { AppLoggedIn } from 'AppLoggedIn';
-import { listTags$ } from 'services/taskTagService';
+import { listTags$ } from 'services/tagService';
 import { last, tap, switchMap, share } from 'rxjs/operators';
 import { concat, EMPTY, of } from 'rxjs';
 

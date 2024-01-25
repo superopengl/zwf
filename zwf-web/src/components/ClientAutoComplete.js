@@ -2,7 +2,7 @@ import { AutoComplete, Typography, Input } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import { listOrgExistingClients } from 'services/orgService';
+import { listOrgExistingClients$ } from 'services/orgService';
 import getInnerText from 'react-innertext';
 import {HighlightingText} from './HighlightingText';
 
@@ -40,7 +40,7 @@ const ClientAutoComplete = (props) => {
   const [options, setOptions] = React.useState([]);
 
   const loadEntity = () => {
-    return listOrgExistingClients()
+    return listOrgExistingClients$()
       .subscribe(resp => generateOptions(resp.data));
   }
 

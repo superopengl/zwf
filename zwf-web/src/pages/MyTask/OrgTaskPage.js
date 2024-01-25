@@ -22,6 +22,7 @@ import { UserAvatar } from 'components/UserAvatar';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 import { FaSign, FaSignature } from 'react-icons/fa';
 import { MdReadMore } from 'react-icons/md';
+import { MemberSelect } from 'components/MemberSelect';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -68,7 +69,7 @@ const OrgTaskPage = React.memo((props) => {
       .subscribe((taskInfo) => {
         const { email, role, userId, orgId, orgName, ...task } = taskInfo;
         setTask(task);
-        setAssigneeId(task.assigneeId);
+        setAssigneeId(task.agentId);
         setLoading(false);
       });
     return () => {
@@ -94,9 +95,8 @@ const OrgTaskPage = React.memo((props) => {
     updateTaskTags$(task.id, tagIds).subscribe()
   }
 
-  const handleChangeAssignee = agentId => {
-    debugger;
-    assignTask$(task.id, agentId).subscribe();
+  const handleChangeAssignee = memberUser => {
+    assignTask$(task.id, memberUser.id).subscribe();
   }
 
   return (<>
@@ -138,13 +138,13 @@ const OrgTaskPage = React.memo((props) => {
                 </Space>}
               </Collapse.Panel>
               <Collapse.Panel key="assignee" header="Assignee">
-                <AssigneeSelect value={assigneeId} placeholder="Select assignee" onChange={handleChangeAssignee}/>
+                <MemberSelect value={assigneeId} onChange={handleChangeAssignee}/>
               </Collapse.Panel>
               <Collapse.Panel key="tags" header="Tags">
                 <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
               </Collapse.Panel>
               <Collapse.Panel key="actions" header="Actions">
-                <Space style={{ width: '100%' }} direction="vertical" class="action-buttons">
+                <Space style={{ width: '100%' }} direction="vertical" className="action-buttons">
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setMessageVisible(true)}>Action history</Button>
                   <hr/>

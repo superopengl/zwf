@@ -21,7 +21,7 @@ import loadable from '@loadable/component'
 import { getMyCurrentSubscription, getMyCurrentSubscription$ } from 'services/subscriptionService';
 import useLocalStorageState from 'use-local-storage-state'
 import { TagSelect } from 'components/TagSelect';
-import { listOrgMembers$ } from 'services/orgService';
+import { listOrgMembers$ } from 'services/memberService';
 import { combineLatest } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 
