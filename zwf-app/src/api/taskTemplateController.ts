@@ -30,7 +30,9 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
     taskTemplate.name = name;
     taskTemplate.description = description;
     taskTemplate.fields = fields;
-    taskTemplate.docs = await m.find(DocTemplate, { where: { id: In(docTemplateIds) } });
+    if(docTemplateIds?.length) {
+      taskTemplate.docs = await m.find(DocTemplate, { where: { id: In(docTemplateIds) } });
+    }
 
     await m.save(taskTemplate);
   });
