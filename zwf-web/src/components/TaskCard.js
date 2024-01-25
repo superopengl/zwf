@@ -4,18 +4,15 @@ import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { UnreadMessageIcon } from './UnreadMessageIcon';
-import { TaskIcon } from './entityIcon';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
-import { showTaskModal } from 'components/showTaskModal';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 import { getUserDisplayName } from 'util/getDisplayName';
 import { TagSelect } from './TagSelect';
 import {HighlightingText} from 'components/HighlightingText';
 
-const { Link: TextLink, Text, Paragraph } = Typography;
+const { Link: TextLink } = Typography;
 
 const { useBreakpoint } = Grid;
 
@@ -39,11 +36,6 @@ export const TaskCard = withRouter((props) => {
   
   const screens = useBreakpoint();
 
-  const context = React.useContext(GlobalContext);
-
-  const myUserId = context.user.id;
-  const myRole = context.user.role;
-
   const goToTask = (e, id) => {
     e.stopPropagation();
     props.history.push(`/task/${id}`);
@@ -55,7 +47,7 @@ export const TaskCard = withRouter((props) => {
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
-    onClick={() => showTaskModal(id, name, myUserId, myRole)}
+    onClick={() => props.history.push(`/task/${id}`)}
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     <Space direction='vertical' size="middle" style={{width: '100%'}}>
@@ -64,7 +56,7 @@ export const TaskCard = withRouter((props) => {
       <Tooltip title={getUserDisplayName(email, givenName, surname)} placement='bottom'>
         <Row gutter={10} wrap={false} style={{ width: '100%' }}>
           {screens?.xxl === true && <Col>
-            <UserAvatar userId={task.userId} size={40} />
+            <UserAvatar value={task.avatarFileId} color={task.avatarColorHex} size={40} />
           </Col>}
           <Col flex='auto'>
             <UserDisplayName

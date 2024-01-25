@@ -11,7 +11,6 @@ import { Logo } from 'components/Logo';
 import Icon from '@ant-design/icons';
 import { PageContainer } from '@ant-design/pro-layout';
 import PropTypes from 'prop-types';
-import { TaskWorkPanel } from 'components/TaskWorkPanel';
 import { LogInPanel } from 'pages/LogInPanel';
 import { ForgotPasswordPanel } from 'pages/ForgotPasswordPanel';
 
@@ -113,7 +112,7 @@ const TaskDirectPage = (props) => {
           <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
         ]}
       >
-        <TaskWorkPanel ref={formRef} task={task} type="client" />
+        {/* <TaskWorkPanel ref={formRef} task={task} type="client" /> */}
       </PageContainer>}
     </ContainerStyled>
     <Modal
