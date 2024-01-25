@@ -3,7 +3,7 @@ import React from 'react';
 import { subscribeMembers } from 'services/memberService';
 import { UserSelect } from './UserSelect';
 
-export const MemberSelect = (props) => {
+export const MemberSelect = React.memo((props) => {
   const { value, onChange } = props;
 
   const [dataSource, setDataSource] = React.useState([]);
@@ -21,7 +21,7 @@ export const MemberSelect = (props) => {
     onChange={onChange}
     placeholder={'Select a member by name or email'}
   />
-};
+});
 
 MemberSelect.propTypes = {
   value: PropTypes.string,

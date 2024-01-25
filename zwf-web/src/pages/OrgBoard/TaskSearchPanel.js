@@ -4,7 +4,7 @@ import { Button, Input, Card, Select, Space, Row, Drawer, Descriptions } from 'a
 import React from 'react';
 import styled from 'styled-components';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
-import ClientSelect from 'components/ClientSelect';
+import {ClientSelect} from 'components/ClientSelect';
 import { AssigneeSelect } from 'components/AssigneeSelect';
 import PropTypes from 'prop-types';
 import { TagSelect } from 'components/TagSelect';
