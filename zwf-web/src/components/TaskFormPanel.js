@@ -2,25 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from './TaskFormWidget';
 
-export const TaskFormPanel = React.memo(React.forwardRef((props, formRef) => {
+export const TaskFormPanel = React.memo(React.forwardRef((props, ref) => {
 
-  const { value: task, type } = props;
+  const { value: task, type, onChange } = props;
 
   if (!task) {
     return null;
   }
 
-  const handleFormSave = (values) => {
-    props.onSave(values);
-  }
-
   return (
     <>
-      <TaskFormWidget 
-      fields={task.fields}
-      docs={task.docs}
-      type={type}
-      mode="task"
+      <TaskFormWidget
+        ref={ref}
+        fields={task.fields}
+        docs={task.docs}
+        type={type}
+        mode="task"
+        onChange={onChange}
       />
     </>
   );
@@ -32,14 +30,11 @@ TaskFormPanel.propTypes = {
     fields: PropTypes.array.isRequired,
   }),
   type: PropTypes.oneOf(['client', 'agent']).isRequired,
-  onSave: PropTypes.func.isRequired,
-  onChangeLoading: PropTypes.func,
+  onChange: PropTypes.func,
 };
 
 TaskFormPanel.defaultProps = {
   type: 'client',
   loading: true,
-  onSave: () => { debugger; },
-  onChangeLoading: () => {}
 };
 

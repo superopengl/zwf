@@ -100,6 +100,11 @@ const OrgTaskPage = React.memo((props) => {
     });
   }
 
+  const handleTaskFieldsChange = fields => {
+    task.fields = fields;
+    setTask({...task});
+  }
+
   return (<>
     <ContainerStyled>
       {task && <PageContainer
@@ -124,7 +129,8 @@ const OrgTaskPage = React.memo((props) => {
       >
         <Row wrap={false} gutter={40}>
           <Col flex={1}>
-            <TaskFormPanel ref={formRef} value={task} type="client" onChangeLoading={setLoading} />
+            <TaskFormPanel ref={formRef} value={task} type="client" onChange={handleTaskFieldsChange} />
+            <em>{JSON.stringify(task.fields, null, 2)}</em>
           </Col>
           <Col style={{ width: 400 }}>
             <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
@@ -156,8 +162,6 @@ const OrgTaskPage = React.memo((props) => {
                   <Button type="link" danger icon={<DeleteOutlined/>} block onClick={() => setMessageVisible(true)}>Archive this task</Button>
                 </Space>
               </Collapse.Panel>
-
-
             </Collapse>
           </Col>
         </Row>
