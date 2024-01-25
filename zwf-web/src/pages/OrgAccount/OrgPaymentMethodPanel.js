@@ -89,6 +89,7 @@ const OrgPaymentMethodPanel = () => {
         bordered={false}
         title="Payment Methods"
         style={{ width: '100%' }}
+        bodyStyle={{paddingTop: 0, paddingBottom: 0}}
         extra={
           <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
         }
@@ -105,8 +106,8 @@ const OrgPaymentMethodPanel = () => {
           }}
           renderItem={item => <List.Item
             actions={item.primary || list.length <= 1 ? null : [
-              <Button key="primary" type="link" ghost onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
-              <Button key="delete" ghost type="link" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
+              <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
+              <Button key="delete" type="link" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
             ]}
           >
             <Space size="large">
