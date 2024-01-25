@@ -93,7 +93,7 @@ export const UserSelect = React.memo((props) => {
     >
       {userList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
         <Space size="small">
-          <UserAvatar value={c.avatarFileId} color={c.avatarColorHex} size={28} />
+          <UserAvatar value={c.avatarFileId} color={c.avatarColorHex} size={32} />
           <UserDisplayName
             surname={c.surname}
             givenName={c.givenName}

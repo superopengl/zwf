@@ -40,15 +40,31 @@ padding: 8px;
 }
 `;
 
-const StyledAvatar = styled(Avatar)`
-  border: 1px solid rgba(0,0,0,0.2);
-`;
+
 
 
 export const UserAvatar = React.memo((props) => {
   const { editable, size, value: avatarFileId, onChange, style, color: backgroundColor } = props;
 
   const [fileList, setFileList] = React.useState([]);
+
+  React.useEffect(() => {
+    if(!editable) {
+      return;
+    }
+    const subscription = load$();
+    return () => {
+      subscription.unsubscribe();
+    }
+  }, []);
+
+  const StyledAvatar = styled(Avatar)`
+  border: 1px solid rgba(0,0,0,0.2);
+
+  .ant-avatar-string {
+    line-height: ${size - 4}px !important;
+  }
+`
 
   const load$ = () => {
     if (!avatarFileId) {
@@ -65,23 +81,6 @@ export const UserAvatar = React.memo((props) => {
     })
   }
 
-  React.useEffect(() => {
-    const subscription = load$();
-    return () => {
-      subscription.unsubscribe();
-    }
-  }, []);
-
-  const handleChange = (info) => {
-    const { file, fileList } = info;
-    setFileList(fileList);
-
-    if (file.status === 'done') {
-      const newFileId = _.get(file, 'response.id', file.uid);
-      onChange(newFileId);
-    }
-  };
-
   let avatarComponent = null;
   if (avatarFileId) {
     avatarComponent = <StyledAvatar size={size} src={<Image
@@ -92,7 +91,7 @@ export const UserAvatar = React.memo((props) => {
     />} />
   } else {
     const fontSize = 28 * size / 64;
-    avatarComponent = <StyledAvatar size={size} style={{ ...style, backgroundColor }}>
+    avatarComponent = <StyledAvatar size={size} style={{ ...style, lineHeight: size - 4, backgroundColor }}>
       <Text style={{ fontSize, color: 'rgba(255,255,255,0.85)' }}>
         <UserOutlined />
       </Text>
@@ -102,6 +101,16 @@ export const UserAvatar = React.memo((props) => {
   if (!editable) {
     return avatarComponent
   }
+
+  const handleChange = (info) => {
+    const { file, fileList } = info;
+    setFileList(fileList);
+
+    if (file.status === 'done') {
+      const newFileId = _.get(file, 'response.id', file.uid);
+      onChange(newFileId);
+    }
+  };
 
   return (
     <Upload
