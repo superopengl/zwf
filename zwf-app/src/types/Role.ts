@@ -5,3 +5,4 @@ export enum Role {
     Client = 'client',  // Client
     Guest = 'guest'     // Anonymous user
 }
+

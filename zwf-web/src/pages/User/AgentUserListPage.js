@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select, PageHeader } from 'antd';
 import {
   UserAddOutlined, GoogleOutlined, SyncOutlined, QuestionOutlined,
   SearchOutlined,
-  ClearOutlined} from '@ant-design/icons';
+  ClearOutlined
+} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { Space } from 'antd';
-import { searchOrgMemberUsers, deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
+import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteUser$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -17,9 +18,12 @@ import ReactDOM from 'react-dom';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameLabel } from 'components/UserNameLabel';
 import loadable from '@loadable/component'
-import { getMyCurrentSubscription } from 'services/subscriptionService';
+import { getMyCurrentSubscription, getMyCurrentSubscription$ } from 'services/subscriptionService';
 import useLocalStorageState from 'use-local-storage-state'
-import {TagSelect} from 'components/TagSelect';
+import { TagSelect } from 'components/TagSelect';
+import { listOrgMembers$ } from 'services/orgService';
+import { combineLatest } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -42,7 +46,6 @@ const LOCAL_STORAGE_KEY = 'agent_list_query';
 const AgentUserListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
-  const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [subscription, setSubscription] = React.useState();
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
@@ -51,7 +54,6 @@ const AgentUserListPage = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
-  const [queryInfo, setQueryInfo] = useLocalStorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
 
   const columnDef = [
     {
@@ -133,72 +135,30 @@ const AgentUserListPage = () => {
     },
   ].filter(x => !!x);
 
-  const loadList = async () => {
-    try {
-      setLoading(true);
-      await searchByQueryInfo(queryInfo)
-    } catch {
-      setLoading(false);
-    }
+  const loadList = () => {
+    setLoading(true);
+    return combineLatest([listOrgMembers$(), getMyCurrentSubscription$()]).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(([members, subscription]) => {
+      setList(members);
+      setSubscription(subscription);
+    })
   }
 
   React.useEffect(() => {
-    loadList();
+    const sub = loadList();
+    return () => sub.unsubscribe();
   }, []);
 
-  const updateQueryInfo = (queryInfo) => {
-    reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    setQueryInfo(queryInfo);
-  }
-
-  const handleSearchTextChange = text => {
-    const newQueryInfo = {
-      ...queryInfo,
-      text
-    }
-    updateQueryInfo(newQueryInfo);
-    // await loadTaskWithQuery(newQueryInfo);
-  }
-
-  const handleSearch = async (value) => {
-    const text = value?.trim();
-
-    const newQueryInfo = {
-      ...queryInfo,
-      text
-    }
-
-    await searchByQueryInfo(newQueryInfo);
-  }
-
-  const searchByQueryInfo = async (queryInfo) => {
-    try {
-      setLoading(true);
-      const resp = await searchOrgMemberUsers(queryInfo);
-      const subscription = await getMyCurrentSubscription();
-      const { count, page, data } = resp;
-      ReactDOM.unstable_batchedUpdates(() => {
-        setTotal(count);
-        setList(data);
-        setQueryInfo({ ...queryInfo, page });
-        setSubscription(subscription);
-        setLoading(false);
-      });
-      reactLocalStorage.setObject(LOCAL_STORAGE_KEY, queryInfo);
-    } catch {
-      setLoading(false);
-    }
-  }
 
   const handleDelete = async (item) => {
-    const { id, email } = item;
+    const { id } = item;
     Modal.confirm({
       title: <>Delete user</>,
       content: <UserNameLabel userId={item.id} profile={item} />,
       onOk: async () => {
-        setLoading(true);
         await deleteUser(id);
-        await searchByQueryInfo(queryInfo);
+        loadList();
       },
       maskClosable: true,
       okButtonProps: {
@@ -258,18 +218,6 @@ const AgentUserListPage = () => {
     });
   }
 
-  const handleTagFilterChange = (tags) => {
-    searchByQueryInfo({ ...queryInfo, page: 1, tags });
-  }
-
-  const handleClearFilter = () => {
-    searchByQueryInfo(DEFAULT_QUERY_INFO);
-  }
-
-  const handlePaginationChange = (page, pageSize) => {
-    searchByQueryInfo({ ...queryInfo, page, size: pageSize });
-  }
-
   const handleBuyLicense = () => {
     setModalVisible(true);
   }
@@ -292,32 +240,22 @@ const AgentUserListPage = () => {
 
   return (
     <ContainerStyled>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Input.Search
-            placeholder="Search name or email"
-            enterButton={<SearchOutlined />}
-            onSearch={value => handleSearch(value)}
-            onPressEnter={e => handleSearch(e.target.value)}
-            onChange={e => handleSearchTextChange(e.target.value)}
-            loading={loading}
-            value={queryInfo?.text}
-            allowClear
-          />
-          <Space>
-            {subscription && <div>{subscription.seats - subscription.occupiedSeats} licenses left - <Button type="link" onClick={() => handleBuyLicense()} style={{ paddingLeft: 0 }}>Buy more</Button></div>}
-            <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost
-              onClick={() => handleNewUser()}
-              icon={<UserAddOutlined />}
-              disabled={!subscription || subscription.occupiedSeats >= subscription.seats}>
-              Add Member
-            </Button>
-            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-          </Space>
-        </Space>
-        <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false}/>
-
+      <PageHeader
+        backIcon={false}
+        title={"Team & Member Accounts"}
+        extra={[
+          subscription ? <span key="buy-more">{subscription.seats - subscription.occupiedSeats} licenses left - <Button type="link" onClick={() => handleBuyLicense()} style={{ paddingLeft: 0 }}>Buy more</Button></span> : null,
+          <Button
+            key="add"
+            type="primary"
+            ghost
+            onClick={() => handleNewUser()}
+            icon={<UserAddOutlined />}
+            disabled={!subscription || subscription.occupiedSeats >= subscription.seats}>
+            Add Member
+          </Button>
+        ].filter(x => !!x)}
+      >
         <Table columns={columnDef}
           dataSource={list}
           size="small"
@@ -328,22 +266,11 @@ const AgentUserListPage = () => {
           rowKey="id"
           loading={loading}
           style={{ marginTop: 20 }}
-          pagination={{
-            current: queryInfo.current,
-            pageSize: queryInfo.size,
-            total: total,
-            showTotal: total => `Total ${total}`,
-            pageSizeOptions: [10, 30, 60],
-            showSizeChanger: true,
-            showQuickJumper: true,
-            disabled: loading,
-            onChange: handlePaginationChange,
-            onShowSizeChange: (page, size) => {
-              searchByQueryInfo({ ...queryInfo, page, size });
-            }
-          }}
+          pagination={false}
         />
-      </Space>
+
+      </PageHeader>
+
       <Modal
         visible={setPasswordVisible}
         destroyOnClose={true}
@@ -355,9 +282,9 @@ const AgentUserListPage = () => {
         width={400}
       >
         <Form layout="vertical" onFinish={values => handleSetPassword(currentUser?.id, values)}>
-          <div style={{marginBottom: 20}}>
+          <div style={{ marginBottom: 20 }}>
             {currentUser && <UserNameLabel userId={currentUser.id} profile={currentUser} />}
-            </div>
+          </div>
           <Form.Item label="Password" name="password" rules={[{ required: true, message: ' ' }]}>
             <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
           </Form.Item>

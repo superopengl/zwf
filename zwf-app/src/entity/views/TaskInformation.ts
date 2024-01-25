@@ -1,5 +1,4 @@
 import { TaskTagsTag } from '../TaskTagsTag';
-import { TaskAssignment } from '../TaskAssignment';
 import { Role } from './../../types/Role';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { TaskTemplate } from '../TaskTemplate';
@@ -26,10 +25,6 @@ import { Tag } from '../Tag';
     .innerJoin(TaskTemplate, 'l', `t."taskTemplateId" = l.id`)
     .innerJoin(User, 'u', `u.id = t."userId"`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
-    .leftJoin(q => q.from(TaskAssignment, 'ta')
-      .distinctOn(['ta."taskId"', 'ta."createdAt"'])
-      .orderBy('"createdAt"', 'DESC')
-      , 'a', 'a."taskId" = t.id')
     .select([
       't.id as id',
       't."deepLinkId" as "deepLinkId"',
@@ -49,7 +44,7 @@ import { Tag } from '../Tag';
       't."name" as "taskTemplateName"',
       'u.role as role',
       't."authorizedAt" as "authorizedAt"',
-      'a."assigneeId" as "assigneeId"',
+      't."agentId" as "assigneeId"',
       't."createdAt" as "createdAt"',
       't."lastUpdatedAt" as "lastUpdatedAt"',
       `coalesce(tag.tags, '{}'::json[]) as tags`,

@@ -1,4 +1,4 @@
-import { httpGet, httpPost, request, httpPost$ } from './http';
+import { httpGet$, httpGet, httpPost, request, httpPost$ } from './http';
 
 export async function downloadReceipt(paymentId) {
   const path = `subscription/${paymentId}/receipt`;
@@ -11,6 +11,10 @@ export async function cancelSubscription(id) {
 
 export async function getMyCurrentSubscription() {
   return httpGet(`subscription`);
+}
+
+export function getMyCurrentSubscription$() {
+  return httpGet$(`/subscription`);
 }
 
 export async function listMySubscriptionHistory() {

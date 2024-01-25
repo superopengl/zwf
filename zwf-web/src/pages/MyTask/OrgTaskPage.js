@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card, Divider } from 'antd';
 
-import { changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
+import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
 import { catchError } from 'rxjs/operators';
@@ -55,6 +55,7 @@ const OrgTaskPage = React.memo((props) => {
   const [loading, setLoading] = React.useState(true);
   const [messageVisible, setMessageVisible] = React.useState(false);
   const [task, setTask] = React.useState();
+  const [assigneeId, setAssigneeId] = React.useState();
   const context = React.useContext(GlobalContext);
 
   const formRef = React.createRef();
@@ -67,6 +68,7 @@ const OrgTaskPage = React.memo((props) => {
       .subscribe((taskInfo) => {
         const { email, role, userId, orgId, orgName, ...task } = taskInfo;
         setTask(task);
+        setAssigneeId(task.assigneeId);
         setLoading(false);
       });
     return () => {
@@ -90,6 +92,11 @@ const OrgTaskPage = React.memo((props) => {
 
   const handleTagsChange = tagIds => {
     updateTaskTags$(task.id, tagIds).subscribe()
+  }
+
+  const handleChangeAssignee = agentId => {
+    debugger;
+    assignTask$(task.id, agentId).subscribe();
   }
 
   return (<>
@@ -131,7 +138,7 @@ const OrgTaskPage = React.memo((props) => {
                 </Space>}
               </Collapse.Panel>
               <Collapse.Panel key="assignee" header="Assignee">
-                <AssigneeSelect value={task.assigneeId} />
+                <AssigneeSelect value={assigneeId} placeholder="Select assignee" onChange={handleChangeAssignee}/>
               </Collapse.Panel>
               <Collapse.Panel key="tags" header="Tags">
                 <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />

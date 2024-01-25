@@ -1,7 +1,10 @@
 import { Column, PrimaryGeneratedColumn, Index, CreateDateColumn, Entity } from 'typeorm';
+import { TaskActionType } from "../types/TaskActionType";
+
+
 
 @Entity()
-export class TaskAssignment {
+export class TaskAction {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -10,9 +13,14 @@ export class TaskAssignment {
   taskId: string;
 
   @Column('uuid')
-  @Index()
-  assigneeId: string;
+  by: string;
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @Column()
+  action: TaskActionType;
+
+  @Column('jsonb', {nullable: true})
+  extra: any;
 }

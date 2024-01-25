@@ -1,3 +1,4 @@
+import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
 import { Tag } from '../entity/Tag';
 
 import { getRepository, Not, getManager, In } from 'typeorm';
@@ -12,7 +13,6 @@ import { inviteOrgMemberWithSendingEmail } from "../utils/inviteOrgMemberWithSen
 import { attachJwtCookie } from '../utils/jwt';
 import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
-import { searchOrgMembers } from '../utils/searchOrgMembers';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Payment } from '../entity/Payment';
 import { Subscription } from '../entity/Subscription';
@@ -93,29 +93,10 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const searchOrgMemberUserList = handlerWrapper(async (req, res) => {
+export const listOrgMembers = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin');
-
   const orgId = getOrgIdFromReq(req);
-
-  const page = +req.body.page;
-  const size = +req.body.size;
-  const orderField = req.body.orderBy || 'email';
-  const orderDirection = req.body.orderDirection || 'ASC';
-  const text = req.body.text?.trim();
-  const tags = (req.body.tags || []);
-
-  const list = await searchOrgMembers(
-    orgId,
-    {
-      text,
-      page,
-      size,
-      orderField,
-      orderDirection,
-      tags
-    });
-
+  const list = await getRepository(OrgMemberInformation).find({orgId});
   res.json(list);
 });
 

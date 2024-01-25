@@ -15,3 +15,7 @@ export function listOrgs$() {
 export function listOrgExistingClients(query) {
   return httpPost$(`/org/client`, query);
 }
+
+export function listOrgMembers$() {
+  return httpGet$(`/org/member`);
+}
