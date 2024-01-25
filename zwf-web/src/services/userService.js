@@ -4,12 +4,8 @@ export async function changePassword(password, newPassword) {
   return httpPost(`user/change_password`, { password, newPassword });
 }
 
-export async function searchOrgMemberUsers(payload) {
-  return httpPost(`org/member`, { page: 0, size: 50, ...payload });
-}
-
 export function searchAssigneeList$(page = 0, text = undefined) {
-  return httpPost$(`org/member`, { page, size: 50, text });
+  return httpGet$(`org/member`, { page, size: 50, text });
 }
 
 export async function searchOrgClientUsers(payload) {
