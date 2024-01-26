@@ -70,7 +70,7 @@ export const TaskSearchDrawer = props => {
       onClose={onClose}
       title="Task Filter"
       placement="right"
-      maskClosable={false}
+      maskClosable={true}
       destroyOnClose={true}
       closable={false}
       contentWrapperStyle={{ width: "80vw", maxWidth: 600 }}
