@@ -121,6 +121,6 @@ UserSelect.defaultProps = {
   valueProp: 'id',
   loading: false,
   allowInput: true,
-  bordered: false,
+  bordered: true,
 };
 
