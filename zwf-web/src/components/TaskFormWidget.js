@@ -13,9 +13,9 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
-    schema.fields.forEach(f => {
-      f.required = false;
-    });
+    // schema.fields.forEach(f => {
+    //   f.required = false;
+    // });
     return schema;
   }, [fields]);
 
