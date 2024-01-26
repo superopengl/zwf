@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card, Typography } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, saveTaskFields$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -11,7 +11,7 @@ import { TagSelect } from 'components/TagSelect';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
 import { TaskChatPanel } from 'components/TaskChatPanel';
-import { TaskFormPanel } from 'components/TaskFormPanel';
+import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LinkOutlined, MessageOutlined, SaveOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
 import { AiOutlineHistory } from 'react-icons/ai';
@@ -23,6 +23,8 @@ import { notify } from 'util/notify';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
+
+const { Text } = Typography;
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -57,6 +59,7 @@ const OrgTaskPage = React.memo((props) => {
   const [messageVisible, setMessageVisible] = React.useState(false);
   const [historyVisible, setHistoryVisible] = React.useState(false);
   const [task, setTask] = React.useState();
+  const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
   const context = React.useContext(GlobalContext);
 
@@ -112,14 +115,6 @@ const OrgTaskPage = React.memo((props) => {
     setTask({ ...task });
   }
 
-  const handleSaveTaskForm = () => {
-    saveTaskFields$(task).pipe(
-      catchError(e => {
-        notify.error('Failed to save task', e.message);
-      })
-    ).subscribe();
-  }
-
   return (<>
     <ContainerStyled>
       {task && <PageContainer
@@ -129,7 +124,11 @@ const OrgTaskPage = React.memo((props) => {
         ghost={true}
         fixedHeader
         header={{
-          title: <><TaskIcon /> {task?.name || <Skeleton paragraph={false} />}</>
+          title: <Space style={{height: 34}}>
+            <TaskIcon />
+            {task?.name || <Skeleton paragraph={false} />}
+            {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
+          </Space>
         }}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
@@ -145,11 +144,8 @@ const OrgTaskPage = React.memo((props) => {
         <Row wrap={false} gutter={40}>
           <Col span={16}>
             <Card size="large">
-              <TaskFormPanel ref={formRef} value={task} type="client" onChange={handleTaskFieldsChange} />
+              <AutoSaveTaskFormPanel ref={formRef} value={task} type="client" onSavingChange={setSaving} />
             </Card>
-            <Row justify="end" style={{ marginTop: 20 }}>
-              <Button type="primary" icon={<SaveOutlined />} onClick={handleSaveTaskForm}>Save</Button>
-            </Row>
             {/* <em>{JSON.stringify(task.fields, null, 2)}</em> */}
           </Col>
           <Col span={8} style={{ minWidth: 300 }}>
