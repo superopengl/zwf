@@ -34,6 +34,7 @@ export function showArchiveTaskModal(taskId, onFinish) {
     okButtonProps: {
       danger: true
     },
+    autoFocusButton: 'cancel',
     okText: 'Archive it!',
     onOk: () => {
       changeTaskStatus$(taskId, 'archived').subscribe(() => onFinish?.());
