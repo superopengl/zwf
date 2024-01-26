@@ -57,6 +57,11 @@ export function assignTask$(taskId, agentId) {
   return httpPost$(`task/${taskId}/assign`, { agentId });
 }
 
+export function getTaskHistory$(taskId) {
+  return httpGet$(`/task/${taskId}/history`);
+}
+
+
 export async function listTaskNotifies(taskId, from, size = 20) {
   return httpGet(`task/${taskId}/notify`, { from, size });
 }

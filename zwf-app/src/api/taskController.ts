@@ -1,3 +1,4 @@
+import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
 import { TaskAction } from './../entity/TaskAction';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
@@ -502,4 +503,30 @@ export const newComment = handlerWrapper(async (req, res) => {
   await getRepository(TaskComment).save(comment);
 
   res.json();
+});
+
+export const getTaskHistory = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { id } = req.params;
+  let query: any = { taskId: id };
+  const role = getRoleFromReq(req);
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent:
+      query = {
+        ...query,
+        orgId: getOrgIdFromReq(req)
+      }
+      break
+    case Role.Client:
+      query = {
+        ...query,
+        clientId: getUserIdFromReq(req)
+      }
+    default:
+      break;
+  }
+  const list = await getRepository(TaskHistoryInformation).find(query);
+
+  res.json(list);
 });

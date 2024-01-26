@@ -21,6 +21,7 @@ import { FaSignature } from 'react-icons/fa';
 import { MemberSelect } from 'components/MemberSelect';
 import { notify } from 'util/notify';
 import { showTaskDeepLinkModal } from 'components/showTaskDeepLinkModal';
+import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -53,6 +54,7 @@ const OrgTaskPage = React.memo((props) => {
   const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
   const [messageVisible, setMessageVisible] = React.useState(false);
+  const [historyVisible, setHistoryVisible] = React.useState(false);
   const [task, setTask] = React.useState();
   const [assigneeId, setAssigneeId] = React.useState();
   const context = React.useContext(GlobalContext);
@@ -172,7 +174,7 @@ const OrgTaskPage = React.memo((props) => {
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                   <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
-                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setMessageVisible(true)}>Action history</Button>
+                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Action history</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for more information</Button>
@@ -186,16 +188,32 @@ const OrgTaskPage = React.memo((props) => {
           </Col>
         </Row>
       </PageContainer>}
-      {task && <Drawer
-        visible={messageVisible}
-        onClose={() => setMessageVisible(false)}
-        title="Message"
-        destroyOnClose
-        closable
-        maskClosable
-      >
-        <TaskChatPanel taskId={task.id} currentUserId={currentUserId} />
-      </Drawer>}
+      {task && <>
+        <Drawer
+          visible={messageVisible}
+          onClose={() => setMessageVisible(false)}
+          title="Message"
+          destroyOnClose
+          closable
+          maskClosable
+        >
+          <TaskChatPanel taskId={task.id} currentUserId={currentUserId} />
+        </Drawer>
+
+        <Drawer
+          visible={historyVisible}
+          onClose={() => setHistoryVisible(false)}
+          title="Task Action History"
+          destroyOnClose
+          closable
+          maskClosable
+          footer={
+            <Button onClick={() => setHistoryVisible(false)}>Close</Button>
+          }
+        >
+          <TaskHistoryPanel taskId={task.id} />
+        </Drawer>
+      </>}
     </ContainerStyled>
   </>
   );
