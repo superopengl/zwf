@@ -29,12 +29,11 @@ import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
-const OrgBoardPage = loadable(() => import('pages/OrgBoard/TaskBoardPanel'));
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
-const AgentUserListPage = loadable(() => import('pages/User/AgentUserListPage'));
+const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const ClientUserListPage = loadable(() => import('pages/User/ClientUserListPage'));
 const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
@@ -279,7 +278,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/team" component={AgentUserListPage} />
+      <RoleRoute visible={isSystem || isAdmin} exact path="/team" component={OrgMemberListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/client" component={ClientUserListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />

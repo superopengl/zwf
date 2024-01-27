@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Drawer } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Drawer, PageHeader } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -50,54 +50,7 @@ const ClientUserListPage = () => {
     await setUserTags(user.id, tags);
   }
 
-  const columnDef = [
-    {
-      // title: 'User',
-      fixed: 'left',
-      render: (text, item) => <UserNameCard userId={item.id} />,
-    },
-    // {
-    //   title: 'Login Type',
-    //   dataIndex: 'loginType',
-    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    // },
-    {
-      title: 'Tags',
-      dataIndex: 'tags',
-      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} readonly={true} />
-    },
-    {
-      // title: 'Action',
-      // fixed: 'right',
-      // width: 200,
-      align: 'right',
-      fixed: 'right',
-      render: (text, user) => {
-        return (
-          <DropdownMenu
-            config={[
-              {
-                menu: 'Active tasks',
-                onClick: () => openProfileModal(user)
-              },
-              {
-                menu: 'Resend invite',
-                onClick: () => openProfileModal(user)
-              },
-              {
-                menu: 'Portfolios',
-                onClick: () => openProfileModal(user)
-              },
-              {
-                menu: 'Tags',
-                onClick: () => openProfileModal(user)
-              },
-            ]}
-          />
-        )
-      },
-    },
-  ].filter(x => !!x);
+
 
   const loadList = async () => {
     try {
@@ -183,11 +136,6 @@ const ClientUserListPage = () => {
   }
 
 
-  const openSetPasswordModal = async (user) => {
-    setSetPasswordVisible(true);
-    setCurrentUser(user);
-  }
-
   const openProfileModal = async (user) => {
     setProfileModalVisible(true);
     setCurrentUser(user);
@@ -213,28 +161,71 @@ const ClientUserListPage = () => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
+  const columnDef = React.useMemo(() => [
+    {
+      title: <Input.Search
+        placeholder="Search name or email"
+        enterButton={<SearchOutlined />}
+        onSearch={value => handleSearch(value)}
+        onPressEnter={e => handleSearch(e.target.value)}
+        onChange={e => handleSearchTextChange(e.target.value)}
+        loading={loading}
+        value={queryInfo?.text}
+        allowClear
+      />,
+      fixed: 'left',
+      render: (text, item) => <UserNameCard userId={item.id} />,
+    },
+    // {
+    //   title: 'Login Type',
+    //   dataIndex: 'loginType',
+    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
+    // },
+    {
+      title: <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />,
+      dataIndex: 'tags',
+      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} readonly={true} />
+    },
+    {
+      // title: 'Action',
+      // fixed: 'right',
+      // width: 200,
+      align: 'right',
+      fixed: 'right',
+      render: (text, user) => {
+        return (
+          <DropdownMenu
+            config={[
+              {
+                menu: 'Active tasks',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Resend invite',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Portfolios',
+                onClick: () => openProfileModal(user)
+              },
+              {
+                menu: 'Tags',
+                onClick: () => openProfileModal(user)
+              },
+            ]}
+          />
+        )
+      },
+    },
+  ].filter(x => !!x), []);
+
   return (
     <ContainerStyled>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-          <Space>
-            <Input.Search
-              placeholder="Search name or email"
-              enterButton={<SearchOutlined />}
-              onSearch={value => handleSearch(value)}
-              onPressEnter={e => handleSearch(e.target.value)}
-              onChange={e => handleSearchTextChange(e.target.value)}
-              loading={loading}
-              value={queryInfo?.text}
-              allowClear
-            />
-            <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />
-          </Space>
-          <Space>
-            <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-          </Space>
-        </Space>
+      <PageHeader
+        backIcon={false}
+        title={"Clients"}
+      >
+
         <Table columns={columnDef}
           dataSource={list}
           size="small"
@@ -260,7 +251,7 @@ const ClientUserListPage = () => {
             }
           }}
         />
-      </Space>
+      </PageHeader>
       <Modal
         visible={setPasswordVisible}
         destroyOnClose={true}
