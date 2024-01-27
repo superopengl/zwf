@@ -28,12 +28,9 @@ import { UserStatus } from '../../types/UserStatus';
       'u.id as "id"',
       'o.id as "orgId"',
       'o.name as "orgName"',
-      'u."profileId" as "profileId"',
       'u.email as "email"',
       'u."givenName" as "givenName"',
       'u."surname" as "surname"',
-      'u."avatarFileId" as "avatarFileId"',
-      'u."avatarColorHex" as "avatarColorHex"',
       'u.role as role',
       'u.status as status',
       'u.tags as tags',
@@ -50,9 +47,6 @@ import { UserStatus } from '../../types/UserStatus';
   orgName: string;
 
   @ViewColumn()
-  profileId: string;
-
-  @ViewColumn()
   email: string;
 
   @ViewColumn()
@@ -60,12 +54,6 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   surname: string;
-
-  @ViewColumn()
-  avatarFileId: string;
-
-  @ViewColumn()
-  avatarColorHex: string;
 
   @ViewColumn()
   role: Role;

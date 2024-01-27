@@ -17,7 +17,7 @@ import { TagSelect } from 'components/TagSelect';
 import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
-import { UserNameLabel } from 'components/UserNameLabel';
+import { UserNameCard } from 'components/UserNameCard';
 
 
 const { Text, Paragraph } = Typography;
@@ -54,7 +54,7 @@ const ClientUserListPage = () => {
     {
       // title: 'User',
       fixed: 'left',
-      render: (text, item) => <UserNameLabel userId={item.id} profile={item} />,
+      render: (text, item) => <UserNameCard userId={item.id} />,
     },
     // {
     //   title: 'Login Type',
@@ -64,7 +64,7 @@ const ClientUserListPage = () => {
     {
       title: 'Tags',
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} />
+      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} readonly={true} />
     },
     {
       // title: 'Action',

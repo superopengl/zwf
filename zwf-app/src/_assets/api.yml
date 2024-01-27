@@ -222,6 +222,14 @@ paths:
       responses:
         200:
           description: OK
+  /user/:id/brief:
+    get:
+      operationId: getUserBrief
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK          
   /user/:id/set_password:
     post:
       operationId: setUserPassword

@@ -1,6 +1,6 @@
 import { AutoComplete, Typography, Space, Row, Col } from 'antd';
 import React from 'react';
-import {HighlightingText} from './HighlightingText';
+import { HighlightingText } from './HighlightingText';
 import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
 import { EnterOutlined, SearchOutlined } from '@ant-design/icons';
 import Tag from './Tag';
@@ -8,6 +8,7 @@ import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, sm
 import { UserDisplayName } from 'components/UserDisplayName';
 import { UserAvatar } from './UserAvatar';
 import Hotkeys from 'react-hot-keys';
+import { UserNameCard } from './UserNameCard';
 
 const { Text } = Typography;
 
@@ -42,15 +43,7 @@ const DOMAIN_CONFIG = {
   'client': {
     searchHandler: smartSearchClient$,
     pathHandler: id => `/client/${id}`,
-    renderHandler: (item, searchText) => <Space size="small">
-      <UserAvatar value={item.avatarFileId} color={item.avatarColorHex} size={32} />
-      <UserDisplayName
-        email={item.email}
-        surname={item.surname}
-        givenName={item.givenName}
-        searchText={searchText}
-      />
-    </Space>,
+    renderHandler: (item, searchText) => <UserNameCard userId={item.id} searchText={searchText} />,
     noFoundContent: <>No client is found.</>
   },
 }

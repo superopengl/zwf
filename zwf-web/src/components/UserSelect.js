@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { UserDisplayName } from 'components/UserDisplayName';
 import isEmail from 'validator/lib/isEmail';
 import { UserAvatar } from './UserAvatar';
+import { UserNameCard } from './UserNameCard';
 
 const { Text } = Typography;
 
@@ -93,15 +94,7 @@ export const UserSelect = React.memo((props) => {
       {...other}
     >
       {userList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
-        <Space size="small">
-          <UserAvatar value={c.avatarFileId} color={c.avatarColorHex} size={32} />
-          <UserDisplayName
-            surname={c.surname}
-            givenName={c.givenName}
-            email={c.email}
-            searchText={searchText}
-          />
-        </Space>
+        <UserNameCard userId={c.id} />
       </Select.Option>))}
     </StyledSelect>
   )

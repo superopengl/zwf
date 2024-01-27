@@ -1,3 +1,4 @@
+import { UserInformation } from './../entity/views/UserInformation';
 import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
 import { Tag } from '../entity/Tag';
 
@@ -19,6 +20,9 @@ import { Subscription } from '../entity/Subscription';
 import { CreditTransaction } from '../entity/CreditTransaction';
 import { Role } from '../types/Role';
 import { searchOrgClients } from '../utils/searchOrgClients';
+import { response } from 'express';
+import { getRoleFromReq } from '../utils/getRoleFromReq';
+import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'member');
@@ -37,6 +41,25 @@ export const changePassword = handlerWrapper(async (req, res) => {
   await repo.save(user);
 
   res.json();
+});
+
+export const getUserBrief = handlerWrapper(async (req, res) => {
+  assertRole(req, Role.System, Role.Admin, Role.Agent, Role.Client);
+  const { id } = req.params;
+
+  const data = await getRepository(UserInformation).findOne({
+    where: { id },
+    select: [
+      'id',
+      'avatarFileId',
+      'avatarColorHex',
+      'givenName',
+      'surname',
+      'email'
+    ]
+  });
+
+  res.json(data);
 });
 
 export const saveProfile = handlerWrapper(async (req, res) => {
@@ -96,7 +119,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 export const listOrgMembers = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin');
   const orgId = getOrgIdFromReq(req);
-  const list = await getRepository(OrgMemberInformation).find({orgId});
+  const list = await getRepository(OrgMemberInformation).find({ orgId });
   res.json(list);
 });
 

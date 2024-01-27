@@ -21,8 +21,6 @@ import { UserProfile } from '../UserProfile';
       'p."surname" as "surname"',
       'p."locale" as "locale"',
       'u."loginType"',
-      'p."avatarFileId" as "avatarFileId"',
-      'p."avatarColorHex" as "avatarColorHex"',
       'u.role as role',
       'u.status as status',
       'u."orgOwner" as "orgOwner"',
@@ -51,12 +49,6 @@ import { UserProfile } from '../UserProfile';
 
   @ViewColumn()
   locale: string;
-
-  @ViewColumn()
-  avatarFileId: string;
-
-  @ViewColumn()
-  avatarColorHex: string;
   
   @ViewColumn()
   loginType: string;

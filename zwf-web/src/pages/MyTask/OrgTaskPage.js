@@ -23,6 +23,7 @@ import { notify } from 'util/notify';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
+import { UserNameCard } from 'components/UserNameCard';
 
 const { Text } = Typography;
 
@@ -78,7 +79,7 @@ const OrgTaskPage = React.memo((props) => {
       catchError(() => setLoading(false))
     )
       .subscribe((taskInfo) => {
-        const { email, role, userId, orgId, orgName, ...task } = taskInfo;
+        const { email, role, orgId, orgName, ...task } = taskInfo;
         setTask(task);
         setAssigneeId(task.agentId);
         setLoading(false);
@@ -151,14 +152,7 @@ const OrgTaskPage = React.memo((props) => {
           <Col span={8} style={{ minWidth: 300 }}>
             <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'procedure', 'actions', 'history']} expandIconPosition="right" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
               <Collapse.Panel key="client" header="Client">
-                {task?.client && <Space size="small" style={{ paddingLeft: 12, paddingRight: 12 }}>
-                  <UserAvatar value={task.client.avatarFileId} color={task.client.avatarColorHex} size={32} />
-                  <UserDisplayName
-                    email={task.client.email}
-                    surname={task.client.surname}
-                    givenName={task.client.givenName}
-                  />
-                </Space>}
+                <UserNameCard userId={task?.userId} />
               </Collapse.Panel>
               <Collapse.Panel key="assignee" header="Assignee">
                 <MemberSelect value={assigneeId} onChange={handleChangeAssignee} />

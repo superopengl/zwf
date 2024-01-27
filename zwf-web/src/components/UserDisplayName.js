@@ -16,7 +16,7 @@ export const UserDisplayName = (props) => {
   ]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 5, paddingBottom: 5 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 5, paddingBottom: 5, fontSize: 14 }}>
       <div style={{ margin: 0, lineHeight: '1rem' }}>
         {/* <HighlightingText value={displayName} search={searchText} /> */}
         <Text ellipsis={true} style={{ maxWidth: "100%" }}>

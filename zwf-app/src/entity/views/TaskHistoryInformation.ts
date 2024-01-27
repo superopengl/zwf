@@ -27,11 +27,6 @@ import { TaskAction } from '../TaskAction';
       'a."action" as "action"',
       'a."extra" as "extra"',
       'u.id as "userId"',
-      'u.email as email',
-      'u."givenName" as "givenName"',
-      'u.surname as surname',
-      'u."avatarFileId" as "avatarFileId"',
-      'u."avatarColorHex" as "avatarColorHex"',
     ])
     .orderBy('t.id')
     .addOrderBy('a."createdAt"')
@@ -59,19 +54,4 @@ import { TaskAction } from '../TaskAction';
 
   @ViewColumn()
   userId: string;
-
-  @ViewColumn()
-  email: string;
-
-  @ViewColumn()
-  givenName: string;
-
-  @ViewColumn()
-  surname: string;
-
-  @ViewColumn()
-  avatarFileId: string;
-
-  @ViewColumn()
-  avatarColorHex: string;
 }

@@ -101,11 +101,6 @@ export const smartSearchClient = handlerWrapper(async (req, res) => {
     .andWhere('(email ILIKE :text OR "givenName" ILIKE :text OR surname ILIKE :text)', { text: `%${text}%` })
     .select([
       'id',
-      'surname',
-      '"givenName"',
-      'email',
-      '"avatarFileId"',
-      '"avatarColorHex"',
     ])
     .take(size)
     .execute();

@@ -1,4 +1,6 @@
-import { httpGet, httpPost, httpPost$, httpDelete } from './http';
+import { BehaviorSubject, of, Subject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+import { httpGet, httpGet$, httpPost, httpPost$, httpDelete } from './http';
 
 export async function changePassword(password, newPassword) {
   return httpPost(`user/change_password`, { password, newPassword });
@@ -30,4 +32,24 @@ export async function setUserTags(userId, tags) {
 
 export async function setUserRole(userId, role) {
   return httpPost(`user/${userId}/role`, { role });
+}
+
+const userNameCardInfoMap = new Map();
+
+export function getUserNameCardInfo$(userId, force = false) {
+  let cachedSource$ = userNameCardInfoMap.get(userId);
+  if (!cachedSource$) {
+    cachedSource$ = new BehaviorSubject().pipe(
+      filter(x => !!x),
+    );
+    userNameCardInfoMap.set(userId, cachedSource$);
+
+    httpGet$(`/user/${userId}/brief`).pipe(
+      tap(data => {
+        cachedSource$.next(data)
+      }),
+    ).subscribe();
+  }
+
+  return cachedSource$;
 }
