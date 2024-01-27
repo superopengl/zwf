@@ -139,7 +139,7 @@ UserAvatar.propTypes = {
   editable: PropTypes.bool,
   onChange: PropTypes.func,
   style: PropTypes.any,
-  fallbackIcon: PropTypes.object,
+  fallbackIcon: PropTypes.any,
 };
 
 UserAvatar.defaultProps = {

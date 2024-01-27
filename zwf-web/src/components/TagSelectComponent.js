@@ -99,6 +99,13 @@ const colourStyles = {
       minWidth: 180
     }
   },
+  placeholder: (styles) => {
+    return {
+      ...styles,
+      paddingLeft: 8,
+      color: '#bfbfbf',
+    }
+  },
   multiValue: (styles, { data }) => {
     return {
       ...styles,
@@ -210,7 +217,7 @@ export const TagSelectComponent = React.memo((props) => {
 
   return <Component
     isMulti
-    placeholder={<Text type="secondary">Select tags</Text>}
+    placeholder="Select tags"
     closeMenuOnSelect={false}
     components={{ Option, Input, DropdownIndicator, IndicatorSeparator: () => null }}
     isClearable={false}
@@ -222,7 +229,7 @@ export const TagSelectComponent = React.memo((props) => {
     styles={colourStyles}
     options={options}
     isSearchable={allowCreate}
-    // menuPortalTarget={document.body}
+  // menuPortalTarget={document.body}
   />
 });
 
