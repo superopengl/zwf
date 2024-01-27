@@ -22,7 +22,7 @@ function streamFileToResponse(file: File, res) {
   const stream = getS3ObjectStream(id, fileName);
   res.setHeader('Content-type', mime);
   res.setHeader('Content-disposition', 'attachment; filename=' + fileName);
-  res.setHeader('Cache-Control', `public, max-age=36536000`);
+  res.setHeader('Cache-Control', `public, max-age=36536000, immutable`);
 
   stream.pipe(res);
 }
