@@ -50,7 +50,7 @@ border: 1px solid rgba(0,0,0,0.2);
 
 
 export const UserAvatar = React.memo((props) => {
-  const { editable, size, value: avatarFileId, onChange, style, color: backgroundColor } = props;
+  const { editable, size, value: avatarFileId, onChange, style, color: backgroundColor, fallbackIcon } = props;
 
   const [fileList, setFileList] = React.useState([]);
 
@@ -92,8 +92,8 @@ export const UserAvatar = React.memo((props) => {
   } else {
     const fontSize = 28 * size / 64;
     avatarComponent = <StyledAvatar size={size} style={{ ...style, lineHeight: size - 4, backgroundColor }}>
-      <Text style={{ fontSize, color: 'rgba(255,255,255,0.85)' }}>
-        <UserOutlined />
+      <Text style={{ color: 'rgba(255,255,255,0.85)' }}>
+        {fallbackIcon || <UserOutlined />}
       </Text>
     </StyledAvatar>
   }
@@ -139,12 +139,14 @@ UserAvatar.propTypes = {
   editable: PropTypes.bool,
   onChange: PropTypes.func,
   style: PropTypes.any,
+  fallbackIcon: PropTypes.object,
 };
 
 UserAvatar.defaultProps = {
   color: '#00232944',
   size: 64,
   editable: false,
+  fallbackIcon: <UserOutlined />
 };
 
 

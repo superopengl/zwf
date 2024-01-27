@@ -13,13 +13,27 @@ export const UserNameCard = React.memo((props) => {
   const [data, setData] = React.useState();
 
   React.useEffect(() => {
-    if(userId) {
+    if (userId) {
       const sub$ = getUserNameCardInfo$(userId).subscribe(x => {
         setData(x)
       });
       return () => sub$.unsubscribe();
     }
   }, [userId]);
+
+  const icon = React.useMemo(() => {
+    let ret = '';
+    if (data) {
+      if (data.givenName) {
+        ret += data.givenName[0];
+        if (data.surname) {
+          ret += data.surname[0];
+        }
+      }
+    }
+
+    return ret || null;
+  }, [data]);
 
   if (!data) {
     return <Space size="small">
@@ -28,8 +42,10 @@ export const UserNameCard = React.memo((props) => {
     </Space>
   }
 
+
+
   const contentComponent = <Space size="small">
-    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} />
+    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
     <UserDisplayName
       surname={data.surname}
       givenName={data.givenName}
