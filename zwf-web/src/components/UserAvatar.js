@@ -9,6 +9,7 @@ import { UserOutlined } from '@ant-design/icons';
 import * as abbreviate from 'abbreviate';
 import uniqolor from 'uniqolor';
 import { empty, EMPTY } from 'rxjs';
+import { API_BASE_URL } from 'services/http';
 
 const { Text } = Typography;
 
@@ -115,7 +116,7 @@ export const UserAvatar = React.memo((props) => {
   return (
     <Upload
       multiple={false}
-      action={`${process.env.REACT_APP_ZWF_API_ENDPOINT}/file?public=1`}
+      action={`${API_BASE_URL}/file?public=1`}
       withCredentials={true}
       accept="image/*"
       showUploadList={false}

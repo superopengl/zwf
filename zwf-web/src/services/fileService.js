@@ -1,4 +1,4 @@
-import { httpGet, httpGet$, httpPost, request } from './http';
+import { API_BASE_URL, httpGet, httpGet$, httpPost, request } from './http';
 
 export async function getFileStream(id) {
   return httpGet(`file/${id}/data`);
@@ -28,5 +28,5 @@ export async function openFile(taskId, fileId) {
 }
 
 export function getPublicFileUrl(fileId) {
-  return `${process.env.REACT_APP_ZWF_API_ENDPOINT}/file/public/${fileId}/data`;
+  return `${API_BASE_URL}/file/public/${fileId}/data`;
 }

@@ -10,6 +10,7 @@ import { AiOutlineUpload } from 'react-icons/ai';
 import { Badge } from 'antd';
 import { Popover } from 'antd';
 import { TimeAgo } from './TimeAgo';
+import { API_BASE_URL } from 'services/http';
 
 const { Dragger } = Upload;
 const { Text } = Typography;
@@ -154,7 +155,7 @@ export const FileUploader = (props) => {
     <Container className="clearfix">
       <Dragger
         multiple={true}
-        action={`${process.env.REACT_APP_ZWF_API_ENDPOINT}/file`}
+        action={`${API_BASE_URL}/file`}
         withCredentials={true}
         accept="*/*"
         listType="text"
