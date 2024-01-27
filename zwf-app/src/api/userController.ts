@@ -117,14 +117,14 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 });
 
 export const listOrgMembers = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req, 'system', 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
   const list = await getRepository(OrgMemberInformation).find({ orgId });
   res.json(list);
 });
 
 export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req, 'system', 'admin', 'agent');
 
   const orgId = getOrgIdFromReq(req);
 

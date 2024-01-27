@@ -161,7 +161,7 @@ const ClientUserListPage = () => {
     searchByQueryInfo({ ...queryInfo, page, size: pageSize });
   }
 
-  const columnDef = React.useMemo(() => [
+  const columnDef = [
     {
       title: <Input.Search
         placeholder="Search name or email"
@@ -217,7 +217,7 @@ const ClientUserListPage = () => {
         )
       },
     },
-  ].filter(x => !!x), []);
+  ].filter(x => !!x);
 
   return (
     <ContainerStyled>
@@ -225,7 +225,6 @@ const ClientUserListPage = () => {
         backIcon={false}
         title={"Clients"}
       >
-
         <Table columns={columnDef}
           dataSource={list}
           size="small"

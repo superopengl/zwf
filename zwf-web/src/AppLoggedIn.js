@@ -5,7 +5,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, FileOutlined, PlusOutlined
+  BankOutlined, QuestionOutlined, FileOutlined, PlusOutlined, TagsOutlined
 } from '@ant-design/icons';
 import { Link, withRouter, Redirect } from 'react-router-dom';
 import { Space, Menu, Typography, Modal, Button, AutoComplete, Row, Col } from 'antd';
@@ -92,19 +92,19 @@ const ROUTES = [
     path: '/scheduler',
     name: <FormattedMessage id="menu.scheduler" />,
     icon: <ClockCircleOutlined />,
-    roles: ['admin']
+    roles: ['admin', 'agent']
   },
   {
     path: '/task_template',
     name: <FormattedMessage id="menu.taskTemplate" />,
     icon: <Icon component={() => <ImInsertTemplate />} />,
-    roles: ['admin']
+    roles: ['admin', 'agent']
   },
   {
     path: '/doc_template',
     name: <FormattedMessage id="menu.docTemplate" />,
     icon: <FileOutlined />,
-    roles: ['admin']
+    roles: ['admin', 'agent']
   },
   {
     path: '/procedure',
@@ -143,15 +143,17 @@ const ROUTES = [
     roles: ['system']
   },
   {
+    path: '/tags',
+    name: <FormattedMessage id="menu.tags" />,
+    icon: <TagsOutlined />,
+    roles: ['admin', 'agent'],
+  },
+  {
     path: '/settings',
     name: <FormattedMessage id="menu.settings" />,
     icon: <SettingOutlined />,
     roles: ['system', 'admin'],
     routes: [
-      {
-        path: '/tags',
-        name: <FormattedMessage id="menu.tags" />,
-      },
       {
         path: '/config',
         name: <FormattedMessage id="menu.config" />,
@@ -269,18 +271,18 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute exact path="/task" component={isSystem ? SystemBoardPage : isAdmin || isAgent ? OrgTaskListPage : ClientTaskListPage} />
       <RoleRoute visible={isAdmin} exact path="/task/new" component={NewTaskPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
-      <RoleRoute visible={isAdmin} exact path="/doc_template" component={DocTemplateListPage} />
-      <RoleRoute visible={isAdmin} exact path="/doc_template/new" component={DocTemplatePage} />
-      <RoleRoute visible={isAdmin} exact path="/doc_template/:id" component={DocTemplatePage} />
-      <RoleRoute visible={isAdmin} exact path="/task_template" component={TaskTemplateListPage} />
-      <RoleRoute visible={isAdmin} exact path="/task_template/new" component={TaskTemplatePage} />
-      <RoleRoute visible={isAdmin} exact path="/task_template/:id" component={TaskTemplatePage} />
-      <RoleRoute visible={isAdmin} exact path="/scheduler" component={RecurringListPage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/new" component={DocTemplatePage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template/:id" component={DocTemplatePage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/task_template" component={TaskTemplateListPage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/new" component={TaskTemplatePage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/task_template/:id" component={TaskTemplatePage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/scheduler" component={RecurringListPage} />
       <RoleRoute visible={isAdmin} exact path="/account" component={OrgAccountPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/team" component={OrgMemberListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/client" component={ClientUserListPage} />
-      <RoleRoute visible={isSystem || isAdmin} exact path="/tags" component={TagsSettingPage} />
+      <RoleRoute visible={isAdmin} exact path="/team" component={OrgMemberListPage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/client" component={ClientUserListPage} />
+      <RoleRoute visible={isAdmin || isAgent} exact path="/tags" component={TagsSettingPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />

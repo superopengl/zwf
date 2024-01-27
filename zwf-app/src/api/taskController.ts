@@ -350,7 +350,7 @@ async function logTaskAction(m: EntityManager, taskId: string, action: TaskActio
 }
 
 export const assignTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const { agentId } = req.body;
   const orgId = getOrgIdFromReq(req);
