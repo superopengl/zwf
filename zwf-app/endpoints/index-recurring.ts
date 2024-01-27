@@ -11,7 +11,6 @@ import { TaskStatus } from '../src/types/TaskStatus';
 import errorToJSON from 'error-to-json';
 import { calculateRecurringNextRunAt } from '../src/utils/calculateRecurringNextRunAt';
 import { sendNewTaskCreatedEmail } from '../src/utils/sendNewTaskCreatedEmail';
-import { Portfolio } from '../src/entity/Portfolio';
 import { TaskTemplate } from '../src/entity/TaskTemplate';
 import { executeRecurring } from '../src/services/recurringService';
 
@@ -72,7 +71,6 @@ start(JOB_NAME, async () => {
   const list = await getRepository(Recurring)
     .createQueryBuilder('x')
     .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
-    .innerJoin(q => q.from(Portfolio, 'p'), 'p', 'p.id = x."portfolioId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
     .where(`x."nextRunAt" <= now()`)
     .getMany();

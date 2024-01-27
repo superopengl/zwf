@@ -6,7 +6,6 @@ export enum EmailTemplateType {
   InviteOrgMember = 'invite_agent_user',
   InviteClientUser = 'invite_client_user',
   ResetPassword = 'reset_password',
-  CreatedPortfolio = 'created_portfolio',
 
   // Authorize
   RequireClientAuthorizing = 'require_client_auth',

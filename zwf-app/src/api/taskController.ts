@@ -17,7 +17,6 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { getNow } from '../utils/getNow';
-import { Portfolio } from '../entity/Portfolio';
 import * as _ from 'lodash';
 import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import { sendCompletedEmail } from '../utils/sendCompletedEmail';
@@ -36,9 +35,9 @@ import { TaskActionType } from '../types/TaskActionType';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
-  const { taskTemplateId, clientEmail, taskName, varBag } = req.body;
+  const { id, taskTemplateId, clientEmail, taskName, varBag } = req.body;
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, varBag);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, varBag, id);
 
   res.json(task);
 });

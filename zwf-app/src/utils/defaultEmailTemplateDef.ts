@@ -57,14 +57,6 @@ Please click below link to reset your password.
 {{url}}
 `,
   },
-  [EmailTemplateType.CreatedPortfolio]: {
-    vars: ['website', 'toWhom', 'email', 'url', 'portfolioName'],
-    subject: '[ZeeWorkflow] Created Portfolio',
-    body: `Dear {{toWhom}}
-    <br/>
-Congratulations! Your portfolio {{portfolioName}} was created.
-`,
-  },
   [EmailTemplateType.RequireClientAuthorizing]: {
     vars: ['website', 'toWhom', 'email', 'okUrl', 'ngUrl', 'orgName'],
     subject: '[ZeeWorkflow] Authorize Organization',

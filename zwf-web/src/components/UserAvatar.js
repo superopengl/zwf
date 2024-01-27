@@ -91,7 +91,6 @@ export const UserAvatar = React.memo((props) => {
       fallback="/images/avatar-fallback.png"
     />} />
   } else {
-    const fontSize = 28 * size / 64;
     avatarComponent = <StyledAvatar size={size} style={{ ...style, lineHeight: size - 4, backgroundColor }}>
       <Text style={{ color: 'rgba(255,255,255,0.85)' }}>
         {fallbackIcon || <UserOutlined />}
