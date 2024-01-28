@@ -8,7 +8,7 @@ const { Text, Paragraph, Link: TextLink } = Typography;
 const definitions = {
   'todo': {
     label: 'To Do',
-    color: '#8abcd1',
+    color: '#13c2c2',
   },
   'in_progress': {
     label: 'In Progress',

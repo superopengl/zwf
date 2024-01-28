@@ -12,9 +12,9 @@ const darkTheme = getThemeVariables({
 
 const modifyVars = {
   ...darkTheme,
-  '@primary-color': '#8abcd1', // rgb(19,194,194)
+  '@primary-color': '#13c2c2',// '#13c2c2', // rgb(19,194,194)
   '@info-color': '#1890ff',
-  '@link-color': '#8abcd1',
+  '@link-color': '#13c2c2',
   '@success-color': '#66c18c',
   '@font-size-base': '14px',
   '@table-font-size': '12px',
