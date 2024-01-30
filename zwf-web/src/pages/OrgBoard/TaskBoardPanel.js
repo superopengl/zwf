@@ -40,7 +40,7 @@ const COLUMN_DEFS = [
   {
     key: 'in_progress_blocked',
     status: ['pending_fix', 'pending_sign'],
-    label: 'Await client reply',
+    label: 'Await client',
     bgColor: '#06117811',
     hoverColor: '#061178',
   },

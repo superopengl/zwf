@@ -204,8 +204,9 @@ const OrgTaskPage = React.memo((props) => {
           destroyOnClose
           closable
           maskClosable
+          width={400}
           footer={
-            <Button onClick={() => setHistoryVisible(false)}>Close</Button>
+            <Button type="text" onClick={() => setHistoryVisible(false)}>Close</Button>
           }
         >
           <TaskHistoryPanel taskId={task.id} />

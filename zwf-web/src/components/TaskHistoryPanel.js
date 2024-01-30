@@ -1,4 +1,4 @@
-import { Skeleton, Space, Steps } from 'antd';
+import { Skeleton, Space, Steps, Timeline } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
@@ -30,17 +30,12 @@ export const TaskHistoryPanel = React.memo((props) => {
   }
 
   return <Container>
-    <Steps progressDot direction="vertical" current={list.length - 1}>
-      {list.map(x => <Steps.Step
-        key={x.id}
-        status="wait"
-        title={<>
-          {x.action} <TimeAgo value={x.createdAt} direction="horizontal" />
-        </>
-        }
-        description={<UserNameCard userId={x.userId} />}>
-      </Steps.Step>)}
-    </Steps>
+    <Timeline mode="left">
+      {list.map(x => <Timeline.Item key={x.id} label={<TimeAgo value={x.createdAt} direction="horizontal" accurate={false}/>}>
+        {x.action}
+        {/* <UserNameCard userId={x.userId} /> */}
+      </Timeline.Item>)}
+    </Timeline>
   </Container>
 });
 

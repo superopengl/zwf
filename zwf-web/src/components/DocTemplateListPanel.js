@@ -34,7 +34,7 @@ position: relative;
 `;
 
 export const DocTemplateListPanel = (props) => {
-  const { value: docs, allowTest, varBag, showWarning, renderVariable, type, ...otherProps } = props;
+  const { value: docs, allowTest, varBag, showWarning, renderVariable, mode, ...otherProps } = props;
 
   const handlePreviewDocTemplate = docId => {
     getDocTemplate$(docId).subscribe(docTemplate => {
@@ -42,7 +42,7 @@ export const DocTemplateListPanel = (props) => {
     })
   }
 
-  const isDocTemplateMode = type === 'taskTemplate'
+  const isDocTemplateMode = mode === 'taskTemplate'
 
   return docs?.length > 0 && <List
     size="small"
