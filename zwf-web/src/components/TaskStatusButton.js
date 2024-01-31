@@ -51,7 +51,7 @@ const options = definitions.map(d => ({
 export const TaskStatusButton = props => {
   const { onChange, value, style, ...others } = props;
 
-  return <Select style={{...style, width: 150}} {...others} options={options} value={value} onChange={onChange} />
+  return <Select {...others} options={options} value={value} onChange={onChange} dropdownMatchSelectWidth={false}/>
 };
 
 TaskStatusButton.propTypes = {

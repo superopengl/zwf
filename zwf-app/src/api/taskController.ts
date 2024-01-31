@@ -23,7 +23,6 @@ import { sendCompletedEmail } from '../utils/sendCompletedEmail';
 import { sendArchiveEmail } from '../utils/sendArchiveEmail';
 import { sendRequireSignEmail } from '../utils/sendRequireSignEmail';
 import { sendTodoEmail } from '../utils/sendTodoEmail';
-import { TaskComment } from '../entity/TaskComment';
 import { sendSignedEmail } from '../utils/sendSignedEmail';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { Role } from '../types/Role';
@@ -31,13 +30,14 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { TaskActionType } from '../types/TaskActionType';
+import { logTaskArchived, logTaskAssigned } from '../services/taskTrackingService';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
   const { id, taskTemplateId, clientEmail, taskName, varBag } = req.body;
+  const creatorId = getUserIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, varBag, id);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, varBag, creatorId, id);
 
   res.json(task);
 });
@@ -334,20 +334,11 @@ export const deleteTask = handlerWrapper(async (req, res) => {
 
   await getManager().transaction(async m => {
     await m.update(Task, { id, orgId }, { status: TaskStatus.ARCHIVED });
-    await logTaskAction(m, id, TaskActionType.Archive, userId);
+    await logTaskArchived(m, id, userId);
   })
 
   res.json();
 });
-
-async function logTaskAction(m: EntityManager, taskId: string, action: TaskActionType, executorId: string, extra: any = null) {
-  const taskAction = new TaskAction();
-  taskAction.taskId = taskId;
-  taskAction.action = action;
-  taskAction.by = executorId;
-  taskAction.extra = extra;
-  await m.save(taskAction);
-}
 
 export const assignTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -358,7 +349,7 @@ export const assignTask = handlerWrapper(async (req, res) => {
 
   await getManager().transaction(async m => {
     await m.update(Task, { id, orgId }, { agentId });
-    await logTaskAction(m, id, TaskActionType.Assign, userId);
+    await logTaskAssigned(m, id, userId, agentId);
   });
 
   res.json();
@@ -491,44 +482,6 @@ export const markTaskNotifyRead = handlerWrapper(async (req, res) => {
   }
 
   await getRepository(Message).update(query, { readAt: now });
-
-  res.json();
-});
-
-export const getComments = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { id } = req.params;
-
-  const list = await getRepository(TaskComment)
-    .createQueryBuilder('c')
-    .leftJoin(q => q.from(User, 'u'), 'u', `u.id = c."senderId"`)
-    .where(`"taskId" = :id`, { id })
-    .orderBy('c.id')
-    .select([
-      `u."givenName" as "givenName"`,
-      `u."surname" as "surname"`,
-      `c."senderId" as "senderId"`,
-      `c.content as content`,
-      `c."createdAt" as "createdAt"`,
-    ])
-    .execute();
-
-  res.json(list);
-});
-
-export const newComment = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
-  const { id } = req.params;
-  const { content } = req.body;
-  assert(content?.trim(), 400, 'Empty comment body');
-  const { user: { id: userId } } = req as any;
-
-  const comment = new TaskComment();
-  comment.taskId = id;
-  comment.senderId = userId;
-  comment.content = content;
-
-  await getRepository(TaskComment).save(comment);
 
   res.json();
 });

@@ -702,32 +702,9 @@ paths:
       responses:
         200:
           description: OK          
-  /task/{id}/comment:
+  /task/{taskId}/chat:
     get:
-      operationId: getComments
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: newComment
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-  /task/{taskId}/message:
-    get:
-      operationId: listTaskMessages
+      operationId: listTaskTrackings
       parameters:
         - name: taskId
           in: path
@@ -738,7 +715,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: newTaskMessage
+      operationId: createNewTaskTracking
       parameters:
         - name: taskId
           in: path
@@ -748,9 +725,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{taskId}/message/subscribe:
+  /task/{taskId}/chat/subscribe:
     get:
-      operationId: subscribeTaskMessage
+      operationId: subscribeTaskTracking
       parameters:
         - name: taskId
           in: path
@@ -877,7 +854,7 @@ paths:
       responses:
         200:
           description: OK
-  /message:
+  /chat:
     post:
       operationId: listMessage
       # security:
@@ -885,13 +862,13 @@ paths:
       responses:
         200:
           description: OK
-  /message/count/unread:
+  /chat/count/unread:
     get:
       operationId: getMessageUnreadCount
       responses:
         200:
           description: OK
-  /message/:id:
+  /chat/:id:
     get:
       operationId: getMessage
       # security:

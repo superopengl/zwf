@@ -1,5 +1,5 @@
-import { SendOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { MessageFilled, MessageOutlined, SendOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Timeline, Space, Typography, Card } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import * as moment from 'moment';
 import PropTypes from 'prop-types';
@@ -11,6 +11,10 @@ import styled from 'styled-components';
 import { v4 as uuidv4 } from 'uuid';
 import { uniqBy, orderBy } from 'lodash';
 import { getPublicFileUrl } from 'services/fileService';
+import { TimeAgo } from './TimeAgo';
+import { UserNameCard } from './UserNameCard';
+
+const { Text, Paragraph } = Typography
 
 const Container = styled.div`
 // background-color: rgba(0,0,0,0.05);
@@ -66,7 +70,27 @@ const SentMessage = (props) => <StyledSentMessageBox {...props} position="right"
 
 const ReceivedMessage = (props) => <StyledReceivedMessageBox {...props} position="left" />
 
-export const TaskChatPanel = React.memo((props) => {
+const ChatMessage = props => {
+  const { userId, message } = props;
+  const context = React.useContext(GlobalContext);
+  const isMe = userId === context.user.id;
+
+  return <Card
+    size="small"
+    bordered={true}
+    style={{
+      marginBottom: 4,
+      backgroundColor: isMe ? '#66c18c' : 'rgb(245,245,245)',
+    }}>
+    <Space style={{ width: '100%', flexDirection: isMe ? 'row-reverse' : 'row', alignItems: 'flex-start' }}>
+      <UserNameCard userId={userId} showName={false} showTooltip={true} />
+      {message}
+    </Space>
+  </Card>
+
+}
+
+export const TaskTrackingPanel = React.memo((props) => {
   const { taskId, currentUserId, readonly } = props;
 
   const [loading, setLoading] = React.useState(true);
@@ -75,7 +99,7 @@ export const TaskChatPanel = React.memo((props) => {
   const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
-    const subLoad$ = listTaskTrackings(taskId).subscribe(allMessages => {
+    const sub$ = listTaskTrackings(taskId).subscribe(allMessages => {
       allMessages.forEach(x => {
         x.createdAt = moment.utc(x.createdAt).local().toDate()
       });
@@ -87,19 +111,19 @@ export const TaskChatPanel = React.memo((props) => {
     eventSource.onmessage = (message) => {
       const event = JSON.parse(message.data);
       event.createdAt = moment.utc(event.createdAt).local().toDate();
-      setList(list => {       
+      setList(list => {
         list.push(event);
-        return orderBy(uniqBy(list, x => x.id), ['createdAt'], ['desc']);
+        return orderBy(uniqBy(list, x => x.id), ['createdAt'], ['asc']);
       });
     }
 
     return () => {
-      subLoad$?.unsubscribe();
+      sub$?.unsubscribe();
       eventSource?.close();
     }
   }, []);
 
-  const sendMessage = (values) => {
+  const handleSendMessage = (values) => {
     const { message } = values;
     if (!message?.trim()) {
       return;
@@ -109,39 +133,40 @@ export const TaskChatPanel = React.memo((props) => {
     const newMessage = {
       id: messageId,
       createdAt: new Date(),
-      senderId: currentUserId,
-      message
+      by: currentUserId,
+      info: message,
+      action: 'chat',
+      status: 'waiting',
     };
-
-    const others = [...list];
 
     createNewTaskTracking$(taskId, messageId, message).subscribe(() => {
       setList(list => list.map(x => x.id === messageId ? { ...x, status: 'sent' } : x));
     })
 
-    setList([{ ...newMessage, status: 'waiting' }, ...others]);
+    setList([ ...list, newMessage]);
 
     form.resetFields();
     textareaRef.current.focus();
   }
 
   return <Container>
-    <div className="message-list" style={{ padding: '0 0 16px', verticalAlign: 'bottom' }}>
-      {list.map(item => {
-        const MessageComponent = item.senderId === currentUserId ? SentMessage : ReceivedMessage;
-        return <MessageComponent
-            key={item.id}
-            // avatar={getPublicFileUrl(item.avatarFileId)}
-            type="text"
-            text={item.message}
-            date={moment.utc(item.createdAt).local().toDate()}
-            status={item.status || 'sent'} // waiting, sent, received, read
-            notch={false}
-          />
-      })}
-    </div>
+    <Timeline mode="left">
+      {list.map(item => <Timeline.Item
+        key={item.id}
+        color={item.action === 'chat' ? (item.by === currentUserId ? 'green' : 'blue') : 'gray'}
+        // position={item.action === 'chat' && item.by === currentUserId ? 'left' : 'right'}
+        dot={item.action === 'chat' ? <MessageFilled /> : null}
+      // label={<TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column' }}>
+          {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text>{item.action ?? item.info}</Text>}
+          <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />
+        </div>
+      </Timeline.Item>
+      )}
+    </Timeline>
     <div style={{ padding: '16px 0' }}>
-      {readonly ? null : <Form onFinish={sendMessage}
+      {readonly ? null : <Form onFinish={handleSendMessage}
         form={form}>
         <Form.Item name="message" style={{ marginBottom: 4 }}>
           <Input.TextArea
@@ -152,7 +177,7 @@ export const TaskChatPanel = React.memo((props) => {
             allowClear
             autoFocus={true}
             disabled={loading}
-            onPressEnter={e => sendMessage({ message: e.target.value })}
+            onPressEnter={e => handleSendMessage({ message: e.target.value })}
             ref={textareaRef}
           />
         </Form.Item>
@@ -165,13 +190,13 @@ export const TaskChatPanel = React.memo((props) => {
   </Container>
 });
 
-TaskChatPanel.propTypes = {
+TaskTrackingPanel.propTypes = {
   taskId: PropTypes.string.isRequired,
   currentUserId: PropTypes.string.isRequired,
   readonly: PropTypes.bool.isRequired,
 };
 
-TaskChatPanel.defaultProps = {
+TaskTrackingPanel.defaultProps = {
   readonly: false
 };
 

@@ -85,16 +85,16 @@ export async function addTaskComment(taskId, content) {
   return httpPost(`task/${taskId}/comment`, { content });
 }
 
-export function listTaskMessages(taskId) {
-  return httpGet$(`task/${taskId}/message`);
+export function listTaskTrackings(taskId) {
+  return httpGet$(`task/${taskId}/chat`);
 }
 
-export function sendTaskMessage$(taskId, id, message) {
-  return httpPost$(`task/${taskId}/message`, { id, message });
+export function createNewTaskTracking$(taskId, id, message) {
+  return httpPost$(`task/${taskId}/chat`, { id, message });
 }
 
-export function subscribeTaskMessage(taskId) {
-  const url = `${API_BASE_URL}/task/${taskId}/message/subscribe`;
+export function subscribeTaskTracking(taskId) {
+  const url = `${API_BASE_URL}/task/${taskId}/chat/subscribe`;
   const es = new EventSource(url, { withCredentials: true });
   return es;
 }
