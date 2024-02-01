@@ -1,11 +1,11 @@
 import { MessageFilled } from '@ant-design/icons';
-import { Timeline, Space, Typography, Card } from 'antd';
+import { Timeline, Space, Typography, Card, Skeleton, Button } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
-import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
+import ScrollToBottom, { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
 import { getTask$, listTaskTrackings$, subscribeTaskTracking } from 'services/taskService';
 import { uniqBy, orderBy } from 'lodash';
 import * as moment from 'moment';
@@ -49,12 +49,15 @@ export const TaskTrackingPanel = React.memo((props) => {
   const { taskId } = props;
 
   const [list, setList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+  const scrollToBottom = useScrollToBottom();
   const context = React.useContext(GlobalContext);
+  const [sticky] = useSticky();
   const currentUserId = context.user.id;
 
   // React.useEffect(() => {
   //   scrollToBottom();
-  // }, [dataSource]);
+  // }, [list]);
 
   React.useEffect(() => {
     const sub$ = listTaskTrackings$(taskId).subscribe(allData => {
@@ -62,16 +65,14 @@ export const TaskTrackingPanel = React.memo((props) => {
         x.createdAt = moment.utc(x.createdAt).local().toDate()
       });
       setList(allData);
+      setLoading(false);
     });
 
     const eventSource = subscribeTaskTracking(taskId);
     eventSource.onmessage = (message) => {
       const event = JSON.parse(message.data);
       event.createdAt = moment.utc(event.createdAt).local().toDate();
-      setList(list => {
-        list.push(event);
-        return orderBy(uniqBy(list, x => x.id), ['createdAt'], ['asc']);
-      });
+      setList(list => [...list, event]);
     }
 
     return () => {
@@ -80,7 +81,12 @@ export const TaskTrackingPanel = React.memo((props) => {
     }
   }, []);
 
-  return <ScrollToBottom className={containerCss}>
+  if(loading) {
+    return <Skeleton active/>
+  }
+
+  return <ScrollToBottom className={containerCss} debug={false}>
+    {/* {!sticky && <Button onClick={scrollToBottom}>to bottom</Button>} */}
     <Timeline mode="left" style={{ padding: 16, paddingLeft: 20 }}>
       {(list ?? []).map(item => <Timeline.Item
         key={item.id}

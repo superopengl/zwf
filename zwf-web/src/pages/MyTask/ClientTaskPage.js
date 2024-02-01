@@ -69,10 +69,20 @@ const ClientTaskPage = (props) => {
               <AutoSaveTaskFormPanel value={task} type="client" onSavingChange={setSaving} />
             </Card>
           </Col>
-          <Col span={12}>
-            <Card size="large">
+          <Col span={12} >
+            <Card 
+            bordered={false}
+            title="Activity History"
+            size="small"
+            size="large" 
+            bodyStyle={{height: 'calc(100vh - 420px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px'}}
+            actions={[
+              <div style={{paddingLeft: 24, paddingRight: 24, width: '100%'}}>
+                <TaskMessageForm  key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
+              </div>
+            ]}
+            >
               <TaskTrackingPanel taskId={task.id} />
-              <TaskMessageForm taskId={task.id} loading={loading} onDone={handleMessageSent} />
             </Card>
           </Col>
         </Row>
