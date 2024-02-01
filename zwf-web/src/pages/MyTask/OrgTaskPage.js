@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { withRouter } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Drawer, Space, Card, Typography } from 'antd';
-import { assignTask$, changeTaskStatus$, getTask$, saveTaskFields$, updateTaskTags$ } from 'services/taskService';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography } from 'antd';
+import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
 import { catchError } from 'rxjs/operators';
@@ -10,21 +10,15 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
-import { TaskChatPanel } from 'components/TaskChatPanel';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LinkOutlined, MessageOutlined, SaveOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LinkOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
 import { AiOutlineHistory } from 'react-icons/ai';
-import { UserDisplayName } from 'components/UserDisplayName';
-import { UserAvatar } from 'components/UserAvatar';
 import { FaSignature } from 'react-icons/fa';
 import { MemberSelect } from 'components/MemberSelect';
-import { notify } from 'util/notify';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
-import { TaskHistoryPanel } from 'components/TaskHistoryPanel';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
-import { TaskTrackingPanel } from 'components/TaskTrackingPanel';
 import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
 
 const { Text } = Typography;
@@ -59,15 +53,13 @@ const OrgTaskPage = React.memo((props) => {
 
   const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
-  const [messageVisible, setMessageVisible] = React.useState(false);
-  const [historyVisible, setHistoryVisible] = React.useState(false);
+  const [historyVisible, setHistoryVisible] = React.useState(!!chat);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
   const context = React.useContext(GlobalContext);
 
   const formRef = React.createRef();
-  const currentUserId = context.user?.id;
 
   React.useEffect(() => {
     const subscription$ = load$();
@@ -170,13 +162,12 @@ const OrgTaskPage = React.memo((props) => {
               </Collapse.Panel>
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                  <Button type="link" icon={<MessageOutlined />} block onClick={() => setMessageVisible(true)}>Messages</Button>
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Activity history</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <hr />
-                  <Button type="link" icon={<FileAddOutlined />} block onClick={() => setMessageVisible(true)}>Request client for more information</Button>
-                  <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setMessageVisible(true)}>Request client for signature</Button>
-                  {!['archived', 'done'].includes(task.status) && <Button type="link" icon={<CheckOutlined />} block onClick={() => setMessageVisible(true)}>Complete this task</Button>}
+                  <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>
+                  <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button>
+                  {!['archived', 'done'].includes(task.status) && <Button type="link" icon={<CheckOutlined />} block onClick={() => setHistoryVisible(true)}>Complete this task</Button>}
                   {task.status !== 'archived' && <>
                     <hr />
                     <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>
@@ -187,19 +178,7 @@ const OrgTaskPage = React.memo((props) => {
           </Col>
         </Row>
       </PageContainer>}
-      {task && <>
-        <Drawer
-          visible={messageVisible}
-          onClose={() => setMessageVisible(false)}
-          title="Message"
-          destroyOnClose
-          closable
-          maskClosable
-        >
-          <TaskChatPanel taskId={task.id} currentUserId={currentUserId} />
-        </Drawer>
-        {task && <TaskTrackingDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
-      </>}
+      {task && <TaskTrackingDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
     </ContainerStyled>
   </>
   );
