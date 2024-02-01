@@ -32,40 +32,36 @@ const ClientTaskPage = (props) => {
   const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
-  const [list, setList] = React.useState([]);
   const [saving, setSaving] = React.useState(null);
 
   React.useEffect(() => {
-    const sub$ = combineLatest([getTask$(id), listTaskTrackings$(id)])
-      .pipe(
-        finalize(() => setLoading(false))
-      )
-      .subscribe(([task, list]) => {
-        setTask(task);
-        setList(list);
-      })
+    const sub$ = getTask$(id).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(task => {
+      setTask(task);
+    })
 
     return () => sub$.unsubscribe();
   }, [])
 
   const handleMessageSent = () => {
-    listTaskTrackings$(id).subscribe(setList);
+    setLoading(false);
   }
 
   return (<>
     <Container>
       {!task ? <Loading /> : <PageContainer
-              loading={loading}
-              backIcon={false}
-              ghost={true}
-              // fixedHeader
-              header={{
-                title: <Space style={{ height: 34 }}>
-                  <TaskIcon />
-                  {task?.name || <Skeleton paragraph={false} />}
-                  {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
-                </Space>
-              }}
+        loading={loading}
+        backIcon={false}
+        ghost={true}
+        // fixedHeader
+        header={{
+          title: <Space style={{ height: 34 }}>
+            <TaskIcon />
+            {task?.name || <Skeleton paragraph={false} />}
+            {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
+          </Space>
+        }}
       >
         <Row gutter={40} wrap={false}>
           <Col span={12}>
@@ -75,7 +71,7 @@ const ClientTaskPage = (props) => {
           </Col>
           <Col span={12}>
             <Card size="large">
-              <TaskTrackingPanel dataSource={list} />
+              <TaskTrackingPanel taskId={task.id} />
               <TaskMessageForm taskId={task.id} loading={loading} onDone={handleMessageSent} />
             </Card>
           </Col>
