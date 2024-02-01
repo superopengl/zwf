@@ -4,10 +4,11 @@ import * as moment from 'moment';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { listTaskTrackings, createNewTaskTracking$, subscribeTaskTracking } from 'services/taskService';
+import { listTaskTrackings$, createNewTaskTracking$, subscribeTaskTracking } from 'services/taskService';
 import { uniqBy, orderBy } from 'lodash';
 import { TaskTrackingPanel } from './TaskTrackingPanel';
 import { switchMapTo } from 'rxjs/operators';
+import { TaskMessageForm } from './TaskMessageForm';
 
 
 
@@ -15,12 +16,10 @@ export const TaskTrackingDrawer = React.memo((props) => {
   const { taskId, visible, onClose, width } = props;
 
   const [loading, setLoading] = React.useState(true);
-  const [form] = Form.useForm();
-  const textareaRef = React.useRef(null);
   const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
-    const sub$ = listTaskTrackings(taskId).subscribe(allMessages => {
+    const sub$ = listTaskTrackings$(taskId).subscribe(allMessages => {
       allMessages.forEach(x => {
         x.createdAt = moment.utc(x.createdAt).local().toDate()
       });
@@ -44,61 +43,21 @@ export const TaskTrackingDrawer = React.memo((props) => {
     }
   }, []);
 
-  React.useEffect(() => {
-    if (!loading) {
-      textareaRef.current?.focus();
-    }
-  }, [loading]);
-
-
-  const handleSendMessage = (values) => {
-    const { message } = values;
-    if (!message?.trim()) {
-      return;
-    }
-
-    setLoading(true)
-    createNewTaskTracking$(taskId, message).pipe(
-      switchMapTo(listTaskTrackings(taskId))
-    ).subscribe(list => {
-      setLoading(false)
-      setList(list);
-      form.resetFields();
-      textareaRef.current.focus();
-    });
+  const handleMessageSent = () => {
+    listTaskTrackings$(taskId).subscribe(setList);
   }
 
   return <Drawer
     visible={visible}
     onClose={onClose}
     title="Activity History"
-    destroyOnClose
+    destroyOnClose={false}
     closable
     autoFocus
     maskClosable
     width={width}
     bodyStyle={{ padding: 0 }}
-    footer={
-      <>
-        <Form onFinish={handleSendMessage}
-          form={form}>
-          <Form.Item name="message">
-            <Input.TextArea
-              showCount
-              autoSize={{ minRows: 3, maxRows: 20 }}
-              maxLength={2000}
-              placeholder="Type here and press enter to send"
-              allowClear
-              autoFocus={true}
-              disabled={loading}
-              onPressEnter={e => handleSendMessage({ message: e.target.value })}
-              ref={textareaRef}
-            />
-          </Form.Item>
-          <Button block type="primary" htmlType="submit" disabled={loading}>Send <EnterOutlined /></Button>
-        </Form>
-      </>
-    }
+    footer={<TaskMessageForm taskId={taskId} loading={loading} onDone={handleMessageSent} />    }
   >
     <TaskTrackingPanel dataSource={list} />
   </Drawer>

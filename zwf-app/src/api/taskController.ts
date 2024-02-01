@@ -127,6 +127,7 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
         ...query,
         userId: getUserIdFromReq(req),
       }
+      break;
     default:
       assert(false, 404, 'Task is not found');
   }

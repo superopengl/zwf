@@ -702,11 +702,11 @@ paths:
       responses:
         200:
           description: OK          
-  /task/{taskId}/chat:
+  /task/{id}/tracking:
     get:
       operationId: listTaskTrackings
       parameters:
-        - name: taskId
+        - name: id
           in: path
           type: string
           format: uuid
@@ -717,7 +717,7 @@ paths:
     post:
       operationId: createNewTaskTracking
       parameters:
-        - name: taskId
+        - name: id
           in: path
           type: string
           format: uuid
@@ -725,7 +725,7 @@ paths:
       responses:
         200:
           description: OK
-  /task/{taskId}/chat/subscribe:
+  /task/{taskId}/tracking/subscribe:
     get:
       operationId: subscribeTaskTracking
       parameters:
@@ -854,7 +854,7 @@ paths:
       responses:
         200:
           description: OK
-  /chat:
+  /tracking:
     post:
       operationId: listMessage
       # security:
@@ -862,13 +862,13 @@ paths:
       responses:
         200:
           description: OK
-  /chat/count/unread:
+  /tracking/count/unread:
     get:
       operationId: getMessageUnreadCount
       responses:
         200:
           description: OK
-  /chat/:id:
+  /tracking/:id:
     get:
       operationId: getMessage
       # security:
