@@ -42,7 +42,7 @@ padding: 8px;
 `;
 
 const StyledAvatar = styled(Avatar)`
-border: 1px solid rgba(0,0,0,0.2);
+border: 1px solid #bfbfbf;
 
 .ant-avatar-string {
   // line-height: ${28}px !important;

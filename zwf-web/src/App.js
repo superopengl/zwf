@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.less';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import HomePage from 'pages/HomePage';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
@@ -119,10 +119,10 @@ export const App = React.memo(() => {
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-              <RoleRoute loading={loading} path="/" exact component={HomePage} />
+              <RoleRoute loading={loading} path="/" exact component={isLoggedIn ? (isClient ? AppClient : AppLoggedIn) : HomePage} />
               <RoleRoute loading={loading} path="/" component={isLoggedIn ? (isClient ? AppClient : AppLoggedIn) : HomePage} />
-              {/* <Redirect to="/" /> */}
-              <RoleRoute loading={loading} component={Error404} />
+              <Redirect to="/" />
+              {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>
           </BrowserRouter>
           {isGuest && <ContactWidget />}
