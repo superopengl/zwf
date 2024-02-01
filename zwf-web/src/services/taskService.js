@@ -89,8 +89,8 @@ export function listTaskTrackings(taskId) {
   return httpGet$(`task/${taskId}/chat`);
 }
 
-export function createNewTaskTracking$(taskId, id, message) {
-  return httpPost$(`task/${taskId}/chat`, { id, message });
+export function createNewTaskTracking$(taskId, message) {
+  return httpPost$(`task/${taskId}/chat`, { message });
 }
 
 export function subscribeTaskTracking(taskId) {
