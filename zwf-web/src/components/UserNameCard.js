@@ -8,7 +8,7 @@ import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 
 export const UserNameCard = React.memo((props) => {
-  const { userId, searchText, size, showTooltip, showName } = props;
+  const { userId, searchText, size, showTooltip, showName, showEmail } = props;
 
   const [data, setData] = React.useState();
 
@@ -42,15 +42,14 @@ export const UserNameCard = React.memo((props) => {
     </Space>
   }
 
-
-
   const contentComponent = <Space size="small">
     <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
-    {showName && <UserDisplayName
+    {(showName || showEmail) && <UserDisplayName
       surname={data.surname}
       givenName={data.givenName}
       email={data.email}
       searchText={searchText}
+      showEmail={showEmail}
     />}
   </Space>
 
@@ -66,6 +65,7 @@ UserNameCard.propTypes = {
   size: PropTypes.number,
   showTooltip: PropTypes.bool,
   showName: PropTypes.bool,
+  showEmail: PropTypes.bool,
 };
 
 UserNameCard.defaultProps = {
@@ -73,4 +73,5 @@ UserNameCard.defaultProps = {
   size: 32,
   showTooltip: false,
   showName: true,
+  showEmail: true,
 };
