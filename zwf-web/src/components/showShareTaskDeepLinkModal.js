@@ -17,7 +17,7 @@ const Content = props => {
 
   return <>
     <Paragraph type="secondary" style={{ marginTop: '1rem' }}>
-      This URL can be accessed anonymously. Please make sure that it will be shared with trusted people.
+      Please make sure that it will be shared with trusted people.
     </Paragraph>
     <Paragraph type="secondary" >
       Click below link to copy to clipboard.
@@ -35,7 +35,7 @@ const Content = props => {
 export function showShareTaskDeepLinkModal(taskDeepLinkId) {
   const url = getTaskDeepLinkUrl(taskDeepLinkId);
   const modalRef = Modal.info({
-    title: <>Share this task with client or other people</>,
+    title: <>Share this task with client or other member</>,
     content: <Content url={url} />,
     afterClose: () => {
     },
