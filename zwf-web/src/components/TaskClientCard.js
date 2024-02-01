@@ -13,7 +13,7 @@ const StyledCard = styled(Card)`
 position: relative;
 box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 .ant-card-body {
-  padding: 16px;
+  // padding: 16px;
 }
 
 &.unread {
