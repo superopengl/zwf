@@ -16,6 +16,8 @@ import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { SubscriptionType } from '../types/SubscriptionType';
+import { getUserIdFromReq } from '../utils/getUserIdFromReq';
+import { assert } from '../utils/assert';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -32,11 +34,26 @@ export const listOrg = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+export const saveOrgProfile = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const userId = getUserIdFromReq(req);
+  const orgId = getOrgIdFromReq(req);
+
+  const org = await getRepository(Org).findOne(orgId);
+  assert(org, 404);
+
+  Object.assign(org, req.body);
+
+  await getManager().save(org);
+
+  res.json();
+})
+
 export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
-  const { user: { id } } = req as any;
+  const userId = getUserIdFromReq(req);
   const { name, domain, businessName, country, address, tel, abn } = req.body;
-  const userEnitty = await getRepository(User).findOne(id);
+  const userEnitty = await getRepository(User).findOne(userId);
 
   const isFirstSave = !userEnitty.orgId;
 

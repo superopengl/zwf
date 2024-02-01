@@ -10,7 +10,7 @@ import { Steps, Button, message, Space, Alert, Form, Input, Typography } from 'a
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { isValidABN, isValidACN } from "abnacn-validator";
 import * as tfn from 'tfn';
-import { getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
+import { getMyOrgProfile$, createMyOrg$ } from 'services/orgService';
 import { Loading } from 'components/Loading';
 
 const { Step } = Steps;
@@ -72,7 +72,7 @@ const OrgOnBoardWizard = (props) => {
   };
 
   const handleSubmitBasic = values => {
-    saveMyOrgProfile$(values).subscribe(
+    createMyOrg$(values).subscribe(
       () => {
         setCurrent(current + 1);
       })

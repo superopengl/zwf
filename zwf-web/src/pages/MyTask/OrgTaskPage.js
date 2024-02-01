@@ -11,7 +11,7 @@ import { TagSelect } from 'components/TagSelect';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LinkOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LeftOutlined, LinkOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { FaSignature } from 'react-icons/fa';
@@ -81,7 +81,7 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleGoBack = () => {
-    props.history.goBack();
+    props.history.push('/');
   }
 
   const handleStatusChange = newStatus => {
@@ -115,7 +115,7 @@ const OrgTaskPage = React.memo((props) => {
       {task && <PageContainer
         loading={loading}
         onBack={handleGoBack}
-        backIcon={false}
+        backIcon={<LeftOutlined />}
         ghost={true}
         fixedHeader
         header={{

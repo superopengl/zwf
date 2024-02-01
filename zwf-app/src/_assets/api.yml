@@ -290,11 +290,16 @@ paths:
       responses:
         200:
           description: OK
-    post:
+    put:
       operationId: createMyOrg
       responses:
         200:
-          description: OK
+          description: OK    
+    post:
+      operationId: saveOrgProfile
+      responses:
+        200:
+          description: OK            
   /org/member:
     get:
       operationId: listOrgMembers
