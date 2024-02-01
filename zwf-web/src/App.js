@@ -6,8 +6,7 @@ import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
 import { ContactWidget } from 'components/ContactWidget';
-import { BehaviorSubject, combineLatest, Subject } from 'rxjs';
-import ReactDOM from 'react-dom';
+import { Subject } from 'rxjs';
 import { ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
 import { IntlProvider } from "react-intl";
@@ -19,9 +18,6 @@ import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppClient } from 'AppClient';
 import { AppLoggedIn } from 'AppLoggedIn';
-import { listTags$ } from 'services/tagService';
-import { last, tap, switchMap, share } from 'rxjs/operators';
-import { concat, EMPTY, of } from 'rxjs';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const Error404 = loadable(() => import('pages/Error404'));

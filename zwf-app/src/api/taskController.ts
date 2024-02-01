@@ -131,7 +131,7 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
       assert(false, 404, 'Task is not found');
   }
 
-  await getRepository(Task).update(query, {fields});
+  await getRepository(Task).update(query, { fields });
 
   res.json();
 });
@@ -275,7 +275,13 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   assert(role === Role.Guest, 404);
   const { deepLinkId } = req.params;
 
-  const task = await getRepository(Task).findOne({ deepLinkId }, { relations: ['tags', 'docs'] });
+  const task = await getRepository(Task)
+    .createQueryBuilder('t')
+    .where(`"deepLinkId" = :deepLinkId`, { deepLinkId })
+    .leftJoinAndSelect('t.tags', 'tags')
+    .leftJoinAndSelect('t.docs', 'docs')
+    .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
+    .getOne();
 
   assert(task, 404);
 

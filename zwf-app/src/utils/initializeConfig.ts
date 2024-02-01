@@ -12,7 +12,7 @@ export async function initializeConfig() {
 
   const bcc = new SystemConfig();
   bcc.key = 'email.sender.bcc';
-  bcc.value = 'admin@zeeworkflow.com';
+  bcc.value = 'noreply@zeeworkflow.com';
 
   const entities = [
     noreply,

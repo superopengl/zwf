@@ -6,6 +6,7 @@ import { Logo } from 'components/Logo';
 import * as queryString from 'query-string';
 import { resetPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
+import { finalize } from 'rxjs/operators';
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
@@ -40,16 +41,16 @@ const ResetPasswordPage = props => {
 
     setLoading(true);
     const { password } = values;
-    const { token } = queryString.parse(props.location.search);
+    const { token, r } = queryString.parse(props.location.search);
 
     resetPassword$(token, password)
-      .subscribe(
-        () => {
-          notify.success('Successfully reset password');
-          props.history.push('/login');
-        },
-        err => setLoading(false)
-      );
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(() => {
+        notify.success('Successfully reset password');
+        props.history.push('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
+      });
   }
 
   const validateConfirmPasswordRule = ({ getFieldValue }) => {

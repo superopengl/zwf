@@ -14,8 +14,8 @@ export function signUpOrg$(email) {
   return httpPost$(`auth/signup/org`, {email});
 }
 
-export function forgotPassword$(email) {
-  return httpPost$(`auth/forgot_password`, { email });
+export function forgotPassword$(email, returnUrl) {
+  return httpPost$(`auth/forgot_password`, { email, returnUrl });
 }
 
 export function resetPassword$(token, password) {
