@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { TimeAgo } from './TimeAgo';
 import { TaskStatusTag } from './TaskStatusTag';
+import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
 
 const { Link: TextLink, Paragraph, Text, Title } = Typography;
 
@@ -23,8 +24,8 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 
 export const TaskClientCard = React.memo(withRouter(props => {
 
-  const { task } = props;
-  const { id, name, description, orgName, createdAt, lastUpdatedAt, status } = task;
+  const { task, searchText } = props;
+  const { id, name, description, orgName, createdAt, lastUpdatedAt, tags, status } = task;
 
   const goToTask = (e, id) => {
     e.stopPropagation();
@@ -32,7 +33,7 @@ export const TaskClientCard = React.memo(withRouter(props => {
   }
 
   return <StyledCard
-    title={<Title>{name}</Title>}
+    title={<><TaskIcon /> {name}</>}
     size="large"
     hoverable
     onClick={e => goToTask(e, id)}
@@ -56,7 +57,8 @@ export const TaskClientCard = React.memo(withRouter(props => {
 }));
 
 TaskClientCard.propTypes = {
-  task: PropTypes.any.isRequired
+  task: PropTypes.any.isRequired,
+  searchText: PropTypes.string,
 };
 
 TaskClientCard.defaultProps = {};

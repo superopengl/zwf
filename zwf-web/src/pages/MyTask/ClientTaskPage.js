@@ -14,6 +14,7 @@ import { combineLatest } from 'rxjs';
 import { PageContainer } from '@ant-design/pro-layout';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
+import { LeftOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -27,9 +28,7 @@ const Container = styled.div`
 
 const ClientTaskPage = (props) => {
   const id = props.match.params.id;
-  const isNew = !id || id === 'new';
 
-  const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
@@ -48,11 +47,16 @@ const ClientTaskPage = (props) => {
     setLoading(false);
   }
 
+  const handleGoBack = () => {
+    props.history.push('/');
+  }
+
   return (<>
     <Container>
       {!task ? <Loading /> : <PageContainer
         loading={loading}
-        backIcon={false}
+        backIcon={<LeftOutlined />}
+        onBack={handleGoBack}
         ghost={true}
         // fixedHeader
         header={{
