@@ -183,17 +183,6 @@ paths:
       responses:
         200:
           description: OK
-  /event:
-    get:
-      operationId: subscribeEvent
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: publishEvent
-      responses:
-        200:
-          description: OK
   /user:
     get:
       operationId: listAllUsers
@@ -730,9 +719,21 @@ paths:
       responses:
         200:
           description: OK
-  /task/{taskId}/tracking/subscribe:
+  /task/{id}/tracking/subscribe:
     get:
       operationId: subscribeTaskTracking
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /task/{id}/tracking/nudge:
+    get:
+      operationId: nudgeTrackingCursor
       parameters:
         - name: taskId
           in: path
@@ -741,7 +742,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: OK          
   /task/{id}/assign:
     post:
       operationId: assignTask

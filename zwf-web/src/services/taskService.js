@@ -102,3 +102,7 @@ export function subscribeTaskTracking(taskId) {
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
   return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
 }
+
+export function nudgeTrackingAccess$(taskId) {
+  return httpGet$(`task/${taskId}/tracking/nudge`);
+}

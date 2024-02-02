@@ -14,56 +14,53 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
-import { logTaskChat } from '../services/taskTrackingService';
+import { logTaskChat, nudgeTrackingAccess } from '../services/taskTrackingService';
+import { assertRole } from '../utils/assertRole';
 
+
+export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { id } = req.params;
+  const userId = getUserIdFromReq(req);
+  await nudgeTrackingAccess(getManager(), id, userId);
+  res.json();
+});
 
 export const listTaskTrackings = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   const { id } = req.params;
+  const userId = getUserIdFromReq(req);
 
-  let query;
-  switch (role) {
-    case Role.Admin:
-    case Role.Agent:
-      query = {
-        id,
-        orgId: getOrgIdFromReq(req)
-      }
-      break;
-    case Role.Client:
-      query = {
-        id,
-        userId: getUserIdFromReq(req)
-      }
-      break;
-    case Role.Guest:
-      query = {
-        id,
-      }
-      break;
-    default:
-      assert(false, 404);
-  }
+  let list;
+  await getManager().transaction(async m => {
+    const task = await m.findOne(Task, {
+      id,
+      ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) })
+    });
+    assert(task, 404);
 
-  const task = await getRepository(Task).findOne(query);
-  assert(task, 404);
+    list = await m.find(TaskTracking, {
+      where: {
+        taskId: id,
+      },
+      order: {
+        createdAt: 'ASC'
+      },
+      select: [
+        'id',
+        'createdAt',
+        'by',
+        'action',
+        'info'
+      ]
+    });
 
-  const list = await getRepository(TaskTracking).find({
-    where: {
-      taskId: id
-    },
-    order: {
-      createdAt: 'ASC'
-    },
-    select: [
-      'id',
-      'createdAt',
-      'by',
-      'action',
-      'info'
-    ]
-  });
+    await nudgeTrackingAccess(m, id, userId);
+  })
+
+
 
   res.json(list);
 });
@@ -74,9 +71,9 @@ export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
   // assertRole(req, 'admin', 'agent', 'client', 'guest');
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
-  const { taskId } = req.params;
+  const { id } = req.params;
 
-  await assertTaskAccess(req, taskId);
+  await assertTaskAccess(req, id);
 
   // const { user: { id: userId } } = req as any;
   const isProd = process.env.NODE_ENV === 'prod';
@@ -98,7 +95,7 @@ export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
 
   const channelSubscription$ = getEventChannel(TASK_ACTIVITY_EVENT_TYPE)
     .pipe(
-      filter(x => x?.taskId === taskId)
+      filter(x => x?.taskId === id)
     )
     .subscribe((event) => {
       res.write(`data: ${JSON.stringify(event)}\n\n`);
