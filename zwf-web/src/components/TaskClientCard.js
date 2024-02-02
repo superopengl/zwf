@@ -33,7 +33,7 @@ export const TaskClientCard = React.memo(withRouter(props => {
   }
 
   return <StyledCard
-    title={<><TaskIcon /> {name}</>}
+    title={<>{name}</>}
     size="large"
     hoverable
     onClick={e => goToTask(e, id)}

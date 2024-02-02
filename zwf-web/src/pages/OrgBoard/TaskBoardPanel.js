@@ -24,44 +24,28 @@ padding: 8px;
 
 const COLUMN_DEFS = [
   {
-    key: 'todo',
-    status: ['todo'],
+    status: 'todo',
     label: 'To Do',
-    bgColor: '#f5f5f5',
-    hoverColor: '#bfbfbf',
+    bgColor: '#d9d9d922',
+    hoverColor: '#d9d9d9',
   },
   {
-    key: 'in_progress',
-    status: ['in_progress', 'signed'],
+    status: 'in_progress',
     label: 'In Progress',
-    bgColor: '#1890ff11',
-    hoverColor: '#1890ff',
+    bgColor: '#37AFD222',
+    hoverColor: '#37AFD2',
   },
   {
-    key: 'in_progress_blocked',
-    status: ['pending_fix', 'pending_sign'],
-    label: 'Await client',
-    bgColor: '#06117811',
-    hoverColor: '#061178',
+    status: 'action_required',
+    label: `Await Client's Actions`,
+    bgColor: '#cd201f22',
+    hoverColor: '#cd201f',
   },
-  // {
-  //   status: 'pending_sign',
-  //   label: 'Await client sign',
-  //   bgColor: '#f5222d11',
-  //   hoverColor: '#f5222d',
-  // },
-  // {
-  //   status: 'signed',
-  //   label: 'Signed',
-  //   bgColor: '#5c001111',
-  //   hoverColor: '#5c0011',
-  // },
   {
-    key: 'done',
-    status: ['done'],
-    label: 'Done',
-    bgColor: '#52c41a11',
-    hoverColor: '#52c41a',
+    status: 'done',
+    label: 'Completed',
+    bgColor: '#66c18c22',
+    hoverColor: '#66c18c',
   },
 ]
 
@@ -81,9 +65,9 @@ export const TaskBoardPanel = props => {
 
   return <DragDropContext onDragEnd={onDragEnd}>
     <StyledRow gutter={10}>
-      {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.key} key={i}>
+      {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
         {(provided, snapshot) => {
-          const tasksInCol = tasks.filter(j => s.status.includes(j.status));
+          const tasksInCol = tasks.filter(t => s.status === t.status);
           return (
             <Col span={6}
               ref={provided.innerRef}>
@@ -93,8 +77,8 @@ export const TaskBoardPanel = props => {
                 borderStyle: `${snapshot.isDraggingOver ? 'dashed' : 'solid'}`,
                 borderColor: `${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}`
               }}>
-                <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                  <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }} type="secondary">{s.label}</Title>
+                <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16, opacity: 0.4 }}>
+                  <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }}>{s.label}</Title>
                   <Text strong>{tasksInCol.length}</Text>
                 </Space>
                 {tasksInCol.map((task, index) => {

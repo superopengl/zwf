@@ -27,9 +27,6 @@ export class Task {
   @Index()
   lastUpdatedAt: Date;
 
-  @Column({ nullable: true })
-  authorizedAt: Date;
-
   @Column()
   name: string;
 

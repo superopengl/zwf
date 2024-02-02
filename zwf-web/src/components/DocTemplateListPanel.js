@@ -28,7 +28,7 @@ position: relative;
 
   .docItem:after {
     content: "click to view";
-    color: #13c2c2;
+    color: #37AFD2;
   }
 }
 `;

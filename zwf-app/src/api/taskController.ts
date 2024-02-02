@@ -52,17 +52,9 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
   } else if (status === TaskStatus.TODO) {
     // Task todo
     await sendTodoEmail(task);
-  } else if (status === TaskStatus.SIGNED) {
-    // Task signed
-    await sendSignedEmail(task);
   } else if (status === TaskStatus.DONE) {
     // Task completed
     await sendCompletedEmail(task);
-  } else if (status === TaskStatus.PENDING_SIGN) {
-    const hasDocToSign = task.docs?.filter(d => d.fileId && d.requiresSign && !d.signedAt).length;
-    assert(hasDocToSign, 400, 'Cannot change status because there is no document to sign.');
-    // Require sign
-    await sendRequireSignEmail(task);
   } else if (status === TaskStatus.ARCHIVED) {
     // Archived
     await sendArchiveEmail(task);
@@ -154,7 +146,7 @@ interface ISearchTaskQuery {
 const defaultSearch: ISearchTaskQuery = {
   page: 1,
   size: 50,
-  status: [TaskStatus.TODO, TaskStatus.PENDING_SIGN],
+  status: [TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE],
   orderField: 'lastUpdatedAt',
   orderDirection: 'DESC'
 };
@@ -232,7 +224,6 @@ export const listTask = handlerWrapper(async (req, res) => {
       'status',
       'orgName',
       'taskTemplateName',
-      'authorizedAt',
       'createdAt',
       'lastUpdatedAt'
     ]
@@ -387,9 +378,9 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
   }
 
   const unsignedFileCount = task.docs.filter(d => d.requiresSign && !d.signedAt).length;
-  if (unsignedFileCount === 0) {
-    task.status = TaskStatus.SIGNED;
-  }
+  // if (unsignedFileCount === 0) {
+  //   task.status = TaskStatus.SIGNED;
+  // }
 
   await taskRepo.save(task);
   await handleTaskStatusChange(oldStatus, task);

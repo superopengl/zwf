@@ -5,24 +5,24 @@ import { Tag } from 'antd';
 
 const statusDefs = {
   'todo': {
-    label: 'Action required',
+    label: 'Not Started',
+    color: '#d9d9d9',
+  },
+  'in_progress': {
+    label: 'In Progress',
+    color: '#37AFD2',
+  },
+  'action_required': {
+    label: 'Action Required',
     color: '#cd201f'
   },
-  'to_sign': {
-    label: 'Sign required',
-    color: '#cd201f',
-  },
-  'signed': {
-    label: 'In progress',
-    color: 'blue',
-  },
-  'complete': {
+  'done': {
     label: 'Completed',
-    color: 'green',
+    color: '#66c18c',
   },
-  'archive': {
-    label: 'Closed',
-    color: '',
+  'archived': {
+    label: 'Archieved',
+    color: '#262626',
   },
 }
 

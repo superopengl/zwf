@@ -41,7 +41,6 @@ import { Tag } from '../Tag';
       't."taskTemplateId" as "taskTemplateId"',
       't."name" as "taskTemplateName"',
       'u.role as role',
-      't."authorizedAt" as "authorizedAt"',
       't."agentId" as "assigneeId"',
       't."createdAt" as "createdAt"',
       't."lastUpdatedAt" as "lastUpdatedAt"',
@@ -92,9 +91,6 @@ import { Tag } from '../Tag';
 
   @ViewColumn()
   role: Role;
-
-  @ViewColumn()
-  authorizedAt: Date;
 
   @ViewColumn()
   assigneeId: string;

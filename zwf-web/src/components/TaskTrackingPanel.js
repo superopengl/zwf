@@ -38,7 +38,7 @@ const ChatMessage = props => {
       style={{
         // marginLeft: 40,
         // marginBottom: 4,
-        backgroundColor: isMe ? '#13c2c2' : 'rgb(236, 236, 236)',
+        backgroundColor: isMe ? '#37AFD2' : 'rgb(236, 236, 236)',
       }}>
       {message}
       </Card>

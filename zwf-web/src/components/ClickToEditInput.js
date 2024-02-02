@@ -13,7 +13,7 @@ width: 100%;
 }
 
 &:focus, &:active {
-  border-bottom: 1px solid #13c2c2;
+  border-bottom: 1px solid #37AFD2;
   background-color: white;
 
   &.error {
