@@ -1,5 +1,5 @@
-import { PlusOutlined } from '@ant-design/icons';
-import { Button, Layout, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, PageHeader } from 'antd';
+import { ArrowDownOutlined, ArrowUpOutlined, DownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
+import { Button, Layout, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, PageHeader, Select, Input } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
@@ -9,6 +9,8 @@ import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import { Loading } from 'components/Loading';
 import { TaskClientCard } from 'components/TaskClientCard';
+import DropdownMenu from 'components/DropdownMenu';
+import { uniq } from 'lodash';
 
 const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -28,7 +30,7 @@ const LayoutStyled = styled.div`
   //   margin: 0 !important;
   // }
   .ant-page-header-heading {
-    padding: 0 24px 24px;
+    padding: 0 0 24px 24px;
   }
 `;
 
@@ -74,25 +76,63 @@ const TAB_DEFS = [
 
 export const ClientTaskListPage = withRouter(() => {
   const [loading, setLoading] = React.useState(true);
-  const [list, setList] = React.useState([]);
+  const [allList, setAllList] = React.useState([]);
+  const [filteredList, setFilteredList] = React.useState([]);
+  const [searchText, setSearchText] = React.useState('');
+  const [org, setOrg] = React.useState('');
+  const [order, setOrder] = React.useState('');
   const [activeTab, setActiveTab] = React.useState(TAB_DEFS.find(x => x.default)?.label);
   const screens = useBreakpoint();
 
   React.useEffect(() => {
     const sub$ = listClientTask$()
       .subscribe(data => {
-        setList(data);
+        setAllList(data);
         setLoading(false);
       });
 
     return () => sub$.unsubscribe()
   }, []);
 
+  React.useEffect(() => {
+    const result = allList.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase()))
+    .filter(x => !org || x.orgName === org)
+    setFilteredList(result);
+  }, [allList, searchText, org, order]);
+
+  const sortOptions = React.useMemo(() => [
+    {
+      value: '+createdAt',
+      label: <>Created <ArrowUpOutlined /></>,
+    },
+    {
+      value: '-createdAt',
+      label: <>Created <ArrowDownOutlined /></>,
+    }
+  ], []);
+
+  const orgOptions = React.useMemo(() => {
+    const options = uniq(allList.map(x => x.orgName)).map(x => ({
+      value: x,
+      label: x,
+    }));
+    options.unshift({ value: '', label: 'All organizations' })
+    return options;
+  }, [allList]);
+
   return (
     <LayoutStyled>
       <PageHeader
         title="All Cases"
         backIcon={false}
+        extra={[
+          <Input.Search key="search" placeholder='Search text' style={{ width: 200 }}
+            onSearch={setSearchText}
+            maxLength={200}
+            allowClear />,
+          <Select key="org" options={orgOptions} defaultValue={''} dropdownMatchSelectWidth={false} style={{ width: 200 }} />,
+          <Select key="sort" options={sortOptions} dropdownMatchSelectWidth={false} style={{ width: 120 }} />,
+        ]}
       >
         <Tabs tabPosition={screens.md ? 'left' : 'top'}
           size="small"
@@ -100,12 +140,13 @@ export const ClientTaskListPage = withRouter(() => {
           onChange={setActiveTab}
           defaultActiveKey={activeTab}>
           {TAB_DEFS.map(tab => {
-            const data = list.filter(tab.filter);
+            const count = allList.filter(tab.filter).length;
+            const data = filteredList.filter(tab.filter);
             return <Tabs.TabPane
               tab={<Tooltip title={tab.description} placement={screens.md ? "leftTop" : 'bottom'} mouseEnterDelay={1}>
                 <Space style={{ width: '100%', justifyContent: 'space-between' }}>
                   {tab.label}
-                  <Badge showZero={false} count={data.length} style={{ backgroundColor: tab.badgeColor }} />
+                  <Badge showZero={false} count={count} style={{ backgroundColor: tab.badgeColor }} />
                 </Space>
               </Tooltip>}
               key={tab.label}>
@@ -127,7 +168,7 @@ export const ClientTaskListPage = withRouter(() => {
                   xxl: 2,
                 }}
                 renderItem={item => <List.Item>
-                  <TaskClientCard task={item} />
+                  <TaskClientCard task={item} searchText={searchText}/>
                 </List.Item>}
               />
             </Tabs.TabPane>
