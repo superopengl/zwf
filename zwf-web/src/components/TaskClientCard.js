@@ -21,6 +21,19 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
   background-color: rgb(255,255,220);
   font-weight: 600;
 }
+
+&.access-disabled {
+  &:hover {
+    cursor: not-allowed;
+  }
+  filter: blur(2px);
+  &::before {
+    content: 'Accessible once org starts';
+    position: absolute;
+    bottom: 8px;
+    right: 16px;
+  }
+}
 `;
 
 export const TaskClientCard = React.memo(withRouter(props => {
@@ -28,15 +41,19 @@ export const TaskClientCard = React.memo(withRouter(props => {
   const { task, searchText } = props;
   const { id, name, description, orgName, createdAt, lastUpdatedAt, tags, status } = task;
 
+  const canAccess = task.status !== 'todo';
   const goToTask = (e, id) => {
     e.stopPropagation();
-    props.history.push(`/task/${id}`);
+    if(canAccess) {
+      props.history.push(`/task/${id}`);
+    }
   }
 
   return <StyledCard
     title={<HighlightingText value={name} search={searchText} />}
     size="large"
-    hoverable
+    className={canAccess ? '' : 'access-disabled'}
+    hoverable={canAccess}
     onClick={e => goToTask(e, id)}
     extra={<TaskStatusTag status={status} />}
   // className={lastUnreadMessageAt ? 'unread' : ''}
