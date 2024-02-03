@@ -63,7 +63,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
   };
 
   const handleGoHome = () => {
-    props.history.push('/');
+    props.history.push('/home');
   };
 
   const isSystem = role === 'system';
@@ -76,6 +76,9 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <pre style={{ fontSize: 14, margin: 0 }}>{email}</pre>
     </Menu.Item>
     <Menu.Divider />
+    <Menu.Item key="home" onClick={handleGoHome}>
+      <FormattedMessage id="menu.home" />
+    </Menu.Item>
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>
@@ -100,12 +103,12 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <a onClick={e => e.preventDefault()}>
         {/* <Avatar size={40}
       icon={<UserOutlined style={{ fontSize: 20 }} />}
-      style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+      style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#062638' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
     /> */}
         <UserAvatar
           size={40}
           value={avatarFileId}
-          style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#002329' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+          style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#062638' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
         />
       </a>
     </Dropdown>

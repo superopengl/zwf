@@ -67,7 +67,7 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
   // background-color: rgba(19,194,194,0.7);
-  background-color: #00474fdd;
+  background-color: #0a425eaa;
   // background-color: rgba(0, 41, 61, 0.7); 
 // background-image: linear-gradient(135deg, #00474f, #00474f 400px, rgba(255,255,255,0.0) 400px, rgba(255,255,255,0.0) 100%);
 }
@@ -164,8 +164,8 @@ const HomePage = (props) => {
     rightContentRender={props => {
 
       if (isLoggedIn) {
-        return <Link to={isSystem ? '/org' : '/task'}><Button type="primary" ghost>
-          <FormattedMessage id="menu.dashboard" /> <RightOutlined style={{color: '#37AFD2'}}/>
+        return <Link to={isSystem ? '/org' : '/'}><Button type="primary">
+          <FormattedMessage id="menu.dashboard" /> <RightOutlined />
         </Button></Link>
       }
 
@@ -194,7 +194,7 @@ const HomePage = (props) => {
     <section id="pricing">
       <HomePricingArea />
     </section>
-    <section><HomeContactArea bgColor="#142952"></HomeContactArea></section>
+    <section><HomeContactArea bgColor="#0a425e"></HomeContactArea></section>
     {/* <section><HomeSearchArea /></section> */}
     {/* <section>
       <HomeServiceArea bgColor="#135200" />
