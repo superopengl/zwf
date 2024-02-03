@@ -13,9 +13,9 @@ const darkTheme = getThemeVariables({
 const modifyVars = {
   ...darkTheme,
   '@primary-color': '#37AFD2',// '#37AFD2', // rgb(19,194,194)
-  '@info-color': '#1890ff',
+  '@info-color': '#37AFD2',
   '@link-color': '#37AFD2',
-  '@success-color': '#73d13d',
+  '@success-color': '#52c41a',
   '@error-color': '#cd201f',
   '@highlight-color': '#cd201f',
   '@font-size-base': '14px',

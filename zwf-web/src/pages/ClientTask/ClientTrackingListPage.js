@@ -124,7 +124,7 @@ export const ClientTrackingListPage = withRouter(() => {
               icon={<SyncOutlined />}
               disabled={loading}
               onClick={() => setPage(x => x + 1)}
-              type="link">{loading ? 'Loading...' : 'Load more past activities ({list.length} loaded)'}</Button>
+              type="link">{loading ? 'Loading...' : `Load more past activities (${list.length} loaded)`}</Button>
           </Row>
           </>}
         >

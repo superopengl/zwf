@@ -110,13 +110,13 @@ const AdminStatsPage = () => {
         </Space>
         <Row gutter={40}>
           <Col {...span}>
-            <StatCard title={<Link to="/user">User <MdOpenInNew /></Link>} value={stats?.user} loading={loading} color={['#b37feb', '#91d5ff', '#1890ff']} />
+            <StatCard title={<Link to="/user">User <MdOpenInNew /></Link>} value={stats?.user} loading={loading} color={['#b37feb', '#91d5ff', '#37AFD2']} />
           </Col>
           <Col {...span}>
             <StatCard title="Portfolio" value={stats?.portfolio} loading={loading} />
           </Col>
           <Col {...span} >
-            <StatCard title={<Link to="/tasks">Task <MdOpenInNew /></Link>} value={stats?.task} loading={loading} color={['#91d5ff', '#ff7875', '#1890ff', '#87e8de', '#b37feb']}/>
+            <StatCard title={<Link to="/tasks">Task <MdOpenInNew /></Link>} value={stats?.task} loading={loading} color={['#91d5ff', '#ff7875', '#37AFD2', '#87e8de', '#b37feb']}/>
           </Col>
         </Row>
       </ContainerStyled>
