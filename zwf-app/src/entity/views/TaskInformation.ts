@@ -43,7 +43,7 @@ import { Tag } from '../Tag';
       'u.role as role',
       't."agentId" as "assigneeId"',
       't."createdAt" as "createdAt"',
-      't."lastUpdatedAt" as "lastUpdatedAt"',
+      't."updatedAt" as "updatedAt"',
       `coalesce(tag.tags, '{}'::json[]) as tags`,
     ])
 }) export class TaskInformation {
@@ -99,7 +99,7 @@ import { Tag } from '../Tag';
   createdAt: Date;
 
   @ViewColumn()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @ViewColumn()
   tags: Array<{ id: string, name: string }>;

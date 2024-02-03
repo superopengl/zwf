@@ -25,7 +25,7 @@ export class TaskTemplate {
   deletedAt: Date;
 
   @UpdateDateColumn()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @Column('jsonb', { default: '[]' })
   fields: TaskField[];

@@ -219,7 +219,7 @@ export const TaskTemplateListPage = props => {
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
               <Space size="large">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
+                <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
               <DocTemplateListPanel value={item.docs} style={{margin: '12px -12px 0'}} bordered={false} />
             </Card>

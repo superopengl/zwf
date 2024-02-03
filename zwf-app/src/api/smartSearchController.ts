@@ -30,7 +30,7 @@ export const smartSearchTask = handlerWrapper(async (req, res) => {
       'status',
     ],
     order: {
-      lastUpdatedAt: 'DESC'
+      updatedAt: 'DESC'
     },
     take: size
   });
@@ -51,7 +51,7 @@ export const smartSearchTaskTemplate = handlerWrapper(async (req, res) => {
       name: ILike(`%${text}%`)
     },
     order: {
-      lastUpdatedAt: 'DESC'
+      updatedAt: 'DESC'
     },
     select: [
       'id',
@@ -76,7 +76,7 @@ export const smartSearchDocTemplate = handlerWrapper(async (req, res) => {
       name: ILike(`%${text}%`)
     },
     order: {
-      lastUpdatedAt: 'DESC'
+      updatedAt: 'DESC'
     },
     select: [
       'id',

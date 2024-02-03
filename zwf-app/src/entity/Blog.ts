@@ -9,7 +9,7 @@ export class Blog {
   createdAt: Date;
 
   @UpdateDateColumn()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @Column({ type: 'varchar', array: true, default: '{}' })
   files: string[];

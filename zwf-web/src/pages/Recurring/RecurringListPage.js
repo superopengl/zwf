@@ -145,7 +145,7 @@ const RecurringListPage = (props) => {
     },
     {
       title: 'Updated At',
-      dataIndex: 'lastUpdatedAt',
+      dataIndex: 'updatedAt',
       render: (value) => <TimeAgo value={value} />
     },
     {

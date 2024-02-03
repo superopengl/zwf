@@ -547,7 +547,7 @@ paths:
         200:
           description: OK
     get:
-      operationId: listTask
+      operationId: listMyTasks
       # security:
       #   - authLoggedInUser: []
       responses:

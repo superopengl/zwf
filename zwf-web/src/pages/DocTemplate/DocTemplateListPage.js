@@ -66,7 +66,7 @@ export const DocTemplateListPage = props => {
     },
     {
       title: 'Updated At',
-      dataIndex: 'lastUpdatedAt',
+      dataIndex: 'updatedAt',
       render: (text) => <TimeAgo value={text} />
     },
     {
@@ -256,7 +256,7 @@ export const DocTemplateListPage = props => {
               <Paragraph>{item.description}</Paragraph>
               <Space size="large">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                <TimeAgo key="2" value={item.lastUpdatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
+                <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>
             </Card>
           </List.Item>}

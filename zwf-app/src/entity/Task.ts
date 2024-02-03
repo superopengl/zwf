@@ -25,7 +25,7 @@ export class Task {
 
   @UpdateDateColumn()
   @Index()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @Column()
   name: string;

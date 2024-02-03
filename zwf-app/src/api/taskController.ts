@@ -4,7 +4,7 @@ import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
 
 import * as moment from 'moment';
-import { EntityManager, getManager, getRepository, Not } from 'typeorm';
+import { EntityManager, getManager, getRepository, Not, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
@@ -147,7 +147,7 @@ const defaultSearch: ISearchTaskQuery = {
   page: 1,
   size: 50,
   status: [TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE],
-  orderField: 'lastUpdatedAt',
+  orderField: 'updatedAt',
   orderDirection: 'DESC'
 };
 
@@ -209,13 +209,14 @@ export const searchTask = handlerWrapper(async (req, res) => {
   res.json({ data: list, pagination: { page, size, total } });
 });
 
-export const listTask = handlerWrapper(async (req, res) => {
+export const listMyTasks = handlerWrapper(async (req, res) => {
   assertRole(req, 'client');
   const userId = getUserIdFromReq(req);
 
   const list = await getRepository(TaskInformation).find({
     where: {
-      userId
+      userId,
+      status: In([TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE]),
     },
     select: [
       'id',
@@ -225,7 +226,7 @@ export const listTask = handlerWrapper(async (req, res) => {
       'orgName',
       'taskTemplateName',
       'createdAt',
-      'lastUpdatedAt'
+      'updatedAt'
     ]
   })
 

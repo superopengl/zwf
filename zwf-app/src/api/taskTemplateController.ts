@@ -119,7 +119,7 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
     const newTaskTemplateId = uuidv4();
     taskTemplate.id = newTaskTemplateId;
     taskTemplate.createdAt = getUtcNow();
-    taskTemplate.lastUpdatedAt = getUtcNow();
+    taskTemplate.updatedAt = getUtcNow();
     taskTemplate.name = await getUniqueCopyName(m, taskTemplate);
 
     const taskTemplateDocTemplateList = await m.find(TaskTemplateDocTemplate, { taskTemplateId: sourceTaskTemplateId });

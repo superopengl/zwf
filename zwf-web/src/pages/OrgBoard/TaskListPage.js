@@ -28,7 +28,7 @@ const DEFAULT_QUERY_INFO = {
   size: 200,
   total: 0,
   status: ['todo', 'in_progress', 'action_required', 'done'],
-  orderField: 'lastUpdatedAt',
+  orderField: 'updatedAt',
   orderDirection: 'DESC'
 };
 

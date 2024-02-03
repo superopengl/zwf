@@ -111,7 +111,7 @@ export const TaskListPanel = (props) => {
     },
     {
       title: 'Last Update At',
-      dataIndex: 'lastUpdatedAt',
+      dataIndex: 'updatedAt',
       sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
       render: (text) => {
         return <TimeAgo value={text} accurate={false} showTime={false}/>;

@@ -24,7 +24,7 @@ export class DocTemplate {
   deletedAt: Date;
 
   @UpdateDateColumn()
-  lastUpdatedAt: Date;
+  updatedAt: Date;
 
   @Column({ type: 'text' })
   html: string;

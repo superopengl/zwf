@@ -1,4 +1,4 @@
-import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOutlined, UpOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOutlined, SyncOutlined, UpOutlined } from '@ant-design/icons';
 import { Button, Layout, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, Badge, Tooltip, PageHeader, Select, Input } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import React from 'react';
@@ -14,6 +14,7 @@ import { orderBy, uniq } from 'lodash';
 import { GrAscend, GrDescend } from 'react-icons/gr';
 import { useLocalStorage } from 'react-use';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
+import Icon from '@ant-design/icons';
 
 const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -35,6 +36,11 @@ const LayoutStyled = styled.div`
   .ant-page-header-heading {
     padding: 0 0 24px 24px;
   }
+
+  .ant-tabs-tab-active {
+    font-weight: bold;
+    // color: rgba(0, 0, 0, 0.85) !important;
+  }
 `;
 
 const TAB_DEFS = [
@@ -55,23 +61,17 @@ const TAB_DEFS = [
     }
   },
   {
-    label: 'Recently completed',
-    description: 'The cases that have been completed in the past 30 days.',
     badgeColor: '#66c18c',
+    label: 'Completed',
+    description: 'The cases that have been completed.',
     filter: item => {
       return item.status === 'done'
     }
   },
   {
-    label: 'Cases done',
-    description: 'All the past cases that are either completed successfully or cancelled for some reasons.',
-    badgeColor: '#cccccc',
-    filter: item => item.status === 'done' || item.status === 'archived',
-  },
-  {
     label: 'All cases',
-    description: 'All the cases, including not started cases, all past cases and all ongoing cases.',
-    badgeColor: '#cccccc',
+    badgeColor: '#bbbbbb',
+    description: 'All the cases, including all completed cases, in progress cases, and action required cases.',
     filter: item => true,
   },
 ];
@@ -92,13 +92,17 @@ export const ClientTaskListPage = withRouter(() => {
   const [query, setQuery] = useLocalStorage(TASK_FILTER_KEY, TASK_FILTER_DEFAULT);
   const screens = useBreakpoint();
 
-  React.useEffect(() => {
-    const sub$ = listClientTask$()
-      .subscribe(data => {
-        setAllList(data);
-        setLoading(false);
-      });
+  const load$ = () => {
+    setLoading(true);
+    return listClientTask$()
+    .subscribe(data => {
+      setAllList(data);
+      setLoading(false);
+    });
+  }
 
+  React.useEffect(() => {
+    const sub$ = load$();
     return () => sub$.unsubscribe()
   }, []);
 
@@ -126,19 +130,19 @@ export const ClientTaskListPage = withRouter(() => {
   const sortOptions = React.useMemo(() => [
     {
       value: '-updatedAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated <ImSortAmountDesc /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (newest)<Icon component={() => <ImSortAmountDesc />} /></Space>,
     },
     {
       value: '+updatedAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated <ImSortAmountAsc /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (oldest)<Icon component={() => <ImSortAmountAsc />} /></Space>,
     },
     {
       value: '-createdAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created <ImSortAmountDesc /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (newest)<Icon component={() => <ImSortAmountDesc />} /></Space>,
     },
     {
       value: '+createdAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created <ImSortAmountAsc /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (oldest)<Icon component={() => <ImSortAmountAsc />} /></Space>,
     },
 
   ], []);
@@ -157,7 +161,12 @@ export const ClientTaskListPage = withRouter(() => {
       <PageHeader
         title="All Cases"
         backIcon={false}
+        loading={loading}
         extra={[
+          <Button key="refresh"
+          icon={<SyncOutlined />}
+          onClick={() => load$()}
+          type="link">Refresh</Button>,
           <Button key="clear"
             icon={<ClearOutlined />}
             onClick={() => setQuery({ ...TASK_FILTER_DEFAULT, tab: query.tab })}
@@ -183,7 +192,7 @@ export const ClientTaskListPage = withRouter(() => {
             options={sortOptions}
             onSelect={order => setQuery({ ...query, order })}
             dropdownMatchSelectWidth={false}
-            style={{ width: 120 }} />,
+            style={{ width: 200 }} />,
         ]}
       >
         <Tabs tabPosition={screens.md ? 'left' : 'top'}
