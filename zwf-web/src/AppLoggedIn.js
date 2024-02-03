@@ -46,6 +46,7 @@ const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/MyTask/ClientTaskPage'));
+const HomePage = loadable(() => import('pages/HomePage'));
 
 const { Link: LinkText } = Typography;
 
