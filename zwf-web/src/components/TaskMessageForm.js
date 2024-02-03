@@ -3,7 +3,7 @@ import { Button, Form, Input } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { createNewTaskTracking$ } from 'services/taskService';
+import { createNewTaskTracking$ } from 'services/taskTrackingService';
 import { finalize } from 'rxjs/operators';
 
 export const TaskMessageForm = React.memo((props) => {

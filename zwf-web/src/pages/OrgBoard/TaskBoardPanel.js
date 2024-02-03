@@ -44,8 +44,8 @@ const COLUMN_DEFS = [
   {
     status: 'done',
     label: 'Completed',
-    bgColor: '#66c18c22',
-    hoverColor: '#66c18c',
+    bgColor: '#73d13d22',
+    hoverColor: '#73d13d',
   },
 ]
 

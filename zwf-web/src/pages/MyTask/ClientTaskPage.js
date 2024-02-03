@@ -48,7 +48,7 @@ const ClientTaskPage = (props) => {
   }
 
   const handleGoBack = () => {
-    props.history.push('/');
+    props.history.goBack();
   }
 
   return (<>

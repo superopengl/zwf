@@ -553,6 +553,14 @@ paths:
       responses:
         200:
           description: OK
+  /task/tracking:
+    get:
+      operationId: listMyTaskTrackings
+      # security:
+      #   - authLoggedInUser: []
+      responses:
+        200:
+          description: OK          
   /task/deep/{deepLinkId}:
     get:
       operationId: getDeepLinkedTask

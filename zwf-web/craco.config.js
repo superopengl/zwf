@@ -15,7 +15,7 @@ const modifyVars = {
   '@primary-color': '#37AFD2',// '#37AFD2', // rgb(19,194,194)
   '@info-color': '#1890ff',
   '@link-color': '#37AFD2',
-  '@success-color': '#66c18c',
+  '@success-color': '#73d13d',
   '@error-color': '#cd201f',
   '@highlight-color': '#cd201f',
   '@font-size-base': '14px',

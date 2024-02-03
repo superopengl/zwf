@@ -8,10 +8,10 @@ export class TaskTracking {
   id?: string;
 
   @CreateDateColumn()
+  @Index()
   createdAt: Date;
 
   @Column('uuid')
-  @Index()
   taskId: string;
 
   @Column('uuid', { nullable: true }) // Author user ID, Null means the system
