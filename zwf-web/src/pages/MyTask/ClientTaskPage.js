@@ -53,7 +53,7 @@ const ClientTaskPage = (props) => {
 
   return (<>
     <Container>
-      {!task ? <Loading /> : <PageContainer
+      {!task ? <Skeleton active/> : <PageContainer
         loading={loading}
         backIcon={<LeftOutlined />}
         onBack={handleGoBack}
