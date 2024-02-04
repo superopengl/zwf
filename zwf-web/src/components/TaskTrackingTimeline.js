@@ -25,7 +25,6 @@ const ChatMessage = React.memo(props => {
       bordered={true}
       bodyStyle={{
         padding: 10,
-        width: '80%',
         maxWidth: 600,
       }}
       style={{

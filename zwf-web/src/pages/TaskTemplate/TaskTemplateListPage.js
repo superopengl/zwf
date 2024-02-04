@@ -5,7 +5,7 @@ import {
   EyeOutlined,
   PlusOutlined, SearchOutlined
 } from '@ant-design/icons';
-import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip, Radio } from 'antd';
+import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip, Radio, PageHeader } from 'antd';
 import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -112,9 +112,12 @@ export const TaskTemplateListPage = props => {
   return (
     <LayoutStyled>
       <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Row justify="end">
-          <Space>
+        <PageHeader
+          title="Task Templates"
+          backIcon={false}
+          extra={[
             <Radio.Group
+              key="view"
               optionType="button"
               buttonStyle="solid"
               defaultValue={viewMode}
@@ -126,10 +129,10 @@ export const TaskTemplateListPage = props => {
               <Radio.Button value="list">
                 <Icon component={() => <HiViewList />} />
               </Radio.Button>
-            </Radio.Group>
-            <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
-          </Space>
-        </Row>
+            </Radio.Group>,
+            <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
+          ]}
+        >
         <List
           size="small"
           grid={viewMode === 'grid' ? {
@@ -225,6 +228,7 @@ export const TaskTemplateListPage = props => {
             </Card>
           </List.Item>}
         />
+        </PageHeader>
       </Space>
       <Modal
         visible={!!previewTaskTemplate}
