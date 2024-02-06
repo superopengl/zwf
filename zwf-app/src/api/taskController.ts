@@ -239,26 +239,25 @@ export const getTask = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const role = getRoleFromReq(req);
 
-  let query = getRepository(Task).createQueryBuilder('t')
-    .leftJoinAndSelect('t.tags', 'tags')
-    .leftJoinAndSelect('t.docs', 'docs')
-    // .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
-    .where(`t.id = :id`, { id });
+  let query: any;
 
   switch (role) {
     case Role.Admin:
     case Role.Agent:
-      query = query.andWhere(`t."orgId" = :orgId`, { orgId: getOrgIdFromReq(req) });
+      query = { id, orgId: getOrgIdFromReq(req) };
       break;
     case Role.Client:
-      query = query.andWhere(`t."userId" = :userId`, { userId: getUserIdFromReq(req) });
+      query = { id, userId: getUserIdFromReq(req) };
       break;
     default:
       assert(false, 404);
       break;
   }
 
-  const task = await query.getOne()
+  const task = await getRepository(Task).findOne({
+    where: query,
+    relations: ['tags', 'docs', 'docs.file']
+  })
   assert(task, 404);
 
   res.json(task);

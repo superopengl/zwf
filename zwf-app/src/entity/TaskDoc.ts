@@ -46,6 +46,6 @@ export class TaskDoc {
   status: 'pending' | 'proceeding' | 'done';
 
   @OneToOne(() => File)
-  @JoinColumn()
+  @JoinColumn({ name: 'fileId', referencedColumnName: 'id' })
   file: File;
 }
