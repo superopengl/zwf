@@ -11,7 +11,7 @@ const VersionMismatchModalContent = React.memo(props => {
 
   const handleReloadPage = () => {
     onClose();
-    window.location = '/';
+    window.location.reload();
   }
 
   return <>
