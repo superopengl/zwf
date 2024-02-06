@@ -19,12 +19,12 @@ const definitions = [
   {
     label: 'Action Required',
     value: 'action_required',
-    color: '#cd201f',
+    color: '#cf222e',
   },
   {
     label: 'Done',
     value: 'done',
-    color: '#52c41a',
+    color: '#2da44e',
   },
   {
     label: 'Archived',
