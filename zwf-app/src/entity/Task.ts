@@ -53,8 +53,7 @@ export class Task {
   @JoinTable()
   tags: Tag[];
 
-  @ManyToMany(() => TaskDoc, { onDelete: 'CASCADE' })
-  @JoinTable()
+  @OneToMany(() => TaskDoc, doc => doc.task, { onDelete: 'CASCADE' })
   docs: TaskDoc[];
 }
 

@@ -43,7 +43,7 @@ TimeAgo.propTypes = {
   prefix: PropTypes.any,
   value: PropTypes.any,
   defaultContent: PropTypes.any,
-  direction: PropTypes.string,
+  direction: PropTypes.oneOf(['vertical', 'horizontal']),
   extra: PropTypes.any,
   strong: PropTypes.bool,
   accurate: PropTypes.bool.isRequired,

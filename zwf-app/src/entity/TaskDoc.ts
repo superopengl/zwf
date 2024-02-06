@@ -1,4 +1,5 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn, PrimaryGeneratedColumn, Index } from "typeorm";
+import { Task } from './Task';
+import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn, PrimaryGeneratedColumn, Index, ManyToOne } from "typeorm";
 import { File } from "./File";
 
 @Entity()
@@ -48,4 +49,11 @@ export class TaskDoc {
   @OneToOne(() => File)
   @JoinColumn({ name: 'fileId', referencedColumnName: 'id' })
   file: File;
+
+  @Column({ nullable: true })
+  taskId: string;
+
+  @ManyToOne(() => Task, task => task.docs)
+  @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
+  task: Task;
 }
