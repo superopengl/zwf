@@ -1,4 +1,4 @@
-import { frontendVersionCheckMiddleware } from './middlewares/frontendVersionCheckMiddleware';
+import { backendVersionMiddleware } from './middlewares/backendVersionMiddleware';
 import * as express from 'express';
 import * as compression from 'compression';
 import * as listEndpoints from 'express-list-endpoints';
@@ -52,6 +52,7 @@ export function createAppInstance() {
   app.use(cors({
     origin: ['http://localhost:6003'],
     credentials: true,
+    exposedHeaders: ['zwf-bff-version'], // To allow frontend to get it via xhr.getResponseHeader()
   }));
   app.use(cookieParser());
   // app.use(cookieSession({
@@ -96,7 +97,7 @@ export function createAppInstance() {
   // });
   // connectPassport(app);
 
-  app.use(frontendVersionCheckMiddleware);
+  app.use(backendVersionMiddleware);
   app.use(authMiddleware);
   app.use((req, res, next) => {
     res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');

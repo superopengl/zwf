@@ -22,9 +22,9 @@ function request(level, title, content, duration) {
     message: title,
     description: content,
     key,
-    duration: duration || 4,
+    duration,
     placement: 'topLeft',
-    style: { width: '85vw', maxWidth: '380px' }
+    style: { width: '85vw', maxWidth: '380px' },
   });
 
   // createBrowserNotification(innerText(title), content ? innerText(content) : null);
@@ -43,11 +43,11 @@ export const notify = {
   success(title, content = null, duration = 4) {
     return request('success', title, content, duration);
   },
-  info(title, content = null) {
-    return request('info', title, content, 5);
+  info(title, content = null, duration = 5) {
+    return request('info', title, content, duration);
   },
-  warn(title, content = null) {
-    return request('warn', title, content, 5);
+  warn(title, content = null, duration = 5) {
+    return request('warn', title, content, duration);
   }
 }
 
