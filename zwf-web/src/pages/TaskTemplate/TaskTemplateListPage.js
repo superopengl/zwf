@@ -133,101 +133,102 @@ export const TaskTemplateListPage = props => {
             <Button key="new" type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Task Template</Button>
           ]}
         >
-        <List
-          size="small"
-          grid={viewMode === 'grid' ? {
-            gutter: [24, 24],
-            xs: 1,
-            sm: 1,
-            md: 1,
-            lg: 2,
-            xl: 3,
-            xxl: 4
-          } : {
-            gutter: [12, 12],
-            column: 1
-          }}
-          dataSource={filteredList}
-          loading={loading}
-          locale={{
-            emptyText: <div style={{ margin: '30px auto' }}>
-              <Paragraph type="secondary">
-                There is no task template. Let's start from a one!
-              </Paragraph>
-              <Link to="/task_template/new">Create new task template</Link>
-            </div>
-          }}
-          renderItem={item => <List.Item>
-            <Card
-              // size="small"
-              bordered={true}
-              hoverable
-              // type="inner"
-              title={<>
-                <TaskTemplateIcon />
-                <Text>{item.name}</Text>
-                {/* <Input bordered={false} value={item.name} /> */}
-                {/* <HighlightingText search={searchText} value={item.name} /> */}
-              </>}
-              extra={<Space size="small">
-                <Tooltip title="Create task with this task template">
-                  <Button icon={<PlusOutlined />} type="text"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleCreateTask(item)
-                    }}></Button>
-                </Tooltip>
-                <DropdownMenu
-                  config={[
-                    {
-                      icon: <PlusOutlined />,
-                      menu: 'Create task',
-                      onClick: () => handleCreateTask(item),
-                    },
-                    {
-                      menu: '-'
-                    },
-                    {
-                      icon: <EyeOutlined />,
-                      menu: 'Preview',
-                      onClick: () => {
-                        setPreviewTaskTemplate(item);
-                      }
-                    },
-                    {
-                      icon: <CopyOutlined />,
-                      menu: 'Clone',
-                      onClick: () => handleClone(item)
-                    },
-                    {
-                      icon: <EditOutlined />,
-                      menu: 'Edit',
-                      onClick: () => handleEdit(item)
-                    },
-                    {
-                      menu: '-'
-                    },
-                    {
-                      icon: <Text type="danger"><DeleteOutlined /></Text>,
-                      menu: <Text type="danger">Delete</Text>,
-                      onClick: () => handleDelete(item)
-                    },
+          <List
+            size="small"
+            grid={viewMode === 'grid' ? {
+              gutter: [24, 24],
+              xs: 1,
+              sm: 1,
+              md: 1,
+              lg: 2,
+              xl: 3,
+              xxl: 4
+            } : {
+              gutter: [12, 12],
+              column: 1
+            }}
+            dataSource={filteredList}
+            loading={loading}
+            locale={{
+              emptyText: <div style={{ margin: '30px auto' }}>
+                <Paragraph type="secondary">
+                  There is no task template. Let's start from a one!
+                </Paragraph>
+                <Link to="/task_template/new">Create new task template</Link>
+              </div>
+            }}
+            renderItem={item => <List.Item>
+              <Card
+                // size="small"
+                bordered={true}
+                hoverable
+                // type="inner"
+                title={<>
+                  <TaskTemplateIcon />
+                  <Text>{item.name}</Text>
+                  {/* <Input bordered={false} value={item.name} /> */}
+                  {/* <HighlightingText search={searchText} value={item.name} /> */}
+                </>}
+                onClick={() => handleEdit(item)}
+                extra={<Space size="small">
+                  <Tooltip title="Create task with this task template">
+                    <Button icon={<PlusOutlined />} type="text"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleCreateTask(item)
+                      }}></Button>
+                  </Tooltip>
+                  <DropdownMenu
+                    config={[
+                      {
+                        icon: <EditOutlined />,
+                        menu: 'Edit',
+                        onClick: () => handleEdit(item)
+                      },
+                      {
+                        icon: <PlusOutlined />,
+                        menu: 'Create task',
+                        onClick: () => handleCreateTask(item),
+                      },
+                      // {
+                      //   menu: '-'
+                      // },
+                      {
+                        icon: <EyeOutlined />,
+                        menu: 'Preview',
+                        onClick: () => {
+                          setPreviewTaskTemplate(item);
+                        }
+                      },
+                      {
+                        icon: <CopyOutlined />,
+                        menu: 'Clone',
+                        onClick: () => handleClone(item)
+                      },
 
-                  ].filter(x => !!x)}
-                /></Space>}
-              bodyStyle={{ paddingTop: 16 }}
-            // onClick={() => handleEdit(item)}
-            >
-              <Paragraph>{item.description}</Paragraph>
-              {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-              <Space size="large">
-                <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-              </Space>
-              <DocTemplateListPanel value={item.docs} style={{margin: '12px -12px 0'}} bordered={false} />
-            </Card>
-          </List.Item>}
-        />
+                      {
+                        menu: '-'
+                      },
+                      {
+                        icon: <Text type="danger"><DeleteOutlined /></Text>,
+                        menu: <Text type="danger">Delete</Text>,
+                        onClick: () => handleDelete(item)
+                      },
+
+                    ].filter(x => !!x)}
+                  /></Space>}
+                bodyStyle={{ paddingTop: 16 }}
+              >
+                <Paragraph>{item.description}</Paragraph>
+                {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
+                <Space size="large">
+                  <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
+                  <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
+                </Space>
+                <DocTemplateListPanel value={item.docs} style={{ margin: '12px -12px 0' }} bordered={false} />
+              </Card>
+            </List.Item>}
+          />
         </PageHeader>
       </Space>
       <Modal
