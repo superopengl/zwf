@@ -1,9 +1,6 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Tag, Checkbox, Typography, Modal, Space, Button, notification, Collapse } from 'antd';
-import { useLocalStorage } from 'react-use';
+import { Typography, Space, Button, notification } from 'antd';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { notify } from 'util/notify';
 
 const { Paragraph, Link: TextLink } = Typography
 
@@ -28,6 +25,9 @@ const VersionMismatchModalContent = React.memo(props => {
 });
 
 export const showVersionMismatchModal = (webappVersion, backendVersion) => {
+  if(webappVersion === backendVersion) {
+    return;
+  }
   const lastAskedBackendVersion = reactLocalStorage.get(LAST_ASKED_BACKEND_VERSION);
   if (lastAskedBackendVersion === backendVersion) {
     return;
