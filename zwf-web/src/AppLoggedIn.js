@@ -294,7 +294,6 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      {/* <Redirect to={(isSystem || isAdmin || isAgent) ? '/task' : '/task'} /> */}
     </Switch>
 
     <ChangePasswordModal
