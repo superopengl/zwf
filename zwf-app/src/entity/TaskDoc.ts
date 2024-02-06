@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn, PrimaryGeneratedColumn, Index } from "typeorm";
 import { File } from "./File";
 
 @Entity()
@@ -28,6 +28,7 @@ export class TaskDoc {
   name?: string;
 
   @Column({ default: 'auto' })
+  @Index()
   type: 'client' | 'auto' | 'agent';
 
   @Column({ default: false })

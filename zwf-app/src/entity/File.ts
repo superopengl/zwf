@@ -32,7 +32,4 @@ export class File {
 
   @Column({ default: false })
   public?: boolean;
-
-  @ManyToOne(() => Task, task => task.docs)
-  task?: Task;
 }
