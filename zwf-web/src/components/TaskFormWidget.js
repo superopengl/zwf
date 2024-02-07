@@ -82,17 +82,17 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
 TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
-  docs: PropTypes.arrayOf(PropTypes.object),
+  docs: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
-  mode: PropTypes.oneOf(['taskTemplate', 'task']),
+  mode: PropTypes.oneOf(['create', 'edit']),
 };
 
 TaskFormWidget.defaultProps = {
   readonly: false,
   type: 'agent',
   onChange: (fields) => { },
-  mode: 'taskTemplate',
+  mode: 'create',
 };
 

@@ -36,9 +36,9 @@ export const AutoSaveTaskFormPanel = React.memo(React.forwardRef((props, ref) =>
   return (
     <TaskFormWidget
       fields={fields}
-      docs={task.docs}
+      docs={task.docs.map(d => d.id)}
       type={type}
-      mode="task"
+      mode="edit"
       onChange={handleTaskFieldsChange}
     />
   );

@@ -33,7 +33,7 @@ export const TaskTemplatePreviewPanel = props => {
         fields={taskTemplate.fields}
         docs={taskTemplate.docs}
         type={type}
-        mode="taskTemplate"
+        mode="create"
       />
     </Container >
   );

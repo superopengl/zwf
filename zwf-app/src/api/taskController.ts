@@ -36,10 +36,10 @@ import { File } from '../entity/File';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
-  const { id, taskTemplateId, clientEmail, taskName, varBag } = req.body;
+  const { id, taskTemplateId, clientEmail, taskName } = req.body;
   const creatorId = getUserIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, varBag, creatorId, id);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, creatorId, id);
 
   res.json(task);
 });

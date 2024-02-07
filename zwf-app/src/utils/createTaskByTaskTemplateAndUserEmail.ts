@@ -20,6 +20,7 @@ import { DocTemplate } from '../entity/DocTemplate';
 import { TaskDoc } from '../entity/TaskDoc';
 import { tryGenDocFile } from '../services/genDocService';
 import { logTaskCreated } from '../services/taskTrackingService';
+import { Role } from '../types/Role';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -50,14 +51,15 @@ function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
   return `${taskTemplateName} - ${displayName}`;
 }
 
-function generateTaskDocs(docTemplates: DocTemplate[], fields: TaskField[], userId: string): TaskDoc[] {
+function generateAutoTaskDocs(docTemplates: DocTemplate[], creatorId: string): TaskDoc[] {
   const docs: TaskDoc[] = [];
   for (const docTemplate of docTemplates) {
     const taskDoc = new TaskDoc();
     taskDoc.docTemplateId = docTemplate.id;
-    taskDoc.createdBy = userId;
+    taskDoc.createdBy = creatorId;
     taskDoc.name = docTemplate.name;
     taskDoc.status = 'pending';
+    taskDoc.type = 'auto';
     // const file = await tryGenDocFile(docTemplate, fields, userId);
     // taskDoc.fileId = file?.id;
     docs.push(taskDoc);
@@ -65,7 +67,7 @@ function generateTaskDocs(docTemplates: DocTemplate[], fields: TaskField[], user
   return docs;
 }
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, varBag: { [key: string]: any }, createrId: string, id?) => {
+export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, creatorId: string, id?) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');
   assert(email, 400, 'email is not specified');
 
@@ -74,7 +76,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
   await getManager().transaction(async m => {
     const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, taskTemplateId, { relations: ['docs'] });
     assert(taskTemplate, 404, 'taskTemplate is not found');
-    const fields = prefillTaskTemplateFields(taskTemplate.fields, varBag);
+    // const fields = prefillTaskTemplateFields(taskTemplate.fields, {});
 
     user = await ensureClientOrGuestUser(m, email);
 
@@ -85,17 +87,17 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     task.description = taskTemplate.description;
     task.userId = user.id;
     task.taskTemplateId = taskTemplateId;
-    task.fields = fields;
+    task.fields = taskTemplate.fields;
     task.orgId = taskTemplate.orgId;
     task.status = TaskStatus.TODO;
 
-    const taskDocs = generateTaskDocs(taskTemplate.docs, fields, user.id);
+    const taskDocs = generateAutoTaskDocs(taskTemplate.docs, creatorId);
     await m.save(taskDocs);
 
     task.docs = taskDocs;
     await m.save(task);
 
-    await logTaskCreated(m, task.id, createrId);
+    await logTaskCreated(m, task.id, creatorId);
   });
 
   const org = await getRepository(Org).findOne(task.orgId);

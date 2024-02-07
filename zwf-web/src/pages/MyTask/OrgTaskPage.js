@@ -66,7 +66,7 @@ const OrgTaskPage = React.memo((props) => {
     return () => {
       subscription$.unsubscribe();
     }
-  }, []);
+  }, [id]);
 
   const load$ = () => {
     return getTask$(id).pipe(

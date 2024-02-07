@@ -18,7 +18,7 @@ import { notify } from 'util/notify';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
 import { HiViewList } from 'react-icons/hi';
-import { showCreateTaskModal } from 'components/showCreateTaskModal';
+import { CreateTaskModal } from 'components/CreateTaskModal';
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
@@ -45,6 +45,8 @@ export const TaskTemplateListPage = props => {
   const [loading, setLoading] = React.useState(true);
   const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
   const [viewMode, setViewMode] = React.useState('grid');
+  const [currentTaskTemplateId, setCurrentTaskTemplateId] = React.useState(null);
+  const [modalVisible, setModalVisible] = React.useState(false)
 
   const loadList = async () => {
     setLoading(true);
@@ -106,7 +108,8 @@ export const TaskTemplateListPage = props => {
   }
 
   const handleCreateTask = (item) => {
-    showCreateTaskModal(item.id);
+    setCurrentTaskTemplateId(item.id);
+    setModalVisible(true);
   }
 
   return (
@@ -245,6 +248,13 @@ export const TaskTemplateListPage = props => {
           type="agent"
         />
       </Modal>
+      <CreateTaskModal
+        taskTemplateId={currentTaskTemplateId}
+        visible={modalVisible}
+        onCancel={() => setModalVisible(false)}
+        onOk={() => setModalVisible(false)}
+      />
+
     </LayoutStyled >
   );
 };

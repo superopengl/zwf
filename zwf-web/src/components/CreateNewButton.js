@@ -3,14 +3,12 @@ import PropTypes from 'prop-types';
 import { Menu, Dropdown, Typography } from 'antd';
 import { CaretDownOutlined } from '@ant-design/icons';
 import { TaskTemplateIcon, DocTemplateIcon } from './entityIcon';
-import { showCreateTaskModal } from 'components/showCreateTaskModal';
-import { notify } from 'util/notify';
-import { withRouter, Link } from 'react-router-dom';
+import { CreateTaskModal } from 'components/CreateTaskModal';
+import { withRouter } from 'react-router-dom';
 
-const {Link: TextLink} = Typography;
-
-export const CreateNewButton = React.memo(withRouter(props => {
+export const CreateNewButton = withRouter(React.memo(props => {
   const { size } = props;
+  const [modalVisible, setModalVisible] = React.useState(false)
 
   const handleMenuSelected = (e) => {
     switch (e.key) {
@@ -26,7 +24,7 @@ export const CreateNewButton = React.memo(withRouter(props => {
   }
 
   const handleCreateTask = () => {
-    showCreateTaskModal(null);
+    setModalVisible(true)
   }
 
   const menu = <Menu onClick={handleMenuSelected} size={size}>
@@ -34,17 +32,20 @@ export const CreateNewButton = React.memo(withRouter(props => {
     <Menu.Item key="doc_template"><DocTemplateIcon />Create Doc Template</Menu.Item>
   </Menu>
 
-  return <Dropdown.Button
-    overlay={menu}
-    size={size}
-    onClick={handleCreateTask}
-    trigger="click"
-    type="primary"
-    icon={<CaretDownOutlined/>}
-    style={{width: 196}}
-  >
-    Create Task
-  </Dropdown.Button>
+  return <>
+    <Dropdown.Button
+      overlay={menu}
+      size={size}
+      onClick={handleCreateTask}
+      trigger="click"
+      type="primary"
+      icon={<CaretDownOutlined />}
+      style={{ width: 196 }}
+    >
+      Create Task
+    </Dropdown.Button>
+    <CreateTaskModal visible={modalVisible} onCancel={() => setModalVisible(false)} onOk={() => setModalVisible(false)} />
+  </>
 }));
 
 CreateNewButton.propTypes = {
