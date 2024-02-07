@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Switch, Checkbox } from 'antd';
+import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Switch, Checkbox, Table } from 'antd';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
@@ -150,7 +150,7 @@ export const TaskAttachmentPanel = (props) => {
   }
 
   const canToggleOfficalOnly = (taskDoc) => {
-    return role !== 'client' && taskDoc.type !== 'client'  
+    return !taskDoc.isAddButton && role !== 'client' && taskDoc.type !== 'client'
   }
 
   const handlePreviewAutoDoc = (taskDoc, e) => {
@@ -175,6 +175,44 @@ export const TaskAttachmentPanel = (props) => {
     return [...filtered, LAST_ADD_DOC_BUTTON_ITEM];
   }, [list]);
 
+  const columns = [
+    {
+      render: (value, item) => <Space align="start">
+        <>{item.isAddButton ? <PlusOutlined style={{ fontSize: 36 }} /> : <FileIcon name={item.name} width={36} />}</>
+        <div>
+          <big>
+            {item.isAddButton ? <Text type="secondary">Click or drag file to this area to upload</Text> :
+              item.fileId ?
+                <TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink> :
+                <><TextLink onClick={(e) => handlePreviewAutoDoc(item, e)}>{item.name}</TextLink></>
+            }
+          </big>
+          <div>
+            {item.isAddButton ? <>
+              <div><Text type="secondary">Support for single or bulk file upload. Maximumn 20MB per file.</Text></div>
+            </> : <>Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" /></>
+            }
+          </div>
+          <div>{item.type === 'auto' &&
+            <Text type="danger">Automatically generated doc, pending fields</Text>
+          }
+          </div>
+        </div>
+      </Space>
+    },
+    role === 'client' ? null : {
+      title: 'Hide from client?',
+      width: 20,
+      align: 'center',
+      render: (value, item) => canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null
+    },
+    {
+      width: 20,
+      align: 'center',
+      render: (value, item) => canDelete(item) ? <Button danger type="text" icon={<DeleteOutlined />} onClick={(e) => handleDeleteDoc(item.id, e)} /> : null
+    }
+  ].filter(x => x);
+
 
   return <Container>
     <Upload.Dragger
@@ -188,40 +226,24 @@ export const TaskAttachmentPanel = (props) => {
       itemRender={() => null}
       onChange={handleChange}
     >
-      <List
-        loading={loading}
-        bordered={false}
-        itemLayout="horizontal"
+      <Table
         dataSource={listDataSource}
-        style={{ padding: '0 12px' }}
-        renderItem={item => item.isAddButton ? <List.Item>
-          <List.Item.Meta
-            avatar={<PlusOutlined />}
-            title={<Text type="secondary">Click or drag file to this area to upload</Text>}
-            description={<>Support for single or bulk file upload. Maximumn 20MB per file.</>}
-          />
-        </List.Item> : <List.Item
-          onClick={e => handleClickTaskDoc(e, item)}
-          actions={[
-            canDelete(item) ? <Button danger type="text" icon={<DeleteOutlined />} onClick={(e) => handleDeleteDoc(item.id, e)} /> : null,
-            canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null,
-          ].filter(x => x)}
-        >
-          <List.Item.Meta
-            // style={{width: '100%'}}
-            avatar={<FileIcon name={item.name} width={36} />}
-            title={item.fileId ?
-              <TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink> :
-              <><TextLink onClick={(e) => handlePreviewAutoDoc(item, e)}>{item.name}</TextLink></>}
-            description={<>
-              Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />
-              {item.type === 'auto' && <div>
-                <Text type="danger">from doc template, pending fields</Text>
-              </div>}
-            </>}
-          ></List.Item.Meta>
-
-        </List.Item>}
+        columns={columns}
+        loading={loading}
+        // size="small"
+        pagination={false}
+        onRow={(item) => {
+          return {
+            onClick: e => item.isAddButton ? null : e.stopPropagation(),
+            onDoubleClick: e => item.isAddButton ? null : e.stopPropagation(),
+          }
+        }}
+        onHeaderRow={() => {
+          return {
+            onClick: e => e.stopPropagation(),
+            onDoubleClick: e => e.stopPropagation(),
+          }
+        }}
       />
     </Upload.Dragger>
   </Container>
