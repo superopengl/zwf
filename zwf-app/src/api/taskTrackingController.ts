@@ -1,9 +1,10 @@
+import { TaskStatus } from './../types/TaskStatus';
 import { TaskTrackingInformation } from './../entity/views/ClientTaskTrackingInformation';
 import { TaskTracking } from './../entity/TaskTracking';
 import { getEventChannel } from '../services/globalEventSubPubService';
 import { filter } from 'rxjs/operators';
 
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
@@ -71,6 +72,7 @@ export const listMyTaskTrackings = handlerWrapper(async (req, res) => {
   const list = await getRepository(TaskTrackingInformation).find({
     where: {
       userId,
+      status: In([TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE])
     },
     order: {
       createdAt: 'DESC'
