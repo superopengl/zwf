@@ -15,6 +15,7 @@ import { notify } from 'util/notify';
 import Icon from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import { withRouter } from 'react-router-dom';
+import { getUserDisplayName } from 'util/getDisplayName';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -41,6 +42,14 @@ export const TaskGenerator = withRouter(React.memo(props => {
       setTaskTemplate(null)
     }
   }, [taskTemplateId])
+
+  React.useEffect(() => {
+    if (clientInfo && taskTemplate) {
+      const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
+      const name = `${taskTemplate.name} - ${userName}`;
+      setTaskName(name);
+    }
+  }, [clientInfo, taskTemplate])
 
   const handleTaskTemplateChange = taskTemplateIdValue => {
     setTaskTemplateId(taskTemplateIdValue);
