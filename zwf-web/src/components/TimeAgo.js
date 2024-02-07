@@ -12,7 +12,7 @@ JavascriptTimeAgo.addLocale(en);
 const { Text } = Typography;
 
 const StyledSpace = styled(Space)`
-font-size: 0.8rem;
+// font-size: 0.8rem;
 
 .ant-space-item {
   margin-bottom: 0 !important;
