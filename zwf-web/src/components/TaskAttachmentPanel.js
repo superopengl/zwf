@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, List, Typography, Tooltip, Row, Col, Upload, Button } from 'antd';
+import { Space, List, Typography, Badge, Row, Col, Upload, Button } from 'antd';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
@@ -163,12 +163,12 @@ export const TaskAttachmentPanel = (props) => {
         bordered={false}
         itemLayout="horizontal"
         dataSource={listDataSource}
-        style={{padding: '0 12px'}}
+        style={{ padding: '0 12px' }}
         renderItem={item => item.isAddButton ? <List.Item>
           <List.Item.Meta
             avatar={<PlusOutlined />}
-            title="Click or drag file to this area to upload"
-            description="Support for a single or bulk upload. Maximumn size is 20MB per file."
+            title={<Text type="secondary">Click or drag file to this area to upload</Text>}
+            description={<>Support for single or bulk file upload. Maximumn 20MB per file.</>}
           />
         </List.Item> : <List.Item
           onClick={e => handleClickTaskDoc(e, item)}
@@ -177,8 +177,8 @@ export const TaskAttachmentPanel = (props) => {
           ]}
         >
           <List.Item.Meta
-            avatar={<FileIcon name={item.name} width={36}/>}
-            title={item.name}
+            avatar={<FileIcon name={item.name} width={36} />}
+            title={item.docTemplateId ? <>{item.name} <Badge count={'auto'}/></> : item.name}
             description={<>Created <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" /></>}
           />
         </List.Item>}

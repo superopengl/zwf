@@ -609,7 +609,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: updateTask
+      operationId: saveTaskContent
       parameters:
         - name: id
           in: path
@@ -649,21 +649,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
-  /task/{id}/fields:
-    post:
-      operationId: saveTaskFields
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK             
+          description: OK         
   /task/{id}/sign:
     post:
       operationId: signTaskDoc

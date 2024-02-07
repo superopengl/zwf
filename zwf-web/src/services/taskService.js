@@ -25,8 +25,8 @@ export async function saveTask(item) {
   return httpPost('task', item);
 }
 
-export function saveTaskFields$(taskId, fields) {
-  return httpPost$(`/task/${taskId}/fields`, fields);
+export function saveTaskContent$(taskId, fields, taskDocIds) {
+  return httpPost$(`/task/${taskId}`, {fields, taskDocIds});
 }
 
 export function createNewTask$(payload) {

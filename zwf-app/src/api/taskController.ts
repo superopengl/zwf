@@ -63,47 +63,9 @@ async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
   }
 }
 
-export const updateTask = handlerWrapper(async (req, res) => {
+export const saveTaskContent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const { fields } = req.body;
-  const { id } = req.params;
-
-  let task: Task;
-  let query: any = { taskId: id };
-  const role = getRoleFromReq(req);
-  switch (role) {
-    case Role.Admin:
-    case Role.Agent:
-      query = {
-        ...query,
-        orgId: getOrgIdFromReq(req),
-      }
-      break;
-    case Role.Client:
-      query = {
-        ...query,
-        userId: getUserIdFromReq(req),
-      }
-    default:
-      assert(task, 404, 'Task is not found');
-  }
-
-  const repo = getRepository(Task);
-  task = await repo.findOne(id);
-  assert(task, 404, 'Task is not found');
-  const oldStatus = task.status;
-
-  task.fields = fields;
-
-  await repo.save(task);
-  await handleTaskStatusChange(oldStatus, task);
-
-  res.json();
-});
-
-export const saveTaskFields = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const fields = req.body ?? [];
+  const { fields, taskDocIds } = req.body;
   const { id } = req.params;
   const role = getRoleFromReq(req);
 
@@ -127,6 +89,13 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
   }
 
   await getRepository(Task).update(query, { fields });
+  await getManager().transaction(async m => {
+    const task = await m.findOneOrFail(Task, query) as Task;
+    task.fields = fields;
+    const taskDocs = await m.findByIds(TaskDoc, taskDocIds);
+    task.docs = taskDocs;
+    await m.save(task);
+  })
 
   res.json();
 });
