@@ -10,7 +10,7 @@ import Icon, { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutline
 import { getFileUrl, getPublicFileUrl, openFile } from 'services/fileService';
 import { API_BASE_URL } from 'services/http';
 import { TimeAgo } from './TimeAgo';
-import { createOrphanTaskDoc$, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
+import { createOrphanTaskDoc$, getTaskDocDownloadUrl, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { FileIcon } from './FileIcon';
@@ -139,6 +139,10 @@ export const TaskAttachmentPanel = (props) => {
     return !taskDoc.isAddButton && isClient && taskDoc.requiresSign
   }
 
+  const pendingClientRead = taskDoc => {
+    return isClient && !taskDoc.lastClientReadAt;
+  }
+
   const handlePreviewAutoDoc = (taskDoc, e) => {
     e.stopPropagation();
     const { docTemplateId } = taskDoc;
@@ -191,7 +195,7 @@ export const TaskAttachmentPanel = (props) => {
           <big>
             {item.isAddButton ? <Text type="secondary">Click or drag file to this area to upload</Text> :
               item.fileId ?
-                <><TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink></> :
+                <><TextLink href={getTaskDocDownloadUrl(item.id)} strong={pendingClientRead(item)} target="_blank">{item.name}</TextLink></> :
                 <><TextLink onClick={(e) => handlePreviewAutoDoc(item, e)}>{item.name}</TextLink></>
             }
           </big>

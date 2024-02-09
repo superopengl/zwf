@@ -7,7 +7,7 @@ import { getOrgIdFromReq } from './getOrgIdFromReq';
 import { getUserIdFromReq } from './getUserIdFromReq';
 
 
-export async function assertTaskAccess(req, taskId) {
+export async function assertTaskAccess(req, taskId): Promise<Task> {
   const role = getRoleFromReq(req);
   let query: any = {id: taskId};
   switch(role) {
@@ -28,6 +28,8 @@ export async function assertTaskAccess(req, taskId) {
       assert(false, 403, 'Invliad role access');
   }
 
-  const has = await getRepository(Task).findOne(query);
-  assert(!!has, 404, 'Cannot find task');
+  const task = await getRepository(Task).findOne(query);
+  assert(!!task, 404, 'Cannot find task');
+
+  return task;
 }

@@ -12,6 +12,8 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { File } from '../entity/File';
 import { computeTaskDocSignedHash } from '../utils/computeTaskDocSignedHash';
 import { logTaskClientSigned } from '../services/taskTrackingService';
+import { assertTaskAccess } from '../utils/assertTaskAccess';
+import { streamFileToResponse } from '../utils/streamFileToResponse';
 
 
 export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
@@ -49,12 +51,12 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
     id: In(ids)
   }
 
-  const list = await getRepository(TaskDoc).find({ 
+  const list = await getRepository(TaskDoc).find({
     where: query,
     order: {
       createdAt: 'ASC'
     }
-   });
+  });
 
   res.json(list);
 });
@@ -86,6 +88,25 @@ export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
   });
 
   res.json();
+});
+
+
+export const getTaskDocFileStream = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'client', 'agent');
+  const { id } = req.params;
+  const role = getRoleFromReq(req);
+  assertTaskAccess(req, id);
+
+  const taskDoc = await getRepository(TaskDoc).findOne(id, { relations: ['file'] });
+  assert(taskDoc?.file, 400, 'File does not exist');
+
+  if (role === Role.Client) {
+    await getRepository(TaskDoc).update(id, {
+      lastClientReadAt: getUtcNow()
+    })
+  }
+
+  streamFileToResponse(taskDoc.file, res);
 });
 
 export const signTaskDoc = handlerWrapper(async (req, res) => {
