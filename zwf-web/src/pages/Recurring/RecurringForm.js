@@ -1,5 +1,4 @@
 import { Button, Form, Select, Space, Typography, InputNumber, Checkbox, Switch } from 'antd';
-import { PortfolioAvatar } from 'components/PortfolioAvatar';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
@@ -10,18 +9,10 @@ import { getRecurring, saveRecurring } from 'services/recurringService';
 import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
-import PortfolioSelect from 'components/PortfolioSelect';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
-const StyledPortfolioSelect = styled(Select)`
-  .ant-select-selector {
-    height: 50px !important;
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-  }
-`;
 
 const RecurringForm = (props) => {
   const { id } = props;
@@ -66,9 +57,6 @@ const RecurringForm = (props) => {
         <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
         <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
           <TaskTemplateSelect />
-        </Form.Item>
-        <Form.Item label="Client Portfolio" name="portfolioId" rules={[{ required: true, message: ' ' }]}>
-          <PortfolioSelect />
         </Form.Item>
         <Form.Item
           label="Start On (First Run)" name="startFrom" 
