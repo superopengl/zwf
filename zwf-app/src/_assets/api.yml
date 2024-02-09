@@ -555,7 +555,7 @@ paths:
           description: OK
   /task/tracking:
     get:
-      operationId: listMyTaskTrackings
+      operationId: listAllMyHistoricalTaskTrackings
       # security:
       #   - authLoggedInUser: []
       responses:
@@ -637,20 +637,6 @@ paths:
       responses:
         200:
           description: OK         
-  /task/{id}/sign:
-    post:
-      operationId: signTaskDoc
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /task/{id}/tags:
     post:
       operationId: updateTaskTags

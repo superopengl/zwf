@@ -134,7 +134,7 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.requiresSign = false;
 
     await m.save(taskDoc);
-    await logTaskDocSignedByClient(m, id, userId, taskDoc.id, taskDoc.name);
+    await logTaskDocSignedByClient(m, taskDoc.taskId, userId, taskDoc.id, taskDoc.name);
   })
 
   res.json();

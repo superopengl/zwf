@@ -111,9 +111,10 @@ export const TaskAttachmentPanel = (props) => {
     setLoading(uploading);
   };
 
-  const handleDeleteDoc = (id, e) => {
+  const handleDeleteDoc = (item, e) => {
     e.stopPropagation();
-    const newList = list.filter(x => x.id !== id);
+    const taskDocId = item.id;
+    const newList = list.filter(x => x.id !== taskDocId);
     setList(newList);
     onChange(newList.map(x => x.id));
   }
@@ -144,11 +145,11 @@ export const TaskAttachmentPanel = (props) => {
   }
 
   const canRequestClientSign = (taskDoc) => {
-    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client' && taskDoc.fileId
+    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client' && taskDoc.fileId && !taskDoc.signedAt
   }
 
   const canClientSign = (taskDoc) => {
-    return !taskDoc.isAddButton && isClient && taskDoc.requiresSign
+    return !taskDoc.isAddButton && isClient && taskDoc.requiresSign && !taskDoc.signedAt
   }
 
   const pendingClientRead = taskDoc => {
@@ -225,23 +226,25 @@ export const TaskAttachmentPanel = (props) => {
       </Space>
     },
     isClient ? null : {
+      title: 'Require sign',
+      // width: 20,
+      align: 'center',
+      render: (value, item) => item.signedAt ? <TimeAgo value={item.signedAt} /> 
+       : canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleToggleRequireSign(item, e)} /> 
+       : null
+    },
+    isClient ? null : {
       title: 'Hide from client?',
       width: 20,
       align: 'center',
       render: (value, item) => canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null
     },
-    isClient ? null : {
-      title: 'Require sign',
-      width: 20,
-      align: 'center',
-      render: (value, item) => canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleToggleRequireSign(item, e)} /> : null
-    },
     {
       width: 20,
       align: 'center',
       render: (value, item) => <>
-      {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item.id, e)} />}
-      {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item.id, e)} >sign</Button>}
+      {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item, e)} />}
+      {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)} >sign</Button>}
       </>
     }
   ].filter(x => x);
