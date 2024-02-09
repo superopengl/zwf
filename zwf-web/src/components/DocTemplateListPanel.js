@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Badge, List, Typography, Tooltip, Row, Col } from 'antd';
+import { Badge, List, Typography, Tooltip, Row, Col, Space } from 'antd';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
@@ -20,6 +20,7 @@ position: relative;
 
 .docItem {
   width: 100%;
+  align-items: center;
 }
 
 &:hover {
@@ -36,7 +37,8 @@ position: relative;
 export const DocTemplateListPanel = (props) => {
   const { value: docs, allowTest, varBag, showWarning, renderVariable, mode, ...otherProps } = props;
 
-  const handlePreviewDocTemplate = docId => {
+  const handlePreviewDocTemplate = (e, docId) => {
+    e.stopPropagation();
     getDocTemplate$(docId).subscribe(docTemplate => {
       showDocTemplatePreviewModal(docTemplate, { allowTest, varBag });
     })
@@ -52,15 +54,15 @@ export const DocTemplateListPanel = (props) => {
     dataSource={docs}
     renderItem={doc => {
       const missingVarComps = (doc.variables ?? []).filter(v => varBag[v] === undefined || varBag[v] === '').map(v => <span key={v}>{renderVariable(v)}</span>);
-      return <DocListItem onClick={isDocTemplateMode ? () => handlePreviewDocTemplate(doc.id) : null}>
+      return <DocListItem onClick={isDocTemplateMode ? (e) => handlePreviewDocTemplate(e, doc.id) : null}>
         {isDocTemplateMode
           ? <Row justify="space-between" className="docItem">
-            <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
+            <Col><Space size="small"><DocTemplateIcon /><Text>{doc.name}</Text></Space></Col>
           </Row>
-          : <TextLink href={getPublicFileUrl(doc.fileId)} target="_blank" style={{width: '100%'}}>
+          : <TextLink href={getPublicFileUrl(doc.fileId)} target="_blank" style={{ width: '100%' }}>
             <Row justify="space-between" className="docItem">
-            <Col><DocTemplateIcon /><Text>{doc.name}</Text></Col>
-          </Row>
+              <Col><Space size="small"><DocTemplateIcon /><Text>{doc.name}</Text></Space></Col>
+            </Row>
           </TextLink>}
         {showWarning && <Tooltip title={<>Fields {missingVarComps} are required to be input to generate the doc.</>}
           placement="topLeft"
