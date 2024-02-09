@@ -59,8 +59,6 @@ const OrgTaskPage = React.memo((props) => {
   const [assigneeId, setAssigneeId] = React.useState();
   const context = React.useContext(GlobalContext);
 
-  const formRef = React.createRef();
-
   React.useEffect(() => {
     const subscription$ = load$();
     return () => {
@@ -139,7 +137,7 @@ const OrgTaskPage = React.memo((props) => {
         <Row wrap={false} gutter={40}>
           <Col span={16}>
             <Card size="large">
-              <AutoSaveTaskFormPanel ref={formRef} value={task} type="agent" onSavingChange={setSaving} />
+              <AutoSaveTaskFormPanel value={task} type="agent" onSavingChange={setSaving} />
             </Card>
             {/* <em>{JSON.stringify(task.fields, null, 2)}</em> */}
           </Col>
