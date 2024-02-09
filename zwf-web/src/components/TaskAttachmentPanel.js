@@ -20,6 +20,7 @@ import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { Subscription } from 'rxjs';
 import { AddNewTaskDocItem } from './AddNewTaskDocItem';
 import { TaskDocItem } from './TaskDocItem';
+import { showSignTaskDocModal } from './showSignTaskDocModal';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -188,9 +189,14 @@ export const TaskAttachmentPanel = (props) => {
 
   const handleSignTaskDoc = (taskDoc, e) => {
     e.stopPropagation();
-    setLoading(true);
-    signTaskDoc$(taskDoc.id).subscribe(() => {
-      reload$(true);
+    // setLoading(true);
+    // signTaskDoc$(taskDoc.id).subscribe(() => {
+    //   reload$(true);
+    // })
+    showSignTaskDocModal(taskDoc, {
+      onOk: () => {
+        reload$(true);
+      }
     })
   }
 
