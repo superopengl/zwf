@@ -31,7 +31,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { logTaskArchived, logTaskAssigned } from '../services/taskTrackingService';
+import { logTaskStatusChange, logTaskAssigned } from '../services/taskTrackingService';
 import { File } from '../entity/File';
 import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
@@ -338,20 +338,6 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const deleteTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const { id } = req.params;
-  const orgId = getOrgIdFromReq(req);
-  const userId = getUserIdFromReq(req);
-
-  await getManager().transaction(async m => {
-    await m.update(Task, { id, orgId }, { status: TaskStatus.ARCHIVED });
-    await logTaskArchived(m, id, userId);
-  })
-
-  res.json();
-});
-
 export const assignTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
@@ -370,9 +356,16 @@ export const assignTask = handlerWrapper(async (req, res) => {
 export const changeTaskStatus = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id, status } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
 
-  const taskStatus = status as TaskStatus;
-  await getRepository(Task).update(id, { status: taskStatus });
+  await getManager().transaction(async m => {
+    const task = await m.findOneOrFail(Task, { id, orgId });
+    const oldStatus = task.status;
+    task.status = status as TaskStatus;
+    await m.save(task);
+    await logTaskStatusChange(m, id, userId, oldStatus, task.status);
+  })
 
   res.json();
 });

@@ -1,4 +1,4 @@
-import { MessageFilled } from '@ant-design/icons';
+import { ArrowRightOutlined, MessageFilled } from '@ant-design/icons';
 import { Timeline, Space, Typography, Card, Row, Col, Button } from 'antd';
 import { GlobalContext } from 'contexts/GlobalContext';
 import PropTypes from 'prop-types';
@@ -75,7 +75,8 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
                 <Link to={`/task/${item.taskId}`}><strong>{item.taskName}</strong></Link>
                 <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
               </Space>}
-              {item.action === 'chat' ? <ChatMessage userId={item.by} message={item.info} /> : <Text strong>{item.action ?? item.info}</Text>}
+              {item.action === 'chat' && <ChatMessage userId={item.by} message={item.info} />}
+              {item.action === 'status-change' && <Text strong>{item.info.oldStatus} <ArrowRightOutlined /> {item.info.newStatus}</Text>}
             </Space>
           </Col>
         </Row>

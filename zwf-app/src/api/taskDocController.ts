@@ -11,7 +11,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { File } from '../entity/File';
 import { computeTaskDocSignedHash } from '../utils/computeTaskDocSignedHash';
-import { logTaskClientSigned } from '../services/taskTrackingService';
+import { logTaskDocSignedByClient } from '../services/taskTrackingService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 
@@ -134,7 +134,7 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.requiresSign = false;
 
     await m.save(taskDoc);
-    await logTaskClientSigned(m, id, userId, taskDoc.id);
+    await logTaskDocSignedByClient(m, id, userId, taskDoc.id, taskDoc.name);
   })
 
   res.json();

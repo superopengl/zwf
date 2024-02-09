@@ -115,7 +115,7 @@ const OrgTaskPage = React.memo((props) => {
         onBack={handleGoBack}
         backIcon={<LeftOutlined />}
         ghost={true}
-        fixedHeader
+        // fixedHeader
         header={{
           title: <Space style={{ height: 34 }}>
             <TaskIcon />
