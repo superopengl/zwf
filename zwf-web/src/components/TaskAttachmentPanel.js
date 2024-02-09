@@ -36,6 +36,18 @@ const Container = styled.div`
   font-size: 36px !important;
 }
 
+.ant-table-placeholder {
+  .ant-table-cell {
+    border: 0;
+  }
+}
+
+.ant-table-row:last-child {
+  .ant-table-cell {
+    border: 0;
+  }
+}
+
 `;
 
 
@@ -254,6 +266,9 @@ export const TaskAttachmentPanel = (props) => {
         loading={loading}
         showHeader={isAgent}
         // size="small"
+        locale={{
+          emptyText: 'No file uploaded. You can upload files when the agent requires.'
+        }}
         pagination={false}
         rowKey={item => item.id}
         onRow={(item) => {
