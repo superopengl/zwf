@@ -6,15 +6,18 @@ import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
-import { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
+import Icon, { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutlined, EyeOutlined, PlusOutlined } from '@ant-design/icons';
 import { getFileUrl, getPublicFileUrl, openFile } from 'services/fileService';
 import { API_BASE_URL } from 'services/http';
 import { TimeAgo } from './TimeAgo';
-import { createOrphanTaskDoc$, listTaskDocs$ } from "services/taskDocService";
+import { createOrphanTaskDoc$, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { FileIcon } from './FileIcon';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { FaFileSignature, FaSignature } from 'react-icons/fa';
+import { ConfirmDeleteButton } from './ConfirmDeleteButton';
+import { Subscription } from 'rxjs';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -35,70 +38,53 @@ const Container = styled.div`
 
 `;
 
-const DocListItem = styled(List.Item)`
-padding-left: 12px !important;
-padding-right: 12px !important;
-display: flex;
-flex-direction: column;
-position: relative;
 
-.docItem {
-  width: 100%;
-}
-
-&:hover {
-  cursor: pointer;
-  background-color: #F5F5F5;
-
-  .docItem:after {
-    content: "click to view";
-    color: #37AFD2;
-  }
-}
-`;
-
-const convertToFileList = (docs) => {
-  return (docs || []).map(d => ({
-    id: d.id,
-    uid: d.id,
-    name: d.name,
-    status: 'done',
-    url: d.file?.location,
-  }))
-}
 
 const LAST_ADD_DOC_BUTTON_ITEM = {
+  id: 'new',
   isAddButton: true
 }
 
 export const TaskAttachmentPanel = (props) => {
-  const { value: taskDocIds, allowTest, varBag, onChange, showWarning, renderVariable, mode, ...otherProps } = props;
+  const { value: taskDocIds, allowTest, varBag, onChange, showWarning, renderVariable, mode } = props;
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const context = React.useContext(GlobalContext);
   const { user, role } = context;
 
+  const isClient = role === 'client';
+  const isAgent = role === 'agent' || role === 'admin';
+
   React.useEffect(() => {
+    const sub$ = reload$(true);
+    return () => sub$.unsubscribe();
+  }, [taskDocIds]);
+
+  const reload$ = (force = false) => {
+    setLoading(true);
+
+    if(!force) {
+      setList(list => [...list]);
+      setLoading(false)
+      return Subscription.EMPTY;
+    } 
+
     if (!taskDocIds?.length) {
       setLoading(false)
-      return;
+      return Subscription.EMPTY;
     }
+
     const sub$ = listTaskDocs$(taskDocIds).pipe(
       finalize(() => setLoading(false))
     ).subscribe(setList);
 
-    return () => sub$.unsubscribe();
-  }, [taskDocIds]);
-
-  const handlePreviewDocTemplate = docId => {
-    getDocTemplate$(docId).subscribe(docTemplate => {
-      showDocTemplatePreviewModal(docTemplate, { allowTest, varBag });
-    })
+    return sub$;
   }
 
+
   const handleChange = (info) => {
-    const { file, fileList, event } = info;
+    const { file } = info;
 
     if (file.status === 'done') {
       const fileId = file.response.id;
@@ -120,14 +106,6 @@ export const TaskAttachmentPanel = (props) => {
     onChange(newList.map(x => x.id));
   }
 
-  const handleClickTaskDoc = (e, taskDoc) => {
-    // Prevent from triggering the below Upload
-    e.stopPropagation();
-    // const { docTemplateId } = taskDoc;
-    // if (docTemplateId) {
-    //   alert('preview')
-    // }
-  }
 
   const beforeUpload = (file) => {
     const isLt20M = file.size / 1024 / 1024 < 20;
@@ -150,11 +128,15 @@ export const TaskAttachmentPanel = (props) => {
   }
 
   const canToggleOfficalOnly = (taskDoc) => {
-    return !taskDoc.isAddButton && role !== 'client' && taskDoc.type !== 'client'
+    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client'
   }
 
   const canRequestClientSign = (taskDoc) => {
-    return !taskDoc.isAddButton && role !== 'client' && taskDoc.type !== 'client' && taskDoc.fileId
+    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client' && taskDoc.fileId
+  }
+
+  const canClientSign = (taskDoc) => {
+    return !taskDoc.isAddButton && isClient && taskDoc.requiresSign
   }
 
   const handlePreviewAutoDoc = (taskDoc, e) => {
@@ -171,14 +153,31 @@ export const TaskAttachmentPanel = (props) => {
 
   const handleToggleOfficialOnly = (taskDoc, e) => {
     e.stopPropagation();
-
+    const checked = e.target.checked;
+    setLoading(true);
+    toggleTaskDocsOfficialOnly$(taskDoc.id, checked).subscribe(() => {
+      taskDoc.officialOnly = checked;
+      reload$()
+    })
   }
 
-  const handleRequireSign = (taskDoc, e) => {
+  const handleToggleRequireSign = (taskDoc, e) => {
     e.stopPropagation();
-
+    const checked = e.target.checked;
+    setLoading(true);
+    toggleTaskDocsRequiresSign$(taskDoc.id, checked).subscribe(() => {
+      taskDoc.requiresSign = checked;
+      reload$(true)
+    })
   }
-
+  
+  const handleSignTaskDoc = (taskDoc, e) => {
+    e.stopPropagation();
+    setLoading(true);
+    signTaskDoc$(taskDoc.id).subscribe(() => {
+      reload$(true);
+    })
+  }
 
   const listDataSource = React.useMemo(() => {
     return [...list, LAST_ADD_DOC_BUTTON_ITEM];
@@ -192,7 +191,7 @@ export const TaskAttachmentPanel = (props) => {
           <big>
             {item.isAddButton ? <Text type="secondary">Click or drag file to this area to upload</Text> :
               item.fileId ?
-                <TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink> :
+                <><TextLink href={getFileUrl(item.fileId)} target="_blank">{item.name}</TextLink></> :
                 <><TextLink onClick={(e) => handlePreviewAutoDoc(item, e)}>{item.name}</TextLink></>
             }
           </big>
@@ -209,22 +208,25 @@ export const TaskAttachmentPanel = (props) => {
         </div>
       </Space>
     },
-    role === 'client' ? null : {
+    isClient ? null : {
       title: 'Hide from client?',
       width: 20,
       align: 'center',
       render: (value, item) => canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null
     },
-    {
+    isClient ? null : {
       title: 'Require sign',
       width: 20,
       align: 'center',
-      render: (value, item) => canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleRequireSign(item, e)} /> : null
+      render: (value, item) => canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleToggleRequireSign(item, e)} /> : null
     },
     {
       width: 20,
       align: 'center',
-      render: (value, item) => canDelete(item) ? <Button danger type="text" icon={<DeleteOutlined />} onClick={(e) => handleDeleteDoc(item.id, e)} /> : null
+      render: (value, item) => <>
+      {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item.id, e)} />}
+      {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item.id, e)} >sign</Button>}
+      </>
     }
   ].filter(x => x);
 
@@ -245,8 +247,10 @@ export const TaskAttachmentPanel = (props) => {
         dataSource={listDataSource}
         columns={columns}
         loading={loading}
+        showHeader={isAgent}
         // size="small"
         pagination={false}
+        rowKey={item => item.id}
         onRow={(item) => {
           return {
             onClick: e => item.isAddButton ? null : e.stopPropagation(),
@@ -281,6 +285,6 @@ TaskAttachmentPanel.defaultProps = {
   varBag: {},
   renderVariable: (varName) => <VarTag>{varName}</VarTag>,
   mode: 'taskTemplate',
-  onChange: (taskDocIds) => { }
+  onChange: () => { }
 };
 

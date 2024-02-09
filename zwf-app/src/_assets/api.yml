@@ -793,13 +793,49 @@ paths:
         200:
           description: OK
   /task_doc:
-    post:
+    put:
       operationId: createOrphanTaskDoc
       # security:
       #   - authLoggedInUser: []
       responses:
         200:
-          description: OK                         
+          description: OK             
+  /task_doc/{id}/offical_only:
+    post:
+      operationId: setTaskDocOfficialOnly
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK            
+  /task_doc/{id}/requires_sign:
+    post:
+      operationId: setTaskDocRequiresSign
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK            
+  /task_doc/{id}/sign:
+    post:
+      operationId: signTaskDoc
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                               
   /task_doc/search:
     post:
       operationId: searchTaskDocs

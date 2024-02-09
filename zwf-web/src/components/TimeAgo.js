@@ -32,8 +32,8 @@ export const TimeAgo = React.memo(props => {
   return <StyledSpace size="small" direction="horizontal">
     <Space direction={direction} size="small">
       {prefix}
-      {showAgo && <Text strong={strong} type={type}><ReactTimeAgo date={m.toDate()} /></Text>}
-      {showTime && <Text strong={strong} type={type}>{m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}</Text>}
+      {showAgo && <ReactTimeAgo date={m.toDate()} />}
+      {showTime && m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}
     </Space>
     {extra}
   </StyledSpace>

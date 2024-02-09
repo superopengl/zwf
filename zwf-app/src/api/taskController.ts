@@ -335,31 +335,6 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const signTaskDoc = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
-  const { id } = req.params;
-  const taskRepo = getRepository(Task);
-  const task = await taskRepo.findOne(id);
-  assert(task, 404);
-  const { files } = req.body;
-  const oldStatus = task.status;
-
-  if (files?.length) {
-    const now = getNow();
-    task.docs.filter(d => d.requiresSign && files.includes(d.fileId)).forEach(d => d.signedAt = now);
-  }
-
-  const unsignedFileCount = task.docs.filter(d => d.requiresSign && !d.signedAt).length;
-  // if (unsignedFileCount === 0) {
-  //   task.status = TaskStatus.SIGNED;
-  // }
-
-  await taskRepo.save(task);
-  await handleTaskStatusChange(oldStatus, task);
-
-  res.json();
-});
-
 async function sendTaskMessage(Task, senderId, content) {
   const user = await getRepository(User).findOne(Task.userId);
   assert(user, 404);
