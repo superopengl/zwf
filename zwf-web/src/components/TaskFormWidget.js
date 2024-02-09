@@ -11,7 +11,7 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, taskDocIds, type, onChange } = props;
+  const { fields, taskDocIds, type, onChange, disabled } = props;
   const context = React.useContext(GlobalContext);
   const role = context.role;
 
@@ -19,15 +19,20 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
-    // schema.fields.forEach(f => {
-    //   f.required = false;
-    // });
+    schema?.fields?.forEach(f => {
+      // f.required = false;
+      f.disabled = disabled;
+    });
     return schema;
-  }, [fields]);
+  }, [fields, disabled]);
 
   const agentFieldSchema = React.useMemo(() => {
-    return type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, true) : null;
-  }, [fields, type]);
+    const schema = type == 'agent' ? convertTaskTemplateFieldsToFormFieldsSchema(fields, true) : null;
+    schema?.fields?.forEach(f => {
+      f.disabled = disabled;
+    });
+    return schema;
+  }, [fields, type, disabled]);
 
   const showDocs = taskDocIds?.length > 0;
   const showOfficialFields = agentFieldSchema?.fields?.length > 0;
@@ -58,7 +63,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       layout="horizontal"
       colon={false}
     >
-        <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">{isClient ? 'Fields' : 'Client fields'}</Divider>
+      <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">{isClient ? 'Fields' : 'Client fields'}</Divider>
       {!isClient && <>
         <Paragraph type="secondary">
           You can prefill some fileds on behalf of the client if you already have some of the information for this task.
@@ -75,7 +80,14 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       </>}
       <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Attachments</Divider>
       <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
-        <TaskAttachmentPanel value={taskDocIds} allowTest={false} varBag={varBag} showWarning={true} onChange={handleTaskDocIdsChange} />
+        <TaskAttachmentPanel
+          value={taskDocIds}
+          allowTest={false}
+          varBag={varBag}
+          showWarning={true}
+          onChange={handleTaskDocIdsChange}
+          disabled={disabled}
+        />
       </Form.Item>
     </Form>
   );
@@ -85,12 +97,14 @@ TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   taskDocIds: PropTypes.arrayOf(PropTypes.string),
   readonly: PropTypes.bool,
+  disabled: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
 };
 
 TaskFormWidget.defaultProps = {
   readonly: false,
+  disabled: false,
   type: 'agent',
   onChange: (fields) => { },
 };

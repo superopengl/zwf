@@ -46,7 +46,7 @@ const LAST_ADD_DOC_BUTTON_ITEM = {
 }
 
 export const TaskAttachmentPanel = (props) => {
-  const { value: taskDocIds, allowTest, varBag, onChange, showWarning, renderVariable, mode } = props;
+  const { value: taskDocIds, disabled, varBag, onChange, showWarning, renderVariable, mode } = props;
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
@@ -184,7 +184,7 @@ export const TaskAttachmentPanel = (props) => {
   }
 
   const listDataSource = React.useMemo(() => {
-    return [...list, LAST_ADD_DOC_BUTTON_ITEM];
+    return disabled ? list : [...list, LAST_ADD_DOC_BUTTON_ITEM];
   }, [list]);
 
   const columns = [
@@ -246,6 +246,7 @@ export const TaskAttachmentPanel = (props) => {
       // fileList={fileList}
       itemRender={() => null}
       onChange={handleChange}
+      disabled={disabled}
     >
       <Table
         dataSource={listDataSource}
@@ -276,6 +277,7 @@ TaskAttachmentPanel.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),
   allowTest: PropTypes.bool,
   showWarning: PropTypes.bool,
+  disabled: PropTypes.bool,
   varBag: PropTypes.object,
   renderVariable: PropTypes.func,
   mode: PropTypes.oneOf(['taskTemplate', 'task']),
@@ -286,6 +288,7 @@ TaskAttachmentPanel.defaultProps = {
   value: null,
   allowTest: false,
   showWarning: false,
+  disabled: false,
   varBag: {},
   renderVariable: (varName) => <VarTag>{varName}</VarTag>,
   mode: 'taskTemplate',
