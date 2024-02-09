@@ -1,14 +1,14 @@
 import {
   DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card } from 'antd';
+import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { deleteDocTemplate, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import {HighlightingText} from 'components/HighlightingText';
+import { HighlightingText } from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { withRouter, Link } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
@@ -28,66 +28,9 @@ const LayoutStyled = styled.div`
   }
 `;
 
-const StyledDrawer = styled(Drawer)`
-
-.ant-drawer-content-wrapper {
-  max-width: 90vw;
-  min-width: 350px;
-}
-
-.rce-mbox {
-  padding-bottom: 2rem;
-
-  .rce-mbox-time {
-    bottom: -1.5rem;
-  }
-}
-`;
 
 
 export const DocTemplateListPage = props => {
-  const columnDef = [
-    {
-      render: (text, item) => <Text>
-        <big>{item.name}</big>
-        <br />
-        <Text type="secondary">{item.description}</Text>
-      </Text>
-    },
-    {
-      title: <>Variables</>,
-      dataIndex: 'variables',
-      render: (value) => <>{(value || []).map(x => <Text style={{ display: 'inline-block' }} key={x} code>{x}</Text>)}</>
-    },
-    {
-      title: 'Created At',
-      dataIndex: 'createdAt',
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      title: 'Updated At',
-      dataIndex: 'updatedAt',
-      render: (text) => <TimeAgo value={text} />
-    },
-    {
-      // title: 'Action',
-      align: 'right',
-      width: 100,
-      render: (text, record) => (
-        <Space size="small">
-          <Tooltip placement="bottom" title="Test doc template">
-            <Button type="link" icon={<EyeOutlined />} onClick={e => handlePreview(record)} />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Edit doc template">
-            <Button type="link" icon={<EditOutlined />} onClick={e => handleEdit(record)} />
-          </Tooltip>
-          <Tooltip placement="bottom" title="Delete doc template">
-            <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(record)} />
-          </Tooltip>
-        </Space>
-      ),
-    },
-  ];
 
 
   const [list, setList] = React.useState([]);
@@ -147,19 +90,13 @@ export const DocTemplateListPage = props => {
     return () => subscription$.unsubscribe();
   }, []);
 
-  const handleDrawerClose = () => {
-    setDrawerVisible(false);
-  }
 
   const handleCreateNew = () => {
     props.history.push('/doc_template/new');
   }
 
-  const handleSearchFilter = (text) => {
-    setSearchText(text);
-  }
 
-  const handlePreview = (item) => {
+  const handlePreview = () => {
   }
 
   const handleClone = item => {
@@ -173,26 +110,27 @@ export const DocTemplateListPage = props => {
 
   return (<>
     <LayoutStyled>
-      <Space direction="vertical" style={{ width: '100%' }} size="large">
-        <Row justify="end">
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
-        </Row>
-
-        {/* <Table columns={columnDef}
-          size="small"
-          dataSource={list}
-          rowKey="id"
-          loading={loading}
-          pagination={false}
-          // onChange={handleTableChange}
-          onRow={(record) => ({
-            onDoubleClick: () => {
-              setCurrentId(record.id);
-              setDrawerVisible(true);
-            }
-          })}
-        /> */}
-
+      <PageHeader
+        title="Doc Templates"
+        backIcon={false}
+        extra={[
+          // <Radio.Group
+          //   key="view"
+          //   optionType="button"
+          //   buttonStyle="solid"
+          //   defaultValue={viewMode}
+          //   onChange={e => setViewMode(e.target.value)}
+          // >
+          //   <Radio.Button value="grid">
+          //     <Icon component={() => <BiGridAlt />} />
+          //   </Radio.Button>
+          //   <Radio.Button value="list">
+          //     <Icon component={() => <HiViewList />} />
+          //   </Radio.Button>
+          // </Radio.Group>,
+          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
+        ]}
+      >
         <List
           size="small"
           grid={{
@@ -227,7 +165,7 @@ export const DocTemplateListPage = props => {
               extra={<DropdownMenu
                 config={[
                   {
-                    icon: <EditOutlined/>,
+                    icon: <EditOutlined />,
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
                   },
@@ -261,8 +199,7 @@ export const DocTemplateListPage = props => {
             </Card>
           </List.Item>}
         />
-      </Space>
-
+      </PageHeader>
     </LayoutStyled>
   </>
   );
