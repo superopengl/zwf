@@ -27,6 +27,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       onSavingChange(false)
     });
 
+    // Subscribe task content change events
     const eventSource = subscribeTaskContent(task.id)
     eventSource.onmessage = (message) => {
       const event = JSON.parse(message.data);
@@ -37,7 +38,9 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
         v[c.name] = c.value;
         return v;
       }, {});
-      ref.current.setFieldsValue(fieldsValue)
+
+      // Manually set from values based on the content change events
+      ref.current?.setFieldsValue(fieldsValue)
     }
 
     return () => {
