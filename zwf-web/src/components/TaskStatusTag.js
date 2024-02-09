@@ -21,7 +21,7 @@ const statusDefs = {
     color: '#2da44e',
   },
   'archived': {
-    label: 'Archieved',
+    label: 'Archived',
     color: '#262626',
   },
 }
@@ -29,7 +29,7 @@ const statusDefs = {
 export const TaskStatusTag = React.memo(props => {
   const { status } = props;
   const def = statusDefs[status];
-  return <Tag color={def?.color}>{def?.label || status}</Tag>
+  return <Tag color={def?.color} style={{margin: 0}}>{def?.label || status}</Tag>
 });
 
 TaskStatusTag.propTypes = {

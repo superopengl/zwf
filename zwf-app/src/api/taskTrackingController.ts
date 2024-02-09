@@ -16,7 +16,7 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
-import { logTaskChat, nudgeTrackingAccess } from '../services/taskTrackingService';
+import { logTaskChat, nudgeTrackingAccess, TASK_ACTIVITY_EVENT_TYPE } from '../services/taskTrackingService';
 import { assertRole } from '../utils/assertRole';
 
 
@@ -95,7 +95,6 @@ export const listMyTaskTrackings = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-const TASK_ACTIVITY_EVENT_TYPE = 'task.activity'
 
 export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
   // assertRole(req, 'admin', 'agent', 'client', 'guest');
@@ -152,16 +151,9 @@ export const createNewTaskTracking = handlerWrapper(async (req, res) => {
   assert(task, 404);
 
   const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
-  const orgId = task.orgId;
 
   const m = getManager();
-  const entity = await logTaskChat(m, taskId, senderId, message);
-  const eventBody = {
-    ...entity,
-    orgId,
-  }
-
-  publishEvent(TASK_ACTIVITY_EVENT_TYPE, eventBody);
+  await logTaskChat(m, taskId, senderId, message);
 
   res.json();
 });

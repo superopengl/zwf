@@ -6,6 +6,10 @@ import { assert } from '../utils/assert';
 import { Task } from '../entity/Task';
 import { TaskTrackingLastAccess } from '../entity/TaskTrackingLastAccess';
 import { TaskStatus } from '../types/TaskStatus';
+import { publishEvent } from '../services/globalEventSubPubService';
+
+export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity'
+
 
 async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType, taskId: string, by: string, info?: any) {
   assert(taskId, 500);
@@ -16,6 +20,9 @@ async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType,
   entity.info = info;
   const result = await m.save(entity);
   await nudgeTrackingAccess(m, taskId, by);
+
+  publishEvent(TASK_ACTIVITY_EVENT_TYPE, entity);
+
   return result;
 }
 
