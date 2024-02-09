@@ -5,12 +5,17 @@ import FormBuilder from 'antd-form-builder'
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { convertTaskTemplateFieldsToFormFieldsSchema } from 'util/convertTaskTemplateFieldsToFormFieldsSchema';
 import { TaskAttachmentPanel } from './TaskAttachmentPanel';
+import { GlobalContext } from '../contexts/GlobalContext';
 
 const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
   const { fields, taskDocIds, type, onChange } = props;
+  const context = React.useContext(GlobalContext);
+  const role = context.role;
+
+  const isClient = role === 'client';
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
@@ -53,33 +58,25 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       layout="horizontal"
       colon={false}
     >
-      <Title level={5} type="secondary" style={{ marginTop: 20 }}>Client fields</Title>
-      <Paragraph type="secondary">
-        You can prefill some fileds on behalf of the client if you already have some of the information for this task.
-      </Paragraph>
-      <Divider style={{ marginTop: 4 }} />
-      <FormBuilder meta={clientFieldSchema} form={ref} />
-      <Title level={5} type="secondary" style={{ marginTop: 20 }}>Attachments</Title>
-      <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
-        <TaskAttachmentPanel value={taskDocIds} allowTest={false} varBag={varBag} showWarning={true} onChange={handleTaskDocIdsChange}/>
-      </Form.Item>
-      {showDocs && <>
-        <Title level={5} type="secondary" style={{ marginTop: 20 }}>Docs</Title>
+        <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">{isClient ? 'Fields' : 'Client fields'}</Divider>
+      {!isClient && <>
         <Paragraph type="secondary">
-          Variables <Text code>{'{{varName}}'}</Text> will be replaced by the corresponding form field values.
+          You can prefill some fileds on behalf of the client if you already have some of the information for this task.
         </Paragraph>
-        <Form.Item wrapperCol={{ span: 16, offset: 8 }}>
-          <DocTemplateListPanel value={taskDocIds} allowTest={false} varBag={varBag} showWarning={true} />
-        </Form.Item>
       </>}
+      <FormBuilder meta={clientFieldSchema} form={ref} />
       {showOfficialFields && <>
-        <Title level={5} type="secondary" style={{ marginTop: 40 }}>Official only fields</Title>
+        <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Official only fields</Divider>
         <Paragraph type="secondary">
           These fields are not visible to clients.
         </Paragraph>
         <Divider style={{ marginTop: 4 }} />
         <FormBuilder meta={agentFieldSchema} form={ref} />
       </>}
+      <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Attachments</Divider>
+      <Form.Item wrapperCol={{ span: 24, offset: 0 }}>
+        <TaskAttachmentPanel value={taskDocIds} allowTest={false} varBag={varBag} showWarning={true} onChange={handleTaskDocIdsChange} />
+      </Form.Item>
     </Form>
   );
 }));

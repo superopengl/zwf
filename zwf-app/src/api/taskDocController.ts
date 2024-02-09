@@ -1,6 +1,6 @@
 import { TaskDoc } from '../entity/TaskDoc';
 
-import { getManager, getRepository } from 'typeorm';
+import { getManager, getRepository, In, Not, IsNull } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -37,7 +37,16 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
   const { ids } = req.body;
   assert(ids?.length, 400);
 
-  const list = await getRepository(TaskDoc).findByIds(ids);
+  const role = getRoleFromReq(req);
+  const query = role === Role.Client ? {
+    id: In(ids),
+    officialOnly: false,
+    fileId: Not(IsNull()),
+  } : {
+    id: In(ids)
+  }
+
+  const list = await getRepository(TaskDoc).find({ where: query });
 
   res.json(list);
 });
