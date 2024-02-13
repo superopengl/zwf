@@ -20,6 +20,8 @@ import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModa
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
+import { showRenameTaskModal } from 'components/showRenameTaskModal';
+import {MdDriveFileRenameOutline} from 'react-icons/md'
 
 const { Text } = Typography;
 
@@ -162,6 +164,7 @@ const OrgTaskPage = React.memo((props) => {
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
+                  <Button type="link" icon={<Icon component={() => <MdDriveFileRenameOutline />} />} block onClick={() => showRenameTaskModal(task.id, task.name, load$)}>Rename task</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>
                   <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button>

@@ -638,7 +638,21 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK         
+  /task/{id}/rename:
+    post:
+      operationId: updateTaskName
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                
   /task/{id}/history:
     get:
       operationId: getTaskHistory
