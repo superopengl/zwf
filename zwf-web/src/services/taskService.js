@@ -12,10 +12,6 @@ export function getDeepLinkedTask$(deepLinkId) {
   return httpGet$(`task/deep/${deepLinkId}`);
 }
 
-export function saveDeepLinkedTask$(deepLinkId, payload) {
-  return httpPost$(`task/deep/${deepLinkId}`, payload);
-}
-
 export function changeTaskStatus$(id, status) {
   return httpPost$(`task/${id}/status/${status}`);
 }

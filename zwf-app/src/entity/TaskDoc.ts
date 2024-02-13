@@ -43,6 +43,9 @@ export class TaskDoc {
   @Column({ nullable: true })
   signedHash?: string;
 
+  @Column('jsonb', { nullable: true })
+  signedVarBag?: any;
+
   @Column({ default: 'done' })
   status: 'pending' | 'proceeding' | 'done';
 

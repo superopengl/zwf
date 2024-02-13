@@ -284,44 +284,14 @@ export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   const task = await getRepository(Task)
     .createQueryBuilder('t')
     .where(`"deepLinkId" = :deepLinkId`, { deepLinkId })
-    .leftJoinAndSelect('t.tags', 'tags')
-    .leftJoinAndSelect('t.docs', 'docs')
+    // .leftJoinAndSelect('t.tags', 'tags')
+    // .leftJoinAndSelect('t.docs', 'docs')
     .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
     .getOne();
 
   assert(task, 404);
 
   res.json(task);
-});
-
-export const saveDeepLinkedTask = handlerWrapper(async (req, res) => {
-  const role = getRoleFromReq(req);
-  assert(role === Role.Guest, 404);
-  const { deepLinkId } = req.params;
-  const payload = req.body;
-
-  let task: Task;
-  await getManager().transaction(async m => {
-    task = await m.findOne(Task, { deepLinkId });
-    assert(task, 404);
-
-    let hasChanged = false;
-    for (const field of task.fields) {
-      const { name, value: oldValue } = field;
-      const newValue = payload[name];
-      if (oldValue !== newValue) {
-        hasChanged = true;
-        field.value = newValue;
-      }
-    }
-
-    if (hasChanged) {
-      await m.save(task);
-    }
-  });
-
-
-  res.json();
 });
 
 export const updateTaskTags = handlerWrapper(async (req, res) => {
