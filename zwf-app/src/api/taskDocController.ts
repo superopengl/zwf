@@ -14,23 +14,50 @@ import { computeTaskDocSignedHash } from '../utils/computeTaskDocSignedHash';
 import { logTaskDocSignedByClient } from '../services/taskTrackingService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
+import { DocTemplate } from '../entity/DocTemplate';
+import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 
 export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  const { fileId, docTemplateId } = req.body;
+  assert(fileId || docTemplateId, 400);
+  if (docTemplateId) {
+    assertRole(req, 'admin', 'agent');
+  } else {
+    assertRole(req, 'admin', 'agent', 'client');
+  }
   const role = getRoleFromReq(req);
-  const { fileId } = req.body;
-  assert(fileId, 400);
-
-  const file = await getRepository(File).findOne(fileId, { select: ['fileName'] });
-  assert(file, 400);
 
   const taskDoc = new TaskDoc();
   taskDoc.createdBy = getUserIdFromReq(req);
-  taskDoc.fileId = fileId;
-  taskDoc.name = file.fileName;
-  taskDoc.type = role === Role.Client ? 'client' : 'agent';
   taskDoc.taskId = null; // This is an orphan TaskDoc having no associated Task
+  if (fileId) {
+    // File has been uploaded
+    const file = await getRepository(File).findOne(fileId, { select: ['fileName'] });
+    assert(file, 400);
+    
+    taskDoc.type = role === Role.Client ? 'client' : 'agent';
+    taskDoc.fileId = fileId;
+    taskDoc.name = file.fileName;
+    taskDoc.status = 'done';
+  } else if (docTemplateId) {
+    // Create task doc from a doc template
+    const docTemplate = await getRepository(DocTemplate).findOne({
+      where: {
+        id: docTemplateId,
+        orgId: getOrgIdFromReq(req)
+      },
+      select: [
+        'name'
+      ]
+    });
+    assert(docTemplate, 400);
+
+    taskDoc.type = 'auto';
+    taskDoc.docTemplateId = docTemplateId;
+    taskDoc.name = `${docTemplate.name}.pdf`;
+    taskDoc.status = 'pending';
+  }
 
   await getManager().save(taskDoc);
 

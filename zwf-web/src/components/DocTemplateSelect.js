@@ -31,7 +31,7 @@ const StyledSelect = styled(Select)`
 `;
 
 const DocTemplateSelect = props => {
-  const { value, onChange, onVariableChange, placeholder, showVariables } = props;
+  const { value, onChange, onVariableChange, placeholder, showVariables, isMultiple } = props;
   const [loading, setLoading] = React.useState(true);
   const [docTemplateOptions, setDocTemplateOptions] = React.useState([]);
   const [allVars, setAllVars] = React.useState([]);
@@ -65,7 +65,7 @@ const DocTemplateSelect = props => {
 
   return <Loading loading={loading}>
     <StyledSelect
-      mode="multiple"
+      mode={isMultiple ? "multiple" : null}
       allowClear
       style={{ width: '100%' }}
       placeholder={placeholder}
@@ -93,6 +93,7 @@ DocTemplateSelect.propTypes = {
   onVariableChange: PropTypes.func,
   placeholder: PropTypes.string,
   showVariables: PropTypes.bool,
+  isMultiple: PropTypes.bool,
 };
 
 DocTemplateSelect.defaultProps = {
@@ -100,7 +101,8 @@ DocTemplateSelect.defaultProps = {
   onChange: () => { },
   onVariableChange: () => { },
   placeholder: 'Doc templates to apply',
-  showVariables: false
+  showVariables: false,
+  isMultiple: true,
 };
 
 export default DocTemplateSelect

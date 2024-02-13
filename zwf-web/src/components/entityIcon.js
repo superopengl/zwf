@@ -2,7 +2,7 @@ import { Typography } from 'antd';
 
 import React from 'react';
 import { withRouter } from 'react-router-dom';
-import Icon, { BorderOutlined, FileOutlined, UserOutlined } from '@ant-design/icons';
+import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
 import { FaTasks } from 'react-icons/fa';
 import { ImInsertTemplate } from 'react-icons/im';
 import PropTypes from 'prop-types';
@@ -36,7 +36,7 @@ EntityIcon.defaultProps = {
 
 export const TaskIcon = (props) => <EntityIcon icon={<FaTasks />} color="#37AFD2" style={props.style} /> 
 export const TaskTemplateIcon = (props) => <EntityIcon icon={<ImInsertTemplate />} color="#9254de" style={props.style} /> 
-export const DocTemplateIcon = (props) => <FileIcon name="x.pdf" width={24} style={props.style} />
+export const DocTemplateIcon = (props) => <EntityIcon icon={<FilePdfFilled />} color="#cf222e" style={props.style} /> 
 export const ClientIcon = (props) => <EntityIcon icon={<UserOutlined />} color="#00232944" style={props.style} /> 
 
 
