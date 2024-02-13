@@ -23,7 +23,6 @@ export const LogInPanel = withRouter(props => {
   const context = React.useContext(GlobalContext);
   const { setUser, setNotifyCount } = context;
 
-
   const validateName = async (rule, value) => {
     const isValid = value && isEmail(value);
     if (!isValid) {

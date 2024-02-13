@@ -97,6 +97,7 @@ export const App = React.memo(() => {
   const isGuest = role === 'guest';
   const isClient = role === 'client';
   const isAdmin = role === 'admin';
+  const isSystem = role === 'system';
 
   const isLoggedIn = !isGuest;
 
@@ -112,7 +113,7 @@ export const App = React.memo(() => {
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/forgot_password" component={ForgotPasswordPage} />
-              <RoleRoute visible={isGuest} exact path="/task/direct/:token" component={TaskDirectPage} />
+              <RoleRoute visible={!isSystem} exact path="/task/direct/:token" component={TaskDirectPage} />
               <RoleRoute visible={isAdmin} loading={loading} exact path="/onboard" component={OrgOnBoardPage} />
               <RoleRoute loading={loading} exact path="/reset_password" component={ResetPasswordPage} />
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />

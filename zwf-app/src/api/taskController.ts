@@ -133,8 +133,8 @@ export const saveTaskContent = handlerWrapper(async (req, res) => {
     await m.save(task);
 
     publishEvent(TASK_CONTENT_EVENT_TYPE, {
-      taskId: id, 
-      fields, 
+      taskId: id,
+      fields,
       taskDocIds: docs.map(x => x.id)
     });
   })
@@ -277,17 +277,40 @@ export const getTask = handlerWrapper(async (req, res) => {
 });
 
 export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
-  const role = getRoleFromReq(req);
-  assert(role === Role.Guest, 404);
+  assertRole(req, 'admin', 'agent', 'client');
   const { deepLinkId } = req.params;
+  const role = getRoleFromReq(req);
+  let query: any = { deepLinkId };
+  switch (role) {
+    case Role.Admin:
+    case Role.Agent:
+      query = {
+        ...query,
+        orgId: getOrgIdFromReq(req)
+      };
+      break;
+    case Role.Client:
+      query = {
+        ...query,
+        userId: getUserIdFromReq(req)
+      }
+      break;
+    default:
+      assert(false, 500);
+  }
 
-  const task = await getRepository(Task)
-    .createQueryBuilder('t')
-    .where(`"deepLinkId" = :deepLinkId`, { deepLinkId })
-    // .leftJoinAndSelect('t.tags', 'tags')
-    // .leftJoinAndSelect('t.docs', 'docs')
-    .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
-    .getOne();
+  // const task = await getRepository(Task)
+  //   .createQueryBuilder('t')
+  //   .where(`"deepLinkId" = :deepLinkId`, { deepLinkId })
+  //   .leftJoinAndSelect('t.tags', 'tags')
+  //   .leftJoinAndSelect('t.docs', 'docs')
+  //   .leftJoinAndMapOne('t.client', OrgClientInformation, 'u', 'u.id = t."userId"')
+  //   .getOne();
+  
+  const task = await getRepository(Task).findOne({
+    where: query,
+    select: ['id']
+  })
 
   assert(task, 404);
 
