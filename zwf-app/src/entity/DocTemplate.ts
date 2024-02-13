@@ -1,4 +1,5 @@
-import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, DeleteDateColumn } from 'typeorm';
+import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, DeleteDateColumn, OneToMany } from 'typeorm';
+import { TaskDoc } from './TaskDoc';
 
 
 @Entity()
@@ -31,4 +32,7 @@ export class DocTemplate {
 
   @Column({ type: 'varchar', array: true, default: '{}' })
   variables: string[];
+
+  @OneToMany(() => TaskDoc, doc => doc.docTemplate, { onDelete: 'CASCADE' })
+  docs: TaskDoc[];
 }

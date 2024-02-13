@@ -225,6 +225,7 @@ export const TaskAttachmentPanel = (props) => {
             <TaskDocItem 
             taskDoc={item} 
             showCreatedAt={true} 
+            varBag={varBag}
             // iconOverlay={item.type === 'auto' ? <Icon component={() => <MdBrightnessAuto/>} style={{color: '#37AFD2', fontSize: 20}} /> : null}
             description={item.type === 'auto' ? <Text type="danger">Automatically generated doc, pending fields</Text> : null} 
             />}
@@ -263,9 +264,8 @@ export const TaskAttachmentPanel = (props) => {
     })
   }
 
-
   return <Container>
-    {/* <em><small>{JSON.stringify(list, null, 2)}</small></em> */}
+    {/* <em><small>{JSON.stringify(varBag, null, 2)}</small></em> */}
     <Upload.Dragger
       multiple={true}
       action={`${API_BASE_URL}/file`}

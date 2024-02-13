@@ -1,3 +1,4 @@
+import { DocTemplate } from './DocTemplate';
 import { Task } from './Task';
 import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn, PrimaryGeneratedColumn, Index, ManyToOne } from "typeorm";
 import { File } from "./File";
@@ -59,4 +60,8 @@ export class TaskDoc {
   @ManyToOne(() => Task, task => task.docs)
   @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
   task: Task;
+
+  @ManyToOne(() => DocTemplate, docTemplate => docTemplate.docs)
+  @JoinColumn({ name: 'docTemplateId', referencedColumnName: 'id' })
+  docTemplate: DocTemplate;
 }
