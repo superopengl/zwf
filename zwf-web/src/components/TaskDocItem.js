@@ -9,8 +9,9 @@ import { TimeAgo } from './TimeAgo';
 import { getTaskDocDownloadUrl } from 'services/taskDocService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { CheckOutlined } from '@ant-design/icons'
+import _ from 'lodash';
 
-const { Link } = Typography;
+const { Link, Text } = Typography;
 
 const getAutoDocTag = (taskDoc, role) => {
   if (role === 'client' || taskDoc.type !== 'auto') {
@@ -31,10 +32,29 @@ const getAutoDocTag = (taskDoc, role) => {
   </Tooltip>
 }
 
+const getMissingVarWarningMessage = (variables, varBag) => {
+  const missingVars = [];
+  // debugger;
+  for (const varName of variables) {
+    const def = varBag[varName];
+    if (!def) {
+      // Not found in varBag
+      missingVars.push(<>Variable {varName} is not defined in task</>)
+    } else if (def.value === undefined || (_.isString(def.value) && def.value === '')) {
+      missingVars.push(<>Field {def.fieldName} is not input</>)
+    }
+  }
+
+  return missingVars.length ? missingVars : null;
+}
+
 export const TaskDocItem = React.memo(props => {
   const { taskDoc, showIcon, style, showCreatedAt, strong, description, align, iconOverlay, varBag } = props;
   const context = React.useContext(GlobalContext);
 
+  const missingVars = React.useMemo(() => {
+    return getMissingVarWarningMessage(taskDoc.variables, varBag)
+  }, [taskDoc, varBag]);
 
   return <Space size="small" align={align} style={{ width: '100%', lineHeight: 1.4, ...style }}>
     {showIcon && <div style={{ position: 'relative' }}>
@@ -48,9 +68,9 @@ export const TaskDocItem = React.memo(props => {
         {taskDoc.name} {getAutoDocTag(taskDoc, context.role)}
       </Link>
       {showCreatedAt && taskDoc.createdAt && <div><small><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" /></small></div>}
-      {description && <div><small>{description}</small></div>}
+      {missingVars && <div><small>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</small></div>}
     </div>
-    <em><small>{JSON.stringify(taskDoc, null, 2)}</small></em>
+    {/* <em><small>{JSON.stringify(varBag, null, 2)}</small></em> */}
 
   </Space>
 });
