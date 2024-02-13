@@ -160,7 +160,7 @@ const OrgTaskPage = React.memo((props) => {
               </Collapse.Panel>
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Activity history</Button>
+                  <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>

@@ -132,15 +132,15 @@ export const TaskAttachmentPanel = (props) => {
       case 'auto':
         return false;
       case 'client':
-        return role === 'client' && user.id === taskDoc.createdBy
+        return role === 'client' && user.id === taskDoc.createdBy && !taskDoc.signedAt
       case 'agent':
-        return role === 'admin' || role === 'agent'
+        return (role === 'admin' || role === 'agent') && !taskDoc.signedAt;
     }
     return false;
   }
 
   const canToggleOfficalOnly = (taskDoc) => {
-    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client'
+    return !taskDoc.isAddButton && isAgent && taskDoc.type !== 'client' && !taskDoc.signedAt
   }
 
   const canRequestClientSign = (taskDoc) => {
@@ -214,7 +214,7 @@ export const TaskAttachmentPanel = (props) => {
       title: 'Require sign',
       // width: 20,
       align: 'center',
-      render: (value, item) => item.signedAt ? <TimeAgo value={item.signedAt} />
+      render: (value, item) => item.signedAt ? <TimeAgo value={item.signedAt} prefix="Signed:" accurate={false} showTime={false} />
         : canRequestClientSign(item) ? <Checkbox key="official" checked={item.requiresSign} onClick={(e) => handleToggleRequireSign(item, e)} />
           : null
     },
@@ -222,7 +222,7 @@ export const TaskAttachmentPanel = (props) => {
       title: 'Hide from client?',
       width: 20,
       align: 'center',
-      render: (value, item) => canToggleOfficalOnly(item) ? <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} /> : null
+      render: (value, item) => <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} disabled={!canToggleOfficalOnly(item)}/> 
     },
     {
       width: 20,

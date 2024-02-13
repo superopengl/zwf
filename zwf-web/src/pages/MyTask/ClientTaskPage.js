@@ -76,7 +76,7 @@ const ClientTaskPage = (props) => {
           <Col span={12} >
             <Card 
             bordered={false}
-            title="Activity History"
+            title="Interactions & Messages"
             size="small"
             size="large" 
             bodyStyle={{height: 'calc(100vh - 420px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px'}}

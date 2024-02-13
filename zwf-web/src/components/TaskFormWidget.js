@@ -75,7 +75,6 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
         <Paragraph type="secondary">
           These fields are not visible to clients.
         </Paragraph>
-        <Divider style={{ marginTop: 4 }} />
         <FormBuilder meta={agentFieldSchema} form={ref} />
       </>}
       <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Attachments</Divider>

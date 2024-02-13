@@ -107,7 +107,7 @@ export const ClientTrackingListPage = withRouter(() => {
   return (
     <LayoutStyled>
       <PageHeader
-        title="Activity History"
+        title="Interactions & Messages"
         backIcon={false}
         loading={loading}
         extra={[

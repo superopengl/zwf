@@ -83,7 +83,7 @@ const ROUTES = [
   },
   {
     path: '/activity',
-    name: 'Activity History',
+    name: 'Interactions & Messages',
     icon: <Icon component={() => <AiOutlineHistory />} />,
     roles: ['client']
   },
