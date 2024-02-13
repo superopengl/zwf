@@ -85,7 +85,7 @@ export function getTaskDeepLinkUrl(taskDeepLinkId) {
 }
 
 export function subscribeTaskContent(taskId) {
-  const url = `${API_BASE_URL}/task/${taskId}/content/subscribe`;
+  const url = `${API_BASE_URL}/task/${taskId}/content/sse`;
   const es = new EventSource(url, { withCredentials: true });
   return es;
 }

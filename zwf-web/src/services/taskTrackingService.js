@@ -2,7 +2,7 @@ import { API_BASE_URL, httpPost$, httpGet$ } from 'services/http';
 
 
 export function subscribeTaskTracking(taskId) {
-  const url = `${API_BASE_URL}/task/${taskId}/tracking/subscribe`;
+  const url = `${API_BASE_URL}/task/${taskId}/tracking/sse`;
   const es = new EventSource(url, { withCredentials: true });
   return es;
 }

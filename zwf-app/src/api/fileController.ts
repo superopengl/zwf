@@ -115,7 +115,7 @@ export const uploadFile = handlerWrapper(async (req, res) => {
 
   const entity: File = {
     id,
-    owner: userId,
+    createdBy: userId,
     fileName: name,
     mime: mimetype,
     location,

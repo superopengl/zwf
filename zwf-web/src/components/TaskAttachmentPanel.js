@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Modal, Checkbox, Table } from 'antd';
+import { Space, List, Typography, Badge, Row, Tag, Upload, Button, Modal, Checkbox, Table, Tooltip } from 'antd';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { getDocTemplate$ } from 'services/docTemplateService';
@@ -10,7 +10,7 @@ import Icon, { DeleteOutlined, ExclamationCircleFilled, ExclamationCircleOutline
 import { getFileUrl, getPublicFileUrl, openFile } from 'services/fileService';
 import { API_BASE_URL } from 'services/http';
 import { TimeAgo } from './TimeAgo';
-import { createOrphanTaskDocFromDocTemplate$, createOrphanTaskDocFromUploadedFile$, getTaskDocDownloadUrl, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
+import { createOrphanTaskDocFromDocTemplate$, createOrphanTaskDocFromUploadedFile$, genDoc$, getTaskDocDownloadUrl, listTaskDocs$, signTaskDoc$, toggleTaskDocsOfficialOnly$, toggleTaskDocsRequiresSign$ } from "services/taskDocService";
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { FileIcon } from './FileIcon';
@@ -24,6 +24,9 @@ import { TaskDocItem } from './TaskDocItem';
 import { showSignTaskDocModal } from './showSignTaskDocModal';
 import TaskTemplateSelect from './TaskTemplateSelect';
 import DocTemplateSelect from './DocTemplateSelect';
+import { BsFillPatchCheckFill, BsPatchCheck } from 'react-icons/bs';
+import { Logo } from './Logo';
+import { MdBrightnessAuto } from 'react-icons/md';
 
 const { Text, Link: TextLink, Paragraph } = Typography;
 
@@ -131,6 +134,15 @@ export const TaskAttachmentPanel = (props) => {
     onChange(newList.map(x => x.id));
   }
 
+  const handleGenDoc = (item, e) => {
+    e.stopPropagation();
+    const taskDocId = item.id;
+    setLoading(true);
+    genDoc$(taskDocId).subscribe(() => {
+      reload$(true)
+    });
+  }
+
 
   const beforeUpload = (file) => {
     const isLt20M = file.size / 1024 / 1024 < 20;
@@ -162,6 +174,10 @@ export const TaskAttachmentPanel = (props) => {
 
   const canClientSign = (taskDoc) => {
     return !taskDoc.isExtra && isClient && taskDoc.requiresSign && !taskDoc.signedAt
+  }
+
+  const canGenDoc = (taskDoc) => {
+    return !taskDoc.isExtra && !isClient && taskDoc.docTemplateId && !taskDoc.fileId
   }
 
   const pendingClientRead = taskDoc => {
@@ -222,7 +238,12 @@ export const TaskAttachmentPanel = (props) => {
       render: (value, item) => <big>
         {item.isAddButton ? <AddNewTaskDocItem /> :
           item.isAddDocTemplateButton ? <AddFromDocTemplateItem /> :
-            <TaskDocItem taskDoc={item} showCreatedAt={true} description={item.type === 'auto' ? <Text type="danger">Automatically generated doc, pending fields</Text> : null} />}
+            <TaskDocItem 
+            taskDoc={item} 
+            showCreatedAt={true} 
+            // iconOverlay={item.type === 'auto' ? <Icon component={() => <MdBrightnessAuto/>} style={{color: '#37AFD2', fontSize: 20}} /> : null}
+            description={item.type === 'auto' ? <Text type="danger">Automatically generated doc, pending fields</Text> : null} 
+            />}
       </big>
     },
     isClient ? null : {
@@ -240,11 +261,12 @@ export const TaskAttachmentPanel = (props) => {
       render: (value, item) => item.isExtra ? null : <Checkbox key="official" checked={item.officialOnly} onClick={(e) => handleToggleOfficialOnly(item, e)} disabled={!canToggleOfficalOnly(item)} />
     },
     {
-      width: 20,
-      align: 'center',
+      // width: 20,
+      align: 'right',
       render: (value, item) => <>
-        {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item, e)} />}
-        {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)} >sign</Button>}
+        {canGenDoc(item) && <Tooltip title="generate doc"><Button type="link" icon={<Icon component={() => <BsPatchCheck />} />} onClick={(e) => handleGenDoc(item, e)} ></Button></Tooltip>}
+        {canDelete(item) && <ConfirmDeleteButton danger type="text" icon={<DeleteOutlined />} onOk={(e) => handleDeleteDoc(item, e)} ></ConfirmDeleteButton>}
+        {canClientSign(item) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(item, e)}>sign</Button>}
       </>
     }
   ].filter(x => x), []);
@@ -315,7 +337,7 @@ export const TaskAttachmentPanel = (props) => {
       destroyOnClose
     >
       <Paragraph>Select a doc template to add to the current task.</Paragraph>
-      <DocTemplateSelect onChange={handleAddDocTemplate} style={{ width: '100%' }} isMultiple={false}/>
+      <DocTemplateSelect onChange={handleAddDocTemplate} style={{ width: '100%' }} isMultiple={false} />
     </Modal>
   </Container>
 };
