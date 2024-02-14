@@ -103,12 +103,12 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <a onClick={e => e.preventDefault()}>
         {/* <Avatar size={40}
       icon={<UserOutlined style={{ fontSize: 20 }} />}
-      style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#062638' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+      style={{ backgroundColor: isSystem ? '#cf222e' : isAdmin ? '#062638' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
     /> */}
         <UserAvatar
           size={40}
           value={avatarFileId}
-          style={{ backgroundColor: isSystem ? '#ff4d4f' : isAdmin ? '#062638' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
+          style={{ backgroundColor: isSystem ? '#cf222e' : isAdmin ? '#062638' : isAgent ? '#4c1bb3' : isClient ? '#18b0d7' : '#333333' }}
         />
       </a>
     </Dropdown>
