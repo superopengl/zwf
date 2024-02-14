@@ -14,7 +14,7 @@ const modifyVars = {
   ...darkTheme,
   '@primary-color': '#37AFD2',// '#37AFD2', // rgb(19,194,194)
   '@info-color': '#37AFD2',
-  '@warning-color': '#fadb14',
+  '@warning-color': '#ffc53d',
   '@link-color': '#37AFD2',
   '@success-color': '#2da44e',
   '@error-color': '#cf222e',

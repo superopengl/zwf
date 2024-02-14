@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import PropTypes from 'prop-types';
-import { Typography, Space, List, Tooltip, Tag, Avatar, Button } from 'antd';
+import { Typography, Space, List, Tooltip, Tag, Avatar, Button, Checkbox } from 'antd';
 import { FileIcon } from './FileIcon';
 import { TimeAgo } from './TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -21,16 +21,21 @@ import { Modal } from 'antd';
 
 const { Link, Text } = Typography;
 
-const StyledActionButtons = styled(Space)`
-gap: 0px !important;
-
-.ant-checkbox-wrapper {
-  margin: 5px 0;
+const StyledListItem = styled(List.Item)`
+&.error-doc {
+  background-color: #cf222e11;
 }
 
-button {
-  text-align: left;
-  padding-left: 0;
+&.not-generated {
+  background-color: #ffc53d22;
+}
+
+.ant-list-item-action {
+  margin-left: 46px;
+}
+
+.ant-list-item-action-split {
+  display: none;
 }
 `;
 
@@ -53,16 +58,19 @@ const getAutoDocTag = (taskDoc, role) => {
   </Tooltip>
 }
 
-const getMissingVarWarningMessage = (variables, varBag) => {
+const getMissingVarWarningMessage = (taskDoc, varBag) => {
+  const { variables, fileId } = taskDoc;
   const missingVars = [];
   // debugger;
-  for (const varName of (variables || [])) {
-    const def = varBag[varName];
-    if (!def) {
-      // Not found in varBag
-      missingVars.push(<>Variable '<strong>{varName}</strong>' is not defined in task</>)
-    } else if (def.value === undefined || (_.isString(def.value) && def.value === '')) {
-      missingVars.push(<>Field '<strong>{def.fieldName}</strong>' has no value</>)
+  if (!fileId && variables) {
+    for (const varName of variables) {
+      const def = varBag[varName];
+      if (!def) {
+        // Not found in varBag
+        missingVars.push(<>Variable '<strong>{varName}</strong>' is not defined in task</>)
+      } else if (def.value === undefined || (_.isString(def.value) && def.value === '')) {
+        missingVars.push(<>Field '<strong>{def.fieldName}</strong>' has no value</>)
+      }
     }
   }
 
@@ -77,7 +85,7 @@ export const TaskDocItem = React.memo(props => {
   const isClient = role === 'client';
   const isAgent = role === 'agent' || role === 'admin';
 
-  const missingVars = React.useMemo(() => getMissingVarWarningMessage(taskDoc.variables, varBag), [taskDoc, varBag]);
+  const missingVars = React.useMemo(() => getMissingVarWarningMessage(taskDoc, varBag), [taskDoc, varBag]);
 
   const canDelete = (taskDoc) => {
     switch (taskDoc.type) {
@@ -113,9 +121,8 @@ export const TaskDocItem = React.memo(props => {
     })
   }
 
-  const handleToggleRequireSign = (taskDoc) => {
+  const handleToggleRequireSign = (taskDoc, checked) => {
     onLoading(true)
-    const checked = !taskDoc.requiresSign;
     toggleTaskDocsRequiresSign$(taskDoc.id, checked).pipe(
       finalize(() => onLoading(false))
     ).subscribe(() => {
@@ -171,25 +178,30 @@ export const TaskDocItem = React.memo(props => {
   const iconOverlay = getAutoDocTag(taskDoc, context.role);
 
 
-  return <List.Item onClick={e => {
-    e.stopPropagation();
-  }}
+  return <StyledListItem onClick={e => e.stopPropagation()}
+    className={missingVars.length > 0 ? 'error-doc' : !taskDoc.fileId ? 'not-generated' : null}
+    actions={isClient ? null : [
+      // <Button key="auto" icon={<Icon component={() => <BsPatchCheck />} />} type="link">Generate</Button>,
+      <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
+      <Checkbox key="client-visible" checked={taskDoc.officialOnly} onClick={e => handleToggleOfficialOnly(taskDoc, e.target.checked)}><Link>Client visible</Link></Checkbox>,
+      // <Button key="delete" danger icon={<DeleteOutlined/>} type="link" onClick={() => handleDeleteDoc(taskDoc)}>Delete</Button>,
+    ].filter(x => x)}
     extra={<>
       {canClientSign(taskDoc) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(taskDoc, e)}>Sign</Button>}
       {!isClient && <DropdownMenu
         config={[
-          {
-            icon: taskDoc.requiresSign ? <CheckSquareOutlined /> : <BorderOutlined />,
-            menu: 'Require client sign',
-            onClick: () => handleToggleRequireSign(taskDoc)
-          },
-          {
-            icon: taskDoc.officialOnly ? <CheckSquareOutlined /> : <BorderOutlined />,
-            menu: 'Hide from client',
-            onClick: () => handleToggleOfficialOnly(taskDoc),
-            disabled: !canToggleOfficalOnly(taskDoc)
-          },
-          taskDoc.type === 'auto' ? {
+          // {
+          //   icon: taskDoc.requiresSign ? <CheckSquareOutlined /> : <BorderOutlined />,
+          //   menu: 'Require client sign',
+          //   onClick: () => handleToggleRequireSign(taskDoc, !taskDoc.requiresSign)
+          // },
+          // {
+          //   icon: taskDoc.officialOnly ? <CheckSquareOutlined /> : <BorderOutlined />,
+          //   menu: 'Hide from client',
+          //   onClick: () => handleToggleOfficialOnly(taskDoc, !taskDoc.officialOnly),
+          //   disabled: !canToggleOfficalOnly(taskDoc)
+          // },
+          taskDoc.type === 'auto' && !taskDoc.fileId ? {
             icon: <Icon component={() => <BsPatchCheck />} />,
             menu: 'Generate doc',
             onClick: () => handleGenDoc(taskDoc),
@@ -220,7 +232,7 @@ export const TaskDocItem = React.memo(props => {
         {missingVars.length > 0 && <div style={{ marginTop: 4 }}>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</div>}
       </>}
     />
-  </List.Item>
+  </StyledListItem>
 });
 
 TaskDocItem.propTypes = {
