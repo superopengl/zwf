@@ -132,12 +132,10 @@ export const TaskDocItem = React.memo(props => {
 
   const handleSignTaskDoc = (taskDoc, e) => {
     e.stopPropagation();
-    onLoading(true)
     showSignTaskDocModal(taskDoc, {
       onOk: () => {
         onChange();
-        onLoading(false)
-      }
+      },
     })
   }
 
@@ -177,45 +175,45 @@ export const TaskDocItem = React.memo(props => {
 
   const iconOverlay = getAutoDocTag(taskDoc, context.role);
 
+  const menuConfig = [
+    // {
+    //   icon: taskDoc.requiresSign ? <CheckSquareOutlined /> : <BorderOutlined />,
+    //   menu: 'Require client sign',
+    //   onClick: () => handleToggleRequireSign(taskDoc, !taskDoc.requiresSign)
+    // },
+    // {
+    //   icon: taskDoc.officialOnly ? <CheckSquareOutlined /> : <BorderOutlined />,
+    //   menu: 'Hide from client',
+    //   onClick: () => handleToggleOfficialOnly(taskDoc, !taskDoc.officialOnly),
+    //   disabled: !canToggleOfficalOnly(taskDoc)
+    // },
+    taskDoc.type === 'auto' && !taskDoc.fileId ? {
+      icon: <Icon component={() => <BsPatchCheck />} />,
+      menu: 'Generate doc',
+      onClick: () => handleGenDoc(taskDoc),
+      disabled: !canGenDoc(taskDoc),
+    } : null,
+    canDelete(taskDoc) ? {
+      icon: <Text type="danger"><DeleteOutlined /></Text>,
+      menu: <Text type="danger">Delete</Text>,
+      onClick: () => handleDeleteDoc(taskDoc)
+    } : null,
+
+  ].filter(x => x);
 
   return <StyledListItem onClick={e => e.stopPropagation()}
     className={missingVars.length > 0 ? 'error-doc' : !taskDoc.fileId ? 'not-generated' : null}
     actions={isClient ? null : [
       // <Button key="auto" icon={<Icon component={() => <BsPatchCheck />} />} type="link">Generate</Button>,
-      <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
-      <Checkbox key="client-visible" checked={taskDoc.officialOnly} onClick={e => handleToggleOfficialOnly(taskDoc, e.target.checked)}><Link>Official only</Link></Checkbox>,
+      taskDoc.signedAt ? null : <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
+      taskDoc.signedAt ? null : <Checkbox key="client-visible" checked={taskDoc.officialOnly} onClick={e => handleToggleOfficialOnly(taskDoc, e.target.checked)}><Link>Official only</Link></Checkbox>,
       // <Button key="delete" danger icon={<DeleteOutlined/>} type="link" onClick={() => handleDeleteDoc(taskDoc)}>Delete</Button>,
     ].filter(x => x)}
     extra={<>
       {canClientSign(taskDoc) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(taskDoc, e)}>Sign</Button>}
-      {!isClient && <DropdownMenu
-        config={[
-          // {
-          //   icon: taskDoc.requiresSign ? <CheckSquareOutlined /> : <BorderOutlined />,
-          //   menu: 'Require client sign',
-          //   onClick: () => handleToggleRequireSign(taskDoc, !taskDoc.requiresSign)
-          // },
-          // {
-          //   icon: taskDoc.officialOnly ? <CheckSquareOutlined /> : <BorderOutlined />,
-          //   menu: 'Hide from client',
-          //   onClick: () => handleToggleOfficialOnly(taskDoc, !taskDoc.officialOnly),
-          //   disabled: !canToggleOfficalOnly(taskDoc)
-          // },
-          taskDoc.type === 'auto' && !taskDoc.fileId ? {
-            icon: <Icon component={() => <BsPatchCheck />} />,
-            menu: 'Generate doc',
-            onClick: () => handleGenDoc(taskDoc),
-            disabled: !canGenDoc(taskDoc),
-          } : null,
-          canDelete(taskDoc) ? {
-            icon: <Text type="danger"><DeleteOutlined /></Text>,
-            menu: <Text type="danger">Delete</Text>,
-            onClick: () => handleDeleteDoc(taskDoc)
-          } : null,
+      {!isClient && menuConfig.length > 0 && <DropdownMenu config={menuConfig} />}
 
-        ].filter(x => x)}
-      />}
-
+      {taskDoc.signedAt && <Tooltip title={<TimeAgo value={taskDoc.signedAt}/>}><Tag>Signed</Tag></Tooltip>}
     </>}
   >
     <List.Item.Meta
@@ -227,7 +225,6 @@ export const TaskDocItem = React.memo(props => {
       </div>}
       title={<Link href={getTaskDocDownloadUrl(taskDoc.id)} target="_blank">{taskDoc.name}</Link>}
       description={<>
-        {taskDoc.signedAt && <TimeAgo value={taskDoc.signedAt} prefix="Signed:" accurate={false} showTime={false} />}
         {showCreatedAt && taskDoc.createdAt && <div><TimeAgo value={taskDoc.createdAt} prefix="Created:" direction="horizontal" accurate={false} showTime={false} /></div>}
         {missingVars.length > 0 && <div style={{ marginTop: 4 }}>{missingVars.map(x => <div><Text type="danger">{x}</Text></div>)}</div>}
       </>}
