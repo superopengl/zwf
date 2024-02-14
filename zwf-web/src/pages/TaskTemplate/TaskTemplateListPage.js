@@ -207,7 +207,6 @@ export const TaskTemplateListPage = props => {
                       menu: 'Clone',
                       onClick: () => handleClone(item)
                     },
-
                     {
                       menu: '-'
                     },
