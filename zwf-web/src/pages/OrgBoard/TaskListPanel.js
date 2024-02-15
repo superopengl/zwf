@@ -190,12 +190,13 @@ export const TaskListPanel = (props) => {
   return (
     <Table columns={columnDef}
       dataSource={tasks}
-      // scroll={{x: 1000}}
       // style={{marginTop: 30}}
       rowKey="id"
       size="small"
       pagination={false}
-      scroll={{ x: 1600 }}
+      scroll={{
+        x: 'max-content'
+       }}
       // onChange={handleTableChange}
       rowClassName={(record) => record.lastUnreadMessageAt ? 'unread' : ''}
       onRow={(record) => ({
