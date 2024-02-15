@@ -1,3 +1,4 @@
+import { OrgClientStatInformation } from './../entity/views/OrgClientStatInformation';
 import { getRepository } from 'typeorm';
 import { assert } from './assert';
 import { OrgClientInformation } from '../entity/views/OrgClientInformation';
@@ -18,7 +19,7 @@ export async function searchOrgClients(orgId: string, queryInfo: StockUserParams
   const pageSize = size || 50;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
-  let query = getRepository(OrgClientInformation)
+  let query = getRepository(OrgClientStatInformation)
     .createQueryBuilder()
     .where('"orgId" = :orgId', { orgId });
 

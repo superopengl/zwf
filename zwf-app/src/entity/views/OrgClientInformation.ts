@@ -1,11 +1,7 @@
 import { OrgClient } from './../OrgClient';
-import { TaskInformation } from './TaskInformation';
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
 import { Org } from '../Org';
-import { User } from '../User';
 import { Role } from '../../types/Role';
-import { UserProfile } from '../UserProfile';
-import { Task } from '../Task';
 import { UserInformation } from './UserInformation';
 import { UserStatus } from '../../types/UserStatus';
 
@@ -15,17 +11,6 @@ import { UserStatus } from '../../types/UserStatus';
     .from(Org, 'o')
     .innerJoin(OrgClient, 'c', `o.id = c."orgId"`)
     .innerJoin(UserInformation, 'u', 'u.id = c."userId"')
-    // .innerJoin(q => q
-    //   .from(Task, 'tt')
-    //   .distinctOn([
-    //     '"userId"', '"orgId"'
-    //   ])
-    //   .orderBy('"orgId"')
-    //   .addOrderBy('"userId"')
-    //   .select([
-    //     '"userId"', '"orgId"'
-    //   ])
-    //   , 't', 't."orgId" = o.id')
     .select([
       'u.id as "id"',
       'o.id as "orgId"',
