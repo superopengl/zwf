@@ -22,6 +22,7 @@ const { Text, Link: TextLink } = Typography;
 const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
 export const TaskGenerator = withRouter(React.memo(props => {
+  const {userId} = props;
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(null);
   const [taskName, setTaskName] = React.useState();
@@ -44,6 +45,12 @@ export const TaskGenerator = withRouter(React.memo(props => {
   }, [taskTemplateId])
 
   React.useEffect(() => {
+    if(userId) {
+      
+    }
+  }, [userId]);
+
+  React.useEffect(() => {
     if (clientInfo && taskTemplate) {
       const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
       const name = `${taskTemplate.name} - ${userName}`;
@@ -58,7 +65,6 @@ export const TaskGenerator = withRouter(React.memo(props => {
   const handleClientChange = client => {
     setClientInfo(client);
   }
-
 
   const handleNameEnter = (e) => {
     const name = e.target.value?.trim();
@@ -150,6 +156,7 @@ export const TaskGenerator = withRouter(React.memo(props => {
 
 TaskGenerator.propTypes = {
   taskTemplateId: PropTypes.string,
+  userId: PropTypes.string,
   onCancel: PropTypes.func,
   onCreated: PropTypes.func,
 };
