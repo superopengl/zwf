@@ -61,7 +61,6 @@ const getAutoDocTag = (taskDoc, role) => {
 const getMissingVarWarningMessage = (taskDoc, varBag) => {
   const { variables, fileId } = taskDoc;
   const missingVars = [];
-  // debugger;
   if (!fileId && variables) {
     for (const varName of variables) {
       const def = varBag[varName];

@@ -1,3 +1,4 @@
+import { OrgClient } from './../entity/OrgClient';
 import { TaskField } from '../types/TaskField';
 import { getUtcNow } from './getUtcNow';
 import { UserProfile } from '../entity/UserProfile';
@@ -102,6 +103,16 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
 
     task.docs = taskDocs;
     await m.save(task);
+
+    const orgClient = new OrgClient();
+    orgClient.orgId = task.orgId;
+    orgClient.userId = task.userId;
+    await m.createQueryBuilder()
+      .insert()
+      .into(OrgClient)
+      .values(orgClient)
+      .orIgnore()
+      .execute();
 
     await logTaskCreated(m, task.id, creatorId);
   });
