@@ -18,6 +18,7 @@ import ReactDOM from 'react-dom';
 import TagFilter from 'components/TagFilter';
 import DropdownMenu from 'components/DropdownMenu';
 import { UserNameCard } from 'components/UserNameCard';
+import { TaskStatusTag } from 'components/TaskStatusTag';
 
 
 const { Text, Paragraph } = Typography;
@@ -185,6 +186,41 @@ const ClientUserListPage = () => {
       title: <TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} />,
       dataIndex: 'tags',
       render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} readonly={true} />
+    },
+    {
+      title: <TaskStatusTag status="todo" />,
+      dataIndex: 'countToDo',
+      width: 40,
+      align: 'right',
+      render: (value, item) => value
+    },
+    {
+      title: <TaskStatusTag status="in_progress" />,
+      dataIndex: 'countInProgress',
+      width: 40,
+      align: 'right',
+      render: (value, item) => value
+    },
+    {
+      title: <TaskStatusTag status="action_required" />,
+      dataIndex: 'countActionRequired',
+      width: 40,
+      align: 'right',
+      render: (value, item) => value
+    },
+    {
+      title: <TaskStatusTag status="done" />,
+      dataIndex: 'countDone',
+      width: 40,
+      align: 'right',
+      render: (value, item) => value
+    },
+    {
+      title: <TaskStatusTag status="archived" />,
+      dataIndex: 'countArchived',
+      width: 40,
+      align: 'right',
+      render: (value, item) => value
     },
     {
       // title: 'Action',
