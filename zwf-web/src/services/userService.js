@@ -10,6 +10,10 @@ export async function searchOrgClientUsers(payload) {
   return httpPost(`org/client`, { page: 0, size: 50, ...payload });
 }
 
+export function searchOrgClientUsers$(payload) {
+  return httpPost$(`org/client`, { page: 0, size: 50, ...payload });
+}
+
 export async function listAllUsers() {
   return httpGet(`user`);
 }
@@ -28,6 +32,10 @@ export async function saveProfile(userId, profile) {
 
 export async function setUserTags(userId, tags) {
   return httpPost(`user/${userId}/tags`, { tags });
+}
+
+export function setUserTags$(userId, tagIds) {
+  return httpPost$(`user/${userId}/tags`, { tags: tagIds });
 }
 
 export async function setUserRole(userId, role) {

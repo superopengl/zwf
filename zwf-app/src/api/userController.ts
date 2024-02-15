@@ -204,13 +204,13 @@ export const setUserTags = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
 
-  const { tags } = req.body;
+  const { tags: tagIds } = req.body;
   const repo = getRepository(User);
   const user = await repo.findOne(id);
-  if (tags?.length) {
+  if (tagIds?.length) {
     user.tags = await getRepository(Tag).find({
       where: {
-        id: In(tags)
+        id: In(tagIds)
       }
     });
   } else {

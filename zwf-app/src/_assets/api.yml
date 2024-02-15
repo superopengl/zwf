@@ -133,7 +133,7 @@ paths:
       responses:
         200:
           description: OK
-  /auth/invite:
+  /auth/invite/member:
     post:
       operationId: inviteOrgMember
       # security:
@@ -141,6 +141,14 @@ paths:
       responses:
         200:
           description: OK
+  /auth/invite/client:
+    post:
+      operationId: inviteClientToOrg
+      # security:
+      #   - authAnyRole: []
+      responses:
+        200:
+          description: OK          
   /auth/reset_password:
     post:
       operationId: resetPassword

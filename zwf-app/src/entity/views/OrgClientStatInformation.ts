@@ -15,6 +15,8 @@ import { TaskStatus } from '../../types/TaskStatus';
     .addGroupBy('o."email"')
     .addGroupBy('o."givenName"')
     .addGroupBy('o."surname"')
+    .addGroupBy('o."role"')
+    .addGroupBy('o."invitedAt"')
     .addGroupBy('o."tags"')
     .select([
       'o.id as id',
@@ -22,6 +24,8 @@ import { TaskStatus } from '../../types/TaskStatus';
       'o.email as email',
       'o."givenName" as "givenName"',
       'o."surname" as "surname"',
+      'o."role" as "role"',
+      'o."invitedAt" as "invitedAt"',
       'o.tags as tags',
       `COUNT(*) FILTER (where t.status = '${TaskStatus.TODO}') AS "countToDo"`,
       `COUNT(*) FILTER (where t.status = '${TaskStatus.IN_PROGRESS}') AS "countInProgress"`,
@@ -45,6 +49,12 @@ import { TaskStatus } from '../../types/TaskStatus';
 
   @ViewColumn()
   surname: string;
+
+  @ViewColumn()
+  role: string;
+
+  @ViewColumn()
+  invitedAt: Date;
 
   @ViewColumn()
   tags: string[];

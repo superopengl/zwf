@@ -2,15 +2,23 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { switchMapTo } from 'rxjs/operators';
 import { listTags$, saveTag$, subscribeTags } from 'services/tagService';
-import {TagSelectComponent} from './TagSelectComponent';
+import { TagSelectComponent } from './TagSelectComponent';
+import { useLocalStorage, useClickAway } from 'react-use';
 
 
 export const TagSelect = React.memo((props) => {
 
-  const { value: propValues, onChange,readonly, allowCreate, ...others } = props;
+  const { value: propValues, onChange, readonly: propReadonly, allowCreate, inPlaceEdit, ...others } = props;
 
   const [tags, setTags] = React.useState();
   const [value, setValue] = React.useState(propValues);
+  const [readonly, setReadonly] = React.useState(propReadonly || inPlaceEdit);
+  const ref = React.useRef();
+  useClickAway(ref, () => {
+    if(inPlaceEdit) {
+      setReadonly(true);
+    }
+  })
 
   React.useEffect(() => {
     const sub$ = subscribeTags(setTags);
@@ -28,9 +36,15 @@ export const TagSelect = React.memo((props) => {
     onChange(ids);
   }
 
+  const handleFocus = () => {
+    if(inPlaceEdit) {
+      setReadonly(false);
+    }
+  }
+
   return (
-    <div {...others}>
-      <TagSelectComponent 
+    <div {...others} ref={ref} onClick={handleFocus}>
+      <TagSelectComponent
         value={value}
         onChange={handleChange}
         readonly={readonly}
@@ -64,11 +78,13 @@ TagSelect.propTypes = {
   readonly: PropTypes.bool,
   allowCreate: PropTypes.bool,
   onChange: PropTypes.func,
+  inPlaceEdit: PropTypes.bool,
 };
 
 TagSelect.defaultProps = {
   readonly: false,
   allowCreate: true,
-  onChange: () => { }
+  onChange: () => { },
+  inPlaceEdit: false,
 };
 

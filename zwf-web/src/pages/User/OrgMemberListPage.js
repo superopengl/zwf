@@ -5,7 +5,7 @@ import {
   UserAddOutlined, GoogleOutlined, QuestionOutlined} from '@ant-design/icons';
 import { withRouter } from 'react-router-dom';
 import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
-import { inviteUser$, impersonate$ } from 'services/authService';
+import { inviteMember$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import ProfileForm from 'pages/Profile/ProfileForm';
@@ -211,7 +211,7 @@ const OrgMemberListPage = () => {
 
   const handleInviteUser = async values => {
     const { email } = values;
-    inviteUser$(email).subscribe(() => {
+    inviteMember$(email).subscribe(() => {
       setInviteVisible(false);
       loadList();
     });
