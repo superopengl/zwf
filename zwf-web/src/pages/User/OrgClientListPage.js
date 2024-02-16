@@ -29,6 +29,7 @@ import { useLocalStorage, useClickAway } from 'react-use';
 import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
 import { UserAvatar } from 'components/UserAvatar';
+import { CreateTaskModal } from 'components/CreateTaskModal';
 
 
 const { Text } = Typography;
@@ -50,6 +51,7 @@ const LOCAL_STORAGE_KEY = 'user_query';
 const OrgClientListPage = () => {
 
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
+  const [createTaskModalVisible, setCreateTaskModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState();
@@ -107,11 +109,9 @@ const OrgClientListPage = () => {
   }
 
   const createTaskForUser = (user) => {
-    setProfileModalVisible(true);
+    setCreateTaskModalVisible(true);
+    setCurrentUser(user);
   }
-
-  
-
 
   const handleTagFilterChange = (tags) => {
     searchByQueryInfo$({ ...queryInfo, page: 1, tags });
@@ -224,7 +224,7 @@ const OrgClientListPage = () => {
               },
               {
                 menu: `Tasks of client`,
-                onClick: () => {}
+                onClick: () => { }
               },
               // {
               //   icon: <TagsOutlined />,
@@ -285,7 +285,7 @@ const OrgClientListPage = () => {
       >
         {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
-        {currentUser && <Space style={{width: '100%', alignItems: 'center'}} direction="vertical" size="large">
+        {currentUser && <Space style={{ width: '100%', alignItems: 'center' }} direction="vertical" size="large">
           <UserAvatar size={120} editable={false} userId={currentUser.id} givenName={currentUser.givenName} surname={currentUser.surname} />
           <Descriptions column={1} bordered={true}>
             <Descriptions.Item label="Email">{currentUser.email}</Descriptions.Item>
@@ -301,6 +301,12 @@ const OrgClientListPage = () => {
           loadList$();
         }}
         onCancel={() => setInviteUserModalVisible(false)} />
+      <CreateTaskModal
+        client={currentUser}
+        visible={createTaskModalVisible}
+        onCancel={() => setCreateTaskModalVisible(false)}
+        onOk={() => setCreateTaskModalVisible(false)}
+      />
     </ContainerStyled>
 
   );

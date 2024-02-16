@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { map, debounceTime, debounce, switchMap } from 'rxjs/operators';
+import { map, debounceTime, debounce, switchMap, tap } from 'rxjs/operators';
 import { searchOrgClientUsers$ } from 'services/userService';
 import { UserSelect } from './UserSelect';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
@@ -8,7 +8,11 @@ import { BehaviorSubject, Subject, timer } from 'rxjs';
 export const ClientSelect = React.memo((props) => {
   const { value, valueProp, onChange, allowInput } = props;
   const [dataSource, setDataSource] = React.useState([]);
-  const source$ = React.useRef(new BehaviorSubject(''));
+  const source$ = React.useRef(new BehaviorSubject());
+
+  React.useEffect(() => {
+    source$.current.next(value);
+  }, [value])
 
   React.useEffect(() => {
     let firstLoad = true;
@@ -19,7 +23,7 @@ export const ClientSelect = React.memo((props) => {
         firstLoad = false;
         return timer(span);
       }),
-      switchMap((text) => searchOrgClientUsers$({ size: 2, text })),
+      switchMap((text) => searchOrgClientUsers$({ text })),
       map(resp => resp.data),
     ).subscribe(setDataSource);
 
