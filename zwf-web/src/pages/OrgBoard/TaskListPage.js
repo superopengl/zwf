@@ -1,4 +1,4 @@
-import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography, PageHeader } from 'antd';
+import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography, PageHeader, Layout, Card } from 'antd';
 import React from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { searchTask$ } from '../../services/taskService';
@@ -11,15 +11,16 @@ import { TaskBoardPanel } from './TaskBoardPanel';
 import { TaskListPanel } from './TaskListPanel';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { IoRefreshOutline } from 'react-icons/io5';
-import { TaskSearchDrawer } from './TaskSearchPanel';
+import { TaskSearchDrawer } from './TaskSearchDrawer';
 import { useLocalStorage } from 'react-use';
+import { TaskSearchPanel } from './TaskSearchPanel';
 
 const { Link: TextLink } = Typography;
 
 const LayoutStyled = styled(Space)`
   margin: 0 auto 0 auto;
   // background-color: #ffffff;
-  height: 100%;
+  // height: 100%;
   width: 100%;
 `;
 
@@ -52,7 +53,7 @@ const TaskListPage = () => {
   }, []);
 
   React.useEffect(() => {
-    if(viewMode === 'board') {
+    if (viewMode === 'board') {
       setMessage(<>Board view doesn't show archived tasks. You can switch to <TextLink onClick={handleSwitchToListView}>list view</TextLink> to see all tasks including archived ones.</>);
     } else {
       setMessage(null);
@@ -107,8 +108,8 @@ const TaskListPage = () => {
       loading={loading}
       title={viewMode === 'board' ? 'Task Board' : 'Task List'}
       extra={[
-        <Tooltip key="filter" title="Filter">
-          <Button icon={<FilterFilled />} onClick={() => setFilterVisible(true)} >Filter</Button>
+        <Tooltip key="refresh" title="Refresh">
+          <Button icon={<SyncOutlined />} onClick={handleReload} />
         </Tooltip>,
         <Radio.Group key="view" buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
           <Tooltip title="Board view">
@@ -122,26 +123,37 @@ const TaskListPage = () => {
             </Radio.Button>
           </Tooltip>
         </Radio.Group>,
-        <Tooltip key="refresh" title="Refresh">
-          <Button icon={<SyncOutlined />} onClick={handleReload} />
-        </Tooltip>
+
+        <Tooltip key="filter" title="Filter">
+          <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
+        </Tooltip>,
       ]}
     >
+      {filterVisible && <Row style={{ marginBottom: 20 }}>
+        <Card
+          style={{ width: "100%" }}
+          size="small">
+          <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} />
+        </Card>
+      </Row>}
+
       <LayoutStyled direction="vertical" size="large">
-        {!messageClosed && message && <Alert type="info" showIcon closable description={message} onClose={() => setMessageClosed(true)}/>}
+        {!messageClosed && message && <Alert type="info" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}
+
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
+
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
             total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
       </LayoutStyled>
-      <TaskSearchDrawer
+      {/* <TaskSearchDrawer
         queryInfo={queryInfo}
         onChange={handleFilterSearch}
         visible={filterVisible}
         onClose={() => setFilterVisible(false)}
-      />
+      /> */}
     </PageHeader>
   )
 }
