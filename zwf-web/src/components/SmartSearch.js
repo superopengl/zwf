@@ -7,6 +7,8 @@ import Tag from './Tag';
 import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
 import Hotkeys from 'react-hot-keys';
 import { UserNameCard } from './UserNameCard';
+// import { useKey} from 'react-use';
+import { useKeys } from "rooks";
 
 const { Text } = Typography;
 
@@ -151,11 +153,10 @@ export const SmartSearch = React.memo((props) => {
     }
   }
 
-  const handleHotKeyUp = (keyName, e, handle) => {
-    e.preventDefault();
-    outerRef.current.focus();
+  useKeys(["Control", "KeyK"], ( )=> {
     setOuterDropdownOpen(true)
-  }
+    outerRef.current.focus();
+  })
 
   if (domain && searchText) {
     return <AutoComplete
@@ -176,22 +177,20 @@ export const SmartSearch = React.memo((props) => {
     />
   }
 
-  return <Hotkeys keyName="option+f,alt+f" onKeyUp={handleHotKeyUp}>
-    <AutoComplete
+  return <AutoComplete
       ref={outerRef}
       showSearch
       open={outerDropdownOpen}
       onFocus={() => setOuterDropdownOpen(true)}
       onBlur={() => setOuterDropdownOpen(false)}
       allowClear
-      placeholder="Search ... (OPTION + F, ALT + F)"
+      placeholder="Search ... (CTRL + K)"
       style={{ minWidth: 300, width: '100%' }}
       options={getOptions()}
       dropdownMatchSelectWidth={false}
       onSearch={handleSearch}
       onSelect={handleDomainSelected}
     />
-  </Hotkeys>
 });
 
 SmartSearch.propTypes = {
