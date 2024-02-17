@@ -12,7 +12,6 @@ import { TaskClientCard } from 'components/TaskClientCard';
 import DropdownMenu from 'components/DropdownMenu';
 import { orderBy, uniq } from 'lodash';
 import { GrAscend, GrDescend } from 'react-icons/gr';
-import { useLocalStorage } from 'react-use';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import Icon from '@ant-design/icons';
 import { finalize } from 'rxjs/operators';

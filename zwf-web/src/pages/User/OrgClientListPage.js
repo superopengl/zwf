@@ -25,7 +25,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 import { showSetTagsModal } from 'components/showSetTagsModal';
 import { finalize } from 'rxjs/operators';
-import { useLocalStorage, useClickAway } from 'react-use';
+import { useLocalStorage } from 'rooks';
 import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
 import { UserAvatar } from 'components/UserAvatar';

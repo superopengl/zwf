@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import { switchMapTo } from 'rxjs/operators';
 import { listTags$, saveTag$, subscribeTags } from 'services/tagService';
 import { TagSelectComponent } from './TagSelectComponent';
-import { useLocalStorage, useClickAway } from 'react-use';
-
+import { useOutsideClick } from "rooks";
 
 export const TagSelect = React.memo((props) => {
 
@@ -14,7 +13,7 @@ export const TagSelect = React.memo((props) => {
   const [value, setValue] = React.useState(propValues);
   const [readonly, setReadonly] = React.useState(propReadonly || inPlaceEdit);
   const ref = React.useRef();
-  useClickAway(ref, () => {
+  useOutsideClick(ref, () => {
     if(inPlaceEdit) {
       setReadonly(true);
     }
