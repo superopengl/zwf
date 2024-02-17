@@ -25,7 +25,7 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 import { showSetTagsModal } from 'components/showSetTagsModal';
 import { finalize } from 'rxjs/operators';
-import { useLocalStorage } from 'rooks';
+import { useLocalstorageState } from 'rooks';
 import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
 import { UserAvatar } from 'components/UserAvatar';
@@ -57,7 +57,7 @@ const OrgClientListPage = () => {
   const [currentUser, setCurrentUser] = React.useState();
   const [inviteUserModalVisible, setInviteUserModalVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
-  const [queryInfo, setQueryInfo] = useLocalStorage(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
+  const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
 
   const handleTagChange = (user, tags) => {
     setUserTags$(user.id, tags).subscribe()
