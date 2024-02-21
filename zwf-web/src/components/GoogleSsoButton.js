@@ -42,7 +42,7 @@ const GoogleSsoButton = props => {
 
   return <GoogleLogin
     clientId={process.env.REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID}
-    buttonText="Log In with Google"
+    buttonText="Login with Google"
     // isSignedIn={true}
     render={render}
     style={{ width: '100%' }}

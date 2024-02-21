@@ -94,7 +94,7 @@ export const LogInPanel = withRouter(props => {
           <Input.Password placeholder="Password" autoComplete="current-password" maxLength="50" disabled={loading} />
         </Form.Item>
         <Form.Item>
-          <Button block type="primary" htmlType="submit" disabled={loading}>Log In</Button>
+          <Button block type="primary" htmlType="submit" disabled={loading}>Login</Button>
         </Form.Item>
       </Form>
     </>
