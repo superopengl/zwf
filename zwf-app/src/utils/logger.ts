@@ -24,7 +24,7 @@ export async function logError(err, req, res, ...args) {
 
     const log: SysLog = {
       level: 'error',
-      createdBy: req.user ? JSON.stringify(req.user) : undefined,
+      createdBy: req?.user ? JSON.stringify(req.user) : undefined,
       req: serializeReq(req),
       data: JSON.stringify(data)
     };
