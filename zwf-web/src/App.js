@@ -126,7 +126,7 @@ export const App = React.memo(() => {
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>
           </BrowserRouter>
-          {isGuest && <ContactWidget />}
+          {/* {isGuest && <ContactWidget />} */}
         </IntlProvider>
       </ConfigProvider>
     </GlobalContext.Provider>
