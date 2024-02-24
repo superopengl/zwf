@@ -13,8 +13,8 @@
     "docker:run": "docker run -p 80:80 --env-file ./devops/.env.prod zwf",
     "docker:push": "aws ecr get-login-password --region ap-southeast-2 | docker login --username AWS --password-stdin 611861040793.dkr.ecr.ap-southeast-2.amazonaws.com && docker tag zwf:latest 611861040793.dkr.ecr.ap-southeast-2.amazonaws.com/zwf:latest && docker push 611861040793.dkr.ecr.ap-southeast-2.amazonaws.com/zwf:latest",
     "ecs:update": "aws ecs update-service --cluster zwf-cluster --service zwf-portal --force-new-deployment",
-    "flush": "aws cloudfront create-invalidation --distribution-id E3CEI7BQGY3KY1 --paths \"/*\"",
-    "release": "pnpm docker:build && pnpm docker:push && pnpm ecs:update"
+    "flush": "aws cloudfront create-invalidation --distribution-id E33SLLY0LP0K89 --paths \"/*\"",
+    "release": "pnpm docker:build && pnpm docker:push && pnpm ecs:update && pnpm flush"
   },
   "author": "mr.shaojun@gmail.com",
   "license": "MIT"

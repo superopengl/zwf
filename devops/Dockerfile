@@ -67,17 +67,18 @@ ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
-ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
-ENV REACT_APP_ZWF_API_DOMAIN_NAME=https://zeeworkflow.com
-ENV REACT_APP_ZWF_HOME_SITE_URL=https://jshao2581.wixsite.com/zeeworkflow
-ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
-ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
 # Build app
 COPY ./zwf-app /usr/portal/app
 RUN pnpm run build:prod
 RUN pnpm prune --production
 # RUN /usr/local/bin/node-prune
+
+ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
+ENV REACT_APP_ZWF_API_DOMAIN_NAME=https://cloud.zeeworkflow.com
+ENV REACT_APP_ZWF_HOME_SITE_URL=https://jwu1028.wixsite.com/zeeworkflow
+ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
+ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
 # Build web
 WORKDIR /usr/portal/web
