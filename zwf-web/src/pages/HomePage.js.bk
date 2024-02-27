@@ -1,6 +1,5 @@
 // import 'App.css';
 import { Affix, Button, Layout, Modal } from 'antd';
-import ContactForm from 'components/ContactForm';
 import { HashAnchorPlaceholder } from 'components/HashAnchorPlaceholder';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeContactArea from 'components/homeAreas/HomeContactArea';

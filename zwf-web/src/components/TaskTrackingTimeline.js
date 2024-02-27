@@ -30,6 +30,7 @@ const ChatMessage = React.memo(props => {
       bodyStyle={{
         padding: 10,
         maxWidth: 600,
+        lineBreak: 'anywhere'
       }}
       style={{
         // marginLeft: 40,
