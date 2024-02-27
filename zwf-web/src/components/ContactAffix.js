@@ -1,5 +1,5 @@
 import React from 'react';
-import { Affix, Space, Button, Card, Typography } from 'antd';
+import { Affix, Space, Button, Card, Typography, Badge } from 'antd';
 import { AiOutlineDown } from "react-icons/ai";
 import { MdMessage } from 'react-icons/md';
 import styled from 'styled-components';
@@ -18,6 +18,7 @@ const AffixContactButton = styled(Button)`
 width: 48px;
 height: 48px;
 display: flex;
+border-radius: 12px;
 align-items: center;
 justify-content: center;
 border: none;
@@ -49,12 +50,14 @@ width: 400px;
 export const ContactAffix = () => {
   const [visible, setVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
+  const [unreadCount, setUnreadCount] = React.useState(0);
   const [list, setList] = React.useState([]);
   const context = React.useContext(GlobalContext);
 
   const { email, givenName, surname } = context.user?.profile ?? {};
   const cheerName = `Hi ${getUserDisplayName(email, givenName, surname)}`.trim();
 
+  // Eventsource subscription
   React.useEffect(() => {
     const eventSource = subscribeContactChange();
     eventSource.onmessage = (e) => {
@@ -62,6 +65,9 @@ export const ContactAffix = () => {
       setList(list => {
         return [...(list ?? []), event]
       });
+      if (!visible) {
+        setUnreadCount(x => x + 1);
+      }
     }
 
     return () => {
@@ -69,17 +75,32 @@ export const ContactAffix = () => {
     }
   }, []);
 
+  // Initial data load
   React.useEffect(() => {
-    if (!visible) {
-      setLoading(false)
-      return;
-    }
     const sub$ = listMyContact$().pipe(
       finalize(() => setLoading(false))
-    ).subscribe(setList);
+    ).subscribe(list => {
+      setList(list);
+      let count = 0;
+      for (let i = list.length - 1; i >= 0; i--) {
+        const item = list[i];
+        if(item.by !== context.user.id) {
+          count++;
+        } else {
+          break;
+        }
+      }
+      setUnreadCount(count);
+    });
 
     return () => sub$.unsubscribe()
-  }, [visible]);
+  }, []);
+
+  React.useEffect(() => {
+    if (visible) {
+      setUnreadCount(0);
+    }
+  }, [visible])
 
   const handleSubmitMessage = (message) => {
     const capturedUrl = window.location.href;
@@ -100,17 +121,17 @@ export const ContactAffix = () => {
             headStyle={{ backgroundColor: '#37AFD2' }}
             bodyStyle={{ padding: 0 }}
           >
-            <div style={{height: 'calc(100vh - 600px)', minHeight: 200}}>
-            <ContactMessageList dataSource={list} loading={loading} />
+            <div style={{ height: 'calc(100vh - 600px)', minHeight: 200 }}>
+              <ContactMessageList dataSource={list} loading={loading} />
             </div>
-            <hr/>
+            <hr />
             <ContactMessageInput loading={loading} onSubmit={handleSubmitMessage} />
-
-
           </StyledCard>}
-        <AffixContactButton type="primary" shape="circle" size="large" onClick={() => setVisible(x => !x)}>
-          {visible ? <AiOutlineDown size={24} /> : <MdMessage size={24} />}
-        </AffixContactButton>
+        <Badge count={unreadCount} showZero={false}>
+          <AffixContactButton type="primary" size="large" onClick={() => setVisible(x => !x)}>
+            {visible ? <AiOutlineDown size={24} /> : <MdMessage size={24} />}
+          </AffixContactButton>
+        </Badge>
       </Space>
     </Affix>
   </>

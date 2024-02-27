@@ -34,6 +34,11 @@ import { MdMessage } from 'react-icons/md';
 const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
+.pending-reply {
+  .ant-table-cell {
+    background-color: #cf222e33;
+  }
+}
 `;
 
 const DEFAULT_QUERY_INFO = {
@@ -65,7 +70,7 @@ const ContactListPage = () => {
       fixed: 'left',
       render: (_, item) => <Space>
         <UserNameCard userId={item.userId} />
-        {!item.replied && <Button type="text" danger icon={<Icon component={() => <MdMessage />} />} />}
+        {!item.replied && <Button type="text" danger icon={<Icon component={() => <MdMessage />} />} onClick={() =>  handleChatWith(item)}/>}
       </Space>
     },
     // {
@@ -268,6 +273,9 @@ const ContactListPage = () => {
           rowKey="userId"
           loading={loading}
           style={{ marginTop: 20 }}
+          rowClassName={item => {
+            return item.replied ? null : 'pending-reply'
+          }}
           pagination={{
             current: queryInfo.current,
             pageSize: queryInfo.size,
