@@ -26,10 +26,22 @@ export const ContactMessageInput = React.memo(props => {
       form.resetFields();
     });
   };
-  
+
+  const handlePressEnter = () => {
+    form.submit();
+  }
+
   return <Form form={form} onFinish={handleSubmit} style={{ padding: '10px 16px 0' }}>
     <Form.Item name="message" rules={[{ required: true, message: ' ', whitespace: true, max: 1000 }]}>
-      <Input.TextArea autoSize={{ minRows: 3 }} allowClear={true} showCount maxLength={1000} disabled={loading} placeholder="Feedback, bug report, feature request..." />
+      <Input.TextArea
+        autoSize={{ minRows: 3 }}
+        allowClear={true}
+        showCount
+        maxLength={1000}
+        disabled={loading}
+        placeholder="Feedback, bug report, feature request..." 
+        onPressEnter={handlePressEnter}
+        />
     </Form.Item>
     <Form.Item>
       <Button block type="primary" htmlType="submit" disabled={loading}>Submit</Button>
