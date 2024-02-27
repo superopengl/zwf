@@ -15,7 +15,7 @@ import { notify } from 'util/notify';
 import Icon from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import { withRouter } from 'react-router-dom';
-import { getUserDisplayName } from 'util/getDisplayName';
+import { getUserDisplayName } from 'util/getUserDisplayName';
 
 const { Text, Link: TextLink } = Typography;
 

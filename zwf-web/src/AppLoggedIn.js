@@ -29,6 +29,7 @@ import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 import { AiOutlineHistory } from 'react-icons/ai';
+import { ContactAffix } from 'components/ContactAffix';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -332,6 +333,7 @@ export const AppLoggedIn = React.memo(props => {
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />
+    <ContactAffix />
   </StyledLayout>
 })
 
