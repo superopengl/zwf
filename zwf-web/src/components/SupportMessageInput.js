@@ -3,7 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { finalize } from 'rxjs/operators';
 import PropTypes from 'prop-types';
 
-export const ContactMessageInput = React.memo(props => {
+export const SupportMessageInput = React.memo(props => {
   const { loading: propLoading, onSubmit } = props;
   const [loading, setLoading] = React.useState(propLoading);
   const [form] = Form.useForm();
@@ -57,12 +57,12 @@ export const ContactMessageInput = React.memo(props => {
 
 })
 
-ContactMessageInput.propTypes = {
+SupportMessageInput.propTypes = {
   dataSource: PropTypes.array,
   loading: PropTypes.bool,
   onSubmit: PropTypes.func,
 };
 
-ContactMessageInput.defaultProps = {
+SupportMessageInput.defaultProps = {
   onSubmit: () => { }
 };

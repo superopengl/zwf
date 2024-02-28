@@ -28,7 +28,7 @@ import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
 import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 import { AiOutlineHistory } from 'react-icons/ai';
-import { ContactAffix } from 'components/ContactAffix';
+import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage } from 'react-icons/md';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
@@ -37,7 +37,7 @@ const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
-const ContactListPage = loadable(() => import('pages/Org/ContactListPage'));
+const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
 const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
@@ -48,7 +48,7 @@ const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplateP
 const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
-const ClientTaskPage = loadable(() => import('pages/Contact/ClientTaskPage'));
+const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
 const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
 const { Link: LinkText } = Typography;
 
@@ -127,8 +127,8 @@ const ROUTES = [
     roles: ['system']
   },
   {
-    path: '/contact',
-    name: 'Contact',
+    path: '/support',
+    name: 'Support',
     icon: <Icon component={() => <MdMessage />} />,
     roles: ['system']
   },
@@ -299,7 +299,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem || isAdmin} exact path="/config" component={ConfigListPage} />
       <RoleRoute visible={isSystem || isAdmin} exact path="/email_template" component={EmailTemplateListPage} />
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
-      <RoleRoute visible={isSystem} exact path="/contact" component={ContactListPage} />
+      <RoleRoute visible={isSystem} exact path="/support" component={SupportListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
     </Switch>
 
@@ -328,7 +328,7 @@ export const AppLoggedIn = React.memo(props => {
       visible={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />
-    {(isAdmin || isAgent) && <ContactAffix />}
+    {(isAdmin || isAgent) && <SupportAffix />}
   </StyledLayout>
 })
 

@@ -1,10 +1,8 @@
 import { Column, Entity, Index, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 
-
-
 @Entity()
-@Index('idx_contact_userId_createdAt', ['userId', 'createdAt'])
-export class Contact {
+@Index('idx_supportMessage_userId_createdAt', ['userId', 'createdAt'])
+export class SupportMessage {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -23,3 +21,4 @@ export class Contact {
   @Column()
   message: string;
 }
+

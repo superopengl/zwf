@@ -3,11 +3,11 @@ import { Affix, Space, Button, Card, Typography, Badge } from 'antd';
 import { AiOutlineDown } from "react-icons/ai";
 import { MdMessage } from 'react-icons/md';
 import styled from 'styled-components';
-import { listMyContact$, subscribeContactChange } from 'services/contactService';
-import { finalize } from 'rxjs/operators';
-import { ContactMessageList } from './ContactMessageList';
-import { ContactMessageInput } from './ContactMessageInput';
-import { sendContact$ } from 'services/contactService';
+import { getMySupport$, subscribeSupportMessage, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
+import { finalize, catchError } from 'rxjs/operators';
+import { SupportMessageList } from './SupportMessageList';
+import { SupportMessageInput } from './SupportMessageInput';
+import { sendContact$ } from 'services/supportService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 
@@ -47,7 +47,7 @@ width: 400px;
 }
 `;
 
-export const ContactAffix = () => {
+export const SupportAffix = () => {
   const [visible, setVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [unreadCount, setUnreadCount] = React.useState(0);
@@ -59,15 +59,13 @@ export const ContactAffix = () => {
 
   // Eventsource subscription
   React.useEffect(() => {
-    const eventSource = subscribeContactChange();
+    const eventSource = subscribeSupportMessage();
     eventSource.onmessage = (e) => {
       const event = JSON.parse(e.data);
       setList(list => {
         return [...(list ?? []), event]
       });
-      if (!visible) {
-        setUnreadCount(x => x + 1);
-      }
+      setUnreadCount(x => x + 1);
     }
 
     return () => {
@@ -77,24 +75,26 @@ export const ContactAffix = () => {
 
   // Initial data load
   React.useEffect(() => {
-    const sub$ = listMyContact$().pipe(
+    const sub$ = getMySupport$().pipe(
       finalize(() => setLoading(false))
-    ).subscribe(list => {
+    ).subscribe(resp => {
+      const {list, unreadCount} = resp;
       setList(list);
-      let count = 0;
-      for (let i = list.length - 1; i >= 0; i--) {
-        const item = list[i];
-        if(item.by !== context.user.id) {
-          count++;
-        } else {
-          break;
-        }
-      }
-      setUnreadCount(count);
+      setUnreadCount(unreadCount);
     });
 
     return () => sub$.unsubscribe()
   }, []);
+
+  React.useEffect(() => {
+    if(visible && list?.length) {
+      const lastMessage = list[list.length - 1];
+      const {id} = lastMessage;
+      nudgeMyLastReadSupportMessage$(id).pipe(
+        catchError()
+      ).subscribe();
+    }
+  }, [list, visible]);
 
   React.useEffect(() => {
     if (visible) {
@@ -121,13 +121,13 @@ export const ContactAffix = () => {
             headStyle={{ backgroundColor: '#37AFD2' }}
             bodyStyle={{ padding: 0 }}
           >
-            <div style={{ height: 'calc(100vh - 600px)', minHeight: 200 }}>
-              <ContactMessageList dataSource={list} loading={loading} />
+            <div style={{ height: '50vh', minHeight: 200, maxHeight: 600 }}>
+              <SupportMessageList dataSource={list} loading={loading} />
             </div>
             <hr />
-            <ContactMessageInput loading={loading} onSubmit={handleSubmitMessage} />
+            <SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />
           </StyledCard>}
-        <Badge count={unreadCount} showZero={false}>
+        <Badge count={visible ? 0 : unreadCount} showZero={false}>
           <AffixContactButton type="primary" size="large" onClick={() => setVisible(x => !x)}>
             {visible ? <AiOutlineDown size={24} /> : <MdMessage size={24} />}
           </AffixContactButton>
@@ -137,8 +137,8 @@ export const ContactAffix = () => {
   </>
 }
 
-ContactAffix.propTypes = {
+SupportAffix.propTypes = {
 };
 
-ContactAffix.defaultProps = {
+SupportAffix.defaultProps = {
 };

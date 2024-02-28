@@ -7,7 +7,7 @@ export * from './taskController';
 export * from './taskTrackingController';
 export * from './recurringController';
 export * from './messageController';
-export * from './contactController';
+export * from './supportController';
 export * from './statsController';
 export * from './blogController';
 export * from './emailTemplateController';
