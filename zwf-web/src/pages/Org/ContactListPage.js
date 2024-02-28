@@ -33,11 +33,30 @@ import { MdMessage } from 'react-icons/md';
 
 const { Text, Paragraph } = Typography;
 
-const ContainerStyled = styled.div`
+const StyledTable = styled(Table)`
+.ant-table-tbody {
+  .ant-table-cell:first-child {
+    border-left: 4px solid transparent;
+  }
+}
+
 .pending-reply {
+  .ant-table-cell:first-child {
+    border-left-color: #cf222e;
+  }
+
   .ant-table-cell {
     background-color: #cf222e22;
     font-weight: 700;
+  }
+}
+
+.current-item {
+  .ant-table-cell:first-child {
+    border-left-color: #37AFD2;
+  }  
+  .ant-table-cell {
+    background-color: #37AFD222;
   }
 }
 `;
@@ -246,7 +265,7 @@ const ContactListPage = () => {
   }
 
   return (
-    <ContainerStyled>
+    <>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Input.Search
@@ -265,7 +284,7 @@ const ContactListPage = () => {
           </Space>
         </Space>
         {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
-        <Table columns={columnDef}
+        <StyledTable columns={columnDef}
           dataSource={list}
           size="small"
           scroll={{
@@ -275,7 +294,19 @@ const ContactListPage = () => {
           loading={loading}
           style={{ marginTop: 20 }}
           rowClassName={item => {
-            return item.replied ? null : 'pending-reply'
+            const classNames = [];
+            if(item === currentUser) {
+              classNames.push('current-item');
+            }
+            if(!item.replied) {
+              classNames.push('pending-reply');
+            }
+            return classNames.join(' ');
+          }}
+          onRow={item => {
+            return {
+              onDoubleClick: () => handleChatWith(item)
+            }
           }}
           pagination={{
             current: queryInfo.current,
@@ -300,7 +331,7 @@ const ContactListPage = () => {
         onClose={() => setChatVisible(false)}
         eventSource={eventSource$.current}
       />
-    </ContainerStyled>
+    </>
 
   );
 };
