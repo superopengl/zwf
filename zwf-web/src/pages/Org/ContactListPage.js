@@ -36,7 +36,8 @@ const { Text, Paragraph } = Typography;
 const ContainerStyled = styled.div`
 .pending-reply {
   .ant-table-cell {
-    background-color: #cf222e33;
+    background-color: #cf222e22;
+    font-weight: 700;
   }
 }
 `;
