@@ -100,14 +100,14 @@ const OrgSubscriptionHistoryPanel = (props) => {
               render: (id, item) => <Button type="link" onClick={() => handleReceipt(item)} icon={<DownloadOutlined />}>Receipt</Button>
             },
           ]}
-          bordered={true}
+          bordered={false}
           rowKey="id"
           showHeader={false}
           dataSource={orderBy(payments, [x => moment(x.paidAt).toDate()], 'asc')}
           pagination={false}
           scroll={false}
           locale={{
-            emptyText: '1 license 14 day trial'
+            emptyText: '15 day single license free trial'
           }}
         // style={{ width: '100%', minWidth: 370 }}
         />

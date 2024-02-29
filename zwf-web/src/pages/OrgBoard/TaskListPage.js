@@ -138,7 +138,7 @@ const TaskListPage = () => {
       </Row>}
 
       <LayoutStyled direction="vertical" size="large">
-        {!messageClosed && message && <Alert type="info" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}
+        {!messageClosed && message && <Alert type="warning" showIcon closable description={message} onClose={() => setMessageClosed(true)} />}
 
         {viewMode === 'board' && <TaskBoardPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
         {viewMode === 'list' && <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />}
