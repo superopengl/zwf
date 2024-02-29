@@ -1,27 +1,21 @@
 import { SupportMessage } from '../SupportMessage';
 import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
-import { SupportLastRead } from '../SupportLastRead';
-
+import { SupportUserLastAccess } from '../SupportUserLastAccess';
 
 
 @ViewEntity({
   expression: (connection: Connection) => connection.createQueryBuilder()
     .from(SupportMessage, 'x')
-    .leftJoin(q => q.from(SupportLastRead, 'r')
-      .innerJoin(SupportMessage, 'm', 'r."userId" = m."userId" AND r."supporterLastReadMessageId" = m.id')
-      .select([
-        `r.userId as "userId"`,
-        `m."createdAt" as "lastReadAt"`
-      ]),
-      'u', 'x."userId" = u."userId"')
-    .where(`x."createdAt" > u."lastReadAt"`)
+    .leftJoin(SupportUserLastAccess, 'u', 'x."userId" = u."userId"')
+    .where(`x."createdAt" > u."lastAccessAt"`)
+    .andWhere(`x.by != x."userId"`)
     .groupBy('x."userId"')
     .select([
       'x."userId" as "userId"',
       'COUNT(1) as count',
     ])
 })
-export class SupportSupporterUnreadInformation {
+export class SupportUserUnreadInformation {
   @ViewColumn()
   @PrimaryColumn()
   userId: string;
@@ -29,3 +23,5 @@ export class SupportSupporterUnreadInformation {
   @ViewColumn()
   count: number;
 }
+
+

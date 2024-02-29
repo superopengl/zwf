@@ -51,18 +51,6 @@ paths:
           required: true          
       responses:
         200:
-          description: OK      
-  /support/{userId}/nudge:
-    post:
-      operationId: nudgeUserLastReadBySupporter
-      parameters:
-        - name: userId
-          in: path
-          type: string
-          format: uuid
-          required: true          
-      responses:
-        200:
           description: OK                           
   /file/download/task/{taskId}/file/{fileId}:
     get:
