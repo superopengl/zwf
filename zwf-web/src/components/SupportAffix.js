@@ -56,7 +56,7 @@ export const SupportAffix = () => {
   const context = React.useContext(GlobalContext);
 
   const { givenName, surname } = context.user?.profile ?? {};
-  const name = `${givenName} ${surname}`.trim();
+  const name = `${givenName || ''} ${surname || ''}`.trim();
   const cheerName = `Hi ${name || 'there'}`.trim();
 
   // Eventsource subscription
@@ -115,7 +115,7 @@ export const SupportAffix = () => {
   }
 
   return <>
-    <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 3000 }}>
+    <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 900 }}>
       <Space direction="vertical" style={{ alignItems: 'flex-end' }} size="large" >
         {visible &&
           <StyledCard
