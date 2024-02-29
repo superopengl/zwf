@@ -46,8 +46,9 @@ const ChatMessage = React.memo(props => {
         style={{
           // marginLeft: 40,
           // marginBottom: 4,
-          // color: isMe ? '#000000cc' : 'normal',
-          backgroundColor: isMe ? '#ffec3d' : 'rgb(236, 236, 236)',
+          // color: isMe ? '#000000cc !important' : 'normal',
+          backgroundColor: isMe ? '#37AFD2aa' : 'rgb(236, 236, 236)',
+          borderRadius: 12
         }}>
         {message}
       </Card>
