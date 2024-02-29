@@ -35,7 +35,6 @@ const PaymentStepperWidget = (props) => {
   const [promotionCode, setPromotionCode] = React.useState();
   const [paymentInfo, setPaymentInfo] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
-  const context = React.useContext(GlobalContext);
 
   const fetchPaymentDetail = async () => {
     try {
@@ -57,6 +56,9 @@ const PaymentStepperWidget = (props) => {
     fetchPaymentDetail();
   }, [seats, promotionCode]);
 
+  React.useEffect(() => {
+    onLoading(loading);
+  }, [loading]);
 
   const handlePurchase = async () => {
     setLoading(true);
