@@ -55,8 +55,9 @@ export const SupportAffix = () => {
   const [list, setList] = React.useState([]);
   const context = React.useContext(GlobalContext);
 
-  const { email, givenName, surname } = context.user?.profile ?? {};
-  const cheerName = `Hi ${getUserDisplayName(email, givenName, surname)}`.trim();
+  const { givenName, surname } = context.user?.profile ?? {};
+  const name = `${givenName} ${surname}`.trim();
+  const cheerName = `Hi ${name || 'there'}`.trim();
 
   // Eventsource subscription
   React.useEffect(() => {
