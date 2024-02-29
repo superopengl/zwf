@@ -17,7 +17,7 @@ const VersionMismatchModalContent = React.memo(props => {
 
   return <>
     <Paragraph>A new version of platform has been released. Reload the page to upgrade.</Paragraph>
-    <Collapse ghost bordered={false} defaultActiveKey={['tag']}
+    <Collapse ghost bordered={false} 
       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}
       style={{position: 'relative', left: -16}}
     >

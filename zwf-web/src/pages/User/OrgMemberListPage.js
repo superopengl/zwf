@@ -324,7 +324,7 @@ const OrgMemberListPage = () => {
         visible={profileModalVisible}
         destroyOnClose={true}
         maskClosable={true}
-        title="Update Profile"
+        title="User Profile"
         onClose={() => setProfileModalVisible(false)}
         footer={null}
         width={400}

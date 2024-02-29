@@ -10,7 +10,7 @@ import { Steps, Button, message, Space, Alert, Form, Input, Typography } from 'a
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { isValidABN, isValidACN } from "abnacn-validator";
 import * as tfn from 'tfn';
-import { getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
+import { createMyOrg$, getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import { CountrySelector } from 'components/CountrySelector';
@@ -65,25 +65,23 @@ const OrgProfileForm = (props) => {
   }, [org]);
 
   const handleSubmitBasic = values => {
-    saveMyOrgProfile$(values).subscribe(
-      () => {
-        props.onOk();
-      })
+    const source$ = props.mode === 'create' ? createMyOrg$(values) : saveMyOrgProfile$(values);
+    source$.subscribe(() => props.onOk())
   }
 
   const handleValuesChange = (changedValues, allValues) => {
-    const {country} = changedValues;
-    if(country) {
+    const { country } = changedValues;
+    if (country) {
       setRequireAbn(country === 'AU');
     }
   }
 
   return <Container>
-    <Form layout="vertical" form={basicForm} 
-    onValuesChange={handleValuesChange}
-    onFinish={handleSubmitBasic} 
-    style={{ textAlign: 'left' }} 
-    initialValues={org}>
+    <Form layout="vertical" form={basicForm}
+      onValuesChange={handleValuesChange}
+      onFinish={handleSubmitBasic}
+      style={{ textAlign: 'left' }}
+      initialValues={org}>
       <Form.Item label="Organization name"
         name="name"
         help={<>The name of your organisation in ZeeWorkflow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
@@ -98,7 +96,7 @@ const OrgProfileForm = (props) => {
         <Input placeholder="ZeeWorkflow Inc." allowClear={true} autoComplete="organization" />
       </Form.Item>
       <Form.Item label="Organization registration country" name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
-        <CountrySelector defaultValue="AU"/>
+        <CountrySelector defaultValue="AU" />
       </Form.Item>
       {requireAbn && <Form.Item label="ABN"
         name="abn"
@@ -109,7 +107,7 @@ const OrgProfileForm = (props) => {
         name="domain"
         help={<>This domain name will be used to generate email sender addresses like <Text code>noreply@zeeworkflow.com</Text>.</>}
         rules={[{ required: false, message: ' ', whitespace: true, max: 100 }]}>
-        <Input placeholder="zeeworkflow.com" allowClear={true} defaultValue="zeeworkflow.com"/>
+        <Input placeholder="zeeworkflow.com" allowClear={true} defaultValue="zeeworkflow.com" />
       </Form.Item>
       <Form.Item label="Address"
         name="address"
@@ -130,11 +128,13 @@ const OrgProfileForm = (props) => {
 }
 
 OrgProfileForm.propTypes = {
-  onOk: PropTypes.func
+  onOk: PropTypes.func,
+  mode: PropTypes.oneOf(['create', 'update'])
 };
 
 OrgProfileForm.defaultProps = {
-  onOk: () => { }
+  onOk: () => { },
+  mode: 'update'
 };
 
 export default withRouter(OrgProfileForm);

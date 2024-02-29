@@ -7,7 +7,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import SignUpForm from 'components/SignUpForm';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 import OrgOnBoardWizard from './OrgOnBoardWizard';
-import OrgOnBoardForm from './OrgProfileForm';
+import OrgProfileForm from './OrgProfileForm';
 import { getAuthUser$ } from 'services/authService';
 
 const { Title } = Typography;
@@ -46,7 +46,7 @@ const OrgOnBoardPage = (props) => {
       <Title level={2} style={{ margin: '2rem auto' }}>
         Organization Profile
       </Title>
-      <OrgOnBoardForm onOk={handleAfterOrgCreated} />
+      <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
     </InnerContainer>
   </Container>
 }
