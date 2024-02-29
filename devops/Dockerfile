@@ -75,7 +75,7 @@ RUN pnpm prune --production
 # RUN /usr/local/bin/node-prune
 
 ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
-ENV REACT_APP_ZWF_API_DOMAIN_NAME=https://cloud.zeeworkflow.com
+ENV REACT_APP_ZWF_API_DOMAIN_NAME=
 ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
 ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
