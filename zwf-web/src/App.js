@@ -107,6 +107,7 @@ export const App = React.memo(() => {
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Switch>
+              <RoleRoute loading={loading} path="/" exact component={HomePage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/login" component={LogInPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup" component={SignUpPage} />
               <RoleRoute visible={isGuest} loading={loading} exact path="/signup/org" component={OrgSignUpPage} />
@@ -117,8 +118,7 @@ export const App = React.memo(() => {
               <RoleRoute loading={loading} exact path="/terms_and_conditions" component={TermAndConditionPage} />
               <RoleRoute loading={loading} exact path="/privacy_policy" component={PrivacyPolicyPage} />
               <RoleRoute loading={loading} path="/blogs" exact component={BlogsPage} />
-              <RoleRoute visible={!isGuest} path="/home" exact component={HomePage} />
-              <RoleRoute loading={loading} path="/" component={!isLoggedIn ? HomePage : AppLoggedIn} />
+              <RoleRoute visible={!isGuest} path="*" exact component={AppLoggedIn} />
               <Redirect to="/" />
               {/* <RoleRoute loading={loading} component={Error404} /> */}
             </Switch>

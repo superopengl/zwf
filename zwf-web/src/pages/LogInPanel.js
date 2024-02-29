@@ -53,10 +53,10 @@ export const LogInPanel = withRouter(props => {
             setUser(user);
             setNotifyCount(count);
 
-            if (user.role === 'admin' && !org) {
-              props.history.push(returnUrl || '/onboard')
+            if (user.role === 'system') {
+              props.history.push(returnUrl || '/support')
             } else {
-              props.history.push(returnUrl || '/');
+              props.history.push(returnUrl || '/task');
             }
           }
         },

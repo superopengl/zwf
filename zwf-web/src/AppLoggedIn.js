@@ -30,6 +30,7 @@ import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage } from 'react-icons/md';
+import Error404 from 'pages/Error404';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -78,7 +79,7 @@ const StyledLayout = styled(ProLayout)`
 
 const ROUTES = [
   {
-    path: '/',
+    path: '/task',
     name: <FormattedMessage id="menu.tasks" />,
     icon: <Icon component={() => <HiOutlineViewList />} />,
     roles: ['admin', 'agent', 'client']
@@ -121,15 +122,15 @@ const ROUTES = [
     roles: ['admin']
   },
   {
-    path: '/org',
-    name: <FormattedMessage id="menu.org" />,
-    icon: <BankOutlined />,
-    roles: ['system']
-  },
-  {
     path: '/support',
     name: 'Support',
     icon: <Icon component={() => <MdMessage />} />,
+    roles: ['system']
+  },
+  {
+    path: '/org',
+    name: <FormattedMessage id="menu.org" />,
+    icon: <BankOutlined />,
     roles: ['system']
   },
   {
@@ -239,7 +240,7 @@ export const AppLoggedIn = React.memo(props => {
     //   ]
     // }}
     headerContentRender={() => {
-      if(isSystem || isClient) {
+      if (isSystem || isClient) {
         return null;
       }
       return <Row gutter={10} wrap={false} justify="start">
@@ -282,7 +283,7 @@ export const AppLoggedIn = React.memo(props => {
     )}
   >
     <Switch>
-      <RoleRoute exact path="/" component={isSystem ? SystemBoardPage : isClient ? ClientTaskListPage : OrgTaskListPage} />
+      <RoleRoute exact path="/task" component={isSystem ? SystemBoardPage : isClient ? ClientTaskListPage : OrgTaskListPage} />
       <RoleRoute visible={!isSystem} path="/task/:id" component={isClient ? ClientTaskPage : OrgTaskPage} />
       <RoleRoute visible={isClient} exact path="/activity" component={ClientTrackingListPage} />
       <RoleRoute visible={isAdmin || isAgent} exact path="/doc_template" component={DocTemplateListPage} />
@@ -301,6 +302,7 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem} exact path="/org" component={OrgListPage} />
       <RoleRoute visible={isSystem} exact path="/support" component={SupportListPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
+      {/* <RoleRoute path="*" component={Error404} /> */}
     </Switch>
 
     <ChangePasswordModal

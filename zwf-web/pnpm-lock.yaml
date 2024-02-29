@@ -38,6 +38,7 @@ specifiers:
   react: ^17.0.2
   react-beautiful-dnd: ^13.1.0
   react-chat-elements: ^10.15.0
+  react-cookie-consent: ^7.3.1
   react-copy-to-clipboard: ^5.0.3
   react-dom: ^17.0.2
   react-file-icon: ^1.0.0
@@ -59,6 +60,7 @@ specifiers:
   rooks: ^5.10.2
   rxjs: ^6.6.3
   serve: ^12.0.0
+  smoothscroll-polyfill: ^0.4.4
   source-map-explorer: ^2.5.2
   styled-components: ^5.2.1
   tfn: ^1.0.0
@@ -112,6 +114,7 @@ dependencies:
   react: 17.0.2
   react-beautiful-dnd: 13.1.0_react-dom@17.0.2+react@17.0.2
   react-chat-elements: 10.16.0_75cb922c19ee1b7939faae9b4d1f4cf7
+  react-cookie-consent: 7.3.1_react@17.0.2
   react-copy-to-clipboard: 5.0.4_react@17.0.2
   react-dom: 17.0.2_react@17.0.2
   react-file-icon: 1.1.0_react-dom@17.0.2+react@17.0.2
@@ -131,6 +134,7 @@ dependencies:
   reactjs-localstorage: 1.0.1
   rooks: 5.10.2_react-dom@17.0.2+react@17.0.2
   rxjs: 6.6.7
+  smoothscroll-polyfill: 0.4.4
   styled-components: 5.3.3_281a4fa50a045c9112baf635f3bc27a7
   tfn: 1.0.0
   uniqolor: 1.0.1
@@ -11332,6 +11336,16 @@ packages:
       react: 17.0.2
     dev: false
 
+  /react-cookie-consent/7.3.1_react@17.0.2:
+    resolution: {integrity: sha512-05usKig0YYy6OLfBlQBIQk/TTi8h3PUGvs218kPO5bAb4f7D0UTjC3N1zG2UAVWFYbiI0QWyG0s3bkh2sfiW3Q==}
+    peerDependencies:
+      react: ^16.13.1 || ^17.0.0
+    dependencies:
+      js-cookie: 2.2.1
+      prop-types: 15.8.1
+      react: 17.0.2
+    dev: false
+
   /react-copy-to-clipboard/5.0.4_react@17.0.2:
     resolution: {integrity: sha512-IeVAiNVKjSPeGax/Gmkqfa/+PuMTBhutEvFUaMQLwE2tS0EXrAdgOpWDX26bWTXF3HrioorR7lr08NqeYUWQCQ==}
     peerDependencies:
@@ -12599,6 +12613,10 @@ packages:
     resolution: {integrity: sha512-3dOsAHXXUkQTpOYcoAxLIorMTp4gIQr5IW3iVb7A7lFIp0VHhnynm9izx6TssdrIcVIESAlVjtnO2K8bg+Coew==}
     engines: {node: '>=12'}
     dev: true
+
+  /smoothscroll-polyfill/0.4.4:
+    resolution: {integrity: sha512-TK5ZA9U5RqCwMpfoMq/l1mrH0JAR7y7KRvOBx0n2869aLxch+gT9GhN3yUfjiw+d/DiF1mKo14+hd62JyMmoBg==}
+    dev: false
 
   /sockjs/0.3.24:
     resolution: {integrity: sha512-GJgLTZ7vYb/JtPSSZ10hsOYIvEYsjbNU+zPdIHcUaWVNUEPivzxku31865sSSud0Da0W4lEeOPlmw93zLQchuQ==}
