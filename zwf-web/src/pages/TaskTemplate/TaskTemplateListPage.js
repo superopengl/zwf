@@ -154,7 +154,7 @@ export const TaskTemplateListPage = props => {
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
-                There is no task template. Let's start from a one!
+                There is no task template. Let's start creating one!
               </Paragraph>
               <Link to="/task_template/new">Create new task template</Link>
             </div>
