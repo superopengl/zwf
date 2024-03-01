@@ -16,7 +16,6 @@ export class ResourcePage {
   publishedAt: Date;
 
   @Column()
-  @Index({ unique: true })
   title: string;
 
   @Column({ default: '' })

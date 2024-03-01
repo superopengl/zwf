@@ -120,7 +120,7 @@ export const DocTemplatePage = (props) => {
           >
             {!loading && <DocTemplateEditorPanel
               value={docTemplate}
-              onChange={d => setDocTemplate({ ...docTemplate, ...d })}
+              onChange={d => setDocTemplate(dt => ({ ...dt, ...d }))}
               debug={debugMode}
             />}
           </PageHeader>

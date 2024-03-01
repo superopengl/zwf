@@ -11,8 +11,9 @@ import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { withRouter, Link } from 'react-router-dom';
-import { finalize } from 'rxjs/operators';
+import { finalize, switchMap, switchMapTo } from 'rxjs/operators';
 import { notify } from 'util/notify';
+import { deleteResourcePage$, listAllResourcePages$ } from 'services/resourcePageService';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -30,7 +31,7 @@ const LayoutStyled = styled.div`
 
 
 
-export const ResourceListPage = props => {
+export const ResourceEditListPage = props => {
 
 
   const [list, setList] = React.useState([]);
@@ -53,46 +54,39 @@ export const ResourceListPage = props => {
   }
 
   const handleDelete = async (item) => {
-    const { id, name } = item;
+    const { id, title } = item;
     Modal.confirm({
-      title: <>Delete Dot Template <strong>{name}</strong>?</>,
-      onOk: async () => {
-        setLoading(true);
-        await deleteDocTemplate(id);
-        await loadList();
-        setLoading(false);
+      title: <>Delete resource page <strong>{title}</strong>?</>,
+      onOk: () => {
+        deleteResourcePage$(id).pipe(
+          switchMapTo(loadList$())
+        ).subscribe();
       },
       maskClosable: true,
       okButtonProps: {
         danger: true
       },
-      okText: 'Yes, delete it!'
+      okText: 'Yes, delete this page!'
     });
   }
 
-  const loadList = async () => {
+  const loadList$ = () => {
     setLoading(true);
-    const list = await listDocTemplate();
-    setList(list);
-    setLoading(false);
-  }
-
-  React.useEffect(() => {
-    setLoading(true);
-    const subscription$ = listDocTemplate$()
+    return listAllResourcePages$()
       .pipe(
         finalize(() => setLoading(false))
       )
-      .subscribe(list => {
-        setList(list);
-      });
+      .subscribe(setList);
+  }
 
-    return () => subscription$.unsubscribe();
+  React.useEffect(() => {
+    const sub$ = loadList$();
+    return () => sub$.unsubscribe();
   }, []);
 
 
   const handleCreateNew = () => {
-    props.history.push('/resources/new');
+    props.history.push('/manage/resources/new');
   }
 
   return (<>
@@ -180,8 +174,8 @@ export const ResourceListPage = props => {
   );
 };
 
-ResourceListPage.propTypes = {};
+ResourceEditListPage.propTypes = {};
 
-ResourceListPage.defaultProps = {};
+ResourceEditListPage.defaultProps = {};
 
-export default withRouter(ResourceListPage);
+export default withRouter(ResourceEditListPage);

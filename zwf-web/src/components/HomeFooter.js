@@ -17,6 +17,10 @@ color: #aaaaaa;
 background-color: #000011;
 padding-left: 1rem;
 padding-right: 1rem;
+// position: fixed;
+// bottom: 0;
+// left: 0;
+// right: 0;
 
 a {
   color: #aaaaaa;
@@ -29,14 +33,6 @@ a {
 p {
   margin-bottom: 0;
 }
-`;
-
-const StyledRegisteredBadge = styled.div`
-margin: 0.5rem auto;
-padding: 0.5rem;
-border-radius: 2px;
-background-color: rgba(255,255,255,0.9);
-width: 200px;
 `;
 
 const HomeFooter = () => (

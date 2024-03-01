@@ -12,8 +12,8 @@ export function listAllResourcePages$() {
   return httpGet$(`/manage/resources`)
 }
 
-export function saveResourcePage$() {
-  return httpPost$(`/manage/resources`)
+export function saveResourcePage$(page) {
+  return httpPost$(`/manage/resources`, page);
 }
 
 export function getEditResourcePage$(id) {
