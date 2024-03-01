@@ -1,5 +1,5 @@
 import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined
+  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined, EyeInvisibleOutlined, SyncOutlined
 } from '@ant-design/icons';
 import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader } from 'antd';
 
@@ -9,11 +9,11 @@ import { deleteDocTemplate, listDocTemplate, listDocTemplate$, cloneDocTemplate$
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
-import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
+import { DocTemplateIcon, ResourcePageIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { withRouter, Link } from 'react-router-dom';
 import { finalize, switchMap, switchMapTo } from 'rxjs/operators';
 import { notify } from 'util/notify';
-import { deleteResourcePage$, listAllResourcePages$ } from 'services/resourcePageService';
+import { deleteResourcePage$, listAllResourcePages$, saveResourcePage$ } from 'services/resourcePageService';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -45,12 +45,17 @@ export const ResourceEditListPage = props => {
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
   }, [list, searchText])
 
-  const handleEditOne = (id) => {
-    props.history.push(`/doc_template/${id}`);
+  const handleEdit = (item) => {
+    props.history.push(`/manage/resource/${item.id}`);
   }
 
-  const handleEdit = (item) => {
-    handleEditOne(item.id);
+  const handleTogglePublished = (item) => {
+    const { publishedAt } = item;
+    item.publishedAt = publishedAt ? null : new Date();
+
+    saveResourcePage$(item)
+      .subscribe()
+      .add(() => loadList$())
   }
 
   const handleDelete = async (item) => {
@@ -58,9 +63,9 @@ export const ResourceEditListPage = props => {
     Modal.confirm({
       title: <>Delete resource page <strong>{title}</strong>?</>,
       onOk: () => {
-        deleteResourcePage$(id).pipe(
-          switchMapTo(loadList$())
-        ).subscribe();
+        deleteResourcePage$(id)
+          .subscribe()
+          .add(() => loadList$());
       },
       maskClosable: true,
       okButtonProps: {
@@ -95,21 +100,8 @@ export const ResourceEditListPage = props => {
         title="Resources"
         backIcon={false}
         extra={[
-          // <Radio.Group
-          //   key="view"
-          //   optionType="button"
-          //   buttonStyle="solid"
-          //   defaultValue={viewMode}
-          //   onChange={e => setViewMode(e.target.value)}
-          // >
-          //   <Radio.Button value="grid">
-          //     <Icon component={() => <BiGridAlt />} />
-          //   </Radio.Button>
-          //   <Radio.Button value="list">
-          //     <Icon component={() => <HiViewList />} />
-          //   </Radio.Button>
-          // </Radio.Group>,
-          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>
+          <Button type="primary" ghost key="refres" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
+          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>,
         ]}
       >
         <List
@@ -119,9 +111,9 @@ export const ResourceEditListPage = props => {
             xs: 1,
             sm: 1,
             md: 1,
-            lg: 2,
-            xl: 3,
-            xxl: 4
+            lg: 1,
+            xl: 2,
+            xxl: 2
           }}
           dataSource={filteredList}
           loading={loading}
@@ -140,15 +132,23 @@ export const ResourceEditListPage = props => {
               hoverable
               // type="inner"
               title={<Space>
-                <DocTemplateIcon />
-                <HighlightingText search={searchText} value={item.name} />
+                <ResourcePageIcon />
+                <HighlightingText search={searchText} value={item.title} />
               </Space>}
               extra={<DropdownMenu
                 config={[
                   {
+                    icon: item.publishedAt ? <EyeInvisibleOutlined /> : <EyeOutlined />,
+                    menu: item.publishedAt ? 'Unpublish' : 'Publish',
+                    onClick: () => handleTogglePublished(item)
+                  },
+                  {
                     icon: <EditOutlined />,
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
+                  },
+                  {
+                    menu: '-'
                   },
                   {
                     icon: <Text type="danger"><DeleteOutlined /></Text>,
@@ -164,6 +164,7 @@ export const ResourceEditListPage = props => {
               <Space size="large">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
                 <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
+                <TimeAgo key="3" value={item.publishedAt} showTime={false} prefix={<Text type="secondary">Published:</Text>} direction="horizontal" />
               </Space>
             </Card>
           </List.Item>}
