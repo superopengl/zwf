@@ -17,7 +17,7 @@ import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon, ResourcePageIcon } from 'components/entityIcon';
 import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 import { ClickToEditInput } from 'components/ClickToEditInput';
-import { getPublishedResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
+import { getEditResourcePage$, getPublishedResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
 import { useDebouncedValue } from "rooks";
 import { withRouter } from 'react-router-dom';
 
@@ -63,7 +63,7 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
     if (isNew) {
       return;
     }
-    const sub$ = getPublishedResourcePage$(id)
+    const sub$ = getEditResourcePage$(id)
       .pipe(
         finalize(() => setLoading(false))
       )

@@ -110,7 +110,7 @@ export const App = React.memo(() => {
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Switch>
-              <RoleRoute loading={loading} path="/(resources|resources/:id)?" exact component={PortalApp} />
+              <RoleRoute loading={loading} path={['/', '/resources', '/resources/:id']} exact component={PortalApp} />
               <RoleRoute visible={isGuest} exact path="/login" component={LogInPage} />
               <RoleRoute visible={isGuest} exact path="/signup" component={SignUpPage} />
               <RoleRoute visible={isGuest} exact path="/signup/org" component={OrgSignUpPage} />

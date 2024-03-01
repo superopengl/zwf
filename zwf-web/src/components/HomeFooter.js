@@ -17,10 +17,10 @@ color: #aaaaaa;
 background-color: #000011;
 padding-left: 1rem;
 padding-right: 1rem;
-// position: fixed;
-// bottom: 0;
-// left: 0;
-// right: 0;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
 
 a {
   color: #aaaaaa;

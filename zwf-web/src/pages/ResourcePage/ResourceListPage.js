@@ -1,80 +1,34 @@
-import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined
-} from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader } from 'antd';
+import { Space, Typography, List, Card } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
-import DropdownMenu from 'components/DropdownMenu';
-import { HighlightingText } from 'components/HighlightingText';
-import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
-import { notify } from 'util/notify';
 import { listPublishedResourcePages$ } from 'services/resourcePageService';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
+const { Text, Paragraph, Title } = Typography;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
+  padding: 1rem;
+  max-width: 1000px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
 
-  .ant-list-item {
-    padding-left: 0;
-    padding-right: 0;
-  }
+  // .ant-list-item {
+  //   padding-left: 0;
+  //   padding-right: 0;
+  // }
 `;
 
+export const ResourceListPage = React.memo(props => {
 
-
-export const ResourceListPage = props => {
-
-
+  useDocumentTitle('All resource pages');
   const [list, setList] = React.useState([]);
-  const [filteredList, setFilteredList] = React.useState([]);
-  const [searchText, setSearchText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
-
-  React.useEffect(() => {
-    setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
-  }, [list, searchText])
-
-  const handleEditOne = (id) => {
-    props.history.push(`/doc_template/${id}`);
-  }
-
-  const handleEdit = (item) => {
-    handleEditOne(item.id);
-  }
-
-  const handleDelete = async (item) => {
-    const { id, name } = item;
-    Modal.confirm({
-      title: <>Delete Dot Template <strong>{name}</strong>?</>,
-      onOk: async () => {
-        setLoading(true);
-        await deleteDocTemplate(id);
-        await loadList();
-        setLoading(false);
-      },
-      maskClosable: true,
-      okButtonProps: {
-        danger: true
-      },
-      okText: 'Yes, delete it!'
-    });
-  }
-
-  const loadList = async () => {
-    setLoading(true);
-    const list = await listDocTemplate();
-    setList(list);
-    setLoading(false);
-  }
 
   React.useEffect(() => {
     setLoading(true);
@@ -87,61 +41,39 @@ export const ResourceListPage = props => {
     return () => sub$.unsubscribe();
   }, []);
 
-
-  return (<>
-    <Container>
-        <List
-          size="small"
-          grid={{
-            gutter: [24, 24],
-            xs: 1,
-            sm: 1,
-            md: 1,
-            lg: 2,
-            xl: 3,
-            xxl: 4
-          }}
-          dataSource={filteredList}
-          loading={loading}
-          renderItem={item => <List.Item>
-            <Card
-              // size="small"
-              bordered={true}
-              hoverable
-              // type="inner"
-              title={<Space>
-                <DocTemplateIcon />
-                <HighlightingText search={searchText} value={item.name} />
-              </Space>}
-              extra={<DropdownMenu
-                config={[
-                  {
-                    icon: <EditOutlined />,
-                    menu: 'Edit',
-                    onClick: () => handleEdit(item)
-                  },
-                  {
-                    icon: <Text type="danger"><DeleteOutlined /></Text>,
-                    menu: <Text type="danger">Delete</Text>,
-                    onClick: () => handleDelete(item)
-                  },
-                ].filter(x => !!x)}
-              />}
-              bodyStyle={{ paddingTop: 16 }}
-              onClick={() => handleEdit(item)}
-            >
-              <Paragraph>{item.description}</Paragraph>
-              <Space size="large">
-                <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-              </Space>
-            </Card>
-          </List.Item>}
-        />
-    </Container>
-  </>
-  );
-};
+  return <Container>
+    <List
+      size="small"
+      grid={{
+        gutter: [24, 24],
+        xs: 1,
+        sm: 1,
+        md: 1,
+        lg: 1,
+        xl: 1,
+        xxl: 1
+      }}
+      dataSource={list}
+      loading={loading}
+      renderItem={item => <List.Item>
+        <Card
+          bordered={false}
+          hoverable
+          title={<Title>{item.title}</Title>}
+          bodyStyle={{ paddingTop: 16 }}
+          onClick={() => props.history.push(`/resources/${item.id}`)}
+        >
+          <Paragraph>{item.brief}...</Paragraph>
+          <Text type="secondary">
+        <small>
+          <TimeAgo value={item.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
+        </small>
+      </Text>
+        </Card>
+      </List.Item>}
+    />
+  </Container>
+});
 
 ResourceListPage.propTypes = {};
 
