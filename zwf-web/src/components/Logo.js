@@ -6,5 +6,5 @@ import {Image} from 'antd';
 
 export const Logo = (props) =>
   <Link to="/">
-    <Image src={logoSvg} preview={false} width={props.size || 80} />
+    <Image src={logoSvg} alt="logo" preview={false} width={props.size || 80} />
   </Link>
