@@ -1,4 +1,4 @@
-import { Space, Typography, List, Card } from 'antd';
+import { Button, Typography, List, Card } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -7,11 +7,12 @@ import { withRouter } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
 import { listPublishedResourcePages$ } from 'services/resourcePageService';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
-
-const { Text, Paragraph, Title } = Typography;
+import { MdOpenInNew } from 'react-icons/md';
+import Icon from '@ant-design/icons';
+const { Text, Paragraph, Title, Link: TextLink } = Typography;
 
 const Container = styled.div`
-  margin: 0 auto 0 auto;
+  margin: 48px auto 120px auto;
   padding: 1rem;
   max-width: 1000px;
   // background-color: #ffffff;
@@ -56,12 +57,13 @@ export const ResourceListPage = React.memo(props => {
       dataSource={list}
       loading={loading}
       renderItem={item => <List.Item>
-        <Card
+           <Card
           bordered={false}
           hoverable
           title={<Title>{item.title}</Title>}
           bodyStyle={{ paddingTop: 16 }}
           onClick={() => props.history.push(`/resources/${item.id}`)}
+          extra={<Button icon={<Icon component={() => <MdOpenInNew />} />} type="link" href={`/resources/${item.id}`} target="_blank" />}
         >
           <Paragraph>{item.brief}...</Paragraph>
           <Text type="secondary">
@@ -69,7 +71,8 @@ export const ResourceListPage = React.memo(props => {
           <TimeAgo value={item.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
         </small>
       </Text>
-        </Card>
+        </Card>       
+
       </List.Item>}
     />
   </Container>

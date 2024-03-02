@@ -7,9 +7,16 @@ import { withRouter } from 'react-router-dom';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import styled from 'styled-components';
+import HomeFooter from 'components/HomeFooter';
 
 smoothscroll.polyfill();
 
+const Container = styled.div`
+  margin: 0 0 120px 0;
+  padding: 0;
+  max-width: 100%;
+`;
 
 const scrollToElement = (selector) => {
   document.querySelector(selector)?.scrollIntoView({
@@ -24,7 +31,7 @@ const HomePage = (props) => {
 
   useDocumentTitle('All in one task doc management');
 
-  return <>
+  return <Container>
     <section>
       <HomeCarouselArea />
     </section>
@@ -40,7 +47,8 @@ const HomePage = (props) => {
     {/* <section>
       <HomeServiceArea bgColor="#135200" />
     </section> */}
-  </>
+    {/* <HomeFooter /> */}
+  </Container>
 }
 
 HomePage.propTypes = {};
