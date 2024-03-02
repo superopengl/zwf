@@ -131,7 +131,7 @@ const ROUTES = [
   },
   {
     path: '/manage/resources',
-    name: 'Resources3',
+    name: 'Resources',
     icon: <Icon component={() => <MdOutlinePages />} />,
     roles: ['system']
   },
