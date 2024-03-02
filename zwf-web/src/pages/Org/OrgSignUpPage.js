@@ -5,6 +5,7 @@ import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
+import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const PageContainer = styled.div`
   width: 100%;
@@ -45,6 +46,7 @@ const LayoutStyled = styled(Layout)`
 
 const OrgSignUpPage = (props) => {
 
+  useDocumentTitle('Join by creating org')
   return (
     <GlobalContext.Consumer>{
       () => {
