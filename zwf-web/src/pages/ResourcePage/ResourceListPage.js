@@ -1,4 +1,4 @@
-import { Button, Typography, List, Card } from 'antd';
+import { Button, Typography, List, Card, Image, Space } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -57,21 +57,32 @@ export const ResourceListPage = React.memo(props => {
       dataSource={list}
       loading={loading}
       renderItem={item => <List.Item>
-           <Card
+
+        <Card
           bordered={false}
           hoverable
-          title={<Title>{item.title}</Title>}
+          ghost
+          title={null}
           bodyStyle={{ paddingTop: 16 }}
           onClick={() => props.history.push(`/resources/${item.id}`)}
-          extra={<Button icon={<Icon component={() => <MdOpenInNew />} />} type="link" href={`/resources/${item.id}`} target="_blank" />}
         >
-          <Paragraph>{item.brief}...</Paragraph>
-          <Text type="secondary">
-        <small>
-          <TimeAgo value={item.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
-        </small>
-      </Text>
-        </Card>       
+          <Space style={{ alignItems: 'flex-start' }} size="large">
+            <Space direction="vertical">
+              <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
+                <Title>{item.title}</Title>
+                <Button icon={<Icon component={() => <MdOpenInNew />} />} type="link" href={`/resources/${item.id}`} target="_blank" />
+              </Space>
+              <Paragraph type="secondary">
+                <small>
+                  <TimeAgo value={item.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
+                </small>
+              </Paragraph>
+              <Paragraph style={{ lineBreak: 'anywhere' }}>{item.brief}...</Paragraph>
+            </Space>
+            {item.imageBase64 && <Image src={item.imageBase64} alt="picture" preview={false} width={200} />}
+          </Space>
+
+        </Card>
 
       </List.Item>}
     />
