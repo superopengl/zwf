@@ -191,14 +191,12 @@ const PortalPage = (props) => {
     }}
     footerRender={() => <HomeFooter />}
   >
-    <PageContainer>
       <Switch>
         <RoleRoute path="/" exact component={HomePage} />
         <RoleRoute exact path="/resources" component={ResourceListPage} />
         <RoleRoute exact path="/resources/:id" component={ResourcePage} />
         {/* <RoleRoute component={Error404} /> */}
       </Switch>
-    </PageContainer>
 
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.
