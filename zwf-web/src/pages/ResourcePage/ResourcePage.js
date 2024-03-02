@@ -1,5 +1,5 @@
 import React from 'react';
-import { Skeleton, Typography, Space, Divider, Tag, Row, PageHeader } from 'antd';
+import { Skeleton, Typography, Space, Divider, Tag, Row, PageHeader, Image } from 'antd';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import { finalize } from 'rxjs/operators';
@@ -14,7 +14,13 @@ const LayoutStyled = styled.div`
   margin: 48px auto 120px auto;
   padding: 3rem 1rem;
   max-width: 1000px;
+
+  .head-image {
+      float: left;
+      margin: 0 2rem 2rem 0;
+  }
 `;
+
 
 export const ResourcePage = (props) => {
 
@@ -41,17 +47,19 @@ export const ResourcePage = (props) => {
   return <Loading loading={loading}>
     {page ? <LayoutStyled>
       <PageHeader
-        title={<Title>{page.title}</Title>}
+        title={<Title style={{ wordWrap: 'break-word', whiteSpace: 'normal' }}>{page.title}</Title>}
         ghost
       >
-      <Text type="secondary">
-        <small>
-          <TimeAgo value={page.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
-        </small>
-      </Text>
-      <Divider />
-      <img src={page.imageBase64} alt="picture" style={{float: 'left', margin: '0 2rem 2rem 0'}}/>
-      <RawHtmlDisplay value={page.html} />
+        <Text type="secondary">
+          <small>
+            <TimeAgo value={page.publishedAt} showTime={false} prefix="Published:" direction="horizontal" />
+          </small>
+        </Text>
+        <Divider />
+        <div className='head-image'>
+          <Image preview={false} src={page.imageBase64} alt="picture" />
+        </div>
+        <RawHtmlDisplay value={page.html} />
       </PageHeader>
 
     </LayoutStyled > : <Skeleton />}

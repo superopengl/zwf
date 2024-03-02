@@ -15,6 +15,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
 import { LeftOutlined } from '@ant-design/icons';
+import { SavingAffix } from 'components/SavingAffix';
 
 const { Text } = Typography;
 
@@ -53,7 +54,7 @@ const ClientTaskPage = (props) => {
 
   return (<>
     <Container>
-      {!task ? <Skeleton active/> : <PageContainer
+      {!task ? <Skeleton active /> : <PageContainer
         loading={loading}
         backIcon={<LeftOutlined />}
         onBack={handleGoBack}
@@ -63,7 +64,6 @@ const ClientTaskPage = (props) => {
           title: <Space style={{ height: 34 }}>
             <TaskIcon />
             {task?.name || <Skeleton paragraph={false} />}
-            {saving !== null && <Text type="secondary" style={{ fontSize: 'small', fontWeight: 'normal' }}>{saving ? 'saving...' : 'saved'}</Text>}
           </Space>
         }}
       >
@@ -74,22 +74,23 @@ const ClientTaskPage = (props) => {
             </Card>
           </Col>
           <Col span={12} >
-            <Card 
-            bordered={false}
-            title="Interactions & Messages"
-            size="large" 
-            bodyStyle={{height: 'calc(100vh - 420px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px'}}
-            actions={[
-              <div style={{paddingLeft: 24, paddingRight: 24, width: '100%'}}>
-                <TaskMessageForm  key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
-              </div>
-            ]}
+            <Card
+              bordered={false}
+              title="Interactions & Messages"
+              size="large"
+              bodyStyle={{ height: 'calc(100vh - 420px)', overflowX: 'hidden', overflowY: 'auto', padding: '0 8px' }}
+              actions={[
+                <div style={{ paddingLeft: 24, paddingRight: 24, width: '100%' }}>
+                  <TaskMessageForm key="0" taskId={task.id} loading={loading} onDone={handleMessageSent} />
+                </div>
+              ]}
             >
               <TaskTrackingPanel taskId={task.id} />
             </Card>
           </Col>
         </Row>
       </PageContainer>}
+      {saving && <SavingAffix />}
     </Container>
   </>
   );

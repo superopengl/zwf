@@ -1,4 +1,4 @@
-import { Button, Layout, PageHeader, Row, Col, Skeleton } from 'antd';
+import { Button, Typography, PageHeader, Row, Col, Skeleton, message, Affix } from 'antd';
 
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
@@ -20,7 +20,9 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { getEditResourcePage$, getPublishedResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
 import { useDebouncedValue } from "rooks";
 import { withRouter } from 'react-router-dom';
+import { SavingAffix } from 'components/SavingAffix';
 
+const { Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -105,27 +107,29 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
         ghost
         backIcon={false}
         style={{ maxWidth: 900, margin: '0 auto' }}
-        title={<Row align="middle" wrap={false} style={{ height: 46 }}>
+        title={<Row align="middle" wrap={false}>
           <Col>
             <ResourcePageIcon />
           </Col>
           <Col flex={1}>
             <ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />
           </Col>
-          <Col>
-            {saving ? "saving..." : "saved"}
-          </Col>
         </Row>}
-        extra={page ? <Button type="primary" ghost={!!page.publishedAt} onClick={handleTogglePublish}>{page.publishedAt ? 'Unpublish' : 'Publish'}</Button> : <Skeleton.Button />}
+        extra={debouncedPage
+          ? <Button type="primary" ghost={!!debouncedPage.publishedAt} onClick={handleTogglePublish}>{debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}</Button>
+          : <Skeleton.Button />}
       >
-        {!loading && <ResourceEditorPanel
-          value={page}
-          onChange={handlePageChange}
-          debug={debugMode}
-        />}
+        <div style={{ position: 'relative' }}>
+          {!loading && <ResourceEditorPanel
+            value={page}
+            onChange={handlePageChange}
+            debug={debugMode}
+          />}
+        </div>
       </PageHeader>
     </Loading>
-  </LayoutStyled >
+    {saving && <SavingAffix />}
+  </LayoutStyled>
 }));
 
 ResourceEditPage.propTypes = {};
