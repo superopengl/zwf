@@ -101,6 +101,7 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
     })
   }
 
+  const canPublish = page?.html?.trim().length > 0;
   return <LayoutStyled>
     <Loading loading={loading}>
       <PageHeader
@@ -116,7 +117,13 @@ export const ResourceEditPage = withRouter(React.memo((props) => {
           </Col>
         </Row>}
         extra={debouncedPage
-          ? <Button type="primary" ghost={!!debouncedPage.publishedAt} onClick={handleTogglePublish}>{debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}</Button>
+          ? <Button
+            type="primary"
+            ghost={!!debouncedPage.publishedAt}
+            onClick={handleTogglePublish}
+            disabled={!canPublish}>
+            {debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}
+          </Button>
           : <Skeleton.Button />}
       >
         <div style={{ position: 'relative' }}>

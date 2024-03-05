@@ -1,7 +1,7 @@
 import {
   DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined, EyeInvisibleOutlined, SyncOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader } from 'antd';
+import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader, Image } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -26,6 +26,14 @@ const LayoutStyled = styled.div`
   .ant-list-item {
     padding-left: 0;
     padding-right: 0;
+  }
+
+  .published-page {
+    border-left: 4px solid #37AFD2;
+  }
+
+  .unpublished-page {
+    border-left: 4px solid #ffc53d;
   }
 `;
 
@@ -129,6 +137,7 @@ export const ResourceEditListPage = props => {
               bordered={true}
               hoverable
               // type="inner"
+              className={item.publishedAt ? 'published-page' : 'unpublished-page'}
               title={<Space>
                 <ResourcePageIcon />
                 <HighlightingText search={searchText} value={item.title} />
@@ -145,10 +154,10 @@ export const ResourceEditListPage = props => {
                     menu: 'Edit',
                     onClick: () => handleEdit(item)
                   },
-                  {
+                  item.publishedAt ? null : {
                     menu: '-'
                   },
-                  {
+                  item.publishedAt ? null : {
                     icon: <Text type="danger"><DeleteOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(item)
@@ -158,8 +167,7 @@ export const ResourceEditListPage = props => {
               bodyStyle={{ paddingTop: 16 }}
               onClick={() => handleEdit(item)}
             >
-              <Paragraph>{item.description}</Paragraph>
-              <Text type="secondary">
+              <Paragraph type="secondary">
                 <small>
                   <Space size="large">
                     <TimeAgo value={item.createdAt} showTime={false} prefix="Created:" direction="horizontal" />
@@ -167,7 +175,12 @@ export const ResourceEditListPage = props => {
                     <TimeAgo value={item.publishedAt} showTime={false} prefix="Published" direction="horizontal" />
                   </Space>
                 </small>
-              </Text>
+              </Paragraph>
+              <Space style={{ alignItems: 'flex-start' }}>
+                {item.imageBase64 && <Image src={item.imageBase64} width={200} preview={false} />}
+                <Paragraph>{item.brief}...</Paragraph>
+              </Space>
+
             </Card>
           </List.Item>}
         />

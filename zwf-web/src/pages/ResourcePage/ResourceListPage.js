@@ -61,13 +61,10 @@ export const ResourceListPage = React.memo(props => {
         <Card
           bordered={false}
           hoverable
-          ghost
           title={null}
           bodyStyle={{ paddingTop: 16 }}
           onClick={() => props.history.push(`/resources/${item.id}`)}
         >
-
-
           <Space direction="vertical">
             <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
               <Title style={{marginBottom: 0}}>{item.title}</Title>
