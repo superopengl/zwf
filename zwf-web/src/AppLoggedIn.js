@@ -125,13 +125,13 @@ const ROUTES = [
   },
   {
     path: '/support',
-    name: 'Support',
+    name: 'User Support',
     icon: <Icon component={() => <MdMessage />} />,
     roles: ['system']
   },
   {
     path: '/manage/resources',
-    name: 'Resources',
+    name: 'Resource Pages',
     icon: <Icon component={() => <MdOutlinePages />} />,
     roles: ['system']
   },
