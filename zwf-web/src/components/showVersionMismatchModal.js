@@ -49,6 +49,7 @@ export const showVersionMismatchModal = (webappVersion, backendVersion) => {
 
   const notificationKey = 'versionCheck';
   notification.info({
+    icon: null,
     message: 'New version is released',
     description: <VersionMismatchModalContent onClose={() => {
       reactLocalStorage.set(LAST_ASKED_BACKEND_VERSION, backendVersion)
