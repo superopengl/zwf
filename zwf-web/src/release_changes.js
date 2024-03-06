@@ -1,7 +1,5 @@
 export const notes=`
+recurring backend code draft
 ui refine
-ui change
-refine resource editor
-what's new UI refine
-update release notes
-auto generate release note commit`
+change menu access control
+resource edit bugfix`
