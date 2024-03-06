@@ -117,12 +117,12 @@ const ROUTES = [
     icon: <FileOutlined />,
     roles: ['admin', 'agent']
   },
-  {
-    path: '/procedure',
-    name: <FormattedMessage id="menu.procedure" />,
-    icon: <Icon component={() => <GoTools />} />,
-    roles: ['admin']
-  },
+  // {
+  //   path: '/procedure',
+  //   name: <FormattedMessage id="menu.procedure" />,
+  //   icon: <Icon component={() => <GoTools />} />,
+  //   roles: ['admin']
+  // },
   {
     path: '/support',
     name: 'User Support',
