@@ -128,7 +128,7 @@ export const ResourceEditListPage = props => {
               <Paragraph type="secondary">
                 There is no resources. Let's start creating one!
               </Paragraph>
-              <Link to="/resources/new">Create new resource page</Link>
+              <Link to="/manage/resources/new">Create new resource page</Link>
             </div>
           }}
           renderItem={item => <List.Item>
