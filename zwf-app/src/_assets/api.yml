@@ -411,6 +411,62 @@ paths:
       responses:
         200:
           description: OK
+  /recurring:
+    get:
+      operationId: listRecurring
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: saveRecurring
+      # security:
+      #   - authClient: []
+      responses:
+        200:
+          description: OK
+  /recurring/:id:
+    get:
+      operationId: getRecurring
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+    delete:
+      operationId: deleteRecurring
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK
+  /recurring/:id/run:
+    post:
+      operationId: runRecurring
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /resources:
     get:
       operationId: listPublishedResourcePages

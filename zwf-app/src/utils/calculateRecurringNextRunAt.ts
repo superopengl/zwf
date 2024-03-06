@@ -4,11 +4,11 @@ import * as moment from 'moment-timezone';
 
 
 export function calculateRecurringNextRunAt(recurring: Recurring): Date {
-  const { startFrom, every, period } = recurring;
-  let startMoment = moment(startFrom);
+  const { firstRunOn, every, period } = recurring;
+  let startMoment = moment(firstRunOn);
   if (startMoment.isAfter()) {
     // If the first one hasn't happen
-    return startFrom;
+    return firstRunOn;
   }
 
   let nextRunMoment = startMoment.tz(CLIENT_TZ).add(every, period);

@@ -27,14 +27,20 @@ export class Recurring {
   @Index()
   userId: string;
 
-  @Column({nullable: true})
-  startFrom?: Date;
+  @Column()
+  firstRunOn: Date;
     
-  @Column({nullable: true})
+  @Column()
   every: number;
   
-  @Column({nullable: true})
+  @Column()
   period: 'day' | 'week' | 'month' | 'year';
+
+  @Column()
+  repeatOn: 'mon' | 'tue' | 'wed' | 'thu' | 'fri' | 'sat' | 'sun' | 'the-date-monthly' | 'last-day-monthly';
+
+  @Column({nullable: true})
+  endsOn: Date;
 
   @Column({nullable: true})
   lastRunAt: Date;

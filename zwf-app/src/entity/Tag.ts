@@ -1,4 +1,4 @@
-import { Entity, Column, Index, PrimaryGeneratedColumn, Unique, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique, CreateDateColumn } from 'typeorm';
 
 
 @Entity()
@@ -19,3 +19,5 @@ export class Tag {
   @Column()
   colorHex: string;
 }
+
+
