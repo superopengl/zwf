@@ -31,7 +31,7 @@ export class Recurring {
   taskTemplateId: string;
 
   @Column({ nullable: true })
-  startFrom?: Date;
+  firstRunOn?: Date;
 
   @Column({ nullable: true })
   every: number;

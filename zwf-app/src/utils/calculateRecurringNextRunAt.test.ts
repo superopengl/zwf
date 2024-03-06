@@ -6,7 +6,7 @@ import { calculateRecurringNextRunAt } from './calculateRecurringNextRunAt';
 
 function createRecurring(startFromSydneyYYYYMMDD: string, every: number, period: 'day' | 'week' | 'month' | 'year') {
   const recurring = new Recurring();
-  recurring.startFrom = moment.tz(`${startFromSydneyYYYYMMDD} 5:00`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate();
+  recurring.firstRunOn = moment.tz(`${startFromSydneyYYYYMMDD} 5:00`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate();
   recurring.every = every;
   recurring.period = period;
   return recurring;
@@ -27,7 +27,7 @@ describe('calculateRecurringNextRunAt', () => {
   afterAll(() => {
     (Date.now as any).mockRestore();
   })
-  describe('startFrom is past day', () => {
+  describe('firstRunOn is past day', () => {
 
     it('nextRunAt should be future day with 1 week recurring', () => {
       const recurring = createRecurring('2021-01-15', 1, 'week');
@@ -66,7 +66,7 @@ describe('calculateRecurringNextRunAt', () => {
     });
   });
 
-  describe('startFrom is past last day of month', () => {
+  describe('firstRunOn is past last day of month', () => {
     it('nextRunAt should be future last day of month with 1 month recurring', () => {
       const recurring = createRecurring('2021-01-31', 1, 'month');
       const nextRunAt = calculateRecurringNextRunAt(recurring);
@@ -83,8 +83,8 @@ describe('calculateRecurringNextRunAt', () => {
     });
   });
 
-  describe('startFrom is future day', () => {
-    it('nextRunAt should be startFrom day', () => {
+  describe('firstRunOn is future day', () => {
+    it('nextRunAt should be firstRunOn day', () => {
       const recurring = createRecurring('2021-02-01', 3, 'month');
       const nextRunAt = calculateRecurringNextRunAt(recurring);
       const expected = createSydneyDate('2021-02-01 5:00');

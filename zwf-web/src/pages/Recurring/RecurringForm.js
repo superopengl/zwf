@@ -59,7 +59,7 @@ const RecurringForm = (props) => {
           <TaskTemplateSelect />
         </Form.Item>
         <Form.Item
-          label="Start On (First Run)" name="startFrom" 
+          label="Start On (First Run)" name="firstRunOn" 
           extra="The recurring will happen at 5:00 am (Sydney time) on the specified day."
           rules={[{
             required: true, message: ' ', validator: async (rule, value) => {
