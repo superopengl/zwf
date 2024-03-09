@@ -110,7 +110,7 @@ const HomeCarouselAreaRaw = props => {
           <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
             All in one system for file, doc, job, task and workflow management. Come on, join us today!!
               </Title>
-          {isGuest &&
+          {/* {isGuest &&
             <Row style={{ maxWidth: 500, margin: '0 auto' }} gutter={30}>
               <Col {...span}>
                 <SignInButton block type="primary"
@@ -133,7 +133,7 @@ const HomeCarouselAreaRaw = props => {
                     )}
                 />
               </Col>
-            </Row>}
+            </Row>} */}
         </Space>
       </PosterContainer>
     </ContainerStyled>

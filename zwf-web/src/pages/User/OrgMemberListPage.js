@@ -69,30 +69,12 @@ const OrgMemberListPage = () => {
           { label: 'admin', value: 'admin' },
         ]} />
     },
-    // {
-    //   title: 'Login Type',
-    //   dataIndex: 'loginType',
-    //   render: (text) => text === 'local' ? <Tag color="#333333">Local</Tag> : <Tag icon={<GoogleOutlined />} color="#4c8bf5">Google</Tag>
-    // },
-    // {
-    //   title: 'Tags',
-    //   dataIndex: 'tags',
-    //   render: (value, item) => <TagSelect tags={tags} onSave={saveUserTag} value={value} onChange={tags => handleTagChange(item, tags)} />
-    // },
     {
       title: 'Last Activity',
       dataIndex: 'lastNudgedAt',
       render: (text) => <TimeAgo value={text} showTime={false} />,
     },
-    // {
-    //   title: 'Status',
-    //   dataIndex: 'status',
-    //   render: (text) => text,
-    // },
     {
-      // title: 'Action',
-      // fixed: 'right',
-      // width: 200,
       align: 'right',
       fixed: 'right',
       render: (text, user) => {

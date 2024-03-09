@@ -154,12 +154,12 @@ const OrgTaskPage = React.memo((props) => {
               <Collapse.Panel key="tags" header="Tags">
                 <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
               </Collapse.Panel>
-              <Collapse.Panel key="procedure" header="Procedures">
+              {/* <Collapse.Panel key="procedure" header="Procedures">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" size="small">
                   <Button type="link" icon={<LinkOutlined />} block >How to do it</Button>
                   <Button type="link" icon={<LinkOutlined />} block >Best practice</Button>
                 </Space>
-              </Collapse.Panel>
+              </Collapse.Panel> */}
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>

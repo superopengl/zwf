@@ -42,7 +42,7 @@ const HomePage = (props) => {
     <section id="pricing">
       <HomePricingArea />
     </section>
-    <section><HomeContactArea bgColor="#0a425e"></HomeContactArea></section>
+    {/* <section><HomeContactArea bgColor="#0a425e"></HomeContactArea></section> */}
     {/* <section><HomeSearchArea /></section> */}
     {/* <section>
       <HomeServiceArea bgColor="#135200" />
