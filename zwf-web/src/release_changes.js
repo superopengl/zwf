@@ -1,5 +1,6 @@
 export const notes=`
 update release notes
+update release notes
 TaskTalk entity
 refactor
 null fix

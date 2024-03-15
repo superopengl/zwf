@@ -14,6 +14,7 @@ RUN rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install libfreetype6 libfreetype6-dev
 RUN apt-get install libfontconfig1 libfontconfig1-dev
+RUN apt-get update
 RUN apt-get install google-chrome-stable
 
 # If running Docker >= 1.13.0 use docker run's --init arg to reap zombie processes, otherwise
