@@ -14,6 +14,9 @@ RUN rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install libfreetype6 libfreetype6-dev
 RUN apt-get install libfontconfig1 libfontconfig1-dev
+
+RUN curl -O https://packages.cloud.google.com/apt/doc/apt-key.gpg && sudo apt-key add apt-key.gpg
+RUN sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' 
 RUN apt-get update
 RUN apt-get install google-chrome-stable
 
