@@ -1,4 +1,4 @@
-FROM node:18-slim
+FROM --platform=linux/amd64 node:18-slim
 
 # Install latest chrome dev package and fonts to support major charsets (Chinese, Japanese, Arabic, Hebrew, Thai and a few others)
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
@@ -15,20 +15,8 @@ RUN rm -rf /var/lib/apt/lists/*
 RUN apt-get install libfreetype6 libfreetype6-dev
 RUN apt-get install libfontconfig1 libfontconfig1-dev
 
-
-RUN apt-get update; apt-get clean
-
-# Install wget.
-RUN apt-get install -y wget
-
-RUN apt-get install -y gnupg
-
-# Set the Chrome repo.
-RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list
-
 # Install Chrome.
-RUN apt-get update && apt-get -y install google-chrome-stable
+RUN apt-get -y install google-chrome-stable
 
 # If running Docker >= 1.13.0 use docker run's --init arg to reap zombie processes, otherwise
 # uncomment the following lines to have `dumb-init` as PID 1
