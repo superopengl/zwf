@@ -9,11 +9,12 @@ RUN apt-get install -y wget gnupg
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
     && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list'
 RUN apt-get update --allow-releaseinfo-change
-RUN apt-get install -y bzip2 google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 build-essential chrpath libssl-dev libxft-dev --no-install-recommends
+RUN apt-get install -y bzip2 fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 build-essential chrpath libssl-dev libxft-dev --no-install-recommends
 RUN rm -rf /var/lib/apt/lists/*
 
 RUN apt-get install libfreetype6 libfreetype6-dev
 RUN apt-get install libfontconfig1 libfontconfig1-dev
+# RUN apt-get install google-chrome-stable
 
 # If running Docker >= 1.13.0 use docker run's --init arg to reap zombie processes, otherwise
 # uncomment the following lines to have `dumb-init` as PID 1
