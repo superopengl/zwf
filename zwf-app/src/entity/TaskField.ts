@@ -1,6 +1,4 @@
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
-import { File } from './File';
-import { Task } from './Task';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 @Index('idex_taskField_taskId_ordinal', ['taskId', 'ordinal'], { unique: true })
@@ -11,9 +9,6 @@ export class TaskField {
 
   @Column('uuid', { select: false })
   taskId: string;
-
-  @ManyToOne(() => Task, task => task.fields, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
-  task: Task;
 
   @Column()
   name: string;
