@@ -11,12 +11,12 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, taskDocIds, type, onChange, disabled } = props;
+  const { fields, taskDocIds, type, onChange, disabled, hasDoc } = props;
   const context = React.useContext(GlobalContext);
   const role = context.role;
 
   const isClient = role === 'client';
-  const hideAttachment = isClient && disabled && !taskDocIds.length;
+  const hideAttachment = !hasDoc || (isClient && disabled && !taskDocIds.length);
 
   const clientFieldSchema = React.useMemo(() => {
     const schema = convertTaskTemplateFieldsToFormFieldsSchema(fields, false);
@@ -101,6 +101,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
 TaskFormWidget.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   taskDocIds: PropTypes.arrayOf(PropTypes.string),
+  hasDoc: PropTypes.bool,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
   type: PropTypes.oneOf(['agent', 'client']),
@@ -110,6 +111,7 @@ TaskFormWidget.propTypes = {
 TaskFormWidget.defaultProps = {
   readonly: false,
   disabled: false,
+  hasDoc: true,
   type: 'agent',
   onChange: (fields) => { },
 };
