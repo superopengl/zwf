@@ -1,2 +1,5 @@
 export const notes=`
-bugfix`
+misc fix
+ui refine
+ui refine
+hide menu procedure`
