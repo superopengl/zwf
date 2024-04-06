@@ -28,9 +28,9 @@ paths:
       responses:
         200:
           description: OK
-  /support/list:
-    get:
-      operationId: listAllSupport
+  /support/search:
+    post:
+      operationId: searchSupportList
       responses:
         200:
           description: OK

@@ -45,18 +45,41 @@ export const getMySupport = handlerWrapper(async (req, res) => {
   res.json(result);
 });
 
-export const listAllSupport = handlerWrapper(async (req, res) => {
+export const searchSupportList = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
   const userId = getUserIdFromReq(req);
-  const list = await getRepository(SupportInformation).find({
-    where: {
-      userId: Not(userId)
-    }
-  });
-  list.forEach(x => {
+  const { text, page, size, orderField, orderDirection, tags } = req.body;
+
+  const pageNo = page || 1;
+  const pageSize = size || 50;
+  assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
+
+  let query = getRepository(SupportInformation)
+    .createQueryBuilder()
+    .where('"userId" != :userId', { userId });
+
+  if (text) {
+    query = query.andWhere('(email ILIKE :text OR "givenName" ILIKE :text OR "surname" ILIKE :text OR "orgName" ILIKE :text)', { text: `%${text}%` });
+  }
+
+  const count = await query.getCount();
+
+  const data = await query //.orderBy(`"${orderField}"`, orderDirection)
+    .offset((pageNo - 1) * pageSize)
+    .limit(pageSize)
+    .getMany();
+
+  data.forEach(x => {
     x.unreadCount = +x.unreadCount;
   })
-  res.json(list);
+
+  const result = {
+    count,
+    page: pageNo,
+    data
+  };
+
+  res.json(result);
 });
 
 export const getUserSupport = handlerWrapper(async (req, res) => {
