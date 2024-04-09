@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Button } from 'antd';
+import { Row, Button, Form } from 'antd';
 import { camelCase } from 'lodash';
 import { arrayMove } from '@dnd-kit/sortable';
 import { PlusOutlined } from '@ant-design/icons';
@@ -8,10 +8,12 @@ import { createEmptyField } from './TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 
 export const FieldList = (props) => {
-  const { value, onChange } = props;
-  // const bottomRef = useRef(null);
-  const handleChange = change => {
-    onChange(change);
+  // const { value, onChange } = props;
+  const form = Form.useFormInstance();
+  const value = form.getFieldValue('fields');
+  const handleChange = fields => {
+    const currentValue = form.getFieldsValue(true);
+    form.setFieldsValue({...currentValue, fields})
   };
   return (
     <>

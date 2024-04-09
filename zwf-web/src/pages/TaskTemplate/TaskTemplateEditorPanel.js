@@ -15,19 +15,20 @@ const Container = styled.div`
   // height: 100%;
 `;
 
-export const TaskTemplateEditorPanel = props => {
+export const TaskTemplateEditorPanel = React.forwardRef((props, ref) => {
   const { value: schema, debug, onChange } = props;
 
   return (
     <Container>
       <TaskTemplateBuilder
+        ref={ref}
         value={schema}
         onChange={onChange}
       />
       {debug && <pre><small>{JSON.stringify(schema, null, 2)}</small></pre>}
     </Container >
   );
-};
+});
 
 TaskTemplateEditorPanel.propTypes = {
   onChange: PropTypes.func.isRequired,
@@ -39,4 +40,4 @@ TaskTemplateEditorPanel.defaultProps = {
   debug: false
 };
 
-export default withRouter(TaskTemplateEditorPanel);
+export default TaskTemplateEditorPanel;

@@ -19,8 +19,8 @@ export const createEmptyField = () => {
   }
 }
 
-const checkLabels = items => {
-  return items.every(x => x.label && x.type);
+const checkRequiredFields = items => {
+  return items.every(x => x.name && x.type);
 };
 
 const checkOptions = items => {
@@ -46,7 +46,7 @@ const checkOptions = items => {
   return true;
 };
 
-export const TaskTemplateBuilder = (props) => {
+export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
   const { value: template, onChange } = props;
 
   const [allVars, setAllVars] = React.useState([]);
@@ -80,6 +80,7 @@ export const TaskTemplateBuilder = (props) => {
 
   return <TaskTemplateEditorContext.Provider value={{ vars: allVars }}>
     <Form
+      ref={ref}
       onKeyPress={e => {
         if (e.key === 'Enter') {
           e.preventDefault();
@@ -129,35 +130,36 @@ export const TaskTemplateBuilder = (props) => {
           type="info"
           style={{ marginBottom: 20 }}
         />
-      <Form.Item
+      {/* <Form.Item
         label="Fields"
         name="fields"
         {...formItemLayoutProps}
         rules={[
           {
             required: true,
-            validator: async (rule, value, callback) => {
-              if (!checkLabels(value)) {
-                throw new Error(
-                  'All fields are required.'
-                );
-              }
-              if (!checkOptions(value)) {
-                throw new Error(
-                  'Please provide options for questions. All options require names.'
-                );
-              }
-            },
+            // validator: async (rule, value, callback) => {
+            //   debugger
+            //   if (!checkRequiredFields(value)) {
+            //     throw new Error(
+            //       'All fields are required.'
+            //     );
+            //   }
+            //   if (!checkOptions(value)) {
+            //     throw new Error(
+            //       'Please provide options for questions. All options require names.'
+            //     );
+            //   }
+            // },
           },
         ]}>
-        <FieldList />
-      </Form.Item>
+      </Form.Item> */}
+      <FieldList />
       {/* <Form.Item>
         <Button htmlType="submit">Save</Button>
       </Form.Item> */}
     </Form>
   </TaskTemplateEditorContext.Provider>
-}
+});
 
 TaskTemplateBuilder.propTypes = {
   onChange: PropTypes.func.isRequired,
