@@ -29,6 +29,10 @@ export const TaskTemplateWidgetDef = Object.freeze([
     widget: 'number',
     widgetPorps: {
       min: 0,
+      precision: 4,
+      style: {
+        width: '100%'
+      }
     },
   },
   {
