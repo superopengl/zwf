@@ -9,6 +9,7 @@ import {
 import {TiSortNumerically} from 'react-icons/ti'
 import Icon, { UploadOutlined } from '@ant-design/icons'
 import { FileUploader } from 'components/FileUploader';
+import { DateInput } from 'components/DateInput';
 
 export const TaskTemplateWidgetDef = Object.freeze([
   {
@@ -74,7 +75,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
     type: 'date',
     label: 'Date',
     icon: <FaCalendarAlt />,
-    widget: 'date-picker',
+    widget: DateInput,
     widgetPorps: {
       picker: 'date'
     },
@@ -83,7 +84,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
     type: 'month',
     label: 'Month',
     icon: <FaCalendarAlt />,
-    widget: 'date-picker',
+    widget: DateInput,
     widgetPorps: {
       picker: 'month'
     },
@@ -92,7 +93,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
     type: 'quarter',
     label: 'Quarter',
     icon: <FaCalendarAlt />,
-    widget: 'date-picker',
+    widget: DateInput,
     widgetPorps: {
       picker: 'quarter'
     },
@@ -101,7 +102,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
     type: 'year',
     label: 'Year',
     icon: <FaCalendarAlt />,
-    widget: 'date-picker',
+    widget: DateInput,
     widgetPorps: {
       picker: 'year'
     },
