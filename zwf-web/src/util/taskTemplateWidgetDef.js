@@ -86,7 +86,8 @@ export const TaskTemplateWidgetDef = Object.freeze([
     icon: <FaCalendarAlt />,
     widget: DateInput,
     widgetPorps: {
-      picker: 'month'
+      picker: 'month',
+      format: 'YYYY-MM'
     },
   },
   {
@@ -95,7 +96,8 @@ export const TaskTemplateWidgetDef = Object.freeze([
     icon: <FaCalendarAlt />,
     widget: DateInput,
     widgetPorps: {
-      picker: 'quarter'
+      picker: 'quarter',
+      format: 'YYYY-\\QQ'
     },
   },
   {
@@ -104,7 +106,8 @@ export const TaskTemplateWidgetDef = Object.freeze([
     icon: <FaCalendarAlt />,
     widget: DateInput,
     widgetPorps: {
-      picker: 'year'
+      picker: 'year',
+      format: 'YYYY'
     },
   },
 ]);
