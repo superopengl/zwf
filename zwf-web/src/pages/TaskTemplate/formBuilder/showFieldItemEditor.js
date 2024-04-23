@@ -22,15 +22,21 @@ const formItemLayoutProps = {
 }
 
 const FieldEditModalContent = (props) => {
-  const { value, index, onChange, onCancel } = props;
+  const { value, onChange, onCancel } = props;
 
+  const [item, setItem] = React.useState(value || DEFAULT_FIELD);
   const editorContext = React.useContext(TaskTemplateEditorContext);
+
+  const handleFormValuesChange = (changedValue, allValues) => {
+    setItem(allValues)
+  }
 
   return (
     <Form
       style={{marginTop: 32}}
-      initialValues={value || DEFAULT_FIELD}
+      initialValues={item}
       onFinish={onChange}
+      onValuesChange={handleFormValuesChange}
       layout="vertical"
     >
       <Form.Item label="Field name"
@@ -50,7 +56,7 @@ const FieldEditModalContent = (props) => {
           </Select.Option>)}
         </Select>
       </Form.Item>
-      {!['upload', 'autodoc'].includes(value.type) && <Form.Item label="Variable"
+      {!['upload', 'autodoc'].includes(item.type) && <Form.Item label="Variable"
         {...formItemLayoutProps}
         name='varName'
         rules={[{ required: false }]}>
@@ -83,7 +89,7 @@ const FieldEditModalContent = (props) => {
           allowClear
           autosize={{ minRows: 3, maxRows: 20 }} />
       </Form.Item>
-      {['radio', 'checkbox', 'select'].includes(value.type) &&
+      {['radio', 'checkbox', 'select'].includes(item.type) &&
         <Form.Item label="Options"
           {...formItemLayoutProps}
           name='options'
@@ -97,18 +103,19 @@ const FieldEditModalContent = (props) => {
         >
           <OptionsBuilder />
         </Form.Item>}
-      {value.type === 'autodoc' && <Form.Item
+      {item.type === 'autodoc' && <Form.Item
         label="Doc Template"
         {...formItemLayoutProps}
-        name='docTemplateId'
+        name={['value', 'docTemplateId']}
         rules={[{ required: true, message: ' ' }]}
       >
         <DocTemplateSelect isMultiple={false} />
       </Form.Item>}
-      <Row justify="end">
+      <Row justify="end" style={{marginTop: 32}}>
         <Button type="text" onClick={onCancel} >Cancel</Button>
-        <Button type="primary" htmlType="submit">Save</Button>
+        <Button type="primary" htmlType="submit" style={{marginLeft: 16}}>Save</Button>
       </Row>
+      {JSON.stringify(item, null, 2)}
     </Form>
   );
 }

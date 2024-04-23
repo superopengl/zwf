@@ -25,7 +25,7 @@ const LayoutStyled = styled.div`
   // height: calc(100vh - 64px);
   // height: calc(100vh - 48px - 48px);
   overflow: hidden;
-  // max-width: 1000px;
+  max-width: 1000px;
 
   .ant-page-header-content {
     padding-top: 30px;
@@ -186,7 +186,7 @@ export const TaskTemplatePage = props => {
         destroyOnClose
         maskClosable
         footer={null}
-        width={1000}
+        width="100vw"
       >
         <Row gutter={40}>
           <Col span={12}>
