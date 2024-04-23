@@ -20,7 +20,6 @@ export const OptionsBuilder = (props) => {
 
   React.useEffect(() => {
     setOptions(value || [])
-    debugger;
   }, [value])
 
   const handleOptionsChange = (newOptions) => {
@@ -83,7 +82,6 @@ export const OptionsBuilder = (props) => {
         </Col>
         <Col flex="24px" />
       </Row>
-
     </Container>
   );
 };

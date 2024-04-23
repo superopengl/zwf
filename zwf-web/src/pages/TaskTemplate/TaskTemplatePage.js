@@ -167,27 +167,14 @@ export const TaskTemplatePage = props => {
           ]
         }}
       >
-        <Row gutter={40} wrap={false} style={{ height: 'calc(100vh - 48px - 72px - 30px)', overflow: 'hidden' }}>
-          <Col style={{ overflowY: 'auto' }}>
-            <Card>
-              <TaskTemplatePreviewPanel
-                value={taskTemplate}
-                debug={debugMode}
-                type="agent"
-              />
-            </Card>
-          </Col>
-          <Col style={{ overflowY: 'auto' }}>
-            {taskTemplate && <TaskTemplateEditorPanel
-              ref={formRef}
-              value={taskTemplate}
-              onChange={schema => {
-                setTaskTemplate(schema);
-              }}
-              debug={debugMode}
-            />}
-          </Col>
-        </Row>
+        {taskTemplate && <TaskTemplateEditorPanel
+          ref={formRef}
+          value={taskTemplate}
+          onChange={schema => {
+            setTaskTemplate(schema);
+          }}
+          debug={debugMode}
+        />}
       </PageContainer>
 
 
@@ -203,25 +190,25 @@ export const TaskTemplatePage = props => {
       >
         <Row gutter={40}>
           <Col span={12}>
-            <Row justify="center" style={{marginBottom: 12}}><Tag color="processing">Agent view</Tag></Row>
-              <Card>
-                <TaskTemplatePreviewPanel
-                  value={taskTemplate}
-                  debug={debugMode}
-                  type="agent"
-                />
-              </Card>
+            <Row justify="center" style={{ marginBottom: 12 }}><Tag color="processing">Agent view</Tag></Row>
+            <Card>
+              <TaskTemplatePreviewPanel
+                value={taskTemplate}
+                debug={debugMode}
+                type="agent"
+              />
+            </Card>
           </Col>
           <Col span={12}>
-          <Row justify="center" style={{marginBottom: 12}}><Tag color="warning">Client view</Tag></Row>
+            <Row justify="center" style={{ marginBottom: 12 }}><Tag color="warning">Client view</Tag></Row>
 
-              <Card>
-                <TaskTemplatePreviewPanel
-                  value={taskTemplate}
-                  debug={debugMode}
-                  type="client"
-                />
-              </Card>
+            <Card>
+              <TaskTemplatePreviewPanel
+                value={taskTemplate}
+                debug={debugMode}
+                type="client"
+              />
+            </Card>
           </Col>
         </Row>
 
