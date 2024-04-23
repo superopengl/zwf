@@ -220,9 +220,9 @@ export const TaskTemplateListPage = props => {
                 /></Space>}
               bodyStyle={{ paddingTop: 16 }}
             >
-              <Paragraph>{item.description}</Paragraph>
+              {/* <Paragraph>{item.description}</Paragraph> */}
               {/* <Paragraph style={{ marginBottom: 0, marginTop: 10 }} ellipsis={{ row: 3 }}>{item.description}</Paragraph> */}
-              <Space size="large">
+              <Space direction="vertical">
                 <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
                 <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
               </Space>

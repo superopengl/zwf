@@ -17,8 +17,8 @@ const DEFAULT_FIELD = {
 }
 
 const formItemLayoutProps = {
-  labelCol: { span: 6 },
-  wrapperCol: { span: 18 },
+  // labelCol: { span: 6 },
+  // wrapperCol: { span: 18 },
 }
 
 const FieldEditModalContent = (props) => {
@@ -28,8 +28,10 @@ const FieldEditModalContent = (props) => {
 
   return (
     <Form
+      style={{marginTop: 32}}
       initialValues={value || DEFAULT_FIELD}
       onFinish={onChange}
+      layout="vertical"
     >
       <Form.Item label="Field name"
         {...formItemLayoutProps}
@@ -41,12 +43,34 @@ const FieldEditModalContent = (props) => {
         {...formItemLayoutProps}
         name='type'
         rules={[{ required: true, message: ' ' }]}>
-        <Select style={{ maxWidth: 240 }}>
+        <Select >
           {TaskTemplateWidgetDef.map((d, i) => <Select.Option key={i} value={d.type}>
             <Icon component={() => d.icon} />
             <span style={{ marginLeft: 10 }}>{d.label}</span>
           </Select.Option>)}
         </Select>
+      </Form.Item>
+      {!['upload', 'autodoc'].includes(value.type) && <Form.Item label="Variable"
+        {...formItemLayoutProps}
+        name='varName'
+        rules={[{ required: false }]}>
+        <Select
+          allowClear
+          bordered={true}
+          options={editorContext.vars.map(v => ({
+            label: <VarTag>{v}</VarTag>,
+            value: v
+          }))} />
+      </Form.Item>}
+      <Form.Item label="Required"
+        {...formItemLayoutProps}
+        valuePropName="checked" name='required'>
+        <Switch />
+      </Form.Item>
+      <Form.Item label="Official only"
+        {...formItemLayoutProps}
+        valuePropName="checked" name='official'>
+        <Switch />
       </Form.Item>
       <Form.Item label="Description"
         {...formItemLayoutProps}
@@ -81,29 +105,6 @@ const FieldEditModalContent = (props) => {
       >
         <DocTemplateSelect isMultiple={false} />
       </Form.Item>}
-
-      {!['upload', 'autodoc'].includes(value.type) && <Form.Item label="Variable"
-        {...formItemLayoutProps}
-        name='varName'
-        rules={[{ required: false }]}>
-        <Select
-          allowClear
-          bordered={true}
-          options={editorContext.vars.map(v => ({
-            label: <VarTag>{v}</VarTag>,
-            value: v
-          }))} />
-      </Form.Item>}
-      <Form.Item label="Required"
-        {...formItemLayoutProps}
-        valuePropName="checked" name='required'>
-        <Switch />
-      </Form.Item>
-      <Form.Item label="Official only"
-        {...formItemLayoutProps}
-        valuePropName="checked" name='official'>
-        <Switch />
-      </Form.Item>
       <Row justify="end">
         <Button type="text" onClick={onCancel} >Cancel</Button>
         <Button type="primary" htmlType="submit">Save</Button>
@@ -123,7 +124,7 @@ FieldEditModalContent.defaultProps = {
 
 export function showFieldItemEditor(item, onOk) {
   const modalRef = Modal.info({
-    title: <>Edit field {item.name}</>,
+    title: <>Edit field <Text code>{item.name}</Text></>,
     content: <FieldEditModalContent
       value={item}
       onChange={(updatedItem) => {
