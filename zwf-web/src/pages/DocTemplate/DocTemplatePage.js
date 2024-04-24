@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Loading } from 'components/Loading';
 import DocTemplateEditorPanel from './DocTemplateEditorPanel';
 import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import Icon, { SaveFilled } from '@ant-design/icons';
+import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
@@ -101,7 +101,7 @@ export const DocTemplatePage = (props) => {
       <Layout style={{ height: 'calc(100vh - 48px - 48px)', overflow: 'hidden' }}>
         <Layout.Content style={{ overflowY: 'auto' }}>
           <PageHeader
-            backIcon={false}
+            backIcon={<LeftOutlined />}
             style={{ maxWidth: 900, margin: '0 auto' }}
             title={<Row align="middle" wrap={false} style={{height: 46}}>
               <Col>
