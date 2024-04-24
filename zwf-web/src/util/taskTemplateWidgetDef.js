@@ -30,8 +30,6 @@ export const TaskTemplateWidgetDef = Object.freeze([
     icon: <Icon component={() => <small><strong>123</strong></small>} />,
     widget: 'number',
     widgetPorps: {
-      min: 0,
-      precision: 4,
       style: {
         width: '100%'
       }
