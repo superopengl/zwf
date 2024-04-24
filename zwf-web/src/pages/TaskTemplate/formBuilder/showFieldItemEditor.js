@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Switch, Row, Input, Col, Select, Form, Typography, Button, Modal } from 'antd';
+import { Card, Switch, Row, Input, Col, Select, Form, Typography, Button, Modal, Divider } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons'
 import { OptionsBuilder } from './OptionsBuilder';
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
@@ -37,7 +37,9 @@ const FieldEditModalContent = (props) => {
       initialValues={item}
       onFinish={onChange}
       onValuesChange={handleFormValuesChange}
-      layout="vertical"
+      // layout="vertical"
+      labelCol={{span: 6}}
+      wrapperCol={{span: 18}}
     >
       <Form.Item label="Field name"
         {...formItemLayoutProps}
@@ -115,7 +117,6 @@ const FieldEditModalContent = (props) => {
         <Button type="text" onClick={onCancel} >Cancel</Button>
         <Button type="primary" htmlType="submit" style={{marginLeft: 16}}>Save</Button>
       </Row>
-      {JSON.stringify(item, null, 2)}
     </Form>
   );
 }
@@ -136,14 +137,15 @@ export function showFieldItemEditor(item, onOk) {
       value={item}
       onChange={(updatedItem) => {
         modalRef.destroy();
-        debugger;
         onOk(updatedItem);
       }}
       onCancel={() => modalRef.destroy()}
     />,
     afterClose: () => {
     },
-    icon: <Icon component={() => <EditOutlined />} />,
+    icon: null,
+    width: 500,
+    // icon: <Icon component={() => <EditOutlined />} />,
     closable: true,
     maskClosable: false,
     destroyOnClose: true,
