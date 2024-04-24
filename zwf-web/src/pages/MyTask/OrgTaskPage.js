@@ -21,8 +21,11 @@ import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskTrackingDrawer } from 'components/TaskTrackingDrawer';
 import { showRenameTaskModal } from 'components/showRenameTaskModal';
-import {MdDriveFileRenameOutline} from 'react-icons/md'
+import { MdDriveFileRenameOutline } from 'react-icons/md'
 import { SavingAffix } from 'components/SavingAffix';
+import { RiInsertRowBottom } from 'react-icons/ri';
+import { showEditTaskFieldsModal } from 'components/showEditTaskFieldsModal';
+import { TaskFieldsEditorModal } from 'components/TaskFieldsEditorModal';
 
 const { Text } = Typography;
 
@@ -57,6 +60,7 @@ const OrgTaskPage = React.memo((props) => {
   const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
   const [historyVisible, setHistoryVisible] = React.useState(!!chat);
+  const [editFieldVisible, setEditFieldVisible] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
@@ -165,6 +169,7 @@ const OrgTaskPage = React.memo((props) => {
                   <Button type="link" icon={<Icon component={() => <AiOutlineHistory />} />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <Button type="link" icon={<Icon component={() => <MdDriveFileRenameOutline />} />} block onClick={() => showRenameTaskModal(task.id, task.name, load$)}>Rename task</Button>
+                  <Button type="link" icon={<Icon component={() => <RiInsertRowBottom />} />} block onClick={() => setEditFieldVisible(true)}>Edit fields</Button>
                   <hr />
                   <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>
                   <Button type="link" icon={<Icon component={() => <FaSignature />} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button>
@@ -180,7 +185,12 @@ const OrgTaskPage = React.memo((props) => {
         </Row>
       </PageContainer>}
       {task && <TaskTrackingDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
-    {saving && <SavingAffix />}
+      {task && <TaskFieldsEditorModal task={task} visible={editFieldVisible} onOk={() => {
+        load$().add(() => {
+          setEditFieldVisible(false)
+        });
+      }} onCancel={() => setEditFieldVisible(false)} />}
+      {saving && <SavingAffix />}
     </ContainerStyled>
   </>
   );

@@ -32,7 +32,6 @@ export const TaskTemplatePreviewPanel = props => {
       <TaskFormWidget 
         fields={taskTemplate.fields}
         docs={taskTemplate.docs}
-        hasDoc={taskTemplate.hasDoc}
         type={type}
         mode="create"
       />

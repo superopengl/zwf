@@ -55,7 +55,6 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
   const initialValues = {
     name: template?.name || '',
     description: template?.description || '',
-    hasDoc: template?.hasDoc ?? true,
     docTemplateIds: template?.docs?.map(d => d.id) || [],
     fields: isEmpty(template?.fields) ? [createEmptyField()] : template.fields
   };
@@ -120,7 +119,6 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
       </Form.Item> */}
       {/* <Form.Item
         label="Has attachments?"
-        name="hasDoc"
         valuePropName="checked"
         {...formItemLayoutProps}
       >

@@ -101,7 +101,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
 
 export const saveTaskContent = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
-  const { fields, taskDocIds } = req.body;
+  const { fields } = req.body;
   const { id } = req.params;
   const role = getRoleFromReq(req);
 
@@ -128,14 +128,14 @@ export const saveTaskContent = handlerWrapper(async (req, res) => {
   await getManager().transaction(async m => {
     const task = await m.findOneOrFail(Task, query) as Task;
     task.fields = fields;
-    const docs = await m.findByIds(TaskDoc, taskDocIds);
-    task.docs = docs;
+    // const docs = await m.findByIds(TaskDoc, taskDocIds);
+    // task.docs = docs;
     await m.save(task);
 
     publishEvent(TASK_CONTENT_EVENT_TYPE, {
       taskId: id,
       fields,
-      taskDocIds: docs.map(x => x.id)
+      // taskDocIds: docs.map(x => x.id)
     });
   })
 

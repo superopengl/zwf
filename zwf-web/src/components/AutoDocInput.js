@@ -16,7 +16,7 @@ import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 const { Link } = Typography;
 
 export const AutoDocInput = (props) => {
-  const { value } = props;
+  const { value, mode } = props;
   const { docTemplateId } = value || {};
   const formInstance = Form.useFormInstance();
 
@@ -37,7 +37,7 @@ export const AutoDocInput = (props) => {
   }, [docTemplateId]);
 
   const handlePreview = () => {
-    showDocTemplatePreviewModal(docTemplate, {allowTest: true});
+    showDocTemplatePreviewModal(docTemplate, { allowTest: true });
   }
 
   if (!docTemplateId) {
@@ -49,9 +49,10 @@ export const AutoDocInput = (props) => {
       <DocTemplateIcon />
       {docTemplate.name}
     </Link>
-    <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
-      <Button type="link" icon={<Icon component={() => <MdOpenInNew />} />} />
-    </Link>
+    {mode === 'taskTemplate' &&
+      <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
+        <Button type="link" icon={<Icon component={() => <MdOpenInNew />} />} />
+      </Link>}
     {/* <Button type="link" icon={<EyeOutlined/>}/> */}
     {/* <DocTemplatePreviewPanel value={docTemplate} /> */}
   </Loading>
@@ -60,8 +61,10 @@ export const AutoDocInput = (props) => {
 AutoDocInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  mode: PropTypes.oneOf(['taskTemplate', 'task'])
 };
 
 AutoDocInput.propTypes = {
-  onChange: () => { }
+  onChange: () => { },
+  mode: 'task'
 };

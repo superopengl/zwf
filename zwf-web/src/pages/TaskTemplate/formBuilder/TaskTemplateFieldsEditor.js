@@ -36,11 +36,12 @@ export const TaskTemplateFieldsEditor = (props) => {
         <Button
           style={{ marginTop: 16, marginBottom: 24 }}
           type="primary"
+          ghost
           icon={<Icon component={() => <RiInsertRowTop />} />}
           // block
           onClick={handlePrependField}
         >
-          Add field
+          Add Field On Top
         </Button>
       </Row>
       <DroppableFieldList
@@ -59,11 +60,12 @@ export const TaskTemplateFieldsEditor = (props) => {
         <Button
           style={{ marginTop: 16 }}
           type="primary"
+          ghost
           icon={<Icon component={() => <RiInsertRowBottom />} />}
           // block
           onClick={handleAddField}
         >
-          Add field
+          Add Field At Bottom
         </Button>
       </Row>
     </>
