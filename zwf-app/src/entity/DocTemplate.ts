@@ -14,7 +14,7 @@ export class DocTemplate {
   @Column()
   name: string;
 
-  @Column({default: ''})
+  @Column({nullable: true})
   description: string;
 
   @CreateDateColumn()

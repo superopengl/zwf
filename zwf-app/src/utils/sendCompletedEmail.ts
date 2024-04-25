@@ -1,4 +1,5 @@
-import { getRepository } from 'typeorm';
+import { TaskDoc } from './../entity/TaskDoc';
+import { getRepository, IsNull, Not } from 'typeorm';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
 import { sendEmailImmediately } from '../services/emailService';
@@ -9,17 +10,22 @@ import { getUserEmailAddress } from './getUserEmailAddress';
 
 export async function sendCompletedEmail(task: Task) {
   const user = await getRepository(User).findOne(task.userId);
-  const { id: taskId, docs: taskDocs, name: taskName } = task;
-  const fileIds = (taskDocs || [])
-    // .filter(d => d.isFeedback)
-    .map(d => d.fileId).filter(x => x);
-  const attachments = fileIds.length ?
-    await getRepository(File)
-      .createQueryBuilder('x')
-      .where(`x.id IN (:...ids)`, { ids: fileIds })
-      .select(['x.fileName as filename', 'x.location as path'])
-      .execute() :
-    undefined;
+  const { id: taskId, name: taskName } = task;
+
+  const taskDocs = await getRepository(TaskDoc).find({
+    where: { 
+      taskId,
+      fileId: Not(IsNull())
+    },
+    relations: [
+      'file'
+    ]
+  });
+
+  const attachments = taskDocs.map(doc => ({
+    filename: doc.file.fileName,
+    path: doc.file.location,
+  }));
 
   await sendEmailImmediately({
     to: user.profile.email,

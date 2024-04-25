@@ -1,10 +1,10 @@
 import { OrgClient } from './../entity/OrgClient';
-import { TaskField } from '../types/TaskField';
+import { TaskField } from '../entity/TaskField';
 import { getUtcNow } from './getUtcNow';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
-import { getRepository, getManager } from 'typeorm';
+import { getRepository, getManager, EntityManager } from 'typeorm';
 import { assert } from './assert';
 import * as _ from 'lodash';
 import { Task } from '../entity/Task';
@@ -23,6 +23,7 @@ import { tryGenDocFile } from '../services/genDocService';
 import { logTaskCreated } from '../services/taskTrackingService';
 import { Role } from '../types/Role';
 import * as path from 'path';
+import { TaskTemplateField } from '../types/TaskTemplateField';
 
 function generateDeepLinkId() {
   const result = voucherCodes.generate({
@@ -58,20 +59,33 @@ function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
   return n + ext;
 }
 
-function generateAutoTaskDocs(docTemplates: DocTemplate[], creatorId: string): TaskDoc[] {
-  const docs: TaskDoc[] = [];
-  for (const docTemplate of docTemplates) {
-    const taskDoc = new TaskDoc();
-    taskDoc.docTemplateId = docTemplate.id;
-    taskDoc.createdBy = creatorId;
-    taskDoc.name = ensureFileNameExtension(docTemplate.name);
-    taskDoc.status = 'pending';
-    taskDoc.type = 'auto';
-    // const file = await tryGenDocFile(docTemplate, fields, userId);
-    // taskDoc.fileId = file?.id;
-    docs.push(taskDoc);
-  }
-  return docs;
+export const createTaskDocByDocTemplate = async (m: EntityManager, taskId: string, fieldId: string, docTemplateId: string) => {
+  const docTemplate = await m.getRepository(DocTemplate).findOne(docTemplateId);
+  const taskDoc = new TaskDoc();
+  taskDoc.taskId = taskId;
+  taskDoc.fieldId = fieldId;
+  taskDoc.docTemplateId = docTemplateId;
+  taskDoc.status = 'pending';
+  taskDoc.name = docTemplate.name;
+
+  return taskDoc;
+}
+
+export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: number, taskTemplateField: TaskTemplateField) => {
+  const field = new TaskField();
+  field.id = uuidv4();
+  field.taskId = taskId;
+  field.ordinal = ordinal;
+  field.name = taskTemplateField.name;
+  field.description = taskTemplateField.description;
+  field.type = taskTemplateField.type;
+  field.required = taskTemplateField.required;
+  field.linkedVarName = taskTemplateField.varName;
+  field.value = null;
+  field.officialOnly = taskTemplateField.officialOnly;
+  field.value = taskTemplateField.value;
+
+  return field;
 }
 
 export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, creatorId: string, id?) => {
@@ -83,7 +97,6 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
   await getManager().transaction(async m => {
     const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, taskTemplateId, { relations: ['docs'] });
     assert(taskTemplate, 404, 'taskTemplate is not found');
-    // const fields = prefillTaskTemplateFields(taskTemplate.fields, {});
 
     user = await ensureClientOrGuestUser(m, email);
 
@@ -94,16 +107,28 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     task.description = taskTemplate.description;
     task.userId = user.id;
     task.taskTemplateId = taskTemplateId;
-    task.fields = taskTemplate.fields;
     task.orgId = taskTemplate.orgId;
     task.status = TaskStatus.TODO;
 
-    const taskDocs = generateAutoTaskDocs(taskTemplate.docs, creatorId);
-    await m.save(taskDocs);
+    // Provision taskFields based on taskTemplate.fields
+    const fields = taskTemplate.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f));
+    // await m.save(fields);
 
-    task.docs = taskDocs;
-    await m.save(task);
+    // Provision taskDoc for those "autodoc" fields
+    const autoDocFields = fields.filter(f => f.type === 'autodoc');
+    const taskDocs = [];
+    for (const field of autoDocFields) {
+      const docTemplateId = field.value.docTemplateId;
+      const taskDoc = await createTaskDocByDocTemplate(m, task.id, field.id, docTemplateId);
+      taskDocs.push(taskDoc);
+    }
+    // await m.save(taskDocs);
 
+    // task.fields = fields;
+
+    await m.save([task, ...fields, ...taskDocs]);
+
+    // Add the user to org clients
     const orgClient = new OrgClient();
     orgClient.orgId = task.orgId;
     orgClient.userId = task.userId;

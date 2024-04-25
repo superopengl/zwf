@@ -1,4 +1,4 @@
-import { TaskField } from './../types/TaskField';
+import { TaskTemplateField } from '../types/TaskTemplateField';
 import { DocTemplate } from './../entity/DocTemplate';
 import { Stream } from 'stream';
 import * as _ from 'lodash';
@@ -8,12 +8,13 @@ import { uploadToS3 } from '../utils/uploadToS3';
 import { getRepository, EntityManager } from 'typeorm';
 import { File } from '../entity/File';
 import { createHash } from 'crypto';
+import { TaskField } from '../entity/TaskField';
 
 function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskField[]) {
   let error: string = null;
   let renderedHtml = docTemplate.html;
   const varBag = fields.reduce((bag, f) => {
-    bag[f.varName] = f.value;
+    bag[f.linkedVarName] = f.value;
     return bag;
   }, {});
   for (const varName of docTemplate.variables) {

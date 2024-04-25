@@ -14,35 +14,24 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { existsQuery } from '../utils/existsQuery';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
+import { TaskDoc } from '../entity/TaskDoc';
 
-export const downloadFile = handlerWrapper(async (req, res) => {
+export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
   const { taskId, fileId } = req.params;
   const { user: { id: userId, role } } = req as any;
 
-  const taskRepo = getRepository(Task);
-  const task = await taskRepo.findOne(taskId, {relations: ['files']});
-  assert(task, 404);
-
-  const fileRepo = getRepository(File);
-  const file = await fileRepo.findOne(fileId);
-  assert(file, 404);
-
-  const taskDoc = task.docs.find(d => d.fileId === fileId);
-  assert(taskDoc, 404);
+  const taskRepo = getRepository(TaskDoc);
+  const taskDoc = await taskRepo.findOne({taskId, fileId}, {relations: ['file']});
+  assert(taskDoc?.file, 404);
 
   if (role === 'client') {
-    assert(task.userId === userId, 404);
-    // // Only record the read by client
     const now = getNow();
     taskDoc.lastClientReadAt = now;
-    await taskRepo.save(task);
-
-    file.lastReadAt = now;
-    await fileRepo.save(file);
+    await taskRepo.save(taskDoc);
   }
 
-  streamFileToResponse(file, res);
+  streamFileToResponse(taskDoc.file, res);
 });
 
 export const getPrivateFileStream = handlerWrapper(async (req, res) => {

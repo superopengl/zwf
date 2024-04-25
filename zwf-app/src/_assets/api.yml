@@ -54,7 +54,7 @@ paths:
           description: OK
   /file/download/task/{taskId}/file/{fileId}:
     get:
-      operationId: downloadFile
+      operationId: downloadTaskFile
       # security:
       #   - authLoggedInUser: []
       parameters:
@@ -933,18 +933,6 @@ paths:
       operationId: createOrphanTaskDoc
       # security:
       #   - authLoggedInUser: []
-      responses:
-        200:
-          description: OK
-  /task_doc/{id}/offical_only:
-    post:
-      operationId: setTaskDocOfficialOnly
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
       responses:
         200:
           description: OK
