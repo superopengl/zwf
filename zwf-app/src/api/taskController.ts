@@ -374,9 +374,11 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
   await getManager().transaction(async m => {
     const task = await m.findOneOrFail(Task, { id, orgId });
     const oldStatus = task.status;
-    task.status = status as TaskStatus;
-    await m.save(task);
-    await logTaskStatusChange(m, id, userId, oldStatus, task.status);
+    const newStatus = status as TaskStatus;
+    if (oldStatus !== newStatus) {
+      await m.update(Task, { id }, { status: newStatus });
+      await logTaskStatusChange(m, id, userId, oldStatus, newStatus);
+    }
   })
 
   res.json();
