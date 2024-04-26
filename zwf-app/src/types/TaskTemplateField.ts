@@ -4,7 +4,8 @@ export class TaskTemplateField {
   description: string;
   type: string;
   required: boolean;
-  officialOnly: boolean;
+  options?: string[];
+  official: boolean;
   varName: string;
   value: any;
 }
