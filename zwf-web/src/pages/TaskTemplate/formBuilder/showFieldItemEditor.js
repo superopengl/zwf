@@ -31,11 +31,20 @@ const FieldEditModalContent = (props) => {
     setItem(allValues)
   }
 
+  const handleFormSubmit = (formValues) => {
+    debugger;
+    const changed = {
+      ...value,
+      ...formValues,
+    };
+    onChange(changed);
+  }
+
   return (
     <Form
       style={{marginTop: 32}}
       initialValues={item}
-      onFinish={onChange}
+      onFinish={handleFormSubmit}
       onValuesChange={handleFormValuesChange}
       // layout="vertical"
       labelCol={{span: 6}}
