@@ -875,6 +875,20 @@ paths:
           required: true        
       responses:
         200:
+          description: OK      
+  /task/{id}/field/value:
+    post:
+      operationId: saveTaskFieldValue
+      # security:
+      #   - authClient: []
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true        
+      responses:
+        200:
           description: OK          
   /task/{id}/assign:
     post:

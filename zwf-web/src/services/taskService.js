@@ -24,6 +24,10 @@ export function saveTaskFields$(taskId, fields) {
   return httpPost$(`/task/${taskId}/fields`, { fields });
 }
 
+export function saveTaskFieldValues$(taskId, fields) {
+  return httpPost$(`/task/${taskId}/field/value`, { fields });
+}
+
 // export function saveTaskFields$(taskId, fields) {
 //   return httpPost$(`/task/${taskId}/fields`, fields);
 // }

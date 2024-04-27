@@ -50,10 +50,6 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
     onChange(changedValues);
   }
 
-  // const handleFieldsChange = (changedFields, allFields) => {
-  //   debugger;
-  // }
-
   return (
     <Form
       ref={ref}
