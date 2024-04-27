@@ -43,7 +43,7 @@ export class TaskField {
   updatedBy: string;
 
   @Column({ default: false })
-  officialOnly: boolean;
+  official: boolean;
 
   @Column('jsonb', {nullable: true })
   options: string[];

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { TaskFormWidget } from './TaskFormWidget';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, filter, finalize, switchMap, switchMapTo, take, tap, throttle, throttleTime } from 'rxjs/operators';
-import { saveTaskContent$, subscribeTaskContent } from 'services/taskService';
+import { saveTaskFields$, subscribeTaskFieldsChange } from 'services/taskService';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
@@ -11,16 +11,15 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const { value: task, type, onSavingChange } = props;
 
   const [fields, setFields] = React.useState(task?.fields);
-  const [taskDocIds, setTaskDocIds] = React.useState(task?.docs?.map(x => x.id));
   const [disabled, setDisabled] = React.useState(false);
   const source$ = React.useRef(new Subject());
   const context = React.useContext(GlobalContext);
+  // const [bufferedChangedFields, setBu]
   const ref = React.useRef()
   const role = context.role;
 
   React.useEffect(() => {
     setFields(task?.fields);
-    setTaskDocIds(task?.docs?.map(x => x.id));
     setDisabled(
       ['done', 'archived'].includes(task.status)
       || (role === 'client' && ['todo', 'in_progress'].includes(task.status))
@@ -30,25 +29,20 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   React.useEffect(() => {
     const sub$ = source$.current.pipe(
       debounceTime(1000),
-      switchMap(({ fields, taskDocIds }) => saveTaskContent$(task.id, fields, taskDocIds)),
+      switchMap(({ fields }) => saveTaskFields$(task.id, fields)),
     ).subscribe(() => {
       onSavingChange(false)
     });
 
     // Subscribe task content change events
-    const eventSource = subscribeTaskContent(task.id)
+    const eventSource = subscribeTaskFieldsChange(task.id)
     eventSource.onmessage = (message) => {
       const event = JSON.parse(message.data);
-      const { fields, taskDocIds } = event;
-      setFields(fields);
-      setTaskDocIds(taskDocIds);
-      const fieldsValue = fields.reduce((v, c) => {
-        v[c.name] = c.value;
-        return v;
-      }, {});
+      const { fields: changedFields } = event;
+      updateFieldsWithChangedFields(changedFields);
 
       // Manually set from values based on the content change events
-      ref.current?.setFieldsValue(fieldsValue)
+      ref.current?.setFieldsValue(changedFields)
     }
 
     return () => {
@@ -57,21 +51,31 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     }
   }, []);
 
-  const handleTaskContentChange = React.useCallback((fields, taskDocIds) => {
-    setFields(fields);
-    setTaskDocIds(taskDocIds);
+  const updateFieldsWithChangedFields = (changedFields) => {
+    setFields(fields => {
+      fields.forEach(field => {
+        if(field.id in changedFields) {
+          field.value = changedFields[field.id];
+        }
+      })
+
+      return [...fields];
+    });
+  }
+
+  const handleTaskFieldsValueChange = React.useCallback(changedFields => {
+    updateFieldsWithChangedFields(changedFields);
     onSavingChange(true);
-    source$.current.next({ fields, taskDocIds });
+    source$.current.next({ fields: changedFields });
   }, []);
 
   return (
     <>
     <TaskFormWidget
       fields={fields}
-      taskDocIds={taskDocIds}
       type={type}
       ref={ref}
-      onChange={handleTaskContentChange}
+      onChange={handleTaskFieldsValueChange}
       disabled={disabled}
     />
     </>

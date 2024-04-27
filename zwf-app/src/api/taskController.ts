@@ -1,3 +1,4 @@
+import { TaskField } from './../entity/TaskField';
 import { TaskDoc } from './../entity/TaskDoc';
 import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
 import { TaskAction } from './../entity/TaskAction';
@@ -99,7 +100,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
 });
 
 
-export const saveTaskContent = handlerWrapper(async (req, res) => {
+export const saveTaskFields = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { fields } = req.body;
   const { id } = req.params;
@@ -124,20 +125,17 @@ export const saveTaskContent = handlerWrapper(async (req, res) => {
       assert(false, 404, 'Task is not found');
   }
 
-  await getRepository(Task).update(query, { fields });
-  await getManager().transaction(async m => {
-    const task = await m.findOneOrFail(Task, query) as Task;
-    task.fields = fields;
-    // const docs = await m.findByIds(TaskDoc, taskDocIds);
-    // task.docs = docs;
-    await m.save(task);
+  const task = await getRepository(Task).findOne(query, { select: ['id'] });
+  assert(task, 404);
 
-    publishEvent(TASK_CONTENT_EVENT_TYPE, {
-      taskId: id,
-      fields,
-      // taskDocIds: docs.map(x => x.id)
-    });
-  })
+  const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));
+
+  await getRepository(TaskField).save(fieldEntities);
+  publishEvent(TASK_CONTENT_EVENT_TYPE, {
+    taskId: id,
+    fields,
+    // taskDocIds: docs.map(x => x.id)
+  });
 
   res.json();
 });

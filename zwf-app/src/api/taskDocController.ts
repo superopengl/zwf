@@ -116,7 +116,7 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
     .where(`t.id = ANY(:ids)`, { ids });
 
   if (role === Role.Client) {
-    query = query.andWhere(`"officialOnly" IS FALSE`)
+    query = query.andWhere(`official IS FALSE`)
       .andWhere(`"fileId" IS NOT NULL`)
       .select('*')
   } else {
