@@ -32,6 +32,8 @@ import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
 import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
 import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadInformation';
+import { TaskTrackingInformation } from './entity/views/ClientTaskTrackingInformation';
+import { TaskTrackingLastAccess } from './entity/TaskTrackingLastAccess';
 
 const views = [
   // StockLatestPaidInformation,
@@ -157,10 +159,10 @@ export let AppDataSource = new DataSource({
   migrationsRun: false,
   migrationsTableName: 'migration',
   maxQueryExecutionTime: 10000,
-  // driver: {
-  //   max: 20,
-  //   connectionTimeoutMillis: 3000,
-  // },
+  extra: {
+    max: 20,
+    connectionTimeoutMillis: 3000,
+  },
   entities: [
     User, 
     UserProfile, 
@@ -191,6 +193,8 @@ export let AppDataSource = new DataSource({
     Recurring,
     SupportUserLastAccess,
     SupportUserUnreadInformation,
+    TaskTrackingInformation,
+    TaskTrackingLastAccess,
   ],
 })
 

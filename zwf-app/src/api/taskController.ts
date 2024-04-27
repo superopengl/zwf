@@ -310,6 +310,7 @@ export const getTask = handlerWrapper(async (req, res) => {
       }
     }
   })
+
   assert(task, 404);
 
   res.json(task);
@@ -356,8 +357,14 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
   const { tags: tagIds } = req.body;
 
   await AppDataSource.transaction(async m => {
-    const task = await m.findOne(Task, { where: { id } });
-    task.tags = await m.find(Tag, { where: { id: In(tagIds) } });
+    const task = await m.findOne(Task, { 
+      where: { id }, 
+      select: {
+        id: true,
+      }
+    });
+    const tags = await m.find(Tag, { where: { id: In(tagIds) } });
+    task.tags = tags;
     await m.save(task);
   });
 

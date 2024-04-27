@@ -48,7 +48,7 @@ export class Task {
   userId: string;
 
   @Column('jsonb', { default: '[]' })
-  @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE' })
+  @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   fields: TaskField[];
 
   @ManyToMany(() => Tag, { onDelete: 'CASCADE' })
