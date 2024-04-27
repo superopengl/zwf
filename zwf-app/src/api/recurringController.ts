@@ -1,5 +1,4 @@
-
-import { getRepository } from 'typeorm';
+import { AppDataSource } from './../db';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
@@ -16,7 +15,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id, portfolioId, taskTemplateId, userId, firstRunOn, every, period, repeatOn } = req.body;
 
-  const taskTemplate = await getRepository(TaskTemplate).findOne(taskTemplateId);
+  const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOne({where: {id: taskTemplateId}});
   assert(taskTemplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
@@ -30,7 +29,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.repeatOn = repeatOn;
   recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
 
-  const repo = getRepository(Recurring);
+  const repo = AppDataSource.getRepository(Recurring);
   await repo.save(recurring);
 
   res.json();
@@ -39,7 +38,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
 export const listRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
 
-  const list = await getRepository(Recurring)
+  const list = await AppDataSource.getRepository(Recurring)
     .createQueryBuilder('x')
     .leftJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .leftJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
@@ -69,8 +68,8 @@ export const listRecurring = handlerWrapper(async (req, res) => {
 export const getRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const repo = getRepository(Recurring);
-  const recurring = await repo.findOne(id);
+  const repo = AppDataSource.getRepository(Recurring);
+  const recurring = await repo.findOne({where: {id}});
   assert(recurring, 404);
 
   res.json(recurring);
@@ -79,7 +78,7 @@ export const getRecurring = handlerWrapper(async (req, res) => {
 export const deleteRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const repo = getRepository(Recurring);
+  const repo = AppDataSource.getRepository(Recurring);
   await repo.delete({ id });
 
   res.json();

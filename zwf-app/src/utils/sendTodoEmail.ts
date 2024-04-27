@@ -1,13 +1,11 @@
-import { getRepository } from 'typeorm';
+import { AppDataSource } from './../db';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
 import { sendEmailImmediately } from '../services/emailService';
-import { File } from '../entity/File';
 import { getEmailRecipientName } from './getEmailRecipientName';
-import { getUserEmailAddress } from './getUserEmailAddress';
 
 export async function sendTodoEmail(task: Task) {
-  const user = await getRepository(User).findOne(task.userId);
+  const user = await AppDataSource.getRepository(User).findOne({where: {id: task.userId}});
   const { id: taskId, name: taskName } = task;
 
   await sendEmailImmediately({

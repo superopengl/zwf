@@ -12,6 +12,7 @@ import { assert } from './assert';
 import { getRequestGeoInfo } from './getIpGeoLocation';
 import { chargeStripeForCardPayment, getOrgStripeCustomerId } from '../services/stripeService';
 import { User } from '../entity/User';
+import { AppDataSource } from '../db';
 
 export type PurchaseSubscriptionRequest = {
   orgId: string;
@@ -28,7 +29,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const start = now.toDate();
   const end = now.add(1, 'month').add(-1, 'day').toDate();
 
-  await getManager().transaction(async m => {
+  await AppDataSource.manager.transaction(async m => {
     const { creditBalance, deduction, unitPrice, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
 
     // Call stripe to pay

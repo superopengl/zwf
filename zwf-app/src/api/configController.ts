@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 
 import { getManager, getRepository } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -8,11 +9,9 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgConfig } from '../entity/OrgConfig';
 
 export const listConfig = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req, 'system');
   const orgId = getOrgIdFromReq(req);
-  const whereClause = orgId ? { where: { orgId }} : null;
-  const list = await getRepository(orgId ? OrgConfig : SystemConfig).find({
-    ...whereClause,
+  const list = await AppDataSource.getRepository(SystemConfig).find({
     order: { key: 'ASC' }
   });
   res.json(list);
@@ -30,7 +29,7 @@ export const saveConfig = handlerWrapper(async (req, res) => {
     (item as OrgConfig).orgId = orgId;
   }
 
-  await getManager()
+  await AppDataSource
     .createQueryBuilder()
     .insert()
     .into(orgId ? OrgConfig : SystemConfig)

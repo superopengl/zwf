@@ -19,13 +19,14 @@ import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { DocTemplate } from '../entity/DocTemplate';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { tryGenDocFile } from '../services/genDocService';
+import { AppDataSource } from '../db';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  await getManager().transaction(async m => {
+  await AppDataSource.transaction(async m => {
     const taskDoc = await m.findOne(TaskDoc, {
       where: {
         id,
@@ -38,7 +39,7 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
 
     const { docTemplate } = taskDoc;
 
-    const fields = await m.getRepository(TaskField).find({ taskId: taskDoc.taskId });
+    const fields = await m.getRepository(TaskField).find({ where: { taskId: taskDoc.taskId }});
 
     const file = await tryGenDocFile(m, docTemplate, fields);
     taskDoc.fileId = file.id;
@@ -61,7 +62,7 @@ export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
   const taskDoc = new TaskDoc();
   taskDoc.taskId = null; // This is an orphan TaskDoc having no associated Task
 
-  await getManager().transaction(async m => {
+  await AppDataSource.transaction(async m => {
     if (fileId) {
       // File has been uploaded
       const file = await m.findOne(File, {
@@ -110,7 +111,7 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
 
   const role = getRoleFromReq(req);
 
-  let query = await getRepository(TaskDoc)
+  let query = await AppDataSource.getRepository(TaskDoc)
     .createQueryBuilder('t')
     .orderBy(`t."createdAt"`, 'ASC')
     .where(`t.id = ANY(:ids)`, { ids });
@@ -137,7 +138,7 @@ export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { requiresSign } = req.body;
 
-  await getRepository(TaskDoc).update({
+  await AppDataSource.getRepository(TaskDoc).update({
     id,
     signedAt: IsNull(),
     requiresSign: !requiresSign,
@@ -155,11 +156,11 @@ export const getTaskDocFileStream = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assertTaskAccess(req, id);
 
-  const taskDoc = await getRepository(TaskDoc).findOne(id, { relations: ['file'] });
+  const taskDoc = await AppDataSource.getRepository(TaskDoc).findOne({ where: { id }, relations: { file: true } });
   assert(taskDoc?.file, 400, 'File does not exist');
 
   if (role === Role.Client) {
-    await getRepository(TaskDoc).update(id, {
+    await AppDataSource.getRepository(TaskDoc).update(id, {
       lastClientReadAt: getUtcNow()
     })
   }
@@ -172,7 +173,7 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const userId = getUserIdFromReq(req);
 
-  await getManager().transaction(async m => {
+  await AppDataSource.transaction(async m => {
     const taskDoc = await m.findOneOrFail(TaskDoc, {
       where: {
         id,

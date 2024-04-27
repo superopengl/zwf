@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { getRepository, getManager } from 'typeorm';
 import * as _ from 'lodash';
 import { User } from '../entity/User';
@@ -11,7 +12,7 @@ let started = false;
 
 function bulkUpdateUser() {
   try {
-    const { schema, tableName } = getRepository(User).metadata;
+    const { schema, tableName } = AppDataSource.getRepository(User).metadata;
     const list = Array.from(map.entries())
       .map(([userId, time]) => {
         const sql = `('${userId}', '${time.format('YYYY/MM/DD HH:mm:ss.SSS')}')`;
@@ -22,7 +23,7 @@ function bulkUpdateUser() {
     const chunks = _.chunk(list, chunkSize);
     for (const chunk of chunks) {
       const param = chunk.join(',');
-      getManager()
+      AppDataSource.manager
         .query(`
 update "${schema}"."${tableName}" as u
 set "lastNudgedAt" = TO_TIMESTAMP(v.time, 'YYYY/MM/DD HH24:MI:SS.MS')

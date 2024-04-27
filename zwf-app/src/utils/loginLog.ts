@@ -1,5 +1,6 @@
 import { UserLogin } from '../entity/UserLogin';
 import { getRepository } from 'typeorm';
+import { AppDataSource } from '../db';
 
 export async function logUserLogin(user, req, loginType: 'local' | 'google') {
   const entity = new UserLogin();
@@ -7,5 +8,5 @@ export async function logUserLogin(user, req, loginType: 'local' | 'google') {
   entity.userId = user.id;
   entity.loginMethod = loginType;
 
-  await getRepository(UserLogin).insert(entity);
+  await AppDataSource.getRepository(UserLogin).insert(entity);
 }

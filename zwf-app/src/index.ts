@@ -1,8 +1,10 @@
-import { createAppInstance } from './app';
-import * as http from 'http';
 import * as path from 'path';
-import { connectDatabase } from './db';
+import * as http from 'http';
 import * as dotenv from 'dotenv';
+loadEnv();
+import { createAppInstance } from './app';
+import { connectDatabase } from './db';
+
 
 function validateEnvVars() {
   const requiredEnvVars = [
@@ -39,7 +41,6 @@ function loadEnv() {
 }
 
 async function launchApp() {
-  loadEnv();
 
   console.log('Connecting database');
   await connectDatabase(true);

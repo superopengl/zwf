@@ -1,7 +1,7 @@
 import { getRepository } from 'typeorm';
 import { start } from './jobStarter';
 import * as moment from 'moment';
-import { refreshMaterializedView } from '../src/db';
+import { AppDataSource, refreshMaterializedView } from '../src/db';
 import * as _ from 'lodash';
 import { SysLog } from '../src/entity/SysLog';
 import { Task } from '../src/entity/Task';
@@ -24,7 +24,7 @@ function logging(log: {
   sysLog.level = 'info';
   Object.assign(sysLog, log);
   sysLog.createdBy = 'cron';
-  getRepository(SysLog).save(sysLog).catch(err => {
+  AppDataSource.getRepository(SysLog).save(sysLog).catch(err => {
     console.error('Logging error', errorToJSON(err));
   });
 }
@@ -68,7 +68,7 @@ start(JOB_NAME, async () => {
     message: '[Recurring] Cron job is executing'
   });
 
-  const list = await getRepository(Recurring)
+  const list = await AppDataSource.getRepository(Recurring)
     .createQueryBuilder('x')
     .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
     .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')

@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 
 import { getRepository, getManager, Not } from 'typeorm';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
@@ -24,8 +25,8 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
   entity.cardExpiry = moment(`${paymentMethod.card.exp_month}/${paymentMethod.card.exp_year}`, 'M/YYYY').format('MM/YY');
   entity.cardLast4 = paymentMethod.card.last4;
 
-  await getManager().transaction(async m => {
-    const existing = await m.getRepository(OrgPaymentMethod).findOne({ orgId });
+  await AppDataSource.transaction(async m => {
+    const existing = await m.getRepository(OrgPaymentMethod).findOne({ where: {orgId} });
     entity.primary = !existing;
     await m.save(entity);
   })
@@ -38,7 +39,7 @@ export const setOrgPrimaryPaymentMethod = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
 
-  await getManager().transaction(async m => {
+  await AppDataSource.transaction(async m => {
     await m.update(OrgPaymentMethod, { orgId, id: Not(id) }, { primary: false });
     await m.update(OrgPaymentMethod, { orgId, id }, { primary: true });
   });
@@ -49,7 +50,7 @@ export const setOrgPrimaryPaymentMethod = handlerWrapper(async (req, res) => {
 export const listOrgPaymentMethods = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const list = await getRepository(OrgPaymentMethod).find({ orgId });
+  const list = await AppDataSource.getRepository(OrgPaymentMethod).find({ where: {orgId} });
   res.json(list);
 });
 
@@ -57,7 +58,7 @@ export const deleteOrgPaymentMethod = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
-  await getRepository(OrgPaymentMethod).delete({
+  await AppDataSource.getRepository(OrgPaymentMethod).delete({
     id,
     orgId,
     primary: false
@@ -68,7 +69,7 @@ export const deleteOrgPaymentMethod = handlerWrapper(async (req, res) => {
 export const getOrgStripeClientSecret = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const clientSecret = await getStripeClientSecretForOrg(getManager(), orgId);
+  const clientSecret = await getStripeClientSecretForOrg(AppDataSource.manager, orgId);
   const result = { clientSecret };
   res.json(result);
 });

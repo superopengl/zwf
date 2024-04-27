@@ -6,7 +6,7 @@ import { UserProfile } from '../src/entity/UserProfile';
 export class createTestOrgAdmin1620184166368 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
-        const orgMetadata = getRepository(Org).metadata;
+        const orgMetadata = queryRunner.manager.getRepository(Org).metadata;
         await queryRunner.query(`INSERT INTO "${orgMetadata.schema}"."${orgMetadata.tableName}" (id, name, domain, "businessName", country)
         VALUES (
         'ea3c49ed-b647-4844-bccd-c3ca003f6796',
@@ -16,7 +16,7 @@ export class createTestOrgAdmin1620184166368 implements MigrationInterface {
         'AU'
         )`);
 
-        const userProfileMetadata = getRepository(UserProfile).metadata;
+        const userProfileMetadata = queryRunner.manager.getRepository(UserProfile).metadata;
         await queryRunner.query(`INSERT INTO "${userProfileMetadata.schema}"."${userProfileMetadata.tableName}" (id, "email", "givenName", "surname", country)
         VALUES (
         '580b9120-6d4f-402a-9149-13cea625084e',
@@ -26,7 +26,7 @@ export class createTestOrgAdmin1620184166368 implements MigrationInterface {
         'AU'
         )`);
 
-        const userMetadata = getRepository(User).metadata;
+        const userMetadata = queryRunner.manager.getRepository(User).metadata;
         await queryRunner.query(`INSERT INTO "${userMetadata.schema}"."${userMetadata.tableName}" ("emailHash", secret, salt, role, "profileId", "orgId", "orgOwner")
         VALUES (
         '2578947b-c183-5a08-acb2-7b07e4714363',

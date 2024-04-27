@@ -1,3 +1,4 @@
+import { AppDataSource } from './../db';
 import { SYSTEM_EMAIL_SENDER, SYSTEM_EMAIL_BCC } from './../utils/constant';
 import { OrgEmailTemplateInformation } from '../entity/views/OrgEmailTemplateInformation';
 import * as aws from 'aws-sdk';
@@ -42,13 +43,17 @@ async function getEmailTemplate(orgId: string, templateName: string, locale: Loc
     locale = Locale.Engish;
   }
 
-  const template = orgId ? await getRepository(OrgEmailTemplateInformation).findOne({
-    orgId,
-    key: templateName,
-    locale
-  }) : await getRepository(SystemEmailTemplate).findOne({
-    key: templateName,
-    locale
+  const template = orgId ? await AppDataSource.getRepository(OrgEmailTemplateInformation).findOne({
+    where: {
+      orgId,
+      key: templateName,
+      locale
+    }
+  }) : await AppDataSource.getRepository(SystemEmailTemplate).findOne({
+    where: {
+      key: templateName,
+      locale
+    }
   });
 
   assert(template, 500, `Cannot find email template for key ${templateName} and locale ${locale}`);
@@ -61,11 +66,13 @@ async function getEmailSignature(orgId: string, locale: Locale): Promise<string>
     locale = Locale.Engish;
   }
 
-  const item = orgId ? await getRepository(OrgEmailSignature).findOne({
-    orgId,
-    locale
-  }) : await getRepository(SystemEmailSignature).findOne({
-    locale
+  const item = orgId ? await AppDataSource.getRepository(OrgEmailSignature).findOne({
+    where: {
+      orgId,
+      locale
+    }
+  }) : await AppDataSource.getRepository(SystemEmailSignature).findOne({
+    where: { locale }
   });
 
   return item?.body || '';
@@ -109,7 +116,7 @@ export async function sendEmailImmediately(req: EmailRequest) {
   assert(template, 400, 'Email template is not specified');
 
   let log: EmailLog = null;
-  const emailLogRepo = getRepository(EmailLog);
+  const emailLogRepo = AppDataSource.getRepository(EmailLog);
   try {
     const option = await composeEmailOption(req);
     log = new EmailLog();
@@ -145,12 +152,12 @@ export async function enqueueEmail(req: EmailRequest) {
   task.vars = req.vars;
   task.attachments = req.attachments;
   task.shouldBcc = req.shouldBcc;
-  await getRepository(EmailSentOutTask).insert(task);
+  await AppDataSource.getRepository(EmailSentOutTask).insert(task);
 }
 
 export async function enqueueEmailToUserId(userId: string, template: EmailTemplateType, vars: object) {
   try {
-    const user = await getRepository(User).findOne(userId, { relations: ['profile'] });
+    const user = await AppDataSource.getRepository(User).findOne({ where: { id: userId }, relations: { profile: true } });
     if (!user) {
       return;
     }

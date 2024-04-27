@@ -55,7 +55,7 @@ export async function calcNewSubscriptionPaymentInfo(
   let isValidPromotionCode = false;
   let promotionDiscountPercentage = 0;
   if (promotionCode) {
-    const promotion = await m.findOne(OrgPromotionCode, { code: promotionCode });
+    const promotion = await m.findOne(OrgPromotionCode, {where: { code: promotionCode }});
     if (promotion) {
       promotionDiscountPercentage = promotion.percentage;
       isValidPromotionCode = true;
@@ -77,7 +77,7 @@ export async function calcNewSubscriptionPaymentInfo(
     deduction = -1 * creditBalanceBefore;
   }
 
-  const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { orgId, primary: true });
+  const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, {where: { orgId, primary: true }});
 
   const result = {
     unitPrice,
@@ -99,6 +99,6 @@ export async function calcNewSubscriptionPaymentInfo(
 }
 
 async function getRefundableCredits(m: EntityManager, orgId: string): Promise<number> {
-  const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { orgId });
+  const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { where: {orgId} });
   return +(refundable?.refundableAmount) || 0;
 }

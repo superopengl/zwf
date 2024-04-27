@@ -1,5 +1,5 @@
 
-import { getManager, getRepository, Not } from 'typeorm';
+import { Not } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -12,9 +12,10 @@ import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { purchaseNewSubscriptionWithPrimaryCard } from '../utils/purchaseNewSubscriptionWithPrimaryCard';
+import { AppDataSource } from '../db';
 
 async function getUserSubscriptionHistory(orgId) {
-  const list = await getRepository(Subscription).find({
+  const list = await AppDataSource.getRepository(Subscription).find({
     where: {
       orgId,
       status: Not(SubscriptionStatus.Provisioning)
@@ -52,7 +53,7 @@ export const turnOffSubscriptionRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
 
-  await getRepository(Subscription).update(
+  await AppDataSource.getRepository(Subscription).update(
     {
       orgId,
       status: SubscriptionStatus.Alive,
@@ -71,9 +72,11 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  const receipt = await getRepository(ReceiptInformation).findOne({
-    paymentId: id,
-    orgId,
+  const receipt = await AppDataSource.getRepository(ReceiptInformation).findOne({
+    where: {
+      paymentId: id,
+      orgId,
+    }
   });
   assert(receipt, 404);
 
@@ -88,9 +91,11 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
 
-  const subscription = await getRepository(OrgAliveSubscription).findOne(
+  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOne(
     {
-      orgId
+      where: {
+        orgId
+      }
     }
   );
 
@@ -117,7 +122,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
-  const result = await calcNewSubscriptionPaymentInfo(getManager(), orgId, seats, promotionCode);
+  const result = await calcNewSubscriptionPaymentInfo(AppDataSource.manager, orgId, seats, promotionCode);
   res.json(result);
 });
 

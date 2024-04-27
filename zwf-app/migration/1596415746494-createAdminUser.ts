@@ -6,7 +6,7 @@ export class CreateAdminUser1596415746494 implements MigrationInterface {
     // Initial password is 'admin'
     public async up(queryRunner: QueryRunner): Promise<void> {
 
-        const userProfileMetadata = getRepository(UserProfile).metadata;
+        const userProfileMetadata = queryRunner.manager.getRepository(UserProfile).metadata;
         await queryRunner.query(`INSERT INTO "${userProfileMetadata.schema}"."${userProfileMetadata.tableName}" (id, "email", "givenName", "surname", country)
         VALUES (
         'c576cbb7-793c-4113-8e74-e44f0eb7d261',
@@ -16,7 +16,7 @@ export class CreateAdminUser1596415746494 implements MigrationInterface {
         'AU'
         )`);
 
-        const userMetadata = getRepository(User).metadata;
+        const userMetadata = queryRunner.manager.getRepository(User).metadata;
         await queryRunner.query(`INSERT INTO "${userMetadata.schema}"."${userMetadata.tableName}" ("emailHash", secret, salt, role, "profileId", "orgId")
         VALUES (
         '479475cc-9183-567e-9534-2c71245cb9f6',

@@ -6,6 +6,7 @@ import { UserProfile } from '../entity/UserProfile';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { Role } from '../types/Role';
 import { Org } from '../entity/Org';
+import { AppDataSource } from '../db';
 
 export type StockUserParams = {
   text?: string;
@@ -23,7 +24,7 @@ export async function searchUsers(orgId: string, queryInfo: StockUserParams) {
   const pageSize = size || 50;
   assert(pageNo >= 1 && pageSize > 0, 400, 'Invalid page and size parameter');
 
-  let query = getRepository(User)
+  let query = AppDataSource.getRepository(User)
     .createQueryBuilder('u')
     .innerJoin(UserProfile, 'p', 'u."profileId" = p.id')
     .where('u."deletedAt" IS NULL')

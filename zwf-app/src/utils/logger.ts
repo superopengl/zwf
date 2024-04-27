@@ -1,4 +1,4 @@
-import { getRepository } from 'typeorm';
+import { AppDataSource } from './../db';
 import { SysLog } from '../entity/SysLog';
 import { serializeError } from 'serialize-error';
 import { String } from 'aws-sdk/clients/cloudsearchdomain';
@@ -28,7 +28,7 @@ export async function logError(err, req, res, ...args) {
       req: serializeReq(req),
       data: JSON.stringify(data)
     };
-    const repo = getRepository(SysLog);
+    const repo = AppDataSource.getRepository(SysLog);
 
     await repo.save(log);
   } catch (err) {
