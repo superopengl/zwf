@@ -6,7 +6,6 @@ import HomeFooter from 'components/HomeFooter';
 import React from 'react';
 import styled from 'styled-components';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
-import CookieConsent from "react-cookie-consent";
 import { Link, useNavigate } from 'react-router-dom';
 import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -22,6 +21,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { RoleRoute } from 'components/RoleRoute';
 import HomePage from './HomePage';
 import Error404 from './Error404';
+import { Outlet } from 'react-router-dom';
 
 smoothscroll.polyfill();
 
@@ -126,7 +126,7 @@ const PortalPage = (props) => {
     },
     {
       key: '2',
-      path: '/resources',
+      path: '/resource',
       name: <FormattedMessage id="menu.resources" />,
       visible: true,
     },
@@ -152,7 +152,7 @@ const PortalPage = (props) => {
     layout="top"
     navTheme="dark"
     route={{ routes: ROUTES }}
-    location={{ pathname: '/resources' }}
+    location={{ pathname: '/resource' }}
     style={{
       height: '100vh',
     }}
@@ -187,16 +187,8 @@ const PortalPage = (props) => {
     }}
     footerRender={() => <HomeFooter />}
   >
-    <Routes>
-      <Route path="/" element={<HomePage/>} />
-      <Route path="/resources" element={<ResourceListPage/>} />
-      <Route path="/resources/:id" element={<ResourcePage/>} />
-      {/* <RoleRoute component={Error404} /> */}
-    </Routes>
-
-    <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
-      We use cookies to improve your experiences on our website.
-    </CookieConsent>
+    <Outlet />
+    {/* <RoleRoute component={Error404} /> */}
   </StyledLayout>
 }
 

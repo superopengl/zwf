@@ -114,12 +114,12 @@ const TaskListPage = () => {
         <Radio.Group key="view" buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
           <Tooltip title="Board view">
             <Radio.Button value="board">
-              <Icon component={() => <HiOutlineViewBoards />} />
+              <Icon component={HiOutlineViewBoards } />
             </Radio.Button>
           </Tooltip>
           <Tooltip title="List view">
             <Radio.Button value="list">
-              <Icon component={() => <HiOutlineViewList />} />
+              <Icon component={HiOutlineViewList } />
             </Radio.Button>
           </Tooltip>
         </Radio.Group>,

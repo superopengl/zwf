@@ -54,7 +54,7 @@ const getAutoDocTag = (taskDoc, role) => {
   }
 
   return <Tooltip title={tooltipMessage}>
-    <Icon component={() => <MdBrightnessAuto />} style={{ color, fontSize: 20 }} />
+    <Icon component={MdBrightnessAuto } style={{ color, fontSize: 20 }} />
   </Tooltip>
 }
 
@@ -174,7 +174,7 @@ export const TaskDocItem = React.memo(props => {
     //   onClick: () => handleToggleRequireSign(taskDoc, !taskDoc.requiresSign)
     // },
     taskDoc.type === 'auto' && !taskDoc.fileId ? {
-      icon: <Icon component={() => <BsPatchCheck />} />,
+      icon: <Icon component={BsPatchCheck } />,
       menu: 'Generate doc',
       onClick: () => handleGenDoc(taskDoc),
       disabled: !canGenDoc(taskDoc),
@@ -190,12 +190,12 @@ export const TaskDocItem = React.memo(props => {
   return <StyledListItem onClick={e => e.stopPropagation()}
     className={missingVars.length > 0 ? 'error-doc' : !taskDoc.fileId ? 'not-generated' : null}
     actions={isClient ? null : [
-      // <Button key="auto" icon={<Icon component={() => <BsPatchCheck />} />} type="link">Generate</Button>,
+      // <Button key="auto" icon={<Icon component={BsPatchCheck } />} type="link">Generate</Button>,
       taskDoc.signedAt ? null : <Checkbox key="require-sign" checked={taskDoc.requiresSign} onClick={e => handleToggleRequireSign(taskDoc, e.target.checked)}><Link>Require sign</Link></Checkbox>,
       // <Button key="delete" danger icon={<DeleteOutlined/>} type="link" onClick={() => handleDeleteDoc(taskDoc)}>Delete</Button>,
     ].filter(x => x)}
     extra={<>
-      {canClientSign(taskDoc) && <Button type="link" icon={<Icon component={() => <FaFileSignature />} />} onClick={(e) => handleSignTaskDoc(taskDoc, e)}>Sign</Button>}
+      {canClientSign(taskDoc) && <Button type="link" icon={<Icon component={FaFileSignature } />} onClick={(e) => handleSignTaskDoc(taskDoc, e)}>Sign</Button>}
       {!isClient && menuConfig.length > 0 && <DropdownMenu config={menuConfig} />}
 
       {taskDoc.signedAt && <Tooltip title={<TimeAgo value={taskDoc.signedAt}/>}><Tag>Signed</Tag></Tooltip>}

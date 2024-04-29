@@ -2,7 +2,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Line, Column } from '@ant-design/charts';
-import ReactDOM from 'react-dom';
 import { Loading } from "components/Loading";
 
 const RevenueChart = props => {

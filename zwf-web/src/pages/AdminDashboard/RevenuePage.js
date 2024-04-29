@@ -4,7 +4,6 @@ import { Typography, Space, Select, Button, Card } from 'antd';
 import RevenueChart from 'components/charts/RevenueChart';
 import { Loading } from 'components/Loading';
 import { getRevenueChartData } from 'services/revenueService';
-import ReactDOM from 'react-dom';
 import { SyncOutlined } from '@ant-design/icons';
 
 const { Text, Paragraph } = Typography;
@@ -19,10 +18,7 @@ const RevenuePage = () => {
     try {
       setLoading(true);
       const data = await getRevenueChartData(period);
-      ReactDOM.unstable_batchedUpdates(() => {
-        setData(data);
-        setLoading(false);
-      })
+      setData(data);
     } catch {
       setLoading(false);
     }
@@ -41,7 +37,7 @@ const RevenuePage = () => {
       <Space direction="vertical" size="large" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'space-between' }}>
 
-          <Select defaultValue={period} onChange={setPeriod} style={{width: 100}}>
+          <Select defaultValue={period} onChange={setPeriod} style={{ width: 100 }}>
             <Select.Option value="day">Daily</Select.Option>
             {/* <Select.Option value="week">Weekly</Select.Option> */}
             <Select.Option value="month">Monthly</Select.Option>
@@ -51,7 +47,7 @@ const RevenuePage = () => {
         </Space>
         <Card>
 
-        <RevenueChart value={data} />
+          <RevenueChart value={data} />
         </Card>
       </Space>
     </Loading>

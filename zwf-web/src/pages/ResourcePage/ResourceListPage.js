@@ -64,12 +64,12 @@ export const ResourceListPage = React.memo(props => {
           hoverable
           title={null}
           bodyStyle={{ paddingTop: 16 }}
-          onClick={() => navigate(`/resources/${item.id}`)}
+          onClick={() => navigate(`/resource/${item.id}`)}
         >
           <Space direction="vertical">
             <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
               <Title style={{marginBottom: 0}}>{item.title}</Title>
-              <Button icon={<Icon component={() => <MdOpenInNew />} />} type="link" href={`/resources/${item.id}`} target="_blank" onClick={e => e.stopPropagation()} />
+              <Button icon={<Icon component={MdOpenInNew } />} type="link" href={`/resource/${item.id}`} target="_blank" onClick={e => e.stopPropagation()} />
             </Space>
             <Text type="secondary">
               <small>

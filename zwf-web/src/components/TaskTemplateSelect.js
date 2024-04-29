@@ -2,7 +2,6 @@ import { AutoComplete, Select } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { listTaskTemplate$ } from 'services/taskTemplateService';
-import ReactDOM from 'react-dom';
 import { TaskTemplateIcon } from './entityIcon';
 import styled from 'styled-components';
 

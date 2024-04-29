@@ -179,7 +179,7 @@ export const TaskAttachmentPanel = (props) => {
               onChange={() => handleTaskDocChange(item)}
               onDelete={() => handleDeleteDoc(item)}
               onLoading={setLoading}
-            // iconOverlay={item.type === 'auto' ? <Icon component={() => <MdBrightnessAuto/>} style={{color: '#37AFD2', fontSize: 20}} /> : null}
+            // iconOverlay={item.type === 'auto' ? <Icon component={MdBrightnessAuto} style={{color: '#37AFD2', fontSize: 20}} /> : null}
             />
         }
       />

@@ -73,7 +73,7 @@ export const TaskGenerator = React.memo(props => {
             notifyHandler.close()
             navigate(`/task/${task.id}`)
           }}>
-          <Icon component={() => <MdOpenInNew />} /> {task.name}
+          <Icon component={MdOpenInNew } /> {task.name}
         </TextLink>
       </>);
       props.onCreated(task)

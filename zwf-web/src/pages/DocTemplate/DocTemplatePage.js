@@ -116,8 +116,8 @@ export const DocTemplatePage = (props) => {
             </Row>}
             onBack={goBack}
             extra={[
-              <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={() => <VscOpenPreview />} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-              <Button key="modal" type="primary" ghost icon={<Icon component={() => <MdOpenInNew />} />} onClick={handlePopPreview}>Preview</Button>,
+              <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={VscOpenPreview } />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
+              <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew } />} onClick={handlePopPreview}>Preview</Button>,
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >

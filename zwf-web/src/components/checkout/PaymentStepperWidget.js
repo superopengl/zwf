@@ -10,7 +10,6 @@ import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
 import { calculatePaymentDetail, purchaseNewSubscription } from 'services/subscriptionService';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
-import ReactDOM from 'react-dom';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { FaCashRegister } from 'react-icons/fa';
 import { BsCardChecklist } from 'react-icons/bs';

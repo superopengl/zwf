@@ -51,7 +51,7 @@ export const AutoDocInput = (props) => {
     </Link>
     {mode === 'taskTemplate' &&
       <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
-        <Button type="link" icon={<Icon component={() => <MdOpenInNew />} />} />
+        <Button type="link" icon={<Icon component={MdOpenInNew } />} />
       </Link>}
     {/* <Button type="link" icon={<EyeOutlined/>}/> */}
     {/* <DocTemplatePreviewPanel value={docTemplate} /> */}

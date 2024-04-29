@@ -123,10 +123,10 @@ export const DocTemplateListPage = props => {
           //   onChange={e => setViewMode(e.target.value)}
           // >
           //   <Radio.Button value="grid">
-          //     <Icon component={() => <BiGridAlt />} />
+          //     <Icon component={BiGridAlt } />
           //   </Radio.Button>
           //   <Radio.Button value="list">
-          //     <Icon component={() => <HiViewList />} />
+          //     <Icon component={HiViewList } />
           //   </Radio.Button>
           // </Radio.Group>,
           <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>

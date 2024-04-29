@@ -153,7 +153,7 @@ export function showFieldItemEditor(item, onOk) {
     },
     icon: null,
     width: 500,
-    // icon: <Icon component={() => <EditOutlined />} />,
+    // icon: <Icon component={EditOutlined } />,
     closable: true,
     maskClosable: false,
     destroyOnClose: true,

@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import {Link} from 'react-router-dom';
 import { Typography, Button, Form, Input, Divider, Tabs } from 'antd';
 import { signUp$ } from 'services/authService';
 import GoogleSsoButton from 'components/GoogleSsoButton';

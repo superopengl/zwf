@@ -81,6 +81,7 @@ const TASK_FILTER_DEFAULT = {
   tab: 'Action required',
 };
 
+
 export const ClientTaskListPage = () => {
   const [loading, setLoading] = React.useState(true);
   const [allList, setAllList] = React.useState([]);
@@ -127,19 +128,19 @@ export const ClientTaskListPage = () => {
   const sortOptions = React.useMemo(() => [
     {
       value: '-updatedAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (newest)<Icon component={() => <ImSortAmountDesc />} /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (newest)<Icon component={ImSortAmountDesc } /></Space>,
     },
     {
       value: '+updatedAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (oldest)<Icon component={() => <ImSortAmountAsc />} /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Updated (oldest)<Icon component={ImSortAmountAsc } /></Space>,
     },
     {
       value: '-createdAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (newest)<Icon component={() => <ImSortAmountDesc />} /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (newest)<Icon component={ImSortAmountDesc } /></Space>,
     },
     {
       value: '+createdAt',
-      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (oldest)<Icon component={() => <ImSortAmountAsc />} /></Space>,
+      label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>Created (oldest)<Icon component={ImSortAmountAsc } /></Space>,
     },
 
   ], []);
@@ -240,3 +241,5 @@ export const ClientTaskListPage = () => {
 ClientTaskListPage.propTypes = {};
 
 ClientTaskListPage.defaultProps = {};
+
+export default ClientTaskListPage;

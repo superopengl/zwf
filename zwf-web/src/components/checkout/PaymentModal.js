@@ -8,7 +8,6 @@ import { SubscriptionCard } from 'components/SubscriptionCard';
 import { getMyCurrentSubscription, listMySubscriptionHistory } from 'services/subscriptionService';
 import MoneyAmount from 'components/MoneyAmount';
 import { getMyAccount, listMyCreditHistory } from 'services/accountService';
-import ReactDOM from 'react-dom';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
@@ -59,67 +58,64 @@ const PaymentModal = (props) => {
       const user = refreshAuthUser ? await getAuthUser() : null;
       const subscriptionHistory = await listMySubscriptionHistory();
 
-      ReactDOM.unstable_batchedUpdates(() => {
-        setAccount(account);
-        setCurrentSubscription(subscription);
-        if (refreshAuthUser) {
-          context.setUser(user);
-        }
-        setSubscriptionHistory(subscriptionHistory);
-        setLoading(false);
-      })
-    } catch {
+      setAccount(account);
+      setCurrentSubscription(subscription);
+      if (refreshAuthUser) {
+        context.setUser(user);
+      }
+      setSubscriptionHistory(subscriptionHistory);
+    } finally {
       setLoading(false);
     }
   }
 
   React.useEffect(() => {
-    const load$ = from(load(false)).subscribe();
-    return () => {
-      load$.unsubscribe();
+      const load$ = from(load(false)).subscribe();
+      return () => {
+        load$.unsubscribe();
+      }
+    }, []);
+
+
+    const handlePaymentOk = async () => {
+      setModalVisible(false);
+      await load();
     }
-  }, []);
 
-
-  const handlePaymentOk = async () => {
-    setModalVisible(false);
-    await load();
-  }
-
-  const handleCancelPayment = () => {
-    setModalVisible(false);
-  }
+    const handleCancelPayment = () => {
+      setModalVisible(false);
+    }
 
 
 
-  return (
-    <ContainerStyled>
-      <Modal
-        visible={modalVisible}
-        closable={!paymentLoading}
-        maskClosable={false}
-        title="Buy licenses"
-        destroyOnClose
-        footer={null}
-        width={300}
-        onOk={onClose}
-        onCancel={onClose}
-      >
-        <PaymentStepperWidget
-          onComplete={onComplete}
-          onLoading={loading => setPaymentLoading(loading)}
-        />
-      </Modal>
-    </ContainerStyled>
-  );
-};
+    return (
+      <ContainerStyled>
+        <Modal
+          visible={modalVisible}
+          closable={!paymentLoading}
+          maskClosable={false}
+          title="Buy licenses"
+          destroyOnClose
+          footer={null}
+          width={300}
+          onOk={onClose}
+          onCancel={onClose}
+        >
+          <PaymentStepperWidget
+            onComplete={onComplete}
+            onLoading={loading => setPaymentLoading(loading)}
+          />
+        </Modal>
+      </ContainerStyled>
+    );
+  };
 
-PaymentModal.propTypes = {
-  visible: PropTypes.bool.isRequired,
-  onClose: PropTypes.func.isRequired,
-  onComplete: PropTypes.func.isRequired,
-};
+  PaymentModal.propTypes = {
+    visible: PropTypes.bool.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onComplete: PropTypes.func.isRequired,
+  };
 
-PaymentModal.defaultProps = {};
+  PaymentModal.defaultProps = {};
 
-export default PaymentModal;
+  export default PaymentModal;

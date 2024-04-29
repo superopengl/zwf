@@ -35,6 +35,7 @@ import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadIn
 import { TaskTrackingInformation } from './entity/views/ClientTaskTrackingInformation';
 import { TaskTrackingLastAccess } from './entity/TaskTrackingLastAccess';
 import { TaskTracking } from './entity/TaskTracking';
+import { UserLogin } from './entity/UserLogin';
 
 const views = [
   // StockLatestPaidInformation,
@@ -197,6 +198,7 @@ export let AppDataSource = new DataSource({
     TaskTrackingInformation,
     TaskTrackingLastAccess,
     TaskTracking,
+    UserLogin,
   ],
 })
 

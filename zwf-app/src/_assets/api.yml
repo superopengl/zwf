@@ -467,13 +467,13 @@ paths:
       responses:
         200:
           description: OK          
-  /resources:
+  /resource:
     get:
       operationId: listPublishedResourcePages
       responses:
         200:
           description: OK
-  /resources/:id:
+  /resource/:id:
     get:
       operationId: getPublishedResourcePage
       parameters:
@@ -485,7 +485,7 @@ paths:
       responses:
         200:
           description: OK
-  /manage/resources:
+  /manage/resource:
     get:
       operationId: listAllResourcePages
       responses:
@@ -496,7 +496,7 @@ paths:
       responses:
         200:
           description: OK
-  /manage/resources/:id:
+  /manage/resource/:id:
     get:
       operationId: getEditResourcePage
       parameters:

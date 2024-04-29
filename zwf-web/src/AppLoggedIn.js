@@ -6,7 +6,7 @@ import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
   BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
 } from '@ant-design/icons';
-import { Routes, Route, Redirect, Link } from 'react-router-dom';
+import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { Space, Typography, Modal, Row, Col } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
@@ -29,6 +29,8 @@ import { AiOutlineHistory } from 'react-icons/ai';
 import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import Error404 from 'pages/Error404';
+import { Navigate } from 'react-router-dom';
+import { Outlet } from 'react-router-dom';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -81,19 +83,19 @@ const ROUTES = [
   {
     path: '/task',
     name: <FormattedMessage id="menu.tasks" />,
-    icon: <Icon element={() => <HiOutlineViewList />} />,
+    icon: <Icon component={HiOutlineViewList }/>,
     roles: ['admin', 'agent', 'client']
   },
   {
     path: '/activity',
     name: 'Interactions & Messages',
-    icon: <Icon element={() => <AiOutlineHistory />} />,
+    icon: <Icon component={AiOutlineHistory} />,
     roles: ['client']
   },
   // {
   //   path: '/metrics',
   //   name: <FormattedMessage id="menu.metrics" />,
-  //   icon: <Icon element={() => <RiBarChartFill />} />,
+  //   icon: <Icon component={RiBarChartFill } /> />,
   //   roles: ['admin']
   // },
 
@@ -106,7 +108,7 @@ const ROUTES = [
   {
     path: '/task_template',
     name: <FormattedMessage id="menu.taskTemplate" />,
-    icon: <Icon element={() => <ImInsertTemplate />} />,
+    icon: <Icon component={ImInsertTemplate } />,
     roles: ['admin', 'agent']
   },
   {
@@ -118,19 +120,19 @@ const ROUTES = [
   // {
   //   path: '/procedure',
   //   name: <FormattedMessage id="menu.procedure" />,
-  //   icon: <Icon element={() => <GoTools />} />,
+  //   icon: <Icon component={GoTools } /> />,
   //   roles: ['admin']
   // },
   {
     path: '/support',
     name: 'User Support',
-    icon: <Icon element={() => <MdMessage />} />,
+    icon: <Icon component={MdMessage } />,
     roles: ['system']
   },
   {
-    path: '/manage/resources',
+    path: '/manage/resource',
     name: 'Resource Pages',
-    icon: <Icon element={() => <MdOutlinePages />} />,
+    icon: <Icon component={MdOutlinePages } />,
     roles: ['system']
   },
   {
@@ -148,13 +150,13 @@ const ROUTES = [
   {
     path: '/team',
     name: <FormattedMessage id="menu.team" />,
-    icon: <Icon element={() => <HiOutlineUserGroup />} />,
+    icon: <Icon component={HiOutlineUserGroup } />,
     roles: ['admin'],
   },
   {
     path: '/account',
     name: 'Subscription & Billings',
-    icon: <Icon element={() => <BiDollar />} />,
+    icon: <Icon component={BiDollar } />,
     roles: ['admin'],
   },
   {
@@ -166,7 +168,7 @@ const ROUTES = [
   // {
   //   path: '/revenue',
   //   name: <FormattedMessage id="menu.revenue" />,
-  //   icon: <Icon element={() => <RiCoinsLine />} />,
+  //   icon: <Icon component={RiCoinsLine } /> />,
   //   roles: ['system']
   // },
   {
@@ -190,12 +192,13 @@ function getSanitizedPathName(pathname) {
 
 export const AppLoggedIn = React.memo(props => {
   const context = React.useContext(GlobalContext);
+  const location = useLocation();
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
-  const [pathname, setPathname] = React.useState(getSanitizedPathName(props.location.pathname));
+  const [pathname, setPathname] = React.useState(getSanitizedPathName(location.pathname));
 
   const { user, role } = context;
   if (!user) {
@@ -284,49 +287,21 @@ export const AppLoggedIn = React.memo(props => {
         </Space>
     )}
   >
-    <Routes>
-      {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
-      {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
-      {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}
-      {isClient && <Route path="/task/:id" element={<ClientTaskPage />} />}
-      {(isAdmin || isAgent) && <Route path="/task/:id" element={<OrgTaskPage />} />}
-      {isClient && <Route path="/activity" element={<ClientTrackingListPage />} />}
-      {/* <Route visible={isAdmin || isAgent} path="/doc_template" element={DocTemplateListPage} />
-      <Route visible={isAdmin || isAgent} path="/doc_template/new" element={DocTemplatePage} />
-      <Route visible={isAdmin || isAgent} path="/doc_template/:id" element={DocTemplatePage} />
-      <Route visible={isAdmin || isAgent} path="/task_template" element={TaskTemplateListPage} />
-      <Route visible={isAdmin || isAgent} path="/task_template/new" element={TaskTemplatePage} />
-      <Route visible={isAdmin || isAgent} path="/task_template/:id" element={TaskTemplatePage} />
-      <Route visible={isAdmin || isAgent} path="/scheduler" element={RecurringListPage} />
-      <Route visible={isAdmin || isAgent} path="/client" element={OrgClientListPage} />
-      <Route visible={isAdmin || isAgent} path="/tags" element={TagsSettingPage} />
-      <Route visible={isAdmin} path="/account" element={OrgAccountPage} />
-      <Route visible={isAdmin} path="/team" element={OrgMemberListPage} />
-      <Route visible={isSystem} path="/config" element={ConfigListPage} />
-      <Route visible={isSystem} path="/email_template" element={EmailTemplateListPage} />
-      <Route visible={isSystem} path="/org" element={OrgListPage} />
-      <Route visible={isSystem} path="/support" element={SupportListPage} />
-      <Route visible={isSystem} path="/manage/resources" element={ResourceListPage} />
-      <Route visible={isSystem} path="/manage/resources/new" element={ResourceEditPage} />
-      <Route visible={isSystem} path="/manage/resources/:id" element={ResourceEditPage} />
-      <Route visible={isSystem} path="/revenue" element={RevenuePage} />
-      <Route path="*" render={() => <Redirect to="/" />} /> */}
-
-    </Routes>
+    <Outlet />
 
     <ChangePasswordModal
-      visible={changePasswordVisible}
+
       onOk={() => setChangePasswordVisible(false)}
       onCancel={() => setChangePasswordVisible(false)}
     />
     <ProfileModal
-      visible={profileVisible}
+
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />
     <Modal
       title="Organization Profile"
-      visible={orgProfileVisible}
+
       onOk={() => setOrgProfileVisible(false)}
       onCancel={() => setOrgProfileVisible(false)}
       footer={null}
@@ -336,7 +311,7 @@ export const AppLoggedIn = React.memo(props => {
       <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
     <AboutModal
-      visible={aboutVisible}
+
       onClose={() => setAboutVisible(false)}
     />
     {(isAdmin || isAgent) && <SupportAffix />}

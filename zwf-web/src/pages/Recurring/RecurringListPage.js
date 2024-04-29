@@ -11,7 +11,6 @@ import { TimeAgo } from 'components/TimeAgo';
 import { listRecurring, deleteRecurring, runRecurring } from 'services/recurringService';
 import RecurringForm from './RecurringForm';
 import { notify } from 'util/notify';
-import * as ReactDom from 'react-dom';
 
 const { Title, Link: TextLink } = Typography;
 
@@ -168,10 +167,7 @@ const RecurringListPage = (props) => {
     try {
       setLoading(true);
       const list = await listRecurring();
-      ReactDom.unstable_batchedUpdates(() => {
-        setList(list);
-        setLoading(false);
-      });
+      setList(list);
     } catch {
       setLoading(false);
     }
