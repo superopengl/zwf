@@ -96,7 +96,7 @@ const HomeCarouselAreaRaw = props => {
       44;
 
   const handleSignIn = () => {
-    history.push('/signup')
+    navigate('/signup')
   }
 
   return (

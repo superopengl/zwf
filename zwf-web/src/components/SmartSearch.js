@@ -8,7 +8,7 @@ import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, sm
 import { UserNameCard } from './UserNameCard';
 // import { useKey} from 'react-use';
 import { useKeys } from "rooks";
-
+import { useNavigate } from "react-router-dom";
 const { Text } = Typography;
 
 const DOMAIN_CONFIG = {
@@ -55,6 +55,7 @@ export const SmartSearch = React.memo((props) => {
   const [outerDropdownOpen, setOuterDropdownOpen] = React.useState(false);
   const innerRef = React.useRef();
   const outerRef = React.useRef();
+  const navigate = useNavigate();
 
   const getOptions = React.useCallback(() => {
     const labels = [
@@ -134,7 +135,7 @@ export const SmartSearch = React.memo((props) => {
     }
 
     const path = config.pathHandler(id);
-    history.push(path);
+    navigate(path);
 
     reset();
   }

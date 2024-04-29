@@ -16,6 +16,7 @@ import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppLoggedIn } from 'AppLoggedIn';
 import PortalApp from 'pages/PortalApp';
+import { Loading } from 'components/Loading';
 
 const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
@@ -69,15 +70,12 @@ export const App = React.memo(() => {
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);
 
-  const Initalize = () => {
-    return getAuthUser$().subscribe(user => {
+
+  React.useEffect(() => {
+    const sub$ = getAuthUser$().subscribe(user => {
       setUser(user);
       setLoading(false);
     })
-  }
-
-  React.useEffect(() => {
-    const sub$ = Initalize();
     return () => sub$.unsubscribe()
   }, []);
 
@@ -104,22 +102,28 @@ export const App = React.memo(() => {
 
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
+  if(loading) {
+    return <Loading loading={true} />
+  }
+
   return (
     <GlobalContext.Provider value={contextValue}>
       <ConfigProvider locale={antdLocale}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
             <Routes>
-              <Route path={['/', '/resources', '/resources/:id']} element={<PortalApp />} />
-              {isGuest && <Route path="/login" element={<LogInPage />} />}
-              {isGuest && <Route path="/signup" element={<SignUpPage />} />}
+              <Route path={'/'} element={<PortalApp />} />
+              {/* <Route path={'resources'} element={<PortalApp />} />
+              <Route path={'/resources/:id'} element={<PortalApp />} /> */}
+              <Route path="/login" element={<LogInPage />} />
+              {/* {isGuest && <Route path="/signup" element={<SignUpPage />} />}
               {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
               {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
               <Route path="/reset_password" element={<ResetPasswordPage />} />
               <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
               <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
               {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
-              <Route path="*" element={<AppLoggedIn />} />
+              <Route path="/*" element={<AppLoggedIn />} /> */}
               {/* <Redirect to="/" /> */}
               {/* <RoleRoute loading={loading} element={Error404} /> */}
               {/* <RoleRoute element={Error404} /> */}

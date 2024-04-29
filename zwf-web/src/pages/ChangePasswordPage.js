@@ -31,7 +31,7 @@ const ChangePasswordPage = props => {
 
 
   const goBack = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   const handleSubmit = async values => {
@@ -47,7 +47,7 @@ const ChangePasswordPage = props => {
 
       notify.success('Successfully changed password');
 
-      history.goBack()
+      navigate(-1)
     } finally {
       setSending(false)
     }

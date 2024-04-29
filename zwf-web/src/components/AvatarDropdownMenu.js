@@ -57,7 +57,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   }
 
   const goToHomePage = () => {
-    history.push('/')
+    navigate('/')
   }
 
   const handleLogout = () => {
@@ -93,7 +93,7 @@ export const AvatarDropdownMenu = React.memo(props => {
     {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
       Organization Profile
     </Menu.Item>}
-    {isAdmin && <Menu.Item key="subscription_billing" onClick={() => history.push('/account')}>
+    {isAdmin && <Menu.Item key="subscription_billing" onClick={() => navigate('/account')}>
       Subscription & Billings
     </Menu.Item>}
     <Menu.Divider />

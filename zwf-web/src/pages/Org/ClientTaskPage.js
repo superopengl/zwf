@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { Layout, Space, Typography, Row, Col, Card, Skeleton } from 'antd';
 
 import { getTask$, listTaskTrackings$ } from 'services/taskService';
-import * as queryString from 'query-string';
 import { Loading } from 'components/Loading';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { TaskMessageForm } from 'components/TaskMessageForm';
@@ -50,7 +49,7 @@ const ClientTaskPage = (props) => {
   }
 
   const handleGoBack = () => {
-    history.goBack();
+    navigate(-1);
   }
 
   return (<>

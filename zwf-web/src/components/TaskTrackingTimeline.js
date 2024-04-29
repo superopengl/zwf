@@ -72,7 +72,7 @@ export const TaskTrackingTimeline = React.memo((props => {
         </Row>
 
         <Row gutter={40} wrap={false}
-          onClick={() => multiMode ? history.push(`/task/${item.taskId}`) : null}
+          onClick={() => multiMode ? navigate(`/task/${item.taskId}`) : null}
         >
           <Col flex={1}>
             <Space direction="vertical" size="small" style={{ width: '100%' }} className="activity-title">

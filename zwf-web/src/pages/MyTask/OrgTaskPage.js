@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
-import * as queryString from 'query-string';
 import { PageContainer } from '@ant-design/pro-layout';
 import { catchError } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -56,9 +55,8 @@ border-radius:4px;
 const OrgTaskPage = React.memo((props) => {
   const id = props.match.params.id;
 
-  const { chat } = queryString.parse(props.location.search);
   const [loading, setLoading] = React.useState(true);
-  const [historyVisible, setHistoryVisible] = React.useState(!!chat);
+  const [historyVisible, setHistoryVisible] = React.useState(false);
   const [editFieldVisible, setEditFieldVisible] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
@@ -86,7 +84,7 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleGoBack = () => {
-    history.push('/task');
+    navigate('/task');
   }
 
   const handleStatusChange = newStatus => {

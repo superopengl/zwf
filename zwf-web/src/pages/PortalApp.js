@@ -18,8 +18,7 @@ import { FormattedMessage } from 'react-intl';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import logoSvg from '../logo.svg';
-import * as queryString from 'query-string';
-import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { RoleRoute } from 'components/RoleRoute';
 import HomePage from './HomePage';
 import Error404 from './Error404';
@@ -139,7 +138,7 @@ const PortalPage = (props) => {
       scrollToElement(path.replace(/\//, ''))
       setCollapsed(true);
     } else {
-      history.push(path);
+      navigate(path);
     }
   }
 
@@ -188,12 +187,12 @@ const PortalPage = (props) => {
     }}
     footerRender={() => <HomeFooter />}
   >
-    <Switch>
-      <RoleRoute path="/" exact component={HomePage} />
-      <RoleRoute exact path="/resources" component={ResourceListPage} />
-      <RoleRoute exact path="/resources/:id" component={ResourcePage} />
+    <Routes>
+      <Route path="/" element={<HomePage/>} />
+      <Route path="/resources" element={<ResourceListPage/>} />
+      <Route path="/resources/:id" element={<ResourcePage/>} />
       {/* <RoleRoute component={Error404} /> */}
-    </Switch>
+    </Routes>
 
     <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
       We use cookies to improve your experiences on our website.

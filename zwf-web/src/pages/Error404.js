@@ -4,7 +4,7 @@ import { Result, Button } from 'antd';
 const Error404 = props => {
   const navigate = useNavigate();
   const handleGoHome = () => {
-    history.push('/');
+    navigate('/');
   };
 
   return <Result

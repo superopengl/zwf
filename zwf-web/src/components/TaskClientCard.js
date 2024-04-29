@@ -31,7 +31,7 @@ export const TaskClientCard = React.memo(props => {
 
   const goToTask = (e, id) => {
     e.stopPropagation();
-    history.push(`/task/${id}`);
+    navigate(`/task/${id}`);
   }
 
   return <StyledCard

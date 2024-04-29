@@ -65,7 +65,7 @@ export const TaskTemplateListPage = props => {
   }, [list, searchText])
 
   const handleEditOne = (id) => {
-    history.push(`/task_template/${id}`);
+    navigate(`/task_template/${id}`);
   }
 
   const handleEdit = (item) => {
@@ -92,7 +92,7 @@ export const TaskTemplateListPage = props => {
   }
 
   const handleCreateNew = () => {
-    history.push('/task_template/new');
+    navigate('/task_template/new');
   }
 
   const handleClone = item => {

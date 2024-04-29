@@ -35,7 +35,7 @@ export const TaskCard = (props) => {
 
   const goToTask = (e, id) => {
     e.stopPropagation();
-    history.push(`/task/${id}`);
+    navigate(`/task/${id}`);
   }
   const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
 
@@ -44,7 +44,7 @@ export const TaskCard = (props) => {
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
-    onClick={() => history.push(`/task/${id}`)}
+    onClick={() => navigate(`/task/${id}`)}
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     <Space direction='vertical' size="middle" style={{width: '100%'}}>

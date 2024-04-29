@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
+import {Link} from 'react-router-dom';
 import { Typography, Button, Form, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { LogInPanel } from './LogInPanel';

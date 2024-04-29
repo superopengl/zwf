@@ -70,7 +70,7 @@ export const DocTemplatePage = (props) => {
   }, []);
 
   const goBack = () => {
-    history.push('/doc_template')
+    navigate('/doc_template')
   };
 
   const handleSave = async () => {

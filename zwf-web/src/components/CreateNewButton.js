@@ -15,10 +15,10 @@ export const CreateNewButton = React.memo(props => {
   const handleMenuSelected = (e) => {
     switch (e.key) {
       case 'task_template':
-        history.push('/task_template/new')
+        navigate('/task_template/new')
         break;
       case 'doc_template':
-        history.push('/doc_template/new')
+        navigate('/doc_template/new')
         break;
       default:
         throw new Error(`Unknonw command '${e.key}'`)
