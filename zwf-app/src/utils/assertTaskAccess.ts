@@ -1,14 +1,13 @@
 import { Task } from './../entity/Task';
-import { getRepository } from 'typeorm';
-import { assert } from "console";
 import { Role } from "../types/Role";
 import { getRoleFromReq } from "./getRoleFromReq";
 import { getOrgIdFromReq } from './getOrgIdFromReq';
 import { getUserIdFromReq } from './getUserIdFromReq';
 import { AppDataSource } from '../db';
+import { assert } from './assert';
 
 
-export async function assertTaskAccess(req, taskId): Promise<Task> {
+export async function assertTaskAccess(req, taskId): Promise<void> {
   const role = getRoleFromReq(req);
   let query: any = {id: taskId};
   switch(role) {
@@ -30,7 +29,5 @@ export async function assertTaskAccess(req, taskId): Promise<Task> {
   }
 
   const task = await AppDataSource.getRepository(Task).findOne({where: query, select: {id: true}});
-  assert(!!task, 404, 'Cannot find task');
-
-  return task;
+  assert(task, 404, 'Cannot find task');
 }

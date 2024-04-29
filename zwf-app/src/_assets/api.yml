@@ -889,7 +889,24 @@ paths:
           required: true        
       responses:
         200:
-          description: OK          
+          description: OK      
+  /task/{taskId}/field/{fieldId}/file:
+    post:
+      operationId: uploadTaskFieldFile
+      parameters:
+        - name: taskId
+          in: path
+          type: string
+          format: uuid
+          required: true     
+        - name: fieldId
+          in: path
+          type: string
+          format: uuid
+          required: true        
+      responses:
+        200:
+          description: OK              
   /task/{id}/assign:
     post:
       operationId: assignTask

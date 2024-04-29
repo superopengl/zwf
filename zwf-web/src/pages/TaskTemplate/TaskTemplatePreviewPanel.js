@@ -20,7 +20,7 @@ export const TaskTemplatePreviewPanel = props => {
 
   const { value: taskTemplate, type } = props;
 
-  if(!taskTemplate) {
+  if (!taskTemplate) {
     return null;
   }
 
@@ -29,11 +29,11 @@ export const TaskTemplatePreviewPanel = props => {
       <Title level={3}>{taskTemplate.name}</Title>
       <p type="secondary">{taskTemplate.description}</p>
       <Divider style={{ marginTop: 4 }} />
-      <TaskFormWidget 
-        fields={taskTemplate.fields}
-        type={type}
-        mode="create"
-      />
+        <TaskFormWidget
+          fields={taskTemplate.fields}
+          type={type}
+          mode="create"
+        />
     </Container >
   );
 };

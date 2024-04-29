@@ -308,8 +308,8 @@ export const AppLoggedIn = React.memo(props => {
       <RoleRoute visible={isSystem} exact path="/manage/resources/new" component={ResourceEditPage} />
       <RoleRoute visible={isSystem} exact path="/manage/resources/:id" component={ResourceEditPage} />
       <RoleRoute visible={isSystem} exact path="/revenue" component={RevenuePage} />
-      {/* <RoleRoute path="*" component={Error404} /> */}
-      <Redirect to="/" /> 
+      <RoleRoute path="*" component={Error404} />
+      <Redirect to="/" />
     </Switch>
 
     <ChangePasswordModal

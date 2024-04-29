@@ -38,6 +38,7 @@ import { File } from '../entity/File';
 import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { filter } from 'rxjs/operators';
+import { uploadToS3 } from '../utils/uploadToS3';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -316,6 +317,60 @@ export const getTask = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
+export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { file } = (req as any).files;
+  assert(file, 400, 'No file to upload');
+  const { name, data, mimetype, md5 } = file;
+  const userId = getUserIdFromReq(req);
+  const role = getRoleFromReq(req);
+  const { taskId, fieldId } = req.params;
+
+  await assertTaskAccess(req, taskId);
+
+  const taskField = await AppDataSource.getRepository(TaskField).findOne({
+    where: {
+      id: fieldId,
+      taskId
+    },
+    select: {
+      id: true,
+      value: true,
+    }
+  });
+  assert(taskField, 404);
+
+  // Upload file binary to S3
+  const id = uuidv4();
+  const location = await uploadToS3(id, name, data);
+
+  const fileEntity = new File();
+  fileEntity.id = id;
+  fileEntity.fileName = name;
+  fileEntity.createdBy = userId;
+  fileEntity.mime = mimetype;
+  fileEntity.location = location;
+  fileEntity.md5 = md5;
+  fileEntity.public = false;
+
+  await AppDataSource.transaction(async m => {
+    taskField.value = [...taskField.value, fileEntity.id];
+
+    const taskDoc = new TaskDoc();
+    taskDoc.fieldId = fieldId;
+    taskDoc.fileId = fileEntity.id;
+    taskDoc.name = name;
+    taskDoc.type = role === Role.Client ? 'client' : 'agent';
+    taskDoc.status = 'done';
+
+    await m.save([taskField, fileEntity, taskDoc]);
+  });
+
+  res.json({
+    id,
+  });
+});
+
 export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { deepLinkId } = req.params;
@@ -357,8 +412,8 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
   const { tags: tagIds } = req.body;
 
   await AppDataSource.transaction(async m => {
-    const task = await m.findOne(Task, { 
-      where: { id }, 
+    const task = await m.findOne(Task, {
+      where: { id },
       select: {
         id: true,
       }

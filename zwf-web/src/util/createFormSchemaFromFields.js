@@ -1,6 +1,6 @@
 import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
 
-export function convertFormSchemaFromFields(fields, official) {
+export function createFormSchemaFromFields(fields, official) {
   const fieldList = fields
     .map((f, i) => {
       if (!!f.official !== official)
@@ -17,7 +17,10 @@ export function convertFormSchemaFromFields(fields, official) {
         options: f.options,
         forwardRef: f.forwardRef,
         widget: widgetDef.widget,
-        widgetProps: widgetDef.widgetPorps
+        widgetProps: {
+          ...widgetDef.widgetPorps,
+          ...(f.type === 'upload' ? {fieldId: f.id} : null),
+        }
       };
     })
     .filter(t => t);
