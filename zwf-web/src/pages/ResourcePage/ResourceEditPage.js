@@ -1,5 +1,5 @@
 import { Button, Typography, PageHeader, Row, Col, Skeleton, message, Affix } from 'antd';
-
+import { useParams } from "react-router-dom";
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
@@ -51,8 +51,9 @@ const createEmptyPage = () => {
 
 
 export const ResourceEditPage = React.memo((props) => {
+  const params = useParams();
 
-  const { id } = props.match.params;
+  const { id } = params;
   const isNew = !id;
   const [loading, setLoading] = React.useState(!isNew);
   const [saving, setSaving] = React.useState(false);

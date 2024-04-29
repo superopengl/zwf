@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import { PageContainer } from '@ant-design/pro-layout';
@@ -53,7 +53,8 @@ border-radius:4px;
 
 
 const OrgTaskPage = React.memo((props) => {
-  const id = props.match.params.id;
+  const params = useParams();
+  const {id} = params;
 
   const [loading, setLoading] = React.useState(true);
   const [historyVisible, setHistoryVisible] = React.useState(false);

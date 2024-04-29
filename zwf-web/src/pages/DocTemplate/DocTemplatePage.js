@@ -17,7 +17,7 @@ import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from 'components/entityIcon';
 import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 import { ClickToEditInput } from 'components/ClickToEditInput';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 
 const LayoutStyled = styled(Layout)`
@@ -45,7 +45,8 @@ const EMPTY_DOC_TEMPLATE = {
 
 export const DocTemplatePage = (props) => {
 
-  const routeParamId = props.match.params.id;
+  const params = useParams();
+  const {id: routeParamId} = params;
   const docTemplateId = routeParamId || uuidv4();
   const isNew = !routeParamId;
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Row, Col, Typography, Modal, Button, Card, Tag, Alert } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
@@ -77,8 +77,8 @@ const EmptyTaskTamplateSchema = {
 };
 
 export const TaskTemplatePage = props => {
-
-  const routeParamId = props.match.params.id;
+  const params = useParams();
+  const {id: routeParamId} = params;
   const taskTemplateId = routeParamId || uuidv4();
   const isNew = !routeParamId;
 

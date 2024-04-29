@@ -7,6 +7,7 @@ import { getPublishedResourcePage$ } from 'services/resourcePageService';
 import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { TimeAgo } from 'components/TimeAgo';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import { useParams } from "react-router-dom";
 const { Paragraph, Title, Text } = Typography;
 
 
@@ -24,7 +25,8 @@ const LayoutStyled = styled.div`
 
 export const ResourcePage = (props) => {
 
-  const { id } = props.match.params;
+  const params = useParams();
+  const { id } = params;
 
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState();

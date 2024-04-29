@@ -1,11 +1,12 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getDeepLinkedTask$ } from 'services/taskService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { catchError } from 'rxjs/operators';
 
 const TaskDirectPage = (props) => {
-  const { token } = props.match.params;
+  const params = useParams();
+  const { token } = params;
 
   const context = React.useContext(GlobalContext);
   const navigate = useNavigate();
