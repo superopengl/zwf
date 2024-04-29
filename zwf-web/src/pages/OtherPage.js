@@ -1,11 +1,12 @@
 
 // import 'App.css';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const OtherPage = (props) => {
+  const navigate = useNavigate();
   React.useEffect(() => {
-    props.history.push('/');
+    history.push('/');
   });
   return null;
 };
@@ -14,4 +15,4 @@ OtherPage.propTypes = {};
 
 OtherPage.defaultProps = {};
 
-export default withRouter(OtherPage);
+export default OtherPage;

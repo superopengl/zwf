@@ -3,7 +3,7 @@ import { Button, Typography, List, Card, Image, Space, Row } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
 import { listPublishedResourcePages$ } from 'services/resourcePageService';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
@@ -30,6 +30,7 @@ export const ResourceListPage = React.memo(props => {
   useDocumentTitle('All resource pages');
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setLoading(true);
@@ -63,7 +64,7 @@ export const ResourceListPage = React.memo(props => {
           hoverable
           title={null}
           bodyStyle={{ paddingTop: 16 }}
-          onClick={() => props.history.push(`/resources/${item.id}`)}
+          onClick={() => history.push(`/resources/${item.id}`)}
         >
           <Space direction="vertical">
             <Space style={{ justifyContent: 'space-between', alignItems: 'flex-start', width: '100%' }}>
@@ -92,4 +93,4 @@ ResourceListPage.propTypes = {};
 
 ResourceListPage.defaultProps = {};
 
-export default withRouter(ResourceListPage);
+export default ResourceListPage;

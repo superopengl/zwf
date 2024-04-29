@@ -1,9 +1,10 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Result, Button } from 'antd';
 const Error404 = props => {
+  const navigate = useNavigate();
   const handleGoHome = () => {
-    props.history.push('/');
+    history.push('/');
   };
 
   return <Result
@@ -18,4 +19,4 @@ Error404.propTypes = {};
 
 Error404.defaultProps = {};
 
-export default withRouter(Error404);
+export default Error404;

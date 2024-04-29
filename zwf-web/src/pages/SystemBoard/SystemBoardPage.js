@@ -1,6 +1,6 @@
 import { Typography } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import styled from 'styled-components';
 
 const { Title } = Typography;
@@ -42,4 +42,4 @@ SystemBoardPage.propTypes = {};
 
 SystemBoardPage.defaultProps = {};
 
-export default withRouter(SystemBoardPage);
+export default SystemBoardPage;

@@ -4,7 +4,7 @@ import { Typography, Button, Table, Input } from 'antd';
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+
 import { Space } from 'antd';
 import { listConfig, saveConfig } from 'services/configService';
 
@@ -138,4 +138,4 @@ ConfigListPage.propTypes = {};
 
 ConfigListPage.defaultProps = {};
 
-export default withRouter(ConfigListPage);
+export default ConfigListPage;

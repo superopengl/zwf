@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -34,6 +34,7 @@ const LayoutStyled = styled(Layout)`
 const SignUpPage = (props) => {
 
   useDocumentTitle('Individual user sign up')
+  const navigate = useNavigate();
 
   return (
     <GlobalContext.Consumer>{
@@ -43,7 +44,7 @@ const SignUpPage = (props) => {
           <PageContainer>
             <ContainerStyled>
               <Logo />
-              <SignUpForm onOk={() => props.history.push('/')} />
+              <SignUpForm onOk={() => history.push('/')} />
             </ContainerStyled>
           </PageContainer>
         </LayoutStyled>;
@@ -57,4 +58,4 @@ SignUpPage.propTypes = {};
 
 SignUpPage.defaultProps = {};
 
-export default withRouter(SignUpPage);
+export default SignUpPage;

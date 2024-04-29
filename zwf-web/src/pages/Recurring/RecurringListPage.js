@@ -5,7 +5,7 @@ import Text from 'antd/lib/typography/Text';
 import {
   DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined, DashOutlined
 } from '@ant-design/icons';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { listRecurring, deleteRecurring, runRecurring } from 'services/recurringService';
@@ -65,6 +65,7 @@ const RecurringListPage = (props) => {
   const [formVisible, setFormVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [currentId, setCurrentId] = React.useState();
+  const navigate = useNavigate();
 
   const isRecurringDeprecated = item => !item.email || !item.taskTemplateId || !item.portfolioName;
 
@@ -218,7 +219,7 @@ const RecurringListPage = (props) => {
       'Successfully run the recurring',
       <Text>The task <TextLink strong onClick={() => {
         notice.close();
-        props.history.push(`/tasks/${task.id}/proceed`);
+        history.push(`/tasks/${task.id}/proceed`);
       }}>{task.name}</TextLink> was created</Text>,
       15
     );
@@ -279,4 +280,4 @@ RecurringListPage.propTypes = {};
 
 RecurringListPage.defaultProps = {};
 
-export default withRouter(RecurringListPage);
+export default RecurringListPage;

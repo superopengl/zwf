@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+
 import { Typography, Button, Form, Input } from 'antd';
 import { signUpOrg$ } from 'services/authService';
 import { notify } from 'util/notify';
@@ -103,4 +103,4 @@ OrgSignUpForm.propTypes = {};
 
 OrgSignUpForm.defaultProps = {};
 
-export default withRouter(OrgSignUpForm);
+export default OrgSignUpForm;

@@ -17,6 +17,7 @@ import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from 'components/entityIcon';
 import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 import { ClickToEditInput } from 'components/ClickToEditInput';
+import { useNavigate } from 'react-router-dom';
 
 
 const LayoutStyled = styled(Layout)`
@@ -52,6 +53,7 @@ export const DocTemplatePage = (props) => {
   const [docTemplate, setDocTemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
   const [previewSider, setPreviewSider] = React.useState(false);
   const [docTemplateName, setDocTemplateName] = React.useState('New Doc Template');
+  const navigate = useNavigate();
   const debugMode = false;
 
   React.useEffect(() => {
@@ -68,7 +70,7 @@ export const DocTemplatePage = (props) => {
   }, []);
 
   const goBack = () => {
-    props.history.push('/doc_template')
+    history.push('/doc_template')
   };
 
   const handleSave = async () => {

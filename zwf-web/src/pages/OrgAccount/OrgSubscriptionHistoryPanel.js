@@ -1,6 +1,6 @@
 import { Tag, Space, Table, Button, Typography } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt } from 'services/subscriptionService';
@@ -139,4 +139,4 @@ OrgSubscriptionHistoryPanel.defaultProps = {
   data: []
 };
 
-export default withRouter(OrgSubscriptionHistoryPanel);
+export default OrgSubscriptionHistoryPanel;

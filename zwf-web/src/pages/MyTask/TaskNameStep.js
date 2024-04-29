@@ -1,7 +1,7 @@
 import { Form, Input, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import StepButtonSet from './StepBottonSet';
 
 const { Title } = Typography;

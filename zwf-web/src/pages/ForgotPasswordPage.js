@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Typography, Input, Button, Form, Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { forgotPassword$ } from 'services/authService';
@@ -26,16 +26,17 @@ const LogoContainer = styled.div`
 
 const { Title } = Typography;
 const ForgotPasswordPage = props => {
+  const navigate = useNavigate();
 
   const goBack = () => {
-    props.history.goBack();
+    history.goBack();
   }
 
   return <LayoutStyled>
     <ContainerStyled>
       <LogoContainer><Logo /></LogoContainer>
       <Title level={2}>Forgot Password</Title>
-      <ForgotPasswordPanel onFinish={() => props.history.push('/')} />
+      <ForgotPasswordPanel onFinish={() => history.push('/')} />
       <Form.Item >
         <Button block type="link" onClick={() => goBack()}>Cancel</Button>
       </Form.Item>
@@ -50,4 +51,4 @@ ForgotPasswordPage.propTypes = {};
 
 ForgotPasswordPage.defaultProps = {};
 
-export default withRouter(ForgotPasswordPage);
+export default ForgotPasswordPage;

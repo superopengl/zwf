@@ -9,7 +9,7 @@ import { Button, Card, List, Modal, Space, Row, Col, Input, Typography, Tooltip,
 import Icon from '@ant-design/icons';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { cloneTaskTemplate$, deleteTaskTemplate, listTaskTemplate } from 'services/taskTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
@@ -47,6 +47,7 @@ export const TaskTemplateListPage = props => {
   const [viewMode, setViewMode] = React.useState('grid');
   const [currentTaskTemplateId, setCurrentTaskTemplateId] = React.useState(null);
   const [modalVisible, setModalVisible] = React.useState(false)
+  const navigate = useNavigate();
 
   const loadList = async () => {
     setLoading(true);
@@ -64,7 +65,7 @@ export const TaskTemplateListPage = props => {
   }, [list, searchText])
 
   const handleEditOne = (id) => {
-    props.history.push(`/task_template/${id}`);
+    history.push(`/task_template/${id}`);
   }
 
   const handleEdit = (item) => {
@@ -91,7 +92,7 @@ export const TaskTemplateListPage = props => {
   }
 
   const handleCreateNew = () => {
-    props.history.push('/task_template/new');
+    history.push('/task_template/new');
   }
 
   const handleClone = item => {
@@ -260,4 +261,4 @@ TaskTemplateListPage.propTypes = {};
 
 TaskTemplateListPage.defaultProps = {};
 
-export default withRouter(TaskTemplateListPage);
+export default TaskTemplateListPage;

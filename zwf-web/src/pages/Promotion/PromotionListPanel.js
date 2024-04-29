@@ -4,7 +4,7 @@ import { Typography, Button, Table, Input, Form, Drawer, InputNumber } from 'ant
 import {
   PlusOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+
 import { Space } from 'antd';
 import { listPromotions$, savePromotion$, newPromotionCode$ } from 'services/promotionService';
 import { TimeAgo } from 'components/TimeAgo';
@@ -165,4 +165,4 @@ PromotionListPanel.propTypes = {
 
 PromotionListPanel.defaultProps = {};
 
-export default withRouter(PromotionListPanel);
+export default PromotionListPanel;

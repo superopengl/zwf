@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
 import { Input, Button, Form, Modal } from 'antd';
 import { changePassword } from 'services/userService';
 import { notify } from 'util/notify';
@@ -75,4 +74,4 @@ ChangePasswordModal.propTypes = {};
 
 ChangePasswordModal.defaultProps = {};
 
-export default withRouter(ChangePasswordModal);
+export default ChangePasswordModal;

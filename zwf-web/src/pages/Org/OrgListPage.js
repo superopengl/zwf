@@ -5,7 +5,7 @@ import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
   ClearOutlined} from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+
 import { Space } from 'antd';
 import { deleteUser, setUserTags } from 'services/userService';
 import { impersonate$ } from 'services/authService';
@@ -314,4 +314,4 @@ OrgListPage.propTypes = {};
 
 OrgListPage.defaultProps = {};
 
-export default withRouter(OrgListPage);
+export default OrgListPage;

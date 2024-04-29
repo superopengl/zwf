@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
 import { DocTemplateIcon, ResourcePageIcon, TaskTemplateIcon } from '../../components/entityIcon';
-import { withRouter, Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { finalize, switchMap, switchMapTo } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { deleteResourcePage$, listAllResourcePages$, saveResourcePage$ } from 'services/resourcePageService';
@@ -46,13 +46,14 @@ export const ResourceEditListPage = props => {
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
   }, [list, searchText])
 
   const handleEdit = (item) => {
-    props.history.push(`/manage/resources/${item.id}`);
+    history.push(`/manage/resources/${item.id}`);
   }
 
   const handleTogglePublished = (item) => {
@@ -97,7 +98,7 @@ export const ResourceEditListPage = props => {
 
 
   const handleCreateNew = () => {
-    props.history.push('/manage/resources/new');
+    history.push('/manage/resources/new');
   }
 
   return (<>
@@ -194,4 +195,4 @@ ResourceEditListPage.propTypes = {};
 
 ResourceEditListPage.defaultProps = {};
 
-export default withRouter(ResourceEditListPage);
+export default ResourceEditListPage;

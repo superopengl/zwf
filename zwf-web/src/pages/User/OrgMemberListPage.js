@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select, PageHeader } from 'antd';
 import {
   UserAddOutlined, GoogleOutlined, QuestionOutlined} from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+
 import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteMember$, impersonate$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
@@ -340,4 +340,4 @@ OrgMemberListPage.propTypes = {};
 
 OrgMemberListPage.defaultProps = {};
 
-export default withRouter(OrgMemberListPage);
+export default OrgMemberListPage;

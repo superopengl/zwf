@@ -6,7 +6,7 @@ import {
   SearchOutlined,
   ClearOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+
 import { Space } from 'antd';
 import { deleteUser, setUserTags } from 'services/userService';
 import { impersonate$ } from 'services/authService';
@@ -311,4 +311,4 @@ SupportListPage.propTypes = {};
 
 SupportListPage.defaultProps = {};
 
-export default withRouter(SupportListPage);
+export default SupportListPage;

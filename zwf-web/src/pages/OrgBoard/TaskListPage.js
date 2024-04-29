@@ -1,6 +1,6 @@
 import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography, PageHeader, Layout, Card } from 'antd';
 import React from 'react';
-import { Link, withRouter } from 'react-router-dom';
+
 import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
@@ -162,4 +162,4 @@ TaskListPage.propTypes = {};
 
 TaskListPage.defaultProps = {};
 
-export default withRouter(TaskListPage);
+export default TaskListPage;

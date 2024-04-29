@@ -1,6 +1,6 @@
 import { Space, Card, Typography, Tooltip, Grid } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { UnreadMessageIcon } from './UnreadMessageIcon';
@@ -27,15 +27,15 @@ box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 `;
 
-export const TaskCard = withRouter((props) => {
+export const TaskCard = (props) => {
 
   const { task, searchText } = props;
   const { id, name, lastUnreadMessageAt, tags } = task;
-  
+  const navigate = useNavigate();
 
   const goToTask = (e, id) => {
     e.stopPropagation();
-    props.history.push(`/task/${id}`);
+    history.push(`/task/${id}`);
   }
   const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
 
@@ -44,7 +44,7 @@ export const TaskCard = withRouter((props) => {
     extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={() => <MdOpenInNew />} /></TextLink>}
     size="small"
     hoverable
-    onClick={() => props.history.push(`/task/${id}`)}
+    onClick={() => history.push(`/task/${id}`)}
     className={lastUnreadMessageAt ? 'unread' : ''}
   >
     <Space direction='vertical' size="middle" style={{width: '100%'}}>
@@ -56,7 +56,7 @@ export const TaskCard = withRouter((props) => {
     </Space>
 
   </StyledCard>
-});
+};
 
 TaskCard.propTypes = {
   task: PropTypes.any.isRequired,

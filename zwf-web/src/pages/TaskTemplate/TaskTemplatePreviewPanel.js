@@ -1,6 +1,6 @@
 import { Typography, Divider } from 'antd';
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from 'components/TaskFormWidget';
@@ -47,4 +47,4 @@ TaskTemplatePreviewPanel.defaultProps = {
   type: 'client',
 };
 
-export default withRouter(TaskTemplatePreviewPanel);
+export default TaskTemplatePreviewPanel;

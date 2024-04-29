@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { withRouter } from 'react-router-dom';
+
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Typography, Button, Alert, Input, Modal, Form, Tooltip, Tag, Drawer, Radio } from 'antd';
@@ -53,4 +53,4 @@ DocTemplateEditorPanel.defaultProps = {
   debug: false
 };
 
-export default withRouter(DocTemplateEditorPanel);
+export default DocTemplateEditorPanel;

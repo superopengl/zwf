@@ -8,7 +8,7 @@ import { TaskIcon } from './entityIcon';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { TaskStatusTag } from './TaskStatusTag';
 import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from 'services/taskDocService';
@@ -43,10 +43,11 @@ const ChatMessage = React.memo(props => {
   </Space>
 });
 
-export const TaskTrackingTimeline = withRouter(React.memo((props => {
+export const TaskTrackingTimeline = React.memo((props => {
   const { dataSource, mode, ...others } = props;
 
   const context = React.useContext(GlobalContext);
+  const navigate = useNavigate();
   const currentUserId = context.user.id;
 
   const multiMode = mode === 'multi';
@@ -71,7 +72,7 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
         </Row>
 
         <Row gutter={40} wrap={false}
-          onClick={() => multiMode ? props.history.push(`/task/${item.taskId}`) : null}
+          onClick={() => multiMode ? history.push(`/task/${item.taskId}`) : null}
         >
           <Col flex={1}>
             <Space direction="vertical" size="small" style={{ width: '100%' }} className="activity-title">
@@ -103,7 +104,7 @@ export const TaskTrackingTimeline = withRouter(React.memo((props => {
       <Text type="secondary"><small>Last activity already</small></Text>
     </Row>}
   </>
-})));
+}));
 
 TaskTrackingTimeline.propTypes = {
   dataSource: PropTypes.array.isRequired,

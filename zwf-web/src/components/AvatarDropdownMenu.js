@@ -5,7 +5,7 @@ import { RoleRoute } from 'components/RoleRoute';
 import {
   QuestionOutlined
 } from '@ant-design/icons';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { logout$ } from 'services/authService';
 import { Dropdown, Menu, Modal, Layout, Button, Typography } from 'antd';
 import styled from 'styled-components';
@@ -39,7 +39,7 @@ const StyledMenu = styled(Menu)`
 }
 `;
 
-export const AvatarDropdownMenu = withRouter(React.memo(props => {
+export const AvatarDropdownMenu = React.memo(props => {
   const { user, role, setUser } = React.useContext(GlobalContext);
 
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
@@ -48,6 +48,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
   const [tcVisible, setTcVisible] = React.useState(false);
   const [ppVisible, setPpVisible] = React.useState(false);
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
+  const navigate = useNavigate();
 
   const email = user?.profile?.email;
   const avatarFileId = user?.profile?.avatarFileId;
@@ -56,7 +57,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
   }
 
   const goToHomePage = () => {
-    props.history.push('/')
+    history.push('/')
   }
 
   const handleLogout = () => {
@@ -92,7 +93,7 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
     {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
       Organization Profile
     </Menu.Item>}
-    {isAdmin && <Menu.Item key="subscription_billing" onClick={() => props.history.push('/account')}>
+    {isAdmin && <Menu.Item key="subscription_billing" onClick={() => history.push('/account')}>
       Subscription & Billings
     </Menu.Item>}
     <Menu.Divider />
@@ -165,4 +166,4 @@ export const AvatarDropdownMenu = withRouter(React.memo(props => {
       <OrgProfileForm onOk={() => setOrgProfileVisible(false)} />
     </Modal>
   </>
-}));
+});

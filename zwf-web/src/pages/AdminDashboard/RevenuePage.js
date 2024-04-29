@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Space, Select, Button, Card } from 'antd';
-import { withRouter } from 'react-router-dom';
+
 import RevenueChart from 'components/charts/RevenueChart';
 import { Loading } from 'components/Loading';
 import { getRevenueChartData } from 'services/revenueService';
@@ -62,4 +62,4 @@ RevenuePage.propTypes = {};
 
 RevenuePage.defaultProps = {};
 
-export default withRouter(RevenuePage);
+export default RevenuePage;

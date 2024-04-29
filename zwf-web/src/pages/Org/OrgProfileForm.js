@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { withRouter } from 'react-router-dom';
+
 import { Layout } from 'antd';
 import { Logo } from 'components/Logo';
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -137,4 +137,4 @@ OrgProfileForm.defaultProps = {
   mode: 'update'
 };
 
-export default withRouter(OrgProfileForm);
+export default OrgProfileForm;

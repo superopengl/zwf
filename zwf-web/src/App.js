@@ -1,6 +1,6 @@
 import React from 'react';
 import 'antd/dist/antd.less';
-import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { RoleRoute } from 'components/RoleRoute';
@@ -109,21 +109,21 @@ export const App = React.memo(() => {
       <ConfigProvider locale={antdLocale}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
-            <Switch>
-              <RoleRoute loading={loading} path={['/', '/resources', '/resources/:id']} exact component={PortalApp} />
-              <RoleRoute visible={isGuest} exact path="/login" component={LogInPage} />
-              <RoleRoute visible={isGuest} exact path="/signup" component={SignUpPage} />
-              <RoleRoute visible={isGuest} exact path="/signup/org" component={OrgSignUpPage} />
-              <RoleRoute visible={isGuest} exact path="/forgot_password" component={ForgotPasswordPage} />
-              <RoleRoute exact path="/reset_password" component={ResetPasswordPage} />
-              <RoleRoute exact path="/terms_and_conditions" component={TermAndConditionPage} />
-              <RoleRoute exact path="/privacy_policy" component={PrivacyPolicyPage} />
-              <RoleRoute visible={!isSystem} exact path="/task/direct/:token" component={TaskDirectPage} />
-              <RoleRoute path="*" component={AppLoggedIn} />
+            <Routes>
+              <Route path={['/', '/resources', '/resources/:id']} element={<PortalApp />} />
+              {isGuest && <Route path="/login" element={<LogInPage />} />}
+              {isGuest && <Route path="/signup" element={<SignUpPage />} />}
+              {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
+              {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
+              <Route path="/reset_password" element={<ResetPasswordPage />} />
+              <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
+              <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
+              {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
+              <Route path="*" element={<AppLoggedIn />} />
               {/* <Redirect to="/" /> */}
-              {/* <RoleRoute loading={loading} component={Error404} /> */}
-              {/* <RoleRoute component={Error404} /> */}
-            </Switch>
+              {/* <RoleRoute loading={loading} element={Error404} /> */}
+              {/* <RoleRoute element={Error404} /> */}
+            </Routes>
           </BrowserRouter>
         </IntlProvider>
       </ConfigProvider>

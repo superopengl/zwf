@@ -1,7 +1,7 @@
 import { Button, Layout, Card, Space, Typography, Row, Col, Spin } from 'antd';
 
 import React from 'react';
-import { withRouter, Link } from 'react-router-dom';
+
 import { SyncOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { getStats } from 'services/statsService';
@@ -128,4 +128,4 @@ AdminStatsPage.propTypes = {};
 
 AdminStatsPage.defaultProps = {};
 
-export default withRouter(AdminStatsPage);
+export default AdminStatsPage;
