@@ -5,7 +5,7 @@ import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation
 import { TaskAction } from './../entity/TaskAction';
 import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
-
+import * as _ from 'lodash';
 import * as moment from 'moment';
 import { EntityManager, getManager, getRepository, Not, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
@@ -20,7 +20,6 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { getNow } from '../utils/getNow';
-import * as _ from 'lodash';
 import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import { sendCompletedEmail } from '../utils/sendCompletedEmail';
 import { sendArchiveEmail } from '../utils/sendArchiveEmail';
@@ -103,7 +102,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
-  const { fields, deletedFieldIds } = req.body;
+  const { fields } = req.body;
   const { id } = req.params;
 
   assert(fields.length, 400, 'No fields to update');
@@ -111,6 +110,9 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   const query: any = { id, orgId: getOrgIdFromReq(req) };
   const task = await AppDataSource.getRepository(Task).findOne({
     where: query,
+    relations: {
+      fields: true,
+    },
     select: {
       id: true,
       fields: {
@@ -123,6 +125,10 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   fields.forEach(f => {
     f.taskId = id;
   })
+
+  const originalFieldIds = task.fields.map(x => x.id);
+  const currentFieldIds = fields.map(x => x.id);
+  const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
 
   await AppDataSource.transaction(async m => {
     await m.getRepository(TaskField).save(fields);
