@@ -1,6 +1,5 @@
 import React from 'react';
 import { Row, Col } from 'antd';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import { FieldItemEditor } from './FieldItemEditor';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -9,87 +8,33 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import update from 'react-addons-update';
 import { v4 as uuidv4 } from 'uuid';
 
-const StyledDragItem = styled(Col)`
-position: relative;
-
-// &::before {
-//   content: ':::';
-//   position: absolute;
-//   left: 0;
-//   top: 4px;
-//   bottom: 0;
-//   margin: auto;
-//   color: rgb(192, 192, 192);
-// }
-`;
-
-const reorder = (list, startIndex, endIndex) => {
-  const result = Array.from(list);
-  const [removed] = result.splice(startIndex, 1);
-  result.splice(endIndex, 0, removed);
-
-  return result;
-};
-
-const getDroppableAreaStyle = isDraggingOver => ({
-  background: isDraggingOver ? "#37AFD222" : "none",
-  padding: 0,
-  // width: '100%'
-});
-
-const getDraggingItemStyle = (isDragging, draggableStyle) => ({
-  ...draggableStyle,
-  background: isDragging ? '#ffffff77' : 'none',
-  padding: isDragging ? 8 : 0,
-  border: isDragging ? '1px dashed rgb(217, 217, 217)' : 'none',
-  borderRadius: isDragging ? 4 : 0,
-});
 
 export const DroppableFieldList = (props) => {
 
   const { items, onChange } = props;
 
-  const [allItems, setAllItems] = React.useState(items.map(x => {
-    x.id = x.id || uuidv4()
-    return x;
-  }));
+  const [allItems, setAllItems] = React.useState([]);
+
+  React.useEffect(() => {
+    setAllItems(items.map(x => {
+      x.id = x.id || uuidv4()
+      return x;
+    }));
+  }, [items]);
 
 
   const handleDelete = deletedIndex => {
-    setAllItems(prevItems => prevItems.filter((x, i) => i !== deletedIndex));
+    onChange(prevItems => prevItems.filter((x, i) => i !== deletedIndex));
   }
 
   const handleChange = (index, updatedItem) => {
     allItems[index] = updatedItem;
-    setAllItems([...allItems]);
+    onChange([...allItems]);
   }
 
-  const handleMove = React.useCallback((dragIndex, hoverIndex) => {
-    setAllItems((prevItems) =>
-      update(prevItems, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, prevItems[dragIndex]],
-        ],
-      }),
-    )
-  }, [])
-
-  // const renderField = React.useCallback((item, index) => {
-  //   return (
-  //     <DraggableFieldItem
-  //       key={index}
-  //       item={item}
-  //       index={index}
-  //       onDelete={() => handleDelete(index)}
-  //       onChange={updatedItem => handleChange(index, updatedItem)}
-  //       onMove={handleMove}
-  //     />
-  //   )
-  // }, [])
 
   const handleMoveItem = React.useCallback((dragIndex, hoverIndex) => {
-    setAllItems((prevCards) =>
+    onChange((prevCards) =>
       update(prevCards, {
         $splice: [
           [dragIndex, 1],
@@ -105,6 +50,8 @@ export const DroppableFieldList = (props) => {
         index={index}
         field={field}
         onMoveItem={handleMoveItem}
+        onDelete={() => handleDelete(index)}
+        onChange={updatedItem => handleChange(index, updatedItem)}
       />
     )
   }, [])
@@ -130,7 +77,7 @@ DroppableFieldList.propTypes = {
 DroppableFieldList.defaultProps = {
 };
 
-export const DraggableFieldItem = ({ field, index, onMoveItem }) => {
+export const DraggableFieldItem = ({ field, index, onMoveItem, onDelete, onChange }) => {
   const style = {
     // border: '1px dashed gray',
     // padding: '0.5rem 1rem',
@@ -203,8 +150,8 @@ export const DraggableFieldItem = ({ field, index, onMoveItem }) => {
       <FieldItemEditor
         value={field}
         index={index}
-        // onDelete={onDelete}
-        // onChange={updatedItem => onChange(updatedItem)}
+        onDelete={onDelete}
+        onChange={onChange}
       />
     </Col>
   )
