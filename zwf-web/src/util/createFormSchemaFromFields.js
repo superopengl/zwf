@@ -19,7 +19,10 @@ export function createFormSchemaFromFields(fields, official) {
         widget: widgetDef.widget,
         widgetProps: {
           ...widgetDef.widgetPorps,
-          ...(f.type === 'upload' ? {fieldId: f.id} : null),
+          ...(f.type === 'upload' ? {
+            fieldId: f.id,
+            docs: f.docs,
+          } : null),
         }
       };
     })

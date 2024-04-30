@@ -54,7 +54,7 @@ export class TaskDoc {
   @Column({ default: 'done' })
   status: 'pending' | 'proceeding' | 'done';
 
-  @OneToOne(() => File)
+  @OneToOne(() => File, { eager: false })
   @JoinColumn({ name: 'fileId', referencedColumnName: 'id' })
   file: File;
 
@@ -62,11 +62,11 @@ export class TaskDoc {
   @Index()
   fieldId: string;
 
-  @ManyToOne(() => TaskField, field => field.docs, { onDelete: 'CASCADE' })
+  @ManyToOne(() => TaskField, field => field.docs, { onDelete: 'CASCADE', eager: false })
   // @JoinColumn({ name: 'taskFieldId', referencedColumnName: 'id' })
   field: TaskField;
 
-  @ManyToOne(() => DocTemplate, docTemplate => docTemplate.docs)
+  @ManyToOne(() => DocTemplate, docTemplate => docTemplate.docs, { eager: false })
   @JoinColumn({ name: 'docTemplateId', referencedColumnName: 'id' })
   docTemplate: DocTemplate;
 }

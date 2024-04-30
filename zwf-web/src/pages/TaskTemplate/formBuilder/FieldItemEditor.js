@@ -23,7 +23,7 @@ export const FieldItemEditor = (props) => {
   const widgetDef = TaskTemplateWidgetDef.find(x => x.type === item.type);
   const name = item.name;
 
-  const meta = React.useMemo(() => ({
+   const meta = React.useMemo(() => ({
     columns: 1,
     fields: [
       {
@@ -37,7 +37,8 @@ export const FieldItemEditor = (props) => {
         widget: widgetDef.widget,
         widgetProps: {
           ...widgetDef.widgetPorps,
-          ...(item.type === 'autodoc' ? { mode: 'taskTemplate' } : null)
+          ...(item.type === 'autodoc' ? { mode: 'taskTemplate' } : null),
+          // ...(item.type === 'upload' ? { docs: item.docs } : null)
         },
         // valuePropName: item.type === 'upload' ? 'docs' : null
       }

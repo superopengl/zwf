@@ -52,25 +52,6 @@ paths:
       responses:
         200:
           description: OK
-  /file/download/task/{taskId}/file/{fileId}:
-    get:
-      operationId: downloadTaskFile
-      # security:
-      #   - authLoggedInUser: []
-      parameters:
-        - name: taskId
-          in: path
-          type: string
-          format: uuid
-          required: true
-        - name: fileId
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /file/meta:
     post:
       operationId: searchFileMetaList
@@ -901,7 +882,26 @@ paths:
           required: true        
       responses:
         200:
-          description: OK              
+          description: OK     
+  /task/field/{fieldId}/file/{docId}:
+    get:
+      operationId: downloadTaskFieldFile
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: fieldId
+          in: path
+          type: string
+          format: uuid
+          required: true
+        - name: docId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                   
   /task/{id}/assign:
     post:
       operationId: assignTask
