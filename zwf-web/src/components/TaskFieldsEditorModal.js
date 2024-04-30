@@ -8,6 +8,7 @@ import { MdDriveFileRenameOutline } from 'react-icons/md'
 import { RiInsertRowBottom } from 'react-icons/ri';
 import { TaskTemplateFieldsEditor } from 'pages/TaskTemplate/formBuilder/TaskTemplateFieldsEditor';
 import PropTypes from 'prop-types';
+import _ from 'lodash';
 
 const { Text, Paragraph } = Typography;
 
@@ -18,7 +19,10 @@ export const TaskFieldsEditorModal = props => {
   const handleSaveTaskFields = async () => {
     await formRef.current.validateFields();
     const values = formRef.current.getFieldsValue();
-    saveTaskFields$(task.id, values.fields).subscribe(() => {
+    const originalFieldIds = task.fields.map(f => f.id);
+    const currentFieldIds = values.fields.map(f => f.id);
+    const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
+    saveTaskFields$(task.id, values.fields, deletedFieldIds).subscribe(() => {
       onOk();
     });
   }
