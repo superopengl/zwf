@@ -68,7 +68,6 @@ export const TaskTemplateFieldsEditor = (props) => {
           Add Field At Bottom
         </Button>
       </Row>
-      <em>{JSON.stringify(value, null, 2)}</em>
     </>
   );
 }

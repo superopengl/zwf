@@ -13,15 +13,17 @@ export const DroppableFieldList = (props) => {
 
   const { items, onChange } = props;
 
-  const [allItems, setAllItems] = React.useState([]);
+  const [allItems, setAllItems] = React.useState(items.map(x => {
+    x.id = x.id || uuidv4()
+    return x;
+  }));
 
   React.useEffect(() => {
     setAllItems(items.map(x => {
       x.id = x.id || uuidv4()
       return x;
-    }));
+    }))
   }, [items]);
-
 
   const handleDelete = deletedIndex => {
     onChange(allItems.filter((x, i) => i !== deletedIndex));
@@ -32,17 +34,23 @@ export const DroppableFieldList = (props) => {
     onChange([...allItems]);
   }
 
+  const handleDropEnd = () => {
+    debugger;
+    onChange(allItems);
+  }
 
   const handleMoveItem = React.useCallback((dragIndex, hoverIndex) => {
-    const newItems = update(allItems, {
-      $splice: [
-        [dragIndex, 1],
-        [hoverIndex, 0, allItems[dragIndex]],
-      ],
-    });
-    onChange(newItems);
-  }, [])
-  const renderCard = React.useCallback((field, index) => {
+    setAllItems((prevCards) =>
+      update(prevCards, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, prevCards[dragIndex]],
+        ],
+      }),
+    )
+  }, []);
+
+  const renderCard = (field, index) => {
     return (
       <DraggableFieldItem
         key={field.id}
@@ -51,9 +59,10 @@ export const DroppableFieldList = (props) => {
         onMoveItem={handleMoveItem}
         onDelete={() => handleDelete(index)}
         onChange={updatedItem => handleChange(index, updatedItem)}
+        onDropEnd={() => handleDropEnd()}
       />
     )
-  }, [])
+  }
 
   return (
     <DndProvider backend={HTML5Backend}>
@@ -62,7 +71,15 @@ export const DroppableFieldList = (props) => {
       // ref={drop}
       // style={getDroppableAreaStyle(isOver)}
       >
-        {allItems.map((item, index) => renderCard(item, index))}
+        {allItems.map((item, index) => <DraggableFieldItem
+          key={item.id}
+          index={index}
+          field={item}
+          onMoveItem={handleMoveItem}
+          onDelete={() => handleDelete(index)}
+          onChange={updatedItem => handleChange(index, updatedItem)}
+          onDropEnd={() => handleDropEnd()}
+        />)}
       </Row>
     </DndProvider>
   );
@@ -76,7 +93,7 @@ DroppableFieldList.propTypes = {
 DroppableFieldList.defaultProps = {
 };
 
-export const DraggableFieldItem = ({ field, index, onMoveItem, onDelete, onChange }) => {
+export const DraggableFieldItem = ({ field, index, onMoveItem, onDelete, onChange, onDropEnd }) => {
   const style = {
     // border: '1px dashed gray',
     // padding: '0.5rem 1rem',
@@ -92,6 +109,9 @@ export const DraggableFieldItem = ({ field, index, onMoveItem, onDelete, onChang
       return {
         handlerId: monitor.getHandlerId(),
       }
+    },
+    drop(item, monitor) {
+      onDropEnd();
     },
     hover(item, monitor) {
       if (!ref.current) {

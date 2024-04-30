@@ -116,7 +116,7 @@ export const TaskTemplatePage = props => {
   }, [taskTemplateName])
 
   const goBack = () => {
-    navigate(-1)
+    navigate('/task_template')
   }
 
   const handleSave = async () => {
