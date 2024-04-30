@@ -1,7 +1,6 @@
 import * as AWS from 'aws-sdk';
 import * as moment from 'moment-timezone';
 import { start } from './jobStarter';
-import * as _ from 'lodash';
 
 AWS.config.update({ region: 'us-east-1' });
 const cloudwatchevents = new AWS.CloudWatchEvents();
@@ -57,7 +56,7 @@ function getDescription(data) {
 }
 
 function getCronInUtcTime(newYorkTimeHHmmArray) {
-    const array = _.isArray(newYorkTimeHHmmArray) ? newYorkTimeHHmmArray : [newYorkTimeHHmmArray];
+    const array = Array.isArray(newYorkTimeHHmmArray) ? newYorkTimeHHmmArray : [newYorkTimeHHmmArray];
     const times = array.map(x => moment.tz(x, 'H:mm', NY_TIMEZONE).tz(UTC_TIMEZONE));
     const minute = times[0].format('mm');
     const hours = times.map(t => t.format('H')).join(',');
