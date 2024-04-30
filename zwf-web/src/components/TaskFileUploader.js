@@ -123,8 +123,13 @@ export const TaskFileUploader = (props) => {
     setFileList(fileList);
 
     if (file.status === 'done' || file.status === 'removed') {
-      props.onAdd?.(_.get(file, 'response.id', file.uid));
-      onChange(fileList.map(f => f.id || f.response.id));
+      // props.onAdd?.(_.get(file, 'response.id', file.uid));
+      const newTaskDocId = file.response?.id
+      if (newTaskDocId) {
+        file.uid = newTaskDocId;
+        file.url = `${API_BASE_URL}/task/field/${fieldId}/file/${newTaskDocId}`
+      }
+      onChange(fileList.map(f => f.uid));
     }
 
     const uploading = file.status === 'uploading';
@@ -138,7 +143,7 @@ export const TaskFileUploader = (props) => {
   }
 
   const handleRemove = file => {
-    props.onRemove?.(file.uid);
+    onChange(fileList.filter(f => f !== file));
   }
 
   const getFileIcon = file => <FileIconWithOverlay
