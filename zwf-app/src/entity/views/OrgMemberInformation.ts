@@ -27,7 +27,8 @@ import { UserProfile } from '../UserProfile';
       'u."lastLoggedInAt"',
       'u."lastNudgedAt"',
       'u."createdAt" as "createdAt"',
-    ])
+    ]),
+  dependsOn: [Org, User, UserProfile]
 }) export class OrgMemberInformation {
   @ViewColumn()
   orgId: string;
@@ -49,7 +50,7 @@ import { UserProfile } from '../UserProfile';
 
   @ViewColumn()
   locale: string;
-  
+
   @ViewColumn()
   loginType: string;
 

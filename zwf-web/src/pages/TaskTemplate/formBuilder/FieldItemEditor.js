@@ -38,7 +38,8 @@ export const FieldItemEditor = (props) => {
         widgetProps: {
           ...widgetDef.widgetPorps,
           ...(item.type === 'autodoc' ? { mode: 'taskTemplate' } : null)
-        }
+        },
+        valuePropName: item.type === 'upload' ? 'docs' : null
       }
     ]
   }), [item]);

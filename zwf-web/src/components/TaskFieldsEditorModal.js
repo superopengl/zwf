@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Typography, Input, Row, Col, Button, Form, Avatar, Divider } from 'antd';
 import { TaskIcon } from 'components/entityIcon';
-import { getTaskDeepLinkUrl, renameTask$, saveTaskFields$} from 'services/taskService';
+import { getTaskDeepLinkUrl, renameTask$, updateTaskFields$} from 'services/taskService';
 import { ClickToCopyTooltip } from './ClickToCopyTooltip';
 import Icon, { ShareAltOutlined } from '@ant-design/icons';
 import { MdDriveFileRenameOutline } from 'react-icons/md'
@@ -19,10 +19,7 @@ export const TaskFieldsEditorModal = props => {
   const handleSaveTaskFields = async () => {
     await formRef.current.validateFields();
     const values = formRef.current.getFieldsValue();
-    const originalFieldIds = task.fields.map(f => f.id);
-    const currentFieldIds = values.fields.map(f => f.id);
-    const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
-    saveTaskFields$(task.id, values.fields, deletedFieldIds).subscribe(() => {
+    updateTaskFields$(task.id, values.fields).subscribe(() => {
       onOk();
     });
   }

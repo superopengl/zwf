@@ -22,7 +22,8 @@ import { UserStatus } from '../../types/UserStatus';
       'u.role as role',
       'u.status as status',
       'u.tags as tags',
-    ])
+    ]),
+  dependsOn: [Org, OrgClient, UserInformation]
 }) export class OrgClientInformation {
   @ViewColumn()
   @PrimaryColumn()

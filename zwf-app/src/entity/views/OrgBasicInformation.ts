@@ -24,7 +24,8 @@ import { OrgAliveSubscription } from './OrgAliveSubscription';
       's.start as "subscriptionStart"',
       's.end as "subscriptionEnd"',
       's.seats as seats',
-    ])
+    ]),
+  dependsOn: [User, UserProfile, OrgAliveSubscription]
 })
 export class OrgBasicInformation {
   @ViewColumn()

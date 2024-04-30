@@ -12,7 +12,7 @@ export class TaskField {
   @Column('uuid')
   taskId: string;
 
-  @ManyToOne(() => Task, task => task.fields, { onDelete: 'CASCADE' })
+  @ManyToOne(() => Task, task => task.fields, { onDelete: 'CASCADE', eager: false })
   task: Task;
 
   @Column()

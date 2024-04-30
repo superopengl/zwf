@@ -35,7 +35,8 @@ import { Payment } from '../Payment';
       '"periodDays"',
       '"usedDays"',
       'trunc("paidAmount" * ("periodDays" - "usedDays") / "periodDays", 2) as "refundableAmount"'
-    ])
+    ]),
+  dependsOn: [Subscription, Payment]
 })
 export class OrgCurrentSubscriptionRefund {
   @ViewColumn()

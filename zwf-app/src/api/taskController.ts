@@ -101,7 +101,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
   });
 });
 
-export const saveTaskFields = handlerWrapper(async (req, res) => {
+export const updateTaskFields = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { fields, deletedFieldIds } = req.body;
   const { id } = req.params;
@@ -109,7 +109,15 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
   assert(fields.length, 400, 'No fields to update');
 
   const query: any = { id, orgId: getOrgIdFromReq(req) };
-  const task = await AppDataSource.getRepository(Task).findOne({ where: query, select: { id: true } });
+  const task = await AppDataSource.getRepository(Task).findOne({
+    where: query,
+    select: {
+      id: true,
+      fields: {
+        id: true
+      }
+    }
+  });
   assert(task, 404);
 
   fields.forEach(f => {
@@ -118,7 +126,7 @@ export const saveTaskFields = handlerWrapper(async (req, res) => {
 
   await AppDataSource.transaction(async m => {
     await m.getRepository(TaskField).save(fields);
-    if(deletedFieldIds?.length) {
+    if (deletedFieldIds?.length) {
       await m.getRepository(TaskField).delete(deletedFieldIds);
     }
   })

@@ -32,7 +32,8 @@ import { TaskStatus } from '../../types/TaskStatus';
       `COUNT(*) FILTER (where t.status = '${TaskStatus.ACTION_REQUIRED}') AS "countActionRequired"`,
       `COUNT(*) FILTER (where t.status = '${TaskStatus.DONE}') AS "countDone"`,
       `COUNT(*) FILTER (where t.status = '${TaskStatus.ARCHIVED}') AS "countArchived"`,
-    ])
+    ]),
+  dependsOn: [OrgClientInformation, TaskInformation]
 }) export class OrgClientStatInformation {
   @ViewColumn()
   @PrimaryColumn()

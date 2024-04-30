@@ -24,7 +24,8 @@ import { DocTemplate } from '../DocTemplate';
     .select([
       't.*',
       `coalesce(y.docs, '{}'::json[]) as docs`,
-    ])
+    ]),
+  dependsOn: [TaskTemplate, TaskTemplateDocTemplate, DocTemplate]
 }) export class TaskTemplateInformation {
   @ViewColumn()
   id: string;
@@ -51,5 +52,5 @@ import { DocTemplate } from '../DocTemplate';
   fields: any;
 
   @ViewColumn()
-  docs: Array<{id: string, name: string, variables: string[]}>;
+  docs: Array<{ id: string, name: string, variables: string[] }>;
 }

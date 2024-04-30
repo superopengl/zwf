@@ -27,7 +27,8 @@ import { SupportUserLastAccess } from '../SupportUserLastAccess';
       'u."orgOwner" as "orgOwner"',
       'u."orgId" as "orgId"',
       'COALESCE(r.count, 0) as "unreadCount"',
-    ])
+    ]),
+  dependsOn: [UserInformation, SupportPendingReplyInformation]
 })
 export class SupportInformation {
   @ViewColumn()

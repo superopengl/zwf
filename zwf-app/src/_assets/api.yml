@@ -864,7 +864,7 @@ paths:
           description: OK
   /task/{id}/fields:
     post:
-      operationId: saveTaskFields
+      operationId: updateTaskFields
       # security:
       #   - authClient: []
       parameters:

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from './TaskFormWidget';
-import { saveTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } from 'services/taskService';
+import { updateTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } from 'services/taskService';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { isEmpty } from 'lodash';

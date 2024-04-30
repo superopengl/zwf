@@ -1,6 +1,6 @@
 import { TaskInformation } from './TaskInformation';
-import { TaskActionType } from './../../types/TaskActionType';
-import { TaskTracking } from './../TaskTracking';
+import { TaskActionType } from '../../types/TaskActionType';
+import { TaskTracking } from '../TaskTracking';
 import { ViewEntity, Connection, ViewColumn } from 'typeorm';
 import { Task } from '../Task';
 
@@ -23,7 +23,8 @@ import { Task } from '../Task';
       'k."by" as "by"',
       'k."action" as "action"',
       'k."info" as "info"',
-    ])
+    ]),
+  dependsOn: [TaskInformation, TaskTracking]
 }) export class TaskTrackingInformation {
   @ViewColumn()
   id: string;

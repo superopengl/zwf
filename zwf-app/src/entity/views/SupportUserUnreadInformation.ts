@@ -13,7 +13,8 @@ import { SupportUserLastAccess } from '../SupportUserLastAccess';
     .select([
       'x."userId" as "userId"',
       'COUNT(1) as count',
-    ])
+    ]),
+  dependsOn: [SupportMessage, SupportUserLastAccess]
 })
 export class SupportUserUnreadInformation {
   @ViewColumn()
