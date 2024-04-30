@@ -11,14 +11,6 @@ import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
 const { Text, Paragraph } = Typography;
 // Import style
 
-export const createEmptyField = () => {
-  return {
-    type: 'input',
-    name: 'Unnamed field',
-    description: '',
-  }
-}
-
 export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
   const { value: template, onChange } = props;
 
@@ -29,7 +21,7 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
     name: template?.name || '',
     description: template?.description || '',
     docTemplateIds: template?.docs?.map(d => d.id) || [],
-    fields: isEmpty(template?.fields) ? [createEmptyField()] : template.fields
+    fields: template?.fields || [],
   };
 
   const handleValueChange = (changedValues, allValues) => {

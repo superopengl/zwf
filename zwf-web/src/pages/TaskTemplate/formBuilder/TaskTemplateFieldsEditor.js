@@ -4,11 +4,18 @@ import { camelCase } from 'lodash';
 import { arrayMove } from '@dnd-kit/sortable';
 import { PlusOutlined } from '@ant-design/icons';
 import { DroppableFieldList } from './DroppableFieldList';
-import { createEmptyField } from './TaskTemplateBuilder';
 import PropTypes from 'prop-types';
 import { showFieldItemEditor } from './showFieldItemEditor';
 import {RiInsertRowTop, RiInsertRowBottom} from 'react-icons/ri';
 import Icon from '@ant-design/icons';
+
+const createEmptyField = () => {
+  return {
+    type: 'input',
+    name: 'Unnamed field',
+    description: '',
+  }
+}
 
 export const TaskTemplateFieldsEditor = (props) => {
   const { value, onChange } = props;
@@ -72,6 +79,7 @@ export const TaskTemplateFieldsEditor = (props) => {
           Add Field At Bottom
         </Button>
       </Row>
+      <em>{JSON.stringify(value, null, 2)}</em>
     </>
   );
 }
