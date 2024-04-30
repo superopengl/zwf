@@ -24,7 +24,7 @@ export const DroppableFieldList = (props) => {
 
 
   const handleDelete = deletedIndex => {
-    onChange(prevItems => prevItems.filter((x, i) => i !== deletedIndex));
+    onChange(allItems.filter((x, i) => i !== deletedIndex));
   }
 
   const handleChange = (index, updatedItem) => {
@@ -34,14 +34,13 @@ export const DroppableFieldList = (props) => {
 
 
   const handleMoveItem = React.useCallback((dragIndex, hoverIndex) => {
-    onChange((prevCards) =>
-      update(prevCards, {
-        $splice: [
-          [dragIndex, 1],
-          [hoverIndex, 0, prevCards[dragIndex]],
-        ],
-      }),
-    )
+    const newItems = update(allItems, {
+      $splice: [
+        [dragIndex, 1],
+        [hoverIndex, 0, allItems[dragIndex]],
+      ],
+    });
+    onChange(newItems);
   }, [])
   const renderCard = React.useCallback((field, index) => {
     return (
