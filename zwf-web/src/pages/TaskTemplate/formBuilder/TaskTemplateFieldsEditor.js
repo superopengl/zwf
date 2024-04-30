@@ -1,7 +1,6 @@
 import React from 'react';
 import { Row, Button, Alert } from 'antd';
 import { camelCase } from 'lodash';
-import { arrayMove } from '@dnd-kit/sortable';
 import { PlusOutlined } from '@ant-design/icons';
 import { DroppableFieldList } from './DroppableFieldList';
 import PropTypes from 'prop-types';
