@@ -19,12 +19,12 @@ import { TaskDoc } from '../entity/TaskDoc';
 
 export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
-  const { taskId, fileId } = req.params;
+  const { fileId } = req.params;
   const { user: { id: userId, role } } = req as any;
 
   const taskRepo = AppDataSource.getRepository(TaskDoc);
   const taskDoc = await taskRepo.findOne({
-    where: { taskId, fileId },
+    where: { fileId },
     relations: { file: true }
   });
   assert(taskDoc?.file, 404);
