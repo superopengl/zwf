@@ -35,7 +35,6 @@ export const DroppableFieldList = (props) => {
   }
 
   const handleDropEnd = () => {
-    debugger;
     onChange(allItems);
   }
 

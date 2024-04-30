@@ -60,9 +60,9 @@ export const FieldItemEditor = (props) => {
 
   return <Row wrap={false} gutter={16}>
     <Col flex="auto">
-      <Form layout="horizontal" ref={formRef}>
-        <FormBuilder meta={meta} form={formRef} />
-      </Form>
+      {/* <Form layout="horizontal" ref={formRef}> */}
+        <FormBuilder meta={meta} />
+      {/* </Form> */}
     </Col>
     <Col>
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>
