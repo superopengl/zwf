@@ -1,30 +1,23 @@
 import React from 'react';
 
-import { Draggable } from 'react-beautiful-dnd';
 import PropTypes from 'prop-types';
 import { TaskCard } from './TaskCard';
+import { useDrag } from 'react-dnd'
 
 export const TaskDraggableCard = (props) => {
+  const { task, searchText } = props;
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: 'taskCard',
+    item: { id: task.id, status: task.status },
+    collect: monitor => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }))
 
-  const { task, index, searchText } = props;
-
-  const getItemStyle = (isDragging, draggableStyle) => ({
-    // background: isDragging ? "#C0C0C0" : "",
-    ...draggableStyle
-  });
-
-  return <Draggable draggableId={task.id} index={index}>
-    {
-      (provided, snapshot) => (
-        <div ref={provided.innerRef}
-          {...provided.draggableProps}
-          {...provided.dragHandleProps}
-          style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}>
-          <TaskCard task={task} searchText={searchText}/>
-        </div>
-      )
-    }
-  </Draggable>
+  return <div ref={drag}
+    style={{ opacity: isDragging ? 0.5 : 1 }}>
+    <TaskCard task={task} searchText={searchText} />
+  </div>
 };
 
 TaskDraggableCard.propTypes = {

@@ -3,9 +3,10 @@ import Text from 'antd/lib/typography/Text';
 import React from 'react';
 import { changeTaskStatus$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { DragDropContext, Droppable } from 'react-beautiful-dnd';
 import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import PropTypes from 'prop-types';
+import { DndProvider, useDrop } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const { Title } = Typography;
 
@@ -52,51 +53,54 @@ const COLUMN_DEFS = [
 export const TaskBoardPanel = props => {
   const { tasks, onChange, searchText } = props;
 
-  const onDragEnd = result => {
-    const { draggableId: taskId, destination: { droppableId: status } } = result;
-    const task = tasks.find(j => j.id === taskId);
-    if (task.status !== status) {
-      task.status = status;
-      changeTaskStatus$(task.id, status).subscribe(() => {
-        onChange(task);
+  return <DndProvider backend={HTML5Backend}>
+    <StyledRow gutter={10}>
+      {COLUMN_DEFS.map((s, i) => <TaskBoardColumn
+        status={s.status}
+        key={i}
+        searchText={searchText}
+        onChange={onChange}
+        tasks={tasks.filter(t => s.status === t.status)}
+      />)}
+    </StyledRow>
+  </DndProvider>
+}
+
+const TaskBoardColumn = props => {
+  const { status, tasks, onChange, searchText } = props;
+  const style = COLUMN_DEFS.find(x => x.status === status);
+
+  const [{ isOver }, drop] = useDrop(() => ({
+    accept: 'taskCard',
+    drop: (item) => changeTaskStatus(item),
+    collect: monitor => ({
+      isOver: !!monitor.isOver(),
+    }),
+  }))
+
+  const changeTaskStatus = item => {
+    const {id: taskId, status: oldStatus} = item;
+    if(oldStatus !== status) {
+      changeTaskStatus$(taskId, status).subscribe(() => {
+        onChange();
       });
     }
   }
 
-  return <DragDropContext onDragEnd={onDragEnd}>
-    <StyledRow gutter={10}>
-      {COLUMN_DEFS.map((s, i) => <Droppable droppableId={s.status} key={i}>
-        {(provided, snapshot) => {
-          const tasksInCol = tasks.filter(t => s.status === t.status);
-          return (
-            <Col span={6}
-              ref={provided.innerRef}>
-              <StyledColumn direction="vertical" style={{
-                backgroundColor: s.bgColor,
-                borderWidth: 2,
-                borderStyle: `${snapshot.isDraggingOver ? 'dashed' : 'solid'}`,
-                borderColor: `${snapshot.isDraggingOver ? s.hoverColor : s.bgColor}`
-              }}>
-                <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16, opacity: 0.4 }}>
-                  <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }}>{s.label}</Title>
-                  <Text strong>{tasksInCol.length}</Text>
-                </Space>
-                {tasksInCol.map((task, index) => {
-                  // if (task.statusId === status.id)
-                  return (
-                    <TaskDraggableCard key={task.id} index={index} task={task} onChange={onChange} searchText={searchText} />
-                  );
-                })
-                }
-                {provided.placeholder}
-              </StyledColumn>
-            </Col>
-          )
-        }}
-      </Droppable>)}
-    </StyledRow>
-  </DragDropContext>
-
+  return <Col span={6} ref={drop}>
+    <StyledColumn direction="vertical" style={{
+      backgroundColor: style.bgColor,
+      borderWidth: 2,
+      borderStyle: isOver ? 'dashed' : 'solid',
+      borderColor: isOver ? style.hoverColor : style.bgColor
+    }}>
+      <Space style={{ width: '100%', justifyContent: 'space-between', marginBottom: 16, opacity: 0.4 }}>
+        <Title level={5} style={{ textAlign: 'center', margin: '0 auto' }}>{style.label}</Title>
+        <Text strong>{tasks.length}</Text>
+      </Space>
+      {tasks.map(task  => <TaskDraggableCard key={task.id} task={task} searchText={searchText} />)}
+    </StyledColumn>
+  </Col>
 }
 
 TaskBoardPanel.propTypes = {
