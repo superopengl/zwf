@@ -18,7 +18,6 @@ const { Link } = Typography;
 export const AutoDocInput = (props) => {
   const { value, mode } = props;
   const { docTemplateId } = value || {};
-  const formInstance = Form.useFormInstance();
 
   const [loading, setLoading] = React.useState(!!docTemplateId);
   const [docTemplate, setDocTemplate] = React.useState({});
@@ -61,10 +60,10 @@ export const AutoDocInput = (props) => {
 AutoDocInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
-  mode: PropTypes.oneOf(['taskTemplate', 'task'])
+  // mode: PropTypes.string,
 };
 
 AutoDocInput.propTypes = {
   onChange: () => { },
-  mode: 'task'
+  // mode: 'task'
 };

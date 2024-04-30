@@ -31,6 +31,7 @@
     "query-string": "^6.13.1",
     "re-resizable": "^6.9.1",
     "react": "^18.1.0",
+    "react-addons-update": "^15.6.3",
     "react-beautiful-dnd": "^13.1.0",
     "react-chat-elements": "^10.15.0",
     "react-cookie-consent": "^7.3.1",
