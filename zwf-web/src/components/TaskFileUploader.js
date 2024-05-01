@@ -93,11 +93,11 @@ export const TaskFileUploader = React.memo((props) => {
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
 
-  const isPreviewMode = fieldId === null;
+  const isPreviewMode = !fieldId;
   const maxSize = size || 30;
 
   React.useEffect(() => {
-    if (value?.length) {
+    if (!isPreviewMode && value?.length) {
       setLoading(true);
       getTaskFieldDocs$(fieldId, value).subscribe(docs => {
         setFileList(docs.map(doc => ({
