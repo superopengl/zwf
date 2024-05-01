@@ -103,7 +103,7 @@ export const subscribeTaskContent = handlerWrapper(async (req, res) => {
 
 export const downloadTaskFieldFile = handlerWrapper(async (req, res) => {
   assert(getUserIdFromReq(req), 404);
-  
+
   assertRole(req, 'system', 'admin', 'client', 'agent');
   const { fieldId, docId } = req.params;
   const role = getRoleFromReq(req);
@@ -206,6 +206,37 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   });
 
   res.json();
+});
+
+export const getTaskFieldDocs = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin', 'agent', 'client');
+  const { taskDocIds } = req.body;
+  const { fieldId } = req.params;
+  assert(taskDocIds?.length, 400, 'taskDocIds not specified');
+
+  const field = await AppDataSource.getRepository(TaskField).findOne({
+    where: {
+      id: fieldId
+    },
+    select: {
+      taskId: true
+    }
+  })
+  assert(field, 404);
+  await assertTaskAccess(req, field.taskId);
+
+  const docs = await AppDataSource.getRepository(TaskDoc).find({ 
+    where: {
+      id: In(taskDocIds),
+      fieldId,
+    },
+    select: {
+      id: true,
+      name: true,
+    }
+  });
+
+  res.json(docs);
 });
 
 interface ISearchTaskQuery {
@@ -320,9 +351,7 @@ export const getTask = handlerWrapper(async (req, res) => {
 
   let query: any;
   let relations = {
-    fields: {
-      docs: true
-    },
+    fields: true,
     tags: true
   };
 

@@ -21,7 +21,6 @@ export function createFormSchemaFromFields(fields, official) {
           ...widgetDef.widgetPorps,
           ...(f.type === 'upload' ? {
             fieldId: f.id,
-            docs: f.docs,
           } : null),
         }
       };

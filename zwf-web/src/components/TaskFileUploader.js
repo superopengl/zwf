@@ -11,6 +11,8 @@ import { Badge } from 'antd';
 import { Popover } from 'antd';
 import { TimeAgo } from './TimeAgo';
 import { API_BASE_URL } from 'services/http';
+import { getTaskFieldDocs$ } from 'services/taskService';
+import { Loading } from 'components/Loading';
 
 const { Dragger } = Upload;
 const { Text } = Typography;
@@ -85,44 +87,38 @@ const FileIconWithOverlay = props => {
   </Popover>
 }
 
-export const TaskFileUploader = (props) => {
-  const { value, fieldId, docs, size, disabled, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
+export const TaskFileUploader = React.memo((props) => {
+  const { value, fieldId, size, disabled, showsLastReadAt, showsSignedAt, showUploadList, onChange } = props;
 
-  const [fileList, setFileList] = React.useState((docs || []).map(doc => ({
-    uid: doc.id,
-    name: doc.name,
-    status: 'done',
-    url: `${API_BASE_URL}/task/field/${fieldId}/file/${doc.id}`
-  })));
-  const [loading, setLoading] = React.useState(false);
+  const [fileList, setFileList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   const isPreviewMode = fieldId === null;
   const maxSize = size || 30;
 
-  // const loadFileList = async () => {
-  //   if (value && value.length) {
-  //     setLoading(true);
-  //     const list = await getFileMetaList(value);
-  //     const fileList = list.map(x => ({
-  //       uid: x.id,
-  //       name: x.fileName,
-  //       status: 'done',
-  //       url: x.location,
-  //     }));
-  //     setFileList(fileList);
-  //     setLoading(false);
-  //   }
-  // }
-
-  // React.useEffect(() => {
-  //   loadFileList()
-  // }, []);
+  React.useEffect(() => {
+    if (value?.length) {
+      setLoading(true);
+      getTaskFieldDocs$(fieldId, value).subscribe(docs => {
+        setFileList(docs.map(doc => ({
+          uid: doc.id,
+          name: doc.name,
+          status: 'done',
+          url: `${API_BASE_URL}/task/field/${fieldId}/file/${doc.id}`
+        })));
+        setLoading(false);
+      })
+    } else {
+      setFileList([]);
+      setLoading(false);
+    }
+  }, [value]);
 
   const handleChange = (info) => {
     const { file, fileList } = info;
     setFileList(fileList);
 
-    if (file.status === 'done' || file.status === 'removed') {
+    if (file.status === 'done') {
       // props.onAdd?.(_.get(file, 'response.id', file.uid));
       const newTaskDocId = file.response?.id
       if (newTaskDocId) {
@@ -143,7 +139,7 @@ export const TaskFileUploader = (props) => {
   }
 
   const handleRemove = file => {
-    onChange(fileList.filter(f => f !== file));
+    onChange(fileList.filter(f => f !== file).map(f => f.uid));
   }
 
   const getFileIcon = file => <FileIconWithOverlay
@@ -158,37 +154,38 @@ export const TaskFileUploader = (props) => {
   }
 
   return (
-    <Container className="clearfix">
-      <Dragger
-        multiple={true}
-        action={`${API_BASE_URL}/task/field/${fieldId}/file`}
-        withCredentials={true}
-        accept="*/*"
-        listType="text"
-        fileList={fileList}
-        onPreview={handlePreview}
-        onChange={handleChange}
-        onRemove={handleRemove}
-        // beforeUpload={handleBeforeUpload}
-        showUploadList={showUploadList}
-        // showUploadList={false}
-        // iconRender={() => <UploadOutlined />}
-        disabled={isPreviewMode || disabled || fileList.length >= maxSize}
-        iconRender={getFileIcon}
-        itemRender={renderFileItem}
-      // showUploadList={true}
-      >
-        {disabled ? <Text type="secondary">File upload is disabled</Text>
-          : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
-            <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-            Click or drag file to this area to upload
-          </div>}
-      </Dragger>
-      {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
-    </Container>
+    <Loading loading={loading}>
+      <Container className="clearfix">
+        <Dragger
+          multiple={true}
+          action={`${API_BASE_URL}/task/field/${fieldId}/file`}
+          withCredentials={true}
+          accept="*/*"
+          listType="text"
+          fileList={fileList}
+          // onPreview={handlePreview}
+          onChange={handleChange}
+          onRemove={handleRemove}
+          // beforeUpload={handleBeforeUpload}
+          showUploadList={showUploadList}
+          // showUploadList={false}
+          // iconRender={() => <UploadOutlined />}
+          disabled={isPreviewMode || disabled || fileList.length >= maxSize}
+          iconRender={getFileIcon}
+          itemRender={renderFileItem}
+        // showUploadList={true}
+        >
+          {disabled ? <Text type="secondary">File upload is disabled</Text>
+            : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+              <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
+              Click or drag file to this area to upload
+            </div>}
+        </Dragger>
+        {/* {fileList.map((f, i) => <FileUploadItem key={i} value={f} />)} */}
+      </Container>
+    </Loading>
   );
-
-}
+})
 
 TaskFileUploader.propTypes = {
   value: PropTypes.arrayOf(PropTypes.string),

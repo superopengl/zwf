@@ -901,7 +901,21 @@ paths:
           required: true
       responses:
         200:
-          description: OK                   
+          description: OK           
+  /task/field/{fieldId}/docs:
+    post:
+      operationId: getTaskFieldDocs
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: fieldId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                                   
   /task/{id}/assign:
     post:
       operationId: assignTask
