@@ -13,11 +13,12 @@ import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
+import { generateAutoDoc$ } from 'services/taskService';
 
 const { Link, Paragraph } = Typography;
 
 export const AutoDocInput = (props) => {
-  const { value, mode } = props;
+  const { value, mode, fieldId } = props;
   const { docTemplateId } = value || {};
   const form = Form.useFormInstance();
 
@@ -54,6 +55,12 @@ export const AutoDocInput = (props) => {
     return 'docTemplate is not specified';
   }
 
+  const handleGenerateDoc = () => {
+    setLoading(true);
+    generateAutoDoc$(fieldId).subscribe(() => {
+      setLoading(false);
+    })
+  }
 
   return <Loading loading={loading}>
     <Row wrap={false} align="top" justify="space-between">
@@ -69,7 +76,7 @@ export const AutoDocInput = (props) => {
       </Col>
       <Col>
         <Tooltip title="Generate document">
-          <Button type="link" icon={<FileAddFilled />}></Button>
+          <Button type="link" icon={<FileAddFilled />} onClick={handleGenerateDoc}></Button>
         </Tooltip>
       </Col>
     </Row>
@@ -84,6 +91,7 @@ export const AutoDocInput = (props) => {
 AutoDocInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  fieldId: PropTypes.string,
   // mode: PropTypes.string,
 };
 

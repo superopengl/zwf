@@ -40,6 +40,7 @@ export const TaskTemplateFieldsEditor = (props) => {
       handleChange([addedField, ...value]);
     });
   }
+  
   return (
     <>
       <Row justify="end">

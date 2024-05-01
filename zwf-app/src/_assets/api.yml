@@ -915,7 +915,19 @@ paths:
           required: true
       responses:
         200:
-          description: OK                                   
+          description: OK   
+  /task/field/{fieldId}/autodoc:
+    post:
+      operationId: generateAutoDoc
+      parameters:
+        - name: fieldId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                                          
   /task/{id}/assign:
     post:
       operationId: assignTask
@@ -976,18 +988,6 @@ paths:
       operationId: createOrphanTaskDoc
       # security:
       #   - authLoggedInUser: []
-      responses:
-        200:
-          description: OK
-  /task_doc/{id}/gendoc:
-    post:
-      operationId: generateAutoDoc
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
       responses:
         200:
           description: OK

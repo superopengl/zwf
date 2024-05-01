@@ -28,6 +28,10 @@ export function getTaskFieldDocs$(fieldId, taskDocIds) {
   return httpPost$(`/task/field/${fieldId}/docs`, { taskDocIds });
 }
 
+export function generateAutoDoc$(fieldId) {
+  return httpPost$(`/task/field/${fieldId}/autodoc`);
+}
+
 export function saveTaskFieldValues$(taskId, fields) {
   return httpPost$(`/task/${taskId}/field/value`, { fields });
 }
