@@ -4,8 +4,7 @@ import { Task } from './Task';
 import { Entity, PrimaryColumn, Column, CreateDateColumn, OneToOne, JoinColumn, PrimaryGeneratedColumn, Index, ManyToOne } from "typeorm";
 import { File } from "./File";
 
-@Entity()
-export class TaskDoc {
+export class TaskDoc_old {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

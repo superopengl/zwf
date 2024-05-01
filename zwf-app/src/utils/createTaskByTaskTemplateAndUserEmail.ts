@@ -19,7 +19,6 @@ import { enqueueEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
 import { DocTemplate } from '../entity/DocTemplate';
-import { TaskDoc } from '../entity/TaskDoc';
 import { logTaskCreated } from '../services/taskTrackingService';
 import { Role } from '../types/Role';
 import * as path from 'path';
@@ -57,18 +56,6 @@ function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
 function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
   const n = path.basename(basename, ext);
   return n + ext;
-}
-
-export const createTaskDocByDocTemplate = async (m: EntityManager, taskId: string, fieldId: string, docTemplateId: string) => {
-  const docTemplate = await m.getRepository(DocTemplate).findOne({where: {id: docTemplateId}});
-  const taskDoc = new TaskDoc();
-  taskDoc.taskId = taskId;
-  taskDoc.fieldId = fieldId;
-  taskDoc.docTemplateId = docTemplateId;
-  taskDoc.status = 'pending';
-  taskDoc.name = docTemplate.name;
-
-  return taskDoc;
 }
 
 export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: number, taskTemplateField: TaskTemplateField) => {
@@ -113,21 +100,8 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
 
     // Provision taskFields based on taskTemplate.fields
     const fields = taskTemplate.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f));
-    // await m.save(fields);
 
-    // Provision taskDoc for those "autodoc" fields
-    const autoDocFields = fields.filter(f => f.type === 'autodoc');
-    const taskDocs = [];
-    for (const field of autoDocFields) {
-      const docTemplateId = field.value.docTemplateId;
-      const taskDoc = await createTaskDocByDocTemplate(m, task.id, field.id, docTemplateId);
-      taskDocs.push(taskDoc);
-    }
-    // await m.save(taskDocs);
-
-    // task.fields = fields;
-
-    await m.save([task, ...fields, ...taskDocs]);
+    await m.save([task, ...fields]);
 
     // Add the user to org clients
     const orgClient = new OrgClient();

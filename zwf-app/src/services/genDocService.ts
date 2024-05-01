@@ -11,7 +11,6 @@ import { File } from '../entity/File';
 import { createHash } from 'crypto';
 import { TaskField } from '../entity/TaskField';
 import * as moment from 'moment';
-import { TaskDoc } from '../entity/TaskDoc';
 
 async function stringifyFieldValue(f) {
   const { value, type } = f;
@@ -36,23 +35,9 @@ async function stringifyFieldValue(f) {
     case 'year':
       return moment(value).format('YYYY');
     case 'upload':
-      {
-        const taskDocIds = value;
-        if (taskDocIds?.length) {
-          const taskDocs = await AppDataSource.getRepository(TaskDoc).find({
-            where: {
-              id: In(taskDocIds)
-            },
-            select: {
-              name: true
-            }
-          });
-
-          return taskDocs.map(x => x.name).join(', ');
-        }
-      }
+      return value.map(x => x.name).join(', ');
     case 'autodoc':
-      return '$autodoc$'
+      return value.name;
     default:
       throw new Error(`Unrecognized field type '${type}'`)
   }

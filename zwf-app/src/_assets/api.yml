@@ -883,18 +883,13 @@ paths:
       responses:
         200:
           description: OK     
-  /task/field/{fieldId}/file/{docId}:
+  /task/file/{fileId}:
     get:
-      operationId: downloadTaskFieldFile
+      operationId: downloadTaskFile
       # security:
       #   - authLoggedInUser: []
       parameters:
-        - name: fieldId
-          in: path
-          type: string
-          format: uuid
-          required: true
-        - name: docId
+        - name: fileId
           in: path
           type: string
           format: uuid
@@ -902,20 +897,6 @@ paths:
       responses:
         200:
           description: OK           
-  /task/field/{fieldId}/docs:
-    post:
-      operationId: getTaskFieldDocs
-      # security:
-      #   - authLoggedInUser: []
-      parameters:
-        - name: fieldId
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK   
   /task/field/{fieldId}/autodoc:
     post:
       operationId: generateAutoDoc
@@ -980,14 +961,6 @@ paths:
           type: string
           format: uuid
           required: true
-      responses:
-        200:
-          description: OK
-  /task_doc:
-    put:
-      operationId: createOrphanTaskDoc
-      # security:
-      #   - authLoggedInUser: []
       responses:
         200:
           description: OK

@@ -1,7 +1,5 @@
-import { TaskDoc } from './TaskDoc';
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, ManyToOne, OneToMany } from 'typeorm';
 import { Task } from './Task';
-
 
 @Entity()
 @Index('idex_taskField_taskId_ordinal', ['taskId', 'ordinal'])
@@ -50,7 +48,4 @@ export class TaskField {
 
   @Column('jsonb', { nullable: true })
   value?: any;
-
-  @OneToMany(() => TaskDoc, taskDoc => taskDoc.field, {eager: false, onDelete: 'CASCADE', orphanedRowAction: 'delete'})
-  docs: TaskDoc[]
 }

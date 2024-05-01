@@ -1,7 +1,6 @@
 import { TaskField } from './../entity/TaskField';
 import { createPdfFromDocTemplate } from './docTemplateController';
 import { getUtcNow } from './../utils/getUtcNow';
-import { TaskDoc } from '../entity/TaskDoc';
 
 import { getManager, getRepository, In, Not, IsNull } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -26,7 +25,7 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
   const { fieldId } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  const taskDoc = new TaskDoc();
+  let file: File;
   await AppDataSource.transaction(async m => {
     const taskField = await m.getRepository(TaskField).findOne({
       where: {
@@ -36,92 +35,30 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
         task: {
           fields: true
         }
-      },
+      }
     });
 
-    assert(taskField?.task?.orgId === orgId, 404, 'Task doc is not found');
+    assert(taskField, 404, 'Task doc is not found');
+    await assertTaskAccess(req, taskField.taskId);
 
     const { fields } = taskField.task;
     const { docTemplateId } = taskField.value;
 
     const docTemplate = await m.getRepository(DocTemplate).findOneBy({ id: docTemplateId });
 
-    const file = await tryGenDocFile(m, docTemplate, fields);
-
-    taskDoc.fieldId = taskField.id;
-    taskDoc.taskId = taskField.taskId;
-    taskDoc.docTemplate = docTemplate;
-    taskDoc.type = 'agent';
-    taskDoc.status = 'done';
-    taskDoc.file = file;
-    taskDoc.name = file.fileName;
+    file = await tryGenDocFile(m, docTemplate, fields);
 
     taskField.value = {
       ...taskField.value,
-      taskDocId: taskDoc.id
+      fileId: file.id
     }
-    
-    await m.save([taskField, taskDoc]);
+
+    await m.save(taskField);
   })
 
   res.json({
-    taskDocId: taskDoc.id
+    fileId: file.id
   });
-});
-
-export const createOrphanTaskDoc = handlerWrapper(async (req, res) => {
-  const { fileId, docTemplateId } = req.body;
-  assert(fileId || docTemplateId, 400);
-  if (docTemplateId) {
-    assertRole(req, 'admin', 'agent');
-  } else {
-    assertRole(req, 'admin', 'agent', 'client');
-  }
-  const role = getRoleFromReq(req);
-
-  const taskDoc = new TaskDoc();
-  taskDoc.taskId = null; // This is an orphan TaskDoc having no associated Task
-
-  await AppDataSource.transaction(async m => {
-    if (fileId) {
-      // File has been uploaded
-      const file = await m.findOne(File, {
-        where: {
-          id: fileId
-        },
-        select: [
-          'fileName'
-        ]
-      });
-      assert(file, 400);
-
-      taskDoc.type = role === Role.Client ? 'client' : 'agent';
-      taskDoc.fileId = fileId;
-      taskDoc.name = file.fileName;
-      taskDoc.status = 'done';
-    } else if (docTemplateId) {
-      // Create task doc from a doc template
-      const docTemplate = await m.findOne(DocTemplate, {
-        where: {
-          id: docTemplateId,
-          orgId: getOrgIdFromReq(req)
-        },
-        select: [
-          'name'
-        ]
-      });
-      assert(docTemplate, 400);
-
-      taskDoc.type = 'auto';
-      taskDoc.docTemplateId = docTemplateId;
-      taskDoc.name = `${docTemplate.name}.pdf`;
-      taskDoc.status = 'pending';
-    }
-
-    await m.save(taskDoc);
-  })
-
-  res.json(taskDoc);
 });
 
 export const searchTaskDocs = handlerWrapper(async (req, res) => {
@@ -131,26 +68,27 @@ export const searchTaskDocs = handlerWrapper(async (req, res) => {
 
   const role = getRoleFromReq(req);
 
-  let query = await AppDataSource.getRepository(TaskDoc)
-    .createQueryBuilder('t')
-    .orderBy(`t."createdAt"`, 'ASC')
-    .where(`t.id = ANY(:ids)`, { ids });
+  // let query = await AppDataSource.getRepository(TaskDoc)
+  //   .createQueryBuilder('t')
+  //   .orderBy(`t."createdAt"`, 'ASC')
+  //   .where(`t.id = ANY(:ids)`, { ids });
 
-  if (role === Role.Client) {
-    query = query.andWhere(`official IS FALSE`)
-      .andWhere(`"fileId" IS NOT NULL`)
-      .select('*')
-  } else {
-    query = query.leftJoin(DocTemplate, 'd', `t."docTemplateId" = d.id`)
-      .select([
-        't.*',
-        'd.variables as variables'
-      ])
-  }
+  // if (role === Role.Client) {
+  //   query = query.andWhere(`official IS FALSE`)
+  //     .andWhere(`"fileId" IS NOT NULL`)
+  //     .select('*')
+  // } else {
+  //   query = query.leftJoin(DocTemplate, 'd', `t."docTemplateId" = d.id`)
+  //     .select([
+  //       't.*',
+  //       'd.variables as variables'
+  //     ])
+  // }
 
-  const list = await query.execute()
+  // const list = await query.execute()
 
-  res.json(list);
+  // res.json(list);
+  res.json();
 });
 
 export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
@@ -158,13 +96,13 @@ export const setTaskDocRequiresSign = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const { requiresSign } = req.body;
 
-  await AppDataSource.getRepository(TaskDoc).update({
-    id,
-    signedAt: IsNull(),
-    requiresSign: !requiresSign,
-  }, {
-    requiresSign,
-  });
+  // await AppDataSource.getRepository(TaskDoc).update({
+  //   id,
+  //   signedAt: IsNull(),
+  //   requiresSign: !requiresSign,
+  // }, {
+  //   requiresSign,
+  // });
 
   res.json();
 });
@@ -176,16 +114,16 @@ export const getTaskDocFileStream = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   assertTaskAccess(req, id);
 
-  const taskDoc = await AppDataSource.getRepository(TaskDoc).findOne({ where: { id }, relations: { file: true } });
-  assert(taskDoc?.file, 400, 'File does not exist');
+  const file = await AppDataSource.getRepository(File).findOneBy({ id });
+  assert(file, 404);
 
   if (role === Role.Client) {
-    await AppDataSource.getRepository(TaskDoc).update(id, {
+    await AppDataSource.getRepository(File).update(id, {
       lastClientReadAt: getUtcNow()
     })
   }
 
-  streamFileToResponse(taskDoc.file, res);
+  streamFileToResponse(file, res);
 });
 
 export const signTaskDoc = handlerWrapper(async (req, res) => {
@@ -193,27 +131,27 @@ export const signTaskDoc = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const userId = getUserIdFromReq(req);
 
-  await AppDataSource.transaction(async m => {
-    const taskDoc = await m.findOneOrFail(TaskDoc, {
-      where: {
-        id,
-        type: In(['agent', 'auto']),
-        signedAt: IsNull(),
-        requiresSign: true,
-      },
-      relations: ['file']
-    });
-    assert(taskDoc, 400, 'The task doc cannot be found or has been signed already');
+  // await AppDataSource.transaction(async m => {
+  //   const taskDoc = await m.findOneOrFail(TaskDoc, {
+  //     where: {
+  //       id,
+  //       type: In(['agent', 'auto']),
+  //       signedAt: IsNull(),
+  //       requiresSign: true,
+  //     },
+  //     relations: ['file']
+  //   });
+  //   assert(taskDoc, 400, 'The task doc cannot be found or has been signed already');
 
-    const now = getUtcNow();
-    const { md5 } = taskDoc.file;
-    taskDoc.signedAt = now;
-    taskDoc.signedHash = computeTaskDocSignedHash(md5, userId, now);
-    taskDoc.requiresSign = false;
+  //   const now = getUtcNow();
+  //   const { md5 } = taskDoc.file;
+  //   taskDoc.signedAt = now;
+  //   taskDoc.signedHash = computeTaskDocSignedHash(md5, userId, now);
+  //   taskDoc.requiresSign = false;
 
-    await m.save(taskDoc);
-    await logTaskDocSignedByClient(m, taskDoc.taskId, userId, taskDoc.id, taskDoc.name);
-  })
+  //   await m.save(taskDoc);
+  //   await logTaskDocSignedByClient(m, taskDoc.taskId, userId, taskDoc.id, taskDoc.name);
+  // })
 
   res.json();
 });

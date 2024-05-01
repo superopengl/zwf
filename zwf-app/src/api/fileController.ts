@@ -1,23 +1,15 @@
 import { AppDataSource } from './../db';
 
-import { getManager, Brackets } from 'typeorm';
+import { Brackets } from 'typeorm';
 import { File } from '../entity/File';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from "../utils/assertRole";
-import { getNow } from '../utils/getNow';
-import { Task } from '../entity/Task';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';
 import { Role } from '../types/Role';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { existsQuery } from '../utils/existsQuery';
-import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
-import { TaskDoc } from '../entity/TaskDoc';
-
-
 
 export const getPrivateFileStream = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
