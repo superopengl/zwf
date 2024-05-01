@@ -13,9 +13,6 @@ export class TaskDoc {
   taskId: string;
 
   @Column({ nullable: true })
-  docTemplateId: string;
-
-  @Column({ nullable: true })
   lastClientReadAt?: Date;
 
   @Column({ nullable: true })
@@ -30,15 +27,21 @@ export class TaskDoc {
   @Column({ nullable: true })
   description?: string;
 
-  @Column({ type: 'text', nullable: true })
-  html: string;
-
-  @Column({ type: 'varchar', array: true, default: '{}' })
-  variables: string[];
-
   @Column({ default: 'auto' })
   @Index()
   type: 'client' | 'auto' | 'agent';
+
+  /** Auto-doc specific */
+  @Column({ nullable: true })
+  docTemplateId: string;
+
+  /** Auto-doc specific */
+  @Column({ type: 'text', nullable: true })
+  html: string;
+
+  /** Auto-doc specific */
+  @Column({ type: 'varchar', array: true, default: '{}' })
+  refFields: string[];
 
   @Column({ default: false })
   requiresSign?: boolean;
