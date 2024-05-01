@@ -25,9 +25,6 @@ export class TaskField {
   @Column({default: false})
   required: boolean;
 
-  @Column({nullable: true})
-  linkedVarName: string;
-
   @Column('int')
   ordinal: number;
 

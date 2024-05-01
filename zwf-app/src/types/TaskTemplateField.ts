@@ -6,6 +6,5 @@ export class TaskTemplateField {
   required: boolean;
   options?: string[];
   official: boolean;
-  varName: string;
   value: any;
 }
