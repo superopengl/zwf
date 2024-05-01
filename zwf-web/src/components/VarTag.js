@@ -7,7 +7,6 @@ import styled from 'styled-components';
 const StyledTag = styled(AntdTag)`
 font-size: 11px;
 border-radius: 999px;
-text-transform: lowercase;
 `;
 
 export const VarTag = (props) => {

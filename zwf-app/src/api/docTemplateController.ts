@@ -18,7 +18,7 @@ import { isRole } from '../utils/isRole';
 import { Role } from '../types/Role';
 
 function extractVariables(html: string) {
-  const pattern = /\{\{[a-zA-Z]+\}\}/ig;
+  const pattern = /\{\{[a-zA-Z0-9 ]+\}\}/ig;
   const all = (html.match(pattern) || []).map(x => x.replace(/^\{\{/, '').replace(/\}\}$/, ''));
   const set = new Set(all);
   return Array.from(set);
@@ -37,7 +37,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   docTemplate.name = name;
   docTemplate.description = description;
   docTemplate.html = html;
-  docTemplate.variables = extractVariables(html);
+  docTemplate.refFields = extractVariables(html);
 
   await AppDataSource.getRepository(DocTemplate).save(docTemplate);
 
@@ -55,14 +55,14 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
     order: {
       name: 'ASC'
     },
-    select: [
-      'id',
-      'name',
-      'description',
-      'variables',
-      'createdAt',
-      'updatedAt'
-    ]
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      refFields: true,
+      createdAt: true,
+      updatedAt: true,
+    }
   });
 
   res.json(list);
@@ -103,16 +103,16 @@ export const renameDocTemplate = handlerWrapper(async (req, res) => {
 export const applyDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
-  const { variables: inboundVariables } = req.body;
+  const { refFields: passedInRefFields } = req.body;
   const repo = AppDataSource.getRepository(DocTemplate);
   const docTemplate = await repo.findOne({ where: { id } });
   assert(docTemplate, 404);
 
-  const { variables, description, name } = docTemplate;
+  const { refFields, description, name } = docTemplate;
 
-  const usedVars = variables.reduce((pre, cur) => {
+  const usedVars = refFields.reduce((pre, cur) => {
     const pattern = `{{${cur}}}`;
-    const replacement = pattern === `{{now}}` ? moment(getNow()).format('D MMM YYYY') : _.get(inboundVariables, cur, '');
+    const replacement = pattern === `{{now}}` ? moment(getNow()).format('D MMM YYYY') : _.get(passedInRefFields, cur, '');
     pre[cur] = replacement;
     return pre;
   }, {});
@@ -139,16 +139,16 @@ async function mdToPdfBuffer(md) {
 export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
-  const { variables: inboundVariables } = req.body;
+  const { refFields: passedInRefFields } = req.body;
   const repo = AppDataSource.getRepository(DocTemplate);
   const docTemplate = await repo.findOne({ where: { id } });
   assert(docTemplate, 404);
 
-  const { name, html, variables } = docTemplate;
+  const { name, html, refFields } = docTemplate;
 
-  const bakedHtml = variables.reduce((pre, cur) => {
+  const bakedHtml = refFields.reduce((pre, cur) => {
     const pattern = new RegExp(`{{${cur}}}`, 'g');
-    const replacement = cur === `now` ? moment(getNow()).format('D MMM YYYY') : inboundVariables[cur];
+    const replacement = cur === `now` ? moment(getNow()).format('D MMM YYYY') : passedInRefFields[cur];
 
     assert(replacement !== undefined, 400, `Variable '${cur}' is missing`);
     return pre.replace(pattern, replacement);

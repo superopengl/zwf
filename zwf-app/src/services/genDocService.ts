@@ -17,7 +17,7 @@ function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskF
     bag[f.linkedVarName] = f.value;
     return bag;
   }, {});
-  for (const varName of docTemplate.variables) {
+  for (const varName of docTemplate.refFields) {
     const value = varBag[varName];
     if (value || value === 0) {
       const regex = new RegExp(`{{${varName}}}`, 'g');

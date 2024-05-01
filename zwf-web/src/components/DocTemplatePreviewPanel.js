@@ -70,7 +70,7 @@ export const DocTemplatePreviewPanel = props => {
 
       {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Collapse.Panel key="1"
-          header="Test variables"
+          header="Test"
           // style={{ border: 'none' }}
         // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
         >
@@ -98,7 +98,7 @@ export const DocTemplatePreviewPanel = props => {
 DocTemplatePreviewPanel.propTypes = {
   value: PropTypes.shape({
     html: PropTypes.string.isRequired,
-    variables: PropTypes.arrayOf(PropTypes.string),
+    refFields: PropTypes.arrayOf(PropTypes.string),
   }),
   varBag: PropTypes.object,
   allowTest: PropTypes.bool,

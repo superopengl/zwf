@@ -10,12 +10,12 @@ const { Paragraph, Title } = Typography;
 
 const GenDocFieldStep = props => {
   const { doc, variableDic, onFinish, onBack, isActive } = props;
-  const { variables: docVariables, docTemplateName, docTemplateDescription } = doc;
+  const { refFields, docTemplateName, docTemplateDescription } = doc;
 
   const [initialValues, setInitialValues] = React.useState({});
 
   React.useEffect(() => {
-    const initialValues = docVariables.filter(x => x.name !== 'now').reduce((pre, cur) => {
+    const initialValues = refFields.filter(x => x.name !== 'now').reduce((pre, cur) => {
       pre[cur.name] = cur.value || variableDic[cur.name];
       return pre;
     }, {});
@@ -23,7 +23,7 @@ const GenDocFieldStep = props => {
   }, [variableDic]);
 
   const handleSubmit = async values => {
-    doc.variables.forEach(x => {
+    doc.refFields.forEach(x => {
       x.value = values[x.name];
     });
     onFinish(values);

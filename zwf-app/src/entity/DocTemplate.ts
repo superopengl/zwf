@@ -31,7 +31,7 @@ export class DocTemplate {
   html: string;
 
   @Column({ type: 'varchar', array: true, default: '{}' })
-  variables: string[];
+  refFields: string[];
 
   @OneToMany(() => TaskDoc, doc => doc.docTemplate, { onDelete: 'CASCADE' })
   docs: TaskDoc[];

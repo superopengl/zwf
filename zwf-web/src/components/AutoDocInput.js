@@ -1,7 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Typography } from 'antd';
+import { Button, Form, Typography, Row } from 'antd';
 import * as moment from 'moment';
 import { DocTemplatePreviewPanel } from './DocTemplatePreviewPanel';
 import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
@@ -12,8 +12,9 @@ import { EditOutlined, EyeOutlined } from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
+import { VarTag } from './VarTag';
 
-const { Link } = Typography;
+const { Link, Paragraph } = Typography;
 
 export const AutoDocInput = (props) => {
   const { value, mode } = props;
@@ -54,6 +55,9 @@ export const AutoDocInput = (props) => {
       </Link>}
     {/* <Button type="link" icon={<EyeOutlined/>}/> */}
     {/* <DocTemplatePreviewPanel value={docTemplate} /> */}
+    <Paragraph>
+      {docTemplate.refFields?.map(f => <VarTag>{f}</VarTag>)}
+    </Paragraph>
   </Loading>
 }
 
