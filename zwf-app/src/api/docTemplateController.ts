@@ -136,45 +136,6 @@ async function mdToPdfBuffer(md) {
   return null;
 }
 
-export const createPdfFromDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { id } = req.params;
-  const { refFields: passedInRefFields } = req.body;
-  const repo = AppDataSource.getRepository(DocTemplate);
-  const docTemplate = await repo.findOne({ where: { id } });
-  assert(docTemplate, 404);
-
-  const { name, html, refFields } = docTemplate;
-
-  const bakedHtml = refFields.reduce((pre, cur) => {
-    const pattern = new RegExp(`{{${cur}}}`, 'g');
-    const replacement = cur === `now` ? moment(getNow()).format('D MMM YYYY') : passedInRefFields[cur];
-
-    assert(replacement !== undefined, 400, `Variable '${cur}' is missing`);
-    return pre.replace(pattern, replacement);
-  }, html);
-
-
-  const pdfFileId = uuidv4();
-  const pdfFileName = `${name}.pdf`;
-
-  const data = await mdToPdfBuffer(bakedHtml);
-
-  const location = await uploadToS3(pdfFileId, pdfFileName, data);
-
-  const file: File = {
-    id: pdfFileId,
-    fileName: pdfFileName,
-    mime: 'application/pdf',
-    location,
-    md5: md5(data)
-  };
-
-  await AppDataSource.getRepository(File).save(file);
-
-  res.json(file);
-});
-
 async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplate) {
   let round = 1;
   const { orgId, name } = sourceDocTemplate;
