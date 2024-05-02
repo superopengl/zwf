@@ -80,7 +80,7 @@ export const AutoDocInput = (props) => {
       </Col>
       <Col>
         <Tooltip title="Generate document">
-          <Button type="link" icon={<FileAddFilled />} onClick={handleGenerateDoc}></Button>
+          <Button type="primary" shape="circle" icon={<FileAddFilled />} onClick={handleGenerateDoc}></Button>
         </Tooltip>
       </Col>
     </Row>
