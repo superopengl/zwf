@@ -1,3 +1,4 @@
+import { getUtcNow } from './../utils/getUtcNow';
 import { AppDataSource } from './../db';
 import { TaskField } from './../entity/TaskField';
 import { TaskHistoryInformation } from './../entity/views/TaskHistoryInformation';
@@ -106,21 +107,27 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin', 'client', 'agent');
   const { fileId } = req.params;
   const role = getRoleFromReq(req);
+  const isClient = role === Role.Client;
 
-  const fileRepo = AppDataSource.getRepository(File);
-  const file = await fileRepo.findOne({
+  const file = await AppDataSource.getRepository(File).findOne({
     where: {
       id: fileId,
     },
+    relations: {
+      field: isClient
+    }
   });
 
   assert(file, 404);
   await assertTaskAccess(req, file.taskId);
 
-  if (role === 'client') {
-    const now = getNow();
-    file.lastClientReadAt = now;
-    await fileRepo.save(file);
+  if (isClient) {
+    const taskField = file.field;
+    const { value } = taskField;
+    const fileItem = value.find(x => x.fileId === fileId);
+
+    fileItem.lastClientReadAt = getUtcNow();
+    await AppDataSource.getRepository(TaskField).save(taskField);
   }
 
   streamFileToResponse(file, res);
@@ -389,6 +396,7 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
   const fileEntity = new File();
   fileEntity.id = fileId;
   fileEntity.taskId = taskField.taskId;
+  fileEntity.fieldId = taskField.id;
   fileEntity.fileName = name;
   fileEntity.createdBy = userId;
   fileEntity.mime = mimetype;

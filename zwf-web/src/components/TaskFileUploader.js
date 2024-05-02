@@ -13,6 +13,7 @@ import { TimeAgo } from './TimeAgo';
 import { API_BASE_URL } from 'services/http';
 import { Loading } from 'components/Loading';
 import { TaskDocItem } from './TaskDocItem';
+import { getTaskDocDownloadUrl } from 'services/taskDocService';
 
 const { Dragger } = Upload;
 const { Text } = Typography;
@@ -102,7 +103,7 @@ export const TaskFileUploader = React.memo((props) => {
         uid: f.fileId,
         name: f.name,
         status: 'done',
-        url: `${API_BASE_URL}/task/file/${f.fileId}`
+        url: getTaskDocDownloadUrl(f.fileId)
       })));
     } else {
       setFileList([]);
@@ -118,7 +119,7 @@ export const TaskFileUploader = React.memo((props) => {
       const newFileId = file.response?.fileId
       if (newFileId) {
         file.uid = newFileId;
-        file.url = `${API_BASE_URL}/task/file/${newFileId}`
+        file.url = getTaskDocDownloadUrl(newFileId)
       }
       onChange(fileList.map(f => ({ fileId: f.uid, name: f.name })));
     }

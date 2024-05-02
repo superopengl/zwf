@@ -1,3 +1,4 @@
+import { TaskField } from './TaskField';
 import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm';
 import { Task } from './Task';
 @Entity()
@@ -10,6 +11,12 @@ export class File {
 
   @Column('uuid', { nullable: true })
   taskId?: string;
+
+  @Column('uuid', { nullable: true })
+  fieldId?: string;
+
+  @ManyToOne(() => TaskField, f => f.files, {onDelete: 'CASCADE', eager: false})
+  field?: TaskField;
 
   /**
    * User ID of the uploader. 
@@ -30,15 +37,21 @@ export class File {
   @Column()
   md5: string;
 
+  /**
+   * True for public accessible files, like avatar files. Otherwise, false
+   */
   @Column({ default: false })
   public?: boolean;
 
-  @Column({ nullable: true })
-  lastClientReadAt?: Date;
-
+  /** 
+   * Autodoc specific 
+   */
   @Column('jsonb', { nullable: true })
   usedValueBag?: {[key: string]: any};
 
+  /**
+   * Autodoc specific 
+   */
   @Column({ nullable: true })
   usedValueHash?: string;
 }

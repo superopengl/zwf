@@ -58,6 +58,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       // onFieldsChange={handleFieldsChange}
       layout="horizontal"
       colon={false}
+      // size={isClient ? 'large' : 'middle'}
     >
       {type !== 'client' && <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Client fields</Divider>}
       {!isClient && <>
