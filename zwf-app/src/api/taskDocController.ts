@@ -59,34 +59,3 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
     fileId: file.id
   });
 });
-
-export const searchTaskDocs = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { ids } = req.body;
-  assert(ids?.length, 400);
-
-  const role = getRoleFromReq(req);
-
-  // let query = await AppDataSource.getRepository(TaskDoc)
-  //   .createQueryBuilder('t')
-  //   .orderBy(`t."createdAt"`, 'ASC')
-  //   .where(`t.id = ANY(:ids)`, { ids });
-
-  // if (role === Role.Client) {
-  //   query = query.andWhere(`official IS FALSE`)
-  //     .andWhere(`"fileId" IS NOT NULL`)
-  //     .select('*')
-  // } else {
-  //   query = query.leftJoin(DocTemplate, 'd', `t."docTemplateId" = d.id`)
-  //     .select([
-  //       't.*',
-  //       'd.variables as variables'
-  //     ])
-  // }
-
-  // const list = await query.execute()
-
-  // res.json(list);
-  res.json();
-});
-
