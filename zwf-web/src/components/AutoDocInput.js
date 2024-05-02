@@ -1,7 +1,7 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Typography, Row, Col, Tooltip } from 'antd';
+import { Button, Form, Typography, Row, Col, Tooltip, Space } from 'antd';
 import * as moment from 'moment';
 import { DocTemplatePreviewPanel } from './DocTemplatePreviewPanel';
 import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
@@ -14,6 +14,7 @@ import Icon from '@ant-design/icons';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
 import { generateAutoDoc$ } from 'services/taskService';
+import { FileIcon } from './FileIcon';
 
 const { Link, Paragraph } = Typography;
 
@@ -66,8 +67,11 @@ export const AutoDocInput = (props) => {
     <Row wrap={false} align="top" justify="space-between">
       <Col>
         <Link onClick={handlePreview}>
-          <DocTemplateIcon />
-          {docTemplate.name}
+          {/* <DocTemplateIcon /> */}
+          <Space>
+            <FileIcon name={'.pdf'} />
+            {docTemplate.name}
+          </Space>
         </Link>
         {mode === 'taskTemplate' &&
           <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
