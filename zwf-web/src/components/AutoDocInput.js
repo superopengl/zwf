@@ -13,7 +13,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
-import { generateAutoDoc$ } from 'services/taskService';
+import { generateAutoDoc$, getTaskDocDownloadUrl } from 'services/taskService';
 import { FileIcon } from './FileIcon';
 
 const { Link, Paragraph } = Typography;
@@ -56,6 +56,8 @@ export const AutoDocInput = (props) => {
     return 'docTemplate is not specified';
   }
 
+  const hasGenerated = !!value.fileId;
+
   const handleGenerateDoc = () => {
     setLoading(true);
     generateAutoDoc$(fieldId).subscribe(() => {
@@ -65,7 +67,15 @@ export const AutoDocInput = (props) => {
 
   return <Loading loading={loading}>
     <Row wrap={false} align="top" justify="space-between">
-      <Col>
+      {hasGenerated ? <Col>
+        <Link href={getTaskDocDownloadUrl(value.fileId)} target="_blank">
+          {/* <DocTemplateIcon /> */}
+          <Space>
+            <FileIcon name={'.pdf'} />
+            {docTemplate.name}
+          </Space>
+        </Link>
+      </Col> : <Col>
         <Link onClick={handlePreview}>
           {/* <DocTemplateIcon /> */}
           <Space>
@@ -77,7 +87,7 @@ export const AutoDocInput = (props) => {
           <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
             <Button type="link" icon={<Icon component={MdOpenInNew} />} />
           </Link>}
-      </Col>
+      </Col>}
       <Col>
         <Tooltip title="Generate document">
           <Button type="primary" shape="circle" icon={<FileAddFilled />} onClick={handleGenerateDoc}></Button>
@@ -89,6 +99,7 @@ export const AutoDocInput = (props) => {
     <Paragraph>
       {docTemplate.refFields?.map(f => <VarTag key={f}>{f}</VarTag>)}
     </Paragraph>
+    <em>{JSON.stringify(value, null, 2)}</em>
   </Loading>
 }
 
