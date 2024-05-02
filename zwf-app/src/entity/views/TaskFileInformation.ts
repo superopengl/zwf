@@ -15,7 +15,7 @@ import { ViewEntity, ViewColumn } from 'typeorm';
   `,
   dependsOn: [TaskField]
 })
-export class TaskFileInformation {
+export class TaskUploadFileInformation {
   @ViewColumn()
   taskId: string;
 

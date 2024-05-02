@@ -35,4 +35,10 @@ export class File {
 
   @Column({ nullable: true })
   lastClientReadAt?: Date;
+
+  @Column('jsonb', { nullable: true })
+  usedValueBag?: {[key: string]: any};
+
+  @Column({ nullable: true })
+  usedValueHash?: string;
 }
