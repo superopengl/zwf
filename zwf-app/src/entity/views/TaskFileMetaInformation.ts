@@ -11,8 +11,7 @@ import { ViewEntity, ViewColumn } from 'typeorm';
       x.doc->>'name' as "fileName", 
       x.doc->>'fileId' as "fileId", 
       x.doc->>'requiresSign' as "requiresSign",
-      x.doc->>'lastClientReadAt' as "lastClientReadAt", 
-      x.doc->>'signedAt' as "signedAt" 
+      x.doc->>'lastClientReadAt' as "lastClientReadAt" 
   from "${process.env.TYPEORM_SCHEMA || 'zwf'}".task_field tf
   left join jsonb_array_elements(tf.value) x(doc) on true
   where tf.type = 'upload'
@@ -25,8 +24,7 @@ import { ViewEntity, ViewColumn } from 'typeorm';
       ad.value->>name as "fileName",
       ad.value->>'fileId' as "fileId",
       ad.value->>'requiresSign' as "requiresSign", 
-      ad.value->>'lastClientReadAt' as "lastClientReadAt", 
-      ad.value->>'signedAt' as "signedAt" 
+      ad.value->>'lastClientReadAt' as "lastClientReadAt" 
       from "${process.env.TYPEORM_SCHEMA || 'zwf'}".task_field ad
   where ad.type = 'autodoc'
   `,

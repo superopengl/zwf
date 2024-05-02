@@ -12,6 +12,9 @@ export class File {
   @Column('uuid', { nullable: true })
   taskId?: string;
 
+  @ManyToOne(() => Task, task => task.files, {onDelete: 'CASCADE', eager: false})
+  task?: Task;  
+
   @Column('uuid', { nullable: true })
   fieldId?: string;
 

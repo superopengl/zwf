@@ -32,6 +32,14 @@ export function saveTaskFieldValues$(taskId, fields) {
   return httpPost$(`/task/${taskId}/field/value`, { fields });
 }
 
+export function getTaskDocDownloadUrl(fileId) {
+  return `${API_BASE_URL}/task/file/${fileId}`;
+}
+
+export function signTaskFile$(fileId) {
+  return httpPost$(`/task/file/${fileId}/sign`);
+}
+
 // export function updateTaskFields$(taskId, fields) {
 //   return httpPost$(`/task/${taskId}/fields`, fields);
 // }

@@ -11,7 +11,7 @@ import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { TaskStatusTag } from './TaskStatusTag';
 import { FileIcon } from './FileIcon';
-import { getTaskDocDownloadUrl } from 'services/taskDocService';
+import { getTaskDocDownloadUrl } from 'services/taskService';
 import { TaskDocItem } from './TaskDocItem';
 
 const { Text, Link: TextLink } = Typography

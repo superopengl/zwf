@@ -10,7 +10,7 @@ import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { File } from '../entity/File';
-import { computeTaskDocSignedHash } from '../utils/computeTaskDocSignedHash';
+import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
 import { logTaskDocSignedByClient } from '../services/taskTrackingService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { streamFileToResponse } from '../utils/streamFileToResponse';

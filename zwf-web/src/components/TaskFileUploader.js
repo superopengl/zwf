@@ -13,7 +13,7 @@ import { TimeAgo } from './TimeAgo';
 import { API_BASE_URL } from 'services/http';
 import { Loading } from 'components/Loading';
 import { TaskDocItem } from './TaskDocItem';
-import { getTaskDocDownloadUrl } from 'services/taskDocService';
+import { getTaskDocDownloadUrl } from 'services/taskService';
 
 const { Dragger } = Upload;
 const { Text } = Typography;

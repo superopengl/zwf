@@ -883,6 +883,20 @@ paths:
       responses:
         200:
           description: OK           
+  /task/file/{fileId}/sign:
+    post:
+      operationId: signTaskFile
+      # security:
+      #   - authLoggedInUser: []
+      parameters:
+        - name: fileId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK              
   /task/field/{fieldId}/autodoc:
     post:
       operationId: generateAutoDoc
