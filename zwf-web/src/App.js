@@ -18,7 +18,6 @@ import PortalApp from 'pages/PortalApp';
 import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import HomePage from 'pages/HomePage';
-import { Navigate } from 'react-router-dom';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));

@@ -1,7 +1,6 @@
 import React from 'react';
 
 import { Avatar, Modal, Tag, Typography, Space } from 'antd';
-
 import { changeTaskStatus$ } from 'services/taskService';
 import { CheckOutlined, DeleteOutlined } from '@ant-design/icons';
 
@@ -31,8 +30,9 @@ export function showCompleteTaskModal(taskId, onFinish) {
     // footer: null,
     // width: 600,
     focusTriggerAfterClose: true,
+    className: 'success-button',
     okButtonProps: {
-      type: 'primary'
+      type: 'primary',
     },
     autoFocusButton: 'cancel',
     okText: 'Complete it!',
