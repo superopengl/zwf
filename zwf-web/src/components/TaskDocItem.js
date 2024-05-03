@@ -12,13 +12,14 @@ import Icon, { DeleteOutlined } from '@ant-design/icons';
 import { BsPatchCheck } from 'react-icons/bs';
 import { showSignTaskFileModal } from './showSignTaskFileModal';
 import { FaFileSignature } from 'react-icons/fa';
-import { getTaskDocDownloadUrl} from "services/taskService";
+import { getTaskDocDownloadUrl } from "services/taskService";
 import { ConfirmDeleteButton } from './ConfirmDeleteButton';
 import { finalize } from 'rxjs/operators';
 import DropdownMenu from './DropdownMenu';
 import { MdBrightnessAuto } from 'react-icons/md';
 import { Modal } from 'antd';
 import { FaSignature } from 'react-icons/fa';
+import { TaskFileName } from './TaskFileName';
 
 const { Link, Text } = Typography;
 
@@ -42,25 +43,6 @@ padding: 4px 0;
   display: none;
 }
 `;
-
-const getAutoDocTag = (taskFile, role) => {
-  if (role === 'client' || taskFile.type !== 'auto') {
-    return null;
-  }
-
-  let label = 'pending';
-  let color = '#cf222e';
-  let tooltipMessage = 'The file is not generated yet. Fill in fields first.';
-  if (taskFile.fileId) {
-    label = 'generated';
-    color = '#2da44e';
-    tooltipMessage = 'The file has been generated.';
-  }
-
-  return <Tooltip title={tooltipMessage}>
-    <Icon component={MdBrightnessAuto} style={{ color, fontSize: 20 }} />
-  </Tooltip>
-}
 
 const getMissingVarWarningMessage = (taskFile, varBag) => {
   const { refFields, fileId } = taskFile;
@@ -90,7 +72,7 @@ export const TaskDocItem = React.memo(props => {
 
   const canClientSign = isClient && taskFile.requiresSign && !taskFile.signedAt
   const canRequestSign = isOrg && !taskFile.signedAt;
-  
+
   const canDelete = isOrg && !taskFile.signedAt;
 
   const handleToggleRequireSign = () => {
@@ -131,24 +113,13 @@ export const TaskDocItem = React.memo(props => {
       focusTriggerAfterClose: true,
     });
   }
-
-  const iconOverlay = getAutoDocTag(taskFile, context.role);
-
+ 
   return <StyledListItem
     onClick={e => e.stopPropagation()}
   // className={missingVars.length > 0 ? 'error-doc' : !taskFile.fileId ? 'not-generated' : null}
   >
     <Col flex={1}>
-      <Space>
-        <div style={{ position: 'relative' }}>
-          <FileIcon name={taskFile.name} />
-          {iconOverlay && <div
-            style={{ position: 'absolute', right: -6, top: -6 }}
-          >{iconOverlay}</div>}
-        </div>
-        <Link href={getTaskDocDownloadUrl(taskFile.fileId)} target="_blank">{taskFile.name}</Link>
-        {!!taskFile.signedAt && <Tag color="#52c41a">signed</Tag>}
-      </Space>
+      <TaskFileName taskFile={taskFile} />
     </Col>
     <Col style={{ paddingTop: 6 }}>
       {canClientSign && <Tooltip title="Sign this document">

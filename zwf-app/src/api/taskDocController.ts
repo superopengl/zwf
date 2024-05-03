@@ -24,7 +24,7 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
   const { fieldId } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  let file: File;
+  let result: any;
   await AppDataSource.transaction(async m => {
     const taskField = await m.getRepository(TaskField).findOne({
       where: {
@@ -45,7 +45,7 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
 
     const docTemplate = await m.getRepository(DocTemplate).findOneBy({ id: docTemplateId });
 
-    file = await generatePdfDocFile(m, docTemplate, fields);
+    const file = await generatePdfDocFile(m, docTemplate, fields);
 
     taskField.value = {
       ...taskField.value,
@@ -53,9 +53,12 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
     }
 
     await m.save(taskField);
+
+    result = {
+      fileId: file.id,
+      name: file.fileName,
+    }
   })
 
-  res.json({
-    fileId: file.id
-  });
+  res.json(result);
 });
