@@ -1,5 +1,4 @@
 import React from 'react';
-import 'antd/dist/antd.less';
 import { GlobalContext } from './contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {

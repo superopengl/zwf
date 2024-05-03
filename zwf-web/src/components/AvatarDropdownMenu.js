@@ -1,10 +1,5 @@
 import React from 'react';
-import 'antd/dist/antd.less';
 import { GlobalContext } from '../contexts/GlobalContext';
-import { RoleRoute } from 'components/RoleRoute';
-import {
-  QuestionOutlined
-} from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { logout$ } from 'services/authService';
 import { Dropdown, Menu, Modal, Layout, Button, Typography } from 'antd';

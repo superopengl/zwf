@@ -3,7 +3,6 @@ import 'antd/dist/antd.less';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
-import { RoleRoute } from 'components/RoleRoute';
 import { Subject } from 'rxjs';
 import { ConfigProvider } from 'antd';
 import loadable from '@loadable/component'
