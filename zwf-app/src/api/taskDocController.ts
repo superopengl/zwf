@@ -46,13 +46,15 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
     const docTemplate = await m.getRepository(DocTemplate).findOneBy({ id: docTemplateId });
 
     const file = await generatePdfDocFile(m, docTemplate, fields);
+    file.taskId = taskField.taskId;
+    file.fieldId = taskField.id;
 
     taskField.value = {
       ...taskField.value,
       fileId: file.id
     }
 
-    await m.save(taskField);
+    await m.save([taskField, file]);
 
     result = {
       fileId: file.id,

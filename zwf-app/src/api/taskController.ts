@@ -152,19 +152,26 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
   assert(file?.task?.userId === userId, 404);
   assert(!file.esign, 400, 'Has been esigned');
 
+  const taskField = file.field;
+  const { value, type } = taskField;
+  let fileItem;
+  if(type === 'upload') {
+    fileItem = value.find(x => x.fileId === fileId);
+  } else if(type === 'autodoc') {
+    fileItem = value;
+  } else {
+    assert(false, 400, `Invalid field type '${type}'`)
+  }
+
   const now = getUtcNow();
   file.signedBy = userId;
   file.signedAt = now;
   file.esign = computeTaskFileSignedHash(file.md5, userId, now);
 
-  const taskField = file.field;
-  const { value } = taskField;
-  const fileItem = value.find(x => x.fileId === fileId);
-
   fileItem.signedAt = now;
   await AppDataSource.manager.save([file, taskField]);
 
-  res.json();
+  res.json(fileItem);
 });
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {
