@@ -27,11 +27,15 @@ const Container = styled.div`
 border: 1px solid #D9D9D9;
 border-radius: 4px;
 width: 100%;
-padding: 12px;
+padding: 4px 12px;
+
+&.disabled {
+  background-color: rgb(245, 245, 245);
+}
 `;
 
 export const AutoDocInput = (props) => {
-  const { value, mode, fieldId, onChange } = props;
+  const { value, mode, fieldId, onChange, disabled } = props;
   const { docTemplateId } = value || {};
   const form = Form.useFormInstance();
 
@@ -101,14 +105,14 @@ export const AutoDocInput = (props) => {
     showSignTaskFileModal(value, {
       onOk: () => {
         value.signedAt = new Date();
-        onChange({...value});
+        onChange({ ...value });
       },
     })
   }
 
   return <Loading loading={loading}>
-    <Container>
-      <Row wrap={false} align="top" justify="space-between">
+    <Container className={disabled ? 'disabled' : ''}>
+      <Row wrap={false} align="top" justify="space-between" style={{marginTop: 8}}>
         {hasGenerated ? <Col>
           <TaskFileName taskFile={value} />
         </Col> : <Col>
@@ -124,16 +128,16 @@ export const AutoDocInput = (props) => {
               <Button type="link" icon={<Icon component={MdOpenInNew} />} />
             </Link>}
         </Col>}
-        <Col>
+        {!disabled && <Col>
           <Space size="small">
-          {canClientSign && <Tooltip title="Sign this document">
-          <Button
-            type="primary"
-            danger
-            icon={<Icon component={FaSignature} />}
-            onClick={handleSignTaskDoc}
-          >Sign</Button>
-        </Tooltip>}
+            {canClientSign && <Tooltip title="Sign this document">
+              <Button
+                type="primary"
+                danger
+                icon={<Icon component={FaSignature} />}
+                onClick={handleSignTaskDoc}
+              >Sign</Button>
+            </Tooltip>}
             {canRequestSign && <Tooltip title={value.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
               <Button shape="circle"
                 type={value.requiresSign ? 'primary' : 'default'}
@@ -148,15 +152,15 @@ export const AutoDocInput = (props) => {
               <Button type="primary" shape="circle" icon={<SyncOutlined />} onClick={handleGenerateDoc}></Button>
             </Tooltip>}
           </Space>
-        </Col>
+        </Col>}
       </Row>
       {/* <Button type="link" icon={<EyeOutlined/>}/> */}
       {/* <DocTemplatePreviewPanel value={docTemplate} /> */}
-      <small>
+      {!disabled && <small>
         <Paragraph type="secondary" style={{ margin: '4px 0 0 0' }}>
           Depending on fields {docTemplate.refFields?.map(f => <VarTag key={f}>{f}</VarTag>)}
         </Paragraph>
-      </small>
+      </small>}
       {/* <em>{JSON.stringify(value, null, 2)}</em> */}
     </Container>
   </Loading>
@@ -167,9 +171,11 @@ AutoDocInput.propTypes = {
   onChange: PropTypes.func,
   fieldId: PropTypes.string,
   // mode: PropTypes.string,
+  disabled: PropTypes.bool,
 };
 
 AutoDocInput.propTypes = {
   onChange: () => { },
+  disabled: false,
   // mode: 'task'
 };

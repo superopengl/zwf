@@ -22,7 +22,11 @@ const Container = styled.div`
 border: 1px solid #D9D9D9;
 border-radius: 4px;
 width: 100%;
-padding: 12px;
+padding: 4px 12px;
+
+&.disabled {
+  background-color: rgb(245, 245, 245);
+}
 
 & {
   .ant-upload-list-item {
@@ -154,13 +158,14 @@ export const TaskFileUploader = React.memo((props) => {
 
   return (
     <Loading loading={loading}>
-      <Container className="clearfix">
-      {!isPreviewMode && value?.map((f, i) => <TaskDocItem key={i}
+      <Container className={disabled ? 'disabled' : ''}>
+        {!isPreviewMode && value?.map((f, i) => <TaskDocItem key={i}
           value={f}
           onDelete={handleRemove}
           onChange={handleSingleFileChange}
+          disabled={disabled}
         />)}
-        <Dragger
+        {!disabled && <Dragger
           multiple={true}
           action={`${API_BASE_URL}/task/field/${fieldId}/file`}
           withCredentials={true}
@@ -179,13 +184,12 @@ export const TaskFileUploader = React.memo((props) => {
           itemRender={renderFileItem}
         // showUploadList={true}
         >
-          {disabled ? <Text type="secondary">File upload is disabled</Text>
-            : <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
-              <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
-              Click or drag file to this area to upload
-            </div>}
-        </Dragger>
-
+          <div style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
+            <AiOutlineUpload size={30} style={{ fill: 'rgba(0, 0, 0, 0.65)' }} />
+            Click or drag file to this area to upload
+          </div>
+        </Dragger>}
+        {disabled && !value?.length && <Text style={{color: 'rgba(0, 0, 0, 0.25)'}}>File upload is disabled</Text>}
       </Container>
     </Loading>
   );

@@ -24,7 +24,7 @@ import { TaskFileName } from './TaskFileName';
 const { Link, Text } = Typography;
 
 const StyledListItem = styled(Row)`
-// margin-top: 4px;
+margin-top: 4px;
 padding: 4px 0;
 
 &.error-doc {
@@ -45,7 +45,7 @@ padding: 4px 0;
 `;
 
 export const TaskDocItem = React.memo(props => {
-  const { value: taskFile, showIcon, style, showCreatedAt, strong, onChange, onDelete, varBag } = props;
+  const { value: taskFile, showIcon, style, showCreatedAt, strong, onChange, onDelete, disabled } = props;
   const context = React.useContext(GlobalContext);
   const { user, role } = context;
 
@@ -103,7 +103,7 @@ export const TaskDocItem = React.memo(props => {
     <Col flex={1}>
       <TaskFileName taskFile={taskFile} />
     </Col>
-    <Col style={{ paddingTop: 6 }}>
+    {!disabled && <Col style={{ paddingTop: 6 }}>
       <Space size="small">
         {canClientSign && <Tooltip title="Sign this document">
           <Button
@@ -124,7 +124,7 @@ export const TaskDocItem = React.memo(props => {
           <Button key="delete" danger icon={<DeleteOutlined />} type="link" onClick={handleDelete} disabled={!canDelete} />
         </Tooltip>}
       </Space>
-    </Col>
+    </Col>}
   </StyledListItem>
 });
 
@@ -138,6 +138,7 @@ TaskDocItem.propTypes = {
   showCreatedAt: PropTypes.bool,
   onChange: PropTypes.func,
   onDelete: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 TaskDocItem.defaultProps = {
@@ -145,5 +146,6 @@ TaskDocItem.defaultProps = {
   showCreatedAt: false,
   onChange: () => { },
   onDelete: () => { },
+  disabled: false,
 }
 

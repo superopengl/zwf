@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Card, Typography, Divider } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, updateTaskTags$ } from 'services/taskService';
 import { PageContainer } from '@ant-design/pro-layout';
 import { catchError } from 'rxjs/operators';
@@ -10,7 +10,7 @@ import { TagSelect } from 'components/TagSelect';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LeftOutlined, LinkOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, DeleteOutlined, FileAddOutlined, LeftOutlined, LinkOutlined, MessageOutlined, ShareAltOutlined } from '@ant-design/icons';
 import Icon from '@ant-design/icons';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { FaSignature } from 'react-icons/fa';
@@ -24,8 +24,9 @@ import { MdDriveFileRenameOutline } from 'react-icons/md'
 import { SavingAffix } from 'components/SavingAffix';
 import { RiInsertRowBottom } from 'react-icons/ri';
 import { TaskFieldsEditorModal } from 'components/TaskFieldsEditorModal';
+import { showCompleteTaskModal } from 'components/showCompleteTaskModal';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled(Layout.Content)`
 margin: 0 auto 0 auto;
@@ -114,6 +115,8 @@ const OrgTaskPage = React.memo((props) => {
     setTask({ ...task });
   }
 
+  const hasFinished = ['archived', 'done'].includes(task?.status)
+
   return (<>
     <ContainerStyled>
       {task && <PageContainer
@@ -165,18 +168,18 @@ const OrgTaskPage = React.memo((props) => {
               </Collapse.Panel> */}
               <Collapse.Panel key="actions" header="Actions">
                 <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                  <Button type="link" icon={<Icon component={AiOutlineHistory} />} block onClick={() => setHistoryVisible(true)}>Interactions & Messages</Button>
+                  {/* <Paragraph type="secondary" style={{margin: 0}}>Extra actions to modify the task.</Paragraph> */}
                   <Button type="link" icon={<ShareAltOutlined />} block onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share deep link</Button>
                   <Button type="link" icon={<Icon component={MdDriveFileRenameOutline} />} block onClick={() => showRenameTaskModal(task.id, task.name, load$)}>Rename task</Button>
-                  <Button type="link" icon={<Icon component={RiInsertRowBottom} />} block onClick={() => setEditFieldVisible(true)}>Edit fields</Button>
+                  {!hasFinished && <Button type="link" icon={<Icon component={RiInsertRowBottom} />} block onClick={() => setEditFieldVisible(true)}>Edit fields</Button>}
                   <hr />
-                  <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>
+                  {/* <Paragraph type="secondary" style={{ margin: 0 }}>Communication with the client.</Paragraph> */}
+                  <Button type="link" icon={<MessageOutlined />} block onClick={() => setHistoryVisible(true)}>Message to client</Button>
+                  {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => setHistoryVisible(true)}>Request client for more information</Button>}
                   {/* <Button type="link" icon={<Icon component={FaSignature} />} block onClick={() => setHistoryVisible(true)}>Request client for signature</Button> */}
-                  {!['archived', 'done'].includes(task.status) && <Button type="link" icon={<CheckOutlined />} block onClick={() => setHistoryVisible(true)}>Complete this task</Button>}
-                  {task.status !== 'archived' && <>
-                    <hr />
-                    <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>
-                  </>}
+                  {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
+                  {!hasFinished && <hr />}
+                  {!hasFinished && <Button type="link" danger icon={<DeleteOutlined />} block onClick={() => showArchiveTaskModal(task.id, load$)}>Archive this task</Button>}
                 </Space>
               </Collapse.Panel>
             </Collapse>
