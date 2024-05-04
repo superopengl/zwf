@@ -9,7 +9,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { listRecurring, deleteRecurring, runRecurring } from 'services/recurringService';
-import RecurringForm from './RecurringForm';
+import RecurringEditModal from './RecurringEditModal';
 import { notify } from 'util/notify';
 
 const { Title, Link: TextLink } = Typography;
@@ -76,8 +76,7 @@ const RecurringListPage = (props) => {
       ellipsis: false
     },
     {
-      title: 'Portfolio',
-      dataIndex: 'portfolioName',
+      title: 'Client',
       onFilter: (value, record) => record.agentId === value,
       render: (text, record) => record.portfolioName ? <>
         <Space>
@@ -89,15 +88,10 @@ const RecurringListPage = (props) => {
       </> : <Text type="danger">deleted portfolio</Text>
     },
     {
-      title: 'Name Template',
+      title: 'Task Template',
       dataIndex: 'nameTemplate',
       render: (text) => text,
       ellipsis: false
-    },
-    {
-      title: 'Due Day',
-      dataIndex: 'dueDay',
-      render: (text) => text,
     },
     {
       title: 'Frequency',
@@ -142,8 +136,13 @@ const RecurringListPage = (props) => {
       }
     },
     {
-      title: 'Updated At',
-      dataIndex: 'updatedAt',
+      title: 'Last Run At',
+      dataIndex: 'lastRunAt',
+      render: (value) => <TimeAgo value={value} />
+    },
+    {
+      title: 'Next Run At',
+      dataIndex: 'nextRunAt',
       render: (value) => <TimeAgo value={value} />
     },
     {
@@ -166,8 +165,9 @@ const RecurringListPage = (props) => {
   const loadList = async () => {
     try {
       setLoading(true);
-      const list =[] // await listRecurring();
+      const list = [] // await listRecurring();
       setList(list);
+      setLoading(false);
     } catch {
       setLoading(false);
     }
@@ -254,19 +254,11 @@ const RecurringListPage = (props) => {
         />
       </Space>
 
-      <StyledDrawer
-        title={currentId ? 'Edit Recurring' : 'New Recurring'}
-        placement="right"
-        closable={true}
+      <RecurringEditModal id={currentId}
         visible={formVisible}
-        onClose={() => setFormVisible(false)}
-        destroyOnClose={true}
-        width={450}
-        // bodyStyle={{ padding: '0 10px' }}
-        footer={null}
-      >
-        <RecurringForm id={currentId} onOk={() => handleEditOnOk()} />
-      </StyledDrawer>
+        onOk={() => setFormVisible(false)}
+        onCancel={() => setFormVisible(false)}
+      />
     </LayoutStyled >
 
   );

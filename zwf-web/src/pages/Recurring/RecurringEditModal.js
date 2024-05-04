@@ -1,10 +1,10 @@
-import { Button, Form, Select, Space, Typography, InputNumber, Checkbox, Switch } from 'antd';
+import { Button, Form, Select, Space, Typography, InputNumber, Modal, Switch } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
 
 import { listTaskTemplate } from 'services/taskTemplateService';
-import { getRecurring, saveRecurring } from 'services/recurringService';
+import { getRecurring$, saveRecurring$ } from 'services/recurringService';
 import styled from 'styled-components';
 import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
@@ -13,29 +13,30 @@ import { ClientSelect } from 'components/ClientSelect';
 
 const { Paragraph } = Typography;
 
+const EMPTY_RECURRING = {
+  name: 'Unnamed recurring',
+}
 
-const RecurringForm = (props) => {
-  const { id } = props;
+
+const RecurringEditModal = (props) => {
+  const { id, visible, onOk, onCancel } = props;
   // const { name, id, fields } = value || {};
-
+  const isNew = !id;
+  const [recurring, setRecurring] = React.useState(EMPTY_RECURRING);
   const [loading, setLoading] = React.useState(true);
   const [form] = Form.useForm();
-  const [taskTemplateList, setTaskTemplateList] = React.useState([]);
-  const [portfolioList, setPortfolioList] = React.useState([]);
-  const [initialValues, setInitialValues] = React.useState();
 
-  const loadEntity = async () => {
-    setLoading(true);
-    const taskTemplateList = await listTaskTemplate();
-    const portfolioList = []//  await listPortfolio();
+  React.useEffect(() => {
     if (id) {
-      const recurring = await getRecurring(id);
-      setInitialValues(recurring);
+      const sub$ = getRecurring$(id).subscribe(item => {
+        setRecurring(item);
+        setLoading(false)
+      })
+      return () => sub$.unsubscribe();
+    } else {
+      setLoading(false)
     }
-    setTaskTemplateList(taskTemplateList);
-    setPortfolioList(portfolioList);
-    setLoading(false);
-  }
+  }, [id]);
 
   const handleSaveRecurring = async (values) => {
     const recurring = {
@@ -43,27 +44,42 @@ const RecurringForm = (props) => {
       ...values
     }
 
-    await saveRecurring(recurring);
-    props.onOk();
+    saveRecurring$(recurring).subscribe(() => {
+      onOk();
+    });
   }
 
-  React.useEffect(() => {
-    loadEntity();
-  }, [id]);
+  const handleOk = () => {
+    form.submit();
+  }
 
-  return <>
-    {!loading && <Form layout="vertical" onFinish={handleSaveRecurring} form={form} initialValues={initialValues}>
+  return <Modal
+    title={isNew ? 'New Schedular' : 'Edit Schedular'}
+    visible={visible}
+    closable={true}
+    maskClosable={false}
+    destroyOnClose={true}
+    onOk={handleOk}
+    onCancel={onCancel}
+    okText="Save"
+    cancelButtonProps={{ type: 'text' }}
+  >
+    {!loading && <Form
+      layout="vertical"
+      onFinish={handleSaveRecurring}
+      form={form}
+      initialValues={recurring}>
       <Space direction="vertical" size="small">
         <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
         <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
-          <ClientSelect style={{ width: '100%' }} />
+          <ClientSelect style={{ width: '100%' }} valueProp="id"/>
         </Form.Item>
         <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
           <TaskTemplateSelect />
         </Form.Item>
         <Form.Item
-          label="Start On (First Run)" name="firstRunOn" 
-          extra="The recurring will happen at 5:00 am (Sydney time) on the specified day."
+          label="Start On (First Run)" name="firstRunOn"
+          extra="If chosse 29, 30, or 31, system will calculate the closest date in future month. For example, if starting on Jan 31 and repeat monthly, next recurring will be on Feb 28."
           rules={[{
             required: true, message: ' ', validator: async (rule, value) => {
               if (!value || !moment(value).isValid()) {
@@ -93,21 +109,23 @@ const RecurringForm = (props) => {
             <Select.Option value="day">Daily</Select.Option>
           </Select>
         </Form.Item>
-        <Form.Item style={{ marginTop: '1rem' }}>
+        {/* <Form.Item style={{ marginTop: '1rem' }}>
           <Button type="primary" block htmlType="submit" disabled={loading} >Save</Button>
-        </Form.Item>
+        </Form.Item> */}
       </Space>
     </Form>}
-  </>;
+  </Modal>;
 };
 
-RecurringForm.propTypes = {
+RecurringEditModal.propTypes = {
   id: PropTypes.string,
   visible: PropTypes.bool.isRequired,
+  onOk: PropTypes.func,
+  onCancel: PropTypes.func,
 };
 
-RecurringForm.defaultProps = {
+RecurringEditModal.defaultProps = {
   visible: false,
 };
 
-export default RecurringForm;
+export default RecurringEditModal;

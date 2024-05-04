@@ -9,11 +9,12 @@ export const ClientSelect = React.memo((props) => {
   const [dataSource, setDataSource] = React.useState([]);
 
   React.useEffect(() => {
-    load$();
+    const sub$ = load$();
+    return () => sub$.unsubscribe();
   }, [])
 
   const load$ = (text) => {
-    searchOrgClientUsers$({ text }).subscribe(resp => {
+    return searchOrgClientUsers$({ text }).subscribe(resp => {
       setDataSource(resp.data)
     })
   }
@@ -24,12 +25,17 @@ export const ClientSelect = React.memo((props) => {
     }
   }, 500);
 
+  const handleChange = (selectedItem) => {
+    const selectedValue = selectedItem[valueProp];
+    onChange(selectedValue)
+  }
+
   return <UserSelect
     value={value}
     dataSource={dataSource}
     allowInput={allowInput}
     valueProp={valueProp}
-    onChange={onChange}
+    onChange={handleChange}
     onTextChange={handleTextChange}
     placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
   />
