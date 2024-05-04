@@ -21,9 +21,9 @@ export async function testRunRecurring(recurringId: string) {
 }
 
 export async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
-  const { taskTemplateId, userId, nameTemplate } = recurring;
+  const { taskTemplateId, userId, name } = recurring;
 
-  const taskName = nameTemplate.replace('{{createdDate}}', moment().format('DD MMM YYYY'));
+  const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
   const client = await AppDataSource.getRepository(UserInformation).findOne({where: {id: userId}});
   const clientEmail = client.email;
 

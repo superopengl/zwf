@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import { DateInput } from 'components/DateInput';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { ClientSelect } from 'components/ClientSelect';
+import { Input } from 'antd';
 
 const { Paragraph } = Typography;
 
@@ -19,16 +20,19 @@ const EMPTY_RECURRING = {
 
 
 const RecurringEditModal = (props) => {
-  const { id, visible, onOk, onCancel } = props;
+  const { id: propId, visible, onOk, onCancel } = props;
   // const { name, id, fields } = value || {};
+  const [id, setId] = React.useState(propId);
   const isNew = !id;
   const [recurring, setRecurring] = React.useState(EMPTY_RECURRING);
   const [loading, setLoading] = React.useState(true);
-  const [form] = Form.useForm();
+  const formRef = React.createRef()
 
   React.useEffect(() => {
-    if (id) {
-      const sub$ = getRecurring$(id).subscribe(item => {
+    setId(propId);
+    if (propId) {
+      setLoading(true)
+      const sub$ = getRecurring$(propId).subscribe(item => {
         setRecurring(item);
         setLoading(false)
       })
@@ -36,7 +40,7 @@ const RecurringEditModal = (props) => {
     } else {
       setLoading(false)
     }
-  }, [id]);
+  }, [propId]);
 
   const handleSaveRecurring = async (values) => {
     const recurring = {
@@ -50,7 +54,7 @@ const RecurringEditModal = (props) => {
   }
 
   const handleOk = () => {
-    form.submit();
+    formRef.current.submit();
   }
 
   return <Modal
@@ -67,12 +71,15 @@ const RecurringEditModal = (props) => {
     {!loading && <Form
       layout="vertical"
       onFinish={handleSaveRecurring}
-      form={form}
+      ref={formRef}
       initialValues={recurring}>
       <Space direction="vertical" size="small">
         <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
+        <Form.Item label="Name" name="name" rules={[{ required: true, message: ' ' }]}>
+          <Input autoFocus allowClear />
+        </Form.Item>
         <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
-          <ClientSelect style={{ width: '100%' }} valueProp="id"/>
+          <ClientSelect style={{ width: '100%' }} valueProp="id" />
         </Form.Item>
         <Form.Item label="Task Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
           <TaskTemplateSelect />
