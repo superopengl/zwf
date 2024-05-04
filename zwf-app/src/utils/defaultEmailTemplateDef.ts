@@ -69,4 +69,16 @@ Please click below link to reset your password.
 
 `,
   },
+  [EmailTemplateType.TaskRequireAction]: {
+    vars: ['website', 'toWhom', 'taskName', 'taskUrl', 'message'],
+    subject: '[ZeeWorkflow] Action Required',
+    body: `Dear {{toWhom}}
+<p>
+    The case <strong>{{taskName}}</strong> requires actions. Please use below link to access the case.
+</p>
+    <br/>
+{{taskUrl}}
+
+`,
+  },
 }

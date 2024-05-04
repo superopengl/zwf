@@ -1,17 +1,15 @@
-import { Connection } from 'typeorm';
+import { Connection, DataSource } from 'typeorm';
 import errorToJson from 'error-to-json';
 import { connectDatabase } from '../src/db';
 import 'colors';
-import * as dotenv from 'dotenv';
 
 export const start = async (jobName: string, jobFunc: () => Promise<any>, options?: { syncSchema?: boolean, daemon?: boolean }) => {
-  let connection: Connection = null;
+  let ds: DataSource = null;
   const shouldSyncSchema = !!options?.syncSchema;
   const oneTimeRun = !options?.daemon;
   let error;
   try {
-    dotenv.config();
-    connection = await connectDatabase(shouldSyncSchema);
+    ds = await connectDatabase(shouldSyncSchema);
     console.log('Task', jobName, 'started');
     await jobFunc();
     if (oneTimeRun) {
@@ -23,10 +21,10 @@ export const start = async (jobName: string, jobFunc: () => Promise<any>, option
     error = e;
   } finally {
     if (error || oneTimeRun) {
-      try {
-        await connection?.close();
-      } catch {
-      }
+      // try {
+      //   await connection?.close();
+      // } catch {
+      // }
       process.exit(error ? 1 : 0);
     }
   }
