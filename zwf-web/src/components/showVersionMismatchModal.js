@@ -3,6 +3,7 @@ import { Typography, Space, Button, notification, Collapse, Avatar } from 'antd'
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { notes } from '../release_changes';
 import { CaretRightOutlined } from '@ant-design/icons';
+import {Logo} from './Logo';
 const { Paragraph } = Typography
 
 const LAST_ASKED_BACKEND_VERSION = 'lastAskedBackendVersion';
@@ -44,12 +45,12 @@ export const showVersionMismatchModal = (webappVersion, backendVersion) => {
 
   const notificationKey = 'versionCheck';
   notification.info({
-    icon: <Avatar src="/maskable_icon_x96.png"/>,
-    message: 'New version is released',
+    message: <Space><Logo />New version is released</Space>,
     description: <VersionMismatchModalContent onClose={() => {
       reactLocalStorage.set(LAST_ASKED_BACKEND_VERSION, backendVersion)
       notification.close(notificationKey);
     }} />,
+    icon: null,
     key: notificationKey,
     duration: 0,
     placement: 'topLeft',
