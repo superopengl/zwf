@@ -14,7 +14,7 @@ import { Task } from '../entity/Task';
 import { Message } from '../entity/Message';
 import { User } from '../entity/User';
 import { TaskStatus } from '../types/TaskStatus';
-import { sendEmailImmediately } from '../services/emailService';
+import { enqueueEmailToUserId, sendEmailImmediately } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -32,7 +32,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { logTaskStatusChange, logTaskAssigned } from '../services/taskTrackingService';
+import { logTaskStatusChange, logTaskAssigned, logTaskChat } from '../services/taskTrackingService';
 import { File } from '../entity/File';
 import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
@@ -40,6 +40,7 @@ import { filter } from 'rxjs/operators';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { computeTaskFileSignedHash } from '../utils/computeTaskFileSignedHash';
+import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client');
@@ -148,16 +149,16 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
     }
   });
 
-  const userId =  getUserIdFromReq(req);
+  const userId = getUserIdFromReq(req);
   assert(file?.task?.userId === userId, 404);
   assert(!file.esign, 400, 'Has been esigned');
 
   const taskField = file.field;
   const { value, type } = taskField;
   let fileItem;
-  if(type === 'upload') {
+  if (type === 'upload') {
     fileItem = value.find(x => x.fileId === fileId);
-  } else if(type === 'autodoc') {
+  } else if (type === 'autodoc') {
     fileItem = value;
   } else {
     assert(false, 400, `Invalid field type '${type}'`)
@@ -521,8 +522,6 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-
-
 export const assignTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
@@ -557,97 +556,32 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-async function sendTaskMessage(Task, senderId, content) {
-  const user = await AppDataSource.getRepository(User).findOne({ where: { id: Task.userId } });
-  assert(user, 404);
-
-  const message = new Message();
-  message.senderId = senderId;
-  message.taskId = Task.id;
-  message.recipientId = Task.userId;
-  message.content = content;
-
-  await AppDataSource.getRepository(Message).save(message);
-
-  sendEmailImmediately({
-    to: user.profile.email,
-    vars: {
-      toWhom: getEmailRecipientName(user),
-      name: Task.name
-    },
-    template: 'taskMessage'
-  });
-}
-
 export const notifyTask = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const { content } = req.body;
-  assert(content, 404);
+  const orgId = getOrgIdFromReq(req);
+  const userId = getUserIdFromReq(req);
 
-  const task = await AppDataSource.getRepository(Task).findOne({ where: { id } });
+  const task = await AppDataSource.getRepository(Task).findOne({
+    where: {
+      id,
+      orgId
+    }
+  });
   assert(task, 404);
 
-  await sendTaskMessage(task, (req as any).user.id, content);
-
-  res.json();
-});
-
-export const listTaskNotifies = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { id } = req.params;
-  const { from, size } = req.query;
-  const { user: { role, id: userId } } = req as any;
-  const isClient = role === 'client';
-
-  let query = AppDataSource.getRepository(Message).createQueryBuilder()
-    .where(`"taskId" = :id`, { id });
-  if (isClient) {
-    query = query.andWhere(`"clientUserId" = :userId`, { userId });
-  }
-  if (from) {
-    query = query.andWhere(`"createdAt" >= :from`, { from: moment(`${from}`).toDate() });
+  const message = req.body.message?.trim();
+  if (message) {
+    await logTaskChat(AppDataSource.manager, task.id, userId, message);
   }
 
-  query = query.orderBy('"createdAt"', 'DESC')
-    .limit(+size || 20);
+  const taskUrl = `${process.env.ZWF_WEB_DOMAIN_NAME}/t/${task.deepLinkId}`;
 
-  const list = await query.getMany();
-
-  res.json(list);
-});
-
-export const markTaskNotifyRead = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { id: taskId } = req.params;
-  const { user: { id: userId, role } } = req as any;
-  const now = getNow();
-  // Mark notification read
-  let query;
-  switch (role) {
-    case 'client':
-      // The messages received by this client
-      query = {
-        taskId,
-        clientUserId: userId,
-        sender: Not(userId)
-      };
-      break;
-    case 'admin':
-    case 'agent':
-      const task = await AppDataSource.getRepository(Task).findOne({ where: { id: taskId } });
-      const clientUserId = task.userId;
-      query = {
-        taskId,
-        clientUserId,
-        sender: clientUserId
-      };
-      break;
-    default:
-      assert(false, 500, 'Impossible code path');
-  }
-
-  await AppDataSource.getRepository(Message).update(query, { readAt: now });
+  enqueueEmailToUserId(task.userId, EmailTemplateType.TaskRequireAction, {
+    taskName: task.name,
+    taskUrl,
+    message,
+  });
 
   res.json();
 });
