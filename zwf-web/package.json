@@ -129,5 +129,11 @@
       ],
       "extensions": "js,jsx"
     }
+  },
+  "pnpm": {
+    "autoInstallPeers": true,
+    "peerDependencyIssues": {
+      "autoInstallPeers": true
+    }
   }
 }
