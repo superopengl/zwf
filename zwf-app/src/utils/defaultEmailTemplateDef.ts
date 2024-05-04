@@ -57,16 +57,6 @@ Please click below link to reset your password.
 {{url}}
 `,
   },
-  [EmailTemplateType.RequireClientAuthorizing]: {
-    vars: ['website', 'toWhom', 'email', 'okUrl', 'ngUrl', 'orgName'],
-    subject: '[ZeeWorkflow] Authorize Organization',
-    body: `Dear {{toWhom}}
-    <br/>
-Organization <strong>{{orgName}}</strong> is asking to access your portfolios.
-<br/>
-Clicking to {{url}} to approve or reject.
-`,
-  },
   [EmailTemplateType.TaskCreated]: {
     vars: ['website', 'toWhom', 'taskName', 'directUrl', 'orgName'],
     subject: '[ZeeWorkflow] Task Created',
