@@ -23,6 +23,7 @@ border: 1px solid #D9D9D9;
 border-radius: 4px;
 width: 100%;
 padding: 4px 12px;
+background-color: white;
 
 &.disabled {
   background-color: rgb(245, 245, 245);

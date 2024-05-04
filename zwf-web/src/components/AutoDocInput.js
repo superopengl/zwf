@@ -27,7 +27,8 @@ const Container = styled.div`
 border: 1px solid #D9D9D9;
 border-radius: 4px;
 width: 100%;
-padding: 4px 12px;
+padding: 4px 12px 8px;
+background-color: white;
 
 &.disabled {
   background-color: rgb(245, 245, 245);
@@ -46,10 +47,6 @@ export const AutoDocInput = (props) => {
   const { role } = context;
 
   const isClient = role === 'client';
-
-  const validateMissingSiblingFields = () => {
-    const allFields = form.getFieldsValue();
-  }
 
   // React.useEffect(() => {
   //   const allFields = form.getFieldsValue();
@@ -110,25 +107,30 @@ export const AutoDocInput = (props) => {
     })
   }
 
+  const isForTaskTemplate = mode === 'taskTemplate';
+  const canAction = !isForTaskTemplate && !disabled;
+
   return <Loading loading={loading}>
     <Container className={disabled ? 'disabled' : ''}>
-      <Row wrap={false} align="top" justify="space-between" style={{marginTop: 8}}>
+      <Row wrap={false} align="top" justify="space-between" style={{ marginTop: 8 }}>
         {hasGenerated ? <Col>
           <TaskFileName taskFile={value} />
         </Col> : <Col>
-          <Link onClick={handlePreview}>
-            {/* <DocTemplateIcon /> */}
-            <Space>
-              <FileIcon name={'.pdf'} type="pending" />
-              {docTemplate.name}
-            </Space>
-          </Link>
-          {mode === 'taskTemplate' &&
-            <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
-              <Button type="link" icon={<Icon component={MdOpenInNew} />} />
-            </Link>}
+          {hasGenerated ? <TaskFileName taskFile={value} /> : <Space>
+            <Link onClick={handlePreview}>
+              {/* <DocTemplateIcon /> */}
+              <Space>
+                <FileIcon name={'.pdf'} type={isForTaskTemplate ? null : "pending"} />
+                {docTemplate.name}
+              </Space>
+            </Link>
+            {isForTaskTemplate &&
+              <Link href={`/doc_template/${docTemplate.id}`} target="_blank">
+                <Button type="link" icon={<Icon component={MdOpenInNew} />} />
+              </Link>}
+          </Space>}
         </Col>}
-        {!disabled && <Col>
+        {canAction && <Col>
           <Space size="small">
             {canClientSign && <Tooltip title="Sign this document">
               <Button
