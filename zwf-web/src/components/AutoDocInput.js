@@ -173,7 +173,7 @@ AutoDocInput.propTypes = {
   onChange: PropTypes.func,
   fieldId: PropTypes.string,
   // mode: PropTypes.string,
-  disabled: PropTypes.bool,
+  // disabled: PropTypes.bool,
 };
 
 AutoDocInput.propTypes = {
