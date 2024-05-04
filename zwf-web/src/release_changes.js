@@ -1,2 +1,2 @@
 export const notes=`
-set auto-install-peers=true`
+fix pnpm peer dep error`
