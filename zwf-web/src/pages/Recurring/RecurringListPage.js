@@ -166,7 +166,7 @@ const RecurringListPage = (props) => {
   const loadList = async () => {
     try {
       setLoading(true);
-      const list = await listRecurring();
+      const list =[] // await listRecurring();
       setList(list);
     } catch {
       setLoading(false);
@@ -261,7 +261,7 @@ const RecurringListPage = (props) => {
         visible={formVisible}
         onClose={() => setFormVisible(false)}
         destroyOnClose={true}
-        width={420}
+        width={450}
         // bodyStyle={{ padding: '0 10px' }}
         footer={null}
       >
