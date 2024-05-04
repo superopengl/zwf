@@ -53,10 +53,10 @@ COPY ./zwf-web/package.json /usr/portal/web/
 COPY ./zwf-app/package.json /usr/portal/app/
 
 WORKDIR /usr/portal/web
-RUN pnpm install
+RUN pnpm install --auto-install-peers=true
 
 WORKDIR /usr/portal/app
-RUN pnpm install
+RUN pnpm install --auto-install-peers=true
 RUN npm install phantomjs-prebuilt@2.1.16 --update-binary
 RUN npm link phantomjs-prebuilt
 
