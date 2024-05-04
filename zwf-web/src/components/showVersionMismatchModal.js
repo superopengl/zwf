@@ -34,13 +34,13 @@ const VersionMismatchModalContent = React.memo(props => {
 });
 
 export const showVersionMismatchModal = (webappVersion, backendVersion) => {
-  // if (webappVersion === backendVersion) {
-  //   return;
-  // }
-  // const lastAskedBackendVersion = reactLocalStorage.get(LAST_ASKED_BACKEND_VERSION);
-  // if (lastAskedBackendVersion === backendVersion) {
-  //   return;
-  // }
+  if (webappVersion === backendVersion) {
+    return;
+  }
+  const lastAskedBackendVersion = reactLocalStorage.get(LAST_ASKED_BACKEND_VERSION);
+  if (lastAskedBackendVersion === backendVersion) {
+    return;
+  }
 
   const notificationKey = 'versionCheck';
   notification.info({

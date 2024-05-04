@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { Subject } from 'rxjs';
-import { ConfigProvider } from 'antd';
+import { ConfigProvider, Row } from 'antd';
 import loadable from '@loadable/component'
 import { IntlProvider } from "react-intl";
 import antdLocaleEN from 'antd/lib/locale/en_US';
@@ -126,7 +126,9 @@ export const App = React.memo(() => {
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
   if (loading) {
-    return <Loading loading={true} />
+    return <Row>
+      <Loading loading={true} />
+    </Row>
   }
 
   return (
