@@ -102,7 +102,7 @@ async function syncDatabaseSchema(connection: Connection) {
    * so as to let typeorm always create fresh views when app starts up.
    */
 
-  await dropAllViewsAndMatviews();
+  // await dropAllViewsAndMatviews();
 
   await connection.synchronize(false);
   await connection.runMigrations();
@@ -215,7 +215,6 @@ export let AppDataSource = new DataSource({
     UserLogin,
     TaskTagsTag,
     OrgClientInformation,
-    ReceiptInformation,
     OrgBasicInformation,
     OrgCurrentSubscriptionRefund,
     SupportInformation,
@@ -227,6 +226,7 @@ export let AppDataSource = new DataSource({
     SystemEmailTemplate,
     SystemEmailSignature,
     RecurringInformation,
+    ReceiptInformation,
   ],
 })
 
