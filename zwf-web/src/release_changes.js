@@ -1,2 +1,2 @@
 export const notes=`
-clean up ipstack`
+remove unnecessary trigger`
