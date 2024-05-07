@@ -1,2 +1,2 @@
 export const notes=`
-fix db`
+clean up ipstack`
