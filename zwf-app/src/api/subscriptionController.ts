@@ -84,7 +84,8 @@ export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
 
   res.set('Cache-Control', `public, max-age=36536000`);
   res.attachment(fileName);
-  pdfStream.pipe(res);
+  res.send(pdfStream);
+  // pdfStream.pipe(res);
 });
 
 export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
