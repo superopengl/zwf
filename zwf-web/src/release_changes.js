@@ -1,2 +1,2 @@
 export const notes=`
-fix receipt pdf printing`
+fix db`
