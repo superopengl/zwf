@@ -4,8 +4,6 @@ FROM node:16-slim
 # Note: this installs the necessary libs to make the bundled version of Chromium that Puppeteer
 # installs, work.
 
-ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
-
 RUN apt-get update \
     && apt-get install -y wget gnupg \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
@@ -74,6 +72,7 @@ ENV TZ=utc
 ENV GIT_HASH=$REACT_APP_GIT_HASH
 ENV GENERATE_SOURCEMAP=false
 ENV NODE_OPTIONS=--max_old_space_size=4096
+# ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
 # Build app
 COPY ./zwf-app /usr/portal/app
