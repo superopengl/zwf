@@ -150,7 +150,7 @@ export const DocTemplateListPage = props => {
               <Paragraph type="secondary">
                 There is no doc template. Let's start creating one!
               </Paragraph>
-              <Link to="/task_template/new">Create new doc template</Link>
+              <Link to="/doc_template/new">Create new doc template</Link>
             </div>
           }}
           renderItem={item => <List.Item>
