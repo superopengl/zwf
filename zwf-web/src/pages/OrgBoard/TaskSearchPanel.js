@@ -40,8 +40,8 @@ export const TaskSearchPanel = props => {
     onChange({ ...queryInfo, taskTemplateId, });
   }
 
-  const handleClientIdChange = (client) => {
-    onChange({ ...queryInfo, clientId: client?.id, });
+  const handleClientIdChange = (clientId) => {
+    onChange({ ...queryInfo, clientId });
   }
 
   const handleTagsChange = tags => {

@@ -29,7 +29,7 @@ width: 100%;
 `;
 
 export const UserSelect = React.memo((props) => {
-  const { value, valueProp, placeholder, onChange, onTextChange, allowInput, dataSource, bordered, ...other } = props;
+  const { value, valueProp, placeholder, onChange, onTextChange, allowInput, dataSource, bordered, ...others } = props;
 
   const [userList, setUserList] = React.useState(dataSource);
   const [searchText, setSearchText] = React.useState();
@@ -65,7 +65,15 @@ export const UserSelect = React.memo((props) => {
     handleSelect(null);
   }
 
-  return (
+  const handleKeyDown = e => {
+    if (e.code === 'Enter') {
+      onChange({
+        email: searchText,
+      });
+    }
+  }
+
+  return (<>
     <StyledSelect
       ref={ref}
       bordered={bordered}
@@ -77,26 +85,24 @@ export const UserSelect = React.memo((props) => {
       onChange={handleChange}
       onSelect={handleSelect}
       onSearch={allowInput ? val => setSearchText(val) : null}
+      onInputKeyDown={handleKeyDown}
       onClear={handleClear}
       filterOption={(input, option) => {
         const { givanName, surname, email } = option.item;
         return email?.includes(input) || givanName?.includes(input) || surname?.includes(input);
       }}
       notFoundContent={
-        isValidEmail ? <Space>
-          Seems like this email isn't a client in your organization.
-          <Button
-            type="primary"
-            onClick={handleNewEmailInput}
-          >Click to invite by this email</Button>
-        </Space> : <>User not found. Typing in a valid email address can invite a user client.</>
+        isValidEmail
+          ? `Seems like this email isn't a client in your organization. Click to invite this email.`
+          : `User not found. Typing in a valid email address can invite a user client.`
       }
-      {...other}
+      {...others}
     >
       {userList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
         <UserNameCard userId={c.id} />
       </Select.Option>))}
     </StyledSelect>
+  </>
   )
 });
 
@@ -116,6 +122,6 @@ UserSelect.defaultProps = {
   loading: false,
   allowInput: true,
   bordered: true,
-  onTextChange: (text) => {}
+  onTextChange: (text) => { }
 };
 

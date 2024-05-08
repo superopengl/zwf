@@ -57,7 +57,7 @@ export const TaskGenerator = React.memo(props => {
     setTaskTemplateId(taskTemplateIdValue);
   }
 
-  const handleClientChange = client => {
+  const handleClientChange = (clientEmmail, client) => {
     setClientInfo(client);
   }
 
