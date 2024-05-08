@@ -17,12 +17,10 @@ export const UserDisplayName = (props) => {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', paddingTop: 5, paddingBottom: 5, fontSize: 14 }}>
-      <div style={{ margin: 0, lineHeight: '1rem' }}>
         {/* <HighlightingText value={displayName} search={searchText} /> */}
         <Text ellipsis={true} style={{ maxWidth: "100%" }}>
           <HighlightingText value={displayName} search={searchText} />
           </Text>
-      </div>
       {showEmail && <Text ellipsis={true} style={{ margin: 0, lineHeight: '0.8rem',  maxWidth: '100%' }} type="secondary"><small>
         <HighlightingText value={email} search={searchText} />
       </small></Text>}

@@ -82,12 +82,13 @@ export const AutoDocInput = (props) => {
 
   const handleGenerateDoc = () => {
     setLoading(true);
-    generateAutoDoc$(fieldId).subscribe((result) => {
+    generateAutoDoc$(fieldId).pipe(
+      finalize(() => setLoading(false))
+    ).subscribe((result) => {
       onChange({
         ...value,
         ...result,
       })
-      setLoading(false);
     })
   }
 
