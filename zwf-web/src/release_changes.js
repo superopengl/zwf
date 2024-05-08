@@ -1,2 +1,3 @@
 export const notes=`
-fix client select`
+prettify autodoc PDF rendering
+add orgId and orgName stripe metadata`
