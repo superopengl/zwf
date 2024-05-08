@@ -17,6 +17,8 @@ function serializeRes(res): String {
 
 export async function logError(err, req, res, ...args) {
   try {
+    console.error(err);
+  
     const data = {
       error: serializeError(err),
       args: args
@@ -28,9 +30,8 @@ export async function logError(err, req, res, ...args) {
       req: serializeReq(req),
       data: JSON.stringify(data)
     };
-    const repo = AppDataSource.getRepository(SysLog);
 
-    await repo.save(log);
+    await AppDataSource.getRepository(SysLog).save(log);
   } catch (err) {
     console.error('sysLog error', err);
     // swallow error
