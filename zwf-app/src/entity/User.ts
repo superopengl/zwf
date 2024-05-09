@@ -55,7 +55,7 @@ export class User {
   @Index()
   deletedAt: Date;
 
-  @OneToOne(() => UserProfile)
+  @OneToOne(() => UserProfile, { orphanedRowAction: 'delete' })
   @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })
   profile: UserProfile;
 

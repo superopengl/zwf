@@ -82,7 +82,7 @@ export const deleteDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  await AppDataSource.getRepository(DocTemplate).softDelete({ id, orgId });
+  await AppDataSource.getRepository(DocTemplate).delete({ id, orgId });
 
   res.json();
 });

@@ -98,7 +98,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
     hasEmailChange = user.emailHash !== newEmailHash;
 
     if (hasEmailChange) {
-      assert(user.emailHash !== BUILTIN_ADMIN_EMIAL_HASH, 400, 'Cannot change the email for the builtin admin');
+      assert(user.emailHash !== BUILTIN_SYSTEM_ADMIN_EMIAL_HASH, 400, 'Cannot change the email for the builtin admin');
       user.emailHash = newEmailHash;
       user.profile.email = email;
 
@@ -150,7 +150,7 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-const BUILTIN_ADMIN_EMIAL_HASH = computeEmailHash('admin@zeeworkflow.com');
+const BUILTIN_SYSTEM_ADMIN_EMIAL_HASH = computeEmailHash('admin@zeeworkflow.com');
 
 export const listAllUsers = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -177,15 +177,18 @@ export const deleteUser = handlerWrapper(async (req, res) => {
   const user = await repo.findOne({
     where: {
       id,
-      emailHash: Not(BUILTIN_ADMIN_EMIAL_HASH)
+      emailHash: Not(BUILTIN_SYSTEM_ADMIN_EMIAL_HASH)
     },
     relations: ['profile']
   });
 
   if (user) {
     const { profileId } = user;
-    await repo.softDelete(id);
-    await AppDataSource.getRepository(UserProfile).delete(profileId);
+
+    await AppDataSource.transaction(async m => {
+      await m.getRepository(User).softDelete(id);
+      await m.getRepository(UserProfile).delete(profileId);
+    })
 
     // await enqueueEmail({
     //   to: user.profile.email,
