@@ -1,2 +1,2 @@
 export const notes=`
-more undo`
+skip downloading chromium in Dockerfile`
