@@ -1,2 +1,3 @@
 export const notes=`
-skip downloading chromium in Dockerfile`
+download chrome
+hard delete doc template`
