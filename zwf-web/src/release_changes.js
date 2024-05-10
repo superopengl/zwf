@@ -1,3 +1,2 @@
 export const notes=`
-disable controls for item editor
-change task status when require client for action`
+adjust doc template preview modal width`
