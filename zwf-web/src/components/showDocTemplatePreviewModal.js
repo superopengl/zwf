@@ -31,7 +31,7 @@ export function showDocTemplatePreviewModal(docTemplate, options = {}) {
     maskClosable: true,
     destroyOnClose: true,
     footer: null,
-    width: 700,
+    width: 800,
     style: { top: 20 },
     okButtonProps: {
       style: {
