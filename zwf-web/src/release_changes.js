@@ -1,3 +1,3 @@
 export const notes=`
-download chrome
-hard delete doc template`
+disable controls for item editor
+change task status when require client for action`
