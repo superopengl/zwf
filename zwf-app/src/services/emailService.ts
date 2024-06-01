@@ -1,3 +1,4 @@
+import { getUtcNow } from './../utils/getUtcNow';
 import { AppDataSource } from './../db';
 import { SYSTEM_EMAIL_SENDER, SYSTEM_EMAIL_BCC } from './../utils/constant';
 import { OrgEmailTemplateInformation } from '../entity/views/OrgEmailTemplateInformation';
@@ -152,10 +153,19 @@ export async function enqueueEmail(req: EmailRequest) {
   task.vars = req.vars;
   task.attachments = req.attachments;
   task.shouldBcc = req.shouldBcc;
+
+  try {
+    // Try to send immediately first
+    await sendEmailImmediately(req);
+    task.sentAt = getUtcNow(); // Mark this email was sent out. So the emailer will skip this task.
+  } catch {
+    // Do nothing;
+  }
+
   await AppDataSource.getRepository(EmailSentOutTask).insert(task);
 }
 
-export async function enqueueEmailToUserId(userId: string, template: EmailTemplateType, vars: object) {
+export async function enqueueEmailForUserId(userId: string, template: EmailTemplateType, vars: object) {
   try {
     const user = await AppDataSource.getRepository(User).findOne({ where: { id: userId }, relations: { profile: true } });
     if (!user) {
