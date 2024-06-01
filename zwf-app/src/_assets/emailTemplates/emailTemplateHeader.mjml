@@ -1,0 +1,62 @@
+<mj-font name="Red Hat Display" href="https://fonts.googleapis.com/css?family=Red+Hat+Display:400,500,800"></mj-font>
+<mj-attributes>
+  <mj-all font-family="'Red Hat Display', Montserrat, Helvetica, Arial, sans-serif"></mj-all>
+  <mj-text font-weight="400" font-size="16px" color="#062638" line-height="24px" padding="10px 0"></mj-text>
+  <mj-section padding="0"></mj-section>
+  <mj-column padding="0"></mj-column>
+  <mj-button color="#062638"></mj-button>
+  <mj-image padding="0"></mj-image>
+</mj-attributes>
+<mj-breakpoint width="460px" />
+<mj-style inline="inline">
+  .content {
+    padding: 20px;
+    background-color: #FFFFFF;
+  }
+
+  .colored-divider {
+    width: 100%;
+    height: 20px;
+    background: linear-gradient(89.79deg, #12c2c3 3.35%, #37AFD2 107.33%);
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .inner-footer {
+    width: 100%;
+    color: #FFFFFF;
+    background-color: #062638;
+    border-radius: 0px 0px 12px 12px;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  .inner-footer a {
+    color: #FFFFFF;
+  }
+
+  a.verify-url {
+    color: #062638;
+  }
+
+  .media-icon-section {
+    max-width: 200px;
+  }
+
+  .contact-section {
+    min-width: 80px;
+    max-width: 100px;
+  }
+
+  .contact-section a {
+    color: #FFFFFF;
+  }
+
+  .location-section {
+    max-width: 420px;
+  }
+
+  .footer-section a {
+    color: #464B53
+  }
+</mj-style>

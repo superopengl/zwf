@@ -1,0 +1,54 @@
+<mj-section>
+  <mj-column width="100%">
+    <mj-text align="left" font-size="20px" font-weight="500" padding="30px 0 0">
+      Thanks for joining!
+    </mj-text>
+  </mj-column>
+  <mj-column width="100%">
+    <mj-text align="left" font-size="20px" font-weight="400" padding="0 0 40px">
+      ZeeWorkflow Team
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section css-class="colored-divider">
+</mj-section>
+
+<mj-section css-class="inner-footer" padding="38px 60px">
+  <mj-column width="100%">
+    <mj-text align="center" color="#FFFFFF" font-size="14px" padding="0px 0 10px" line-height="17px">
+      <a target="_blank" href="{{website}}">{{website}}</a>
+    </mj-text>
+  </mj-column>
+  <mj-column width="100%">
+    <mj-text align="center" color="#FFFFFF" font-size="14px" padding="40px 0 10px" line-height="17px">
+      You have received this email at <a href="mailto:{{email}}">{{email}}</a> because you have signed up for ZeeWorkflow.
+    </mj-text>
+  </mj-column>
+  <mj-column width="120px" padding-top="30px">
+    <mj-text color="#FFFFFF" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
+      <a href="https://zeeworkflow.com" target="_blank">Contact Us</a>
+    </mj-text>
+  </mj-column>
+  <mj-column width="120px" padding-top="30px">
+    <mj-text color="#FFFFFF" align="center" font-size="14px" font-weight="500" text-decoration="underline" padding="0">
+      <a target="_blank" href="https://zeeworkflow.com/resource">Resources</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section padding-top="30px">
+  <mj-column>
+    <mj-text font-size="14px" font-weight="400" color="#464B53" line-height="17px" padding-bottom="0" align="center">
+      ©2022 ZeeWorkflow. All rights Reserved
+    </mj-text>
+  </mj-column>
+</mj-section>
+
+<mj-section>
+  <mj-column>
+    <mj-text font-size="14px" font-weight="400" color="#464B53" line-height="17px" padding-top="0" align="center" css-class="footer-section">
+      Use of ZeeWorkflow products is governed by our <a target="_blank" href="https://zeeworkflow.com/privacy_policy">privacy policy</a> and <a target="_blank" href="https://zeeworkflow.com/terms_and_conditions">terms and conditions</a>
+    </mj-text>
+  </mj-column>
+</mj-section>
