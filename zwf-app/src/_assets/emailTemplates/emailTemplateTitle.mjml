@@ -1,7 +1,7 @@
 <mj-section padding-bottom="40px" padding="0">
   <mj-group>
-    <mj-column width="280px" padding="0">
-      <mj-image align="left" src="{{website}}/images/logo-email-head.png" alt="ZeeWorkflow logo" title="ZeeWorkflow logo" width="280px" height="53px"></mj-image>
+    <mj-column width="100%" padding="0">
+      <mj-image align="left" src="https://zeeworkflow.com/images/logo-email-head.png" alt="ZeeWorkflow logo" title="ZeeWorkflow logo" width="180px" height="34px"></mj-image>
     </mj-column>
   </mj-group>
 </mj-section>

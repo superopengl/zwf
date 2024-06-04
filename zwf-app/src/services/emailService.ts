@@ -18,6 +18,8 @@ import { getEmailRecipientName } from '../utils/getEmailRecipientName';
 import { EmailSentOutTask } from '../entity/EmailSentOutTask';
 import 'colors';
 import { getEmailTemplate } from './mjmlService';
+import { v4 as uuidv4 } from 'uuid';
+import * as moment from 'moment';
 
 let emailTransporter = null;
 
@@ -52,8 +54,10 @@ async function compileEmailBody(req: EmailRequest) {
   const body = emailTemplate.html || '';
 
   const allVars = {
+    ...vars,
     website: process.env.ZWF_API_DOMAIN_NAME,
-    ...vars
+    random_salt: uuidv4(),
+    year: moment().year(),
   };
 
   const compiledBody = handlebars.compile(body);

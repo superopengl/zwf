@@ -36,7 +36,7 @@
   }
 
   a.verify-url {
-    color: #062638;
+    color: #000000;
   }
 
   .media-icon-section {
