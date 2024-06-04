@@ -5,7 +5,6 @@ import { getUtcNow } from './getUtcNow';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
-import { getRepository, getManager, EntityManager } from 'typeorm';
 import { assert } from './assert';
 import * as _ from 'lodash';
 import { Task } from '../entity/Task';

@@ -7,7 +7,7 @@ import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { EntityManager, getManager, getRepository, Not, In } from 'typeorm';
+import { In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';

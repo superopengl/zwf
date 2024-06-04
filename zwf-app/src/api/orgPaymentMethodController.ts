@@ -1,6 +1,6 @@
 import { AppDataSource } from './../db';
 
-import { getRepository, getManager, Not } from 'typeorm';
+import { Not } from 'typeorm';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";

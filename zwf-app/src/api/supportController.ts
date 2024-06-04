@@ -4,7 +4,6 @@ import { getUtcNow } from './../utils/getUtcNow';
 import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
 import { SupportInformation } from '../entity/views/SupportInformation';
 import { UserInformation } from '../entity/views/UserInformation';
-import { getManager, getRepository, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 
 import { assert } from '../utils/assert';

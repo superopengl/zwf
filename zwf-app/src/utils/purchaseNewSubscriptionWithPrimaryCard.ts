@@ -1,4 +1,3 @@
-import { getManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment';
 import { Subscription } from '../entity/Subscription';

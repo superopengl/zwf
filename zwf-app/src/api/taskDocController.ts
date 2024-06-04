@@ -1,7 +1,6 @@
 import { TaskField } from './../entity/TaskField';
 import { getUtcNow } from './../utils/getUtcNow';
 
-import { getManager, getRepository, In, Not, IsNull } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';

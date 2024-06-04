@@ -1,5 +1,4 @@
 import { AppDataSource } from './../db';
-import { getRepository, getManager } from 'typeorm';
 import * as _ from 'lodash';
 import { User } from '../entity/User';
 import * as moment from 'moment';

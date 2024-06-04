@@ -1,7 +1,6 @@
 import { AppDataSource } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 
-import { getRepository, getConnection, getManager } from 'typeorm';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
@@ -187,7 +186,8 @@ export const resetPassword = handlerWrapper(async (req, res) => {
   const salt = uuidv4();
   const secret = computeUserSecret(password, salt);
 
-  await getConnection()
+  
+  await AppDataSource
     .createQueryBuilder()
     .update(User)
     .set({

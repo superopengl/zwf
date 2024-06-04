@@ -3,7 +3,7 @@ import { UserInformation } from './../entity/views/UserInformation';
 import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
 import { Tag } from '../entity/Tag';
 
-import { getRepository, Not, getManager, In } from 'typeorm';
+import { Not, In } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';

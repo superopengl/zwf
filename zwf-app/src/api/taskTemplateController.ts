@@ -2,7 +2,7 @@ import { AppDataSource } from './../db';
 import { DocTemplate } from './../entity/DocTemplate';
 import { getUtcNow } from './../utils/getUtcNow';
 
-import { getRepository, getManager, EntityManager, In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import * as _ from 'lodash';

@@ -1,6 +1,5 @@
 import { AppDataSource } from './../db';
 
-import { getManager, getRepository } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
