@@ -4,7 +4,7 @@ import 'colors';
 import { start } from './jobStarter';
 import { getRepository, IsNull, LessThan } from 'typeorm';
 import { EmailSentOutTask } from '../src/entity/EmailSentOutTask';
-import { sendEmailImmediately } from '../src/services/emailService';
+import { sendEmail } from '../src/services/emailService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 
 const JOB_NAME = 'email-sender';
@@ -42,7 +42,7 @@ export async function handleEmailTasks() {
   let okCounter = 0;
   for (const task of emailTasks) {
     try {
-      await sendEmailImmediately({
+      await sendEmail({
         to: task.to,
         from: task.from,
         template: task.template,

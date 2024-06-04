@@ -34,7 +34,6 @@ import { Outlet } from 'react-router-dom';
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
-const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
 const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
@@ -176,12 +175,6 @@ const ROUTES = [
     icon: <SettingOutlined />,
     roles: ['system'],
   },
-  {
-    path: '/email_template',
-    name: <FormattedMessage id="menu.emailTemplate" />,
-    icon: <MailOutlined />,
-    roles: ['system'],
-  }
 ];
 
 function getSanitizedPathName(pathname) {

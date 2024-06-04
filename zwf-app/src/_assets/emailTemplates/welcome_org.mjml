@@ -1,7 +1,7 @@
 <mjml>
   <mj-head>
+    <mj-title>Please verify org registration</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
-    <mj-title>{{subject}}</mj-title>
   </mj-head>
   <mj-body css-class="content">
     <mj-include path="./emailTemplateTitle.mjml" />
@@ -17,18 +17,18 @@
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-button align="left" background-color="#ffc53d" padding="20px 0" inner-padding="16px 36px" border-radius="8px" font-size="18px" href="{{URL_accept}}">
+        <mj-button align="left" background-color="#ffc53d" padding="20px 0" inner-padding="16px 36px" border-radius="8px" font-size="18px" href="{{url}}">
           Verify now
         </mj-button>
       </mj-column>
       <mj-column width="100%">
         <mj-text align="left" font-size="14px" font-weight="400">
-          Or, paste this link into your browser: <a href="{{URL_accept}}" target="_blank" class="verify-url">{{url}}</a>
+          Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
         </mj-text>
       </mj-column>
       <mj-column width="100%">
         <mj-text align="left" font-size="14px" font-weight="400">
-          This account <strong>{{email}}</strong> will be the org owner.
+          After opening ZeeWorkflow, you can follow the instructions on the page to complete the process, like setting password, input org profile. This email address will be used as your account in ZeeWorkflow.
         </mj-text>
       </mj-column>
     </mj-section>

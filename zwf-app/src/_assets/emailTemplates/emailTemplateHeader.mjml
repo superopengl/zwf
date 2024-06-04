@@ -1,10 +1,10 @@
 <mj-font name="Red Hat Display" href="https://fonts.googleapis.com/css?family=Red+Hat+Display:400,500,800"></mj-font>
 <mj-attributes>
   <mj-all font-family="'Red Hat Display', Montserrat, Helvetica, Arial, sans-serif"></mj-all>
-  <mj-text font-weight="400" font-size="16px" color="#062638" line-height="24px" padding="10px 0"></mj-text>
+  <mj-text font-weight="400" font-size="16px" color="#000000" line-height="24px" padding="10px 0"></mj-text>
   <mj-section padding="0"></mj-section>
   <mj-column padding="0"></mj-column>
-  <mj-button color="#062638"></mj-button>
+  <mj-button color="#000000"></mj-button>
   <mj-image padding="0"></mj-image>
 </mj-attributes>
 <mj-breakpoint width="460px" />

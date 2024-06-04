@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
 import { computeUserSecret } from '../utils/computeUserSecret';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmailImmediately, enqueueEmail } from '../services/emailService';
+import { sendEmail } from '../services/emailService';
 import { getUtcNow } from '../utils/getUtcNow';
 import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
@@ -95,7 +95,7 @@ export const signUp = handlerWrapper(async (req, res) => {
   const { email } = profile;
 
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmailImmediately({
+  await sendEmail({
     template: role === Role.Admin ? EmailTemplateType.WelcomeOrg : EmailTemplateType.WelcomeClient,
     to: email,
     vars: {
@@ -128,7 +128,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
   const { id, resetPasswordToken } = user;
 
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmailImmediately({
+  await sendEmail({
     template: EmailTemplateType.WelcomeOrg,
     to: email,
     vars: {
@@ -154,9 +154,9 @@ async function setUserToResetPasswordStatus(user: User, returnUrl: string) {
 
   const returnUrlParam = returnUrl ? `?r=${encodeURIComponent(returnUrl)}` : '';
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/` + returnUrlParam;
-  await sendEmailImmediately({
+  await sendEmail({
     to: user.profile.email,
-    template: EmailTemplateType.ResetPassword,
+    template: EmailTemplateType.SetPassword,
     vars: {
       toWhom: getEmailRecipientName(user),
       url
@@ -316,7 +316,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     profile.surname = surname;
     await AppDataSource.manager.save([user, profile]);
 
-    enqueueEmail({
+    sendEmail({
       to: user.profile.email,
       template: EmailTemplateType.WelcomeClient,
       vars: {

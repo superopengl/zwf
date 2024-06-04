@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { sendEmailImmediately } from '../services/emailService';
 import * as delay from 'delay';
 import { filter } from 'rxjs';
 import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';

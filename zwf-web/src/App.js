@@ -36,7 +36,6 @@ const ResourcePage = loadable(() => import('pages/ResourcePage/ResourcePage'))
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
 const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
-const EmailTemplateListPage = loadable(() => import('pages/EmailTemplate/EmailTemplateListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
 const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
@@ -169,7 +168,6 @@ export const App = React.memo(() => {
                 <Route path="/account" element={<OrgAccountPage />} />
                 <Route path="/team" element={<OrgMemberListPage />} />
                 <Route path="/config" element={<ConfigListPage />} />
-                <Route path="/email_template" element={<EmailTemplateListPage />} />
                 <Route path="/org" element={<OrgListPage />} />
                 <Route path="/support" element={<SupportListPage />} />
                 <Route path="/manage/resource" element={<ResourceListPage />} />

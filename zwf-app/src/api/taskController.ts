@@ -14,7 +14,7 @@ import { Task } from '../entity/Task';
 import { Message } from '../entity/Message';
 import { User } from '../entity/User';
 import { TaskStatus } from '../types/TaskStatus';
-import { enqueueEmailForUserId, sendEmailImmediately } from '../services/emailService';
+import { sendEmailForUserId } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -577,7 +577,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 
   const taskUrl = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;
 
-  enqueueEmailForUserId(task.userId, EmailTemplateType.TaskRequireAction, {
+  sendEmailForUserId(task.userId, EmailTemplateType.TaskRequireAction, {
     taskName: task.name,
     taskUrl,
     message,
