@@ -7,7 +7,7 @@ import * as cheerio from 'cheerio';
 const mjmlDir = path.join(__dirname, `../_assets/emailTemplates`);
 const cache = new Map<string, CacheItem>();
 const emailTemplateKeys = Object.values(EmailTemplateType).filter(x => isNaN(Number(x)));
-for(const key of emailTemplateKeys) {
+for (const key of emailTemplateKeys) {
   const html =  getHtmlEmailTemplate(key);
   cache.set(key, {
     subject: extractTitleFromHtml(html),
@@ -18,7 +18,7 @@ for(const key of emailTemplateKeys) {
 type CacheItem  = {
   subject: string,
   html: string,
-}
+};
 
 function extractTitleFromHtml(html: string): string {
   const htmlDom = cheerio.load(html);
@@ -41,7 +41,7 @@ function getHtmlEmailTemplate(key: string): string {
   };
   const result = mjml2html(mjmlText, options);
 
-  if(!result || result.errors?.length) {
+  if (!result || result.errors?.length) {
     throw new Error(`Failed to load mjml template for '${key}': ${JSON.stringify(result.errors)}`);
   }
 
@@ -52,4 +52,4 @@ function getHtmlEmailTemplate(key: string): string {
 
 export const getEmailTemplate = (key: EmailTemplateType): CacheItem => {
   return cache.get(key);
-}
+};

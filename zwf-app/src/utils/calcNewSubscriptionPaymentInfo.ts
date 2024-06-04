@@ -17,7 +17,7 @@ async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
       deletedAt: IsNull(),
       role: In([Role.Admin, Role.Agent])
     }
-  })
+  });
 
   return count || 0;
 }
@@ -62,15 +62,15 @@ export async function calcNewSubscriptionPaymentInfo(
     }
   }
   const fullPriceAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * fullPriceBeforeDiscount, 2);
-  
+
   const creditBalance = await getCreditBalance(m, orgId);
   const refundable = await getRefundableCredits(m, orgId);
   const creditBalanceBefore = creditBalance + refundable;
-  
+
   let payable = 0;
   let deduction = 0;
   if (creditBalanceBefore >= fullPriceAfterDiscount) {
-    payable = 0
+    payable = 0;
     deduction = -1 * fullPriceAfterDiscount;
   } else {
     payable = _.round(fullPriceAfterDiscount - creditBalanceBefore, 2);

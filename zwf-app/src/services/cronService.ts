@@ -45,7 +45,7 @@ async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
   //   taskTemplateId,
   //   () => taskName
   // );
-  const task = new Task()
+  const task = new Task();
 
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);
 

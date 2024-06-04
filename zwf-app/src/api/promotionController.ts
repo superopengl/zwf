@@ -1,7 +1,7 @@
 
 import { ResourcePage } from '../entity/ResourcePage';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUtcNow } from '../utils/getUtcNow';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';

@@ -1,7 +1,7 @@
 import { AppDataSource } from './../db';
 
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { SystemConfig } from '../entity/SystemConfig';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
@@ -33,7 +33,7 @@ export const saveConfig = handlerWrapper(async (req, res) => {
     .insert()
     .into(orgId ? OrgConfig : SystemConfig)
     .values(item)
-    .onConflict(`(${orgId ? `"orgId", ` :''}key) DO UPDATE SET value = excluded.value`)
+    .onConflict(`(${orgId ? `"orgId", ` : ''}key) DO UPDATE SET value = excluded.value`)
     .execute();
 
   res.json();

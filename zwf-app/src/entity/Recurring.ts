@@ -29,10 +29,10 @@ export class Recurring {
 
   @Column()
   firstRunOn: Date;
-    
+
   @Column()
   every: number;
-  
+
   @Column()
   period: 'day' | 'week' | 'month' | 'year';
 

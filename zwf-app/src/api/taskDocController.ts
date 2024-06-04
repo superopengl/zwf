@@ -2,7 +2,7 @@ import { TaskField } from './../entity/TaskField';
 import { getUtcNow } from './../utils/getUtcNow';
 
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { Role } from '../types/Role';
@@ -51,15 +51,15 @@ export const generateAutoDoc = handlerWrapper(async (req, res) => {
     taskField.value = {
       ...taskField.value,
       fileId: file.id
-    }
+    };
 
     await m.save([taskField, file]);
 
     result = {
       fileId: file.id,
       name: file.fileName,
-    }
-  })
+    };
+  });
 
   res.json(result);
 });

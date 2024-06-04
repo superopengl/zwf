@@ -13,7 +13,7 @@ function serializeReq(req): string {
 export async function logError(err, req, res, ...args) {
   try {
     console.error(err);
-  
+
     const data = {
       error: serializeError(err),
       args: args

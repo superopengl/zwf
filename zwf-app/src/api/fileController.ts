@@ -4,7 +4,7 @@ import { Brackets } from 'typeorm';
 import { File } from '../entity/File';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { v4 as uuidv4 } from 'uuid';
 import { Role } from '../types/Role';
@@ -22,7 +22,7 @@ export const getPrivateFileStream = handlerWrapper(async (req, res) => {
   let queryBuilder = m
     .getRepository(File)
     .createQueryBuilder('f')
-    .where(`id = :id`, { id })
+    .where(`id = :id`, { id });
   switch (role) {
     case Role.Admin:
     case Role.Agent:
@@ -37,7 +37,7 @@ export const getPrivateFileStream = handlerWrapper(async (req, res) => {
     case Role.System:
       break;
     default:
-      assert(false, 500, 'Impossible code path')
+      assert(false, 500, 'Impossible code path');
   }
   const file = await queryBuilder.getOne();
 

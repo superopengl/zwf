@@ -9,7 +9,7 @@ const redisUrl = process.env.REDIS_URL;
 type Event = {
   type: string,
   payload: any
-}
+};
 
 class RedisPubService {
   private publisher = null;
@@ -69,13 +69,13 @@ export const publishEvent = (type: string, payload: any) => {
     type,
     payload,
   });
-}
+};
 
 export const getEventChannel = (type: string): Observable<any> => {
   return golbalSubscriber.getObservable()
     .pipe(
       filter(x => x.type === type),
       map(x => x.payload)
-    )
-}
+    );
+};
 

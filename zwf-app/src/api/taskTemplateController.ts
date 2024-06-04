@@ -4,7 +4,7 @@ import { getUtcNow } from './../utils/getUtcNow';
 
 import { EntityManager, In } from 'typeorm';
 import { assert } from '../utils/assert';
-import { assertRole } from "../utils/assertRole";
+import { assertRole } from '../utils/assertRole';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -77,7 +77,7 @@ export const listTaskTemplates = handlerWrapper(async (req, res) => {
 export const getTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'client', 'agent');
   const { id } = req.params;
-  const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) }
+  const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
   const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOne({ where: query, relations: { docs: true } });
   assert(taskTemplate, 404);
 
@@ -126,12 +126,12 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
     const taskTemplateDocTemplateList = await m.find(TaskTemplateDocTemplate, { where: { taskTemplateId: sourceTaskTemplateId }});
     taskTemplateDocTemplateList.forEach(x => {
       x.taskTemplateId = newTaskTemplateId;
-    })
+    });
 
     const entities = [taskTemplate, ...taskTemplateDocTemplateList];
 
     await m.save(entities);
-  })
+  });
 
   res.json(taskTemplate);
 });

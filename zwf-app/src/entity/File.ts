@@ -13,7 +13,7 @@ export class File {
   taskId?: string;
 
   @ManyToOne(() => Task, task => task.files, {onDelete: 'CASCADE', eager: false})
-  task?: Task;  
+  task?: Task;
 
   @Column('uuid', { nullable: true })
   fieldId?: string;
@@ -22,7 +22,7 @@ export class File {
   field?: TaskField;
 
   /**
-   * User ID of the uploader. 
+   * User ID of the uploader.
    * For auto-gen doc, it's the org ID.
    */
   @Column('uuid', { nullable: true })
@@ -46,14 +46,14 @@ export class File {
   @Column({ default: false })
   public?: boolean;
 
-  /** 
-   * Autodoc specific 
+  /**
+   * Autodoc specific
    */
   @Column('jsonb', { nullable: true })
   usedValueBag?: {[key: string]: any};
 
   /**
-   * Autodoc specific 
+   * Autodoc specific
    */
   @Column({ nullable: true })
   usedValueHash?: string;

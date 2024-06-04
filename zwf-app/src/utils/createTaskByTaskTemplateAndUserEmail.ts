@@ -27,7 +27,7 @@ function generateDeepLinkId() {
   const result = voucherCodes.generate({
     length: 64,
     count: 1,
-    charset: voucherCodes.charset("alphanumeric")
+    charset: voucherCodes.charset('alphanumeric')
   });
   return result[0];
 }
@@ -72,7 +72,7 @@ export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: numb
   field.value = taskTemplateField.value;
 
   return field;
-}
+};
 
 export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, creatorId: string, id?) => {
   assert(taskTemplateId, 400, 'taskTemplateId is not specified');

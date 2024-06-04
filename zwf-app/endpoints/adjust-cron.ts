@@ -6,13 +6,13 @@ AWS.config.update({ region: 'us-east-1' });
 const cloudwatchevents = new AWS.CloudWatchEvents();
 
 const NY_TIMEZONE = 'America/New_York';
-const UTC_TIMEZONE = 'UTC'
+const UTC_TIMEZONE = 'UTC';
 
 /**
  * The cron to trigger this task should be
  *  In March, the second Sunday 03:10 New York time => 07:10 UTC time
  *      cron(10 7 ? MAR 1#2 *)
- * 
+ *
  *  In November, the first Sunday 01:10 New York time => 05:10 UTC time
  *      cron(10 5 ? NOV 1#1 *)
  */
@@ -84,7 +84,7 @@ async function updateEventRule(cloudwatchevents, def) {
             }
             res(data);
         });
-    })
+    });
 }
 
 const JOB_NAME = 'adjust-cron';
@@ -92,7 +92,7 @@ const JOB_NAME = 'adjust-cron';
 start(JOB_NAME, async () => {
     for (const def of defs) {
         try {
-            await updateEventRule(cloudwatchevents, def)
+            await updateEventRule(cloudwatchevents, def);
             console.log(def.name, 'done');
         } catch (e) {
             console.error(def.name, 'error', e);

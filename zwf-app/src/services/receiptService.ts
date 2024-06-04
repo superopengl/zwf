@@ -28,7 +28,7 @@ function getSubscriptionDescription(receipt: ReceiptInformation) {
   return `${subscriptionName} (${start} - ${end})`;
 }
 
-function getVarBag(receipt: ReceiptInformation): {[key:string]: any} {
+function getVarBag(receipt: ReceiptInformation): {[key: string]: any} {
   const subscriptionPrice = (+receipt.payable || 0) + (+receipt.deduction || 0);
   return {
     receiptNumber: receipt.receiptNumber,

@@ -1,5 +1,5 @@
 import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, ManyToMany, JoinTable, DeleteDateColumn } from 'typeorm';
-import { TaskTemplateField } from "../types/TaskTemplateField";
+import { TaskTemplateField } from '../types/TaskTemplateField';
 import { DocTemplate } from './DocTemplate';
 
 @Entity()
