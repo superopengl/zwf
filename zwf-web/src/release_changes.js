@@ -1,2 +1,3 @@
 export const notes=`
-remove unused files`
+lint
+delete unused code`
