@@ -16,7 +16,6 @@ import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
-import logoSvg from '../logo.svg';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './HomePage';
 import Error404 from './Error404';
@@ -143,7 +142,7 @@ const PortalPage = (props) => {
 
   return <StyledLayout
     title={'ZeeWorkflow'}
-    logo="/images/logo.svg"
+    logo="/images/logo-horizontal-blue.png"
     // logo="/images/logo-transparent.png"
     collapsed={collapsed}
     onCollapse={setCollapsed}

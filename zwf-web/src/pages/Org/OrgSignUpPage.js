@@ -16,7 +16,7 @@ const PageContainer = styled.div`
   background-color: #00474f;
 
   .poster-patterns {
-    background-image: url("images/logo.svg");
+    background-image: url("images/logo-tile.png");
       background-repeat: repeat;
       background-size: 120px;
       opacity: 0.05;

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Space, Row, Col } from 'antd';
+import { Typography, Button, Space, Row, Col, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
 import { GlobalContext } from 'contexts/GlobalContext';
@@ -55,7 +55,7 @@ padding: 1rem;
 }
 
 .poster-patterns {
-background-image: url("images/logo.svg");
+background-image: url("images/logo-tile.png");
   background-repeat: repeat;
   background-size: 120px;
   opacity: 0.1;
@@ -105,10 +105,9 @@ const HomeCarouselAreaRaw = props => {
         <div className="poster-patterns" />
         <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
           <Space size="large">
-            <Logo />
-            <Title style={{ fontSize: catchPhraseSize, color: '#ffc53d' }} >ZeeWorkflow</Title>
+            <Image src="images/logo-vertical-gold.png" alt="ZeeWorkflow logo" preview={false} width={300}/>
           </Space>
-          <Title level={2} style={{ marginTop: 0, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
+          <Title level={1} style={{ marginTop: 30, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
             All in one system for file, doc, job, task and workflow management. Come on, join us today!!
               </Title>
           {/* {isGuest &&
