@@ -1,14 +1,28 @@
-import { filter } from 'rxjs';
 import { EmailTemplateType } from './../types/EmailTemplateType';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as mjml2html from 'mjml';
+import * as cheerio from 'cheerio';
 
 const mjmlDir = path.join(__dirname, `../_assets/emailTemplates`);
-const cache = new Map();
+const cache = new Map<string, CacheItem>();
 const emailTemplateKeys = Object.values(EmailTemplateType).filter(x => isNaN(Number(x)));
 for(const key of emailTemplateKeys) {
-  cache.set(key, getHtmlEmailTemplate(key));
+  const html =  getHtmlEmailTemplate(key);
+  cache.set(key, {
+    subject: extractTitleFromHtml(html),
+    html,
+  });
+}
+
+type CacheItem  = {
+  subject: string,
+  html: string,
+}
+
+function extractTitleFromHtml(html: string): string {
+  const htmlDom = cheerio.load(html);
+  return htmlDom('html > head > title')?.text()?.trim();
 }
 
 function readMjmlFileSync(key: string): string {
@@ -36,6 +50,6 @@ function getHtmlEmailTemplate(key: string): string {
   return result.html;
 }
 
-export const getEmailTemplate = (key: EmailTemplateType): { subject: string, html: string } => {
+export const getEmailTemplate = (key: EmailTemplateType): CacheItem => {
   return cache.get(key);
 }

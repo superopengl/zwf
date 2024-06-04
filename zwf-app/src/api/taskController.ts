@@ -20,7 +20,6 @@ import { assertRole } from "../utils/assertRole";
 import { handlerWrapper } from '../utils/asyncHandler';
 import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { getNow } from '../utils/getNow';
-import { sendNewTaskCreatedEmail } from '../utils/sendNewTaskCreatedEmail';
 import { sendCompletedEmail } from '../utils/sendCompletedEmail';
 import { sendArchiveEmail } from '../utils/sendArchiveEmail';
 import { sendRequireSignEmail } from '../utils/sendRequireSignEmail';
@@ -51,25 +50,6 @@ export const createNewTask = handlerWrapper(async (req, res) => {
 
   res.json(task);
 });
-
-async function handleTaskStatusChange(oldStatus: TaskStatus, task: Task) {
-  const { status } = task;
-  if (oldStatus === status) return;
-
-  if (!oldStatus) {
-    // New task
-    await sendNewTaskCreatedEmail(task);
-  } else if (status === TaskStatus.TODO) {
-    // Task todo
-    await sendTodoEmail(task);
-  } else if (status === TaskStatus.DONE) {
-    // Task completed
-    await sendCompletedEmail(task);
-  } else if (status === TaskStatus.ARCHIVED) {
-    // Archived
-    await sendArchiveEmail(task);
-  }
-}
 
 const TASK_CONTENT_EVENT_TYPE = 'task.content'
 
