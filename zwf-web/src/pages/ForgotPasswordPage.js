@@ -11,13 +11,11 @@ const ContainerStyled = styled.div`
   padding: 2rem 1rem;
   text-align: center;
   max-width: 400px;
-  width: 100%;
 `;
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
-  height: 100%;
 `;
 
 const LogoContainer = styled.div`

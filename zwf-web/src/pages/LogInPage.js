@@ -9,7 +9,6 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 const LayoutStyled = styled(Layout)`
 margin: 0 auto 0 auto;
 background-color: #ffffff;
-height: 100%;
 `;
 
 const ContainerStyled = styled.div`
@@ -18,7 +17,6 @@ const ContainerStyled = styled.div`
   text-align: center;
   max-width: 360px;
   background-color: #ffffff;
-  height: 100%;
 `;
 
 const LogoContainer = styled.div`

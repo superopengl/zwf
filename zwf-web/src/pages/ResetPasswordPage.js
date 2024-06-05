@@ -10,14 +10,12 @@ import { finalize } from 'rxjs/operators';
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
-  height: 100%;
 `;
 
 const ContainerStyled = styled.div`
   margin: 2rem auto;
   padding: 2rem 1rem;
   text-align: center;
-  width: 100%;
   max-width: 300px;
 `;
 

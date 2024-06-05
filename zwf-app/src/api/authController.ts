@@ -25,6 +25,7 @@ import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
 import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSendingEmail';
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
+import { UserInformation } from '../entity/views/UserInformation';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -67,23 +68,31 @@ export const logout = handlerWrapper(async (req, res) => {
 });
 
 
-async function createNewLocalUser(payload): Promise<{ user: User; profile: UserProfile }> {
+async function createNewLocalUser(payload): Promise<{ user: User; profile: UserProfile, exists: boolean }> {
   const { user, profile } = createUserAndProfileEntity(payload);
 
   user.resetPasswordToken = uuidv4();
   user.status = UserStatus.ResetPassword;
 
-  await AppDataSource.manager.save([profile, user]);
+  let exists = false;
 
-  return { user, profile };
+  await AppDataSource.manager.transaction(async m => {
+    const existingUser = await m.findOneBy(UserInformation, { email: profile.email });
+    exists = !!existingUser;
+    if (!exists) {
+      await m.save([profile, user]);
+    }
+  })
+
+
+  return { user, profile, exists };
 }
 
 
 export const signUp = handlerWrapper(async (req, res) => {
   const payload = req.body;
-  const role = payload.role || Role.Client;
 
-  const { user, profile } = await createNewLocalUser({
+  const { user, profile, exists } = await createNewLocalUser({
     ...payload,
     orgOwner: false,
     role: Role.Client,
@@ -95,7 +104,7 @@ export const signUp = handlerWrapper(async (req, res) => {
 
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
   await sendEmail({
-    template: role === Role.Admin ? EmailTemplateType.WelcomeOrg : EmailTemplateType.WelcomeClient,
+    template: EmailTemplateType.WelcomeClient,
     to: email,
     vars: {
       email,
@@ -113,36 +122,33 @@ export const signUp = handlerWrapper(async (req, res) => {
 });
 
 export const signUpOrg = handlerWrapper(async (req, res) => {
-  const { email } = req.body;
+  const email = req.body.email?.toLowerCase();
 
   assert(email, 400, 'email is required');
 
-  const { user } = await createNewLocalUser({
-    email: email.toLowerCase(),
+  const { user, exists } = await createNewLocalUser({
+    email,
     orgOwner: true,
     password: uuidv4(), // Temp password to fool the functions beneath
     role: Role.Admin,
   });
 
-  const { id, resetPasswordToken } = user;
+  if (!exists) {
+    const { resetPasswordToken } = user;
 
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmail({
-    template: EmailTemplateType.WelcomeOrg,
-    to: email,
-    vars: {
-      email,
-      url
-    },
-    shouldBcc: true
-  });
+    const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
+    await sendEmail({
+      template: EmailTemplateType.WelcomeOrg,
+      to: email,
+      vars: {
+        email,
+        url
+      },
+      shouldBcc: true
+    });
+  }
 
-  const info = {
-    id,
-    email
-  };
-
-  res.json(info);
+  res.json();
 });
 
 async function setUserToResetPasswordStatus(user: User, returnUrl: string) {
@@ -211,7 +217,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
   assert(token, 400, 'Invalid token');
 
   const userRepo = AppDataSource.getRepository(User);
-  const user = await userRepo.findOne({where: { resetPasswordToken: token }});
+  const user = await userRepo.findOne({ where: { resetPasswordToken: token } });
 
   assert(user, 401, 'Token expired');
 
@@ -252,7 +258,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   });
 
   await AppDataSource.transaction(async m => {
-    const subscription = await m.findOne(OrgAliveSubscription, { where: {orgId }});
+    const subscription = await m.findOne(OrgAliveSubscription, { where: { orgId } });
     assert(subscription, 400, 'No active subscription');
     const { seats, occupiedSeats } = subscription;
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');

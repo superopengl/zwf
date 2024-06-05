@@ -9,31 +9,29 @@ import { useDocumentTitle } from 'hooks/useDocumentTitle';
 
 const PageContainer = styled.div`
   width: 100%;
-  height: 100%;
   padding: 0;
-  margin: 0;
-  color: rgba(255,255,255,0.95);
-  background-color: #00474f;
+  margin: 0 auto;
+  // color: rgba(255,255,255,0.95);
+  // background-color: #00474f;
 
-  .poster-patterns {
-    background-image: url("images/logo-tile.png");
-      background-repeat: repeat;
-      background-size: 120px;
-      opacity: 0.05;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
-      position: absolute;
-    }
+  // .poster-patterns {
+  //   background-image: url("images/logo-tile.png");
+  //     background-repeat: repeat;
+  //     background-size: 120px;
+  //     opacity: 0.05;
+  //     top: 0;
+  //     left: 0;
+  //     bottom: 0;
+  //     right: 0;
+  //     position: absolute;
+  //   }
 `;
 
 const ContainerStyled = styled.div`
   margin: 0 auto;
   padding: 2rem 1rem;
   text-align: center;
-  max-width: 360px;
-  height: 100%;
+  max-width: 420px;
   // background-color: #ffffff;
 `;
 
@@ -41,7 +39,6 @@ const ContainerStyled = styled.div`
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
   // background-color: rgba(19,194,194,0.1);
-  height: 100%;
 `;
 
 const OrgSignUpPage = (props) => {
