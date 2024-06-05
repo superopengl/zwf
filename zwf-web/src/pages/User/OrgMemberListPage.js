@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select, PageHeader } from 'antd';
 import {
-  UserAddOutlined, GoogleOutlined, QuestionOutlined} from '@ant-design/icons';
+  UserAddOutlined, GoogleOutlined, QuestionOutlined
+} from '@ant-design/icons';
 
 import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteMember$, impersonate$ } from 'services/authService';
@@ -23,17 +24,6 @@ const { Text, Paragraph } = Typography;
 
 const ContainerStyled = styled.div`
 `;
-
-const DEFAULT_QUERY_INFO = {
-  text: '',
-  tags: [],
-  page: 1,
-  size: 50,
-  orderField: 'createdAt',
-  orderDirection: 'DESC'
-};
-
-const LOCAL_STORAGE_KEY = 'agent_list_query';
 
 const OrgMemberListPage = () => {
 
@@ -152,7 +142,7 @@ const OrgMemberListPage = () => {
     Modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
-      content: <UserNameCard userId={item.id}  />,
+      content: <UserNameCard userId={item.id} />,
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
