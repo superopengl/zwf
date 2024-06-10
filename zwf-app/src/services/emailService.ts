@@ -20,6 +20,7 @@ import 'colors';
 import { getEmailTemplate } from './mjmlService';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment';
+import { EntityManager } from 'typeorm';
 
 let emailTransporter = null;
 
@@ -140,6 +141,30 @@ export async function sendEmailForUserId(userId: string, template: EmailTemplate
   } catch (err) {
     console.log('Sent out email error'.red, errorToJson(err));
     logError(err, null, null, 'Sending email error', userId, template, vars);
+  }
+}
+
+export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailRequest[]) {
+  const defaultFrom = 'noreply@zeeworkflow.com';
+  const entities: EmailSentOutTask[] = [];
+  for (const req of emailRequests) {
+    const { to, template } = req;
+    assert(to, 400, 'Email recipient is not specified');
+    assert(template, 400, 'Email template is not specified');
+
+    const emailTask = new EmailSentOutTask();
+    emailTask.from = req.from || defaultFrom
+    emailTask.to = req.to;
+    emailTask.template = req.template;
+    emailTask.vars = req.vars;
+    emailTask.attachments = req.attachments;
+    emailTask.shouldBcc = req.shouldBcc;
+
+    entities.push(emailTask);
+  }
+
+  if (entities.length) {
+    await m.save(entities);
   }
 }
 
