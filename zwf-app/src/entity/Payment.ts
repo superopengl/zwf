@@ -1,5 +1,4 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, ManyToOne, OneToOne, JoinColumn, CreateDateColumn, UpdateDateColumn, Generated } from 'typeorm';
-import { PaymentMethod } from '../types/PaymentMethod';
 import { PaymentStatus } from '../types/PaymentStatus';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { CreditTransaction } from './CreditTransaction';
@@ -61,6 +60,9 @@ export class Payment {
 
   @Column()
   subscriptionId: string;
+
+  @Column({nullable: true})
+  promotionCode: string;
 
   @OneToOne(() => CreditTransaction, { nullable: true, cascade: true })
   @JoinColumn({ name: 'creditTransactionId', referencedColumnName: 'id' })

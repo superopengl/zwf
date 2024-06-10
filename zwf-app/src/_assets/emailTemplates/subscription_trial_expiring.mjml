@@ -1,0 +1,33 @@
+<mjml>
+  <mj-head>
+    <mj-title>Subscription is expired</mj-title>
+    <mj-include path="./emailTemplateHeader.mjml" />
+  </mj-head>
+  <mj-body css-class="content">
+    <mj-include path="./emailTemplateTitle.mjml" />
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {toWhom}, subscription was expired</mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="20px" font-weight="400">
+          Your trial subscription will expire after {{endDate}}. 
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          To keep on your business smoothly, please go back to ZeeWorkflow and set a primary payment method and purchase a subscription.
+        </mj-text>
+      </mj-column>
+      <mj-column width="100%">
+        <mj-text align="left" font-size="14px" font-weight="400">
+          Should you have any questions about this task, please contact us.
+        </mj-text>
+      </mj-column>
+    </mj-section>
+
+    <mj-include path="./emailTemplateFooter.mjml" />
+  </mj-body>
+</mjml>

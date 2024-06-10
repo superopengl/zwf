@@ -20,7 +20,7 @@ import { OrgClient } from './entity/OrgClient';
 import { Org } from './entity/Org';
 import { User } from './entity/User';
 import { File } from './entity/File';
-import { DataSource, DataSource } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { initializeConfig } from './utils/initializeConfig';
 import { redisCache } from './services/redisCache';
 import { OrgAliveSubscription } from './entity/views/OrgAliveSubscription';
@@ -46,6 +46,8 @@ import { OrgCurrentSubscriptionRefund } from './entity/views/OrgCurrentSubscript
 import { SupportPendingReplyInformation } from './entity/views/SupportPendingReplyInformation';
 import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
+import { UserAliveSubscriptionInformation } from './entity/views/UserAliveSubscriptionInformation';
+import { SubscriptionEndingNotificationEmailInformation } from './entity/views/SubscriptionEndingNotificationEmailInformation';
 dotenv.config();
 
 const views = [
@@ -221,6 +223,8 @@ export let AppDataSource = new DataSource({
     SystemConfig,
     RecurringInformation,
     ReceiptInformation,
+    UserAliveSubscriptionInformation,
+    SubscriptionEndingNotificationEmailInformation,
   ],
 });
 

@@ -19,6 +19,8 @@
     "sync:schema:prod": "TZ=utc node endpoints/sync-db-schema",
     "emailer": "TZ=utc ts-node endpoints/index-email.ts",
     "emailer:prod": "TZ=utc node endpoints/index-email",
+    "index-subscription": "TZ=utc ts-node endpoints/index-subscription.ts",
+    "index-subscription:prod": "TZ=utc node endpoints/index-subscription",    
     "migrate:up": "pnpm typeorm migration:run",
     "migrate:down": "pnpm typeorm migration:revert",
     "migrate:new": "pnpm typeorm migration:create -- -n",

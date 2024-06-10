@@ -29,7 +29,15 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const end = now.add(1, 'month').add(-1, 'day').toDate();
 
   await AppDataSource.manager.transaction(async m => {
-    const { creditBalance, deduction, unitPrice, payable, refundable, paymentMethodId, stripePaymentMethodId } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
+    const { 
+      creditBalance, 
+      deduction, 
+      unitPrice, 
+      payable, 
+      refundable, 
+      paymentMethodId, 
+      stripePaymentMethodId 
+    } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
@@ -89,6 +97,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.geo = await getRequestGeoInfo(expressReq);
     payment.orgPaymentMethodId = paymentMethodId;
     payment.creditTransaction = deductCreditTransaction;
+    payment.promotionCode = promotionCode;
     payment.subscription = subscription;
 
     await m.save(payment);

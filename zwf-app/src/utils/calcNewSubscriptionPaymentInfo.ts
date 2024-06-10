@@ -35,7 +35,7 @@ async function getCurrentSubscriptionLicenseCount(m: EntityManager, orgId: strin
 export async function calcNewSubscriptionPaymentInfo(
   m: EntityManager,
   orgId: string,
-  seatsAfter: number,
+  seatsAfter: number, // If null, keep the current seat number. Useful for recurring
   promotionCode: string,
 ) {
   const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
@@ -55,7 +55,12 @@ export async function calcNewSubscriptionPaymentInfo(
   let isValidPromotionCode = false;
   let promotionDiscountPercentage = 0;
   if (promotionCode) {
-    const promotion = await m.findOne(OrgPromotionCode, {where: { code: promotionCode }});
+    const promotion = await m.getRepository(OrgPromotionCode)
+      .createQueryBuilder()
+      .where({ code: promotionCode })
+      .andWhere(`"end" > CURRENT_DATE`)
+      .getOne();
+
     if (promotion) {
       promotionDiscountPercentage = promotion.percentage;
       isValidPromotionCode = true;
@@ -77,7 +82,7 @@ export async function calcNewSubscriptionPaymentInfo(
     deduction = -1 * creditBalanceBefore;
   }
 
-  const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, {where: { orgId, primary: true }});
+  const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { where: { orgId, primary: true } });
 
   const result = {
     unitPrice,
@@ -99,6 +104,6 @@ export async function calcNewSubscriptionPaymentInfo(
 }
 
 async function getRefundableCredits(m: EntityManager, orgId: string): Promise<number> {
-  const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { where: {orgId} });
+  const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { where: { orgId } });
   return +(refundable?.refundableAmount) || 0;
 }
