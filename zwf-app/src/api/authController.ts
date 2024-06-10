@@ -135,7 +135,16 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
   });
 
   if (exists) {
-    await sleep(2000);
+    const url = `${process.env.ZWF_WEB_DOMAIN_NAME}/login`;
+    await sendEmail({
+      template: EmailTemplateType.RegisterExistingAccount,
+      to: email,
+      vars: {
+        email,
+        url
+      },
+      shouldBcc: true
+    });
   } else {
     const { resetPasswordToken } = user;
 
