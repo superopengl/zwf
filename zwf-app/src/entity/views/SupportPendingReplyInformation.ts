@@ -1,10 +1,10 @@
 import { SupportUserUnreadInformation } from './SupportUserUnreadInformation';
 import { SupportMessage } from '../SupportMessage';
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { SupportUserLastAccess } from '../SupportUserLastAccess';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection.createQueryBuilder()
+  expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(SupportMessage, 'x')
     .innerJoin(q => q.from(SupportMessage, 'm')
       .where(`m.by != m."userId"`)

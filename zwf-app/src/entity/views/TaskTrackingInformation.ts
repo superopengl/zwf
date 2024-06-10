@@ -1,13 +1,13 @@
 import { TaskInformation } from './TaskInformation';
 import { TaskActionType } from '../../types/TaskActionType';
 import { TaskTracking } from '../TaskTracking';
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { Task } from '../Task';
 
 
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(TaskInformation, 't')
     .innerJoin(TaskTracking, 'k', 't.id = k."taskId"')

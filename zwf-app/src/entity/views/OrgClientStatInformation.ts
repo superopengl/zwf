@@ -1,12 +1,12 @@
 import { TaskInformation } from './TaskInformation';
-import { ViewEntity, Connection, ViewColumn, PrimaryColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
 import { OrgClientInformation } from './OrgClientInformation';
 import { TaskStatus } from '../../types/TaskStatus';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(OrgClientInformation, 'o')
     .leftJoin(TaskInformation, 't', 't."userId" = o.id AND t."orgId" = o."orgId"')

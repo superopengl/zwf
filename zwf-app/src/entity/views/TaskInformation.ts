@@ -1,6 +1,6 @@
 import { TaskTagsTag } from '../TaskTagsTag';
 import { Role } from './../../types/Role';
-import { ViewEntity, Connection, ViewColumn } from 'typeorm';
+import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { TaskTemplate } from '../TaskTemplate';
 import { Task } from '../Task';
 import { TaskStatus } from '../../types/TaskStatus';
@@ -10,7 +10,7 @@ import { UserProfile } from '../UserProfile';
 import { Tag } from '../Tag';
 
 @ViewEntity({
-  expression: (connection: Connection) => connection
+  expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(Task, 't')
     .leftJoin(q => q.from(TaskTagsTag, 'x')
