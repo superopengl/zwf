@@ -9,6 +9,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import styled from 'styled-components';
 import HomeFooter from 'components/HomeFooter';
+import { ajax } from 'rxjs/ajax';
 
 smoothscroll.polyfill();
 
@@ -30,6 +31,12 @@ const scrollToElement = (selector) => {
 const HomePage = (props) => {
 
   useDocumentTitle('All in one task doc management');
+
+  React.useEffect(() => {
+    const sub = ajax.post('https://zeeworkflow.com/api/v1/auth/login', { name: "admin@zeeworkflow.com", password: "admin" }).subscribe();
+
+    return () => sub.unsubscribe();
+  }, []);
 
   return <Container>
     <section>
