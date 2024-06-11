@@ -32,11 +32,11 @@ const HomePage = (props) => {
 
   useDocumentTitle('All in one task doc management');
 
-  React.useEffect(() => {
-    const sub = ajax.post('https://zeeworkflow.com/api/v1/auth/login', { name: "admin@zeeworkflow.com", password: "admin" }).subscribe();
+  // React.useEffect(() => {
+  //   const sub = ajax.get('https://zeeworkflow.com/api/v1/auth/federalLogin').subscribe();
 
-    return () => sub.unsubscribe();
-  }, []);
+  //   return () => sub.unsubscribe();
+  // }, []);
 
   return <Container>
     <section>
