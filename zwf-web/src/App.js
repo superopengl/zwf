@@ -108,7 +108,7 @@ export const App = React.memo(() => {
         role: user?.role || 'guest',
       });
 
-      contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
+      // contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
     }
   }, [user]);
 

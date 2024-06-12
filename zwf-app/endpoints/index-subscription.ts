@@ -90,39 +90,39 @@ async function expireSubscriptions() {
       .where('"end" < CURRENT_DATE')
       .getMany();
 
-    if (list.length) {
-      // Set subscriptions to be expired
-      const subscriptionIds = _.uniq(list.map(x => x.subscriptionId));
-      await m.update(Subscription,
-        {
-          id: In(subscriptionIds),
-        }, {
-        status: SubscriptionStatus.Expired
-      });
-
-      // Set user to be unpaid users
-      const userIds = list.map(x => x.userId);
-      await m.update(User, { id: In(userIds) }, { paid: false });
-      console.log(`Expired subscriptions for user ${subscriptionIds.join(', ')}`);
-
-      // Compose email requests
-      const emailRequests = list.map(x => {
-        const emailRequest: EmailRequest = {
-          to: x.email,
-          template: EmailTemplateType.SubscriptionExpired,
-          shouldBcc: true,
-          vars: {
-            toWhom: getEmailRecipientNameByNames(x.givenName, x.surname),
-            subscriptionId: x.subscriptionId,
-            endDate: moment(x.end).format('D MMM YYYY')
-          }
-        };
-        return emailRequest;
-      });
-
-      // Enqueue email notifications
-      await enqueueEmailInBulk(m, emailRequests);
+    if (!list.length) {
+      return;
     }
+    
+    // Set subscriptions to be expired
+    const subscriptionIds = _.uniq(list.map(x => x.subscriptionId));
+    await m.update(Subscription,
+      {
+        id: In(subscriptionIds),
+      }, {
+      status: SubscriptionStatus.Expired
+    });
+
+    // Set user to be unpaid users
+    console.log(`Expired subscriptions for user ${subscriptionIds.join(', ')}`);
+
+    // Compose email requests
+    const emailRequests = list.map(x => {
+      const emailRequest: EmailRequest = {
+        to: x.email,
+        template: EmailTemplateType.SubscriptionExpired,
+        shouldBcc: true,
+        vars: {
+          toWhom: getEmailRecipientNameByNames(x.givenName, x.surname),
+          subscriptionId: x.subscriptionId,
+          endDate: moment(x.end).format('D MMM YYYY')
+        }
+      };
+      return emailRequest;
+    });
+
+    // Enqueue email notifications
+    await enqueueEmailInBulk(m, emailRequests);
   });
 }
 

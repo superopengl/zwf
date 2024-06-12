@@ -101,13 +101,6 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.subscription = subscription;
 
     await m.save(payment);
-
-    // Update org users to paid
-    await m.getRepository(User).update({
-      orgId,
-    }, {
-      paid: true
-    });
   });
 }
 

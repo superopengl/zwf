@@ -1,3 +1,4 @@
+import { UserInformation } from './../entity/views/UserInformation';
 
 import * as jwt from 'jsonwebtoken';
 import { getUtcNow } from './getUtcNow';
@@ -15,7 +16,7 @@ export const COOKIE_OPTIONS = {
   secure: isProd ? true : undefined,
 };
 
-export function attachJwtCookie(user, res) {
+export function attachJwtCookie(user: UserInformation, res) {
   assert(user.id, 500, 'User has no id');
   const payload = sanitizeUser(user);
   payload.expires = moment(getUtcNow()).add(30, 'minutes').toDate();

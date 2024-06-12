@@ -1,14 +1,18 @@
 import { User } from '../entity/User';
 import * as _ from 'lodash';
+import { UserInformation } from '../entity/views/UserInformation';
 
 
-export function sanitizeUser(user: User) {
+export function sanitizeUser(user: UserInformation) {
   return _.pick(user, [
     'id',
     'role',
     'orgId',
-    'lastLoggedInAt',
-    'loginType',
-    'profile'
+    'email',
+    'givenName',
+    'surname',
+    'avatarFileId',
+    'avatarColorHex',
+    'subscriptionAlive',
   ]);
 }

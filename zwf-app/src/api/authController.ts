@@ -15,9 +15,9 @@ import { Role } from '../types/Role';
 import * as jwt from 'jsonwebtoken';
 import { attachJwtCookie, clearJwtCookie } from '../utils/jwt';
 import { getEmailRecipientName } from '../utils/getEmailRecipientName';
-import { logUserLogin } from '../utils/loginLog';
+import { emitUserAuditLog } from '../utils/emitUserAuditLog';
 import { sanitizeUser } from '../utils/sanitizeUser';
-import { getActiveUserByEmailWithProfile } from '../utils/getActiveUserByEmailWithProfile';
+import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
@@ -27,23 +27,25 @@ import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity'
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 import { UserInformation } from '../entity/views/UserInformation';
 import { sleep } from '../utils/sleep';
+import { getRoleFromReq } from '../utils/getRoleFromReq';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
   if (user) {
     const email = user.profile.email;
-    user = await getActiveUserByEmailWithProfile(email);
+    user = await getActiveUserInformation(email);
     attachJwtCookie(user, res);
   }
   res.json(user || null);
 });
 
 export const login = handlerWrapper(async (req, res) => {
-  const { name, password } = req.body;
+  const { name: email, password } = req.body;
 
-  const user = await getActiveUserByEmailWithProfile(name);
+  const userInfo = await getActiveUserInformation(email);
+  assert(userInfo, 400, 'User or password is not valid');
 
-  assert(user, 400, 'User or password is not valid');
+  const user = await AppDataSource.getRepository(User).findOneBy({ id: userInfo.id });
 
   // Validate passpord
   const hash = computeUserSecret(password, user.salt);
@@ -56,11 +58,11 @@ export const login = handlerWrapper(async (req, res) => {
 
   await AppDataSource.getRepository(User).save(user);
 
-  attachJwtCookie(user, res);
+  attachJwtCookie(userInfo, res);
 
-  logUserLogin(user, req, 'local');
+  emitUserAuditLog(user.id, 'login', { type: 'local' });
 
-  res.json(sanitizeUser(user));
+  res.json(sanitizeUser(userInfo));
 });
 
 export const logout = handlerWrapper(async (req, res) => {
@@ -118,6 +120,9 @@ export const signUp = handlerWrapper(async (req, res) => {
     email
   };
 
+  emitUserAuditLog(user.id, 'signup');
+
+
   res.json(info);
 });
 
@@ -160,11 +165,16 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
     });
   }
 
+  emitUserAuditLog(user.id, 'register-org');
+
   res.json();
 });
 
-async function setUserToResetPasswordStatus(user: User, returnUrl: string) {
-  const userRepo = AppDataSource.getRepository(User);
+async function setUserToResetPasswordStatus(userId: string, returnUrl: string) {
+  const user = await AppDataSource.getRepository(User).findOne({
+    where: { id: userId },
+    relations: ['profile']
+  });
   const resetPasswordToken = uuidv4();
   user.resetPasswordToken = resetPasswordToken;
   user.status = UserStatus.ResetPassword;
@@ -181,18 +191,20 @@ async function setUserToResetPasswordStatus(user: User, returnUrl: string) {
     shouldBcc: false
   });
 
-  await userRepo.save(user);
+  await AppDataSource.manager.save(user);
 }
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
   const { email, returnUrl } = req.body;
-  const user = await getActiveUserByEmailWithProfile(email);
+  const user = await getActiveUserInformation(email);
   if (!user) {
     res.json();
     return;
   }
 
-  await setUserToResetPasswordStatus(user, returnUrl);
+  await setUserToResetPasswordStatus(user.id, returnUrl);
+
+  emitUserAuditLog(user.id, 'forgot-password');
 
   res.json();
 });
@@ -241,9 +253,10 @@ export const impersonate = handlerWrapper(async (req, res) => {
   assertRole(req, 'system', 'admin');
   const { email } = req.body;
   assert(email, 400, 'Invalid email');
-  const { user: { role } } = req as any;
+  const role = getRoleFromReq(req);
+  const loginUser = (req as any).user;
 
-  const user = await getActiveUserByEmailWithProfile(email);
+  const user = await getActiveUserInformation(email);
   if (role === Role.Admin) {
     const orgId = getOrgIdFromReq(req);
     assert(user.orgId === orgId, 404, 'User not found');
@@ -253,6 +266,9 @@ export const impersonate = handlerWrapper(async (req, res) => {
 
   attachJwtCookie(user, res);
 
+  emitUserAuditLog(user.id, 'is-impersonated', { by: loginUser.id });
+
+
   res.json(sanitizeUser(user));
 });
 
@@ -260,7 +276,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
-  const existingUser = await getActiveUserByEmailWithProfile(email);
+  const existingUser = await getActiveUserInformation(email);
   assert(!existingUser, 400, 'User exists');
 
   const { user, profile } = createUserAndProfileEntity({
@@ -311,7 +327,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
 
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  let user = await getActiveUserByEmailWithProfile(email);
+  let user = await getActiveUserInformation(email);
 
   const isNewUser = !user;
   const now = getUtcNow();
@@ -323,19 +339,19 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
   };
 
   if (isNewUser) {
-    const { user: newUser, profile } = createUserAndProfileEntity({
+    let { user: newUser, profile } = createUserAndProfileEntity({
       email,
       role: Role.Client
     });
 
-    user = Object.assign(newUser, extra);
-    user.profile = profile;
+    newUser = Object.assign(newUser, extra);
+    newUser.profile = profile;
     profile.givenName = givenName;
     profile.surname = surname;
-    await AppDataSource.manager.save([user, profile]);
+    await AppDataSource.manager.save([newUser, profile]);
 
     sendEmail({
-      to: user.profile.email,
+      to: user.email,
       template: EmailTemplateType.WelcomeClient,
       vars: {
         toWhom: getEmailRecipientName(user),
@@ -343,13 +359,12 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
       shouldBcc: false
     });
   } else {
-    user = Object.assign(user, extra);
-    await AppDataSource.getRepository(User).save(user);
+    await AppDataSource.getRepository(User).update({ id: user.id }, extra);
   }
 
   attachJwtCookie(user, res);
 
-  logUserLogin(user, req, 'google');
+  emitUserAuditLog(user.id, 'login', { type: 'google' });
 
   res.json(sanitizeUser(user));
 });

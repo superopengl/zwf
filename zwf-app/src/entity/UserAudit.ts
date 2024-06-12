@@ -2,8 +2,9 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn } from 
 
 
 @Entity()
-@Index('idx_user_login', ['userId', 'createdAt'])
-export class UserLogin {
+@Index(['userId', 'createdAt'], { unique: true })
+@Index(['userId', 'action'])
+export class UserAudit {
   @PrimaryGeneratedColumn()
   id?: number;
 
@@ -14,5 +15,9 @@ export class UserLogin {
   userId: string;
 
   @Column()
-  loginMethod: string;
+  @Index()
+  action: string;
+
+  @Column('jsonb', { nullable: true })
+  info?: any;
 }

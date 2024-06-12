@@ -45,8 +45,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const navigate = useNavigate();
 
-  const email = user?.profile?.email;
-  const avatarFileId = user?.profile?.avatarFileId;
+  const { email, avatarFileId } = user ?? {};
   if (!email) {
     return null;
   }
