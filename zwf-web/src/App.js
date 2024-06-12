@@ -86,7 +86,6 @@ export const App = React.memo(() => {
       reactLocalStorage.set('locale', locale);
       setLocale(locale);
     },
-    setNotifyCount: count => { },
   }
 
   const [contextValue, setContextValue] = React.useState(globalContextValue);

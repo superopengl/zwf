@@ -4,7 +4,6 @@ import { Input, Button, Form, Divider } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { login$ } from 'services/authService';
-import { countUnreadMessage$ } from 'services/messageService';
 import GoogleSsoButton from 'components/GoogleSsoButton';
 import GoogleLogoSvg from 'components/GoogleLogoSvg';
 import { zip, of } from 'rxjs';
@@ -22,7 +21,7 @@ export const LogInPanel = props => {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
-  const { setUser, setNotifyCount } = context;
+  const { setUser } = context;
 
   const validateName = async (rule, value) => {
     const isValid = value && isEmail(value);
