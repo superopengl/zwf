@@ -1,2 +1,2 @@
 export const notes=`
-federal login attempt: lax cookie`
+federal login set sameSite='none' attempt`
