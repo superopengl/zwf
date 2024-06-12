@@ -11,7 +11,7 @@ const isProd = process.env.NODE_ENV === 'prod';
 export const COOKIE_OPTIONS = {
   httpOnly: true,
   signed: false,
-  sameSite: isProd ? 'strict' : undefined,
+  sameSite: isProd ? 'none' : undefined,
   secure: isProd ? true : undefined,
 };
 
