@@ -32,13 +32,13 @@ export const listOrg = handlerWrapper(async (req, res) => {
 export const saveOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
+  assert(orgId, 400, 'orgId not found');
 
-  const org = await AppDataSource.getRepository(Org).findOne({ where: { id: orgId } });
-  assert(org, 404);
+  const orgInDb = await AppDataSource.getRepository(Org).findOneBy({id: orgId });
 
-  Object.assign(org, req.body);
+  const org = {...orgInDb, ...req.body, orgId};
 
-  await AppDataSource.manager.save(org);
+  await AppDataSource.getRepository(Org).save(org);
 
   res.json();
 });

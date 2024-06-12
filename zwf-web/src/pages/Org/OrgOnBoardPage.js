@@ -36,7 +36,7 @@ const OrgOnBoardPage = (props) => {
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe(() => {
-      navigate('/');
+      navigate('/task');
     });
   }
 

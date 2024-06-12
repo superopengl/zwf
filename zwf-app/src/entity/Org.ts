@@ -12,7 +12,6 @@ export class Org {
   deletedAt: Date;
 
   @Column()
-  @Index('idx_unique_org_name', { unique: true })
   name: string;
 
   @Column()
