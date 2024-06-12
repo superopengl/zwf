@@ -34,9 +34,6 @@ export class Org {
 
   @Column({ nullable: true })
   stripeCustomerId?: string;
-
-  @Column({ default: false })
-  isProfileComplete: boolean;
 }
 
 

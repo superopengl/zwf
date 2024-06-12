@@ -49,6 +49,7 @@ export class User {
   resetPasswordToken?: string;
 
   @Column('uuid', { nullable: true })
+  @Index()
   orgId: string;
 
   @DeleteDateColumn()
@@ -65,9 +66,6 @@ export class User {
   @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
   @JoinTable()
   tags: Tag[];
-
-  @Column({ default: false })
-  isProfileComplete: boolean;
 
   @Column({ default: false })
   orgOwner: boolean;
