@@ -1,3 +1,3 @@
 export const notes=`
-update release notes
-misc fix`
+bgcolor
+no confirm password`
