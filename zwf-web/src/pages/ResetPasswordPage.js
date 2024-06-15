@@ -10,7 +10,8 @@ import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 
 const LayoutStyled = styled(Layout)`
   margin: 0 auto 0 auto;
-  background-color: #ffffff;
+  // background-color: #ffffff;
+  height: 100%;
 `;
 
 const ContainerStyled = styled.div`
