@@ -110,6 +110,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 
   if (id === loginUserId) {
     const userInfo = await getActiveUserInformation(user.profile.email);
+    assert(userInfo, 400, 'User not found');
     attachJwtCookie(userInfo, res);
   }
 

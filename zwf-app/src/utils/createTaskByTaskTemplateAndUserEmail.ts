@@ -79,12 +79,11 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
   assert(email, 400, 'email is not specified');
 
   let task: Task;
-  let user: User;
   await AppDataSource.transaction(async m => {
     const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, { where: { id: taskTemplateId }, relations: { docs: true } });
     assert(taskTemplate, 404, 'taskTemplate is not found');
 
-    user = await ensureClientOrGuestUser(m, email);
+    const { user } = await ensureClientOrGuestUser(m, email);
 
     task = new Task();
     task.id = id || uuidv4();
