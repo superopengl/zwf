@@ -4,7 +4,7 @@ import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import { Loading } from 'components/Loading';
-import DocTemplateEditorPanel from './DocTemplateEditorPanel';
+import { DocTemplateEditorPanel } from './DocTemplateEditorPanel';
 import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
 import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
 import { VscOpenPreview } from 'react-icons/vsc';
@@ -46,8 +46,8 @@ const EMPTY_DOC_TEMPLATE = {
 export const DocTemplatePage = (props) => {
 
   const params = useParams();
-  const {id: routeParamId} = params;
-  const docTemplateId = routeParamId || uuidv4();
+  const { id: routeParamId } = params;
+  const initDocTemplateId = routeParamId || uuidv4();
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(true);
@@ -58,7 +58,7 @@ export const DocTemplatePage = (props) => {
   const debugMode = false;
 
   React.useEffect(() => {
-    const obs$ = isNew ? of({ ...EMPTY_DOC_TEMPLATE }) : getDocTemplate$(docTemplateId);
+    const obs$ = isNew ? of({ ...EMPTY_DOC_TEMPLATE, id: uuidv4() }) : getDocTemplate$(initDocTemplateId);
     const subscription$ = obs$
       .pipe(
         finalize(() => setLoading(false))
@@ -77,7 +77,6 @@ export const DocTemplatePage = (props) => {
   const handleSave = async () => {
     const entity = {
       ...docTemplate,
-      id: docTemplateId,
       name: docTemplateName,
     };
 
@@ -106,18 +105,18 @@ export const DocTemplatePage = (props) => {
           <PageHeader
             backIcon={<LeftOutlined />}
             style={{ maxWidth: 900, margin: '0 auto' }}
-            title={<Row align="middle" wrap={false} style={{height: 46}}>
+            title={<Row align="middle" wrap={false} style={{ height: 46 }}>
               <Col>
-              <DocTemplateIcon />
+                <DocTemplateIcon />
               </Col>
               <Col flex={1}>
-              <ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />
+                <ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />
               </Col>
             </Row>}
             onBack={goBack}
             extra={[
-              <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={VscOpenPreview } />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
-              <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew } />} onClick={handlePopPreview}>Preview</Button>,
+              <Button key="sider" type="primary" ghost={!previewSider} icon={<Icon component={VscOpenPreview} />} onClick={() => setPreviewSider(!previewSider)}>Side preview</Button>,
+              <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew} />} onClick={handlePopPreview}>Preview</Button>,
               <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
             ]}
           >
