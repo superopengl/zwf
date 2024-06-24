@@ -1,23 +1,19 @@
 import React from 'react';
-import { Row, Col, Typography, Modal, Button, Card, Tag, Alert } from 'antd';
+import { Row, Col, Modal, Button, Card, Tag } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
 import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
-import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
 import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Subscription } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Resizable } from "re-resizable";
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
-
-const { Title, Text } = Typography;
+import { of } from 'rxjs';
 
 const LayoutStyled = styled.div`
   margin: 0 auto;
@@ -47,7 +43,7 @@ const StyledModal = styled(Modal)`
 }
 `;
 
-const EmptyTaskTamplateSchema = {
+const EMPTY_TASK_TEMPLATE = {
   name: 'Tax return',
   description: 'Please fill in the information as complete as possible.',
   fields: [
@@ -79,31 +75,27 @@ const EmptyTaskTamplateSchema = {
 export const TaskTemplatePage = props => {
   const params = useParams();
   const {id: routeParamId} = params;
-  const taskTemplateId = routeParamId || uuidv4();
+  const initTaskTemplateId = routeParamId || uuidv4();
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(!isNew);
   const [preview, setPreview] = React.useState(false);
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
-  const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EmptyTaskTamplateSchema : null);
+  const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
   const formRef = React.useRef();
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    let subscription$ = Subscription.EMPTY;
-    if (!isNew) {
-      // Load
-      setLoading(true);
-      subscription$ = getTaskTemplate$(taskTemplateId)
-        .pipe(
-          finalize(() => setLoading(false))
-        )
-        .subscribe(taskTemplate => {
-          setTaskTemplate(taskTemplate)
-          setTaskTemplateName(taskTemplate.name)
-          setLoading(false);
-        });
-    }
+    const obs$ = isNew ? of({ ...EMPTY_TASK_TEMPLATE, id: uuidv4() }) : getTaskTemplate$(initTaskTemplateId);
+    const subscription$ = obs$
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(taskTemplate => {
+        setTaskTemplate(taskTemplate)
+        setTaskTemplateName(taskTemplate.name)
+      });
+
     return () => {
       subscription$.unsubscribe();
     }
@@ -124,7 +116,6 @@ export const TaskTemplatePage = props => {
 
     const entity = {
       ...taskTemplate,
-      id: taskTemplateId,
       name: taskTemplateName,
     };
 
