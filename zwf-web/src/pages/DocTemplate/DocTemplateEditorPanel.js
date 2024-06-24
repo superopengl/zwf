@@ -59,4 +59,3 @@ DocTemplateEditorPanel.defaultProps = {
   debug: false
 };
 
-export default DocTemplateEditorPanel;

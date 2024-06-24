@@ -47,7 +47,7 @@ export const DocTemplatePage = (props) => {
 
   const params = useParams();
   const { id: routeParamId } = params;
-  const initDocTemplateId = routeParamId || uuidv4();
+  const initDocTemplateId = routeParamId;
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(true);
