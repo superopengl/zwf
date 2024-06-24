@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import { Typography, Select, Row, Alert } from 'antd';
 import { Loading } from './Loading';
 import * as _ from 'lodash';
-import { listDocTemplate } from 'services/docTemplateService';
+import { listDocTemplate$ } from 'services/docTemplateService';
 import { DocTemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { VarTag } from './VarTag';
+import { finalize } from 'rxjs/operators';
 
 const { Paragraph } = Typography;
 
@@ -36,15 +37,14 @@ const DocTemplateSelect = props => {
   const [docTemplateOptions, setDocTemplateOptions] = React.useState([]);
   const [allRefFields, setAllRefFields] = React.useState([]);
 
-  const load = async () => {
-    setLoading(true);
-    const allDocTemps = await listDocTemplate();
-    setDocTemplateOptions(_.sortBy(allDocTemps, ['name']));
-    setLoading(false);
-  }
-
   React.useEffect(() => {
-    load();
+    setLoading(true);
+    const $sub = listDocTemplate$().pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(allDocTemps => {
+    setDocTemplateOptions(_.sortBy(allDocTemps, ['name']));
+
+    });
   }, []);
 
   React.useEffect(() => {

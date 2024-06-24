@@ -11,7 +11,7 @@ import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
-import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
+import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from 'components/entityIcon';
@@ -74,14 +74,15 @@ export const DocTemplatePage = (props) => {
     navigate('/doc_template')
   };
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const entity = {
       ...docTemplate,
       name: docTemplateName,
     };
 
-    await saveDocTemplate(entity);
-    notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
+    saveDocTemplate$(entity).subscribe(() => {
+      notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
+    });
   }
 
   const handlePopPreview = () => {

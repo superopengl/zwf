@@ -11,7 +11,7 @@ import { VscOpenPreview } from 'react-icons/vsc';
 import { MdOpenInNew } from 'react-icons/md';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
-import { saveDocTemplate, getDocTemplate$ } from 'services/docTemplateService';
+import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon, ResourcePageIcon } from 'components/entityIcon';

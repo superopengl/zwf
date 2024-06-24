@@ -5,13 +5,13 @@ import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List,
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
+import { deleteDocTemplate$, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
 import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
 import { useNavigate, Link } from 'react-router-dom';
-import { finalize } from 'rxjs/operators';
+import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
 import { notify } from 'util/notify';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
@@ -53,15 +53,19 @@ export const DocTemplateListPage = props => {
     handleEditOne(item.id);
   }
 
-  const handleDelete = async (item) => {
+  const handleDelete = (item) => {
     const { id, name } = item;
     Modal.confirm({
       title: <>Delete Dot Template <strong>{name}</strong>?</>,
-      onOk: async () => {
+      onOk: () => {
         setLoading(true);
-        await deleteDocTemplate(id);
-        await loadList();
-        setLoading(false);
+        deleteDocTemplate$(id).pipe(
+          finalize(() => setLoading(false)),
+          switchMap(() => listDocTemplate$()),
+          finalize(() => setLoading(false)),
+        ).subscribe(list => {
+          setList(list);
+        });
       },
       maskClosable: true,
       okButtonProps: {
@@ -69,13 +73,6 @@ export const DocTemplateListPage = props => {
       },
       okText: 'Yes, delete it!'
     });
-  }
-
-  const loadList = async () => {
-    setLoading(true);
-    const list = await listDocTemplate();
-    setList(list);
-    setLoading(false);
   }
 
   React.useEffect(() => {
@@ -101,12 +98,13 @@ export const DocTemplateListPage = props => {
   }
 
   const handleClone = item => {
-    cloneDocTemplate$(item.id)
-      .subscribe(cloned => {
-        // console.log(task);
-        notify.success('Cloned task', <>Successfully cloned doc template. The new doc template is  <TextLink target="_blank" href={`/doc_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
-        loadList();
-      })
+    cloneDocTemplate$(item.id).pipe(
+      tap(cloned => notify.success('Cloned task', <>Successfully cloned doc template. The new doc template is  <TextLink target="_blank" href={`/doc_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20)),
+      switchMap(() => listDocTemplate$()),
+      finalize(() => setLoading(false)),
+    ).subscribe(list => {
+      setList(list);
+    });
   }
 
   return (<>

@@ -111,7 +111,7 @@ export const TaskTemplatePage = props => {
     navigate('/task_template')
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     // await formRef.current.validateFields();
 
     const entity = {

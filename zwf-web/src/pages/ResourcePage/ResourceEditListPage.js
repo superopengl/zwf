@@ -5,7 +5,7 @@ import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List,
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
+import { deleteDocTemplate$, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
