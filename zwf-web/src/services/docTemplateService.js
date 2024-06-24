@@ -20,10 +20,6 @@ export function listDocTemplate$() {
   return httpGet$('doc_template');
 }
 
-export async function applyDocTemplate(id, refFields) {
-  return httpPost(`doc_template/${id}/apply`, { refFields });
-}
-
 export function renameDocTemplate$(id, name) {
   return httpPost$(`/doc_template/${id}/rename`, { name });
 }

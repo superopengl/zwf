@@ -99,43 +99,6 @@ export const renameDocTemplate = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-
-export const applyDocTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
-  const { id } = req.params;
-  const { refFields: passedInRefFields } = req.body;
-  const repo = AppDataSource.getRepository(DocTemplate);
-  const docTemplate = await repo.findOne({ where: { id } });
-  assert(docTemplate, 404);
-
-  const { refFields, description, name } = docTemplate;
-
-  const usedVars = refFields.reduce((pre, cur) => {
-    const pattern = `{{${cur}}}`;
-    const replacement = pattern === `{{now}}` ? moment(getNow()).format('D MMM YYYY') : _.get(passedInRefFields, cur, '');
-    pre[cur] = replacement;
-    return pre;
-  }, {});
-
-  res.json({
-    name,
-    description,
-    usedVars,
-  });
-});
-
-async function mdToPdfBuffer(md) {
-  // const pdf = await mdToPdf({
-  //   content: md
-  // }, {
-  //   launch_options: {
-  //     args: ['--no-sandbox']
-  //   }
-  // });
-  // return pdf.content;
-  return null;
-}
-
 async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplate) {
   let round = 1;
   const { orgId, name } = sourceDocTemplate;
