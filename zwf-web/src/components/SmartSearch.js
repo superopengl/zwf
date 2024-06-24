@@ -19,7 +19,7 @@ const DOMAIN_CONFIG = {
       <TaskIcon />
       <HighlightingText value={item.name} search={searchText} />
     </>,
-    noFoundContent: <>No task is found.</>
+    noFoundContent: <><TaskIcon /> No task is found.</>
   },
   'task_template': {
     searchHandler: smartSearchTaskTemplate$,
@@ -28,7 +28,7 @@ const DOMAIN_CONFIG = {
       <TaskTemplateIcon />
       <HighlightingText value={item.name} search={searchText} />
     </>,
-    noFoundContent: <>No task template is found.</>
+    noFoundContent: <><TaskTemplateIcon /> No task template is found.</>
   },
   'doc_template': {
     searchHandler: smartSearchDocTemplate$,
@@ -37,13 +37,13 @@ const DOMAIN_CONFIG = {
       <DocTemplateIcon />
       <HighlightingText value={item.name} search={searchText} />
     </>,
-    noFoundContent: <>No doc template is found.</>
+    noFoundContent: <><DocTemplateIcon /> No doc template is found.</>
   },
   'client': {
     searchHandler: smartSearchClient$,
     pathHandler: id => `/client/${id}`,
     renderHandler: (item, searchText) => <UserNameCard userId={item.id} searchText={searchText} />,
-    noFoundContent: <>No client is found.</>
+    noFoundContent: <><ClientIcon /> No client is found.</>
   },
 }
 
@@ -121,7 +121,11 @@ export const SmartSearch = React.memo((props) => {
   }, [domain, searchText])
 
   const handleDomainSelected = (domain) => {
-    setDomain(domain);
+    if (searchText?.trim()) {
+      setDomain(domain);
+    } else {
+      setDomain(null);
+    }
   }
 
   const handleSearchWithinDomain = () => {
@@ -153,44 +157,53 @@ export const SmartSearch = React.memo((props) => {
     }
   }
 
-  useKeys(["Control", "KeyK"], ( )=> {
-    setOuterDropdownOpen(true)
+  useKeys(["Control", "KeyK"], () => {
     outerRef.current.focus();
   })
 
-  if (domain && searchText) {
-    return <AutoComplete
-      ref={innerRef}
-      showSearch
-      allowClear
-      style={{ minWidth: 300, width: '100%' }}
-      options={optionsWithinDomain}
-      value={searchText}
-      open={innerDropdownOpen}
-      dropdownMatchSelectWidth={false}
-      onFocus={() => setInnerDropdownOpen(true)}
-      onBlur={() => setInnerDropdownOpen(false)}
-      onChange={handleValueChangeWithinDomain}
-      onSearch={handleSearchWithinDomain}
-      onSelect={handleSelectWithinDomain}
-      notFoundContent={DOMAIN_CONFIG[domain]?.noFoundContent}
-    />
+  const handleOuterKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      outerRef.current.blur();
+    }
   }
 
-  return <AutoComplete
-      ref={outerRef}
-      showSearch
-      open={outerDropdownOpen}
-      onFocus={() => setOuterDropdownOpen(true)}
-      onBlur={() => setOuterDropdownOpen(false)}
-      allowClear
-      placeholder="Search ... (CTRL + K)"
-      style={{ minWidth: 300, width: '100%' }}
-      options={getOptions()}
-      dropdownMatchSelectWidth={false}
-      onSearch={handleSearch}
-      onSelect={handleDomainSelected}
-    />
+  const searchInDomainMode = !!domain;
+
+  return <>
+    {searchInDomainMode ?
+      <AutoComplete
+        ref={innerRef}
+        showSearch
+        allowClear
+        style={{ minWidth: 300, width: '100%' }}
+        options={optionsWithinDomain}
+        value={searchText}
+        open={innerDropdownOpen}
+        dropdownMatchSelectWidth={false}
+        onFocus={() => setInnerDropdownOpen(true)}
+        onBlur={() => setInnerDropdownOpen(false)}
+        onChange={handleValueChangeWithinDomain}
+        onSearch={handleSearchWithinDomain}
+        onSelect={handleSelectWithinDomain}
+        notFoundContent={DOMAIN_CONFIG[domain]?.noFoundContent}
+      /> :
+      <AutoComplete
+        ref={outerRef}
+        showSearch
+        open={outerDropdownOpen}
+        onFocus={() => setOuterDropdownOpen(true)}
+        onBlur={() => setOuterDropdownOpen(false)}
+        allowClear
+        value=""
+        placeholder="Search ... CTRL + K"
+        style={{ minWidth: 300, width: '100%' }}
+        options={getOptions()}
+        dropdownMatchSelectWidth={false}
+        onSearch={handleSearch}
+        onSelect={handleDomainSelected}
+        onInputKeyDown={handleOuterKeyDown}
+      />}
+  </>
 });
 
 SmartSearch.propTypes = {
