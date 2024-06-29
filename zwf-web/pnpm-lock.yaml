@@ -12,6 +12,7 @@ specifiers:
   '@stripe/react-stripe-js': ^1.4.0
   '@stripe/stripe-js': ^1.13.2
   '@testing-library/jest-dom': ^4.2.4
+  '@tinymce/tinymce-react': ^4.1.0
   abbreviate: ^0.0.3
   abnacn-validator: ^0.0.5
   antd: ^4.20.6
@@ -24,6 +25,7 @@ specifiers:
   dompurify: ^2.2.8
   file-saver: ^2.0.2
   form-data: ^3.0.0
+  fs-extra: ^10.1.0
   i18next: ^20.3.2
   javascript-time-ago: ^2.3.10
   lodash: ^4.17.21
@@ -66,6 +68,7 @@ specifiers:
   source-map-explorer: ^2.5.2
   styled-components: ^5.2.1
   tfn: ^1.0.0
+  tinymce: ^6.1.0
   uniqolor: ^1.0.1
   uuid: ^8.3.2
   validator: ^13.1.1
@@ -95,6 +98,7 @@ dependencies:
   '@react-hook/window-size': 3.0.7_react@17.0.2
   '@stripe/react-stripe-js': 1.8.0_0a6f7d5b64281bea4e6f95bbef587eae
   '@stripe/stripe-js': 1.29.0
+  '@tinymce/tinymce-react': 4.1.0_react-dom@17.0.2+react@17.0.2
   abbreviate: 0.0.3
   abnacn-validator: 0.0.5
   antd: 4.20.6_react-dom@17.0.2+react@17.0.2
@@ -104,6 +108,7 @@ dependencies:
   dompurify: 2.3.8
   file-saver: 2.0.5
   form-data: 3.0.1
+  fs-extra: 10.1.0
   i18next: 20.6.1
   javascript-time-ago: 2.5.2
   lodash: 4.17.21
@@ -141,6 +146,7 @@ dependencies:
   smoothscroll-polyfill: 0.4.4
   styled-components: 5.3.5_281a4fa50a045c9112baf635f3bc27a7
   tfn: 1.0.0
+  tinymce: 6.1.0
   uniqolor: 1.0.2
   uuid: 8.3.2
   validator: 13.7.0
@@ -3465,6 +3471,18 @@ packages:
       pretty-format: 24.9.0
       redent: 3.0.0
     dev: true
+
+  /@tinymce/tinymce-react/4.1.0_react-dom@17.0.2+react@17.0.2:
+    resolution: {integrity: sha512-7qXheXhyY9a8mY5tXQUz3BFq+Z4TQ7zd/OIaKasbVzojkjCw3VWdwFhHOEcwmDDprepgQwECsYqe3AGOtehfFg==}
+    peerDependencies:
+      react: ^18.0.0 || ^17.0.1 || ^16.7.0
+      react-dom: ^18.0.0 || ^17.0.1 || ^16.7.0
+    dependencies:
+      prop-types: 15.8.1
+      react: 17.0.2
+      react-dom: 17.0.2_react@17.0.2
+      tinymce: 6.1.0
+    dev: false
 
   /@tootallnate/once/1.1.2:
     resolution: {integrity: sha512-RbzJvlNzmRq5c3O09UipeuXno4tA1FE6ikOjxZK0tuxVv3412l64l5t1W5pj4+rJq9vpkm/kwiR07aZXnsKPxw==}
@@ -7099,7 +7117,6 @@ packages:
       graceful-fs: 4.2.10
       jsonfile: 6.1.0
       universalify: 2.0.0
-    dev: true
 
   /fs-extra/9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}
@@ -7616,7 +7633,7 @@ packages:
     dev: true
 
   /image-size/0.5.5:
-    resolution: {integrity: sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=}
+    resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
     hasBin: true
     requiresBuild: true
@@ -13568,6 +13585,10 @@ packages:
     resolution: {integrity: sha512-vJhccZPs965sV/L2sU4oRQVAos0pQXwsvTLkWYdqJ+a8Q5kPFzJTuOFwy7UniPli44NKQGAglksjvOcpo95aZA==}
     dev: false
 
+  /tinymce/6.1.0:
+    resolution: {integrity: sha512-IdSdMlmuyhpEpUuabhBUaRC2NzZZxP2/CO/F+/54kTaAifB1Et5mKEty03pJYZxl6GBdFgclKRA2UU5JKJtJbA==}
+    dev: false
+
   /tinyqueue/2.0.3:
     resolution: {integrity: sha512-ppJZNDuKGgxzkHihX8v9v9G5f+18gzaTfrukGrq6ueg0lmH4nqVnA2IPG0AEH3jKEk2GRJCUhDoqpoiw3PHLBA==}
     dev: false
@@ -13772,7 +13793,7 @@ packages:
     dev: false
 
   /uglify-to-browserify/1.0.2:
-    resolution: {integrity: sha1-bgkk1r2mta/jSeOabWMoUKD4grc=}
+    resolution: {integrity: sha512-vb2s1lYx2xBtUgy+ta+b2J/GLVUR+wmpINwHePmPRhOsIVCG2wDzKJ0n14GslH1BifsqVzSOwQhRaCAsZ/nI4Q==}
     requiresBuild: true
     dev: false
     optional: true

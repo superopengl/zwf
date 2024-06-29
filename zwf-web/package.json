@@ -12,6 +12,7 @@
     "@react-hook/window-size": "^3.0.7",
     "@stripe/react-stripe-js": "^1.4.0",
     "@stripe/stripe-js": "^1.13.2",
+    "@tinymce/tinymce-react": "^4.1.0",
     "abbreviate": "^0.0.3",
     "abnacn-validator": "^0.0.5",
     "antd": "^4.20.6",
@@ -21,6 +22,7 @@
     "dompurify": "^2.2.8",
     "file-saver": "^2.0.2",
     "form-data": "^3.0.0",
+    "fs-extra": "^10.1.0",
     "i18next": "^20.3.2",
     "javascript-time-ago": "^2.3.10",
     "lodash": "^4.17.21",
@@ -58,6 +60,7 @@
     "smoothscroll-polyfill": "^0.4.4",
     "styled-components": "^5.2.1",
     "tfn": "^1.0.0",
+    "tinymce": "^6.1.0",
     "uniqolor": "^1.0.1",
     "uuid": "^8.3.2",
     "validator": "^13.1.1",
@@ -93,7 +96,8 @@
     "g": "npx generate-react-cli component --",
     "p": "npx generate-react-cli component -- --type=page",
     "upload": " aws s3 sync build s3://zwf-web/",
-    "analyze": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=true craco build && source-map-explorer 'build/static/js/*.js'"
+    "analyze": "cross-env CLIENT_ENV=production GENERATE_SOURCEMAP=true craco build && source-map-explorer 'build/static/js/*.js'",
+    "postinstall": "node ./bin/build-tinymce"
   },
   "eslintConfig": {
     "extends": "react-app"
