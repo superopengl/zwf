@@ -1,16 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { API_BASE_URL } from 'services/http';
-import { extend } from 'wangeditor-for-react';
-import i18next from 'i18next';
 import { Typography, Skeleton, Button } from 'antd';
-import { Link } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react';
-import { Loading } from './Loading';
 
 const { Paragraph, Text } = Typography
-
-const ReactWEditor = extend({ i18next });
 
 const DEFAULT_SAMPLE = ``;
 
@@ -140,65 +134,6 @@ export const RichTextInput = React.memo((props) => {
       <Button onClick={log}>Log editor content</Button>
     </>
   );
-
-  return <>
-    <ReactWEditor
-      className="rich-editor"
-      ref={editorRef}
-      defaultValue={value}
-      onChange={onChange}
-      disabled={disabled}
-      config={{
-        lang: 'en',
-        fontSizes: {
-          'x-small': { name: '10px', value: '1' },
-          small: { name: '12px', value: '2' },
-          normal: { name: '14px', value: '3' },
-          large: { name: '16px', value: '4' },
-          'x-large': { name: '20px', value: '5' },
-          'xx-large': { name: '24px', value: '6' },
-          'xxx-large': { name: '32px', value: '7' },
-        },
-        height: "80%",
-        // uploadImgServer: `${API_BASE_URL}/file${shared ? '?public=1' : ''}`,
-        // uploadImgMaxLength: 1,
-        uploadImgShowBase64: true,
-        // withCredentials: true,
-        // uploadFileName: 'file',
-        // uploadImgTimeout: 30 * 1000, // 30 seconds
-        // uploadImgHooks: {
-        //   customInsert: handleCustomImageInsert
-        // },
-        showFullScreen: true,
-        menus: [
-          'head',
-          'bold',
-          // 'fontSize',
-          // 'fontName',
-          'italic',
-          'underline',
-          'strikeThrough',
-          'indent',
-          // 'lineHeight',
-          // 'foreColor',
-          // 'backColor',
-          // 'link',
-          'list',
-          // 'todo',
-          'justify',
-          'quote',
-          // 'emoticon',
-          'image',
-          // 'video',
-          'table',
-          // 'code',
-          'splitLine',
-          // 'undo',
-          // 'redo',
-        ]
-      }}
-    />
-  </>
 });
 
 RichTextInput.propTypes = {
