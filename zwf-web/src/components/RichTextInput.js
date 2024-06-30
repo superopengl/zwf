@@ -20,10 +20,6 @@ export const RichTextInput = React.memo((props) => {
     }
   }, [])
 
-  React.useEffect(() => {
-    console.log('redering')
-  })
-
   const handleCustomImageInsert = (insertImgFn, result) => {
     const { id, fileName } = result;
     const url = `${API_BASE_URL}/file/${id}/data`;
@@ -68,12 +64,12 @@ export const RichTextInput = React.memo((props) => {
   //     if (meta.filetype === 'file') {
   //       callback('https://www.google.com/logos/google.jpg', { text: 'My text' });
   //     }
-  
+
   //     /* Provide image and alt text for the image dialog */
   //     if (meta.filetype === 'image') {
   //       callback('https://www.google.com/logos/google.jpg', { alt: 'My alt text' });
   //     }
-  
+
   //     /* Provide alternative source and posted for the media dialog */
   //     if (meta.filetype === 'media') {
   //       callback('movie.mp4', { source2: 'alt.ogg', poster: 'https://www.google.com/logos/google.jpg' });
@@ -96,35 +92,38 @@ export const RichTextInput = React.memo((props) => {
 
   const handleEditorLoad = React.useCallback(() => {
     setReady(true)
-  });
+  }, []);
 
-  const handleChange =(content) => {  
+  const handleChange = React.useCallback((content) => {
     onChange(content)
-  }
+  }, []);
 
   return (
     <>
-    {!ready && <Skeleton active ></Skeleton>}
-    
+      {!ready && <Skeleton active ></Skeleton>}
+
       <Editor
         // apiKey='3bmfxh7ddj07yqd2q0zicz9kckvcshqd1dwypp5tws9snpam'
         tinymceScriptSrc={process.env.PUBLIC_URL + '/tinymce/tinymce.js'}
         onInit={(evt, editor) => editorRef.current = editor}
         initialValue={value}
-        onEditorChange={handleChange}
+        onEditorChange={onChange}
         init={{
           height: 'calc(100vh - 340px)',
-          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor insertdatetime advlist lists quickbars',
+          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize',
           menubar: false, //'file edit view insert format tools table tc help',
-          toolbar: 'blocks fontfamily fontsize  | bold italic underline | strikethrough blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor removeformat | table image link',
+          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor removeformat | table',
           toolbar_sticky: true,
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
           toolbar_mode: 'wrap',
           branding: false,
           elementpath: false,
-          statusbar : true,
+          statusbar: true,
           contextmenu: false,
           paste_data_images: true,
+          link_default_target: '_blank',
+          link_default_protocol: 'https',
+          // autoresize_bottom_margin: 100,
           onpageload: handleEditorLoad,
           images_upload_handler: (blobInfo, success, failure) => {
             success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
