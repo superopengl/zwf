@@ -10,7 +10,7 @@ const DEFAULT_SAMPLE = ``;
 
 export const RichTextInput = React.memo((props) => {
 
-  const { value, disabled, onChange, shared } = props;
+  const { value, disabled, onChange, editorConfig } = props;
   const editorRef = React.useRef(null);
   const [ready, setReady] = React.useState(false);
 
@@ -108,7 +108,7 @@ export const RichTextInput = React.memo((props) => {
           height: 'calc(100vh - 340px)',
           plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize',
           menubar: false, //'file edit view insert format tools table tc help',
-          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent |  numlist bullist checklist | forecolor backcolor removeformat | table',
+          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | table',
           toolbar_sticky: true,
           content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
           toolbar_mode: 'wrap',
@@ -125,46 +125,18 @@ export const RichTextInput = React.memo((props) => {
           automatic_uploads: true,
           // autoresize_bottom_margin: 100,
           onpageload: handleEditorLoad,
-          // images_upload_handler: (blobInfo, success, failure) => {
-          //   success("data:" + blobInfo.blob().type + ";base64," + blobInfo.base64());
-          // },
-          file_picker_callback: function (cb, value, meta) {
-            const input = document.createElement('input');
-            input.setAttribute('type', 'file');
-            input.setAttribute('accept', 'image/*');
-
-            /*
-              Note: In modern browsers input[type="file"] is functional without
-              even adding it to the DOM, but that might not be the case in some older
-              or quirky browsers like IE, so you might want to add it to the DOM
-              just in case, and visually hide it. And do not forget do remove it
-              once you do not need it anymore.
-            */
-
-            input.onchange = function () {
-              const file = this.files[0];
-
-              const reader = new FileReader();
-              reader.onload = function () {
-                /*
-                  Note: Now we need to register the blob in TinyMCEs image blob
-                  registry. In the next release this part hopefully won't be
-                  necessary, as we are looking to handle it internally.
-                */
-                const id = 'blobid' + (new Date()).getTime();
-                const blobCache = editorRef.current.activeEditor.editorUpload.blobCache;
-                const base64 = reader.result.split(',')[1];
-                const blobInfo = blobCache.create(id, file, base64);
-                blobCache.add(blobInfo);
-
-                /* call the callback and populate the Title field with the file name */
-                cb(blobInfo.blobUri(), { title: file.name });
-              };
-              reader.readAsDataURL(file);
-            };
-
-            input.click();
+          images_upload_handler2: (blobInfo, success, failure, progress) => {
+            const imageSize = blobInfo.blob().size;
+            const maxSize = 1 * 1000 * 1000;
+            if (imageSize > maxSize) {
+              failure(`Image is too large. Maximum image size is ${maxSize / 1000 / 1000} MB`);
+              return;
+            }
+            const uri = blobInfo.blobUri()
+            success(uri);
+            progress(100);
           },
+          ...editorConfig
         }}
       />
       <Button onClick={log}>Log editor content</Button>
@@ -177,6 +149,7 @@ RichTextInput.propTypes = {
   onChange: PropTypes.func,
   disabled: PropTypes.bool,
   shared: PropTypes.bool,
+  editorConfig: PropTypes.object,
 };
 
 RichTextInput.defaultProps = {
