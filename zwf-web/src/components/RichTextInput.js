@@ -10,7 +10,7 @@ const DEFAULT_SAMPLE = ``;
 
 export const RichTextInput = React.memo((props) => {
 
-  const { value, disabled, onChange, editorConfig } = props;
+  const { value, disabled, onChange, placeholder, editorConfig } = props;
   const editorRef = React.useRef(null);
   const [ready, setReady] = React.useState(false);
 
@@ -136,10 +136,11 @@ export const RichTextInput = React.memo((props) => {
             success(uri);
             progress(100);
           },
+          placeholder,
           ...editorConfig
         }}
       />
-      <Button onClick={log}>Log editor content</Button>
+      {/* <Button onClick={log}>Log editor content</Button> */}
     </>
   );
 });
@@ -147,6 +148,7 @@ export const RichTextInput = React.memo((props) => {
 RichTextInput.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
+  placeholder: PropTypes.string,
   disabled: PropTypes.bool,
   shared: PropTypes.bool,
   editorConfig: PropTypes.object,
