@@ -1,19 +1,19 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 
 import { v4 as uuidv4 } from 'uuid';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { CreditTransaction } from '../entity/CreditTransaction';
-import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getCreditBalance } from '../utils/getCreditBalance';
 
 
 const getAccountForOrg = async (orgId) => {
 
-  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOne({ where: {orgId} });
+  const subscription = await db.getRepository(OrgCurrentSubscriptionInformation).findOne({ where: {orgId} });
 
-  const credit = await getCreditBalance(AppDataSource.manager, orgId);
+  const credit = await getCreditBalance(db.manager, orgId);
 
   const result = {
     subscription,
@@ -51,7 +51,7 @@ export const adjustCredit = handlerWrapper(async (req, res) => {
     entity.amount = amount;
     entity.type = 'grant';
 
-    await AppDataSource.getRepository(CreditTransaction).insert(entity);
+    await db.getRepository(CreditTransaction).insert(entity);
   }
 
   res.json();

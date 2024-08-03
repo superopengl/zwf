@@ -10,7 +10,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { DocTemplate } from '../entity/DocTemplate';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 export const smartSearchTask = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -19,7 +19,7 @@ export const smartSearchTask = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const size = 20;
 
-  const list = await AppDataSource.getRepository(Task).find({
+  const list = await db.getRepository(Task).find({
     where: {
       orgId,
       name: ILike(`%${text}%`),
@@ -46,7 +46,7 @@ export const smartSearchTaskTemplate = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const size = 20;
 
-  const list = await AppDataSource.getRepository(TaskTemplate).find({
+  const list = await db.getRepository(TaskTemplate).find({
     where: {
       orgId,
       name: ILike(`%${text}%`)
@@ -71,7 +71,7 @@ export const smartSearchDocTemplate = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const size = 20;
 
-  const list = await AppDataSource.getRepository(DocTemplate).find({
+  const list = await db.getRepository(DocTemplate).find({
     where: {
       orgId,
       name: ILike(`%${text}%`)
@@ -96,7 +96,7 @@ export const smartSearchClient = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const size = 20;
 
-  const list = await AppDataSource.getRepository(OrgClientInformation)
+  const list = await db.getRepository(OrgClientInformation)
     .createQueryBuilder()
     .where('"orgId" = :orgId', {orgId})
     .andWhere('(email ILIKE :text OR "givenName" ILIKE :text OR surname ILIKE :text)', { text: `%${text}%` })

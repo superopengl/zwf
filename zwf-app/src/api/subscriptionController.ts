@@ -1,3 +1,5 @@
+import { PaymentStatus } from './../types/PaymentStatus';
+import { SubscriptionBlock } from './../entity/SubscriptionBlock';
 
 import { Not } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -9,24 +11,30 @@ import { calcNewSubscriptionPaymentInfo } from '../utils/calcNewSubscriptionPaym
 import * as _ from 'lodash';
 import { generateReceiptPdfStream } from '../services/receiptService';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
-import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { purchaseNewSubscriptionWithPrimaryCard } from '../utils/purchaseNewSubscriptionWithPrimaryCard';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 async function getUserSubscriptionHistory(orgId) {
-  const list = await AppDataSource.getRepository(Subscription).find({
-    where: {
-      orgId,
-      status: Not(SubscriptionStatus.Provisioning)
-    },
-    order: {
-      createdAt: 'ASC',
-    },
-    relations: [
-      'payments'
-    ]
-  });
+  // const list = await db.getRepository(SubscriptionBlock).find({
+  //   where: {
+  //     orgId,
+  //   },
+  //   order: {
+  //     start: 'ASC',
+  //   },
+  //   relations: [
+  //     'payments'
+  //   ]
+  // });
+
+  const list = await db.getRepository(SubscriptionBlock)
+    .createQueryBuilder()
+    .where({ orgId })
+    .leftJoinAndSelect('payments', 'payment', `payment.status = '${PaymentStatus.Paid}'`)
+    .orderBy('start', 'ASC')
+    .getMany();
 
   return list;
 }
@@ -49,30 +57,12 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const turnOffSubscriptionRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const orgId = getOrgIdFromReq(req);
-
-  await AppDataSource.getRepository(Subscription).update(
-    {
-      orgId,
-      status: SubscriptionStatus.Alive,
-      recurring: true,
-    },
-    {
-      recurring: false,
-    }
-  );
-
-  res.json();
-});
-
 export const downloadPaymentReceipt = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  const receipt = await AppDataSource.getRepository(ReceiptInformation).findOne({
+  const receipt = await db.getRepository(ReceiptInformation).findOne({
     where: {
       paymentId: id,
       orgId,
@@ -93,7 +83,7 @@ export const getMyCurrnetSubscription = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   assert(orgId, 400, 'orgId not found');
 
-  const subscription = await AppDataSource.getRepository(OrgAliveSubscription).findOneBy({ orgId });
+  const subscription = await db.getRepository(OrgCurrentSubscriptionInformation).findOneBy({ orgId });
 
   res.json(subscription);
 });
@@ -118,7 +108,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
   const { seats, promotionCode } = req.body;
-  const result = await calcNewSubscriptionPaymentInfo(AppDataSource.manager, orgId, seats, promotionCode);
+  const result = await calcNewSubscriptionPaymentInfo(db.manager, orgId, seats, promotionCode);
   res.json(result);
 });
 

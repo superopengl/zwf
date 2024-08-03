@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { SysLog } from '../entity/SysLog';
 import { serializeError } from 'serialize-error';
 import { String } from 'aws-sdk/clients/cloudsearchdomain';
@@ -26,7 +26,7 @@ export async function logError(err, req, res, ...args) {
       data: JSON.stringify(data)
     };
 
-    await AppDataSource.getRepository(SysLog).save(log);
+    await db.getRepository(SysLog).save(log);
   } catch (err) {
     console.error('sysLog error', err);
     // swallow error

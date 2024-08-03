@@ -1,10 +1,11 @@
+import { OrgBasicInformation } from './../src/entity/views/OrgBasicInformation';
 import { UserAliveSubscriptionInformation } from './../src/entity/views/UserAliveSubscriptionInformation';
-import { AppDataSource } from './../src/db';
+import { db } from './../src/db';
 import { SubscriptionEndingNotificationEmailInformation } from './../src/entity/views/SubscriptionEndingNotificationEmailInformation';
 import { In, IsNull, Between, EntityManager } from 'typeorm';
 import { Subscription } from '../src/entity/Subscription';
 import { SubscriptionStatus } from '../src/types/SubscriptionStatus';
-import { SubscriptionType } from '../src/types/SubscriptionType';
+import { SubscriptionBlockType } from '../src/types/SubscriptionBlockType';
 import { Payment } from '../src/entity/Payment';
 import { User } from '../src/entity/User';
 import { PaymentStatus } from '../src/types/PaymentStatus';
@@ -19,7 +20,7 @@ import { SysLog } from '../src/entity/SysLog';
 import { assert } from '../src/utils/assert';
 import { chargeStripeForCardPayment, getOrgStripeCustomerId } from '../src/services/stripeService';
 import { getUtcNow } from '../src/utils/getUtcNow';
-import { OrgAliveSubscription } from '../src/entity/views/OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from '../src/entity/views/OrgCurrentSubscriptionInformation';
 import { v4 as uuidv4 } from 'uuid';
 import { calcNewSubscriptionPaymentInfo } from '../src/utils/calcNewSubscriptionPaymentInfo';
 import { CreditTransaction } from '../src/entity/CreditTransaction';
@@ -29,7 +30,7 @@ import * as _ from 'lodash';
 const JOB_NAME = 'daily-subscription';
 
 async function getOrgAdminUsers(orgId: string) {
-  const users = await AppDataSource.getRepository(UserInformation).find({
+  const users = await db.getRepository(UserInformation).find({
     where: {
       orgId,
       role: Role.Admin,
@@ -43,8 +44,8 @@ async function getOrgAdminUsers(orgId: string) {
   return users;
 }
 
-async function enqueueRecurringSucceededEmail(m: EntityManager, activeSubscription: OrgAliveSubscription, payment: Payment) {
-  const { orgId, subscriptionId } = activeSubscription;
+async function enqueueRecurringSucceededEmail(m: EntityManager, activeSubscription: OrgCurrentSubscriptionInformation, payment: Payment) {
+  const { orgId, headBlockId: subscriptionId } = activeSubscription;
   const adminUsers = await getOrgAdminUsers(orgId);
   const emailRequests = adminUsers.map(user => {
     const req: EmailRequest = {
@@ -63,8 +64,8 @@ async function enqueueRecurringSucceededEmail(m: EntityManager, activeSubscripti
   await enqueueEmailInBulk(m, emailRequests);
 }
 
-async function enqueueRecurringFailedEmail(m: EntityManager, activeSubscription: OrgAliveSubscription) {
-  const { orgId, subscriptionId, end } = activeSubscription;
+async function enqueueRecurringFailedEmail(m: EntityManager, activeSubscription: OrgCurrentSubscriptionInformation) {
+  const { orgId, headBlockId: subscriptionId, end } = activeSubscription;
   const adminUsers = await getOrgAdminUsers(orgId);
   const emailRequests = adminUsers.map(user => {
     const req: EmailRequest = {
@@ -83,39 +84,39 @@ async function enqueueRecurringFailedEmail(m: EntityManager, activeSubscription:
   await enqueueEmailInBulk(m, emailRequests);
 }
 
-async function expireSubscriptions() {
-  await AppDataSource.transaction(async m => {
-    const list = await m.getRepository(UserAliveSubscriptionInformation)
+async function terminateSubscriptions() {
+  await db.transaction(async m => {
+    const subs = await m.getRepository(OrgCurrentSubscriptionInformation)
       .createQueryBuilder()
-      .where('"end" < CURRENT_DATE')
+      .where('"endingAt" < CURRENT_DATE')
       .getMany();
 
-    if (!list.length) {
+    if (!subs.length) {
       return;
     }
-    
+
     // Set subscriptions to be expired
-    const subscriptionIds = _.uniq(list.map(x => x.subscriptionId));
+    const orgIds = subs.map(x => x.orgId);
     await m.update(Subscription,
       {
-        id: In(subscriptionIds),
+        orgId: In(orgIds),
       }, {
-      status: SubscriptionStatus.Expired
+      enabled: false
     });
 
     // Set user to be unpaid users
-    console.log(`Expired subscriptions for user ${subscriptionIds.join(', ')}`);
+    console.log(`Disabled subscriptions for orgs ${orgIds.join(', ')}`);
+
+    const orgInfos = await m.findBy(OrgBasicInformation, { id: In(orgIds) });
 
     // Compose email requests
-    const emailRequests = list.map(x => {
+    const emailRequests = orgInfos.map(x => {
       const emailRequest: EmailRequest = {
-        to: x.email,
-        template: EmailTemplateType.SubscriptionExpired,
+        to: x.ownerEmail,
+        template: EmailTemplateType.SubscriptionTerminated,
         shouldBcc: true,
         vars: {
           toWhom: getEmailRecipientNameByNames(x.givenName, x.surname),
-          subscriptionId: x.subscriptionId,
-          endDate: moment(x.end).format('D MMM YYYY')
         }
       };
       return emailRequest;
@@ -128,7 +129,7 @@ async function expireSubscriptions() {
 
 
 async function sendEndingNotificationEmails() {
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
 
     const list = await m.findBy(SubscriptionEndingNotificationEmailInformation, {
       sentAt: IsNull(),
@@ -139,7 +140,7 @@ async function sendEndingNotificationEmails() {
     const emailRequests = list.map(x => {
       const emailRequest: EmailRequest = {
         to: x.email,
-        template: x.type === SubscriptionType.Trial ? EmailTemplateType.SubscriptionTrialExpiring : EmailTemplateType.SubscriptionAutoRenewing,
+        template: x.type === SubscriptionBlockType.Trial ? EmailTemplateType.SubscriptionTrialExpiring : EmailTemplateType.SubscriptionAutoRenewing,
         shouldBcc: true,
         vars: {
           toWhom: getEmailRecipientNameByNames(x.givenName, x.surname),
@@ -158,7 +159,7 @@ async function sendEndingNotificationEmails() {
 
 async function getLastValidPaymentMethod(m: EntityManager, subscription: Subscription): Promise<Payment> {
   // TODO: Call API to pay by card
-  const lastPaidPayment = await AppDataSource
+  const lastPaidPayment = await db
     .getRepository(Payment)
     .findOne({
       where: {
@@ -175,11 +176,11 @@ async function getLastValidPaymentMethod(m: EntityManager, subscription: Subscri
   return lastPaidPayment;
 }
 
-async function renewRecurringSubscription(targetSubscription: OrgAliveSubscription) {
-  const { subscriptionId, end } = targetSubscription;
+async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscriptionInformation) {
+  const { headBlockId: subscriptionId, end } = targetSubscription;
 
   try {
-    await AppDataSource.transaction(async m => {
+    await db.transaction(async m => {
       const subscription = await m.findOne(Subscription, {
         where: {
           id: subscriptionId,
@@ -244,21 +245,21 @@ async function renewRecurringSubscription(targetSubscription: OrgAliveSubscripti
       await enqueueRecurringSucceededEmail(m, targetSubscription, payment);
     });
   } catch (e) {
-    await enqueueRecurringFailedEmail(AppDataSource.manager, targetSubscription);
+    await enqueueRecurringFailedEmail(db.manager, targetSubscription);
 
     const sysLog = new SysLog();
     sysLog.level = 'autopay_falied';
     sysLog.message = 'Recurring auto pay failed';
     sysLog.req = targetSubscription;
-    await AppDataSource.getRepository(SysLog).insert(sysLog);
+    await db.getRepository(SysLog).insert(sysLog);
   }
 }
 
 async function handleRecurringPayments() {
-  const list = await AppDataSource.getRepository(OrgAliveSubscription)
+  const list = await db.getRepository(OrgCurrentSubscriptionInformation)
     .createQueryBuilder()
     .where({ recurring: true })
-    .andWhere('"end" <= CURRENT_DATE')
+    .andWhere('"softEnd" <= CURRENT_DATE')
     .getMany();
 
   for (const item of list) {
@@ -275,7 +276,7 @@ start(JOB_NAME, async () => {
   await sendEndingNotificationEmails();
   console.log('Finished sending notification emails for renewing/expiring subscriptions');
 
-  console.log('Starting expiring subscriptions');
-  await expireSubscriptions();
-  console.log('Finished expiring subscriptions');
+  console.log('Starting suspending subscriptions');
+  await terminateSubscriptions();
+  console.log('Finished suspending subscriptions');
 }, { daemon: false });

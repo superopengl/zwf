@@ -3,7 +3,7 @@ import * as handlebars from 'handlebars';
 import { Stream } from 'stream';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { SubscriptionType } from '../types/SubscriptionType';
+import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
@@ -16,15 +16,10 @@ function getPaymentMethodName(cardLast4: string) {
 }
 
 function getSubscriptionDescription(receipt: ReceiptInformation) {
-  const type = receipt.subscriptionType;
+  const start = moment(receipt.startAt).format('D MMM YYYY');
+  const end = moment(receipt.endingAt).format('D MMM YYYY');
 
-  const subscriptionName = type === SubscriptionType.Monthly ? 'Pro Member Monthly' :      null;
-  assert(subscriptionName, 400, `Unsupported subscription type for receipt ${type}`);
-
-  const start = moment(receipt.start).format('D MMM YYYY');
-  const end = moment(receipt.end).format('D MMM YYYY');
-
-  return `${subscriptionName} (${start} - ${end})`;
+  return `ZeeWorkflow subscription (${start} - ${end})`;
 }
 
 function getVarBag(receipt: ReceiptInformation): {[key: string]: any} {

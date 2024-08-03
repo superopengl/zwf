@@ -1,5 +1,5 @@
 import { getUtcNow } from './../utils/getUtcNow';
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { SYSTEM_EMAIL_SENDER, SYSTEM_EMAIL_BCC } from './../utils/constant';
 import * as aws from 'aws-sdk';
 import { awsConfig } from '../utils/awsConfig';
@@ -73,7 +73,7 @@ async function sendEmailImmediately(req: EmailRequest) {
   assert(template, 400, 'Email template is not specified');
 
   let log: EmailLog = null;
-  const emailLogRepo = AppDataSource.getRepository(EmailLog);
+  const emailLogRepo = db.getRepository(EmailLog);
   try {
     const option = await composeEmailOption(req);
     log = new EmailLog();
@@ -118,12 +118,12 @@ export async function sendEmail(req: EmailRequest) {
     // Do nothing;
   }
 
-  await AppDataSource.getRepository(EmailSentOutTask).insert(task);
+  await db.getRepository(EmailSentOutTask).insert(task);
 }
 
 export async function sendEmailForUserId(userId: string, template: EmailTemplateType, vars: object) {
   try {
-    const user = await AppDataSource.getRepository(User).findOne({ where: { id: userId }, relations: { profile: true } });
+    const user = await db.getRepository(User).findOne({ where: { id: userId }, relations: { profile: true } });
     if (!user) {
       return;
     }

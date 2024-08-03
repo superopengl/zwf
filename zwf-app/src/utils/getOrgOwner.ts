@@ -1,9 +1,9 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { User } from '../entity/User';
 import { assert } from './assert';
 
 export async function getOrgOwner(orgId: string) {
-  const user = await AppDataSource.getRepository(User).findOne({
+  const user = await db.getRepository(User).findOne({
     where: {
       orgId,
       orgOwner: true

@@ -16,7 +16,7 @@ export enum EmailTemplateType {
   // Subscription and payment
   SubscriptionTrialExpiring = 'subscription_trial_expiring',
   SubscriptionAutoRenewing = 'subscription_auto_renewing',
-  SubscriptionExpired = 'subscription_expired',
+  SubscriptionTerminated = 'subscription_terminated',
   SubscriptionPaymentSuccessful = 'subscription_payment_successful',
   SubscriptionAutoRenewSuccessful = 'subscription_auto_renew_successful',
   SubscriptionAutoRenewFailed = 'subscription_auto_renew_failed',

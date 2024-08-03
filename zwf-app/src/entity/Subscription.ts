@@ -1,15 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, CreateDateColumn } from 'typeorm';
+import { OrgPromotionCode } from './OrgPromotionCode';
+import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, CreateDateColumn, OneToOne, JoinColumn } from 'typeorm';
 import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { SubscriptionType } from '../types/SubscriptionType';
+import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Payment } from './Payment';
+import { SubscriptionBlock } from './SubscriptionBlock';
 
 @Entity()
-@Index('idx_subscription_end', ['end'])
-@Index('idx_subscription_orgId_start_end', ['orgId', 'start', 'end'])
-@Index('idx_subscription_orgId_end', ['orgId', 'end'])
-@Index('idx_subscription_orgId_alive_unique', ['orgId'], { where: `status = '${SubscriptionStatus.Alive}'`, unique: true })
-@Index('idx_subscription_orgId_trial_unique', ['orgId'], { where: `type = '${SubscriptionType.Trial}'`, unique: true })
 export class Subscription {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -18,33 +15,23 @@ export class Subscription {
   createdAt?: Date;
 
   @Column('uuid')
+  @Index({unique: true})
   orgId: string;
 
   @Column()
-  type: SubscriptionType;
-
-  @Column({ nullable: true })
-  promotionCode: string;
-
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  unitPrice: number;
-
-  @Column('int')
-  seats: number;
-
-  @Column({ default: true })
-  recurring: boolean;
-
-  @Column('date')
-  start: Date;
-
-  @Column('date', {nullable: true})
-  end: Date;
-
-  @Column({ default: SubscriptionStatus.Provisioning })
   status: SubscriptionStatus;
 
-  @OneToMany(() => Payment, payment => payment.subscription, { onDelete: 'CASCADE' })
-  payments: Payment[];
+  @Column()
+  headBlockId: string;
+
+  @OneToOne(() => SubscriptionBlock, {cascade: true})
+  @JoinColumn({ name: 'headBlockId', referencedColumnName: 'id' })
+  headBlock: SubscriptionBlock;
+
+  @OneToMany(() => Payment, block => block.subscription, { onDelete: 'CASCADE' })
+  blocks: SubscriptionBlock[];
+
+  @Column()
+  enabled: boolean;
 }
 

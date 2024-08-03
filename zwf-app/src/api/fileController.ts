@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 
 import { Brackets } from 'typeorm';
 import { File } from '../entity/File';
@@ -18,7 +18,7 @@ export const getPrivateFileStream = handlerWrapper(async (req, res) => {
   const userId = user.id;
   const role = user.role;
 
-  const m = AppDataSource.manager;
+  const m = db.manager;
   let queryBuilder = m
     .getRepository(File)
     .createQueryBuilder('f')
@@ -46,14 +46,14 @@ export const getPrivateFileStream = handlerWrapper(async (req, res) => {
 
 export const getPublicFileStream = handlerWrapper(async (req, res) => {
   const { id } = req.params;
-  const file = await AppDataSource.getRepository(File).findOne({ where: { id, public: true } });
+  const file = await db.getRepository(File).findOne({ where: { id, public: true } });
 
   streamFileToResponse(file, res);
 });
 
 export const getFileMeta = handlerWrapper(async (req, res) => {
   const { id } = req.params;
-  const repo = AppDataSource.getRepository(File);
+  const repo = db.getRepository(File);
   const file = await repo.findOne({where: {id}});
   assert(file, 404);
   res.json(file);
@@ -61,7 +61,7 @@ export const getFileMeta = handlerWrapper(async (req, res) => {
 
 export const searchFileMetaList = handlerWrapper(async (req, res) => {
   const { ids } = req.body;
-  const files = await AppDataSource.getRepository(File)
+  const files = await db.getRepository(File)
     .createQueryBuilder()
     .where('id IN (:...ids)', { ids })
     .getMany();
@@ -89,7 +89,7 @@ export const uploadPublicFile = handlerWrapper(async (req, res) => {
     public: true
   };
 
-  const repo = AppDataSource.getRepository(File);
+  const repo = db.getRepository(File);
   await repo.insert(entity);
 
   res.json(entity);

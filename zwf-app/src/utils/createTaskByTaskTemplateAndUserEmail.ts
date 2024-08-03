@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 import { TaskField } from '../entity/TaskField';
 import { getUtcNow } from './getUtcNow';
@@ -79,7 +79,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
   assert(email, 400, 'email is not specified');
 
   let task: Task;
-  await AppDataSource.transaction(async m => {
+  await db.transaction(async m => {
     const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, { where: { id: taskTemplateId }, relations: { docs: true } });
     assert(taskTemplate, 404, 'taskTemplate is not found');
 
@@ -114,7 +114,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     await logTaskCreated(m, task.id, creatorId);
   });
 
-  // const org = await AppDataSource.getRepository(Org).findOne({ where: { id: task.orgId } });
+  // const org = await db.getRepository(Org).findOne({ where: { id: task.orgId } });
 
   // enqueueEmail({
   //   template: EmailTemplateType.TaskCreated,

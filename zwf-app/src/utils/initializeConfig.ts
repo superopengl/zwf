@@ -1,4 +1,4 @@
-import { AppDataSource } from '../db';
+import { db } from '../db';
 import { SystemConfig } from '../entity/SystemConfig';
 
 export async function initializeConfig() {
@@ -20,7 +20,7 @@ export async function initializeConfig() {
     bcc
   ];
 
-  await AppDataSource.manager
+  await db.manager
     .createQueryBuilder()
     .insert()
     .into(SystemConfig)

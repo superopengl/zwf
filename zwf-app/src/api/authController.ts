@@ -1,4 +1,4 @@
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { OrgClient } from './../entity/OrgClient';
 
 import { User } from '../entity/User';
@@ -21,7 +21,7 @@ import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 import { UserProfile } from '../entity/UserProfile';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { inviteOrgMemberWithSendingEmail } from '../utils/inviteOrgMemberWithSendingEmail';
 import { createUserAndProfileEntity } from '../utils/createUserAndProfileEntity';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
@@ -47,7 +47,7 @@ export const login = handlerWrapper(async (req, res) => {
   const userInfo = await getActiveUserInformation(email);
   assert(userInfo, 400, 'User or password is not valid');
 
-  const user = await AppDataSource.getRepository(User).findOneBy({ id: userInfo.id });
+  const user = await db.getRepository(User).findOneBy({ id: userInfo.id });
 
   // Validate passpord
   const hash = computeUserSecret(password, user.salt);
@@ -58,7 +58,7 @@ export const login = handlerWrapper(async (req, res) => {
   user.status = UserStatus.Enabled;
   user.role = user.role === Role.Guest ? Role.Client : user.role;
 
-  await AppDataSource.getRepository(User).save(user);
+  await db.getRepository(User).save(user);
 
   attachJwtCookie(userInfo, res);
 
@@ -81,7 +81,7 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
 
   let exists = false;
 
-  await AppDataSource.manager.transaction(async m => {
+  await db.manager.transaction(async m => {
     const existingUser = await m.findOneBy(UserInformation, { email: profile.email });
     exists = !!existingUser;
     if (!exists) {
@@ -173,7 +173,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
 });
 
 async function setUserToResetPasswordStatus(userId: string, returnUrl: string) {
-  const user = await AppDataSource.getRepository(User).findOne({
+  const user = await db.getRepository(User).findOne({
     where: { id: userId },
     relations: ['profile']
   });
@@ -193,7 +193,7 @@ async function setUserToResetPasswordStatus(userId: string, returnUrl: string) {
     shouldBcc: false
   });
 
-  await AppDataSource.manager.save(user);
+  await db.manager.save(user);
 }
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
@@ -219,7 +219,7 @@ export const resetPassword = handlerWrapper(async (req, res) => {
   const secret = computeUserSecret(password, salt);
 
 
-  await AppDataSource
+  await db
     .createQueryBuilder()
     .update(User)
     .set({
@@ -242,7 +242,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
   const r = req.query.r as string;
   assert(token, 400, 'Invalid token');
 
-  const userRepo = AppDataSource.getRepository(User);
+  const userRepo = db.getRepository(User);
   const user = await userRepo.findOne({ where: { resetPasswordToken: token } });
 
   assert(user, 401, 'Token expired');
@@ -288,8 +288,8 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
     role: Role.Agent
   });
 
-  await AppDataSource.transaction(async m => {
-    const subscription = await m.findOne(OrgAliveSubscription, { where: { orgId } });
+  await db.transaction(async m => {
+    const subscription = await m.findOne(OrgCurrentSubscriptionInformation, { where: { orgId } });
     assert(subscription, 400, 'No active subscription');
     const { seats, occupiedSeats } = subscription;
     assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
@@ -304,7 +304,7 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  await AppDataSource.manager.transaction(async m => {
+  await db.manager.transaction(async m => {
     const { user, newlyCreated } = await ensureClientOrGuestUser(m, email);
     const orgClient = new OrgClient();
     orgClient.orgId = orgId;
@@ -384,7 +384,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     newUser.profile = profile;
     profile.givenName = givenName;
     profile.surname = surname;
-    await AppDataSource.manager.save([newUser, profile]);
+    await db.manager.save([newUser, profile]);
 
     sendEmail({
       to: user.email,
@@ -395,7 +395,7 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
       shouldBcc: false
     });
   } else {
-    await AppDataSource.getRepository(User).update({ id: user.id }, extra);
+    await db.getRepository(User).update({ id: user.id }, extra);
   }
 
   attachJwtCookie(user, res);

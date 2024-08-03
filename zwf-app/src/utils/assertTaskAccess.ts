@@ -3,7 +3,7 @@ import { Role } from '../types/Role';
 import { getRoleFromReq } from './getRoleFromReq';
 import { getOrgIdFromReq } from './getOrgIdFromReq';
 import { getUserIdFromReq } from './getUserIdFromReq';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 import { assert } from './assert';
 
 
@@ -28,6 +28,6 @@ export async function assertTaskAccess(req, taskId): Promise<void> {
       assert(false, 403, 'Invliad role access');
   }
 
-  const task = await AppDataSource.getRepository(Task).findOne({where: query, select: {id: true}});
+  const task = await db.getRepository(Task).findOne({where: query, select: {id: true}});
   assert(task, 404, 'Cannot find task');
 }

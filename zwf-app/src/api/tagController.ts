@@ -6,7 +6,7 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { generateRandomColorHex } from '../utils/generateRandomColorHex';
 import { v4 as uuidv4 } from 'uuid';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 export const saveTag = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
@@ -17,7 +17,7 @@ export const saveTag = handlerWrapper(async (req, res) => {
   tag.orgId = orgId;
   tag.name = name;
   tag.colorHex = colorHex || generateRandomColorHex();
-  await AppDataSource.getRepository(Tag).save(tag);
+  await db.getRepository(Tag).save(tag);
   res.json();
 });
 
@@ -25,7 +25,7 @@ export const listTags = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
   const { names } = req.body;
-  const list = await AppDataSource.getRepository(Tag).find({
+  const list = await db.getRepository(Tag).find({
     where: {
       orgId,
       ...(names?.length ? { names: In(names) } : null),
@@ -44,7 +44,7 @@ export const deleteTag = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
-  await AppDataSource.getRepository(Tag).delete({
+  await db.getRepository(Tag).delete({
     id,
     orgId
   });

@@ -4,11 +4,12 @@ import { EntityManager, In, IsNull } from 'typeorm';
 import { assert } from './assert';
 import { OrgPromotionCode } from '../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
-import { OrgCurrentSubscriptionRefund } from '../entity/views/OrgCurrentSubscriptionRefund';
 import { User } from '../entity/User';
+import { Subscription } from '../entity/Subscription';
 import { Role } from '../types/Role';
-import { OrgAliveSubscription } from '../entity/views/OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import * as _ from 'lodash';
+import * as  moment from 'moment';
 
 async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
   const count = await m.count(User, {
@@ -23,7 +24,7 @@ async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
 }
 
 async function getCurrentSubscriptionLicenseCount(m: EntityManager, orgId: string) {
-  const entity = await m.findOne(OrgAliveSubscription, {
+  const entity = await m.findOne(OrgCurrentSubscriptionInformation, {
     where: {
       orgId,
     }
@@ -104,6 +105,22 @@ export async function calcNewSubscriptionPaymentInfo(
 }
 
 async function getRefundableCredits(m: EntityManager, orgId: string): Promise<number> {
-  const refundable = await m.findOne(OrgCurrentSubscriptionRefund, { where: { orgId } });
-  return +(refundable?.refundableAmount) || 0;
+  const sub = await m.findOne(Subscription, {
+    where: { orgId },
+    relations: ['headBlock', 'headBlock.payment']
+  });
+
+  const { headBlock: { startAt, endingAt, payment } } = sub;
+  const startMoment = moment(startAt);
+  const endingMoment = moment(endingAt);
+
+  if (endingMoment.isBefore()) {
+    return 0;
+  }
+
+  const periodDays = endingMoment.diff(startMoment, 'days') + 1;
+  const usedDays = moment().diff(startMoment, 'days') + 1;
+
+  const refundable = Math.floor((periodDays - usedDays) / periodDays * payment.amount);
+  return refundable > 0 ? refundable : 0;
 }

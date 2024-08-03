@@ -1,10 +1,10 @@
 import { getRepository, IsNull } from 'typeorm';
 import { SystemConfig } from '../entity/SystemConfig';
 import { OrgConfig } from '../entity/OrgConfig';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 export async function getConfigValue(key, defaultValue) {
-  const item =  await AppDataSource.getRepository(SystemConfig).findOne({
+  const item =  await db.getRepository(SystemConfig).findOne({
     where: {
     key
   }});

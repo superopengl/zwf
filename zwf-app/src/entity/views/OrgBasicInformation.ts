@@ -1,9 +1,9 @@
-import { ViewEntity, ViewColumn, DataSource } from 'typeorm';
+import { ViewEntity, ViewColumn, DataSource, PrimaryColumn } from 'typeorm';
 import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
 import { UserProfile } from '../UserProfile';
-import { OrgAliveSubscription } from './OrgAliveSubscription';
+import { OrgCurrentSubscriptionInformation } from './OrgCurrentSubscriptionInformation';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection
@@ -11,7 +11,7 @@ import { OrgAliveSubscription } from './OrgAliveSubscription';
     .from(Org, 'o')
     .leftJoin(User, 'u', `u."orgId" = o.id AND u.role = '${Role.Admin}' AND u."orgOwner" IS TRUE`)
     .leftJoin(UserProfile, 'p', `u."profileId" = p.id`)
-    .leftJoin(OrgAliveSubscription, 's', 'o.id = s."orgId"')
+    .leftJoin(OrgCurrentSubscriptionInformation, 's', 'o.id = s."orgId"')
     .select([
       'o.id as id',
       'o.name as name',
@@ -20,15 +20,16 @@ import { OrgAliveSubscription } from './OrgAliveSubscription';
       'o.tel as tel',
       'u.id as "adminUserId"',
       'p.email as "ownerEmail"',
-      `CASE WHEN s."type" = 'trial' THEN TRUE ELSE FALSE END as "isTrial"`,
-      's.start as "subscriptionStart"',
-      's.end as "subscriptionEnd"',
+      'p."givenName" as "givenName"',
+      'p."surname" as "surname"',
+      's."endingAt" as "endingAt"',
       's.seats as seats',
     ]),
-  dependsOn: [User, UserProfile, OrgAliveSubscription]
+  dependsOn: [User, UserProfile, OrgCurrentSubscriptionInformation]
 })
 export class OrgBasicInformation {
   @ViewColumn()
+  @PrimaryColumn()
   id: string;
 
   @ViewColumn()
@@ -50,13 +51,13 @@ export class OrgBasicInformation {
   ownerEmail: string;
 
   @ViewColumn()
-  isTrial: boolean;
+  givenName: string;
 
   @ViewColumn()
-  subscriptionStart: string;
+  surname: string;
 
   @ViewColumn()
-  subscriptionEnd: string;
+  endingAt: string;
 
   @ViewColumn()
   seats: number;

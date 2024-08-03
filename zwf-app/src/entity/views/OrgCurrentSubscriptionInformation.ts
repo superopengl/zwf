@@ -1,17 +1,17 @@
-import { Org } from './../Org';
+import { Org } from '../Org';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn, In, IsNull } from 'typeorm';
 import { PaymentStatus } from '../../types/PaymentStatus';
 import { Role } from '../../types/Role';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
-import { SubscriptionType } from '../../types/SubscriptionType';
+import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { Subscription } from '../Subscription';
 import { User } from '../User';
+import { SubscriptionBlock } from '../SubscriptionBlock';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Subscription, 's')
-    .where(`status = '${SubscriptionStatus.Alive}'`)
-    .innerJoin(Org, 'o', 's."orgId" = o.id')
+    .leftJoin(SubscriptionBlock, 'b', 's."headBlockId" = b.id')
     .leftJoin(q => q
       .from(User, 'u')
       .where({ deletedAt: IsNull() })
@@ -23,40 +23,40 @@ import { User } from '../User';
       ]),
       'u', 'u."orgId" = s. "orgId"')
     .select([
-      's."orgId" as "orgId"',
-      '"type"',
-      '"seats"',
-      'recurring',
-      '"start"',
-      '"end"',
       's.id as "subscriptionId"',
-      'count as "occupiedSeats"'
+      's."orgId" as "orgId"',
+      'b."type" as type',
+      '"seats"',
+      '"endingAt"',
+      '"headBlockId"',
+      'count as "occupiedSeats"',
+      's.enabled as enabled',
     ])
 })
-export class OrgAliveSubscription {
+export class OrgCurrentSubscriptionInformation { 
   @ViewColumn()
   @PrimaryColumn()
+  subscriptionId: string;
+
+  @ViewColumn()
   orgId: string;
 
   @ViewColumn()
-  type: SubscriptionType;
+  type: SubscriptionBlockType;
 
   @ViewColumn()
   seats: number;
 
   @ViewColumn()
-  recurring: boolean;
+  endingAt: Date;
 
   @ViewColumn()
-  start: Date;
-
-  @ViewColumn()
-  end: Date;
-
-  @ViewColumn()
-  subscriptionId: string;
+  headBlockId: string;
 
   @ViewColumn()
   occupiedSeats: number;
+
+  @ViewColumn()
+  enabled: boolean;
 }
 

@@ -1,5 +1,5 @@
 import { RecurringInformation } from './../entity/views/RecurringInformation';
-import { AppDataSource } from './../db';
+import { db } from './../db';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
@@ -18,7 +18,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   const { id, clientId, name, taskTemplateId, firstRunOn, every, period } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  const taskTemplate = await AppDataSource.getRepository(TaskTemplate).findOne({ where: { id: taskTemplateId } });
+  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: { id: taskTemplateId } });
   assert(taskTemplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
@@ -32,7 +32,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   recurring.period = period;
   recurring.nextRunAt = calculateRecurringNextRunAt(recurring);
 
-  const repo = AppDataSource.getRepository(Recurring);
+  const repo = db.getRepository(Recurring);
   await repo.save(recurring);
 
   res.json();
@@ -42,7 +42,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const orgId = getOrgIdFromReq(req);
 
-  const list = await AppDataSource.getRepository(RecurringInformation)
+  const list = await db.getRepository(RecurringInformation)
     .findBy({
       orgId
     });
@@ -53,7 +53,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
 export const getRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const repo = AppDataSource.getRepository(Recurring);
+  const repo = db.getRepository(Recurring);
   const recurring = await repo.findOne({ where: { id } });
   assert(recurring, 404);
 
@@ -63,7 +63,7 @@ export const getRecurring = handlerWrapper(async (req, res) => {
 export const deleteRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
-  const repo = AppDataSource.getRepository(Recurring);
+  const repo = db.getRepository(Recurring);
   await repo.delete({ id });
 
   res.json();

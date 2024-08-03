@@ -4,10 +4,10 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { assertRole } from '../utils/assertRole';
 import { Task } from '../entity/Task';
 import { User } from '../entity/User';
-import { AppDataSource } from '../db';
+import { db } from '../db';
 
 async function getUserStats() {
-  const result = await AppDataSource.getRepository(User)
+  const result = await db.getRepository(User)
     .createQueryBuilder('x')
     .select('x.role as name')
     .addSelect(`COUNT(1) AS count`)
@@ -25,7 +25,7 @@ async function getUserStats() {
 }
 
 async function getTaskStat() {
-  const result = await AppDataSource.getRepository(Task)
+  const result = await db.getRepository(Task)
     .createQueryBuilder('x')
     .select('x.status as name')
     .addSelect(`COUNT(1) AS count`)
@@ -47,7 +47,7 @@ async function getTaskStat() {
 export const getAdminStats = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
 
-  const taskStat = await AppDataSource.getRepository(Task)
+  const taskStat = await db.getRepository(Task)
     .createQueryBuilder('x')
     .select('x.status as name')
     .addSelect(`COUNT(1) AS count`)
