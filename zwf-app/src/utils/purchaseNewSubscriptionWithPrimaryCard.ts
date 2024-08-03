@@ -8,9 +8,7 @@ import { calcNewSubscriptionPaymentInfo } from './calcNewSubscriptionPaymentInfo
 import { PaymentStatus } from '../types/PaymentStatus';
 import { Payment } from '../entity/Payment';
 import { assert } from './assert';
-import { getRequestGeoInfo } from './getIpGeoLocation';
 import { chargeStripeForCardPayment, getOrgStripeCustomerId } from '../services/stripeService';
-import { User } from '../entity/User';
 import { db } from '../db';
 import { SubscriptionBlock } from '../entity/SubscriptionBlock';
 
@@ -20,14 +18,13 @@ export type PurchaseSubscriptionRequest = {
   promotionCode: string;
 };
 
-export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSubscriptionRequest, expressReq: any) {
+export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSubscriptionRequest, geoInfo = null) {
   const { orgId, seats, promotionCode } = request;
   assert(orgId, 400, 'orgId is empty');
   assert(seats > 0, 400, 'seats must be positive integer');
 
   const now = moment.utc();
-  const start = now.toDate();
-  const end = now.add(1, 'month').add(-1, 'day').toDate();
+  const startAt = now.toDate();
 
   await db.manager.transaction(async m => {
     const { 
@@ -55,13 +52,14 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     block.orgId = orgId;
     block.type = SubscriptionBlockType.Monthly;
     block.parentBlockId = headBlock.id;
-    block.startAt = start;
+    block.startAt = startAt;
     block.endingAt = now.add(1, 'month').add(-1, 'day').endOf('day').toDate()
     block.seats = seats;
     block.unitPrice = unitPrice;
     block.promotionCode = promotionCode;
 
     subscription.headBlockId = block.id;
+    subscription.enabled = true;
     await m.save([block, headBlock, subscription]);
 
     // Handle refund credit from current unfinished subscrption
@@ -94,7 +92,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     payment.amount = payable;
     payment.status = PaymentStatus.Paid;
     payment.auto = false;
-    payment.geo = await getRequestGeoInfo(expressReq);
+    payment.geo = geoInfo;
     payment.orgPaymentMethodId = paymentMethodId;
     payment.creditTransaction = deductCreditTransaction;
 

@@ -15,26 +15,18 @@ import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSub
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { purchaseNewSubscriptionWithPrimaryCard } from '../utils/purchaseNewSubscriptionWithPrimaryCard';
 import { db } from '../db';
+import { getRequestGeoInfo } from '../utils/getIpGeoLocation';
 
 async function getUserSubscriptionHistory(orgId) {
-  // const list = await db.getRepository(SubscriptionBlock).find({
-  //   where: {
-  //     orgId,
-  //   },
-  //   order: {
-  //     start: 'ASC',
-  //   },
-  //   relations: [
-  //     'payments'
-  //   ]
-  // });
-
-  const list = await db.getRepository(SubscriptionBlock)
-    .createQueryBuilder()
-    .where({ orgId })
-    .leftJoinAndSelect('payments', 'payment', `payment.status = '${PaymentStatus.Paid}'`)
-    .orderBy('start', 'ASC')
-    .getMany();
+  const list = await db.getRepository(SubscriptionBlock).find({
+    where: {
+      orgId
+    },
+    order: {
+      startAt: 'ASC',
+    },
+    relations: ['payment']
+  })
 
   return list;
 }
@@ -95,11 +87,13 @@ export const purchaseSubscription = handlerWrapper(async (req, res) => {
 
   assert(seats > 0, 400, 'seats must be positive integer');
 
+  const geoInfo = await getRequestGeoInfo(req);
+
   await purchaseNewSubscriptionWithPrimaryCard({
     orgId,
     seats,
     promotionCode
-  }, req);
+  }, geoInfo);
 
   res.json();
 });

@@ -11,36 +11,15 @@ import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSub
 import * as _ from 'lodash';
 import * as  moment from 'moment';
 
-async function getCurrentOccupiedLicenseCount(m: EntityManager, orgId: string) {
-  const count = await m.count(User, {
-    where: {
-      orgId,
-      deletedAt: IsNull(),
-      role: In([Role.Admin, Role.Agent])
-    }
-  });
-
-  return count || 0;
-}
-
-async function getCurrentSubscriptionLicenseCount(m: EntityManager, orgId: string) {
-  const entity = await m.findOne(OrgCurrentSubscriptionInformation, {
-    where: {
-      orgId,
-    }
-  });
-
-  return +(entity?.seats) || 0;
-}
-
 export async function calcNewSubscriptionPaymentInfo(
   m: EntityManager,
   orgId: string,
   seatsAfter: number, // If null, keep the current seat number. Useful for recurring
   promotionCode: string,
 ) {
-  const minSeats = await getCurrentOccupiedLicenseCount(m, orgId);
-  const seatsBefore = await getCurrentSubscriptionLicenseCount(m, orgId);
+  const sub = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
+  const seatsBefore = +sub.seats;
+  const minSeats = +sub.occupiedSeats;
 
   seatsAfter = seatsAfter ?? seatsBefore;
   // assert(seatsAfter !== seatsBefore, 400, `${minSeats} is the minimum licenses required in your organization. There is no need to adjust.`);
@@ -84,6 +63,8 @@ export async function calcNewSubscriptionPaymentInfo(
   }
 
   const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { where: { orgId, primary: true } });
+  assert(primaryPaymentMethod, 500, `Cannot find primary payment method.`);
+  const { id: paymentMethodId, stripePaymentMethodId } = primaryPaymentMethod;
 
   const result = {
     unitPrice,
@@ -98,8 +79,8 @@ export async function calcNewSubscriptionPaymentInfo(
     refundable,
     deduction,
     payable,
-    paymentMethodId: primaryPaymentMethod?.id,
-    stripePaymentMethodId: primaryPaymentMethod?.stripePaymentMethodId,
+    paymentMethodId,
+    stripePaymentMethodId,
   };
   return result;
 }
