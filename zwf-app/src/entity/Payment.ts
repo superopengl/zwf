@@ -24,6 +24,7 @@ export class Payment {
   orgId: string;
 
   @Column('uuid')
+  @Index()
   subscriptionId: string;
 
   @Column('uuid', {nullable: true})
@@ -52,9 +53,6 @@ export class Payment {
 
   @Column('jsonb', { nullable: true })
   geo: object;
-  @OneToOne(() => Subscription)
-  @JoinColumn({ name: 'subscriptionId', referencedColumnName: 'id' })
-  subscription: Subscription;
 
   @OneToOne(() => CreditTransaction, { nullable: true, cascade: true })
   @JoinColumn({ name: 'creditTransactionId', referencedColumnName: 'id' })

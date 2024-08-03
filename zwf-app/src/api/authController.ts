@@ -96,6 +96,8 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
 export const signUp = handlerWrapper(async (req, res) => {
   const payload = req.body;
 
+  await sleep(1500);
+
   const { user, profile, exists } = await createNewLocalUser({
     ...payload,
     orgOwner: false,
@@ -133,6 +135,8 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
 
   assert(email, 400, 'email is required');
 
+  await sleep(1500);
+
   const { user, exists } = await createNewLocalUser({
     email,
     orgId: null, // Don't set orgId at the moment. Org will be created when this user's first login.
@@ -165,9 +169,10 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
       },
       shouldBcc: true
     });
+    
+    emitUserAuditLog(user.id, 'register-org');
   }
 
-  emitUserAuditLog(user.id, 'register-org');
 
   res.json();
 });
