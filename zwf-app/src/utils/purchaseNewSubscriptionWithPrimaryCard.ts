@@ -27,14 +27,14 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
   const startAt = now.toDate();
 
   await db.manager.transaction(async m => {
-    const { 
-      creditBalance, 
-      deduction, 
-      unitPrice, 
-      payable, 
-      refundable, 
-      paymentMethodId, 
-      stripePaymentMethodId 
+    const {
+      creditBalance,
+      deduction,
+      unitPrice,
+      payable,
+      refundable,
+      paymentMethodId,
+      stripePaymentMethodId
     } = await calcNewSubscriptionPaymentInfo(m, orgId, seats, promotionCode);
 
     // Call stripe to pay
@@ -42,7 +42,10 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     const stripeRawResponse = await chargeStripeForCardPayment(payable, stripeCustomerId, stripePaymentMethodId, true);
 
     // Ends the head subscription block
-    const subscription = await m.findOneBy(Subscription, {orgId});
+    const subscription = await m.findOne(Subscription, {
+      where: { orgId },
+      relations: ['headBlock']
+    });
     const headBlock = subscription.headBlock;
     headBlock.endedAt = now.toDate();
 
@@ -50,6 +53,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     const block = new SubscriptionBlock();
     block.id = uuidv4();
     block.orgId = orgId;
+    block.subscriptionId = subscription.id;
     block.type = SubscriptionBlockType.Monthly;
     block.parentBlockId = headBlock.id;
     block.startAt = startAt;
