@@ -1,5 +1,5 @@
 // import 'App.css';
-import { Menu, Dropdown, Button, Modal, Alert, Typography, Space } from 'antd';
+import { Menu, Dropdown, Button, Row, Col, Image, Layout, Space, Typography } from 'antd';
 import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import HomeFooter from 'components/HomeFooter';
@@ -11,15 +11,18 @@ import loadable from '@loadable/component'
 import { GlobalContext } from 'contexts/GlobalContext';
 import ProLayout, { DefaultFooter, PageContainer } from '@ant-design/pro-layout';
 import Icon, { ArrowRightOutlined, RightOutlined } from '@ant-design/icons';
-import { IoLanguage } from 'react-icons/io5';
+import { IoLanguage, IoTrashBinSharp } from 'react-icons/io5';
 import { useIntl } from 'react-intl';
 import { FormattedMessage } from 'react-intl';
 import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import HomePage from './HomePage';
 import Error404 from './Error404';
 import { Outlet } from 'react-router-dom';
+import { Logo } from 'components/Logo';
+import { Tabs } from 'antd';
+
+const { Text } = Typography;
 
 smoothscroll.polyfill();
 
@@ -27,8 +30,8 @@ const ResourceListPage = loadable(() => import('pages/ResourcePage/ResourceListP
 const ResourcePage = loadable(() => import('pages/ResourcePage/ResourcePage'))
 
 const StyledLayout = styled(ProLayout)`
-.ant-layout {
-  // background-color: white;
+.ant-layout-header {
+  background-color: white;
 }
 
 .ant-menu-item:hover {
@@ -71,7 +74,7 @@ const StyledLayout = styled(ProLayout)`
 
 .ant-pro-global-header-layout-top, .ant-pro-top-nav-header {
   // background-color: rgba(19,194,194,0.7);
-  background-color: #0a425eaa;
+  // background-color: #0a425eaa;
   // background-color: rgba(0, 41, 61, 0.7); 
 // background-image: linear-gradient(135deg, #00474f, #00474f 400px, rgba(255,255,255,0.0) 400px, rgba(255,255,255,0.0) 100%);
 }
@@ -88,6 +91,22 @@ const StyledLayout = styled(ProLayout)`
 }
 `;
 
+const StyledLayoutPage = styled(Layout)`
+.ant-layout-header {
+  background-color: white;
+}
+
+.ant-tabs-nav {
+  margin: 0;
+}
+
+.ant-tabs-nav::before {
+  border: none;
+}
+
+
+`;
+
 
 const scrollToElement = (selector) => {
   document.querySelector(selector)?.scrollIntoView({
@@ -96,6 +115,21 @@ const scrollToElement = (selector) => {
     inline: "nearest"
   });
 }
+
+const RawMenuButton = (props) => {
+  const { to, children } = props;
+  const navigate = useNavigate();
+
+  return <Text onClick={() => navigate(to)}>
+    {children}
+  </Text>
+};
+
+const MenuButton = styled(RawMenuButton)`
+&:hover {
+  cursor: pointer;
+}
+`;
 
 
 const PortalPage = (props) => {
@@ -140,6 +174,44 @@ const PortalPage = (props) => {
     }
   }
 
+  const handleMenuChange = (path) => {
+    navigate(path);
+  }
+
+  return <StyledLayoutPage>
+    <Layout.Header>
+      <Space style={{ justifyContent: 'space-between', width: '100%' }}>
+        <Link to="/">
+          <Image src="/images/logo-horizontal-blue.png" preview={false} height={32} />
+        </Link>
+        <Row gutter={30} align="middle">
+          <Col>
+            <Tabs defaultActiveKey="/" onChange={handleMenuChange}>
+              <Tabs.TabPane tab="Home" key="/"></Tabs.TabPane>
+              <Tabs.TabPane tab="Resources" key="/resource"></Tabs.TabPane>
+              <Tabs.TabPane tab="Pricing" key="/#pricing"></Tabs.TabPane>
+              <Tabs.TabPane tab="Contact Us" key="/#contactus"></Tabs.TabPane>
+            </Tabs>
+          </Col>
+          <Col>
+            <Link to="/login">
+              <Button type="primary" ghost>Log in</Button>
+            </Link>
+          </Col>
+          <Col>
+            <Link to="/signup/org">
+              <Button type="primary">Try it Now</Button>
+            </Link>
+          </Col>
+        </Row>
+      </Space>
+    </Layout.Header>
+    <Layout.Content>
+      <Outlet />
+    </Layout.Content>
+    <HomeFooter />
+  </StyledLayoutPage>
+
   return <StyledLayout
     title={'ZeeWorkflow'}
     logo="/images/logo-horizontal-blue.png"
@@ -166,7 +238,7 @@ const PortalPage = (props) => {
             <Button ghost>Log in</Button>
           </Link>
           <Link to="/signup/org">
-            <Button type="primary">Start free trial</Button>
+            <Button type="primary">Try it Now</Button>
           </Link>
         </Space>
 

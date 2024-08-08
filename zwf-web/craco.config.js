@@ -12,7 +12,7 @@ const darkTheme = getThemeVariables({
 
 const modifyVars = {
   ...darkTheme,
-  '@primary-color': '#37AFD2',// '#37AFD2', // rgb(19,194,194)
+  '@primary-color': '#0FBFC4',// '#37AFD2', // rgb(19,194,194)
   '@info-color': '#37AFD2',
   '@warning-color': '#ffc53d',
   '@link-color': '#37AFD2',
@@ -22,14 +22,14 @@ const modifyVars = {
   '@font-size-base': '14px',
   '@table-font-size': '12px',
   '@layout-header-background': '#062638',
-  '@heading-color': '#062638',
+  '@heading-color': '#2C3645',
   '@label-color': '#00232988',
   '@btn-font-size-sm': '12px',
   '@height-base': '32px',
   '@height-lg': '40px',
   '@height-sm': '28px',
   '@border-radius-base': '4px',
-  // '@font-family': "'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
+  // '@font-family': "'Inter', 'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
   // '@table-padding-vertical': '4px',
   // '@table-padding-horizontal': '4px',
   '@heading-1-size': 'ceil(@font-size-base * 2.0)',

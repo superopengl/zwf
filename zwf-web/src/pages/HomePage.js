@@ -28,7 +28,7 @@ const scrollToElement = (selector) => {
 }
 
 
-const HomePage = (props) => {
+export const HomePage = (props) => {
 
   useDocumentTitle('All in one task doc management');
 
@@ -56,4 +56,3 @@ HomePage.propTypes = {};
 
 HomePage.defaultProps = {};
 
-export default HomePage;
