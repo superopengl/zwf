@@ -11,14 +11,15 @@ import { InputYear } from 'components/InputYear';
 import { OrgRegisterInput } from 'components/OrgRegisterInput';
 
 
-const { Title } = Typography;
+const { Title, Text, Paragraph } = Typography;
 
 
 const ContainerStyled = styled.div`
-border-bottom: 1px solid #f0f0f0;
+// border-bottom: 1px solid #f0f0f0;
 margin: 0 auto 0 auto;
 // padding: 1rem;
 width: 100%;
+background-color: #ffffff;
 `;
 
 const SignInButton = styled(Button)`
@@ -73,6 +74,15 @@ background-image: url("images/logo-tile.png");
 
 `;
 
+const CatchPicture = styled.div`
+min-width: 250px;
+min-height: 250px;
+// background-image: linear-gradient(135deg, #37AFD2, #37AFD2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
+background: radial-gradient(closest-side, transparent 0%, white 100%), 
+                 linear-gradient(45deg, #b5f5ec, #37AFD2 100%);
+padding: 80px;
+`;
+
 const span = {
   xs: 24,
   sm: 24,
@@ -82,7 +92,7 @@ const span = {
   xxl: 12
 }
 
-const HomeCarouselAreaRaw = props => {
+export const HomeCarouselArea = props => {
 
   const windowWidth = useWindowWidth();
   const navigate = useNavigate();
@@ -105,16 +115,30 @@ const HomeCarouselAreaRaw = props => {
   return (
     <ContainerStyled gutter={0} style={{ position: 'relative' }}>
       <PosterContainer style={{ height: posterHeight, position: 'relative' }}>
-        <div className="poster-patterns" />
-        <Space direction="vertical" style={{ maxWidth: '1200px', textAlign: 'center' }}>
-          <Space size="large">
-            <Image src="images/logo-vertical-gold.png" alt="ZeeWorkflow logo" preview={false} width={300} />
-          </Space>
-          <Title level={1} style={{ marginTop: 30, fontWeight: 300, fontSize: Math.max(catchPhraseSize * 0.5, 14) }}>
-            All in one system for file, doc, job, task and workflow management. Come on, join us today!!
-          </Title>
-          <OrgRegisterInput />
-          {/* {isGuest &&
+        {/* <div className="poster-patterns" /> */}
+        <Row justify="center" align="middle" gutter={[40, 40]}>
+          <Col {...span}>
+            <Space direction="vertical" style={{ justifyContent: 'center', alignItems: 'center' }}>
+              <Title style={{fontWeight: 'bold'}}>
+                <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
+              </Title>
+              <Paragraph>
+                All in one system for file, doc, job, task and workflow management. Come on, join us today!!
+              </Paragraph>
+              <OrgRegisterInput />
+            </Space>
+          </Col>
+          <Col {...span}>
+            <CatchPicture>
+              <div style={{padding: 10, position: 'relative'}}>
+                <div style={{backgroundColor: '#0FBFC4', width: 150, height: 150, borderRadius: 8, position: 'absolute', left:0, bottom : 0}}></div>
+                <div style={{backgroundColor: '#FF7D00', width: 150, height: 150, borderRadius: 8, position: 'absolute', right:0, top : 0}}></div>
+                <Image src="/images/catchPicture.png" />
+              </div>
+            </CatchPicture>
+          </Col>
+        </Row>
+        {/* {isGuest &&
             <Row style={{ maxWidth: 500, margin: '0 auto' }} gutter={30}>
               <Col {...span}>
                 <SignInButton block type="primary"
@@ -138,16 +162,13 @@ const HomeCarouselAreaRaw = props => {
                 />
               </Col>
             </Row>} */}
-        </Space>
       </PosterContainer>
     </ContainerStyled>
   );
 }
 
-HomeCarouselAreaRaw.propTypes = {};
+HomeCarouselArea.propTypes = {};
 
-HomeCarouselAreaRaw.defaultProps = {};
+HomeCarouselArea.defaultProps = {};
 
-export const HomeCarouselArea = HomeCarouselAreaRaw;
 
-export default HomeCarouselArea;

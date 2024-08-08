@@ -1,5 +1,5 @@
 // import 'App.css';
-import HomeCarouselArea from 'components/homeAreas/HomeCarouselArea';
+import {HomeCarouselArea} from 'components/homeAreas/HomeCarouselArea';
 import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import React from 'react';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';

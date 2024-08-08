@@ -36,13 +36,13 @@ export const OrgRegisterInput = React.memo(props => {
 
   return <>
     <Input.Search
-      style={{maxWidth: '400px', }}
+      style={{maxWidth: '500px', }}
       size="large"
       // prefix={<MailOutlined />}
       value={email}
       onChange={e => setEmail(e.target.value)}
-      placeholder="Register with email"
-      enterButton="Try for free"
+      placeholder="Email"
+      enterButton="Try it Now"
       loading={loading}
       onSearch={handleClick}
     />
