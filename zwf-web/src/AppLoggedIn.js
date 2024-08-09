@@ -3,7 +3,7 @@ import { GlobalContext } from './contexts/GlobalContext';
 import ProLayout from '@ant-design/pro-layout';
 import Icon, {
   ClockCircleOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
+  BankOutlined, QuestionOutlined, FileOutlined, TagFilled, CreditCardFilled
 } from '@ant-design/icons';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { Space, Typography, Modal, Row, Col, Layout, Button, Menu, Image } from 'antd';
@@ -30,6 +30,9 @@ import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import Error404 from 'pages/Error404';
 import { Navigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
+import { AiOutlineMenu, AiFillCalendar } from 'react-icons/ai';
+import { HiUser, HiUsers } from 'react-icons/hi';
+import { useNavigate } from 'react-router-dom';
 
 const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
 const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
@@ -84,6 +87,54 @@ const StyledNewLayout = styled(Layout)`
 .ant-menu {
   background-color: transparent;
 }
+
+.ant-layout-header {
+  padding-left: 24px;
+  padding-right: 24px
+}
+
+.ant-menu-item-group-title {
+  font-size: small;
+}
+
+.ant-menu, .ant-icon  {
+  font-size: 16px !important;
+  color: #4B5B76 !important;
+}
+
+.menu-group {
+  padding-left: 16px;
+  margin-top: 16px;
+  color: #97A3B7;
+  font-size: small;
+}
+
+.menu-button {
+  // font-size: 16px !important;
+  color: #4B5B76 !important;
+  justify-content: flex-start;
+  align-items: center;
+  display: flex;
+
+  &:hover {
+    background-color: #E3E6EB;
+  }
+}
+
+`;
+
+
+const StyledKnot = styled.div`
+border: 1px solid #F1F2F5;
+background-color: #F1F2F5;
+position: absolute;
+left: 0;
+top: 8px;
+margin: 0;
+padding: 0 4px;
+&:hover {
+  cursor: pointer;
+}
 `;
 
 
@@ -108,7 +159,7 @@ const ROUTES = [
       {
         key: '/scheduler',
         label: <FormattedMessage id="menu.scheduler" />,
-        icon: <ClockCircleOutlined />,
+        icon: <Icon component={AiFillCalendar} />,
         roles: ['admin', 'agent'],
       },
     ],
@@ -152,13 +203,13 @@ const ROUTES = [
       {
         key: '/client',
         label: <FormattedMessage id="menu.client" />,
-        icon: <TeamOutlined />,
+        icon: <Icon component={HiUser} />,
         roles: ['admin', 'agent'],
       },
       {
         key: '/team',
         label: <FormattedMessage id="menu.team" />,
-        icon: <Icon component={HiOutlineUserGroup} />,
+        icon: <Icon component={HiUsers} />,
         roles: ['admin'],
       },
     ]
@@ -177,13 +228,13 @@ const ROUTES = [
       {
         key: '/account',
         label: 'Subscription & Billings',
-        icon: <Icon component={BiDollar} />,
+        icon: <CreditCardFilled />,
         roles: ['admin'],
       },
       {
         key: '/tags',
         label: <FormattedMessage id="menu.tags" />,
-        icon: <TagsOutlined />,
+        icon: <TagFilled />,
         roles: ['admin', 'agent'],
       },
       // {
@@ -217,17 +268,51 @@ function getItem(label, key, icon, children, type) {
   };
 }
 
+const NavMenu = props => {
+  const { items, size } = props;
+  const navigate = useNavigate();
+
+  const components = [];
+  for (const group of items) {
+    components.push(<div className="menu-group">{group.label}</div>)
+    for (const item of group.children) {
+      components.push(<Button
+        className="menu-button"
+        size={size}
+        block
+        icon={item.icon}
+        type="text"
+        onClick={() => navigate(item.key)}>
+        <span>{item.label}</span>
+      </Button>)
+    }
+  }
+
+  return <Space direction="vertical" style={{ width: '100%', padding: 8 }}>{components}</Space>;
+}
+
+const FooterMenuItem = props => {
+  const { children, href } = props;
+  return <LinkText href={href} target="_blank">
+    <Button type="text" block style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: 'small', color: '#7787A2' }}>
+    {children}
+  </Button>
+  </LinkText>
+}
+
 export const AppLoggedIn = React.memo(props => {
   const context = React.useContext(GlobalContext);
   const location = useLocation();
-  const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
-  const [profileVisible, setProfileVisible] = React.useState(false);
-  const [aboutVisible, setAboutVisible] = React.useState(false);
-  const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const [collapsed, setCollapsed] = React.useState(false);
   const [pathname, setPathname] = React.useState(getSanitizedPathName(location.pathname));
 
   const { user, role } = context;
+
+  const routes = React.useMemo(() => ROUTES.map(g => ({
+    ...g,
+    children: g.children.filter(x => !x.roles || x.roles.includes(role))
+  })).filter(g => g.children.length > 0), [role]);
+
   if (!user) {
     return null;
   }
@@ -237,182 +322,77 @@ export const AppLoggedIn = React.memo(props => {
   const isAgent = role === 'agent';
   const isClient = role === 'client';
 
-  const routes = ROUTES.map(g => ({
-    ...g,
-    children: g.children.filter(x => !x.roles || x.roles.includes(role))
-  })).filter(g => g.children.length > 0);
+
 
 
   return <StyledNewLayout>
-    <Layout.Sider theme="light" style={{ position: 'fixed', zIndex: 1000, left: 0, top: 0, bottom : 0 }}>
-      <div style={{ position: 'relative', height: '100%', width: '100%' }}>
-      <Image src="/images/logo-horizontal-blue.png" preview={false} width={200}/>
-      <Menu
-        mode="inline"
-        items={routes}
-        />
+    <Layout.Header theme="light" style={{
+      position: 'fixed',
+      zIndex: 1000,
+      width: '100%',
+      padding: 0,
+    }}>
+      <Layout style={{ borderBottom: '1px solid #E3E6EB' }}>
+        <Layout.Sider width={220} style={{ paddingLeft: 24, paddingRight: 24 }}>
+          <Image src="/images/logo-horizontal-blue.png" preview={false} width={140} />
+        </Layout.Sider>
+        <Layout.Content style={{ paddingLeft: 24, paddingRight: 24 }}>
+          <Row justify="space-between">
+            <Col>
+              <Space>
+                <SmartSearch />
+                <CreateNewButton />
+              </Space>
+            </Col>
+            <Col>
+              <div style={{ marginLeft: 16 }}>
+                <AvatarDropdownMenu />
+              </div>
+            </Col>
+          </Row>
+        </Layout.Content>
+      </Layout>
 
-      <Space direction="vertical" style={{ position: 'absolute', left: 0, right: 0 }}>
-        <Button type="text" size="small" onClick={() => setAboutVisible(true)}>About</Button>
-        <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
-        <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
-      </Space>
-        </div>
-    </Layout.Sider>
-    <Layout>
-      <Layout.Header theme="light" style={{ position: 'fixed', zIndex: 1000, right: 0, left: 200 }}>
-        <Row justify="space-between">
-          <Col>
-            <Space>
-              <SmartSearch />
-              <CreateNewButton />
+    </Layout.Header>
+    <Layout style={{ marginTop: 64 }}>
+      <Layout.Sider
+        style={{
+          overflow: 'auto',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          bottom: 0,
+          borderRight: '1px solid #E3E6EB',
+        }}
+        theme="light"
+        // trigger={null}
+        // collapsedWidth={0}
+        width={220}
+      // collapsible={false}
+      // collapsed={collapsed}
+      // defaultCollapsed={false}
+      >
+        <Layout style={{ paddingTop: 64 + 16, height: '100vh', background: 'transparent' }}>
+          <Layout.Content>
+            <NavMenu items={routes} />
+          </Layout.Content>
+          <Layout.Footer style={{ backgroundColor: 'transparent', padding: '24px 8px', borderTop: '1px solid #E3E6EB' }}>
+            <Space direction="vertical" style={{ width: '100%' }}>
+              <FooterMenuItem href="/terms_and_conditions">Terms and Conditions</FooterMenuItem>
+              <FooterMenuItem href="/privacy_policy">Privacy Policy</FooterMenuItem>
             </Space>
-          </Col>
-          <Col>
-            <div style={{ marginLeft: 16 }}>
-              <AvatarDropdownMenu />
-            </div>
-          </Col>
-        </Row>
-      </Layout.Header>
-      <Layout.Content style={{ marginTop: 64, marginLeft: 200 }}>
-        <Outlet />
+          </Layout.Footer>
+        </Layout>
+      </Layout.Sider>
 
-        <ChangePasswordModal
-          onOk={() => setChangePasswordVisible(false)}
-          onCancel={() => setChangePasswordVisible(false)}
-        />
-        <ProfileModal
-          onOk={() => setProfileVisible(false)}
-          onCancel={() => setProfileVisible(false)}
-        />
-        <Modal
-          title="Organization Profile"
-          onOk={() => setOrgProfileVisible(false)}
-          onCancel={() => setOrgProfileVisible(false)}
-          footer={null}
-          destroyOnClose={true}
-          maskClosable={false}
-        >
-          <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
-        </Modal>
-        <AboutModal
-          onClose={() => setAboutVisible(false)}
-        />
-        {!isSystem && <SupportAffix />}
-      </Layout.Content>
+      <Layout style={{ marginLeft: 220 }}>
+
+        <Layout.Content >
+          <Outlet />
+          {!isSystem && <SupportAffix />}
+        </Layout.Content>
+      </Layout>
     </Layout>
-
   </StyledNewLayout>
-
-  return <StyledLayout
-    // title={<Image src="/images/brand.svg" preview={false} width={110} />}
-    title={""}
-    logo="/images/logo-horizontal-blue.png"
-    // logo="/header-logo.png"
-    route={{ routes }}
-    location={{ pathname }}
-    navTheme="light"
-    siderWidth={230}
-    fixSiderbar={true}
-    fixedHeader={true}
-    headerRender={true}
-    collapsed={collapsed}
-    onCollapse={setCollapsed}
-    menuItemRender={(item, dom) => {
-      if (item.group) {
-        return <Text type="secondary" style={{ fontSize: 'small' }}>{item.group}</Text>
-      }
-      // return <Button type="text" block size="large" icon={item.icon}>{item.name}</Button>
-      return <Link to={item.path} onClick={() => {
-        setPathname(item.path);
-      }}>
-        {dom}
-      </Link>
-    }}
-    // collapsedButtonRender={false}
-    // postMenuData={menuData => {
-    //   return [
-    //     {
-    //       icon: collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />,
-    //       name: ' ',
-    //       onTitleClick: () => setCollapsed(!collapsed),
-    //     },
-    //     ...menuData
-    //   ]
-    // }}
-    headerContentRender={() => {
-      if (isSystem || isClient) {
-        return null;
-      }
-      return <Row gutter={10} wrap={false} justify="start">
-        {/* <div
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              position: 'relative',
-              top: '20px',
-              left: '-24px',
-              cursor: 'pointer',
-              // fontSize: '16px',
-              backgroundColor: '#062638',
-              width: '20px',
-              color: 'white'
-            }}
-          >
-          {collapsed ? <RightCircleOutlined /> : <LeftCircleOutlined />}
-          </div> */}
-        <Col>
-          <SmartSearch />
-        </Col>
-        <Col>
-          <CreateNewButton />
-        </Col>
-      </Row>
-    }}
-    rightContentRender={() => (
-      <div style={{ marginLeft: 16 }}>
-        <AvatarDropdownMenu />
-      </div>
-    )}
-    menuFooterRender={props => (
-      props?.collapsed ?
-        <QuestionOutlined style={{ color: '#7787A2' }} onClick={() => setCollapsed(!collapsed)} /> :
-        <Space direction="vertical" style={{ width: 188 }}>
-          <LinkText onClick={() => setAboutVisible(true)}>About</LinkText>
-          <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
-          <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
-        </Space>
-    )}
-  >
-    <Outlet />
-
-    <ChangePasswordModal
-
-      onOk={() => setChangePasswordVisible(false)}
-      onCancel={() => setChangePasswordVisible(false)}
-    />
-    <ProfileModal
-
-      onOk={() => setProfileVisible(false)}
-      onCancel={() => setProfileVisible(false)}
-    />
-    <Modal
-      title="Organization Profile"
-
-      onOk={() => setOrgProfileVisible(false)}
-      onCancel={() => setOrgProfileVisible(false)}
-      footer={null}
-      destroyOnClose={true}
-      maskClosable={false}
-    >
-      <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
-    </Modal>
-    <AboutModal
-
-      onClose={() => setAboutVisible(false)}
-    />
-    {/* {(isAdmin || isAgent) && <SupportAffix />} */}
-    {!isSystem && <SupportAffix />}
-  </StyledLayout>
 })
 
