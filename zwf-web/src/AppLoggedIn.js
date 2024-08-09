@@ -1,107 +1,29 @@
 import React from 'react';
 import { GlobalContext } from './contexts/GlobalContext';
-import ProLayout from '@ant-design/pro-layout';
 import Icon, {
-  ClockCircleOutlined, SettingOutlined, TeamOutlined,
-  BankOutlined, QuestionOutlined, FileOutlined, TagFilled, CreditCardFilled
+  SettingOutlined, BankOutlined, FileOutlined, TagFilled, CreditCardFilled
 } from '@ant-design/icons';
-import { Routes, Route, useLocation, Link } from 'react-router-dom';
-import { Space, Typography, Modal, Row, Col, Layout, Button, Menu, Image } from 'antd';
+import { Space, Typography, Row, Col, Layout, Button, Image } from 'antd';
 import styled from 'styled-components';
-import ProfileModal from 'pages/Profile/ProfileModal';
-import AboutModal from 'pages/About/AboutModal';
-import { BiDollar } from 'react-icons/bi';
-import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
-import { GoTools } from 'react-icons/go';
-import { RiCoinsLine } from 'react-icons/ri';
 import { HiOutlineViewList } from 'react-icons/hi';
-import OrgOnBoardForm from 'pages/Org/OrgProfileForm';
-import OrgListPage from 'pages/Org/OrgListPage';
-import { HiOutlineUserGroup } from 'react-icons/hi';
 import { ImInsertTemplate } from 'react-icons/im';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
 import { SmartSearch } from 'components/SmartSearch';
 import { CreateNewButton } from 'components/CreateNewButton';
-import { ClientTaskListPage } from 'pages/ClientTask/ClientTaskListPage';
 import { AiOutlineHistory } from 'react-icons/ai';
 import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage, MdOutlinePages } from 'react-icons/md';
-import Error404 from 'pages/Error404';
-import { Navigate } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import { AiOutlineMenu, AiFillCalendar } from 'react-icons/ai';
+import { AiFillCalendar } from 'react-icons/ai';
 import { HiUser, HiUsers } from 'react-icons/hi';
+import {MdDashboard, MdSpaceDashboard} from 'react-icons/md';
+import {BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill} from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
-const SystemBoardPage = loadable(() => import('pages/SystemBoard/SystemBoardPage'));
-const TagsSettingPage = loadable(() => import('pages/TagsSettingPage/TagsSettingPage'));
-const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
-const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
-const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
-const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
-const OrgAccountPage = loadable(() => import('pages/OrgAccount/OrgAccountPage'));
-const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
-const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
-const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
-const ResourceListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
-const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
-const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
-const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
-const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
-const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
-const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
-const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
-const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
-const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
-const { Link: LinkText, Text } = Typography;
-
-const StyledLayout = styled(ProLayout)`
-.ant-layout {
-  background-color: #f8f8fa;
-}
-
-.ant-pro-global-header {
-  padding-left: 24px;
-}
-
-.ant-pro-global-header-collapsed-button {
-  margin-right: 16px;
-}
-
-.ant-pro-sider {
-  background-color: #F1F2F5
-}
-
-.ant-pro-sider-footer {
-  padding: 0 0 16px 16px;
-  .ant-typography {
-    font-size: 12px;
-    color: #7787A2;
-  }
-}
-
-`;
+const { Link: LinkText } = Typography;
 
 const StyledNewLayout = styled(Layout)`
-.ant-menu {
-  background-color: transparent;
-}
-
-.ant-layout-header {
-  padding-left: 24px;
-  padding-right: 24px
-}
-
-.ant-menu-item-group-title {
-  font-size: small;
-}
-
-.ant-menu, .ant-icon  {
-  font-size: 16px !important;
-  color: #4B5B76 !important;
-}
-
 .menu-group {
   padding-left: 16px;
   margin-top: 16px;
@@ -119,23 +41,15 @@ const StyledNewLayout = styled(Layout)`
   &:hover {
     background-color: #E3E6EB;
   }
+
+  .anticon {
+    font-size: 1.2rem;
+  }
 }
 
 `;
 
 
-const StyledKnot = styled.div`
-border: 1px solid #F1F2F5;
-background-color: #F1F2F5;
-position: absolute;
-left: 0;
-top: 8px;
-margin: 0;
-padding: 0 4px;
-&:hover {
-  cursor: pointer;
-}
-`;
 
 
 const ROUTES = [
@@ -147,7 +61,7 @@ const ROUTES = [
       {
         key: '/task',
         label: <FormattedMessage id="menu.tasks" />,
-        icon: <Icon component={HiOutlineViewList} />,
+        icon: <Icon component={MdDashboard} />,
         roles: ['admin', 'agent', 'client'],
       },
       {
@@ -172,13 +86,13 @@ const ROUTES = [
       {
         key: '/task_template',
         label: <FormattedMessage id="menu.taskTemplate" />,
-        icon: <Icon component={ImInsertTemplate} />,
+        icon: <Icon component={MdSpaceDashboard} />,
         roles: ['admin', 'agent'],
       },
       {
         key: '/doc_template',
         label: <FormattedMessage id="menu.docTemplate" />,
-        icon: <FileOutlined />,
+        icon: <Icon component={BsFileEarmarkTextFill} />,
         roles: ['admin', 'agent'],
       },
     ],
@@ -203,13 +117,13 @@ const ROUTES = [
       {
         key: '/client',
         label: <FormattedMessage id="menu.client" />,
-        icon: <Icon component={HiUser} />,
+        icon: <Icon component={BsFillPersonFill} />,
         roles: ['admin', 'agent'],
       },
       {
         key: '/team',
         label: <FormattedMessage id="menu.team" />,
-        icon: <Icon component={HiUsers} />,
+        icon: <Icon component={BsFillPeopleFill} />,
         roles: ['admin'],
       },
     ]
@@ -253,20 +167,7 @@ const ROUTES = [
   },
 ];
 
-function getSanitizedPathName(pathname) {
-  const match = /\/[^/]+/.exec(pathname);
-  return match ? match[0] ?? pathname : pathname;
-}
 
-function getItem(label, key, icon, children, type) {
-  return {
-    key,
-    icon,
-    children,
-    label,
-    type,
-  };
-}
 
 const NavMenu = props => {
   const { items, size } = props;
@@ -300,11 +201,8 @@ const FooterMenuItem = props => {
   </LinkText>
 }
 
-export const AppLoggedIn = React.memo(props => {
+export const AppLoggedIn = React.memo(() => {
   const context = React.useContext(GlobalContext);
-  const location = useLocation();
-  const [collapsed, setCollapsed] = React.useState(false);
-  const [pathname, setPathname] = React.useState(getSanitizedPathName(location.pathname));
 
   const { user, role } = context;
 
@@ -318,12 +216,6 @@ export const AppLoggedIn = React.memo(props => {
   }
 
   const isSystem = role === 'system';
-  const isAdmin = role === 'admin';
-  const isAgent = role === 'agent';
-  const isClient = role === 'client';
-
-
-
 
   return <StyledNewLayout>
     <Layout.Header theme="light" style={{
@@ -365,12 +257,7 @@ export const AppLoggedIn = React.memo(props => {
           borderRight: '1px solid #E3E6EB',
         }}
         theme="light"
-        // trigger={null}
-        // collapsedWidth={0}
         width={220}
-      // collapsible={false}
-      // collapsed={collapsed}
-      // defaultCollapsed={false}
       >
         <Layout style={{ paddingTop: 64 + 16, height: '100vh', background: 'transparent' }}>
           <Layout.Content>
