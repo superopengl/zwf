@@ -1,5 +1,4 @@
 import { OrgBasicInformation } from './../src/entity/views/OrgBasicInformation';
-import { UserAliveSubscriptionInformation } from './../src/entity/views/UserAliveSubscriptionInformation';
 import { db } from './../src/db';
 import { SubscriptionEndingNotificationEmailInformation } from './../src/entity/views/SubscriptionEndingNotificationEmailInformation';
 import { In, IsNull, Between, EntityManager } from 'typeorm';
@@ -55,7 +54,6 @@ async function enqueueRecurringSucceededEmail(m: EntityManager, activeSubscripti
       vars: {
         toWhom: getEmailRecipientName(user),
         subscriptionId: subscriptionId,
-        endDate: moment(payment.end).format('D MMM YYYY'),
       }
     };
     return req;
@@ -65,7 +63,7 @@ async function enqueueRecurringSucceededEmail(m: EntityManager, activeSubscripti
 }
 
 async function enqueueRecurringFailedEmail(m: EntityManager, activeSubscription: OrgCurrentSubscriptionInformation) {
-  const { orgId, headBlockId: subscriptionId, end } = activeSubscription;
+  const { orgId, headBlockId: subscriptionId, endingAt } = activeSubscription;
   const adminUsers = await getOrgAdminUsers(orgId);
   const emailRequests = adminUsers.map(user => {
     const req: EmailRequest = {
@@ -75,7 +73,7 @@ async function enqueueRecurringFailedEmail(m: EntityManager, activeSubscription:
       vars: {
         toWhom: getEmailRecipientName(user),
         subscriptionId: subscriptionId,
-        endDate: moment(end).format('D MMM YYYY')
+        endDate: moment(endingAt).format('D MMM YYYY')
       }
     };
     return req;
@@ -144,9 +142,9 @@ async function sendEndingNotificationEmails() {
         shouldBcc: true,
         vars: {
           toWhom: getEmailRecipientNameByNames(x.givenName, x.surname),
-          subscriptionId: x.subscriptionId,
-          start: moment(x.start).format('D MMM YYYY'),
-          end: moment(x.end).format('D MMM YYYY'),
+          // subscriptionId: x.subscriptionId,
+          // start: moment(x.startAt).format('D MMM YYYY'),
+          end: moment(x.endingAt).format('D MMM YYYY'),
         }
       };
       return emailRequest;
@@ -177,19 +175,22 @@ async function getLastValidPaymentMethod(m: EntityManager, subscription: Subscri
 }
 
 async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscriptionInformation) {
-  const { headBlockId: subscriptionId, end } = targetSubscription;
+  const { headBlockId: subscriptionId, endingAt } = targetSubscription;
 
   try {
     await db.transaction(async m => {
       const subscription = await m.findOne(Subscription, {
         where: {
           id: subscriptionId,
-          recurring: true,
-        }
+        },
+        relations: [
+          'headBlock',
+          'headBlock.payment',
+        ]
       });
-      const { orgId } = subscription;
+      const { orgId, headBlock } = subscription;
+      const { promotionCode } = headBlock;
 
-      const { promotionCode } = await getLastValidPaymentMethod(m, subscription);
       const paymentInfo = await calcNewSubscriptionPaymentInfo(
         m,
         orgId,
@@ -209,9 +210,9 @@ async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscrip
       const stripeRawResponse = await chargeStripeForCardPayment(payable, stripeCustomerId, stripePaymentMethodId, false);
 
       // Extend one month for current subscription
-      const oldEnd = subscription.end;
-      const newEnd = moment(oldEnd).add(1, 'month').add(-1, 'day').toDate();
-      subscription.end = newEnd;
+      // const oldEnd = subscription.end;
+      // const newEnd = moment(oldEnd).add(1, 'month').add(-1, 'day').toDate();
+      // subscription.end = newEnd;
 
       // Pay with credit as possible
       let deductCreditTransaction = null;
@@ -227,17 +228,17 @@ async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscrip
       const payment = new Payment();
       payment.id = uuidv4();
       payment.orgId = orgId;
-      payment.start = oldEnd;
-      payment.end = newEnd;
-      payment.rawResponse = stripeRawResponse;
-      payment.paidAt = getUtcNow();
-      payment.amount = payable;
-      payment.status = PaymentStatus.Paid;
-      payment.auto = false;
-      payment.orgPaymentMethodId = paymentMethodId;
-      payment.creditTransaction = deductCreditTransaction;
-      payment.promotionCode = promotionCode;
-      payment.subscription = subscription;
+      // payment.start = oldEnd;
+      // payment.end = newEnd;
+      // payment.rawResponse = stripeRawResponse;
+      // payment.paidAt = getUtcNow();
+      // payment.amount = payable;
+      // payment.status = PaymentStatus.Paid;
+      // payment.auto = false;
+      // payment.orgPaymentMethodId = paymentMethodId;
+      // payment.creditTransaction = deductCreditTransaction;
+      // payment.promotionCode = promotionCode;
+      // payment.subscription = subscription;
 
       await m.save([payment, subscription]);
 
