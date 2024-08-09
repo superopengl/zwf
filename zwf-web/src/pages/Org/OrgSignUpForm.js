@@ -7,8 +7,22 @@ import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
+import { Divider } from 'antd';
+import GoogleSsoButton from 'components/GoogleSsoButton';
+import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import Icon from '@ant-design/icons';
 const { Title, Text, Paragraph } = Typography;
 
+const GoogleButton = styled(Button)`
+// margin-top: 1rem;
+// max-width: 300px;
+// height: 50px;
+// border-radius: 30px;
+// font-size: 1.3rem;
+// border: 2px solid white;
+display: flex;
+justify-content: center;
+`;
 
 const ContainerStyled = styled.div`
   margin: 0 auto;
@@ -98,8 +112,8 @@ const OrgSignUpForm = (props) => {
           />
         </Text>
         <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block type="primary" htmlType="submit" disabled={loading}>
-            <FormattedMessage id="menu.signUpOrg" />
+          <Button block type="primary" size="large" htmlType="submit" disabled={loading}>
+            Register with Email
           </Button>
         </Form.Item>
         {/* <Form.Item>
@@ -111,6 +125,21 @@ const OrgSignUpForm = (props) => {
           </Text>
         </Form.Item> */}
       </Form>
+      <Divider>or</Divider>
+      <GoogleSsoButton
+        render={
+          renderProps => (
+            <GoogleButton
+              block
+              type="secondary"
+              size="large"
+              icon={<Icon component={GoogleLogoSvg} />}
+              onClick={renderProps.onClick}
+              disabled={renderProps.disabled}
+            // style={{ paddingTop: 6 }}
+            >Continue with Google</GoogleButton>
+          )}
+      />
     </ContainerStyled>
   );
 }

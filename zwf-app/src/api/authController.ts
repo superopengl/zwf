@@ -169,7 +169,7 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
       },
       shouldBcc: true
     });
-    
+
     emitUserAuditLog(user.id, 'register-org');
   }
 
@@ -316,7 +316,7 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
     orgClient.userId = user.id;
 
     await m.insert(OrgClient, orgClient);
-    const org = await m.findOneBy(Org, {id: orgId});
+    const org = await m.findOneBy(Org, { id: orgId });
 
     if (newlyCreated) {
       const resetPasswordToken = uuidv4();
@@ -376,13 +376,13 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     loginType: 'google',
     lastLoggedInAt: now,
     referredBy: referralCode,
-    role: Role.Client,
   };
 
   if (isNewUser) {
     let { user: newUser, profile } = createUserAndProfileEntity({
       email,
-      role: Role.Client
+      role: Role.Admin,
+      orgOwner: true,
     });
 
     newUser = Object.assign(newUser, extra);
@@ -391,9 +391,11 @@ export const ssoGoogle = handlerWrapper(async (req, res) => {
     profile.surname = surname;
     await db.manager.save([newUser, profile]);
 
+    user = await getActiveUserInformation(email);
+
     sendEmail({
       to: user.email,
-      template: EmailTemplateType.WelcomeClient,
+      template: EmailTemplateType.WelcomeOrg,
       vars: {
         toWhom: getEmailRecipientName(user),
       },
