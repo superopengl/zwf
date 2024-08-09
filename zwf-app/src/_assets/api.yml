@@ -210,12 +210,18 @@ paths:
       responses:
         200:
           description: OK
-  /auth/sso/google:
+  /auth/register/google:
     post:
-      operationId: ssoGoogle
+      operationId: ssoGoogleRegisterOrg
       responses:
         200:
           description: OK
+  /auth/login/google:
+    post:
+      operationId: ssoGoogleLogin
+      responses:
+        200:
+          description: OK          
   /user:
     get:
       operationId: listAllUsers

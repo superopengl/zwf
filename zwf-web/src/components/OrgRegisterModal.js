@@ -5,7 +5,7 @@ import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 
 const { Text } = Typography;
 
-export const OrgRegisterModal = React.memo(props => {
+export const OrgRegisterModal = props => {
 
   const { visible, onOk, onCancel } = props;
 
@@ -22,6 +22,6 @@ export const OrgRegisterModal = React.memo(props => {
     <OrgSignUpForm onOk={onOk} />
   </Modal>
 
-});
+};
 
 

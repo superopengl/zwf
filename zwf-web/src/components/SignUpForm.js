@@ -3,8 +3,8 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 import { Typography, Button, Form, Input, Divider, Tabs } from 'antd';
 import { signUp$ } from 'services/authService';
-import GoogleSsoButton from 'components/GoogleSsoButton';
-import GoogleLogoSvg from 'components/GoogleLogoSvg';
+import {GoogleSsoButton} from 'components/GoogleSsoButton';
+import {GoogleLogoSvg} from 'components/GoogleLogoSvg';
 import { notify } from 'util/notify';
 import { FormattedMessage } from 'react-intl';
 import { useIntl } from 'react-intl';
@@ -86,6 +86,7 @@ const SignUpForm = (props) => {
       </Form>
       {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
       <GoogleSsoButton
+        type="register"
         render={
           renderProps => (
             <Button

@@ -29,6 +29,7 @@ import { UserInformation } from '../entity/views/UserInformation';
 import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
+import { info } from 'console';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -363,51 +364,81 @@ async function decodeEmailFromGoogleToken(token) {
   return { email, givenName, surname };
 }
 
-export const ssoGoogle = handlerWrapper(async (req, res) => {
-  const { token, referralCode } = req.body;
+export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
+  await sleep(1500);
 
+  const { token, referralCode } = req.body;
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  let user = await getActiveUserInformation(email);
+  const user = await getActiveUserInformation(email);
 
-  const isNewUser = !user;
-  const now = getUtcNow();
-  const extra = {
+  assert(user, 404, 'User not found');
+
+  await db.getRepository(User).update({ id: user.id }, {
     loginType: 'google',
-    lastLoggedInAt: now,
-    referredBy: referralCode,
-  };
-
-  if (isNewUser) {
-    let { user: newUser, profile } = createUserAndProfileEntity({
-      email,
-      role: Role.Admin,
-      orgOwner: true,
-    });
-
-    newUser = Object.assign(newUser, extra);
-    newUser.profile = profile;
-    profile.givenName = givenName;
-    profile.surname = surname;
-    await db.manager.save([newUser, profile]);
-
-    user = await getActiveUserInformation(email);
-
-    sendEmail({
-      to: user.email,
-      template: EmailTemplateType.WelcomeOrg,
-      vars: {
-        toWhom: getEmailRecipientName(user),
-      },
-      shouldBcc: false
-    });
-  } else {
-    await db.getRepository(User).update({ id: user.id }, extra);
-  }
+    lastLoggedInAt: getUtcNow(),
+  });
 
   attachJwtCookie(user, res);
 
   emitUserAuditLog(user.id, 'login', { type: 'google' });
 
+  res.json(sanitizeUser(user));
+});
+
+export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
+  await sleep(1000);
+
+  const { token, referralCode } = req.body;
+  const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
+
+  let user = await getActiveUserInformation(email);
+
+  assert(!user, 404, 'User already registered');
+
+  // if (user) {
+  //   sendEmail({
+  //     to: user.email,
+  //     template: EmailTemplateType.RegisterExistingAccount,
+  //     vars: {
+  //       toWhom: getEmailRecipientName(user),
+  //     },
+  //     shouldBcc: false
+  //   });
+  //   res.json();
+  //   return;
+  // }
+
+  // Only create org admin users
+  let { user: newUser, profile } = createUserAndProfileEntity({
+    email,
+    role: Role.Admin,
+    orgOwner: true,
+  });
+
+  newUser = Object.assign(newUser, {
+    loginType: 'google',
+    lastLoggedInAt: getUtcNow(),
+  });
+  newUser.profile = profile;
+  profile.givenName = givenName;
+  profile.surname = surname;
+  await db.manager.save([newUser, profile]);
+
+  user = await getActiveUserInformation(email);
+
+  sendEmail({
+    to: user.email,
+    template: EmailTemplateType.WelcomeOrg,
+    vars: {
+      toWhom: getEmailRecipientName(user),
+    },
+    shouldBcc: false
+  });
+
+
+  attachJwtCookie(user, res);
+
+  emitUserAuditLog(user.id, 'signup', { type: 'google' });
   res.json(sanitizeUser(user));
 });
