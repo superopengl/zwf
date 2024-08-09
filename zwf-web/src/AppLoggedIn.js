@@ -6,7 +6,7 @@ import Icon, {
   BankOutlined, QuestionOutlined, FileOutlined, TagsOutlined, MailOutlined
 } from '@ant-design/icons';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
-import { Space, Typography, Modal, Row, Col, Button } from 'antd';
+import { Space, Typography, Modal, Row, Col, Layout, Button, Menu, Image } from 'antd';
 import styled from 'styled-components';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import AboutModal from 'pages/About/AboutModal';
@@ -80,118 +80,141 @@ const StyledLayout = styled(ProLayout)`
 
 `;
 
+const StyledNewLayout = styled(Layout)`
+.ant-menu {
+  background-color: transparent;
+}
+`;
+
 
 const ROUTES = [
   {
-    group: 'Task',
-  },
-
-  {
-    path: '/task',
-    name: <FormattedMessage id="menu.tasks" />,
-    icon: <Icon component={HiOutlineViewList }/>,
-    roles: ['admin', 'agent', 'client'],
-  },
-  {
-    path: '/activity',
-    name: 'Interactions & Messages',
-    icon: <Icon component={AiOutlineHistory} />,
-    roles: ['client'],
-  },
-  // {
-  //   path: '/metrics',
-  //   name: <FormattedMessage id="menu.metrics" />,
-  //   icon: <Icon component={RiBarChartFill } /> />,
-  //   roles: ['admin']
-  // },
-
-  {
-    path: '/scheduler',
-    name: <FormattedMessage id="menu.scheduler" />,
-    icon: <ClockCircleOutlined />,
-    roles: ['admin', 'agent'],
+    type: 'group',
+    label: 'Tasks',
+    key: 'g_tasks',
+    children: [
+      {
+        key: '/task',
+        label: <FormattedMessage id="menu.tasks" />,
+        icon: <Icon component={HiOutlineViewList} />,
+        roles: ['admin', 'agent', 'client'],
+      },
+      {
+        key: '/activity',
+        label: 'Interactions & Messages',
+        icon: <Icon component={AiOutlineHistory} />,
+        roles: ['client'],
+      },
+      {
+        key: '/scheduler',
+        label: <FormattedMessage id="menu.scheduler" />,
+        icon: <ClockCircleOutlined />,
+        roles: ['admin', 'agent'],
+      },
+    ],
   },
   {
-    group: 'Templates',
+    type: 'group',
+    label: 'Templates',
+    key: 'g_templates',
+    children: [
+      {
+        key: '/task_template',
+        label: <FormattedMessage id="menu.taskTemplate" />,
+        icon: <Icon component={ImInsertTemplate} />,
+        roles: ['admin', 'agent'],
+      },
+      {
+        key: '/doc_template',
+        label: <FormattedMessage id="menu.docTemplate" />,
+        icon: <FileOutlined />,
+        roles: ['admin', 'agent'],
+      },
+    ],
   },
   {
-    path: '/task_template',
-    name: <FormattedMessage id="menu.taskTemplate" />,
-    icon: <Icon component={ImInsertTemplate } />,
-    roles: ['admin', 'agent'],
+    type: 'group',
+    label: 'Users',
+    key: 'g_users',
+    children: [
+      {
+        key: '/support',
+        label: 'User Support',
+        icon: <Icon component={MdMessage} />,
+        roles: ['system'],
+      },
+      {
+        key: '/org',
+        label: <FormattedMessage id="menu.org" />,
+        icon: <BankOutlined />,
+        roles: ['system'],
+      },
+      {
+        key: '/client',
+        label: <FormattedMessage id="menu.client" />,
+        icon: <TeamOutlined />,
+        roles: ['admin', 'agent'],
+      },
+      {
+        key: '/team',
+        label: <FormattedMessage id="menu.team" />,
+        icon: <Icon component={HiOutlineUserGroup} />,
+        roles: ['admin'],
+      },
+    ]
   },
   {
-    path: '/doc_template',
-    name: <FormattedMessage id="menu.docTemplate" />,
-    icon: <FileOutlined />,
-    roles: ['admin', 'agent'],
-  },
-  {
-    group: 'Admin',
-  },
-  {
-    path: '/support',
-    name: 'User Support',
-    icon: <Icon component={MdMessage } />,
-    roles: ['system'],
-  },
-  {
-    path: '/manage/resource',
-    name: 'Resource Pages',
-    icon: <Icon component={MdOutlinePages } />,
-    roles: ['system'],
-  },
-  {
-    path: '/org',
-    name: <FormattedMessage id="menu.org" />,
-    icon: <BankOutlined />,
-    roles: ['system'],
-  },
-  {
-    path: '/client',
-    name: <FormattedMessage id="menu.client" />,
-    icon: <TeamOutlined />,
-    roles: ['admin', 'agent'],
-  },
-  {
-    path: '/team',
-    name: <FormattedMessage id="menu.team" />,
-    icon: <Icon component={HiOutlineUserGroup } />,
-    roles: ['admin'],
-  },
-  {
-    group: 'Others',
-  },
-  {
-    path: '/account',
-    name: 'Subscription & Billings',
-    icon: <Icon component={BiDollar } />,
-    roles: ['admin'],
-  },
-  {
-    path: '/tags',
-    name: <FormattedMessage id="menu.tags" />,
-    icon: <TagsOutlined />,
-    roles: ['admin', 'agent'],
-  },
-  // {
-  //   path: '/revenue',
-  //   name: <FormattedMessage id="menu.revenue" />,
-  //   icon: <Icon component={RiCoinsLine } /> />,
-  //   roles: ['system']
-  // },
-  {
-    path: '/config',
-    name: <FormattedMessage id="menu.config" />,
-    icon: <SettingOutlined />,
-    roles: ['system'],
-    group: 'Others',
+    type: 'group',
+    label: 'Others',
+    key: 'g_others',
+    children: [
+      {
+        key: '/manage/resource',
+        label: 'Resource Pages',
+        icon: <Icon component={MdOutlinePages} />,
+        roles: ['system'],
+      },
+      {
+        key: '/account',
+        label: 'Subscription & Billings',
+        icon: <Icon component={BiDollar} />,
+        roles: ['admin'],
+      },
+      {
+        key: '/tags',
+        label: <FormattedMessage id="menu.tags" />,
+        icon: <TagsOutlined />,
+        roles: ['admin', 'agent'],
+      },
+      // {
+      //   key: '/revenue',
+      //   name: <FormattedMessage id="menu.revenue" />,
+      //   icon: <Icon component={RiCoinsLine } /> />,
+      //   roles: ['system']
+      // },
+      {
+        key: '/config',
+        label: <FormattedMessage id="menu.config" />,
+        icon: <SettingOutlined />,
+        roles: ['system'],
+      },
+    ]
   },
 ];
 
 function getSanitizedPathName(pathname) {
   const match = /\/[^/]+/.exec(pathname);
   return match ? match[0] ?? pathname : pathname;
+}
+
+function getItem(label, key, icon, children, type) {
+  return {
+    key,
+    icon,
+    children,
+    label,
+    type,
+  };
 }
 
 export const AppLoggedIn = React.memo(props => {
@@ -214,7 +237,73 @@ export const AppLoggedIn = React.memo(props => {
   const isAgent = role === 'agent';
   const isClient = role === 'client';
 
-  const routes = ROUTES.filter(x => !x.roles || x.roles.includes(role));
+  const routes = ROUTES.map(g => ({
+    ...g,
+    children: g.children.filter(x => !x.roles || x.roles.includes(role))
+  })).filter(g => g.children.length > 0);
+
+
+  return <StyledNewLayout>
+    <Layout.Sider theme="light" style={{ position: 'fixed', zIndex: 1000, left: 0, top: 0, bottom : 0 }}>
+      <div style={{ position: 'relative', height: '100%', width: '100%' }}>
+      <Image src="/images/logo-horizontal-blue.png" preview={false} width={200}/>
+      <Menu
+        mode="inline"
+        items={routes}
+        />
+
+      <Space direction="vertical" style={{ position: 'absolute', left: 0, right: 0 }}>
+        <Button type="text" size="small" onClick={() => setAboutVisible(true)}>About</Button>
+        <LinkText href="/terms_and_conditions" target="_blank">Terms and Conditions</LinkText>
+        <LinkText href="/privacy_policy" target="_blank">Privacy Policy</LinkText>
+      </Space>
+        </div>
+    </Layout.Sider>
+    <Layout>
+      <Layout.Header theme="light" style={{ position: 'fixed', zIndex: 1000, right: 0, left: 200 }}>
+        <Row justify="space-between">
+          <Col>
+            <Space>
+              <SmartSearch />
+              <CreateNewButton />
+            </Space>
+          </Col>
+          <Col>
+            <div style={{ marginLeft: 16 }}>
+              <AvatarDropdownMenu />
+            </div>
+          </Col>
+        </Row>
+      </Layout.Header>
+      <Layout.Content style={{ marginTop: 64, marginLeft: 200 }}>
+        <Outlet />
+
+        <ChangePasswordModal
+          onOk={() => setChangePasswordVisible(false)}
+          onCancel={() => setChangePasswordVisible(false)}
+        />
+        <ProfileModal
+          onOk={() => setProfileVisible(false)}
+          onCancel={() => setProfileVisible(false)}
+        />
+        <Modal
+          title="Organization Profile"
+          onOk={() => setOrgProfileVisible(false)}
+          onCancel={() => setOrgProfileVisible(false)}
+          footer={null}
+          destroyOnClose={true}
+          maskClosable={false}
+        >
+          <OrgOnBoardForm onOk={() => setOrgProfileVisible(false)} />
+        </Modal>
+        <AboutModal
+          onClose={() => setAboutVisible(false)}
+        />
+        {!isSystem && <SupportAffix />}
+      </Layout.Content>
+    </Layout>
+
+  </StyledNewLayout>
 
   return <StyledLayout
     // title={<Image src="/images/brand.svg" preview={false} width={110} />}
@@ -231,8 +320,8 @@ export const AppLoggedIn = React.memo(props => {
     collapsed={collapsed}
     onCollapse={setCollapsed}
     menuItemRender={(item, dom) => {
-      if(item.group) {
-        return <Text type="secondary" style={{fontSize: 'small'}}>{item.group}</Text>
+      if (item.group) {
+        return <Text type="secondary" style={{ fontSize: 'small' }}>{item.group}</Text>
       }
       // return <Button type="text" block size="large" icon={item.icon}>{item.name}</Button>
       return <Link to={item.path} onClick={() => {

@@ -21,9 +21,13 @@ const modifyVars = {
   '@highlight-color': '#cf222e',
   '@font-size-base': '14px',
   '@table-font-size': '12px',
-  '@layout-header-background': '#062638',
+  '@layout-body-background': '#ffffff',
+  '@layout-header-background': '#ffffff',
+  '@layout-sider-background-light': '#F1F2F5',
   '@heading-color': '#2C3645',
   '@label-color': '#00232988',
+
+
   // '@btn-font-size-sm': '12px',
   '@btn-font-size-lg': '14px',
   '@height-base': '32px',

@@ -242,7 +242,7 @@ async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscrip
 
       await m.save([payment, subscription]);
 
-      console.log(`Renewed subscription ${subscription.id} for org ${orgId} at $${payment.amount} from ${payment.start} to ${payment.end}`);
+      // console.log(`Renewed subscription ${subscription.id} for org ${orgId} at $${payment.amount} from ${payment.start} to ${payment.end}`);
       await enqueueRecurringSucceededEmail(m, targetSubscription, payment);
     });
   } catch (e) {
