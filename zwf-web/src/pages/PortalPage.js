@@ -46,6 +46,10 @@ export const PortalPage = () => {
 
   const navigate = useNavigate();
   const [visible, setVisible] = React.useState(false);
+  const context = React.useContext(GlobalContext);
+
+  const { role } = context;
+  const isGuest = role === 'guest';
 
   const handleMenuChange = (path) => {
     navigate(path);
@@ -74,14 +78,19 @@ export const PortalPage = () => {
               <Tabs.TabPane tab="Contact Us" key="/#contactus"></Tabs.TabPane>
             </Tabs>
           </Col>
-          <Col>
+          {isGuest && <Col>
             <Link to="/login">
               <Button type="primary" ghost>Log in</Button>
             </Link>
-          </Col>
-          <Col>
+          </Col>}
+          {isGuest && <Col>
             <Button type="primary" onClick={handleShowModal}>Try it Now</Button>
-          </Col>
+          </Col>}
+          {!isGuest && <Col>
+            <Link to="/task">
+              <Button type="primary">Go to App</Button>
+            </Link>
+          </Col>}
         </Row>
       </Space>
     </Layout.Header>
