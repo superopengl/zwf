@@ -1,7 +1,7 @@
 import React from 'react';
 import { GlobalContext } from './contexts/GlobalContext';
 import Icon, {
-  SettingOutlined, BankOutlined, FileOutlined, TagFilled, CreditCardFilled
+  SettingOutlined, BankOutlined, QuestionOutlined, TagFilled, CreditCardFilled
 } from '@ant-design/icons';
 import { Space, Typography, Row, Col, Layout, Button, Image } from 'antd';
 import styled from 'styled-components';
@@ -16,9 +16,9 @@ import { SupportAffix } from 'components/SupportAffix';
 import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { AiFillCalendar } from 'react-icons/ai';
-import { HiUser, HiUsers } from 'react-icons/hi';
-import {MdDashboard, MdSpaceDashboard} from 'react-icons/md';
-import {BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill} from 'react-icons/bs';
+import { BsBell } from 'react-icons/bs';
+import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
+import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 
 const { Link: LinkText } = Typography;
@@ -196,8 +196,8 @@ const FooterMenuItem = props => {
   const { children, href } = props;
   return <LinkText href={href} target="_blank">
     <Button type="text" block style={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', fontSize: 'small', color: '#7787A2' }}>
-    {children}
-  </Button>
+      {children}
+    </Button>
   </LinkText>
 }
 
@@ -229,7 +229,7 @@ export const AppLoggedIn = React.memo(() => {
           <Image src="/images/logo-horizontal-blue.png" preview={false} width={140} />
         </Layout.Sider>
         <Layout.Content style={{ paddingLeft: 24, paddingRight: 24 }}>
-          <Row justify="space-between">
+          <Row justify="space-between" gutter={16}>
             <Col>
               <Space>
                 <SmartSearch />
@@ -237,9 +237,11 @@ export const AppLoggedIn = React.memo(() => {
               </Space>
             </Col>
             <Col>
-              <div style={{ marginLeft: 16 }}>
-                <AvatarDropdownMenu />
-              </div>
+              <Space>
+                {/* <Button icon={<QuestionOutlined />} type="text" size="large"></Button>
+                <Button icon={<Icon component={BsBell}/>} type="text" size="large"></Button> */}
+                <AvatarDropdownMenu style={{marginLeft: 8}}/>
+              </Space>
             </Col>
           </Row>
         </Layout.Content>
