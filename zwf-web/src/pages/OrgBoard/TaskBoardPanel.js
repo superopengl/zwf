@@ -89,7 +89,7 @@ const TaskBoardColumn = props => {
 
   return <Col span={6} ref={drop}>
     <StyledColumn direction="vertical" style={{
-      backgroundColor: style.bgColor,
+      backgroundColor:isOver ? `${style.hoverColor}11` : style.bgColor,
       borderWidth: 2,
       borderStyle: isOver ? 'dashed' : 'solid',
       borderColor: isOver ? style.hoverColor : style.bgColor
