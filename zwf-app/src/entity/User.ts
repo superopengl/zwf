@@ -75,4 +75,7 @@ export class User {
 
   @Column({ default: false })
   suspended: boolean;
+
+  @Column({ default: false })
+  sawWalkthrough?: boolean;
 }

@@ -64,11 +64,6 @@ const OrgListPage = () => {
     //   render: (value, item) => <Text code>{value}</Text>,
     // },
     {
-      title: 'Domain',
-      dataIndex: 'domain',
-      render: (value) => <Text code>{value}</Text>
-    },
-    {
       title: 'Business Name',
       dataIndex: 'businessName',
       render: (value) => value

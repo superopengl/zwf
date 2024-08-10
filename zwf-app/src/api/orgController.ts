@@ -46,7 +46,7 @@ export const saveOrgProfile = handlerWrapper(async (req, res) => {
 export const createMyOrg = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const userId = getUserIdFromReq(req);
-  const { name, domain, businessName, country, address, tel, abn } = req.body;
+  const { name, businessName, country, address, tel, abn } = req.body;
   const userEnitty = await db.getRepository(User).findOne({ where: { id: userId } });
 
   const isFirstSave = !userEnitty.orgId;
@@ -55,7 +55,6 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   const orgId = isFirstSave ? uuidv4() : userEnitty.orgId;
   org.id = orgId;
   org.name = name?.trim();
-  org.domain = domain?.trim();
   org.businessName = businessName?.trim();
   org.country = country;
   org.address = address?.trim();

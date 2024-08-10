@@ -143,7 +143,7 @@ async function sendEndingNotificationEmails() {
         vars: {
           toWhom: getEmailRecipientNameByNames(x.givenName, x.surname),
           // subscriptionId: x.subscriptionId,
-          // start: moment(x.startAt).format('D MMM YYYY'),
+          // start: moment(x.startedAt).format('D MMM YYYY'),
           end: moment(x.endingAt).format('D MMM YYYY'),
         }
       };
@@ -174,8 +174,8 @@ async function getLastValidPaymentMethod(m: EntityManager, subscription: Subscri
   return lastPaidPayment;
 }
 
-async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscriptionInformation) {
-  const { headBlockId: subscriptionId, endingAt } = targetSubscription;
+async function renewRecurringSubscription(subInfo: OrgCurrentSubscriptionInformation) {
+  const { headBlockId, subscriptionId, startedAt, endingAt } = subInfo;
 
   try {
     await db.transaction(async m => {
@@ -243,15 +243,15 @@ async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscrip
       await m.save([payment, subscription]);
 
       // console.log(`Renewed subscription ${subscription.id} for org ${orgId} at $${payment.amount} from ${payment.start} to ${payment.end}`);
-      await enqueueRecurringSucceededEmail(m, targetSubscription, payment);
+      await enqueueRecurringSucceededEmail(m, subInfo, payment);
     });
   } catch (e) {
-    await enqueueRecurringFailedEmail(db.manager, targetSubscription);
+    await enqueueRecurringFailedEmail(db.manager, subInfo);
 
     const sysLog = new SysLog();
     sysLog.level = 'autopay_falied';
     sysLog.message = 'Recurring auto pay failed';
-    sysLog.req = targetSubscription;
+    sysLog.req = subInfo;
     await db.getRepository(SysLog).insert(sysLog);
   }
 }
@@ -259,12 +259,12 @@ async function renewRecurringSubscription(targetSubscription: OrgCurrentSubscrip
 async function handleRecurringPayments() {
   const list = await db.getRepository(OrgCurrentSubscriptionInformation)
     .createQueryBuilder()
-    .where({ recurring: true })
-    .andWhere('"softEnd" <= CURRENT_DATE')
+    .where({ enabled: true })
+    .andWhere('"endingAt" <= CURRENT_DATE')
     .getMany();
 
-  for (const item of list) {
-    await renewRecurringSubscription(item);
+  for (const subInfo of list) {
+    await renewRecurringSubscription(subInfo);
   }
 }
 

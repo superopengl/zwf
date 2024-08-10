@@ -18,13 +18,29 @@ export type PurchaseSubscriptionRequest = {
   promotionCode: string;
 };
 
+export async function renewSubscriptionWithPrimaryCard(subscriptionId: string) {
+  await db.manager.transaction(async m => {
+    const subscription = await m.findOneOrFail(Subscription, {
+      where: {
+        id: subscriptionId,
+      },
+      relations: [
+        'headBlock',
+        'headBlock.payment',
+      ]
+    });
+
+
+  });
+}
+
 export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSubscriptionRequest, geoInfo = null) {
   const { orgId, seats, promotionCode } = request;
   assert(orgId, 400, 'orgId is empty');
   assert(seats > 0, 400, 'seats must be positive integer');
 
   const now = moment.utc();
-  const startAt = now.toDate();
+  const startedAt = now.toDate();
 
   await db.manager.transaction(async m => {
     const {
@@ -56,7 +72,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
     block.subscriptionId = subscription.id;
     block.type = SubscriptionBlockType.Monthly;
     block.parentBlockId = headBlock.id;
-    block.startAt = startAt;
+    block.startedAt = startedAt;
     block.endingAt = now.add(1, 'month').add(-1, 'day').endOf('day').toDate()
     block.seats = seats;
     block.unitPrice = unitPrice;

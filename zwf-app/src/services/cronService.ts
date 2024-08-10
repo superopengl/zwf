@@ -1,12 +1,7 @@
-import { getRepository } from 'typeorm';
 import { Recurring } from '../entity/Recurring';
-import { SysLog } from '../entity/SysLog';
 import { assert } from '../utils/assert';
 import { TaskStatus } from '../types/TaskStatus';
 import { Task } from '../entity/Task';
-import errorToJSON from 'error-to-json';
-import { TaskTemplate } from '../entity/TaskTemplate';
-import { User } from '../entity/User';
 import * as moment from 'moment-timezone';
 import 'colors';
 import { calculateRecurringNextRunAt } from '../utils/calculateRecurringNextRunAt';
@@ -16,20 +11,6 @@ export const CLIENT_TZ = 'Australia/Sydney';
 
 export const CRON_EXECUTE_TIME = process.env.NODE_ENV === 'dev' ? moment().add(2, 'minute').format('HH:mm') : '5:00';
 
-function logging(log: {
-  level?: string,
-  message: string,
-  data?: any
-}) {
-  const sysLog = new SysLog();
-  sysLog.level = 'info';
-  Object.assign(sysLog, log);
-  sysLog.createdBy = 'cron';
-  db.getRepository(SysLog).save(sysLog).catch(err => {
-    console.error('Logging error', errorToJSON(err));
-  });
-}
-
 export async function testRunRecurring(recurringId: string) {
   const recurring = await db.getRepository(Recurring).findOne({where: {id: recurringId}});
   assert(recurring, 404);
@@ -37,7 +18,7 @@ export async function testRunRecurring(recurringId: string) {
 }
 
 async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
-  const { name, taskTemplateId } = recurring;
+  const { name } = recurring;
 
   // const taskTemplate = await db.getRepository(TaskTemplate).findOneBy({id: taskTemplateId});
   const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
@@ -61,53 +42,3 @@ async function executeRecurring(recurring: Recurring, resetNextRunAt: boolean) {
 
   return task;
 }
-
-async function executeSingleRecurringFromCron(recurring: Recurring): Promise<void> {
-  const { id } = recurring;
-
-  try {
-    console.log('[Recurring]'.bgYellow, `Executing recuring ${id}`);
-    await executeRecurring(recurring, true);
-
-    logging({
-      message: 'Recurring complete',
-      data: {
-        recurringId: id
-      }
-    });
-
-
-    console.log('[Recurring]'.bgYellow, `Done with recuring ${id}`);
-  } catch (err) {
-    logging({
-      level: 'error',
-      message: 'Recurring error',
-      data: {
-        recurringId: id,
-        error: errorToJSON(err)
-      }
-    });
-
-    console.error('[Recurring]'.bgYellow, `Error from recuring ${id}`, err);
-  }
-}
-
-// export function startCronService() {
-//   try {
-//     console.log('[Recurring]'.bgYellow, `Starting cron service`);
-
-//     startCronJob();
-
-//     console.log('[Recurring]'.bgYellow, `Started cron service`);
-//     logging({
-//       message: 'Cron service started'
-//     });
-//   } catch (e) {
-//     console.error('[Recurring]'.bgYellow, `Failed to start cron service`, errorToJSON(e));
-//     logging({
-//       level: 'error',
-//       message: 'Failed to restart cron service',
-//       data: errorToJSON(e)
-//     });
-//   }
-// }

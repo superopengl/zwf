@@ -15,9 +15,6 @@ export class Org {
   name: string;
 
   @Column()
-  domain: string;
-
-  @Column()
   businessName: string;
 
   @Column()

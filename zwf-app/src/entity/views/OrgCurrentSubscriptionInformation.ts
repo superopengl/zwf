@@ -25,8 +25,10 @@ import { SubscriptionBlock } from '../SubscriptionBlock';
     .select([
       's.id as "subscriptionId"',
       's."orgId" as "orgId"',
+      's."status" as "status"',
       'b."type" as type',
       '"seats"',
+      '"startedAt"',
       '"endingAt"',
       '"headBlockId"',
       'count as "occupiedSeats"',
@@ -46,6 +48,9 @@ export class OrgCurrentSubscriptionInformation {
 
   @ViewColumn()
   seats: number;
+
+  @ViewColumn()
+  startedAt: Date;
 
   @ViewColumn()
   endingAt: Date;

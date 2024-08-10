@@ -16,7 +16,7 @@ function getPaymentMethodName(cardLast4: string) {
 }
 
 function getSubscriptionDescription(receipt: ReceiptInformation) {
-  const start = moment(receipt.startAt).format('D MMM YYYY');
+  const start = moment(receipt.startedAt).format('D MMM YYYY');
   const end = moment(receipt.endingAt).format('D MMM YYYY');
 
   return `ZeeWorkflow subscription (${start} - ${end})`;

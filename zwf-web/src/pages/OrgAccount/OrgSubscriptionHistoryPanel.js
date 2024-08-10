@@ -39,10 +39,10 @@ export const OrgSubscriptionHistoryPanel = (props) => {
       align: 'left',
       render: (value, item) => {
         return <Space>
-          <TimeAgo value={item.startAt} showAgo={false} accurate={false} />
+          <TimeAgo value={item.startedAt} showAgo={false} accurate={false} />
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {!item.endedAt && moment(item.startAt).isBefore() && moment(item.endingAt).isAfter() && <Tag>current</Tag>}
+          {!item.endedAt && moment(item.startedAt).isBefore() && moment(item.endingAt).isAfter() && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
@@ -59,7 +59,7 @@ export const OrgSubscriptionHistoryPanel = (props) => {
       title: 'Days',
       align: 'center',
       render: (value, item) => {
-        return item.endingAt ? <Text>{moment(item.endingAt).diff(moment(item.startAt), 'days') + 1}</Text> : null;
+        return item.endingAt ? <Text>{moment(item.endingAt).diff(moment(item.startedAt), 'days') + 1}</Text> : null;
       }
     },
     {

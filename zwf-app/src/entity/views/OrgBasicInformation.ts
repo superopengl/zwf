@@ -16,7 +16,6 @@ import { OrgCurrentSubscriptionInformation } from './OrgCurrentSubscriptionInfor
       'o.id as id',
       'o.name as name',
       'o."businessName" as "businessName"',
-      'o.domain as domain',
       'o.tel as tel',
       'u.id as "adminUserId"',
       'p.email as "ownerEmail"',
@@ -37,9 +36,6 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   businessName: string;
-
-  @ViewColumn()
-  domain: string;
 
   @ViewColumn()
   tel: string;
