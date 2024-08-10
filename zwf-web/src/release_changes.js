@@ -1,2 +1,2 @@
 export const notes=`
-login fix`
+tweak price card`
