@@ -1160,14 +1160,15 @@ paths:
       responses:
         200:
           description: OK
-  /promotion:
+  /promotion/:orgId:
     get:
       operationId: listPromotionCode
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: savePromotion
+      parameters:
+        - name: orgId
+          in: path
+          type: string
+          format: uuid
+          required: true      
       responses:
         200:
           description: OK
@@ -1175,7 +1176,14 @@ paths:
       operationId: newPromotionCode
       responses:
         200:
+          description: OK     
+  /promotion:
+    post:
+      operationId: savePromotion
+      responses:
+        200:
           description: OK
+
   /smart_search/task:
     post:
       operationId: smartSearchTask

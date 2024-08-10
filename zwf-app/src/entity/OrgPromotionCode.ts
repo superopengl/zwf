@@ -17,8 +17,8 @@ export class OrgPromotionCode {
   @DeleteDateColumn()
   deletedAt?: Date;
 
-  @Column('date')
-  end: string;
+  @Column()
+  endingAt: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
   percentage: number;

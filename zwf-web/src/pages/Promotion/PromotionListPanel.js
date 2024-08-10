@@ -50,9 +50,9 @@ const PromotionListPanel = (props) => {
     },
     {
       title: 'End',
-      dataIndex: 'end',
+      dataIndex: 'endingAt',
       sorter: {
-        compare: (a, b) => compareDates(a.end, b.end)
+        compare: (a, b) => compareDates(a.endingAt, b.endingAt)
       },
       render: (value) => <TimeAgo value={value} />
     },
@@ -69,7 +69,7 @@ const PromotionListPanel = (props) => {
   const loadList = () => {
     setLoading(true);
 
-    return listPromotions$().subscribe(
+    return listPromotions$(org.id).subscribe(
       list => setList(list),
     ).add(() => {
       setLoading(false);
@@ -84,7 +84,7 @@ const PromotionListPanel = (props) => {
   }, []);
 
   const handleNewPromotionCode = () => {
-    newPromotionCode$().subscribe(code => {
+    newPromotionCode$(org.id).subscribe(code => {
       setNewCode(code);
       setModalVisible(true);
     })
@@ -145,7 +145,7 @@ const PromotionListPanel = (props) => {
               parser={value => +(value.replace(' %', '')) / 100}
             />
           </Form.Item>
-          <Form.Item label="End" name="end" rules={[{ required: true, type: 'date', whitespace: true, message: ' ' }]}>
+          <Form.Item label="End" name="endingAt" rules={[{ required: true, type: 'date', whitespace: true, message: ' ' }]}>
             <DatePicker type="date" />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>

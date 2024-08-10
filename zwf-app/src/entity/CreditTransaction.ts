@@ -21,4 +21,7 @@ export class CreditTransaction {
 
   @Column()
   type: 'grant' | 'deduct' | 'revert' | 'refund';
+
+  @Column('uuid', {nullable: true})
+  paymentId: string;
 }

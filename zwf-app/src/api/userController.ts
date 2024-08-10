@@ -254,13 +254,12 @@ export const listMyCreditHistory = handlerWrapper(async (req, res) => {
     .where('uc."orgId" = :orgId', { orgId })
     // .andWhere('uc.amount != 0')
     .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
-    .leftJoin(q => q.from(Subscription, 'sub'), 'sub', 'sub.id = py."subscriptionId"')
     .orderBy('uc."createdAt"', 'ASC')
     .select([
       'uc."createdAt" as "createdAt"',
       'uc.amount as amount',
       'py.id as "paymentId"',
-      'sub.type as type'
+      'uc.type as type',
     ])
     .execute();
   res.json(list);

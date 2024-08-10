@@ -54,10 +54,6 @@ export class Payment {
   @Column('jsonb', { nullable: true })
   geo: object;
 
-  @OneToOne(() => CreditTransaction, { nullable: true, cascade: true })
-  @JoinColumn({ name: 'creditTransactionId', referencedColumnName: 'id' })
-  creditTransaction: CreditTransaction;
-
   @OneToOne(() => SubscriptionBlock, block => block.payment , { onDelete: 'CASCADE' })
   @JoinColumn()
   subscriptionBlock: SubscriptionBlock;

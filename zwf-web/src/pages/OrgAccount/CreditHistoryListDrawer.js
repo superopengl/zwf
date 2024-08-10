@@ -1,13 +1,15 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, List, Drawer } from 'antd';
+import { Typography, List, Drawer, Button } from 'antd';
 import PropTypes from 'prop-types';
 import MoneyAmount from 'components/MoneyAmount';
 import { TimeAgo } from 'components/TimeAgo';
 import { getSubscriptionName } from 'util/getSubscriptionName';
 import { sumBy } from 'lodash';
 import { from } from 'rxjs';
+import { downloadReceipt } from 'services/subscriptionService';
+import { DownloadOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -45,6 +47,10 @@ const CreditHistoryListDrawer = (props) => {
 
   const total = sumBy(data, x => (+x.amount) || 0);
 
+  const handleReceipt = async (paymentId) => {
+    await downloadReceipt(paymentId);
+  }
+
   return (
     <StyledDrawer
       title="Credit History"
@@ -70,8 +76,13 @@ const CreditHistoryListDrawer = (props) => {
         renderItem={item => {
           return <List.Item>
             <List.Item.Meta
-              description={<TimeAgo value={item.createdAt} />}
-              title={item.referredUserEmail || getSubscriptionName(item.type)}
+              description={<>
+              <TimeAgo value={item.createdAt} direction="horizontal" />
+            <Button type="link" size="small" onClick={() => handleReceipt(item.paymentId)} icon={<DownloadOutlined />}>Receipt</Button>
+
+              </>
+              }
+              title={item.type}
             />
             <MoneyAmount type={item.amount < 0 ? 'danger' : 'success'} value={item.amount} />
           </List.Item>
