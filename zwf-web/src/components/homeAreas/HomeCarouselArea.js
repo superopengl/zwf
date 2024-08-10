@@ -103,7 +103,7 @@ export const HomeCarouselArea = () => {
               <div style={{padding: 10, position: 'relative'}}>
                 <div style={{backgroundColor: '#0FBFC4', width: 150, height: 150, borderRadius: 8, position: 'absolute', left:0, bottom : 0}}></div>
                 <div style={{backgroundColor: '#FF7D00', width: 150, height: 150, borderRadius: 8, position: 'absolute', right:0, top : 0}}></div>
-                <Image src="/images/catchPicture.png" preview={false}/>
+                <Image src="/images/catchPicture.png" style={{opacity: 0.95}} preview={false}/>
               </div>
             </CatchPicture>
           </Col>
