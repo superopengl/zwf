@@ -1,15 +1,10 @@
 // import 'App.css';
 import { HomeCarouselArea } from 'components/homeAreas/HomeCarouselArea';
-import HomeServiceArea from 'components/homeAreas/HomeServiceArea';
 import React from 'react';
 import { HomePricingArea } from 'components/homeAreas/HomePricingArea';
-
-import HomeContactArea from 'components/homeAreas/HomeContactArea.js';
 import smoothscroll from 'smoothscroll-polyfill';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
 import styled from 'styled-components';
-import HomeFooter from 'components/HomeFooter';
-import { ajax } from 'rxjs/ajax';
 import { HomeFeatureListArea } from 'components/homeAreas/HomeFeatureListArea';
 import { HomeContactUsArea } from 'components/homeAreas/HomeContactUsArea';
 import { HomeKeyFeatureArea } from 'components/homeAreas/HomeKeyFeatureArea';
@@ -54,12 +49,6 @@ export const HomePage = (props) => {
     <section id="contactus">
       <HomeContactUsArea />
     </section>
-    {/* <section><HomeContactArea bgColor="#0a425e"></HomeContactArea></section> */}
-    {/* <section><HomeSearchArea /></section> */}
-    {/* <section>
-      <HomeServiceArea bgColor="#135200" />
-    </section> */}
-    {/* <HomeFooter /> */}
   </Container>
 }
 
