@@ -27,6 +27,9 @@ export class ResourcePage {
   @Column({ default: '' })
   brief: string;
 
+  @Column('jsonb', { nullable: true })
+  readingTime: {text: string, minutes: number, time: number, words: number}; // https://www.npmjs.com/package/reading-time
+
   @Column({ default: '' })
   html: string;
 }
