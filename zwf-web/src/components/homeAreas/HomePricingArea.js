@@ -8,6 +8,7 @@ import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'reac
 import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
+import { OrgRegisterModal } from 'components/OrgRegisterModal';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -63,17 +64,29 @@ padding-top: 3rem;
 
 
 export const HomePricingArea = props => {
+  const [visible, setVisible] = React.useState(false);
+
+
+  const handleShowModal = (e) => {
+    e.stopPropagation();
+    setVisible(true);
+  }
+
+  const handleHideModal = () => {
+    setVisible(false);
+  }
+
   return (
     <Container>
       <InnerContainer>
         <Title style={{ color: '#0FBFC4', textAlign: 'center', fontWeight: 700, fontSize: 18, lineHeight: 1.5, margin: 0 }}>Only One Plan !</Title>
         <Title style={{ textAlign: 'center', fontWeight: 800, margin: 0 }}>We get tired of multiple plans</Title>
         <Row align='end'
-        justify='center'
+          justify='center'
           gutter={20}
-          style={{alignItems: 'flex-end'}}
+          style={{ alignItems: 'flex-end' }}
         >
-          <Col flex="auto" style={{ textAlign: 'right',  }}
+          <Col flex="auto" style={{ textAlign: 'right', }}
             {...{
               xs: 0,
               sm: 0,
@@ -113,7 +126,7 @@ export const HomePricingArea = props => {
               <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Monthly auto renew payment
               </Paragraph>
-              <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }}>Join Now</Button>
+              <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} >Join Now</Button>
             </div>
           </Col>
           <Col flex="auto"
@@ -130,6 +143,11 @@ export const HomePricingArea = props => {
 
           </Col>
         </Row>
+        <OrgRegisterModal
+          visible={visible}
+          onOk={handleHideModal}
+          onCancel={handleHideModal}
+        />
       </InnerContainer>
     </Container>
   )
