@@ -19,7 +19,7 @@ font-size: 0.8rem;
 color: #aaaaaa;
 background-color: #13161B;
 padding: 2rem 1rem;
-// position: fixed;
+// position: absolute;
 // bottom: 0;
 // left: 0;
 // right: 0;
