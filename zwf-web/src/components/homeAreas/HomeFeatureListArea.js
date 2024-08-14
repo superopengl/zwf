@@ -122,7 +122,7 @@ const clientFeatures = [
   name: x,
 }))
 
-export const HomeFeaturesArea = props => {
+export const HomeFeatureListArea = props => {
   return (
     <Container>
       <InnerContainer>
@@ -150,8 +150,8 @@ export const HomeFeaturesArea = props => {
   )
 }
 
-HomeFeaturesArea.propTypes = {
+HomeFeatureListArea.propTypes = {
 };
 
-HomeFeaturesArea.defaultProps = {
+HomeFeatureListArea.defaultProps = {
 };

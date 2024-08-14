@@ -31,6 +31,8 @@ const modifyVars = {
   '@height-lg': '40px',
   '@height-sm': '28px',
   '@border-radius-base': '4px',
+  '@text-color': '#4B5B76',
+  '@text-color-secondary': '#4B5B7688',
   // '@font-family': "'Inter', 'klavika', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji'",
   // '@table-padding-vertical': '4px',
   // '@table-padding-horizontal': '4px',
