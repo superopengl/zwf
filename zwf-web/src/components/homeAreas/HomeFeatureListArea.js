@@ -68,58 +68,62 @@ const orgColumns = [
   {
     title: 'Org Portal',
     dataIndex: 'name',
-    render: text => <Row justify='space-between'>
+    render: (text, item) => <Row justify='space-between'>
       <Col>
         <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
       </Col>
       <Col>
-        <Text type="secondary" italic>included</Text>
+        <Text type="secondary" italic>{item.extra}</Text>
       </Col>
     </Row>
   }
 ]
 
 const orgFeatures = [
-  'Status based task management',
-  'Task assignment',
-  'Scheduler to periodically create tasks',
-  'Task template',
-  'Doc template',
-  'Realtime client communication',
-  'Task event timeline',
-  'Request client for actions',
-  'Request client for Doc Sign',
-  'Tags for task and user management',
-  'Invite any clients by email addresses',
-  'Google Single Sign On',
-  'Team metrics',
-].map(x => ({
-  key: x,
-  name: x,
+  { name: 'Status based task management', release: 'v1' },
+  { name: 'Task assignment', release: 'v1' },
+  { name: 'Scheduler to periodically create tasks', release: 'v1' },
+  { name: 'Task template', release: 'v1' },
+  { name: 'Doc template', release: 'v1' },
+  { name: 'Realtime client communication', release: 'v1' },
+  { name: 'Task event timeline', release: 'v1' },
+  { name: 'Request client for actions', release: 'v1' },
+  { name: 'Request client for Doc Sign', release: 'v1' },
+  { name: 'Tags for task and user management', release: 'v1' },
+  { name: 'Invite any clients by email addresses', release: 'v1' },
+  { name: 'Google Single Sign On', release: 'v1' },
+  { name: 'Team metrics', dev: true },
+  { name: 'Doc Sign in blockchian', dev: true },
+].map((x, i) => ({
+  key: i,
+  name: x.name,
+  extra: x.release ? `alive from ${x.release}` : x.dev ? 'coming soon' : ''
 }))
 
 const clientColumns = [
   {
     title: 'Client Portal',
     dataIndex: 'name',
-    render: text => <Row justify='space-between'>
+    render: (text, item) => <Row justify='space-between'>
       <Col>
         <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
       </Col>
       <Col>
-        <Text type="secondary" italic>free</Text>
+        <Text type="secondary" italic>{item.extra}</Text>
       </Col>
     </Row>
   }
 ]
 
 const clientFeatures = [
-  'Realtime chat communication',
-  'Task event timeline',
-  'Doc Sign',
-].map(x => ({
-  key: x,
-  name: x,
+  { name:'Realtime chat communication',release: 'v1' },
+  { name:'Task event timeline',release: 'v1' },
+  { name:'Doc Sign',release: 'v1' },
+  { name: 'Doc Sign in blockchian', dev: true },
+].map((x, i) => ({
+  key: i,
+  name: x.name,
+  extra: x.release ? `alive from ${x.release}` : x.dev ? 'coming soon' : ''
 }))
 
 export const HomeFeatureListArea = props => {
@@ -128,7 +132,7 @@ export const HomeFeatureListArea = props => {
       <InnerContainer>
         <Title style={{ textAlign: 'center' }}>Included Features</Title>
         <Row justify='center' >
-          <Col style={{ maxWidth: 800, width: '100%' }}>
+          <Col style={{ maxWidth: 700, width: '100%' }}>
             <Table
               columns={orgColumns}
               dataSource={orgFeatures}

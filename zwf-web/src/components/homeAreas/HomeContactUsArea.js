@@ -82,20 +82,6 @@ export const HomeContactUsArea = props => {
     <Container>
       <InnerContainer>
         <Row justify='center'>
-          <Col flex="auto" style={{ textAlign: 'right', position: 'relative' }}
-            {...{
-              xs: 0,
-              sm: 0,
-              md: 0,
-              lg: 2,
-              xl: 2,
-              xxl: 2
-            }}
-          >
-            <div style={{ position: 'absolute', bottom: -30, left: 0, zIndex: 200 }}>
-              <Image src="/images/contact-left.svg" preview={false} style={{ width: 'clamp(400px, 30vw, 460px)' }} />
-            </div>
-          </Col>
           <Col
             flex="auto"
             className='dark-card'
@@ -103,6 +89,7 @@ export const HomeContactUsArea = props => {
           >
             <Row gutter={16}>
               <Col
+                style={{ position: 'relative' }}
                 {...{
                   xs: 24,
                   sm: 24,
@@ -114,6 +101,9 @@ export const HomeContactUsArea = props => {
               >
                 <Text style={{ color: '#0FBFC4' }}>Got a question?</Text>
                 <Title style={{ color: '#ffffff', marginTop: '1rem' }}>Contact Us Now</Title>
+                <div style={{ position: 'absolute', bottom: -50, right: 20 }}>
+                  <Image src="/images/contact-left.svg" preview={false} style={{ width: 'clamp(400px, 30vw, 460px)' }} />
+                </div>
               </Col>
               <Col flex="auto">
                 <Form
