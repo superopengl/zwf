@@ -1,3 +1,2 @@
 export const notes=`
-update release notes
-homepage refine`
+update release notes`
