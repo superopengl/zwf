@@ -43,7 +43,7 @@ export const OrgRegisterInput = React.memo(props => {
       // enterButton="Try it Now"
       // onSearch={handleShowModal}
     />
-    <Button type="primary" size="large" onClick={handleShowModal}>Try it Now</Button>
+    <Button type="primary" size="large" onClick={handleShowModal} style={{color: '#ffffff'}}>Try it Now</Button>
     <OrgRegisterModal
       visible={visible}
       onOk={handleHideModal}
