@@ -1,5 +1,5 @@
 import { db } from './../src/db';
-import { In } from 'typeorm';
+import { EntityManager, In } from 'typeorm';
 import { SubscriptionBlockType } from '../src/types/SubscriptionBlockType';
 import { Payment } from '../src/entity/Payment';
 import { Role } from '../src/types/Role';
@@ -17,19 +17,19 @@ const JOB_NAME = 'daily-subscription';
 async function autoRenewSubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { type } = subInfo;
 
-  switch (type) {
-    case SubscriptionBlockType.Trial:
-      renewTrialSubscription(subInfo);
-      break;
-    case SubscriptionBlockType.Monthly:
-      renewMonthlySubscription(subInfo);
-      break;
-    case SubscriptionBlockType.OverduePeacePeriod:
-      renewOverdueSubscription(subInfo);
-      break;
-    default:
-      throw new Error(`Unsupported subscription type: ${type}`);
-  }
+    switch (type) {
+      case SubscriptionBlockType.Trial:
+        renewTrialSubscription(subInfo);
+        break;
+      case SubscriptionBlockType.Monthly:
+        renewMonthlySubscription(subInfo);
+        break;
+      case SubscriptionBlockType.OverduePeacePeriod:
+        renewOverdueSubscription(subInfo);
+        break;
+      default:
+        throw new Error(`Unsupported subscription type: ${type}`);
+    }
 }
 
 async function handleAutoRenewPayments() {

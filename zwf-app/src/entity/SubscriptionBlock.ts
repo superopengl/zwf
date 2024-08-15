@@ -31,7 +31,7 @@ export class SubscriptionBlock {
   promotionCode: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  unitPrice: number;
+  pricePerSeat: number;
 
   @Column()
   startedAt: Date;
@@ -42,8 +42,8 @@ export class SubscriptionBlock {
   @Column({ nullable: false })
   endingAt: Date;
 
-  @OneToOne(() => Payment, payment => payment.subscriptionBlock, { onDelete: 'CASCADE', eager: false })
-  payment: Payment;
+  @Column('uuid', {nullable: true})
+  paymentId: string;
 
   @ManyToOne(() => Subscription, subscription => subscription.blocks, { onDelete: 'CASCADE' })
   subscription: Subscription;

@@ -16,7 +16,6 @@ import { OrgPaymentMethod } from '../OrgPaymentMethod';
     .innerJoin(SubscriptionBlock, 's', 'p."subscriptionBlockId" = s.id')
     .innerJoin(OrgBasicInformation, 'org', 'p."orgId" = org.id')
     .leftJoin(CreditTransaction, 'c', 'p."creditTransactionId" = c.id')
-    .where(`p.status = '${PaymentStatus.Paid}'`)
     .orderBy('p."paidAt"', 'DESC')
     .select([
       'p.id as "paymentId"',
