@@ -4,6 +4,7 @@ import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
 import { UserProfile } from './UserProfile';
+
 @Entity()
 @Index('user_unique_email', { synchronize: false })
 export class User {

@@ -108,6 +108,12 @@ paths:
       responses:
         200:
           description: OK
+  /contact:
+    post:
+      operationId: submitContact
+      responses:
+        200:
+          description: OK          
   /auth/federalLogin:
     get:
       operationId: federalLogin

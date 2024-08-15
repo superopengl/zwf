@@ -59,4 +59,10 @@
   .footer-section a {
     color: #464B53
   }
+
+  .contact-body {
+    border-radius: 12px;
+    background-color: #e6fffc;
+    color: #4B5B76;
+  }
 </mj-style>

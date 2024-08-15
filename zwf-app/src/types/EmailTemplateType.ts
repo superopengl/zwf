@@ -20,6 +20,9 @@ export enum EmailTemplateType {
   SubscriptionPaymentSuccessful = 'subscription_payment_successful',
   SubscriptionAutoRenewSuccessful = 'subscription_auto_renew_successful',
   SubscriptionAutoRenewFailed = 'subscription_auto_renew_failed',
+
+  // Contact
+  InboundContact = 'inbound_contact',
 }
 
 

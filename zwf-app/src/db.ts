@@ -47,6 +47,7 @@ import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
 import { SubscriptionEndingNotificationEmailInformation } from './entity/views/SubscriptionEndingNotificationEmailInformation';
 import { SubscriptionBlock } from './entity/SubscriptionBlock';
+import { Contact } from './entity/Contact';
 dotenv.config();
 
 const views = [
@@ -199,27 +200,29 @@ export const db = new DataSource({
     CreditTransaction,
     OrgPromotionCode,
     SupportMessage,
+    Contact,
+    TaskTrackingLastAccess,
+    TaskTracking,
+    UserAudit,
+    TaskTagsTag,
+    Recurring,
+    SupportUserLastAccess,
+    EmailSentOutTask,
+    SystemConfig,
+    // Views below
     TaskInformation,
     UserInformation,
     OrgClientStatInformation,
     OrgMemberInformation,
     OrgCurrentSubscriptionInformation,
-    Recurring,
-    SupportUserLastAccess,
     SupportUserUnreadInformation,
     TaskTrackingInformation,
-    TaskTrackingLastAccess,
-    TaskTracking,
-    UserAudit,
-    TaskTagsTag,
     OrgClientInformation,
     OrgBasicInformation,
     SupportInformation,
     SupportPendingReplyInformation,
-    EmailSentOutTask,
     TaskFileMetaInformation,
     TaskFileInformation,
-    SystemConfig,
     RecurringInformation,
     ReceiptInformation,
     SubscriptionEndingNotificationEmailInformation,
