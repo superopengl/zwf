@@ -66,7 +66,7 @@ export const ResourcePage = (props) => {
         <TimeAgo value={page.publishedAt} showTime={false} prefix="By ZeeWorkflow Team, " direction="horizontal" />
       </Paragraph>
       <Image preview={false} src={page.imageBase64} width="100%" alt="picture" style={{ borderRadius: 4, marginBottom: '2rem' }} />
-      <Paragraph>
+      <Paragraph style={{fontSize: 16}}>
         <RawHtmlDisplay value={page.html} />
       </Paragraph>
       {/* <Row justify='center'>
