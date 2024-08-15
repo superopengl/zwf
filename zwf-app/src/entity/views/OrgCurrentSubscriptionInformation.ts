@@ -27,6 +27,8 @@ import { SubscriptionBlock } from '../SubscriptionBlock';
       's."orgId" as "orgId"',
       's."status" as "status"',
       'b."type" as type',
+      'b."unitPrice" as "unitPrice"',
+      'b."promotionCode" as "promotionCode"',
       '"seats"',
       '"startedAt"',
       '"endingAt"',
@@ -47,7 +49,13 @@ export class OrgCurrentSubscriptionInformation {
   type: SubscriptionBlockType;
 
   @ViewColumn()
+  promotionCode: string;
+
+  @ViewColumn()
   seats: number;
+
+  @ViewColumn()
+  unitPrice: number;
 
   @ViewColumn()
   startedAt: Date;
