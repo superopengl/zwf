@@ -33,29 +33,6 @@ position: relative;
   height: 3px !important;
 }
 
-.light2 {
-  position: absolute;
-  width: 532.39px;
-  height: 232.9px;
-  right: 200px;
-  top: 168.86px;
-
-  background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.4) 12.79%, rgba(55, 212, 207, 0.4) 56.4%);
-  filter: blur(147px);
-  transform: rotate(-31.89deg);
-}
-
-.light1 {
-  position: absolute;
-  width: 284.65px;
-  height: 159.8px;
-  right: 0px;
-  top: 161.4px;
-
-  background: rgba(0, 61, 182, 0.8);
-  filter: blur(300px);
-  transform: rotate(-135deg);
-}
 `;
 
 
@@ -94,8 +71,6 @@ export const PortalPage = () => {
   }
 
   return <StyledLayoutPage>
-    <div className="light1"></div>
-    <div className="light2"></div>
     <Layout.Header>
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
