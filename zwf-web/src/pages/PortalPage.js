@@ -36,15 +36,6 @@ position: relative;
 `;
 
 
-const scrollToElement = (selector) => {
-  document.querySelector(selector)?.scrollIntoView({
-    behavior: 'smooth',
-    block: "start",
-    inline: "nearest"
-  });
-}
-
-
 export const PortalPage = () => {
 
   const navigate = useNavigate();
@@ -55,11 +46,7 @@ export const PortalPage = () => {
   const isGuest = role === 'guest';
 
   const handleMenuChange = (path) => {
-    if (path.charAt(0) === '#') {
-      scrollToElement(path)
-    } else {
-      navigate(path);
-    }
+    navigate(path);
   }
 
   const handleShowModal = () => {
@@ -81,8 +68,8 @@ export const PortalPage = () => {
             <Tabs defaultActiveKey="/" onChange={handleMenuChange}>
               <Tabs.TabPane tab="Home" key="/"></Tabs.TabPane>
               <Tabs.TabPane tab="Resources" key="/resource"></Tabs.TabPane>
-              <Tabs.TabPane tab="Pricing" key="#pricing"></Tabs.TabPane>
-              <Tabs.TabPane tab="Contact Us" key="#contactus"></Tabs.TabPane>
+              <Tabs.TabPane tab="Pricing" key="/#pricing"></Tabs.TabPane>
+              <Tabs.TabPane tab="Contact Us" key="/#contactus"></Tabs.TabPane>
             </Tabs>
           </Col>
           {isGuest && <Col>
