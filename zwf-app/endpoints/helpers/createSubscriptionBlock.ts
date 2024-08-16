@@ -1,11 +1,11 @@
-import { SubscriptionBlock } from './../../src/entity/SubscriptionBlock';
+import { SubscriptionBlock } from '../../src/entity/SubscriptionBlock';
 import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCurrentSubscriptionInformation';
 import { getCurrentPricePerSeat } from '../../src/utils/getCurrentPricePerSeat';
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
 
-export function newSubscriptionBlock(subInfo: OrgCurrentSubscriptionInformation, type: SubscriptionBlockType, startingMode: 'continuously' | 'rightaway') {
+export function createSubscriptionBlock(subInfo: OrgCurrentSubscriptionInformation, type: SubscriptionBlockType, startingMode: 'continuously' | 'rightaway') {
   const { orgId, seats, promotionCode, subscriptionId, headBlockId, endingAt } = subInfo;
 
   const block = new SubscriptionBlock();

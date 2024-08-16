@@ -6,7 +6,7 @@ import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
 import { assert } from 'console';
 import { db } from '../../src/db';
-import { newSubscriptionBlock } from './newSubscriptionBlock';
+import { newSubscriptionBlock } from './createSubscriptionBlock';
 
 export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { type } = subInfo;
