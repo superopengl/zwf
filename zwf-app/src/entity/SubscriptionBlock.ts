@@ -1,5 +1,6 @@
 import { Entity, Column, PrimaryGeneratedColumn, Index, OneToMany, ManyToOne, JoinColumn, OneToOne } from 'typeorm';
 import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
+import { SubscriptionStartingMode } from '../types/SubscriptionStartingMode';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Payment } from './Payment';
 import { Subscription } from './Subscription';
@@ -20,6 +21,9 @@ export class SubscriptionBlock {
 
   @Column()
   type: SubscriptionBlockType;
+
+  @Column({default: SubscriptionStartingMode.Rightaway})
+  startingMode: SubscriptionStartingMode;
 
   @Column('uuid', { nullable: true })
   parentBlockId?: string;
@@ -42,7 +46,7 @@ export class SubscriptionBlock {
   @Column({ nullable: false })
   endingAt: Date;
 
-  @Column('uuid', {nullable: true})
+  @Column('uuid', { nullable: true })
   paymentId?: string;
 
   @ManyToOne(() => Subscription, subscription => subscription.blocks, { onDelete: 'CASCADE' })

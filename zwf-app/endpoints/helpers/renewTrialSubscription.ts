@@ -3,10 +3,11 @@ import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCur
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { terminateSubscription } from "./terminateSubscription";
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
-import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
+import { renewSubscription } from "../../src/services/payment/renewSubscription";
 import { assert } from 'console';
 import { db } from '../../src/db';
-import { createSubscriptionBlock } from './createSubscriptionBlock';
+import { createSubscriptionBlock } from '../../src/services/payment/createSubscriptionBlock';
+import { SubscriptionStartingMode } from '../../src/types/SubscriptionStartingMode';
 
 export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { type } = subInfo;
@@ -14,11 +15,9 @@ export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInfo
 
   try {
     await db.transaction(async m => {
-      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+      const newMonthlyBlock = await renewSubscription(m, subInfo, SubscriptionStartingMode.Continuously, {auto: true});
 
-      await paySubscriptionBlock(m, block, { auto: true, real: true });
-
-      await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, block);
+      await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, newMonthlyBlock);
     });
   } catch (e) {
     await terminateSubscription(subInfo, e);

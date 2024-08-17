@@ -1,13 +1,12 @@
-import { SubscriptionBlockType } from './../types/SubscriptionBlockType';
-import { SubscriptionBlock } from './../entity/SubscriptionBlock';
+import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
+import { SubscriptionBlock } from '../../entity/SubscriptionBlock';
 import { EntityManager } from 'typeorm';
-import { OrgPromotionCode } from '../entity/OrgPromotionCode';
-import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
+import { OrgPromotionCode } from '../../entity/OrgPromotionCode';
+import { OrgCurrentSubscriptionInformation } from '../../entity/views/OrgCurrentSubscriptionInformation';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { CreditTransaction } from '../entity/CreditTransaction';
 
-export async function refundCurrentSubscriptionBlock(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation, options: { real?: boolean } = null) {
+export async function calcRefundableCurrentSubscriptionBlock(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation) {
   const { headBlockId, type, orgId } = subInfo;
   if (type !== SubscriptionBlockType.Monthly) {
     return 0;
@@ -38,14 +37,6 @@ export async function refundCurrentSubscriptionBlock(m: EntityManager, subInfo: 
   const fullAmountAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * fullPriceBeforeDiscount, 2);
 
   const refundable = Math.floor((periodDays - usedDays) / periodDays * fullAmountAfterDiscount);
-
-  if (options?.real === true) {
-    const refundCreditTransaction = new CreditTransaction();
-    refundCreditTransaction.orgId = orgId;
-    refundCreditTransaction.type = 'refund';
-    refundCreditTransaction.amount = refundable;
-    await m.save(refundCreditTransaction);
-  }
 
   return refundable;
 }
