@@ -20,7 +20,7 @@ import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { getCurrentPricePerSeat } from '../utils/getCurrentPricePerSeat';
 import moment = require('moment');
 import { refundCurrentSubscriptionBlock } from '../utils/refundCurrentSubscriptionBlock';
-import { newSubscriptionBlock } from '../../endpoints/helpers/createSubscriptionBlock';
+import { createSubscriptionBlock } from '../../endpoints/helpers/createSubscriptionBlock';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await db.getRepository(SubscriptionBlock).find({
@@ -114,7 +114,7 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
     const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
     const refundable = await refundCurrentSubscriptionBlock(m, subInfo, { real: false });
 
-    const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
+    const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
 
     const paymentInfo = await paySubscriptionBlock(m, block, { real: false });
 

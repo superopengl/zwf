@@ -6,7 +6,7 @@ import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
 import { assert } from 'console';
 import { db } from '../../src/db';
-import { newSubscriptionBlock } from './createSubscriptionBlock';
+import { createSubscriptionBlock } from './createSubscriptionBlock';
 
 export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInformation) {
   const { type } = subInfo;
@@ -14,7 +14,7 @@ export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInfo
 
   try {
     await db.transaction(async m => {
-      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
 
       await paySubscriptionBlock(m, block, { auto: true, real: true });
 

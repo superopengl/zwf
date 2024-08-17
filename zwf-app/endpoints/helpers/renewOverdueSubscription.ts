@@ -6,7 +6,7 @@ import { terminateSubscription } from "./terminateSubscription";
 import { EntityManager } from 'typeorm';
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
 import { paySubscriptionBlock } from '../../src/utils/paySubscriptionBlock';
-import { newSubscriptionBlock } from './createSubscriptionBlock';
+import { createSubscriptionBlock } from './createSubscriptionBlock';
 import { SubscriptionBlock } from '../../src/entity/SubscriptionBlock';
 import { assert } from '../../src/utils/assert';
 
@@ -21,7 +21,7 @@ export async function renewOverdueSubscription(m: EntityManager, subInfo: OrgCur
       await paySubscriptionBlock(m, duedBlock, { auto: true, real: true });
 
       // Buy a new monthly block
-      const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
+      const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'continuously');
       await paySubscriptionBlock(m, block, { auto: true, real: true });
 
       await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, block);

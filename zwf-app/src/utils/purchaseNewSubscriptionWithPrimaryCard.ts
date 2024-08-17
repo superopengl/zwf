@@ -13,7 +13,7 @@ import { db } from '../db';
 import { SubscriptionBlock } from '../entity/SubscriptionBlock';
 import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
 import { refundCurrentSubscriptionBlock } from './refundCurrentSubscriptionBlock';
-import { newSubscriptionBlock } from '../../endpoints/helpers/createSubscriptionBlock';
+import { createSubscriptionBlock } from '../../endpoints/helpers/createSubscriptionBlock';
 import { paySubscriptionBlock } from './paySubscriptionBlock';
 
 export type PurchaseSubscriptionRequest = {
@@ -32,7 +32,7 @@ export async function purchaseNewSubscriptionWithPrimaryCard(request: PurchaseSu
 
     await refundCurrentSubscriptionBlock(m, subInfo, { real: true });
 
-    const block = newSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
+    const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, 'rightaway');
     block.seats = seats;
     block.promotionCode = promotionCode;
 
