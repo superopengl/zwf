@@ -42,9 +42,9 @@ const PromotionListPanel = (props) => {
     },
     {
       title: '% off',
-      dataIndex: 'percentage',
+      dataIndex: 'percentageOff',
       sorter: {
-        compare: (a, b) => a.percentage - b.percentage
+        compare: (a, b) => a.percentageOff - b.percentageOff
       },
       render: (value) => <>{value * 100} %</>,
     },
@@ -132,11 +132,11 @@ const PromotionListPanel = (props) => {
           onFinish={handleSavePromotion}
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
-          initialValues={{ code: newCode, percentage: 0.1 }}>
+          initialValues={{ code: newCode, percentageOff: 0.1 }}>
           <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <Input readOnly={true} />
           </Form.Item>
-          <Form.Item label="% off" name="percentage" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, whitespace: true }]}>
+          <Form.Item label="% off" name="percentageOff" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, whitespace: true }]}>
             <InputNumber
               min={0.01}
               max={0.99}

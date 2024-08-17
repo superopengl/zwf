@@ -20,20 +20,20 @@ export async function refundCurrentSubscriptionBlock(m: EntityManager, subInfo: 
   }
 
   const startedMoment = moment(startedAt);
-  const endingMoment = moment(endingAt);
+  const endingMoment = moment(endingAt); 
   const periodDays = endingMoment.diff(startedMoment, 'days') + 1;
   const usedDays = moment().diff(startedMoment, 'days') + 1;
-
   if (endingMoment.isBefore() || usedDays >= periodDays) {
     return 0;
   }
+
 
   const fullPriceBeforeDiscount = pricePerSeat * seats;
   let promotionDiscountPercentage = 0;
   if (promotionCode) {
     // Regardless if the promotion code is expired now, because it's a refund.
-    const promotion = await m.getRepository(OrgPromotionCode).findOneBy({ code: promotionCode });
-    promotionDiscountPercentage = promotion.percentage;
+    const promotion = await m.findOneBy(OrgPromotionCode, { code: promotionCode });
+    promotionDiscountPercentage = promotion.percentageOff;
   }
   const fullAmountAfterDiscount = _.round(((1 - promotionDiscountPercentage) || 1) * fullPriceBeforeDiscount, 2);
 

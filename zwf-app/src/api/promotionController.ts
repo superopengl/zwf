@@ -30,14 +30,14 @@ export const listPromotionCode = handlerWrapper(async (req, res) => {
 
 export const savePromotion = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const { code, percentage, endingAt, orgId } = req.body;
-  assert(0 < percentage && percentage < 1, 400, `percentage must be between 0 and 1`);
+  const { code, percentageOff, endingAt, orgId } = req.body;
+  assert(0 < percentageOff && percentageOff < 1, 400, `percentageOff must be between 0 and 1`);
   assert(endingAt && moment(endingAt).isAfter(), 400, 'endingAt must be a future date');
 
   const promotion = new OrgPromotionCode();
   promotion.code = code;
   promotion.orgId = orgId;
-  promotion.percentage = percentage;
+  promotion.percentageOff = percentageOff;
   promotion.endingAt = endingAt;
   promotion.createdBy = (req as any).user.id;
 

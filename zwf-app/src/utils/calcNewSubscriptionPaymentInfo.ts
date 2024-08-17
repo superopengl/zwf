@@ -50,7 +50,7 @@ export async function calcNewSubscriptionPaymentInfo(
       .getOne();
 
     if (promotion) {
-      promotionDiscountPercentage = promotion.percentage;
+      promotionDiscountPercentage = promotion.percentageOff;
       isValidPromotionCode = true;
     }
   }
