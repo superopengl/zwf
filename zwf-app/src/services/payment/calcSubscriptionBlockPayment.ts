@@ -3,7 +3,7 @@ import { OrgCurrentSubscriptionInformation } from '../../entity/views/OrgCurrent
 import { SubscriptionStartingMode } from '../../types/SubscriptionStartingMode';
 import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { getCreditBalance } from '../../utils/getCreditBalance';
-import { EntityManager } from 'typeorm';
+import { EntityManager, MoreThan } from 'typeorm';
 import { assert } from '../../utils/assert';
 import { OrgPromotionCode } from '../../entity/OrgPromotionCode';
 import { OrgPaymentMethod } from '../../entity/OrgPaymentMethod';
@@ -12,7 +12,7 @@ import { calcRefundableCurrentSubscriptionBlock } from './calcRefundableCurrentS
 import { SubscriptionPurchasePreviewInfo } from './SubscriptionPurchasePreviewInfo';
 
 
-export async function handlePreviewSubscriptionBlockPayment(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation, block: SubscriptionBlock): Promise<SubscriptionPurchasePreviewInfo> {
+export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: OrgCurrentSubscriptionInformation, block: SubscriptionBlock): Promise<SubscriptionPurchasePreviewInfo> {
   const { seats, promotionCode, pricePerSeat, orgId } = block;
 
   assert(!block.paymentId, 500, `The block (${block.id}) has been paid and cannot be paid again.`);
@@ -25,7 +25,7 @@ export async function handlePreviewSubscriptionBlockPayment(m: EntityManager, su
     const promotion = await m.getRepository(OrgPromotionCode)
       .createQueryBuilder()
       .where({ code: promotionCode })
-      .andWhere(`"endingAt" > CURRENT_DATE`)
+      .andWhere(`"endingAt" > NOW()`)
       .getOne();
 
     if (promotion) {

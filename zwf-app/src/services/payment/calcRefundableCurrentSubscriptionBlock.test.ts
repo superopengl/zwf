@@ -1,13 +1,12 @@
-import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
-import { SubscriptionBlock } from '../entity/SubscriptionBlock';
+import { SubscriptionStartingMode } from './../../types/SubscriptionStartingMode';
+import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
+import { SubscriptionBlock } from '../../entity/SubscriptionBlock';
 import { EntityManager } from 'typeorm';
-import { OrgPromotionCode } from '../entity/OrgPromotionCode';
-import { OrgCurrentSubscriptionInformation } from '../entity/views/OrgCurrentSubscriptionInformation';
+import { OrgPromotionCode } from '../../entity/OrgPromotionCode';
+import { OrgCurrentSubscriptionInformation } from '../../entity/views/OrgCurrentSubscriptionInformation';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { CreditTransaction } from '../entity/CreditTransaction';
 import { calcRefundableCurrentSubscriptionBlock } from './calcRefundableCurrentSubscriptionBlock';
-import { calcSubscriptionBlockEnding } from './calcSubscriptionBlockEnding';
 
 describe('calcRefundableCurrentSubscriptionBlock', () => {
 
@@ -30,7 +29,6 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
       const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
       expect(result).toBe(0);
-      expect(m.save).not.toHaveBeenCalled();
     })
   });
 
@@ -42,7 +40,6 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
       const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
       expect(result).toBe(0);
-      expect(m.save).not.toHaveBeenCalled();
     })
   });
 
@@ -75,6 +72,7 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         seats: 3,
         pricePerSeat: 39,
         startedAt: moment().toDate(),
+        startingMode: SubscriptionStartingMode.Continuously,
         endingAt: moment().toDate(),
       };
       mockPromotionCode = {
@@ -91,7 +89,6 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         expect(result).toBe(0);
-        expect(mMock.save).not.toHaveBeenCalled();
       })
     })
 
@@ -103,7 +100,6 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         expect(result).toBe(0);
-        expect(mMock.save).not.toHaveBeenCalled();
       })
     })
 
@@ -116,7 +112,7 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
       it('should refund deducting one day price if today is the first day', async () => {
         mockHeadBlock.startedAt = moment().toDate();
         mockHeadBlock.endingAt = moment(mockHeadBlock.startedAt).add(30 - 1, 'days').toDate(); // 30 days
-        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo, { real: false });
+        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         const expectedRefundable = _.floor(39 * (30 - 1) / 30 * mockHeadBlock.seats);
         expect(result).toBe(expectedRefundable);
@@ -126,7 +122,7 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         mockHeadBlock.endingAt = moment().toDate();
         mockHeadBlock.startedAt = moment(mockHeadBlock.endingAt).add(-30 + 1, 'days').toDate(); // 30 days
 
-        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo, { real: false });
+        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         const expectedRefundable = 0;
         expect(result).toBe(expectedRefundable);
@@ -137,11 +133,10 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         mockHeadBlock.startedAt = moment().add(-7, 'days').toDate();
         mockHeadBlock.endingAt = moment(mockHeadBlock.startedAt).add(30 - 1, 'days').toDate(); // 30 days
 
-        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo, { real: false });
+        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         const expectedRefundable = _.floor(39 * (30 - 8) / 30 * mockHeadBlock.seats);
         expect(result).toBe(expectedRefundable);
-        expect(mMock.save).not.toHaveBeenCalled();
       })
     })
 
@@ -155,7 +150,7 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
       it('should refund by deducting one day price if today is the first day', async () => {
         mockHeadBlock.startedAt = moment().toDate();
         mockHeadBlock.endingAt = moment(mockHeadBlock.startedAt).add(30 - 1, 'days').toDate(); // 30 days
-        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo, { real: false });
+        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         const expectedRefundable = _.floor(0.85 * 39 * (30 - 1) / 30 * mockHeadBlock.seats);
         expect(result).toBe(expectedRefundable);
@@ -165,7 +160,7 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         mockHeadBlock.endingAt = moment().toDate();
         mockHeadBlock.startedAt = moment(mockHeadBlock.endingAt).add(-30 + 1, 'days').toDate(); // 30 days
 
-        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo, { real: false });
+        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         const expectedRefundable = 0;
         expect(result).toBe(expectedRefundable);
@@ -176,11 +171,10 @@ describe('calcRefundableCurrentSubscriptionBlock', () => {
         mockHeadBlock.startedAt = moment().add(-7, 'days').toDate();
         mockHeadBlock.endingAt = moment(mockHeadBlock.startedAt).add(30 - 1, 'days').toDate(); // 30 days
 
-        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo, { real: false });
+        const result = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
 
         const expectedRefundable = _.floor(0.85 * 39 * (30 - 8) / 30 * mockHeadBlock.seats);
         expect(result).toBe(expectedRefundable);
-        expect(mMock.save).not.toHaveBeenCalled();
       })
     })
   });

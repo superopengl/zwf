@@ -13,7 +13,7 @@ import { Role } from '../../types/Role';
     .where(`u.role = '${Role.Admin}'`)
     .leftJoin(q => q.from(EmailSentOutTask, 'm')
       .where(`m.template IN ('${EmailTemplateType.SubscriptionTrialExpiring}', '${EmailTemplateType.SubscriptionAutoRenewing}')`)
-      .andWhere(`CURRENT_DATE - m."sentAt" <= interval '30 days'`),
+      .andWhere(`NOW() - m."sentAt" <= interval '30 days'`),
       'm', `m.vars->>'subscriptionId' = s."subscriptionId"::text`)
     .select([
       'u.id as "userId"',
@@ -21,7 +21,7 @@ import { Role } from '../../types/Role';
       'u."givenName" as "givenName"',
       'u."surname" as "surname"',
       's."endingAt" as "endingAt"',
-      's."endingAt" - CURRENT_DATE as "daysBeforeEnd"',
+      's."endingAt" - NOW() as "daysBeforeEnd"',
       'm.template as "sentNotificationTemplate"',
       'EXTRACT(DAY FROM s."endingAt" - m."sentAt") as "sentDaysBeforeEnd"',
       'm."sentAt"',

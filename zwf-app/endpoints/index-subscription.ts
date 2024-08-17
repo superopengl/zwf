@@ -36,7 +36,7 @@ async function handleAutoRenewPayments() {
   const list = await db.getRepository(OrgCurrentSubscriptionInformation)
     .createQueryBuilder()
     .where({ enabled: true })
-    .andWhere('"endingAt" <= CURRENT_DATE')
+    .andWhere('"endingAt" <= NOW()')
     .getMany();
 
   for (const subInfo of list) {

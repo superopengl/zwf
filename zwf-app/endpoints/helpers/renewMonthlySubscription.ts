@@ -18,7 +18,7 @@ export async function renewMonthlySubscription(subInfo: OrgCurrentSubscriptionIn
 
   try {
     await db.transaction(async m => {
-      const newMonthlyBlock = await renewSubscription(m, subInfo, SubscriptionStartingMode.Continuously, {auto: true});
+      const newMonthlyBlock = await renewSubscription(m, subInfo);
 
       await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, newMonthlyBlock);
     });
