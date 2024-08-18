@@ -72,19 +72,6 @@ describe('calcSubscriptionBlockPayment', () => {
     })
   })
 
-  // describe('a overdued block', () => {
-  //   it('should throw', async () => {
-  //     (getDiscountInfoFromPromotionCode as any).mockResolvedValue({ promotionDiscountPercentage: 0, isValidPromotionCode: false });
-  //     (calcRefundableCurrentSubscriptionBlock as any).mockResolvedValue(0);
-  //     (getCreditBalance as any).mockResolvedValue(0);
-  //     const overduedBlock = {
-  //       ...monthlyContinuouslyBlock,
-  //       type: SubscriptionBlockType.OverduePeacePeriod,
-  //     }
-  //     await expect(calcSubscriptionBlockPayment(m, subInfo, overduedBlock)).rejects.toThrow();
-  //   })
-  // })
-
   describe('a monthly block', () => {
 
     describe('no discount, no refund, no credit balance, continueously purchase', () => {

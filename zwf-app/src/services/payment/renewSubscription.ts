@@ -4,7 +4,7 @@ import { SubscriptionStartingMode } from '../../types/SubscriptionStartingMode';
 import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { EntityManager } from 'typeorm';
 import { createSubscriptionBlock } from './createSubscriptionBlock';
-import { handlePurchaseSubscriptionBlock } from './handlePurchaseSubscriptionBlock';
+import { purchaseSubscriptionBlock } from './purchaseSubscriptionBlock';
 
 
 export async function renewSubscription(
@@ -12,5 +12,5 @@ export async function renewSubscription(
   subInfo: OrgCurrentSubscriptionInformation
 ): Promise<SubscriptionBlock> {
   const newMonthlyBlock = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Continuously);
-  return await handlePurchaseSubscriptionBlock(m, subInfo, newMonthlyBlock, { auto: true });
+  return await purchaseSubscriptionBlock(m, subInfo, newMonthlyBlock, { auto: true });
 }
