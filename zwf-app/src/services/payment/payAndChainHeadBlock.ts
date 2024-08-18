@@ -11,7 +11,7 @@ import { calcSubscriptionBlockPayment } from './calcSubscriptionBlockPayment';
 import { handleCreditBalance } from "./handleCreditBalance";
 
 
-export async function purchaseSubscriptionBlock(
+export async function payAndChainHeadBlock(
   m: EntityManager,
   subInfo: OrgCurrentSubscriptionInformation,
   block: SubscriptionBlock,

@@ -3,7 +3,7 @@ import { OrgCurrentSubscriptionInformation } from '../../entity/views/OrgCurrent
 import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { EntityManager } from 'typeorm';
 import { assert } from '../../utils/assert';
-import { purchaseSubscriptionBlock } from './purchaseSubscriptionBlock';
+import { payAndChainHeadBlock } from './payAndChainHeadBlock';
 
 
 export async function payOverduedSubscription(
@@ -16,5 +16,5 @@ export async function payOverduedSubscription(
 ): Promise<SubscriptionBlock> {
   const duedBlock = await m.findOneBy(SubscriptionBlock, { id: subInfo.headBlockId, type: SubscriptionBlockType.OverduePeacePeriod });
   assert(duedBlock, 500, `No overdued head block for org ${subInfo.orgId}`);
-  return await purchaseSubscriptionBlock(m, subInfo, duedBlock, options);
+  return await payAndChainHeadBlock(m, subInfo, duedBlock, options);
 }

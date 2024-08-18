@@ -3,7 +3,7 @@ import { OrgCurrentSubscriptionInformation } from '../../src/entity/views/OrgCur
 import { sendSubscriptionEmail } from "./sendSubscriptionEmail";
 import { terminateSubscription } from "./terminateSubscription";
 import { SubscriptionBlockType } from '../../src/types/SubscriptionBlockType';
-import { renewSubscription } from "../../src/services/payment/renewSubscription";
+import { extendSubscriptionOneMonth } from "../../src/services/payment/extendSubscriptionOneMonth";
 import { assert } from 'console';
 import { db } from '../../src/db';
 
@@ -13,7 +13,7 @@ export async function renewTrialSubscription(subInfo: OrgCurrentSubscriptionInfo
 
   try {
     await db.transaction(async m => {
-      const newMonthlyBlock = await renewSubscription(m, subInfo);
+      const newMonthlyBlock = await extendSubscriptionOneMonth(m, subInfo);
 
       await sendSubscriptionEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, newMonthlyBlock);
     });

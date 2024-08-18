@@ -21,6 +21,7 @@ import { Role } from '../../types/Role';
       'u."givenName" as "givenName"',
       'u."surname" as "surname"',
       's."endingAt" as "endingAt"',
+      's."type" as "type"',
       's."endingAt" - NOW() as "daysBeforeEnd"',
       'm.template as "sentNotificationTemplate"',
       'EXTRACT(DAY FROM s."endingAt" - m."sentAt") as "sentDaysBeforeEnd"',

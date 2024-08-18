@@ -14,7 +14,7 @@ import { calcSubscriptionBlockPayment } from "../services/payment/calcSubscripti
 import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { createSubscriptionBlock } from '../services/payment/createSubscriptionBlock';
 import { SubscriptionStartingMode } from '../types/SubscriptionStartingMode';
-import { changeSubscription } from '../services/payment/changeSubscription';
+import { changeSubscriptionRightaway } from '../services/payment/changeSubscriptionRightaway';
 
 async function getUserSubscriptionHistory(orgId) {
   const list = await db.getRepository(SubscriptionBlock).find({
@@ -90,7 +90,7 @@ export const purchaseSubscription = handlerWrapper(async (req, res) => {
 
   await db.manager.transaction(async m => {
     const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
-    await changeSubscription(m, subInfo, seats, promotionCode, geoInfo);
+    await changeSubscriptionRightaway(m, subInfo, seats, promotionCode, geoInfo);
   });
 
   res.json();
