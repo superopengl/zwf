@@ -6,7 +6,8 @@ export type SubscriptionPurchasePreviewInfo = {
   isValidPromotionCode: boolean;
   promotionDiscountPercentage: number;
   refundable: number;
-  creditBalance: number;
+  creditBalanceBefore: number;
+  creditBalanceAfter: number;
   deduction: number;
   payable: number;
   paymentMethodId: string;

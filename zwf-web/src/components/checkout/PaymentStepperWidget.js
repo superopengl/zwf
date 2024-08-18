@@ -171,7 +171,7 @@ const PaymentStepperWidget = (props) => {
         <hr />
         <Descriptions column={1}>
           <Descriptions.Item label="Credit balance" contentStyle={{ textAlign: 'right' }}>
-            <MoneyAmount value={paymentInfo.creditBalance} />
+            <MoneyAmount value={paymentInfo.creditBalanceBefore} />
           </Descriptions.Item>
           <Descriptions.Item label="Refundable" contentStyle={{ textAlign: 'right' }}>
             <MoneyAmount value={paymentInfo.refundable} />

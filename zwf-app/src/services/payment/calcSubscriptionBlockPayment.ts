@@ -28,8 +28,8 @@ export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: Or
     refundable = await calcRefundableCurrentSubscriptionBlock(m, subInfo);
   }
 
-  const creditBalance = await getCreditBalance(m, orgId);
-  const creditBalanceAfterRefund = creditBalance + refundable;
+  const creditBalanceBefore = await getCreditBalance(m, orgId);
+  const creditBalanceAfterRefund = creditBalanceBefore + refundable;
 
   let payable = fullPriceAfterDiscount;
   let deduction = 0;
@@ -40,6 +40,8 @@ export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: Or
     payable = fullPriceAfterDiscount - creditBalanceAfterRefund;
     deduction = creditBalanceAfterRefund;
   }
+
+  const creditBalanceAfter = creditBalanceBefore + refundable - deduction;
 
   const primaryPaymentMethod = await m.findOne(OrgPaymentMethod, { where: { orgId, primary: true } });
   assert(primaryPaymentMethod, 500, 'Primary payment method not found');
@@ -52,7 +54,8 @@ export async function calcSubscriptionBlockPayment(m: EntityManager, subInfo: Or
     fullPriceAfterDiscount,
     isValidPromotionCode,
     promotionDiscountPercentage,
-    creditBalance,
+    creditBalanceBefore,
+    creditBalanceAfter,
     deduction,
     payable,
     paymentMethodId,
