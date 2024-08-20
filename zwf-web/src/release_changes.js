@@ -1,3 +1,2 @@
 export const notes=`
-column rename
-refine email templates`
+fix rich text editor focus issue`
