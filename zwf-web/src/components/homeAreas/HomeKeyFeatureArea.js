@@ -1,23 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import { Card, Typography, Col, Row, Space, Button, Table, Image } from 'antd';
-import { CheckCircleOutlined } from '@ant-design/icons';
+import { Typography, Col, Row, Image } from 'antd';
 import styled from 'styled-components';
-import { SubscriptionCard } from 'components/SubscriptionCard';
-import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'react-icons/gi';
-import { VscRocket } from 'react-icons/vsc';
-import { AiOutlineHome } from 'react-icons/ai';
-import { subscriptionDef } from 'def/subscriptionDef';
 
 const { Title, Paragraph, Text } = Typography;
-
-const StyledRow = styled(Row)`
-`;
-
-const StyledCol = styled(Col)`
-display: flex;
-justify-content: center;
-`;
 
 const Container = styled.div`
 justify-content: center;
@@ -47,67 +32,10 @@ h2 {
 }
 
 .ant-row {
-  margin: 1rem auto;
+  margin: 5rem auto;
 }
 `;
 
-const orgColumns = [
-  {
-    title: 'Org Portal',
-    dataIndex: 'name',
-    render: text => <Row justify='space-between'>
-      <Col>
-        <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
-      </Col>
-      <Col>
-        <Text type="secondary" italic>included</Text>
-      </Col>
-    </Row>
-  }
-]
-
-const orgFeatures = [
-  'Status based task management',
-  'Task assignment',
-  'Scheduler to periodically create tasks',
-  'Task template',
-  'Doc template',
-  'Realtime client communication',
-  'Task event timeline',
-  'Request client for actions',
-  'Request client for Doc Sign',
-  'Tags for task and user management',
-  'Invite any clients by email addresses',
-  'Google Single Sign On',
-  'Team metrics',
-].map(x => ({
-  key: x,
-  name: x,
-}))
-
-const clientColumns = [
-  {
-    title: 'Client Portal',
-    dataIndex: 'name',
-    render: text => <Row justify='space-between'>
-      <Col>
-        <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
-      </Col>
-      <Col>
-        <Text type="secondary" italic>free</Text>
-      </Col>
-    </Row>
-  }
-]
-
-const clientFeatures = [
-  'Realtime chat communication',
-  'Task event timeline',
-  'Doc Sign',
-].map(x => ({
-  key: x,
-  name: x,
-}))
 
 const span = {
   xs: 24,
@@ -118,7 +46,7 @@ const span = {
   xxl: 12
 }
 
-export const HomeKeyFeatureArea = props => {
+export const HomeKeyFeatureArea = () => {
   return (
     <Container>
       <InnerContainer>
@@ -132,13 +60,13 @@ export const HomeKeyFeatureArea = props => {
             <Image src="/images/feature-task-template.svg" preview={false} />
           </Col>
         </Row>
-        <Row gutter={[48, 24]} justify='center'>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
-            <Image src="/images/feature-doc-template.svg" preview={false} />
-          </Col>
-          <Col {...span} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+        <Row gutter={[24, 24]} justify='center'>
+          <Col span={24} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column', textAlign: 'center' }}>
             <Title level={2}><Text style={{ color: '#0051D9' }}>Doc</Text> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
+          </Col>
+          <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
+            <Image src="/images/feature-doc-template.svg" preview={false} />
           </Col>
         </Row>
         <Row gutter={[48, 24]} justify='center'>
@@ -148,6 +76,15 @@ export const HomeKeyFeatureArea = props => {
           </Col>
           <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
             <Image src="/images/feature-doc-sign.svg" preview={false} />
+          </Col>
+        </Row>
+        <Row gutter={[48, 24]} justify='center'>
+          <Col {...span} style={{ display: 'flex', justifyContent: 'center' }}>
+            <Image src="/images/feature-timeline.svg" preview={false} />
+          </Col>
+          <Col {...span} style={{ display: 'flex', justifyContent: 'center', flexDirection: 'column' }}>
+            <Title level={2}><Text style={{ color: '#0FBFC4' }}>Timeline</Text></Title>
+            <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
         </Row>
         <Row gutter={[24, 24]} justify='center'>
