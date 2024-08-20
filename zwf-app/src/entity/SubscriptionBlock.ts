@@ -35,7 +35,7 @@ export class SubscriptionBlock {
   promotionCode?: string;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  pricePerSeat: number;
+  seatPrice: number;
 
   @Column()
   startedAt: Date;

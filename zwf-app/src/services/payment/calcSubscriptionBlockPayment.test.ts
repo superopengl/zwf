@@ -36,7 +36,7 @@ describe('calcSubscriptionBlockPayment', () => {
     type: SubscriptionBlockType.Monthly,
     promotionCode: 'ABC',
     seats: 3,
-    unitPrice: 39,
+    seatPrice: 39,
     startedAt: moment().toDate(),
     endingAt: moment().toDate(),
     headBlockId: 'fake-headBlockId',
@@ -82,7 +82,7 @@ describe('calcSubscriptionBlockPayment', () => {
         const result = await calcSubscriptionBlockPayment(m, subInfo, monthlyContinuouslyBlock);
 
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 0,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3,
@@ -106,7 +106,7 @@ describe('calcSubscriptionBlockPayment', () => {
         const result = await calcSubscriptionBlockPayment(m, subInfo, monthlyContinuouslyBlock);
 
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 0,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3 * (1 - 0.13),
@@ -134,7 +134,7 @@ describe('calcSubscriptionBlockPayment', () => {
         }
         const result = await calcSubscriptionBlockPayment(m, subInfo, block);
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 0,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3 * (1 - 0.13),
@@ -164,7 +164,7 @@ describe('calcSubscriptionBlockPayment', () => {
         }
         const result = await calcSubscriptionBlockPayment(m, subInfo, block);
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 0,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3 * (1 - 0.13),
@@ -194,7 +194,7 @@ describe('calcSubscriptionBlockPayment', () => {
         }
         const result = await calcSubscriptionBlockPayment(m, subInfo, block);
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 333.3,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3,
@@ -222,7 +222,7 @@ describe('calcSubscriptionBlockPayment', () => {
         }
         const result = await calcSubscriptionBlockPayment(m, subInfo, block);
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 100,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3,
@@ -250,7 +250,7 @@ describe('calcSubscriptionBlockPayment', () => {
         }
         const result = await calcSubscriptionBlockPayment(m, subInfo, block);
         expect(result).toEqual({
-          pricePerSeat: 39,
+          seatPrice: 39,
           refundable: 10.9,
           fullPriceBeforeDiscount: 39 * 3,
           fullPriceAfterDiscount: 39 * 3 * (1 - 0.13),

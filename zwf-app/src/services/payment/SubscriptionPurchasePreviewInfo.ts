@@ -1,6 +1,6 @@
 
 export type SubscriptionPurchasePreviewInfo = {
-  pricePerSeat: number;
+  seatPrice: number;
   fullPriceBeforeDiscount: number;
   fullPriceAfterDiscount: number;
   isValidPromotionCode: boolean;

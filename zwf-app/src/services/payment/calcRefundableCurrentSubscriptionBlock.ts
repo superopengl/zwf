@@ -13,7 +13,7 @@ export async function calcRefundableCurrentSubscriptionBlock(m: EntityManager, s
   }
 
   const block = await m.findOneBy(SubscriptionBlock, { id: headBlockId });
-  const { seats, pricePerSeat, promotionCode, startedAt, endingAt, endedAt } = block;
+  const { seats, seatPrice, promotionCode, startedAt, endingAt, endedAt } = block;
   if (endedAt) {
     return 0;
   }
@@ -27,7 +27,7 @@ export async function calcRefundableCurrentSubscriptionBlock(m: EntityManager, s
   }
 
 
-  const fullPriceBeforeDiscount = pricePerSeat * seats;
+  const fullPriceBeforeDiscount = seatPrice * seats;
   let promotionDiscountPercentage = 0;
   if (promotionCode) {
     // Regardless if the promotion code is expired now, because it's a refund.

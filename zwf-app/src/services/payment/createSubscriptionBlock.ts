@@ -19,7 +19,7 @@ export function createSubscriptionBlock(
   block.parentBlockId = headBlockId;
   block.seats = seats;
   block.promotionCode = promotionCode;
-  block.pricePerSeat = getCurrentPricePerSeat();
+  block.seatPrice = getCurrentPricePerSeat();
   block.subscriptionId = subscriptionId;
   block.type = type;
   block.startingMode = startingMode;
