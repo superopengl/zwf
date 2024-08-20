@@ -1,22 +1,31 @@
 import React from 'react';
 import styled from 'styled-components';
-import {Link} from 'react-router-dom';
-import { Typography, Button, Form, Layout } from 'antd';
+import { Link } from 'react-router-dom';
+import { Typography, Button, Form, Layout, Divider, Image } from 'antd';
 import { Logo } from 'components/Logo';
 import { LogInPanel } from './LogInPanel';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import { GoogleSsoButton } from 'components/GoogleSsoButton';
+import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
+import Icon from '@ant-design/icons';
+
 
 const LayoutStyled = styled(Layout)`
-margin: 0 auto 0 auto;
+margin: 3rem auto 0 auto;
+// padding: 3rem auto 1rem;
 // background-color: #ffffff;
+text-align: center;
 `;
 
 const ContainerStyled = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
+  margin: 1rem auto;
+  padding: 2rem 3rem;
   text-align: center;
-  max-width: 360px;
+  max-width: 460px;
   // background-color: #ffffff;
+  border: 1px solid #E3E6EB;
+  border-radius: 8px;
+
 `;
 
 const LogoContainer = styled.div`
@@ -30,17 +39,35 @@ const LogInPage = props => {
 
   return (
     <LayoutStyled>
-      <ContainerStyled>
         <LogoContainer><Logo /></LogoContainer>
         <Title level={3}>Login</Title>
+
+      <ContainerStyled>
         <LogInPanel />
         <Form.Item>
-            <Link to="/forgot_password">
-              <Button block type="link">Forgot password</Button>
-            </Link>
-            {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
-            <Link to="/signup"><Button block type="link">Not a user? Sign up now!</Button></Link>
-          </Form.Item>
+          <Link to="/forgot_password">
+            <Button block type="link">Forgot password</Button>
+          </Link>
+          {/* <Link to="/"><Button block type="link">Go to home page</Button></Link> */}
+          <Link to="/signup"><Button block type="link">Not a user? Sign up now!</Button></Link>
+        </Form.Item>
+        <Divider>or</Divider>
+          <GoogleSsoButton
+            type="login"
+            render={
+              renderProps => (
+                <Button
+                  block
+                  type="secondary"
+                  size="large"
+                  icon={<Icon component={GoogleLogoSvg} />}
+                  // icon={<GoogleOutlined />}
+                  style={{ marginTop: '1.5rem' }}
+                  onClick={renderProps.onClick}
+                  disabled={renderProps.disabled}
+                >Continue with Google</Button>
+              )}
+          />
       </ContainerStyled>
     </LayoutStyled>
   );
