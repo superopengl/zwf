@@ -49,35 +49,28 @@ padding: 1rem;
 
 .light2 {
   position: absolute;
-  width: 332.39px;
-  height: 232.9px;
-  right: 200px;
-  top: 168.86px;
-
+  width: 473.17px;
+  height: 206.99px;
+  left: 122.65px;
+  top: 205.57px;
+  
   background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.4) 12.79%, rgba(55, 212, 207, 0.4) 56.4%);
-  filter: blur(147px);
+  filter: blur(219.522px);
   transform: rotate(-31.89deg);
+  
 }
 
 .light1 {
   position: absolute;
-  width: 184.65px;
-  height: 159.8px;
-  right: 0px;
-  top: 161.4px;
-
+  width: 252.99px;
+  height: 142.02px;
+  left: 481.69px;
+  top: 198.94px;
+  
   background: rgba(0, 61, 182, 0.8);
-  filter: blur(400px);
+  filter: blur(355.502px);
   transform: rotate(-135deg);
 }
-`;
-
-const CatchPicture = styled.div`
-min-width: 200px;
-min-height: 200px;
-// background-image: linear-gradient(135deg, #37AFD2, #37AFD2 25%, #5cdbd3 25%, #5cdbd3 50%, #87e8de 50%, #87e8de 75%, #b5f5ec 75%, #b5f5ec 100%);
-// background: radial-gradient(closest-side, transparent 0%, white 100%), linear-gradient(45deg, #b5f5ec, #37AFD2 100%);
-padding: 80px;
 `;
 
 const span = {
