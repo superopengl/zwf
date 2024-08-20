@@ -70,7 +70,7 @@ export const ResourcePage = (props) => {
         </Text>
 
       </Space>
-      <Paragraph style={{ fontSize: 16 }}>
+      <Paragraph style={{ fontSize: 16, textAlign: 'justify' }}>
         <RawHtmlDisplay value={page.html} />
       </Paragraph>
       {/* <Row justify='center'>
