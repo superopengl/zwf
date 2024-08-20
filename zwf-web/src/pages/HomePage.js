@@ -48,13 +48,13 @@ export const HomePage = (props) => {
     {/* <section>
       <HomeFeatureArea />
     </section> */}
-    <section>
+    <section id="features">
       <HomeKeyFeatureArea />
     </section>
     <section id="pricing">
       <HomePricingArea />
     </section>
-    <section id="features">
+    <section>
       <HomeFeatureListArea />
     </section>
     <section id="contactus">
