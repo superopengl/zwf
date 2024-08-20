@@ -12,6 +12,7 @@
     "build": "pnpm lint && pnpm clean && pnpm compile",
     "build:prod": "rm -rf www && pnpm compile",
     "clean": "ts-clean && rm -rf www",
+    "new-user": "ts-node endpoints/new-user",
     "compile": "tsc",
     "lint": "tslint -c tslint.json -p tsconfig.json --fix",
     "link-web": "rm -rf www && ln -sfn \"$(pwd)/../zwf-web/build\" www",
