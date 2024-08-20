@@ -4,8 +4,8 @@ export function listPublishedResourcePages$() {
   return httpGet$(`/resource`)
 }
 
-export function getPublishedResourcePage$(id) {
-  return httpGet$(`/resource/${id}`)
+export function getPublishedResourcePage$(key) {
+  return httpGet$(`/resource/${key}`)
 }
 
 export function listAllResourcePages$() {

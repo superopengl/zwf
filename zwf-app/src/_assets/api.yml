@@ -477,14 +477,13 @@ paths:
       responses:
         200:
           description: OK
-  /resource/:id:
+  /resource/:key:
     get:
       operationId: getPublishedResourcePage
       parameters:
-        - name: id
+        - name: key
           in: path
           type: string
-          format: uuid
           required: true
       responses:
         200:

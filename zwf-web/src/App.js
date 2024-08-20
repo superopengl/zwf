@@ -140,7 +140,7 @@ export const App = React.memo(() => {
               <Route path={'/'} element={<PortalPage />} >
                 <Route index element={<HomePage />} />
                 <Route path="resource" element={<ResourceListPage />} />
-                <Route path="resource/:id" element={<ResourcePage />} />
+                <Route path="resource/:key" element={<ResourcePage />} />
               </Route>
               <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
               <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />

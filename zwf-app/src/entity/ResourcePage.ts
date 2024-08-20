@@ -1,4 +1,4 @@
-import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, Unique, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class ResourcePage {
@@ -17,6 +17,9 @@ export class ResourcePage {
 
   @Column()
   title: string;
+
+  @Column({unique: true, generatedType: "STORED", asExpression: `LOWER(REPLACE("title", ' ', '-'))`})
+  titleKey: string;
 
   @Column({nullable: true})
   imageBase64: string;
