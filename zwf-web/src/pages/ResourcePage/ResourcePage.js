@@ -57,16 +57,20 @@ export const ResourcePage = (props) => {
 
   return <Loading loading={loading}>
     {page ? <LayoutStyled>
-      <Button type="text" icon={<LeftOutlined />} style={{ color: '#4B5B76' }} onClick={() => navigate('/resource')}>Back</Button>
-      {page.readingTime?.text && <Paragraph style={{ textAlign: 'center', margin: '0 auto' }}>
-        {page.readingTime?.text}
-      </Paragraph>}
+      <Button type="text" icon={<LeftOutlined />} style={{ color: '#4B5B76', position: 'relative', left: -16 }} onClick={() => navigate('/resource')}>Back</Button>
+      <Image preview={false} src={page.imageBase64} width="100%" alt="picture" style={{ borderRadius: 4, margin: '1rem auto' }} />
       <Title style={{ textAlign: 'center', margin: '2rem auto' }}>{page.title}</Title>
-      <Paragraph type="secondary" level={5} style={{ textAlign: 'center', margin: '2rem auto' }}>
-        <TimeAgo value={page.publishedAt} showTime={false} prefix="By ZeeWorkflow Team, " direction="horizontal" />
-      </Paragraph>
-      <Image preview={false} src={page.imageBase64} width="100%" alt="picture" style={{ borderRadius: 4, marginBottom: '2rem' }} />
-      <Paragraph style={{fontSize: 16}}>
+      <Space style={{ width: '100%', justifyContent: 'center', marginBottom: 32 }} size="large">
+        <Text type="secondary" >
+          {page.readingTime?.text}
+        </Text>
+        <Text type="secondary" >|</Text>
+        <Text type="secondary">
+          <TimeAgo value={page.publishedAt} showTime={false} prefix="By ZeeWorkflow Team, " direction="horizontal" />
+        </Text>
+
+      </Space>
+      <Paragraph style={{ fontSize: 16 }}>
         <RawHtmlDisplay value={page.html} />
       </Paragraph>
       {/* <Row justify='center'>
