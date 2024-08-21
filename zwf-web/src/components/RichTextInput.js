@@ -62,7 +62,7 @@ export const RichTextInput = React.memo((props) => {
             padding: 1px 6px;
             font-weight: 400;
             font-style: normal;
-            font-size: small;
+            font-size: 85%;
             line-height: 1.2;
             font-family: monospace;
           }`,
