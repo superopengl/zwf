@@ -26,7 +26,7 @@ export async function createOrgSubscriptionWithTrial(m: EntityManager, orgId: st
   trialBlock.seats = 1;
   trialBlock.seatPrice = 0;
   trialBlock.startedAt = now.toDate();
-  trialBlock.endingAt = now.add(14, 'days').endOf('day').toDate();
+  trialBlock.endingAt = now.add(14 - 1, 'days').endOf('day').toDate();
   
   subscription.headBlockId = trialBlock.id;
   await m.save([trialBlock, subscription]);
