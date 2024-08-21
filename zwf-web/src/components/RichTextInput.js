@@ -49,16 +49,29 @@ export const RichTextInput = React.memo((props) => {
         onEditorChange={onChange}
         init={{
           height: 'calc(100vh - 340px)',
-          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize',
+          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize variable',
           menubar: false, //'file edit view insert format tools table tc help',
           toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | table',
           toolbar_sticky: true,
-          content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:16px }',
+          content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
+            cursor: default;
+            background-color: #0FBFC433;
+            border: 1px solid #0FBFC4;
+            // color: #FFFFFF;
+            border-radius: 3px;
+            padding: 1px 6px;
+            font-weight: 400;
+            font-style: normal;
+            font-size: small;
+            line-height: 1.2;
+            font-family: monospace;
+          }`,
           toolbar_mode: 'wrap',
           branding: false,
           elementpath: false,
           statusbar: true,
           // contextmenu: 'table',
+          variable_class: "editor-variable",
           paste_data_images: true,
           link_default_target: '_blank',
           link_default_protocol: 'https',
