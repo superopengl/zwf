@@ -37,6 +37,7 @@ describe('calcSubscriptionBlockPayment', () => {
     promotionCode: 'ABC',
     seats: 3,
     seatPrice: 39,
+    isLast: false,
     startedAt: moment().toDate(),
     endingAt: moment().toDate(),
     headBlockId: 'fake-headBlockId',
