@@ -6,16 +6,20 @@ import { Logo } from 'components/Logo';
 import { forgotPassword$ } from 'services/authService';
 import { notify } from 'util/notify';
 import { ForgotPasswordPanel } from './ForgotPasswordPanel';
-const ContainerStyled = styled.div`
-  margin: 2rem auto;
-  padding: 2rem 1rem;
+import HomeFooter from 'components/HomeFooter';
+const ContainerStyled = styled(Layout.Content)`
+  padding: 3rem 1rem;
+  margin: 0 auto;
   text-align: center;
   max-width: 400px;
 `;
 
 const LayoutStyled = styled(Layout)`
-  margin: 0 auto 0 auto;
-  // background-color: #ffffff;
+margin: 0 auto;
+padding: 0;
+background-color: #ffffff;
+text-align: center;
+min-height: 100%;
 `;
 
 const LogoContainer = styled.div`
@@ -38,10 +42,8 @@ const ForgotPasswordPage = props => {
       <Form.Item >
         <Button block type="link" onClick={() => goBack()}>Cancel</Button>
       </Form.Item>
-      <Form.Item>
-        <Link to="/"><Button block type="link">Go to home page</Button></Link>
-      </Form.Item>
     </ContainerStyled>
+    <HomeFooter/>
   </LayoutStyled>;
 }
 
