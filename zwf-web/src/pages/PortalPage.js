@@ -17,6 +17,8 @@ smoothscroll.polyfill();
 
 const StyledLayoutPage = styled(Layout)`
 position: relative;
+min-height: 100%;
+background: #ffffff;
 
 .ant-layout-header {
   background: #ffffffee;
@@ -96,7 +98,7 @@ export const PortalPage = () => {
         </Row>
       </Space>
     </Layout.Header>
-    <Layout.Content>
+    <Layout.Content style={{padding: '2rem 1rem'}}>
       <Outlet />
     </Layout.Content>
     <HomeFooter />

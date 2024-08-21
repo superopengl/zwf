@@ -24,6 +24,9 @@ import { useNavigate } from 'react-router-dom';
 const { Link: LinkText } = Typography;
 
 const StyledNewLayout = styled(Layout)`
+min-height: 100%;
+background: #ffffff;
+
 .menu-group {
   padding-left: 16px;
   margin-top: 16px;
@@ -240,7 +243,7 @@ export const AppLoggedIn = React.memo(() => {
               <Space>
                 {/* <Button icon={<QuestionOutlined />} type="text" size="large"></Button>
                 <Button icon={<Icon component={BsBell}/>} type="text" size="large"></Button> */}
-                <AvatarDropdownMenu style={{marginLeft: 8}}/>
+                <AvatarDropdownMenu style={{ marginLeft: 8 }} />
               </Space>
             </Col>
           </Row>
@@ -274,14 +277,13 @@ export const AppLoggedIn = React.memo(() => {
         </Layout>
       </Layout.Sider>
 
-      <Layout style={{ marginLeft: 220 }}>
-
-        <Layout.Content >
+      <Layout style={{ marginLeft: 220, minHeight: '100%', backgroundColor: '#FFFFFF' }}>
+        <Layout.Content style={{padding: '2rem'}}>
           <Outlet />
-          {!isSystem && <SupportAffix />}
         </Layout.Content>
       </Layout>
     </Layout>
+    {!isSystem && <SupportAffix />}
   </StyledNewLayout>
 })
 
