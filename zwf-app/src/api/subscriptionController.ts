@@ -106,10 +106,10 @@ export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
     const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
 
     const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Rightaway);
-    block.seats = seats;
+    block.seats = seats || 0;
     block.promotionCode = promotionCode;
   
-    return await calcSubscriptionBlockPayment(m, subInfo, block);
+    result = await calcSubscriptionBlockPayment(m, subInfo, block);
   });
 
   res.json(result);
