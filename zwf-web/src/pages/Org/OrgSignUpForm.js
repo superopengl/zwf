@@ -11,6 +11,7 @@ import { Divider } from 'antd';
 import { GoogleSsoButton } from 'components/GoogleSsoButton';
 import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
+import { Loading } from 'components/Loading';
 const { Title, Text, Paragraph } = Typography;
 
 const GoogleButton = styled(Button)`
@@ -81,66 +82,73 @@ const OrgSignUpForm = (props) => {
 
   return (
     <ContainerStyled>
-      <Title level={2}>
-        <FormattedMessage id="menu.signUpOrg" />
-      </Title>
-      <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ email: props.value }}>
-        <Form.Item>
-          <Text>
-            We will send an verification email to below email address. This email address will be the account of the root administrator of the organasation.
-          </Text>
-        </Form.Item>
-        <Form.Item label="" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
-          <Input placeholder={intl.formatMessage({ id: 'placeholder.rootEmailAddress' })} type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
-        </Form.Item>
-        {/* <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
+      <Loading loading={loading}>
+        <Title level={2}>
+          <FormattedMessage id="menu.signUpOrg" />
+        </Title>
+        <Form layout="vertical" onFinish={handleSignIn} style={{ textAlign: 'left' }} initialValues={{ email: props.value }}>
+          <Form.Item>
+            <Text>
+              We will send an verification email to below email address. This email address will be the account of the root administrator of the organasation.
+            </Text>
+          </Form.Item>
+          <Form.Item label="" name="email" rules={[{ required: true, type: 'email', whitespace: true, max: 100, message: ' ' }]}>
+            <Input placeholder={intl.formatMessage({ id: 'placeholder.rootEmailAddress' })} type="email" autoComplete="email" allowClear={true} maxLength="100" autoFocus={true} />
+          </Form.Item>
+          {/* <Form.Item label="" name="agreement" valuePropName="checked" style={{ marginBottom: 0 }} rules={[{
           validator: (_, value) =>
             value ? Promise.resolve() : Promise.reject('You have to agree to continue.'),
         }]}>
           <Checkbox disabled={sending}>I have read and agree to the <a target="_blank" href="/terms_and_conditions">terms & conditions</a> and <a target="_blank" href="/privacy_policy">privacy policy</a>.</Checkbox>
         </Form.Item> */}
-        <Text>
-          <FormattedMessage id="text.byClickingAgreement"
-            values={{
-              tc: <a target="_blank" href="/terms_and_conditions">
-                <FormattedMessage id="menu.tc" />
-              </a>,
-              pp: <a target="_blank" href="/privacy_policy">
-                <FormattedMessage id="menu.pp" />
-              </a>
-            }}
-          />
-        </Text>
-        <Form.Item style={{ marginTop: '1rem' }}>
-          <Button block type="primary" size="large" htmlType="submit" disabled={loading}>
-            Register with Email
-          </Button>
-        </Form.Item>
-        {/* <Form.Item>
+          <Text>
+            <FormattedMessage id="text.byClickingAgreement"
+              values={{
+                tc: <a target="_blank" href="/terms_and_conditions">
+                  <FormattedMessage id="menu.tc" />
+                </a>,
+                pp: <a target="_blank" href="/privacy_policy">
+                  <FormattedMessage id="menu.pp" />
+                </a>
+              }}
+            />
+          </Text>
+          <Form.Item style={{ marginTop: '1rem' }}>
+            <Button block type="primary" size="large" htmlType="submit" disabled={loading}>
+              Register with Email
+            </Button>
+          </Form.Item>
+          {/* <Form.Item>
                   <Button block type="link" onClick={() => goBack()}>Cancel</Button>
                 </Form.Item> */}
-        {/* <Form.Item>
+          {/* <Form.Item>
           <Text type="secondary">
             If you cannot receieve the verification email within 30 minutes, please check if the email address is valid or if the email address has been registered in ZeeWorkflow before, in which case, you may use forgot password to find back your credential.
           </Text>
         </Form.Item> */}
-      </Form>
-      <Divider>or</Divider>
-      <GoogleSsoButton
-        type="register"
-        render={
-          renderProps => (
-            <GoogleButton
-              block
-              type="secondary"
-              size="large"
-              icon={<Icon component={GoogleLogoSvg} />}
-              onClick={renderProps.onClick}
-              disabled={renderProps.disabled}
-            // style={{ paddingTop: 6 }}
-            >Continue with Google</GoogleButton>
-          )}
-      />
+        </Form>
+        <Divider>or</Divider>
+        <GoogleSsoButton
+          type="register"
+          onStart={() => setLoading(true)}
+          onEnd={() => setLoading(false)}
+          render={
+            renderProps => (
+              <GoogleButton
+                block
+                type="secondary"
+                size="large"
+                icon={<Icon component={GoogleLogoSvg} />}
+                onClick={() => {
+                  setLoading(true);
+                  renderProps.onClick()
+                }}
+                disabled={renderProps.disabled}
+              // style={{ paddingTop: 6 }}
+              >Continue with Google</GoogleButton>
+            )}
+        />
+      </Loading>
     </ContainerStyled>
   );
 }

@@ -29,6 +29,7 @@ import { SubscriptionBlock } from '../SubscriptionBlock';
       'b."type" as type',
       'b."seatPrice" as "seatPrice"',
       'b."promotionCode" as "promotionCode"',
+      'b."isLast" as "isLast"',
       '"seats"',
       '"startedAt"',
       '"endingAt"',
@@ -50,6 +51,9 @@ export class OrgCurrentSubscriptionInformation {
 
   @ViewColumn()
   promotionCode: string;
+
+  @ViewColumn()
+  isLast: boolean;
 
   @ViewColumn()
   seats: number;

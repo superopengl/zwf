@@ -20,14 +20,14 @@ export async function terminateSubscription(subInfo: OrgCurrentSubscriptionInfor
     let extraVars: any;
     if (type === SubscriptionBlockType.OverduePeacePeriod) {
       // Terminate rightaway if it's in the overdue pease period
-      await m.update(SubscriptionBlock, { id: headBlockId }, { isToTerminate: true, endedAt: () => `NOW()` });
+      await m.update(SubscriptionBlock, { id: headBlockId }, { isLast: true, endedAt: () => `NOW()` });
       await m.update(Subscription, { id: subscriptionId, }, { enabled: false });
 
       emailTemplate = EmailTemplateType.SubscriptionTerminated;
       extraVars = {};
     } else {
       // Terminate till the current block ends
-      await m.update(SubscriptionBlock, { id: headBlockId }, { isToTerminate: true });
+      await m.update(SubscriptionBlock, { id: headBlockId }, { isLast: true });
       emailTemplate = EmailTemplateType.SubscriptionTerminating;
       extraVars = {
         till: moment(endingAt).format('D MMM YYYY'),
