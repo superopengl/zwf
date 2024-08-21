@@ -54,7 +54,7 @@ export class SubscriptionBlock {
 
   @OneToOne(() => Payment, payment => payment.subscriptionBlock)
   @JoinColumn()
-  payment: Payment;
+  payment?: Payment;
 
   @ManyToOne(() => Subscription, subscription => subscription.blocks, { onDelete: 'CASCADE' })
   subscription?: Subscription;

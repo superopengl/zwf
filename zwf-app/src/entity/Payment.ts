@@ -31,7 +31,7 @@ export class Payment {
   subscriptionBlockId: string;
 
   @OneToOne(() => SubscriptionBlock, block => block.payment)
-  subscriptionBlock: SubscriptionBlock;
+  subscriptionBlock?: SubscriptionBlock;
 
   @Column('uuid', { nullable: true })
   creditTransactionId: string;
