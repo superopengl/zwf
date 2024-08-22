@@ -137,7 +137,7 @@ export async function sendEmailForUserId(userId: string, template: EmailTemplate
         toWhom
       }
     };
-    await sendEmail(request);
+    await enqueueEmailInBulk(db.manager, [request]);
   } catch (err) {
     console.log('Sent out email error'.red, errorToJson(err));
     logError(err, null, null, 'Sending email error', userId, template, vars);

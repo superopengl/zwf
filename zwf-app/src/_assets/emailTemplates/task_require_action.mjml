@@ -7,7 +7,7 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {toWhom}, task <strong>{{task}}</strong> requires further action</mj-text>
+        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {{toWhom}}, task <strong>{{task}}</strong> requires further action</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>

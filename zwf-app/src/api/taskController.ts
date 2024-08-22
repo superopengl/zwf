@@ -534,7 +534,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
-  const task = await db.getRepository(Task).findOne({
+  const task = await db.getRepository(TaskInformation).findOne({
     where: {
       id,
       orgId
@@ -547,12 +547,13 @@ export const notifyTask = handlerWrapper(async (req, res) => {
     await logTaskChat(db.manager, task.id, userId, message);
   }
 
-  const taskUrl = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;
+  const url = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;
 
   sendEmailForUserId(task.userId, EmailTemplateType.TaskRequireAction, {
-    taskName: task.name,
-    taskUrl,
+    task: task.name,
+    url,
     message,
+    org: task.orgName,
   });
 
   res.json();
