@@ -98,7 +98,7 @@ export const PortalPage = () => {
         </Row>
       </Space>
     </Layout.Header>
-    <Layout.Content style={{padding: '2rem 1rem'}}>
+    <Layout.Content>
       <Outlet />
     </Layout.Content>
     <HomeFooter />

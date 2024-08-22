@@ -15,9 +15,9 @@ import { delay } from 'rxjs/operators';
 smoothscroll.polyfill();
 
 const Container = styled.div`
-  margin: 0 0 120px 0;
   padding: 0;
   max-width: 100%;
+  margin: 0;
 `;
 
 const scrollToElement = (selector) => {
