@@ -83,7 +83,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskN
     const taskTemplate: TaskTemplate = await m.findOne(TaskTemplate, { where: { id: taskTemplateId }, relations: { docs: true } });
     assert(taskTemplate, 404, 'taskTemplate is not found');
 
-    const { user } = await ensureClientOrGuestUser(m, email);
+    const { user } = await ensureClientOrGuestUser(m, email, taskTemplate.orgId);
 
     task = new Task();
     task.id = id || uuidv4();
