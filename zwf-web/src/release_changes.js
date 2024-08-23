@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 homepage ui refine
 homepage refine
 tweak content padding
