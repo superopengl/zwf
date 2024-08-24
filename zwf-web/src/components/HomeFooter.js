@@ -19,7 +19,7 @@ text-align: center;
 font-size: 0.8rem;
 color: #aaaaaa;
 background-color: #13161B;
-padding: 1em 1rem;
+padding: 1em 1rem 2rem;
 // position: absolute;
 // bottom: 0;
 // left: 0;
