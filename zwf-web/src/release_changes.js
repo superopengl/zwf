@@ -1,2 +1,4 @@
 export const notes=`
-clean up`
+narrow screen menu
+responsive refine
+tweak light1 and light2`
