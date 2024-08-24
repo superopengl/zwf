@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Col, Row, Space, Button, Table } from 'antd';
+import { Card, Typography, Col, Row, Space, Grid, Table } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
@@ -10,6 +10,7 @@ import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
 
 const { Title, Paragraph, Text } = Typography;
+const { useBreakpoint } = Grid;
 
 const StyledRow = styled(Row)`
 `;
@@ -64,20 +65,7 @@ padding: 3rem 1rem 1rem;
 }
 `;
 
-const orgColumns = [
-  {
-    title: 'Org Portal',
-    dataIndex: 'name',
-    render: (text, item) => <Row justify='space-between'>
-      <Col>
-        <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
-      </Col>
-      <Col>
-        <Text type="secondary" italic>{item.extra}</Text>
-      </Col>
-    </Row>
-  }
-]
+
 
 const orgFeatures = [
   { name: 'Status based task management', release: 'v1' },
@@ -100,25 +88,12 @@ const orgFeatures = [
   extra: x.release ? `alive from ${x.release}` : x.dev ? 'coming soon' : ''
 }))
 
-const clientColumns = [
-  {
-    title: 'Client Portal',
-    dataIndex: 'name',
-    render: (text, item) => <Row justify='space-between'>
-      <Col>
-        <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
-      </Col>
-      <Col>
-        <Text type="secondary" italic>{item.extra}</Text>
-      </Col>
-    </Row>
-  }
-]
+
 
 const clientFeatures = [
-  { name:'Realtime chat communication',release: 'v1' },
-  { name:'Task event timeline',release: 'v1' },
-  { name:'Doc Sign',release: 'v1' },
+  { name: 'Realtime chat communication', release: 'v1' },
+  { name: 'Task event timeline', release: 'v1' },
+  { name: 'Doc Sign', release: 'v1' },
   { name: 'Doc Sign in blockchian', dev: true },
 ].map((x, i) => ({
   key: i,
@@ -127,6 +102,38 @@ const clientFeatures = [
 }))
 
 export const HomeFeatureListArea = props => {
+  const screens = useBreakpoint();
+
+  const orgColumns = [
+    {
+      title: 'Org Portal',
+      dataIndex: 'name',
+      render: (text, item) => <Row justify='space-between'>
+        <Col>
+          <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
+        </Col>
+        {!screens.xs && <Col>
+          <Text type="secondary" italic>{item.extra}</Text>
+        </Col>}
+      </Row>
+    }
+  ]
+
+  const clientColumns = [
+    {
+      title: 'Client Portal',
+      dataIndex: 'name',
+      render: (text, item) => <Row justify='space-between'>
+        <Col>
+          <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> {text}
+        </Col>
+        {!screens.xs && <Col>
+          <Text type="secondary" italic>{item.extra}</Text>
+        </Col>}
+      </Row>
+    }
+  ]
+
   return (
     <Container>
       <InnerContainer>

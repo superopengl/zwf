@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Card, Typography, Col, Row, Space, Button, Image, Form, Input } from 'antd';
+import { Card, Typography, Col, Row, Grid, Button, Image, Form, Input } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { SubscriptionCard } from 'components/SubscriptionCard';
@@ -36,6 +36,7 @@ const Container = styled.div`
 justify-content: center;
 margin-bottom: 6rem;
 width: 100%;
+padding: 1rem;
 
 // text-align: center;
 // background: #fafafa;
@@ -71,6 +72,11 @@ label {
 export const HomeContactUsArea = props => {
   const [loading, setLoading] = React.useState(false);
   const [form] = Form.useForm();
+  const screens = Grid.useBreakpoint();
+
+  const showDecorationPicture = screens.lg || screens.xl || screens.xxl;
+
+  console.log(screens);
 
   const handleSubmit = values => {
     setLoading(true);
@@ -104,9 +110,9 @@ export const HomeContactUsArea = props => {
               >
                 <Text style={{ color: '#0FBFC4' }}>Got a question?</Text>
                 <Title style={{ color: '#ffffff', marginTop: '1rem' }}>Contact Us Now</Title>
-                <div style={{ position: 'absolute', bottom: -50, right: 20 }}>
+                {showDecorationPicture && <div style={{ position: 'absolute', bottom: -50, right: 20 }}>
                   <Image src="/images/contact-left.svg" preview={false} style={{ width: 'clamp(400px, 30vw, 460px)' }} />
-                </div>
+                </div>}
               </Col>
               <Col flex="auto">
                 <Form

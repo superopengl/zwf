@@ -47,10 +47,9 @@ export const PortalPage = () => {
 
   const navigate = useNavigate();
   const [visible, setVisible] = React.useState(false);
-  const position = useWindowScrollPosition(); 
+  // const position = useWindowScrollPosition(); 
   const context = React.useContext(GlobalContext);
 
-  console.log(position); 
 
   const { role } = context;
   const isGuest = role === 'guest';

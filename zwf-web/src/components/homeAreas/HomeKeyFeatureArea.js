@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Col, Row, Image } from 'antd';
+import { Typography, Col, Row, Image, Grid } from 'antd';
 import styled from 'styled-components';
 
 const { Title, Paragraph, Text } = Typography;
@@ -64,7 +64,13 @@ const span = {
   xxl: 12
 }
 
+
+
 export const HomeKeyFeatureArea = () => {
+  const screens = Grid.useBreakpoint();
+
+  const isWide = screens.xxl || screens.xl ||screens.lg || screens.md;
+
   return (
     <Container>
       <InnerContainer>
@@ -83,9 +89,12 @@ export const HomeKeyFeatureArea = () => {
             <Title level={2}><Text style={{ color: '#0051D9' }}>Doc</Text> Template</Title>
             <Paragraph style={{ width: 600 }}>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
-          <Col span={24} style={{ display: 'flex', justifyContent: 'center', minWidth: 800, maxWidth: 1200 }}>
+          {isWide && <Col span={24} style={{ display: 'flex', justifyContent: 'center', maxWidth: 1000 }}>
             <Image src="/images/feature-doc-template.svg" preview={false} />
-          </Col>
+          </Col>}
+          {!isWide && <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
+            <Image src="/images/feature-doc-template-narrow.svg" preview={false} />
+          </Col>}
         </Row>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
           <Col {...span}>
@@ -105,8 +114,8 @@ export const HomeKeyFeatureArea = () => {
               <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
             </Col>
           </Row>
-        <Row justify='center' style={{ width: '100%', height: '3rem', backgroundImage: 'linear-gradient(to top left, #F6F7F9, #F6F7F9 50%, #ffffff 50%, #ffffff 100%)', paddingBottom: '5rem' }}>
-        </Row>
+        <div justify='center' style={{ width: '100%', height: 'clamp(3rem, 7vw, 8rem)', backgroundImage: 'linear-gradient(to top left, #F6F7F9, #F6F7F9 50%, #ffffff 50%, #ffffff 100%)' }}>
+        </div>
         <Row gutter={[24, 24]} justify='center' style={{ width: '100%', backgroundColor: '#F6F7F9' }}>
           <Col span={24}>
             <Title level={2}>Task management</Title>
