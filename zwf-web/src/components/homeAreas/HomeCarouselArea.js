@@ -45,26 +45,28 @@ padding: 1rem;
 
 .light2 {
   position: absolute;
-  width: 473.17px;
-  height: 206.99px;
-  left: 122.65px;
-  top: 205.57px;
+  width: clamp(100px, 50vw, 470px);
+  height: clamp(50px, 50vw, 200px);
+  left: clamp(50px, 60vw, 120px);
+  top: clamp(20px, 20vw, 200px);
+  // border: 1px solid red;
   
   background: linear-gradient(268.24deg, rgba(0, 61, 182, 0.5) 12.79%, rgba(55, 212, 207, 0.5) 56.4%);
-  filter: blur(119.522px);
+  filter: blur(clamp(60px, 20vw, 120px));
   transform: rotate(-31.89deg);
   
 }
 
 .light1 {
   position: absolute;
-  width: 252.99px;
-  height: 142.02px;
-  left: 481.69px;
-  top: 198.94px;
+  width: clamp(30px, 80vw, 260px);
+  height: clamp(10px, 80vw, 140px);
+  left: clamp(50px, 60vw, 480px);
+  top: clamp(0px, 20vw, 200px);
+  // border: 1px solid blue;
   
   background: rgba(0, 61, 182, 0.8);
-  filter: blur(355.502px);
+  filter: blur(clamp(150px, 20vw, 300px));
   transform: rotate(-135deg);
 }
 `;
