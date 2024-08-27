@@ -1,2 +1,3 @@
 export const notes=`
-ui refine`
+rich text editor for customer support
+refine ui`
