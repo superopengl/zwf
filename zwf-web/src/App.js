@@ -20,7 +20,7 @@ import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { Alert } from 'antd';
-import { VersionMismatchAlert } from 'components/showVersionMismatchAlert';
+import { VersionMismatchAlert } from "components/VersionMismatchAlert";
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));

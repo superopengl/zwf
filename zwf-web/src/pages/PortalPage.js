@@ -12,7 +12,7 @@ import { OrgRegisterModal } from 'components/OrgRegisterModal';
 import { useWindowScrollPosition } from "rooks";
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
-import { VersionMismatchAlert } from 'components/showVersionMismatchAlert';
+import { VersionMismatchAlert } from "components/VersionMismatchAlert";
 
 const { Text } = Typography;
 
@@ -81,7 +81,7 @@ export const PortalPage = () => {
 
   return <StyledLayoutPage>
     <Layout.Header >
-      <VersionMismatchAlert style={{margin: '0 -1rem'}}/>
+      {/* <VersionMismatchAlert style={{margin: '0 -1rem'}}/> */}
 
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
