@@ -1,3 +1,4 @@
 export const notes=`
-update release notes
-fix homepage`
+refine version detection
+refine version detection
+dev memo`
