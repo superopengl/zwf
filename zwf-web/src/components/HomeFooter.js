@@ -19,7 +19,7 @@ text-align: center;
 font-size: 0.8rem;
 color: #aaaaaa;
 background-color: #13161B;
-padding: 1em 1rem 2rem;
+padding: 1em 1rem 4rem;
 // position: absolute;
 // bottom: 0;
 // left: 0;
@@ -74,6 +74,12 @@ a {
 p {
   margin-bottom: 0;
 }
+
+.footer-bottom-section {
+  .ant-btn {
+    color: #BCC4D0;
+  }
+}
 `;
 
 const span = {
@@ -118,15 +124,15 @@ const HomeFooter = () => {
         </Col>
       </Row>
     </section>
-    <Row style={{ borderTop: '1px solid #D6DBE333' }}></Row>
+    <Row style={{ borderTop: '1px solid #2C3645', margin: '0 -1rem' }}></Row>
     <section>
       <Row style={{ paddingTop: '1rem' }} align="middle" gutter={[8, 16]}>
-        <Col {...span}>
+        <Col flex="auto">
           <Link to="/">
-            <Image style={{marginLeft: 10}} src="/images/logo-text-light.svg" preview={false} height={24} />
+            <Image src="/images/logo-text-light.svg" style={{marginLeft: 16, width: 'auto'}} preview={false} height={24} width="auto" />
           </Link>
         </Col>
-        <Col {...span}>
+        <Col {...span} className="footer-bottom-section">
           <Space style={{ position: 'relative' }} direction={screens.xs ? 'vertical' : 'horizontal'} size={screens.xs ? 'small' : 'large'}>
             <Button type="text" className='copyright-button'>©{new Date().getFullYear()} ZeeWorkflow</Button>
             <Button type="link" href="/privacy_policy" target="_blank">Privacy Policy</Button>
