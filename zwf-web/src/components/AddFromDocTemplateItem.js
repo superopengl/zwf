@@ -10,7 +10,7 @@ export const AddFromDocTemplateItem = React.memo(props => {
     props.onClick();
   }}>
     <List.Item.Meta
-      avatar={<PlusOutlined style={{ fontSize: 30, color: '#37AFD2' }} />}
+      avatar={<PlusOutlined style={{ fontSize: 30, color: '#0FBFC4' }} />}
       title={<Text type="secondary">Add doc template</Text>}
       description="The doc can be filled by filed values and generated on demand."
     />

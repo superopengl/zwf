@@ -49,7 +49,7 @@ const Content = props => {
 export function showRequireActionModal(taskID, onOk) {
   const modalRef = Modal.info({
     title: <Space>
-      <Avatar icon={<NotificationOutlined />} style={{ backgroundColor: '#37AFD2' }} />
+      <Avatar icon={<NotificationOutlined />} style={{ backgroundColor: '#0FBFC4' }} />
       Notify client
     </Space>,
     content: <Content id={taskID} onOk={() => {

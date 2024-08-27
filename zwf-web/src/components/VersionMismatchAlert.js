@@ -1,23 +1,38 @@
 import React from 'react';
 import { useLocalstorageState } from 'rooks';
-import { Alert } from 'antd';
+import { Alert, Button } from 'antd';
 import styled from 'styled-components';
 import { versionMismatchSubject$ } from './showVersionMismatchAlert';
 const LAST_ASKED_BACKEND_VERSION = 'lastAskedBackendVersion';
 
 const StyledAlert = styled(Alert)`
-background-color: #FF7D00;
+background-color: #F7BA1E;
 
 .ant-alert-message, a, .ant-btn, .ant-alert-close-text {
     color: #FFFFFF;
     font-size: 14px;
 }
 
-a {
-  text-decoration: underline;
+.reload-link {
+  padding: 0;
+  span {
+    text-decoration: underline !important;
+  }
 
   &:hover {
 
+  }
+}
+
+.ant-alert-close-icon {
+  border: 1px solid #FFFFFF;
+  border-radius: 4px;
+  padding: 8px 16px;
+  transition: all 0.2s ease-in-out; 
+
+  &:hover {
+    background-color: #FFFFFF33;
+    transition: all 0.2s ease-in-out; 
   }
 }
 `;
@@ -50,7 +65,7 @@ export const VersionMismatchAlert = (props) => {
     showIcon={false}
     type="warning"
     // message="New version is released"
-    message={<>A new version of ZeeWorkflow has been released.<a onClick={handleReloadPage}>Reload the page</a> to upgrgade.</>}
+    message={<>A new version of ZeeWorkflow has been released.<Button type="text" className='reload-link' onClick={handleReloadPage}>Reload the page</Button> to upgrgade.</>}
     closeText="Reload"
     banner
     onClose={handleReloadPage} />;

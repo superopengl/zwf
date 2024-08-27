@@ -26,7 +26,7 @@ export const TaskFieldsEditorModal = props => {
 
   return <Modal
     visible={visible}
-    title={<><Avatar icon={<Icon component={RiInsertRowBottom } />} style={{ backgroundColor: '#37AFD2' }} /> Edit task fields</>}
+    title={<><Avatar icon={<Icon component={RiInsertRowBottom } />} style={{ backgroundColor: '#0FBFC4' }} /> Edit task fields</>}
     closable={true}
     maskClosable={false}
     destroyOnClose={true}

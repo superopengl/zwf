@@ -36,7 +36,7 @@ export function showShareTaskDeepLinkModal(taskDeepLinkId) {
   const url = getTaskDeepLinkUrl(taskDeepLinkId);
   const modalRef = Modal.info({
     title: <Space>
-    <Avatar icon={<ShareAltOutlined />} style={{ backgroundColor: '#37AFD2' }} />
+    <Avatar icon={<ShareAltOutlined />} style={{ backgroundColor: '#0FBFC4' }} />
     Share this task with client or other member
   </Space>,
     content: <Content url={url} />,

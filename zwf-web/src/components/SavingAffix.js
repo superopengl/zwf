@@ -8,7 +8,7 @@ const Container = styled.div`
 padding: 0 2px 0 8px;
 border-radius: 4px 0 0 0;
 border: none;
-background-color: #37AFD266;
+background-color: #0FBFC466;
 `;
 
 export const SavingAffix = (props) => {
