@@ -138,7 +138,6 @@ export const App = React.memo(() => {
       <ConfigProvider locale={antdLocale}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <BrowserRouter basename="/">
-            <VersionMismatchAlert />
             <Routes>
               <Route path={'/'} element={<PortalPage />} >
                 <Route index element={<HomePage />} />

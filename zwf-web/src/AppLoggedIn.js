@@ -20,6 +20,7 @@ import { BsBell } from 'react-icons/bs';
 import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
 import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
+import { VersionMismatchAlert } from 'components/showVersionMismatchAlert';
 
 const { Link: LinkText } = Typography;
 
@@ -227,6 +228,7 @@ export const AppLoggedIn = React.memo(() => {
       width: '100%',
       padding: 0,
     }}>
+      <VersionMismatchAlert />
       <Layout style={{ borderBottom: '1px solid #E3E6EB' }}>
         <Layout.Sider width={220} style={{ paddingLeft: 24, paddingRight: 24 }}>
           <Image src="/images/logo-text-dark.svg" preview={false} width={140} />

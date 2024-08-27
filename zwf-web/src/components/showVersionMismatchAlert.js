@@ -1,51 +1,68 @@
 import React from 'react';
-import { Typography, Space, Button, notification, Collapse, Avatar } from 'antd';
+import { Typography, Space, Button, notification, Collapse, Row, Col } from 'antd';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import { notes } from '../release_changes';
-import { CaretRightOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, SyncOutlined } from '@ant-design/icons';
 import { BehaviorSubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Alert } from 'antd';
 import { useLocalstorageState } from 'rooks';
+import styled from 'styled-components';
 
 const { Paragraph } = Typography
 
-export const versionMismatchSubject$ = new Subject();
+const StyledAlert = styled(Alert)`
+background-color: #FF7D00;
+
+.ant-alert-message, a, .ant-btn, .ant-alert-close-text {
+    color: #FFFFFF;
+    font-size: 14px;
+}
+
+a {
+  text-decoration: underline;
+
+  &:hover {
+
+  }
+}
+`;
+
+export const versionMismatchSubject$ = new BehaviorSubject();
 
 const LAST_ASKED_BACKEND_VERSION = 'lastAskedBackendVersion';
 
-export const VersionMismatchAlert = () => {
+export const VersionMismatchAlert = (props) => {
   const [visible, setVisible] = React.useState(false);
   const [newVersion, setNewVersion] = React.useState();
+  const [currentVersion, setCurrentVersion] = useLocalstorageState(LAST_ASKED_BACKEND_VERSION);
 
   React.useEffect(() => {
     const $sub = versionMismatchSubject$.subscribe((version) => {
-      setNewVersion(version);
-      setVisible(true)
+      if(version !== currentVersion) {
+        setNewVersion(version);
+        setVisible(true)
+      }
     });
     return () => $sub.unsubscribe();
   }, []);
 
   const handleReloadPage = () => {
-    if(newVersion) {
-      reactLocalStorage.set(LAST_ASKED_BACKEND_VERSION, newVersion);
+    if (newVersion) {
+      setCurrentVersion(newVersion);
       window.location.reload();
     }
   }
 
-  return !visible ? null : <Alert
-    showIcon
+  return !visible ? null : <StyledAlert
+    style={{ ...props.style }}
+    showIcon={false}
     type="warning"
-    message="New version is released"
-    description={<>
-      <Paragraph>A new version of ZeeWorkflow has been released with below changes. Reload the page to upgrade.</Paragraph>
-      <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 20 }}>
-        <Button type="primary" autoFocus onClick={handleReloadPage}>Reload Page</Button>
-      </Space>
-    </>}
-    closable
+    // message="New version is released"
+    message={<>A new version of ZeeWorkflow has been released. <a onClick={handleReloadPage}>Reload the page</a> to upgrgade.</>}
+    closeText="Reload"
     banner
-    onClose={() => setVisible(false)}
+    onClose={handleReloadPage}
   />
 }
 

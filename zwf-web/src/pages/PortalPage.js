@@ -12,6 +12,7 @@ import { OrgRegisterModal } from 'components/OrgRegisterModal';
 import { useWindowScrollPosition } from "rooks";
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
+import { VersionMismatchAlert } from 'components/showVersionMismatchAlert';
 
 const { Text } = Typography;
 
@@ -29,6 +30,8 @@ background: #ffffff;
   top: 0;
   z-index: 100;
   padding: 0 1rem;
+  min-height: 64px;
+  height: auto;
 }
 
 .ant-tabs-nav {
@@ -78,6 +81,8 @@ export const PortalPage = () => {
 
   return <StyledLayoutPage>
     <Layout.Header >
+      <VersionMismatchAlert style={{margin: '0 -1rem'}}/>
+
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
           <Image src="/images/logo-text-dark.svg" preview={false} height={32} />
