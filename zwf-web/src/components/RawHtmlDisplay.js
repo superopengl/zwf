@@ -12,6 +12,10 @@ const ContainerStyled = styled.div`
   // border-radius: 4px;
   // border: 1px solid rgba(0,0,0,0.05);
   // color: rgba(0,0,0,0.65);
+
+  & > p:last-child {
+    margin-bottom: 0;
+  }
 `;
 
 
