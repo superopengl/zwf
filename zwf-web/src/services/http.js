@@ -8,7 +8,7 @@ import { Modal } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import * as queryString from 'query-string';
-import {showVersionMismatchModal} from 'components/showVersionMismatchModal';
+import {showVersionMismatchAlert} from 'components/showVersionMismatchAlert';
 
 axios.defaults.withCredentials = true;
 
@@ -134,7 +134,7 @@ export function request$(method, path, queryParams, body, responseType = 'json')
 
 function handleVersionMatch(response) {
   const backendVersion = response.xhr.getResponseHeader('zwf-bff-version');
-  showVersionMismatchModal(webappVersion, backendVersion);
+  showVersionMismatchAlert(webappVersion, backendVersion);
 }
 
 export async function uploadFile(fileBlob) {
