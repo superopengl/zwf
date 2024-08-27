@@ -19,8 +19,6 @@ import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
-import { Alert } from 'antd';
-import { VersionMismatchAlert } from "components/VersionMismatchAlert";
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -128,7 +126,7 @@ export const App = React.memo(() => {
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
   if (loading) {
-    return <Row>
+    return <Row justify='center' align='center' style={{height: 400, alignItems: 'center'}}>
       <Loading loading={true} />
     </Row>
   }
