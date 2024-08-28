@@ -58,6 +58,7 @@ export const SupportMessageInput = React.memo(props => {
           toolbar: 'bold italic underline strikethrough removeformat blockquote numlist bullist',
           toolbar_mode: 'scrolling',
           statusbar: false,
+          contextmenu: false,
           // a11y_advanced_options: true,
         }}
       />

@@ -45,7 +45,8 @@ export const AvatarDropdownMenu = React.memo(props => {
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const navigate = useNavigate();
 
-  const { email, avatarFileId } = user ?? {};
+  const { email, avatarFileId, loginType } = user ?? {};
+
   if (!email) {
     return null;
   }
@@ -80,9 +81,9 @@ export const AvatarDropdownMenu = React.memo(props => {
     <Menu.Item key="profile" onClick={() => setProfileVisible(true)}>
       <FormattedMessage id="menu.profile" />
     </Menu.Item>
-    <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
+    {loginType === 'local' && <Menu.Item key="change_password" onClick={() => setChangePasswordVisible(true)}>
       <FormattedMessage id="menu.changePassword" />
-    </Menu.Item>
+    </Menu.Item>}
     {isAdmin && <Menu.Divider />}
     {isAdmin && <Menu.Item key="org_profile" onClick={() => setOrgProfileVisible(true)}>
       Organization Profile

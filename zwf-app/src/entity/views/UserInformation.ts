@@ -9,6 +9,7 @@ import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
 import { OrgCurrentSubscriptionInformation } from './OrgCurrentSubscriptionInformation';
 import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
+import { UserLoginType } from '../../types/UserLoginType';
 
 
 @ViewEntity({
@@ -33,6 +34,7 @@ import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
       'u.role as role',
       'u.status as status',
       'u."emailHash" as "emailHash"',
+      'u."loginType" as "loginType"',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
@@ -54,6 +56,9 @@ export class UserInformation {
 
   @ViewColumn()
   emailHash: string;
+
+  @ViewColumn()
+  loginType: UserLoginType;
 
   @ViewColumn()
   email: string;
