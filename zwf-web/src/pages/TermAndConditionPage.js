@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography } from 'antd';
+import { Typography, Layout } from 'antd';
 import { Logo } from 'components/Logo';
+import HomeFooter from 'components/HomeFooter';
 const ContainerStyled = styled.div`
 padding: 2rem 1rem;
 margin: 1rem auto;
@@ -19,7 +20,7 @@ h3 {
 }
 `;
 const { Title } = Typography;
-const TermAndConditionPage = () => <>
+const TermAndConditionPage = () => <Layout>
   <ContainerStyled>
     <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
     <Title style={{ textAlign: 'center' }}>Techseeding Pty Ltd - Terms and Conditions</Title>
@@ -173,7 +174,8 @@ For the execution of the Services Contract, we may make use of computer software
       <Title level={2}>21. Applicable law and jurisdictions</Title>
       <p>The professional relationships between the Parties to which these General Terms apply will be governed exclusively by law. All disputes related thereto will be submitted exclusively to the courts within the judicial area in which ZeeWorkflow has its registered office.</p>
   </ContainerStyled>
-</>;  
+  <HomeFooter />
+</Layout>;  
 
 TermAndConditionPage.propTypes = {};
 
