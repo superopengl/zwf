@@ -1,2 +1,4 @@
 export const notes=`
-bugfix for soft delete`
+hide termination panel to users
+checkout at latest time when terminating org
+soft delete user profile`
