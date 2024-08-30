@@ -145,12 +145,9 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
 
     const period = await m.findOneByOrFail(OrgSubscriptionPeriod, { orgId, tail: true });
     const isTrialPeriod = period.type === 'trial';
-    if (!isTrialPeriod) {
-      await checkoutSubscriptionPeriod(m, period, true);
-    }
-
+    
     const adminUsers = await getOrgAdminUsers(m, orgId);
-
+    
     // Delete user profiles
     const userInfos = await m.find(UserInformation, {
       where: { orgId },
@@ -167,7 +164,7 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
     await m.softDelete(OrgSubscriptionPeriod, { orgId });
     await m.softDelete(User, { orgId });
     await m.softDelete(Org, { id: orgId });
-
+    
     const emailRequests = adminUsers.map(user => {
       const ret: EmailRequest = {
         to: user.email,
@@ -180,6 +177,10 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
       };
       return ret;
     });
+
+    if (!isTrialPeriod) {
+      await checkoutSubscriptionPeriod(m, period, true);
+    }
 
     await enqueueEmailInBulk(m, emailRequests);
     // throw new Error('debug');
