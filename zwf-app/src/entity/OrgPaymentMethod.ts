@@ -12,6 +12,9 @@ export class OrgPaymentMethod {
   @CreateDateColumn()
   createdAt: Date;
 
+  @DeleteDateColumn()
+  deletedAt: Date;
+
   @Column('uuid')
   orgId: string;
 
