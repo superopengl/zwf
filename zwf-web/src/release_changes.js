@@ -1,2 +1,2 @@
 export const notes=`
-allow owner to terminate subscription`
+bugfix for soft delete`
