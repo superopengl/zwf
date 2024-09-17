@@ -129,7 +129,7 @@ const HomeFooter = () => {
       <Row style={{ paddingTop: '1rem' }} align="middle" gutter={[8, 16]}>
         <Col flex="auto">
           <Link to="/">
-            <Image src="/images/logo-text-light.svg" style={{marginLeft: 16, width: 'auto'}} preview={false} height={24} width="auto" />
+            <Image src="/images/logo-full-primary.svg" style={{marginLeft: 16, width: 'auto'}} preview={false} height={32} width="auto" />
           </Link>
         </Col>
         <Col {...span} className="footer-bottom-section">
