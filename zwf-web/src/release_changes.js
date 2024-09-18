@@ -1,2 +1,5 @@
 export const notes=`
-disable change password for Google SSO user`
+update images
+clean up
+new logo
+fix pages`
