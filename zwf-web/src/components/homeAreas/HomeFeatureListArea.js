@@ -81,7 +81,6 @@ const orgFeatures = [
   { name: 'Invite any clients by email addresses', release: 'v1' },
   { name: 'Google Single Sign On', release: 'v1' },
   { name: 'Team metrics', dev: true },
-  { name: 'Doc Sign in blockchian', dev: true },
 ].map((x, i) => ({
   key: i,
   name: x.name,
@@ -94,7 +93,7 @@ const clientFeatures = [
   { name: 'Realtime chat communication', release: 'v1' },
   { name: 'Task event timeline', release: 'v1' },
   { name: 'Doc Sign', release: 'v1' },
-  { name: 'Doc Sign in blockchian', dev: true },
+  { name: 'Doc Sign on blockchian', dev: true },
 ].map((x, i) => ({
   key: i,
   name: x.name,
