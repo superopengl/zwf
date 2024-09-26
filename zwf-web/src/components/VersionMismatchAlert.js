@@ -6,7 +6,12 @@ import { versionMismatchSubject$ } from './showVersionMismatchAlert';
 const LAST_ASKED_BACKEND_VERSION = 'lastAskedBackendVersion';
 
 const StyledAlert = styled(Alert)`
-background-color: #F7BA1E;
+background-color: #F7BA1EDD;
+position: fixed;
+bottom: 0;
+left: 0;
+right: 0;
+z-index: 1000;
 
 .ant-alert-message, a, .ant-btn, .ant-alert-close-text {
     color: #FFFFFF;
@@ -61,7 +66,6 @@ export const VersionMismatchAlert = (props) => {
   };
 
   return !visible ? null : <StyledAlert
-    style={{ ...props.style }}
     showIcon={false}
     type="warning"
     // message="New version is released"

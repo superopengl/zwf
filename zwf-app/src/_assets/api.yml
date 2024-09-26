@@ -198,12 +198,6 @@ paths:
       responses:
         200:
           description: OK
-  /auth/signup:
-    post:
-      operationId: signUp
-      responses:
-        200:
-          description: OK
   /auth/signup/org:
     post:
       operationId: signUpOrg

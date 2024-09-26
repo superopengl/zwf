@@ -30,6 +30,7 @@ import { sleep } from '../utils/sleep';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { Org } from '../entity/Org';
 import { UserLoginType } from '../types/UserLoginType';
+import { createNewTicketForUser } from '../utils/createNewTicketForUser';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
@@ -74,11 +75,12 @@ export const logout = handlerWrapper(async (req, res) => {
 });
 
 
-async function createNewLocalUser(payload): Promise<{ user: User; profile: UserProfile, exists: boolean }> {
+async function createNewLocalOrgAdmin(payload): Promise<{ user: User; profile: UserProfile, exists: boolean }> {
   const { user, profile } = createUserAndProfileEntity(payload);
 
   user.resetPasswordToken = uuidv4();
   user.status = UserStatus.ResetPassword;
+  user.orgOwner = true;
 
   let exists = false;
 
@@ -94,43 +96,6 @@ async function createNewLocalUser(payload): Promise<{ user: User; profile: UserP
 }
 
 
-export const signUp = handlerWrapper(async (req, res) => {
-  const payload = req.body;
-
-  await sleep(1500);
-
-  const { user, profile, exists } = await createNewLocalUser({
-    ...payload,
-    orgOwner: false,
-    role: Role.Client,
-    password: uuidv4(), // Temp password to fool the functions beneath
-  });
-
-  const { id, resetPasswordToken } = user;
-  const { email } = profile;
-
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  await sendEmail({
-    template: EmailTemplateType.WelcomeClient,
-    to: email,
-    vars: {
-      email,
-      url
-    },
-    shouldBcc: true
-  });
-
-  const info = {
-    id,
-    email
-  };
-
-  emitUserAuditLog(user.id, 'signup');
-
-
-  res.json(info);
-});
-
 export const signUpOrg = handlerWrapper(async (req, res) => {
   const email = req.body.email?.toLowerCase();
 
@@ -138,12 +103,11 @@ export const signUpOrg = handlerWrapper(async (req, res) => {
 
   await sleep(1500);
 
-  const { user, exists } = await createNewLocalUser({
+  const { user, exists } = await createNewLocalOrgAdmin({
     email,
     orgId: null, // Don't set orgId at the moment. Org will be created when this user's first login.
-    orgOwner: true,
-    password: uuidv4(), // Temp password to fool the functions beneath
     role: Role.Admin,
+    password: uuidv4(), // Temp password to fool the functions beneath
   });
 
   if (exists) {
@@ -404,7 +368,9 @@ export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
   newUser.profile = profile;
   profile.givenName = givenName;
   profile.surname = surname;
-  await db.manager.save([newUser, profile]);
+
+  const ticket = createNewTicketForUser(newUser.id, newUser.orgId);
+  await db.manager.save([newUser, profile, ticket]);
 
   user = await getActiveUserInformation(email);
 

@@ -1,3 +1,4 @@
+import { LicenseTicket } from './../LicenseTicket';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 import { SubscriptionStatus } from '../../types/SubscriptionStatus';
 import { Subscription } from '../Subscription';
@@ -7,18 +8,16 @@ import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { UserStatus } from '../../types/UserStatus';
-import { OrgCurrentSubscriptionInformation } from './OrgCurrentSubscriptionInformation';
-import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import { UserLoginType } from '../../types/UserLoginType';
 
 
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(User, 'u')
-    .where(`u."deletedAt" IS NULL`)
     .leftJoin(UserProfile, 'p', 'p.id = u."profileId"')
     .leftJoin(Org, 'o', 'o.id = u."orgId"')
-    .leftJoin(OrgCurrentSubscriptionInformation, 's', 's."orgId" = u."orgId"')
+    // .leftJoin(OrgCurrentSubscriptionInformation, 's', 's."orgId" = u."orgId"')
+    // .leftJoin(LicenseTicket, 't', 't."orgId" = u."orgId" AND t."userId" = u.id')
     .leftJoin(q => q
       .from('user_tags_tag', 'tg')
       .groupBy('tg."userId"')
@@ -27,6 +26,7 @@ import { UserLoginType } from '../../types/UserLoginType';
         'array_agg(tg."tagId") as tags'
       ]),
       'tg', 'tg."userId" = u.id')
+    .where(`u."deletedAt" IS NULL`)
     .select([
       'u.id as id',
       'o.id as "orgId"',
@@ -44,10 +44,9 @@ import { UserLoginType } from '../../types/UserLoginType';
       'u.suspended as suspended',
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
-      's.enabled as "subscriptionEnabled"',
       'tg.tags as tags',
     ]),
-  dependsOn: [User, UserProfile, Org, OrgCurrentSubscriptionInformation]
+  dependsOn: [User, UserProfile, Org]
 })
 export class UserInformation {
   @ViewColumn()
@@ -98,9 +97,6 @@ export class UserInformation {
 
   @ViewColumn()
   avatarColorHex: string;
-
-  @ViewColumn()
-  subscriptionEnabled?: boolean;
 
   @ViewColumn()
   tags: string[];

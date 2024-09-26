@@ -22,7 +22,6 @@ import { Navigate } from 'react-router-dom';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
-const SignUpPage = loadable(() => import('pages/SignUpPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
 const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
@@ -145,7 +144,6 @@ export const App = React.memo(() => {
               <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
               <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
               {isGuest && <Route path="/login" element={<LogInPage />} />}
-              {isGuest && <Route path="/signup" element={<SignUpPage />} />}
               {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
               {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
               {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
