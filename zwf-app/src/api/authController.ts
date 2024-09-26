@@ -259,10 +259,6 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   });
 
   await db.transaction(async m => {
-    const subscription = await m.findOne(OrgCurrentSubscriptionInformation, { where: { orgId } });
-    assert(subscription, 400, 'No active subscription');
-    const { seats, occupiedSeats } = subscription;
-    assert(occupiedSeats + 1 <= seats, 400, 'Ran out of licenses. Please change subscription by adding more licenses.');
     await inviteOrgMemberWithSendingEmail(m, user, profile);
   });
 

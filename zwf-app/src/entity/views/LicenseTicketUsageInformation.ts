@@ -22,8 +22,10 @@ import { UserLoginType } from '../../types/UserLoginType';
       't."orgId" as "orgId"',
       't."userId" as "userId"',
       'o.name as "orgName"',
+      'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
+      'u.role as role',
       't."createdAt" as "ticketFrom"',
       't."voidedAt" as "ticketTo"',
       'CASE WHEN t."voidedAt" IS NULL THEN TRUE ELSE FALSE END as "ticketAlive"',
@@ -44,16 +46,19 @@ export class LicenseTicketUsageInformation {
   userId: string;
 
   @ViewColumn()
-  email: string;
+  orgName: string;
 
   @ViewColumn()
-  orgName: string;
+  email: string;
 
   @ViewColumn()
   givenName: string;
 
   @ViewColumn()
   surname: string;
+
+  @ViewColumn()
+  role: Role;
 
   @ViewColumn()
   ticketFrom: Date;
