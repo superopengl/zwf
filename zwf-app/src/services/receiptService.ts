@@ -1,9 +1,7 @@
 import * as fs from 'fs';
 import * as handlebars from 'handlebars';
-import { Stream } from 'stream';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { assert } from '../utils/assert';
 import { ReceiptInformation } from '../entity/views/ReceiptInformation';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 
@@ -11,25 +9,25 @@ const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_tem
 const compiledTemplate = handlebars.compile(receiptTemplateHtml.toString());
 
 function getPaymentMethodName(cardLast4: string) {
-  return `Card ends with ${cardLast4}`;
+  return `Card ending with ${cardLast4}`;
 }
 
 function getSubscriptionDescription(receipt: ReceiptInformation) {
-  const start = null // moment(receipt.startedAt).format('D MMM YYYY');
-  const end = null // moment(receipt.endingAt).format('D MMM YYYY');
+  const start = moment(receipt.periodFrom).format('D MMM YYYY');
+  const end = moment(receipt.periodTo).format('D MMM YYYY');
 
-  return `ZeeWorkflow subscription (${start} - ${end})`;
+  return `ZeeWorkflow Invoice (${start} - ${end})`;
 }
 
 function getVarBag(receipt: ReceiptInformation): {[key: string]: any} {
   const subscriptionPrice = +receipt.payable || 0;
   return {
     receiptNumber: receipt.receiptNumber,
-    date: moment(receipt.paidAt).format('D MMM YYYY'),
+    date: moment(receipt.issuedAt).format('D MMM YYYY'),
     subscriptionDescription: getSubscriptionDescription(receipt),
     subscriptionPrice: subscriptionPrice.toFixed(2),
     paymentMethod: getPaymentMethodName(receipt.cardLast4),
-    payableAmount: (+receipt.payable || 0).toFixed(2),
+    payableAmount: (+receipt.amount || 0).toFixed(2),
   };
 }
 

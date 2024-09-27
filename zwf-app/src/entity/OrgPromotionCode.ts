@@ -1,8 +1,10 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, Index } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, DeleteDateColumn, Index, Check } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
+@Check(`0 < "percentageOff" AND "percentageOff" < 1`)
+@Index('single_code_per_org', ['orgId', 'code'], {unique: true, where: 'active IS TRUE'})
 export class OrgPromotionCode {
   @PrimaryColumn()
   code: string;
@@ -25,4 +27,7 @@ export class OrgPromotionCode {
 
   @Column('uuid')
   createdBy: string;
+
+  @Column({default: true})
+  active: boolean;
 }

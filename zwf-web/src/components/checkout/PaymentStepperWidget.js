@@ -1,19 +1,13 @@
 import React from 'react';
 
-import { Typography, Button, Divider, Input, Card, Tooltip } from 'antd';
-import { getAuthUser } from 'services/authService';
+import { Typography, Button, Input, Tooltip } from 'antd';
 import PropTypes from 'prop-types';
 import { Space } from 'antd';
-import Icon, { LeftOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import { MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { subscriptionDef } from 'def/subscriptionDef';
 import MoneyAmount from '../MoneyAmount';
 import { Loading } from '../Loading';
-import { calculatePaymentDetail, purchaseNewSubscription } from 'services/subscriptionService';
 import StripeCardPaymentWidget from './StripeCardPaymentWidget';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { FaCashRegister } from 'react-icons/fa';
-import { BsCardChecklist } from 'react-icons/bs';
-import { InputNumber } from 'antd';
 import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
 import { Descriptions } from 'antd';
 import styled from 'styled-components';
@@ -35,62 +29,11 @@ const PaymentStepperWidget = (props) => {
   const [paymentInfo, setPaymentInfo] = React.useState();
   const [currentStep, setCurrentStep] = React.useState(0);
 
-  const fetchPaymentDetail = async () => {
-    try {
-      const paymentDetail = await calculatePaymentDetail(seats, promotionCode)
-      setPaymentInfo(paymentDetail);
-      if(seats === undefined) {
-        setSeats(paymentDetail.seatsAfter + 1);
-      }
-    } finally {
-      setLoading(false)
-    }
-  }
-  // React.useEffect(() => {
-  //   fetchPaymentDetail(willUseCredit);
-  // }, []);
-
-  React.useEffect(() => {
-    // setLoading(true)
-    fetchPaymentDetail();
-  }, [seats, promotionCode]);
 
   React.useEffect(() => {
     onLoading(loading);
   }, [loading]);
 
-  const handlePurchase = async () => {
-    setLoading(true);
-    try {
-      await purchaseNewSubscription(seats, promotionCode);
-    } finally {
-      setLoading(false);
-    }
-    onComplete();
-  }
-
-  const handlePayByNewCard = async (stripePaymentMethodId) => {
-    setLoading(true);
-    try {
-      await saveOrgPaymentMethod(stripePaymentMethodId);
-      await handlePurchase();
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  const handleCheckout = async () => {
-    if (paymentInfo.paymentMethodId) {
-      setLoading(true);
-      try {
-        await handlePurchase();
-      } finally {
-        setLoading(false);
-      }
-    } else {
-      setCurrentStep(3);
-    }
-  }
 
   const handleGoToPromotionCode = () => {
     setCurrentStep(1);
@@ -185,11 +128,11 @@ const PaymentStepperWidget = (props) => {
           <Text strong>Total payable amount:</Text>
           {paymentInfo ? <MoneyAmount style={{ fontSize: '1.2rem' }} strong value={paymentInfo.payable} /> : '-'}
         </Space>
-        <Button type="primary" block
+        {/* <Button type="primary" block
           size="large"
           style={{ marginTop: 20 }} onClick={handleCheckout}>
           Checkout
-        </Button>
+        </Button> */}
       </Space>
     },
     {
@@ -201,10 +144,10 @@ const PaymentStepperWidget = (props) => {
         <Paragraph type="secondary">
           This card will be added to the payment methods for future auto renew payment automatically.
         </Paragraph>
-        <StripeCardPaymentWidget
+        {/* <StripeCardPaymentWidget
           onOk={handlePayByNewCard}
           onLoading={loading => setLoading(loading)}
-        />
+        /> */}
       </Space>
     }
   ];

@@ -7,32 +7,12 @@ export async function downloadReceipt(paymentId) {
   window.open(fileUrl);
 }
 
-export async function cancelSubscription(id) {
-  return httpPost(`subscription/${id}/cancel`);
-}
-
-export async function getMyCurrentSubscription() {
-  return httpGet(`subscription`);
-}
-
-export function getMyCurrentSubscription$() {
-  return httpGet$(`/subscription`);
-}
-
-export async function listMySubscriptionHistory() {
-  return httpGet(`subscription/history`);
+export function listMyPayments$() {
+  return httpGet$(`/payment`);
 }
 
 export async function listUserSubscriptionHistory(userId) {
   return httpGet(`/user/${userId}/subscription`);
-}
-
-export async function purchaseNewSubscription(seats, promotionCode) {
-  return httpPost(`subscription`, {seats, promotionCode});
-}
-
-export async function calculatePaymentDetail(seats, promotionCode) {
-  return httpPost(`subscription/preview`, { seats, promotionCode });
 }
 
 export async function fetchStripeCheckoutSession() {

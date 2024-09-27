@@ -9,6 +9,8 @@ import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { assert } from '../utils/assert';
 import { createNewTicketForUser } from '../utils/createNewTicketForUser';
+import { createTrialZeroPayment } from '../utils/createTrialZeroPayment';
+import { getUtcNow } from '../utils/getUtcNow';
 
 export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
@@ -48,6 +50,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
 
   const org = new Org();
   org.id = orgId;
+  org.createdAt = getUtcNow();
   org.name = name?.trim();
   org.businessName = businessName?.trim();
   org.country = country;
@@ -56,6 +59,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.abn = abn?.trim();
 
   const ticket = createNewTicketForUser(userId, orgId);
+  const payment = createTrialZeroPayment(org);
 
   await db.transaction(async m => {
     const userEnitty = await m.findOneBy(User, { id: userId });
@@ -65,7 +69,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     userEnitty.orgId = orgId;
     userEnitty.orgOwner = true;
 
-    await m.save([org, userEnitty, ticket]);
+    await m.save([org, userEnitty, ticket, payment]);
   });
 
   res.json();

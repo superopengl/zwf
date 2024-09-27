@@ -1112,38 +1112,15 @@ paths:
       responses:
         200:
           description: OK
-  /account:
+  /payment:
     get:
-      operationId: getMyAccount
+      operationId: listMyPayments
       responses:
         200:
-          description: OK
-  /subscription:
+          description: OK          
+  /payment/:id/receipt:
     get:
-      operationId: getMyCurrnetSubscription
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: purchaseSubscription
-      responses:
-        200:
-          description: OK
-  /subscription/preview:
-    post:
-      operationId: previewSubscriptionPayment
-      responses:
-        200:
-          description: OK
-  /subscription/history:
-    get:
-      operationId: listMySubscriptionHistory
-      responses:
-        200:
-          description: OK
-  /subscription/:id/receipt:
-    get:
-      operationId: downloadPaymentReceipt
+      operationId: downloadReceipt
       parameters:
         - name: id
           in: path

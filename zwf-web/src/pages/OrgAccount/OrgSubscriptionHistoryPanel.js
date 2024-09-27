@@ -37,10 +37,10 @@ export const OrgSubscriptionHistoryPanel = (props) => {
       align: 'left',
       render: (value, item) => {
         return <Space>
-          <TimeAgo value={item.startedAt} showAgo={false} accurate={false} />
+          <TimeAgo value={item.periodFrom} showAgo={false} accurate={false} />
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
-          {!item.endedAt && moment(item.startedAt).isBefore() && moment(item.endingAt).isAfter() && <Tag>current</Tag>}
+          {!item.endedAt && moment(item.periodFrom).isBefore() && moment(item.periodTo).isAfter() && <Tag>current</Tag>}
           {/* {moment(item.createdAt).isAfter(moment()) && <Tag color="warning">new purchase</Tag>} */}
           {/* {moment().isBefore(moment(item.start).startOf('day')) && <Tag>Furture</Tag>} */}
         </Space>
@@ -50,14 +50,14 @@ export const OrgSubscriptionHistoryPanel = (props) => {
       title: 'End',
       align: 'left',
       render: (value, item) => {
-        return item.endingAt ? <TimeAgo value={item.endingAt} showAgo={false} accurate={false} /> : null;
+        return item.periodTo ? <TimeAgo value={item.periodTo} showAgo={false} accurate={false} /> : null;
       }
     },
     {
       title: 'Days',
       align: 'center',
       render: (value, item) => {
-        return item.endingAt ? <Text>{moment(item.endingAt).diff(moment(item.startedAt), 'days') + 1}</Text> : null;
+        return item.periodTo ? <Text>{moment(item.periodTo).diff(moment(item.periodFrom), 'days') + 1}</Text> : null;
       }
     },
     {
@@ -70,25 +70,23 @@ export const OrgSubscriptionHistoryPanel = (props) => {
     },
     {
       title: 'Billing',
-      dataIndex: 'payment',
       align: 'center',
       width: 370,
-      render: (payment, item) => {
+      render: (value, item) => {
         if(item.type === 'trial') {
-          return 'Single license free trial'
+          return 'Free trial'
         }
-        if (!payment) return null;
 
-        const { amount, createdAt, id } = payment;
+        const { payable, issuedAt, paymentId } = item;
         return <Row align="middle">
           <Col span={8}>
-            <MoneyAmount value={amount} />
+            <MoneyAmount value={payable} />
           </Col>
           <Col span={8}>
-            <TimeAgo value={createdAt} showAgo={false} accurate={false} />
+            <TimeAgo value={issuedAt} showAgo={false} accurate={false} />
           </Col>
           <Col span={8}>
-            <Button type="link" size="small" onClick={() => handleReceipt(payment.id)} icon={<DownloadOutlined />}>Receipt</Button>
+            <Button type="link" size="small" onClick={() => handleReceipt(paymentId)} icon={<DownloadOutlined />}>Receipt</Button>
           </Col>
         </Row>
       }

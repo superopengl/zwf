@@ -13,9 +13,6 @@ export class LicenseTicket {
   @Column({nullable: true})
   voidedAt: Date;
 
-  @Column()
-  unitPrice: number;
-
   @Column('uuid')
   @Index()
   orgId: string;
