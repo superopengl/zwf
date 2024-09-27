@@ -6,10 +6,6 @@ import { User } from '../entity/User';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
-import * as moment from 'moment';
-import { Subscription } from '../entity/Subscription';
-import { SubscriptionStatus } from '../types/SubscriptionStatus';
-import { SubscriptionBlockType } from '../types/SubscriptionBlockType';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { assert } from '../utils/assert';
 import { createNewTicketForUser } from '../utils/createNewTicketForUser';
@@ -65,7 +61,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     const userEnitty = await m.findOneBy(User, { id: userId });
 
     assert(!userEnitty.orgId, 400, 'The org has been initialized');
-    
+
     userEnitty.orgId = orgId;
     userEnitty.orgOwner = true;
 

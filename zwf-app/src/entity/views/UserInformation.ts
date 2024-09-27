@@ -1,8 +1,4 @@
-import { LicenseTicket } from './../LicenseTicket';
 import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
-import { SubscriptionStatus } from '../../types/SubscriptionStatus';
-import { Subscription } from '../Subscription';
-import { Payment } from '../Payment';
 import { User } from '../User';
 import { UserProfile } from '../UserProfile';
 import { Org } from '../Org';
