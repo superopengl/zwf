@@ -19,7 +19,6 @@ import { UserProfile } from '../entity/UserProfile';
 import { computeEmailHash } from '../utils/computeEmailHash';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Payment } from '../entity/Payment';
-import { CreditTransaction } from '../entity/CreditTransaction';
 import { Role } from '../types/Role';
 import { searchOrgClients } from '../utils/searchOrgClients';
 import { getActiveUserInformation } from '../utils/getActiveUserInformation';
@@ -248,44 +247,5 @@ export const setUserPassword = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const listMyCreditHistory = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const orgId = getOrgIdFromReq(req);
-  const list = await db.getRepository(CreditTransaction)
-    .createQueryBuilder('uc')
-    .where('uc."orgId" = :orgId', { orgId })
-    // .andWhere('uc.amount != 0')
-    .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
-    .orderBy('uc."createdAt"', 'ASC')
-    .select([
-      'uc."createdAt" as "createdAt"',
-      'uc.amount as amount',
-      'py.id as "paymentId"',
-      'uc.type as type',
-    ])
-    .execute();
-  res.json(list);
-});
 
-export const listUserCreditHistory = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
-  const { id } = req.params;
-  const list = await db.getRepository(CreditTransaction)
-    .createQueryBuilder('uc')
-    .where('uc."orgId" = :id', { id })
-    .leftJoin(q => q.from(User, 'u'), 'u', 'uc."referredUserId" = u.id')
-    .leftJoin(q => q.from(UserProfile, 'p'), 'p', 'p.id = u."profileId"')
-    .leftJoin(q => q.from(Payment, 'py'), 'py', 'uc.id = py."creditTransactionId"')
-    .orderBy('uc."createdAt"', 'DESC')
-    .select([
-      'uc."createdAt" as "createdAt"',
-      'uc.amount as amount',
-      'uc."revertedCreditTransactionId" as "revertedCreditTransactionId"',
-      'uc.type as "creditType"',
-      'p.email as "referredUserEmail"',
-      'py.id as "paymentId"',
-    ])
-    .execute();
-  res.json(list);
-});
 

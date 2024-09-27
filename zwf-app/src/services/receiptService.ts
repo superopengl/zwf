@@ -22,13 +22,12 @@ function getSubscriptionDescription(receipt: ReceiptInformation) {
 }
 
 function getVarBag(receipt: ReceiptInformation): {[key: string]: any} {
-  const subscriptionPrice = (+receipt.payable || 0) + (+receipt.deduction || 0);
+  const subscriptionPrice = +receipt.payable || 0;
   return {
     receiptNumber: receipt.receiptNumber,
     date: moment(receipt.paidAt).format('D MMM YYYY'),
     subscriptionDescription: getSubscriptionDescription(receipt),
     subscriptionPrice: subscriptionPrice.toFixed(2),
-    creditDeduction: (+receipt.deduction || 0).toFixed(2),
     paymentMethod: getPaymentMethodName(receipt.cardLast4),
     payableAmount: (+receipt.payable || 0).toFixed(2),
   };

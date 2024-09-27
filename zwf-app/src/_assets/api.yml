@@ -1118,12 +1118,6 @@ paths:
       responses:
         200:
           description: OK
-  /credit/history:
-    get:
-      operationId: listMyCreditHistory
-      responses:
-        200:
-          description: OK
   /subscription:
     get:
       operationId: getMyCurrnetSubscription
