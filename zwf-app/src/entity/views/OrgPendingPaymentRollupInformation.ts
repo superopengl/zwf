@@ -6,6 +6,7 @@ import { Org } from '../Org';
 import { Role } from '../../types/Role';
 import { Payment } from '../Payment';
 import { LicenseTicketUsageInformation } from './LicenseTicketUsageInformation';
+import { ColumnNumericTransformer } from '../../utils/ColumnNumericTransformer';
 
 
 @ViewEntity({
@@ -20,8 +21,8 @@ import { LicenseTicketUsageInformation } from './LicenseTicketUsageInformation';
         `p."periodTo" + '1 month'::interval - '1 day'::interval as "periodTo"`,
       ])
       , 'x', 'x."orgId" = t."orgId"')
-    .where(`t."ticketTo" < NOW()`)
-    .andWhere(`t."ticketFrom" > NOW()`)
+    .where(`(t."ticketTo" > x."periodFrom" OR t."ticketTo" IS NULL)`)
+    .andWhere(`t."ticketFrom" <= x."periodTo"`)
     .select([
       't."ticketId" as "ticketId"',
       't."orgId" as "orgId"',
@@ -31,6 +32,11 @@ import { LicenseTicketUsageInformation } from './LicenseTicketUsageInformation';
       't."givenName" as "givenName"',
       't.surname as surname',
       't.role as role',
+      't."ticketFrom" as "ticketFrom"',
+      't."ticketTo" as "ticketTo"',
+      't."type" as "type"',
+      't."unitFullPrice" as "unitFullPrice"',
+      't."percentageOff" as "percentageOff"',
       'x."periodFrom" as "periodFrom"',
       'x."periodTo" as "periodTo"',
       'GREATEST(t."ticketFrom", x."periodFrom") as "chargeFrom"',
@@ -72,11 +78,26 @@ export class OrgPendingPaymentRollupInformation {
   periodTo: Date;
 
   @ViewColumn()
+  ticketFrom: Date;
+
+  @ViewColumn()
+  ticketTo: Date;
+
+  @ViewColumn()
+  type: string;
+
+  @ViewColumn({transformer: new ColumnNumericTransformer()})
+  unitFullPrice: number;
+
+  @ViewColumn({transformer: new ColumnNumericTransformer()})
+  percentageOff: number;
+
+  @ViewColumn()
   chargeFrom: Date;
 
   @ViewColumn()
   chargeTo: Date;
 
-  @ViewColumn()
+  @ViewColumn({transformer: new ColumnNumericTransformer()})
   chargeDays: number;
 }

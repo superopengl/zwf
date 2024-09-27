@@ -1,7 +1,7 @@
 import { httpGet$, httpGet, httpPost, request, httpPost$ } from './http';
 
 export async function downloadReceipt(paymentId) {
-  const path = `subscription/${paymentId}/receipt`;
+  const path = `/payment/${paymentId}/receipt`;
   const data = await request('GET', path, null, null, 'blob');
   const fileUrl = URL.createObjectURL(data);
   window.open(fileUrl);

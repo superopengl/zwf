@@ -364,8 +364,7 @@ export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
   profile.givenName = givenName;
   profile.surname = surname;
 
-  const ticket = createNewTicketForUser(newUser.id, newUser.orgId);
-  await db.manager.save([newUser, profile, ticket]);
+  await db.manager.save([newUser, profile]);
 
   user = await getActiveUserInformation(email);
 

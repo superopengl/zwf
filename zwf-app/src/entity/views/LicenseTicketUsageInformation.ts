@@ -16,6 +16,9 @@ import { Role } from '../../types/Role';
       't.id as "ticketId"',
       't."orgId" as "orgId"',
       't."userId" as "userId"',
+      't."type" as "type"',
+      't."unitFullPrice" as "unitFullPrice"',
+      't."percentageOff" as "percentageOff"',
       'o.name as "orgName"',
       'p.email as email',
       'p."givenName" as "givenName"',
@@ -40,6 +43,12 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   type: string;
+
+  @ViewColumn()
+  unitFullPrice: number;
+
+  @ViewColumn()
+  percentageOff: number;
 
   @ViewColumn()
   orgName: string;
