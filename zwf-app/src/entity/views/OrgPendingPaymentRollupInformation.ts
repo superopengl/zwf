@@ -43,7 +43,7 @@ import { ColumnNumericTransformer } from '../../utils/ColumnNumericTransformer';
       'COALESCE(LEAST(t."ticketTo", x."periodTo"), x."periodTo") as "chargeTo"',
       'EXTRACT(DAY FROM COALESCE(LEAST(t."ticketTo", x."periodTo"), x."periodTo") - GREATEST(t."ticketFrom", x."periodFrom")) + 1 as "chargeDays"',
     ]),
-  dependsOn: [User, UserProfile, Org, LicenseTicketUsageInformation]
+  dependsOn: [User, UserProfile, OrgBasicInformation, LicenseTicketUsageInformation]
 })
 export class OrgPendingPaymentRollupInformation {
   @ViewColumn()

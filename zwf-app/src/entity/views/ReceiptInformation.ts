@@ -8,6 +8,7 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(Payment, 'p')
     .where('p."succeeded" IS TRUE')
+    .andWhere(`p.type != 'trial'`)
     .innerJoin(OrgBasicInformation, 'org', 'p."orgId" = org.id')
     .leftJoin(OrgPaymentMethod, 'm', 'p."orgPaymentMethodId" = m.id')
     .leftJoin(OrgPromotionCode, 'x', 'x.code = p."promotionCode"')
