@@ -37,6 +37,7 @@ import { Payment } from '../Payment';
       'p."givenName" as "givenName"',
       'p."surname" as "surname"',
       'm.id as "lastPaymentId"',
+      `m."periodTo" as "unpaidPeriodFrom"`,
       `m."periodTo" + '1 month'::interval - '1 day'::interval as "nextPaymentAt"`,
       'y."code" as "activePromotinCode"',
       'COALESCE(y."percentageOff", 0) as "promotionPercentageOff"',
@@ -80,6 +81,9 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   lastPaymentId: string;
+
+  @ViewColumn()
+  unpaidPeriodFrom: Date;
 
   @ViewColumn()
   nextPaymentAt: Date;

@@ -1,59 +1,17 @@
 import { OrgPromotionCode } from './../src/entity/OrgPromotionCode';
-import { getUtcNow } from './../src/utils/getUtcNow';
 import { OrgBasicInformation } from './../src/entity/views/OrgBasicInformation';
 import { db } from '../src/db';
-import { EntityManager, In, IsNull } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { Payment } from '../src/entity/Payment';
 import { start } from './jobStarter';
 import * as _ from 'lodash';
 import moment = require('moment');
-import { calcBillingAmountForPayment } from '../src/services/payment/calcBillingAmountForPayment';
-import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../src/services/stripeService';
-import { SysLog } from '../src/entity/SysLog';
-import { EmailTemplateType } from '../src/types/EmailTemplateType';
-import { sendPaymentEmail } from './helpers/sendPaymentEmail';
 import { Org } from '../src/entity/Org';
 import { LicenseTicket } from '../src/entity/LicenseTicket';
-import { getCurrentPricePerSeat } from '../src/utils/getCurrentPricePerSeat';
+import { getCurrentUnitPricePerTicket } from '../src/utils/getCurrentUnitPricePerTicket';
+import { checkoutPayment } from '../src/utils/checkoutPayment';
 
 const JOB_NAME = 'daily-payment';
-
-async function checkoutPayment(m: EntityManager, pendingPayment: Payment) {
-  console.log('Handling auto payments for org', pendingPayment.orgId);
-
-  try {
-    const previewInfo = await calcBillingAmountForPayment(m, pendingPayment);
-
-    const { amount, payable, paymentMethodId, stripePaymentMethodId } = previewInfo;
-
-    // Call stripe to pay
-    const stripeCustomerId = await getOrgStripeCustomerId(m, pendingPayment.orgId);
-    const stripeRawResponse = await chargeStripeForCardPayment(payable, stripeCustomerId, stripePaymentMethodId, true);
-
-    pendingPayment.rawResponse = stripeRawResponse;
-    pendingPayment.paidAt = getUtcNow();
-    pendingPayment.succeeded = true;
-    pendingPayment.amount = amount;
-    pendingPayment.payable = payable;
-    pendingPayment.orgPaymentMethodId = paymentMethodId;
-
-    await m.save(pendingPayment);
-    await sendPaymentEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, pendingPayment);
-    console.log('Successfully handled auto payments for org', pendingPayment.orgId);
-  } catch (e) {
-    await sendPaymentEmail(m, EmailTemplateType.SubscriptionAutoRenewFailed, pendingPayment);
-
-    const sysLog = new SysLog();
-    sysLog.level = 'autopay_falied';
-    sysLog.message = 'Recurring auto pay failed';
-    sysLog.req = {
-      pendingPayment,
-      error: e
-    };
-    await m.save(sysLog);
-    console.log('Failed to handle auto payments for org', pendingPayment.orgId, e);
-  }
-}
 
 async function chargeDuePayments() {
   let lastPayment: Payment;
@@ -62,7 +20,7 @@ async function chargeDuePayments() {
       lastPayment = await db.getRepository(Payment)
         .createQueryBuilder('p')
         .innerJoin(OrgBasicInformation, 'o', 'o."lastPaymentId" = p.id')
-        .where(`o."nextPaymentAt" <= NOW()`)
+        .where(`o."unpaidPeriodFrom" <= NOW()`)
         .getOne();
 
       if (!lastPayment) {
@@ -100,10 +58,10 @@ async function upgradeTrialTicketsWhenDue() {
         `o."trialEndsTill" as "trialEndsTill"`,
       ])
       .execute();
-    
-    const orgNames = _.uniq(tiralTicketInfo.map(x => x.orgName));
-    console.log(`Upgrading trial plan to monthly plan for ${orgNames.length} orgs:`);
-    orgNames.forEach(x => console.log('    ', x));
+
+    const orgs = _.uniqBy(tiralTicketInfo, x => x.orgId);
+    console.log(`Upgrading trial plan to monthly plan for ${orgs.length} orgs:`);
+    orgs.forEach(x => console.log(`    ${x.orgId} (${x.orgName})`));
 
     if (tiralTicketInfo.length) {
       // 1. Void trial tickets
@@ -113,32 +71,19 @@ async function upgradeTrialTicketsWhenDue() {
         voidedAt: () => `NOW()`,
       });
 
-      // 2. Create trial payments
-      const payments: Payment[] = _.uniqBy(tiralTicketInfo, x => x.orgId).map(x => {
-        const payment = new Payment();
-        payment.orgId = x.orgId;
-        payment.periodFrom = x.orgCreatedAt;
-        payment.periodTo = x.trialEndsTill;
-        payment.succeeded = true;
-        payment.amount = 0;
-        payment.payable = 0;
-        payment.type = 'trial';
-        return payment;
-      });
-
-      // 3. Issue new paid tickets based on these trial tickets
+      // 2. Issue new paid tickets based on these trial tickets
       const newTickets: LicenseTicket[] = tiralTicketInfo.map(x => {
         const ticket = new LicenseTicket();
         ticket.orgId = x.orgId;
         ticket.userId = x.userId;
-        ticket.unitFullPrice = getCurrentPricePerSeat();
+        ticket.unitFullPrice = getCurrentUnitPricePerTicket();
         ticket.type = 'paid';
         ticket.promotionCode = x.promotionCode;
         ticket.percentageOff = x.percentageOff;
         return ticket;
       });
 
-      await m.save([...newTickets, ...payments]);
+      await m.save([...newTickets]);
     }
   });
 }

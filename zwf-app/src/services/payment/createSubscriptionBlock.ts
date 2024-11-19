@@ -1,6 +1,6 @@
 import { SubscriptionBlock } from '../../entity/SubscriptionBlock';
 import { OrgCurrentSubscriptionInformation } from '../../entity/views/OrgCurrentSubscriptionInformation';
-import { getCurrentPricePerSeat } from '../../utils/getCurrentPricePerSeat';
+import { getCurrentUnitPricePerTicket } from '../../utils/getCurrentUnitPricePerTicket';
 import { SubscriptionBlockType } from '../../types/SubscriptionBlockType';
 import * as moment from 'moment';
 import { v4 as uuidv4 } from 'uuid';
@@ -19,7 +19,7 @@ export function createSubscriptionBlock(
   block.parentBlockId = headBlockId;
   block.seats = seats;
   block.promotionCode = promotionCode;
-  block.seatPrice = getCurrentPricePerSeat();
+  block.seatPrice = getCurrentUnitPricePerTicket();
   block.subscriptionId = subscriptionId;
   block.type = type;
   block.startingMode = startingMode;

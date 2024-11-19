@@ -39,7 +39,7 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, orgId: string,
   const data = await getQuery(m.createQueryBuilder(), params).execute();
   const stats = await m.createQueryBuilder()
     .from(q => q
-      .from(sub => getQuery(sub, params), 'sub')
+      .from(sq => getQuery(sq, params), 'sub')
       .select([
         '*',
         'EXTRACT(DAY FROM "chargeTo" - "chargeFrom") as "chargeDays"',
@@ -49,6 +49,7 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, orgId: string,
     .select([
       `ROUND(SUM(s."unitFullPrice" * s."chargeDays" / s."periodDays"), 2) as amount`,
       `ROUND(SUM((s."unitFullPrice" * s."chargeDays" / s."periodDays") * (1 - COALESCE(s."percentageOff", 0))), 2) as payable`,
+      `EXTRACT(DAY FROM :periodTo::timestamp - :periodFrom::timestamp) as "periodDays"`,
     ])
     .getRawOne();
 
@@ -56,5 +57,6 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, orgId: string,
     data,
     amount: +stats.amount || 0,
     payable: +stats.payable || 0,
+    periodDays: +stats.periodDays || 0,
   };
 }

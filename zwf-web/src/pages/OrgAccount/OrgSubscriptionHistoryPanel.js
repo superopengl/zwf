@@ -57,15 +57,7 @@ export const OrgSubscriptionHistoryPanel = (props) => {
       title: 'Days',
       align: 'center',
       render: (value, item) => {
-        return item.periodTo ? <Text>{moment(item.periodTo).diff(moment(item.periodFrom), 'days') + 1}</Text> : null;
-      }
-    },
-    {
-      title: 'Licenses',
-      dataIndex: 'seats',
-      align: 'center',
-      render: (value, item) => {
-        return value
+        return item.periodTo ? <Text>{item.periodDays}</Text> : 'on-going';
       }
     },
     {
