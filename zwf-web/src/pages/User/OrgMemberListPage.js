@@ -6,7 +6,7 @@ import {
 } from '@ant-design/icons';
 
 import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
-import { inviteMember$, impersonate$ } from 'services/authService';
+import { inviteMember$, impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import ProfileForm from 'pages/Profile/ProfileForm';
@@ -15,6 +15,7 @@ import loadable from '@loadable/component'
 import { listOrgMembers$ } from 'services/memberService';
 import { finalize } from 'rxjs/operators';
 import { UserNameCard } from 'components/UserNameCard';
+import { GlobalContext } from 'contexts/GlobalContext';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -33,6 +34,7 @@ const OrgMemberListPage = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
+  const context = React.useContext(GlobalContext);
 
   const columnDef = [
     {
@@ -65,8 +67,10 @@ const OrgMemberListPage = () => {
       align: 'right',
       fixed: 'right',
       render: (text, user) => {
+        const isMe = user.id === context.user.id;
         return (
           <DropdownMenu
+            disabled={isMe}
             config={[
               {
                 menu: 'Update profile',
@@ -82,9 +86,9 @@ const OrgMemberListPage = () => {
               },
               {
                 menu: 'Resend invite',
-                onClick: () => openSetPasswordModal(user)
+                onClick: () => handleResendInvite(user)
               },
-              {
+              user.orgOwner ? null : {
                 menu: <Text type="danger">Delete user</Text>,
                 onClick: () => handleDelete(user),
                 disabled: user.orgOwner
@@ -110,7 +114,6 @@ const OrgMemberListPage = () => {
     return () => sub.unsubscribe();
   }, []);
 
-
   const handleDelete = async (item) => {
     const { id } = item;
     Modal.confirm({
@@ -132,7 +135,7 @@ const OrgMemberListPage = () => {
     });
   }
 
-  const handleImpersonante = async (item) => {
+  const handleImpersonante = (item) => {
     // setSetPasswordVisible(true);
     // setCurrentUser(item);
     Modal.confirm({
@@ -152,6 +155,15 @@ const OrgMemberListPage = () => {
         type: 'text'
       },
     })
+  }
+
+  const handleResendInvite = (item) => {
+    reinviteMember$(item.email, true).subscribe(() => {
+      Modal.success({
+        title: 'Resent invite',
+        content: <>Has resent an invite email to email <Text code>{item.email}</Text></>
+      });
+    });
   }
 
 

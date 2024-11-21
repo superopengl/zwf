@@ -65,13 +65,4 @@ export class User {
 
   @Column({ default: false })
   orgOwner: boolean;
-
-  @Column({ default: false })
-  overdue: boolean;
-
-  @Column({ default: false })
-  suspended: boolean;
-
-  @Column({ default: false })
-  sawWalkthrough?: boolean;
 }

@@ -22,7 +22,6 @@ import { UserLoginType } from '../../types/UserLoginType';
         'array_agg(tg."tagId") as tags'
       ]),
       'tg', 'tg."userId" = u.id')
-    .where(`u."deletedAt" IS NULL`)
     .select([
       'u.id as id',
       'o.id as "orgId"',
@@ -31,13 +30,12 @@ import { UserLoginType } from '../../types/UserLoginType';
       'u.status as status',
       'u."emailHash" as "emailHash"',
       'u."loginType" as "loginType"',
+      'u."resetPasswordToken" as "resetPasswordToken"',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'o.name as "orgName"',
       'u."orgOwner" as "orgOwner"',
-      'u.overdue as overdue',
-      'u.suspended as suspended',
       'p."avatarFileId" as "avatarFileId"',
       'p."avatarColorHex" as "avatarColorHex"',
       'tg.tags as tags',
@@ -54,6 +52,9 @@ export class UserInformation {
 
   @ViewColumn()
   loginType: UserLoginType;
+
+  @ViewColumn()
+  resetPasswordToken: string;
 
   @ViewColumn()
   email: string;
@@ -81,12 +82,6 @@ export class UserInformation {
 
   @ViewColumn()
   orgOwner: boolean;
-
-  @ViewColumn()
-  overdue: boolean;
-
-  @ViewColumn()
-  suspended: boolean;
 
   @ViewColumn()
   avatarFileId: string;

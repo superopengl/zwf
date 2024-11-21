@@ -11,7 +11,7 @@ const StyledDropdown = styled(Dropdown)`
 `
 
 const DropdownMenu = (props) => {
-  const { config } = props;
+  const { config, disabled } = props;
 
   const handleMenuClick = (e) => {
     const { key, domEvent } = e;
@@ -21,20 +21,23 @@ const DropdownMenu = (props) => {
   }
 
   const menu = <Menu
+    disabled={disabled}
     mode="vertical"
     // theme="dark"
     onClick={handleMenuClick}>
     {config.map((x, i) => {
-      if(x.menu === '-') {
+      if (x.menu === '-') {
         return <Menu.Divider key={i} />
       }
-    return <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
-      {x.menu}
-    </Menu.Item>})}
+      return <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
+        {x.menu}
+      </Menu.Item>
+    })}
   </Menu>
 
   return (
     <StyledDropdown
+      disabled={disabled}
       overlay={menu}
       placement="bottomRight"
       trigger="click"

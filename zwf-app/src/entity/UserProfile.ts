@@ -32,4 +32,7 @@ export class UserProfile {
 
   @Column({ nullable: true })
   avatarColorHex: string;
+
+  @Column({ default: false })
+  sawWalkthrough?: boolean;
 }

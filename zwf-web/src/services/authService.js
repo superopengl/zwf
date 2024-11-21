@@ -37,6 +37,10 @@ export function inviteMember$(email) {
   return httpPost$(`auth/invite/member`, { email });
 }
 
+export function reinviteMember$(email) {
+  return httpPost$(`auth/reinvite/member`, { email });
+}
+
 export function inviteClient$(email) {
   return httpPost$(`auth/invite/client`, { email });
 }

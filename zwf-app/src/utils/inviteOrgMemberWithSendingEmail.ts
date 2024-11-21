@@ -3,12 +3,10 @@ import { db } from './../db';
 import { EntityManager } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { UserStatus } from '../types/UserStatus';
-import { sendEmail } from '../services/emailService';
-import { getEmailRecipientName } from './getEmailRecipientName';
-import { EmailTemplateType } from '../types/EmailTemplateType';
 import { createNewTicketForUser } from './createNewTicketForUser';
 import { UserProfile } from '../entity/UserProfile';
 import { getOrgCurrentSubscriptionPeriod } from './getOrgCurrentSubscriptionPeriod';
+import { sendInviteOrgMemberEmail } from './sendInviteOrgMemberEmail';
 
 
 export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user: User, profile: UserProfile) {
@@ -21,18 +19,7 @@ export async function inviteOrgMemberWithSendingEmail(m: EntityManager, user: Us
 
   await m.save([profile, user, ticket]);
 
-  const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
-  const email = profile.email;
-  await sendEmail({
-    to: email,
-    template: EmailTemplateType.InviteOrgMember,
-    vars: {
-      toWhom: getEmailRecipientName(user),
-      email,
-      url
-    },
-    shouldBcc: false
-  });
+  await sendInviteOrgMemberEmail(user, profile.email);
 }
 
 

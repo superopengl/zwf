@@ -2,7 +2,6 @@ import { getRepository } from 'typeorm';
 import { assert } from './assert';
 import { User } from '../entity/User';
 import { UserProfile } from '../entity/UserProfile';
-import { SubscriptionStatus } from '../types/SubscriptionStatus';
 import { Role } from '../types/Role';
 import { Org } from '../entity/Org';
 import { db } from '../db';
