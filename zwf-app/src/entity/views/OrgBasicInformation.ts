@@ -4,7 +4,6 @@ import { Org } from '../Org';
 import { User } from '../User';
 import { Role } from '../../types/Role';
 import { UserProfile } from '../UserProfile';
-import { Payment } from '../Payment';
 import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
 
 @ViewEntity({
@@ -44,7 +43,7 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
       'y."code" as "activePromotinCode"',
       'COALESCE(y."promotionUnitPrice", 0) as "promotionUnitPrice"',
     ]),
-  dependsOn: [Org, User, UserProfile, Payment, OrgPromotionCode]
+  dependsOn: [Org, User, UserProfile, OrgPromotionCode, OrgSubscriptionPeriod]
 })
 export class OrgBasicInformation {
   @ViewColumn()

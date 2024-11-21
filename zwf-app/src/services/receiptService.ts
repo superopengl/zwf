@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as handlebars from 'handlebars';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { ReceiptInformation } from '../entity/views/ReceiptInformation';
+import { OrgSubscriptionPeriodHistoryInformation } from '../entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 
 const receiptTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/receipt_template.html`);
@@ -12,14 +12,14 @@ function getPaymentMethodName(cardLast4: string) {
   return `Card ending with ${cardLast4}`;
 }
 
-function getSubscriptionDescription(receipt: ReceiptInformation) {
+function getSubscriptionDescription(receipt: OrgSubscriptionPeriodHistoryInformation) {
   const start = moment(receipt.periodFrom).format('D MMM YYYY');
   const end = moment(receipt.periodTo).format('D MMM YYYY');
 
   return `ZeeWorkflow Invoice (${start} - ${end})`;
 }
 
-function getVarBag(receipt: ReceiptInformation): {[key: string]: any} {
+function getVarBag(receipt: OrgSubscriptionPeriodHistoryInformation): {[key: string]: any} {
   const subscriptionPrice = +receipt.payable || 0;
   return {
     receiptNumber: receipt.receiptNumber,
@@ -31,7 +31,7 @@ function getVarBag(receipt: ReceiptInformation): {[key: string]: any} {
   };
 }
 
-export async function generateReceiptPdfStream(receipt: ReceiptInformation): Promise<{ pdfStream, fileName: string }> {
+export async function generateReceiptPdfStream(receipt: OrgSubscriptionPeriodHistoryInformation): Promise<{ pdfStream, fileName: string }> {
   const varBag = getVarBag(receipt);
   const html = compiledTemplate(varBag);
 

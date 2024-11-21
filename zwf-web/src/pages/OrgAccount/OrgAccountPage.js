@@ -12,7 +12,7 @@ import * as moment from 'moment-timezone';
 import { OrgSubscriptionHistoryPanel } from './OrgSubscriptionHistoryPanel';
 import { from } from 'rxjs';
 import OrgPaymentMethodPanel from './OrgPaymentMethodPanel';
-import { listMyPayments$, searchMyTicketUsage$ } from 'services/subscriptionService';
+import { listMySubscriptions$, searchMyTicketUsage$ } from 'services/subscriptionService';
 import { finalize } from 'rxjs/operators';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
@@ -58,14 +58,14 @@ const OrgAccountPage = (props) => {
   const [billingHistory, setBillingHistory] = React.useState([]);
 
   React.useEffect(() => {
-    const sub$ = listMyPayments$().pipe(
+    const sub$ = listMySubscriptions$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(data => setBillingHistory(data));
 
-    const x$ = searchMyTicketUsage$(moment().toDate(), moment().add(17, 'day').toDate()).subscribe(d => {
-      debugger;
-      const ok = d;
-    });
+    // const x$ = searchMyTicketUsage$(moment().toDate(), moment().add(17, 'day').toDate()).subscribe(d => {
+    //   debugger;
+    //   const ok = d;
+    // });
 
     return () => {
       sub$.unsubscribe();
