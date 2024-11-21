@@ -5,6 +5,7 @@ import { User } from '../User';
 import { Role } from '../../types/Role';
 import { UserProfile } from '../UserProfile';
 import { Payment } from '../Payment';
+import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection
@@ -13,9 +14,10 @@ import { Payment } from '../Payment';
     .leftJoin(User, 'u', `u."orgId" = o.id AND u.role = '${Role.Admin}' AND u."orgOwner" IS TRUE`)
     .leftJoin(UserProfile, 'p', `u."profileId" = p.id`)
     .leftJoin(q => q
-      .from(Payment, 'm')
+      .from(OrgSubscriptionPeriod, 'm')
+      .where(`"periodTo" > NOW()`)
       .orderBy('"orgId"')
-      .addOrderBy('"periodTo"', 'DESC')
+      .addOrderBy('"periodTo"', 'ASC')
       .distinctOn([
         '"orgId"',
         '"periodTo"',
@@ -28,19 +30,19 @@ import { Payment } from '../Payment';
       'o.id as id',
       'o.name as name',
       `o."createdAt" as "createdAt"`,
-      `o."trialEndsTill" as "trialEndsTill"`,
-      `o."trialEndsTill" > NOW() as "isInTrial"`,
+      `CASE WHEN m.type = 'trial' THEN TRUE ELSE FALSE END as "isInTrial"`,
       'o."businessName" as "businessName"',
       'o.tel as tel',
       'u.id as "adminUserId"',
       'p.email as "ownerEmail"',
       'p."givenName" as "givenName"',
       'p."surname" as "surname"',
-      'm.id as "lastPaymentId"',
-      `m."periodTo" as "unpaidPeriodFrom"`,
-      `m."periodTo" + '1 month'::interval - '1 day'::interval as "nextPaymentAt"`,
+      'm.id as "currentPeriodId"',
+      `m."periodFrom" as "periodFrom"`,
+      `m."periodTo" as "periodTo"`,
+      `m."periodDays" as "periodDays"`,
       'y."code" as "activePromotinCode"',
-      'COALESCE(y."percentageOff", 0) as "promotionPercentageOff"',
+      'COALESCE(y."promotionUnitPrice", 0) as "promotionUnitPrice"',
     ]),
   dependsOn: [Org, User, UserProfile, Payment, OrgPromotionCode]
 })
@@ -54,9 +56,6 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   createdAt: Date;
-
-  @ViewColumn()
-  trialEndsTill: Date;
 
   @ViewColumn()
   isInTrial: boolean;
@@ -80,18 +79,21 @@ export class OrgBasicInformation {
   surname: string;
 
   @ViewColumn()
-  lastPaymentId: string;
+  currentPeriodId: string;
 
   @ViewColumn()
-  unpaidPeriodFrom: Date;
+  periodFrom: Date;
 
   @ViewColumn()
-  nextPaymentAt: Date;
+  periodTo: Date;
+
+  @ViewColumn()
+  periodDays: number;
 
   @ViewColumn()
   activePromotinCode: string;
 
   @ViewColumn()
-  promotionPercentageOff: number;
+  promotionUnitPrice: number;
 }
 

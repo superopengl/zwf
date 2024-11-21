@@ -1,3 +1,4 @@
+import { OrgSubscriptionPeriod } from "./../entity/OrgSubscriptionPeriod";
 import { db } from './../db';
 import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
@@ -59,6 +60,14 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   org.tel = tel?.trim();
   org.abn = abn?.trim();
 
+  const period = new OrgSubscriptionPeriod()
+  period.periodFrom = now;
+  period.periodTo = moment(now).add(13, 'days').toDate();
+  period.orgId = orgId;
+  period.type = 'trial';
+
+  const ticket = createNewTicketForUser(userId, period);
+
   await db.transaction(async m => {
     const userEnitty = await m.findOneBy(User, { id: userId });
 
@@ -67,19 +76,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     userEnitty.orgId = orgId;
     userEnitty.orgOwner = true;
     
-    const ticket = await createNewTicketForUser(m, userId, orgId);
-    const savedOrg = await m.findOneBy(Org, { id: orgId });
-    const payment = new Payment();
-    payment.orgId = orgId;
-    payment.type = 'trial';
-    payment.periodFrom = savedOrg.createdAt;
-    payment.periodTo = savedOrg.trialEndsTill;
-    payment.succeeded = true;
-    payment.paidAt = now;
-    payment.amount = 0;
-    payment.payable = 0;
-
-    await m.save([userEnitty, ticket, payment]);
+    await m.save([userEnitty, period, ticket]);
   });
 
   res.json();

@@ -42,11 +42,11 @@ const PromotionListPanel = (props) => {
     },
     {
       title: '% off',
-      dataIndex: 'percentageOff',
+      dataIndex: 'promotionUnitPrice',
       sorter: {
-        compare: (a, b) => a.percentageOff - b.percentageOff
+        compare: (a, b) => a.promotionUnitPrice - b.promotionUnitPrice
       },
-      render: (value) => <>{value * 100} %</>,
+      render: (value) => value,
     },
     {
       title: 'End',
@@ -132,17 +132,17 @@ const PromotionListPanel = (props) => {
           onFinish={handleSavePromotion}
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
-          initialValues={{ code: newCode, percentageOff: 0.1 }}>
+          initialValues={{ code: newCode, promotionUnitPrice: 39 }}>
           <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true, message: ' ' }]}>
             <Input readOnly={true} />
           </Form.Item>
-          <Form.Item label="% off" name="percentageOff" rules={[{ required: true, type: 'number', min: 0.01, max: 0.99, whitespace: true }]}>
+          <Form.Item label="% off" name="promotionUnitPrice" rules={[{ required: true, type: 'number', min: 0, max: 100, whitespace: true }]}>
             <InputNumber
-              min={0.01}
-              max={0.99}
-              step={0.01}
-              formatter={value => `${value * 100} %`}
-              parser={value => +(value.replace(' %', '')) / 100}
+              min={0}
+              max={100}
+              step={1}
+              // formatter={value => `${value * 100} %`}
+              // parser={value => +(value.replace(' %', '')) / 100}
             />
           </Form.Item>
           <Form.Item label="End" name="endingAt" rules={[{ required: true, type: 'date', whitespace: true, message: ' ' }]}>

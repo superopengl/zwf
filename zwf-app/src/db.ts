@@ -45,7 +45,7 @@ import { EmailSentOutTask } from './entity/EmailSentOutTask';
 import * as dotenv from 'dotenv';
 import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
-import { OrgPendingPaymentRollupInformation } from './entity/views/OrgPendingPaymentRollupInformation';
+import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 dotenv.config();
 
 const views = [
@@ -205,6 +205,7 @@ export const db = new DataSource({
     EmailSentOutTask,
     SystemConfig,
     LicenseTicket,
+    OrgSubscriptionPeriod,
     // Views below
     TaskInformation,
     UserInformation,
@@ -221,7 +222,6 @@ export const db = new DataSource({
     RecurringInformation,
     ReceiptInformation,
     LicenseTicketUsageInformation,
-    OrgPendingPaymentRollupInformation,
   ],
 });
 

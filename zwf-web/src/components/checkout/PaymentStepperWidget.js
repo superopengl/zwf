@@ -107,7 +107,7 @@ const PaymentStepperWidget = (props) => {
           <Descriptions.Item label="Full price" contentStyle={{ textAlign: 'right' }}>
             <MoneyAmount value={paymentInfo.fullPriceBeforeDiscount} />
           </Descriptions.Item>
-          <Descriptions.Item label={<>Total price ({Math.round(paymentInfo.promotionDiscountPercentage * 100)}% off)</>} contentStyle={{ textAlign: 'right' }}>
+          <Descriptions.Item label={<>Total price with promotion price {paymentInfo.promotionUnitPrice}</>} contentStyle={{ textAlign: 'right' }}>
             <MoneyAmount strong value={paymentInfo.fullPriceAfterDiscount} />
           </Descriptions.Item>
         </Descriptions>
