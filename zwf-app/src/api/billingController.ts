@@ -71,39 +71,3 @@ export const downloadReceipt = handlerWrapper(async (req, res) => {
 });
 
 
-export const purchaseSubscription = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const orgId = getOrgIdFromReq(req);
-  // const { seats, promotionCode } = req.body;
-
-  // assert(seats > 0, 400, 'seats must be positive integer');
-
-  // const geoInfo = await getRequestGeoInfo(req);
-
-  // await db.manager.transaction(async m => {
-  //   const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
-  //   await changeSubscriptionRightaway(m, subInfo, seats, promotionCode, geoInfo);
-  // });
-
-  res.json();
-});
-
-export const previewSubscriptionPayment = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
-  const orgId = getOrgIdFromReq(req);
-  const { seats, promotionCode } = req.body;
-
-  let result: PaymentRollupInfo;
-  // await db.transaction(async m => {
-  //   const subInfo = await m.findOneBy(OrgCurrentSubscriptionInformation, { orgId });
-
-  //   const block = createSubscriptionBlock(subInfo, SubscriptionBlockType.Monthly, SubscriptionStartingMode.Rightaway);
-  //   block.seats = seats || 0;
-  //   block.promotionCode = promotionCode;
-
-  //   result = await calcSubscriptionBlockPayment(m, subInfo, block);
-  // });
-
-  res.json(result);
-});
-
