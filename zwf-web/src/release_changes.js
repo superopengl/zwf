@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 bugfix for version mismatch notification
 refine payment flow
 change receipt to use new logo

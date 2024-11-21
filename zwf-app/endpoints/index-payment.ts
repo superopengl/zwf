@@ -20,7 +20,7 @@ async function chargeDuePayments() {
       lastPayment = await db.getRepository(Payment)
         .createQueryBuilder('p')
         .innerJoin(OrgBasicInformation, 'o', 'o."lastPaymentId" = p.id')
-        .where(`o."unpaidPeriodFrom" <= NOW()`)
+        .where(`o."nextPaymentAt" <= NOW()`)
         .getOne();
 
       if (!lastPayment) {
