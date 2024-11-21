@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 payment refine
 refine subscriptions
 db schema refine
