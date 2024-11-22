@@ -41,7 +41,7 @@ const PromotionListPanel = (props) => {
       </ClickToCopyTooltip>
     },
     {
-      title: '% off',
+      title: 'Promotion unit price',
       dataIndex: 'promotionUnitPrice',
       sorter: {
         compare: (a, b) => a.promotionUnitPrice - b.promotionUnitPrice
@@ -132,20 +132,23 @@ const PromotionListPanel = (props) => {
           onFinish={handleSavePromotion}
           labelCol={{ span: 10 }}
           wrapperCol={{ span: 14 }}
+          requiredMark={false}
           initialValues={{ code: newCode, promotionUnitPrice: 39 }}>
-          <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true, message: ' ' }]}>
+          <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true }]}>
             <Input readOnly={true} />
           </Form.Item>
-          <Form.Item label="% off" name="promotionUnitPrice" rules={[{ required: true, type: 'number', min: 0, max: 100, whitespace: true }]}>
+          <Form.Item label="Unit price" name="promotionUnitPrice" rules={[{ required: true, type: 'number', min: 0, max: 100, whitespace: true }]}>
             <InputNumber
               min={0}
               max={100}
               step={1}
-              // formatter={value => `${value * 100} %`}
-              // parser={value => +(value.replace(' %', '')) / 100}
+              addonBefore="$"
+              precision={2}
+              // formatter={value => `$ ${value}`}
+              // parser={value => +(value.replace('$ ', ''))}
             />
           </Form.Item>
-          <Form.Item label="End" name="endingAt" rules={[{ required: true, type: 'date', whitespace: true, message: ' ' }]}>
+          <Form.Item label="End" name="endingAt" rules={[{ required: true, type: 'date', whitespace: true }]}>
             <DatePicker type="date" />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>
