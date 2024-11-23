@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Tag, Drawer } from 'antd';
+import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -56,7 +56,7 @@ const OrgListPage = () => {
       title: 'Name',
       dataIndex: 'name',
       fixed: 'left',
-      render: (text) => <HighlightingText search={queryInfo.text} value={text} />,
+      render: (text, item) => <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
     },
     // {
     //   title: 'ID',
@@ -79,17 +79,16 @@ const OrgListPage = () => {
       render: (value) => value
     },
     {
+      title: 'Type',
+      dataIndex: 'type',
+      render: (value) => value
+    },
+    {
       title: 'Next pay / trial end',
       dataIndex: 'subscription',
       render: (value, item) => <Space>
-        <TimeAgo value={item.subscriptionEnd} showTime={false} />
-        {item.isTrial && <Tag>Trial</Tag>}
+        <TimeAgo value={item.periodTo} showTime={false} />
       </Space>
-    },
-    {
-      title: 'Licenses',
-      dataIndex: 'seats',
-      render: (value, item) => value
     },
     {
       // title: 'Action',
@@ -102,13 +101,13 @@ const OrgListPage = () => {
           <DropdownMenu
             config={[
               {
-                menu: 'Impersonate',
+                menu: 'Impersonate owner',
                 onClick: () => handleImpersonante(org)
               },
-              {
-                menu: 'Billing',
-                onClick: () => handleOpenBilling(org)
-              },
+              // {
+              //   menu: 'Billing',
+              //   onClick: () => handleOpenBilling(org)
+              // },
               {
                 menu: 'Promotion code',
                 onClick: () => handleOpenPromotionCode(org)

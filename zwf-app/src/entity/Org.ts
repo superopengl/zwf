@@ -34,6 +34,9 @@ export class Org {
 
   @Column({ default: false })
   suspended: boolean;
+
+  @Column({ default: false })
+  testing: boolean;
 }
 
 

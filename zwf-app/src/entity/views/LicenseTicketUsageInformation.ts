@@ -25,6 +25,10 @@ import { Role } from '../../types/Role';
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'u.role as role',
+      'm."periodFrom" as "periodFrom"',
+      'm."periodTo" as "periodTo"',
+      't."createdAt" as "ticketFrom"',
+      't."voidedAt" as "ticketTo"',
       't."createdAt" as "billingFrom"',
       'COALESCE(t."voidedAt", m."periodTo") as "billingTo"',
       'EXTRACT(DAY FROM COALESCE(t."voidedAt", m."periodTo") - t."createdAt") + 1 as "usedDays"',
@@ -67,6 +71,18 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   role: Role;
+
+  @ViewColumn()
+  periodFrom: Date;
+
+  @ViewColumn()
+  periodTo: Date;
+
+  @ViewColumn()
+  ticketFrom: Date;
+
+  @ViewColumn()
+  ticketTo: Date;
 
   @ViewColumn()
   billingFrom: Date;
