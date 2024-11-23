@@ -22,7 +22,7 @@ async function chargeLastSubscriptionIfDue() {
     await db.transaction(async m => {
       lastPeriod = await m.getRepository(OrgSubscriptionPeriodHistoryInformation)
         .createQueryBuilder()
-        .where('"paymentId" IS NULL')
+        .where(`latest IS TRUE`)
         .andWhere('"periodTo"::date <= NOW()::date')
         .distinctOn(['"orgId"'])
         .orderBy('"orgId"')
@@ -33,16 +33,12 @@ async function chargeLastSubscriptionIfDue() {
         return;
       }
 
-      
       const period = await m.getRepository(OrgSubscriptionPeriod).findOneByOrFail({ id: lastPeriod.id });
-      
-      let okToExtend = true;
-      if (period.type !== 'trial') {
-        console.log(`Charging subscription period ${lastPeriod.id} for org ${lastPeriod.orgId}`);
-        okToExtend = await checkoutSubscriptionPeriod(m, period);
-      }
 
-      if(okToExtend) {
+      console.log(`Charging subscription period ${lastPeriod.id} for org ${lastPeriod.orgId}`);
+      const paymentSucceeded = await checkoutSubscriptionPeriod(m, period);
+
+      if (paymentSucceeded) {
         await issueNewSubscriptionPeriod(m, period);
       }
     });
@@ -50,6 +46,8 @@ async function chargeLastSubscriptionIfDue() {
 }
 
 async function issueNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
+  previousPeriod.latest = false;
+  await m.save(previousPeriod);
 
   const now = getUtcNow();
 
@@ -61,12 +59,12 @@ async function issueNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgS
   period.periodFrom = now;
   period.periodTo = moment(now).add(1, 'month').add(-1, 'day').toDate();
   period.unitFullPrice = getCurrentUnitPricePerTicket();
-
+  period.latest = true;
   await m.save(period);
 
   const users = await m.getRepository(User).find({
-    where: { 
-      orgId: previousPeriod.orgId 
+    where: {
+      orgId: previousPeriod.orgId
     },
     select: {
       id: true,
@@ -79,6 +77,13 @@ async function issueNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgS
     ticket.orgId = period.orgId;
     ticket.periodId = period.id;
     return ticket;
+  });
+
+  await m.update(LicenseTicket, {
+    userId: In(users.map(u => u.id)),
+    voidedAt: IsNull()
+  }, {
+    voidedAt: () => `NOW()`
   });
 
   await m.save([...newTickets]);

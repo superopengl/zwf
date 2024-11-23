@@ -5,6 +5,8 @@ import { Payment } from './Payment';
 
 @Entity()
 @Index('idx_orgId_periodTo', ['orgId', 'periodTo'])
+@Index('idx_orgId_previousPeriodId_unique', ['orgId', 'previousPeriodId'], { unique: true })
+@Index('idx_orgId_latest_unique', ['orgId', 'latest'], { unique: true, where: 'latest IS TRUE' })
 export class OrgSubscriptionPeriod {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -18,14 +20,17 @@ export class OrgSubscriptionPeriod {
   @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `EXTRACT(DAY FROM "periodTo"::timestamp - "periodFrom"::timestamp) + 1` })
   periodDays: number;
 
-  @Column({nullable: true})
+  @Column({ nullable: true })
   billingDate: Date;
 
   @Column('uuid')
   orgId: string;
 
-  @Column({default: 'monthly'})
+  @Column({ default: 'monthly' })
   type: 'trial' | 'monthly';
+
+  @Column({ default: true})
+  latest: boolean;
 
   @Column('uuid', { nullable: true })
   @Index()
