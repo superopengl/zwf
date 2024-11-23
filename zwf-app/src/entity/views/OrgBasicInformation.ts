@@ -32,6 +32,7 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
       `CASE WHEN m.type = 'trial' THEN TRUE ELSE FALSE END as "isInTrial"`,
       'o."businessName" as "businessName"',
       'o.tel as tel',
+      'o.suspended as suspended',
       'u.id as "adminUserId"',
       'p.email as "ownerEmail"',
       'p."givenName" as "givenName"',
@@ -64,6 +65,9 @@ export class OrgBasicInformation {
 
   @ViewColumn()
   tel: string;
+
+  @ViewColumn()
+  suspended: boolean;
 
   @ViewColumn()
   adminUserId: string;

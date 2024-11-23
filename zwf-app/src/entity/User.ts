@@ -65,4 +65,7 @@ export class User {
 
   @Column({ default: false })
   orgOwner: boolean;
+
+  @Column({ default: false })
+  suspended: boolean;
 }

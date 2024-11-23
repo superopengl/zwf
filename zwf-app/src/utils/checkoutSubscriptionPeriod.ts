@@ -1,5 +1,5 @@
 import { getUtcNow } from './getUtcNow';
-import { EntityManager } from 'typeorm';
+import { EntityManager, IsNull } from 'typeorm';
 import { Payment } from '../entity/Payment';
 import { calcBillingAmountForPeriod } from '../services/payment/calcBillingAmountForPeriod';
 import { getOrgStripeCustomerId, chargeStripeForCardPayment } from '../services/stripeService';
@@ -9,14 +9,21 @@ import { sendPaymentEmail } from '../../endpoints/helpers/sendPaymentEmail';
 import { terminatePlan } from './terminatePlan';
 import { OrgSubscriptionPeriod } from '../entity/OrgSubscriptionPeriod';
 import { v4 as uuidv4 } from 'uuid';
+import { getOrgActivePromotionCode } from './getOrgActivePromotionCode';
 
 export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSubscriptionPeriod) {
-  console.log('Handling auto payment for org', period.orgId);
+  console.log(`Charging subscription period ${period.id} for org ${period.orgId}`);
 
   try {
-    const previewInfo = await calcBillingAmountForPeriod(m, period);
 
-    const { amount, payable, paymentMethodId, stripePaymentMethodId } = previewInfo;
+    const alivePromotionCode = await getOrgActivePromotionCode(m, period.orgId);
+    period.promotionCode = alivePromotionCode?.code;
+    period.promotionUnitPrice = alivePromotionCode?.promotionUnitPrice;
+    await m.save(period); // Have to save before calculating amout from view.
+
+    const calcResult = await calcBillingAmountForPeriod(m, period);
+
+    const { amount, payable, paymentMethodId, stripePaymentMethodId } = calcResult;
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, period.orgId);

@@ -31,6 +31,9 @@ export class Org {
 
   @Column({ nullable: true })
   stripeCustomerId?: string;
+
+  @Column({ default: false })
+  suspended: boolean;
 }
 
 

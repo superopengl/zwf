@@ -31,6 +31,7 @@ import { UserLoginType } from '../../types/UserLoginType';
       'u."emailHash" as "emailHash"',
       'u."loginType" as "loginType"',
       'u."resetPasswordToken" as "resetPasswordToken"',
+      'u.suspended as suspended',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
@@ -55,6 +56,9 @@ export class UserInformation {
 
   @ViewColumn()
   resetPasswordToken: string;
+
+  @ViewColumn()
+  suspended: boolean;
 
   @ViewColumn()
   email: string;

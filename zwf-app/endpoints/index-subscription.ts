@@ -17,35 +17,30 @@ import { v4 as uuidv4 } from 'uuid';
 const JOB_NAME = 'daily-subscription-check';
 
 async function chargeLastSubscriptionIfDue() {
-  let lastPeriod: OrgSubscriptionPeriodHistoryInformation;
+  let payingPeriod: OrgSubscriptionPeriod;
   do {
     await db.transaction(async m => {
-      lastPeriod = await m.getRepository(OrgSubscriptionPeriodHistoryInformation)
+      payingPeriod = await m.getRepository(OrgSubscriptionPeriod)
         .createQueryBuilder()
         .where(`latest IS TRUE`)
+        .andWhere(`"paymentId" IS NULL`)
         .andWhere('"periodTo"::date <= NOW()::date')
-        .distinctOn(['"orgId"'])
-        .orderBy('"orgId"')
-        .addOrderBy('"periodTo"', 'DESC')
         .getOne();
 
-      if (!lastPeriod) {
+      if (!payingPeriod) {
         return;
       }
 
-      const period = await m.getRepository(OrgSubscriptionPeriod).findOneByOrFail({ id: lastPeriod.id });
+      const shouldExtend = payingPeriod.type === 'trial' || await checkoutSubscriptionPeriod(m, payingPeriod);
 
-      console.log(`Charging subscription period ${lastPeriod.id} for org ${lastPeriod.orgId}`);
-      const paymentSucceeded = await checkoutSubscriptionPeriod(m, period);
-
-      if (paymentSucceeded) {
-        await issueNewSubscriptionPeriod(m, period);
+      if (shouldExtend) {
+        await createNewSubscriptionPeriod(m, payingPeriod);
       }
     });
-  } while (lastPeriod)
+  } while (payingPeriod)
 }
 
-async function issueNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
+async function createNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
   previousPeriod.latest = false;
   await m.save(previousPeriod);
 
@@ -54,10 +49,10 @@ async function issueNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgS
   const period = new OrgSubscriptionPeriod();
   period.id = uuidv4();
   period.orgId = previousPeriod.orgId;
-  period.previousPeriodId = previousPeriod.id;
   period.type = 'monthly';
-  period.periodFrom = now;
-  period.periodTo = moment(now).add(1, 'month').add(-1, 'day').toDate();
+  period.periodFrom = previousPeriod.periodTo < now ? now : previousPeriod.periodTo;
+  period.periodTo = moment(period.periodFrom).add(1, 'month').add(-1, 'day').toDate();
+  period.previousPeriodId = previousPeriod.id;
   period.unitFullPrice = getCurrentUnitPricePerTicket();
   period.latest = true;
   await m.save(period);
