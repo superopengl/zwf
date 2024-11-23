@@ -73,7 +73,6 @@ export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) 
   const list = await db.getRepository(TaskTrackingInformation).find({
     where: {
       userId,
-      status: In([TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE])
     },
     order: {
       createdAt: 'DESC'
