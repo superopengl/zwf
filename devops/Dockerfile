@@ -101,10 +101,10 @@ RUN pnpm compile:prod
 RUN cp -rf /usr/portal/web/build /usr/portal/app/www
 RUN rm -rf /usr/portal/web
 
-# RUN npm uninstall -g pnpm
+RUN npm uninstall -g pnpm
 
 # # Start the portal website
-# WORKDIR /usr/portal/app
+WORKDIR /usr/portal/app
 
 # # USER pptruser
 
