@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 pnpm fetch and monorepo
 fix Dockerfile
 successful pnpm fetch
