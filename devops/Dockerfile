@@ -49,14 +49,7 @@ RUN npm install -g pnpm@7
 EXPOSE 80
 # Install dependencies
 WORKDIR /usr/portal
-COPY ./zwf-web/pnpm-lock.yaml ./web/
-COPY ./zwf-app/pnpm-lock.yaml ./app/
-COPY ./zwf-web/package.json ./web/
-COPY ./zwf-app/package.json ./app/
-
-WORKDIR /usr/portal/app
-RUN pnpm fetch
-WORKDIR /usr/portal/web
+COPY ./pnpm-lock.yaml .
 RUN pnpm fetch
 
 # WORKDIR /usr/portal/web
@@ -80,10 +73,11 @@ RUN pnpm fetch
 # ENV NODE_OPTIONS=--max_old_space_size=4096
 # # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
+COPY . .
+RUN pnpm install -r --offline
+
 # Build app
-WORKDIR /usr/portal/app
-COPY ./zwf-app .
-RUN pnpm install --offline
+WORKDIR /usr/portal/zwf-app
 RUN pnpm build:prod
 
 ENV REACT_APP_ZWF_API_ENDPOINT=/api/v1
@@ -92,19 +86,15 @@ ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8
 ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_test_51KdBy9GTxuce44Dh2njxhzLQ7648GBICSKkunecyWB05s8Se05yNZsTIbgddsVlKCk8yzcBOV5X4sRjhHmv8xouQ000ZW84mJx
 
 # Build web
-WORKDIR /usr/portal/web
-COPY ./zwf-web .
-RUN pnpm install --offline
+WORKDIR /usr/portal/zwf-web
 RUN pnpm compile:prod
 
 # Copy web to app/www
-RUN cp -rf /usr/portal/web/build /usr/portal/app/www
-RUN rm -rf /usr/portal/web
-
-RUN npm uninstall -g pnpm
+RUN cp -rf /usr/portal/zwf-web/build /usr/portal/zwf-app/www
+RUN rm -rf /usr/portal/zwf-web
 
 # # Start the portal website
-WORKDIR /usr/portal/app
+WORKDIR /usr/portal/zwf-app
 
 # # USER pptruser
 
