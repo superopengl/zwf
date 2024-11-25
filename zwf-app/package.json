@@ -28,7 +28,7 @@
     "migrate:gen": "ts-node typeorm migration:generate -n",
     "typeorm": "TS_NODE_PROJECT=tsconfig.ts-node.json TS_NODE_TRANSPILE_ONLY=true ts-node ./node_modules/typeorm/cli.js"
   },
-  "author": "techseeding2020@gmail.com",
+  "author": "jshao@zeeworkflow.com",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^26.0.20",
