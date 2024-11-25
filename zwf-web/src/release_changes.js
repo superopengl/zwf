@@ -1,2 +1,8 @@
 export const notes=`
-fix tracking`
+pnpm fetch and monorepo
+fix Dockerfile
+successful pnpm fetch
+update web pnpm lock file
+rename web
+refine
+fix branding`
