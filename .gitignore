@@ -8,3 +8,4 @@ zwf-app/src/_assets/keys/localhost.crt
 zwf-app/src/_assets/keys/localhost.key
 .pnpm-debug.log
 zwf-app/package-lock.json
+.DS_Store
