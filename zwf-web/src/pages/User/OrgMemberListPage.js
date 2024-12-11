@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Tag, Drawer, Select, PageHeader } from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Drawer, Select } from 'antd';
 import {
-  UserAddOutlined, GoogleOutlined, QuestionOutlined
+  UserAddOutlined, QuestionOutlined
 } from '@ant-design/icons';
-
 import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteMember$, impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
@@ -16,6 +15,7 @@ import { listOrgMembers$ } from 'services/memberService';
 import { finalize } from 'rxjs/operators';
 import { UserNameCard } from 'components/UserNameCard';
 import { GlobalContext } from 'contexts/GlobalContext';
+import { PageContainer } from '@ant-design/pro-components';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -219,11 +219,10 @@ const OrgMemberListPage = () => {
 
   return (
     <ContainerStyled>
-      <PageHeader
-        backIcon={false}
-        title={"Team & Member Accounts"}
-        extra={[
-          <Button
+      <PageContainer
+        header={{
+          title: "Team & Member Accounts",
+          extra: [<Button
             key="add"
             type="primary"
             ghost
@@ -231,7 +230,8 @@ const OrgMemberListPage = () => {
             icon={<UserAddOutlined />}>
             Add Member
           </Button>
-        ].filter(x => !!x)}
+          ].filter(x => !!x)
+        }}
       >
         <Table columns={columnDef}
           dataSource={list}
@@ -245,7 +245,7 @@ const OrgMemberListPage = () => {
           pagination={false}
         />
 
-      </PageHeader>
+      </PageContainer>
 
       <Modal
         open={setPasswordVisible}

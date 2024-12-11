@@ -1,19 +1,17 @@
 import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined, EyeInvisibleOutlined, SyncOutlined
+  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, EyeInvisibleOutlined, SyncOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader, Image } from 'antd';
-
+import { Button, Modal, Space, Typography, List, Card, Image } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate$, listDocTemplate, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
-import { DocTemplateIcon, ResourcePageIcon, TaskTemplateIcon } from '../../components/entityIcon';
+import { ResourcePageIcon } from '../../components/entityIcon';
 import { useNavigate, Link } from 'react-router-dom';
-import { finalize, switchMap, switchMapTo } from 'rxjs/operators';
-import { notify } from 'util/notify';
+import { finalize } from 'rxjs/operators';
 import { deleteResourcePage$, listAllResourcePages$, saveResourcePage$ } from 'services/resourcePageService';
+import { PageContainer } from '@ant-design/pro-components';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -103,13 +101,13 @@ export const ResourceEditListPage = props => {
 
   return (<>
     <LayoutStyled>
-      <PageHeader
-        title="Resources"
-        backIcon={false}
-        extra={[
-          <Button type="primary" ghost key="refres" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
-          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>,
-        ]}
+      <PageContainer
+        header={{
+          title: 'Resources',
+          extra: [
+            <Button type="primary" ghost key="refres" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
+            <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>,          ]
+        }}
       >
         <List
           size="small"
@@ -185,7 +183,7 @@ export const ResourceEditListPage = props => {
             </Card>
           </List.Item>}
         />
-      </PageHeader>
+      </PageContainer>
     </LayoutStyled>
   </>
   );

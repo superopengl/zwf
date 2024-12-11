@@ -3,9 +3,7 @@ import React from 'react';
 import { TagListPanel } from 'components/TagListPanel';
 import styled from 'styled-components';
 import { deleteTag$, listTags$, saveTag$ } from 'services/tagService';
-import { Card, PageHeader, Space } from 'antd';
-import { tap } from 'rxjs/operators';
-import { GlobalContext } from 'contexts/GlobalContext';
+import { PageContainer } from '@ant-design/pro-components';
 
 const Container = styled.div`
   width: 100%;
@@ -30,18 +28,18 @@ const TagsSettingPage = () => {
 
   return (
     <Container>
-      <PageHeader 
-      backIcon={false}
-      title="Tag Management"
+      <PageContainer
+        header={{
+          title: 'Tag Management'
+        }}
       >
-
-          <TagListPanel
-            onLoadList={handleLoadTaskTags}
-            onSave={saveTag$}
-            onDelete={deleteTag$}
-            showColor={true}
-            />
-            </PageHeader>
+        <TagListPanel
+          onLoadList={handleLoadTaskTags}
+          onSave={saveTag$}
+          onDelete={deleteTag$}
+          showColor={true}
+        />
+      </PageContainer>
     </Container>
   );
 };

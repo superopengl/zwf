@@ -1,7 +1,7 @@
 
 import React from 'react';
 import styled from 'styled-components';
-import { Button, Typography, PageHeader, Row, Col, Skeleton, message, Affix } from 'antd';
+import { Typography, Affix } from 'antd';
 const { Text } = Typography;
 
 const Container = styled.div`

@@ -1,17 +1,17 @@
 import {
-  DeleteOutlined, EditOutlined, EyeOutlined, PlusOutlined, CopyOutlined
+  DeleteOutlined, EditOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { Button, Drawer, Layout, Modal, Space, Table, Tooltip, Typography, List, Row, Input, Card, PageHeader } from 'antd';
-
+import { Button, Modal, Space, Typography, List, Card } from 'antd';
+import { PageContainer } from '@ant-design/pro-components';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { deleteDocTemplate$, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { HighlightingText } from 'components/HighlightingText';
-import { DocTemplateIcon, TaskTemplateIcon } from '../../components/entityIcon';
+import { DocTemplateIcon } from '../../components/entityIcon';
 import { useNavigate, Link } from 'react-router-dom';
-import { catchError, finalize, switchMap, tap } from 'rxjs/operators';
+import { finalize, switchMap, tap } from 'rxjs/operators';
 import { notify } from 'util/notify';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
@@ -109,26 +109,13 @@ export const DocTemplateListPage = props => {
 
   return (<>
     <LayoutStyled>
-      <PageHeader
-        title="Doc Templates"
-        backIcon={false}
-        extra={[
-          // <Radio.Group
-          //   key="view"
-          //   optionType="button"
-          //   buttonStyle="solid"
-          //   defaultValue={viewMode}
-          //   onChange={e => setViewMode(e.target.value)}
-          // >
-          //   <Radio.Button value="grid">
-          //     <Icon component={BiGridAlt } />
-          //   </Radio.Button>
-          //   <Radio.Button value="list">
-          //     <Icon component={HiViewList } />
-          //   </Radio.Button>
-          // </Radio.Group>,
+      <PageContainer
+      header={{
+        title: 'Doc Templates',
+        extra: [
           <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
-        ]}
+        ]
+      }}
       >
         <List
           size="small"
@@ -198,7 +185,7 @@ export const DocTemplateListPage = props => {
             </Card>
           </List.Item>}
         />
-      </PageHeader>
+      </PageContainer>
     </LayoutStyled>
   </>
   );

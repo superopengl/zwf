@@ -1,25 +1,13 @@
-import { ArrowDownOutlined, ArrowUpOutlined, ClearOutlined, DownOutlined, PlusOutlined, SyncOutlined, UpOutlined } from '@ant-design/icons';
-import { Button, Timeline, Row, Col, Space, Spin, Typography, List, Tabs, Grid, Alert, message, Tooltip, PageHeader, Select, Input, Card } from 'antd';
-import Text from 'antd/lib/typography/Text';
+import { SyncOutlined } from '@ant-design/icons';
+import { Button, Row, Typography, Grid, message, Card } from 'antd';
 import React from 'react';
-
-import { saveTask, listClientTask$, listTaskTrackings$ } from '../../services/taskService';
+import { PageContainer } from '@ant-design/pro-components';
 import styled from 'styled-components';
-import { TaskDraggableCard } from '../../components/TaskDraggableCard';
-import { Loading } from 'components/Loading';
-import { TaskClientCard } from 'components/TaskClientCard';
-import DropdownMenu from 'components/DropdownMenu';
-import { orderBy, uniq } from 'lodash';
-import { GrAscend, GrDescend } from 'react-icons/gr';
-import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
-import Icon from '@ant-design/icons';
 import { finalize } from 'rxjs/operators';
-import { EMPTY, of, Subscription } from 'rxjs';
 import { searchMyTaskTracking$ } from 'services/taskTrackingService';
 import { TaskTrackingTimeline } from 'components/TaskTrackingTimeline';
-import ScrollToBottom, { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
+import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
 import { css } from '@emotion/css'
-import { notify } from 'util/notify';
 
 const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -104,12 +92,11 @@ export const ClientTrackingListPage = () => {
 
   return (
     <LayoutStyled>
-      <PageHeader
-        title="Interactions & Messages"
-        backIcon={false}
+      <PageContainer
         loading={loading}
-        extra={[
-        ]}
+        header={{
+          title: 'Interactions & Messages',
+        }}
       >
         <Paragraph>
           This page shows all the activities in time series cross all your cases from all our agents. You can click on individual case to see the case specific activities.
@@ -130,7 +117,7 @@ export const ClientTrackingListPage = () => {
             <TaskTrackingTimeline dataSource={list} mode="multi" />
           </ScrollToBottom >
         </Card>
-      </PageHeader>
+      </PageContainer>
     </LayoutStyled>
   )
 }

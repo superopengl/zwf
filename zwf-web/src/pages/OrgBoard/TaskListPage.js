@@ -1,19 +1,15 @@
-import { Button, Row, Space, Pagination, Radio, Tooltip, Drawer, Alert, Typography, PageHeader, Layout, Card } from 'antd';
+import { Button, Row, Space, Pagination, Radio, Tooltip, Alert, Typography, Card } from 'antd';
 import React from 'react';
-
 import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { Loading } from 'components/Loading';
 import { catchError } from 'rxjs/operators';
 import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
-import Icon, { FilterFilled, FilterOutlined, SyncOutlined } from '@ant-design/icons';
+import Icon, { FilterFilled, SyncOutlined } from '@ant-design/icons';
 import { TaskBoardPanel } from './TaskBoardPanel';
 import { TaskListPanel } from './TaskListPanel';
-import { reactLocalStorage } from 'reactjs-localstorage';
-import { IoRefreshOutline } from 'react-icons/io5';
-import { TaskSearchDrawer } from './TaskSearchDrawer';
 import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
+import { PageContainer } from '@ant-design/pro-components';
 
 const { Link: TextLink } = Typography;
 
@@ -104,30 +100,31 @@ const TaskListPage = () => {
   }
 
   return (
-    <PageHeader
+    <PageContainer
       loading={loading}
-      title={viewMode === 'board' ? 'Task Board' : 'Task List'}
-      extra={[
-        <Tooltip key="refresh" title="Refresh">
-          <Button icon={<SyncOutlined />} onClick={handleReload} />
-        </Tooltip>,
-        <Radio.Group key="view" buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
-          <Tooltip title="Board view">
-            <Radio.Button value="board">
-              <Icon component={HiOutlineViewBoards } />
-            </Radio.Button>
-          </Tooltip>
-          <Tooltip title="List view">
-            <Radio.Button value="list">
-              <Icon component={HiOutlineViewList } />
-            </Radio.Button>
-          </Tooltip>
-        </Radio.Group>,
-
-        <Tooltip key="filter" title="Filter">
-          <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
-        </Tooltip>,
-      ]}
+      header={{
+        title: viewMode === 'board' ? 'Task Board' : 'Task List',
+        extra: [
+          <Tooltip key="refresh" title="Refresh">
+            <Button icon={<SyncOutlined />} onClick={handleReload} />
+          </Tooltip>,
+          <Radio.Group key="view" buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
+            <Tooltip title="Board view">
+              <Radio.Button value="board">
+                <Icon component={HiOutlineViewBoards} />
+              </Radio.Button>
+            </Tooltip>
+            <Tooltip title="List view">
+              <Radio.Button value="list">
+                <Icon component={HiOutlineViewList} />
+              </Radio.Button>
+            </Tooltip>
+          </Radio.Group>,
+          <Tooltip key="filter" title="Filter">
+            <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
+          </Tooltip>,
+        ]
+      }}
     >
       {filterVisible && <Row style={{ marginBottom: 20 }}>
         <Card
@@ -154,7 +151,7 @@ const TaskListPage = () => {
         visible={filterVisible}
         onClose={() => setFilterVisible(false)}
       /> */}
-    </PageHeader>
+    </PageContainer>
   )
 }
 

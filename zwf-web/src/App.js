@@ -1,5 +1,5 @@
 import React from 'react';
-import 'antd/dist/antd.less';
+// import 'antd/dist/antd.less';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
