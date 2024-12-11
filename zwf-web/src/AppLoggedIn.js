@@ -222,6 +222,7 @@ export const AppLoggedIn = React.memo(() => {
   }
 
   const isSystem = role === 'system';
+  const canCreateNew = role === 'admin' || role === 'agent';
 
   return <StyledNewLayout>
     <Layout.Header theme="light" style={{
@@ -237,10 +238,10 @@ export const AppLoggedIn = React.memo(() => {
         <Layout.Content style={{ paddingLeft: 24, paddingRight: 24 }}>
           <Row justify="space-between" gutter={16}>
             <Col>
-              <Space>
+              {canCreateNew && <Space>
                 <SmartSearch />
                 <CreateNewButton />
-              </Space>
+              </Space>}
             </Col>
             <Col>
               <Space>

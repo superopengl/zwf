@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Dropdown, Menu, Button } from 'antd';
+import { Dropdown, Menu, Button, Divider } from 'antd';
 import styled from 'styled-components';
 import { CaretDownOutlined, SettingOutlined } from '@ant-design/icons';
 
@@ -20,28 +20,23 @@ const DropdownMenu = (props) => {
     item?.onClick();
   }
 
-  const menu = <Menu
-    disabled={disabled}
-    mode="vertical"
-    // theme="dark"
-    onClick={handleMenuClick}>
-    {config.map((x, i) => {
-      if (x.menu === '-') {
-        return <Menu.Divider key={i} />
-      }
-      return <Menu.Item key={i} icon={x.icon} disabled={x.disabled} >
-        {x.menu}
-      </Menu.Item>
-    })}
-  </Menu>
+  const items = config.map((x, i) => {
+    if (x.menu === '-') {
+      return <Divider key={i} />
+    }
+    return {
+      key: i,
+      icon: x.icon,
+      label: x.menu
+    }
+  })
 
   return (
     <StyledDropdown
       disabled={disabled}
-      menu={menu}
+      menu={{items, onClick: handleMenuClick}}
       placement="bottomRight"
       trigger="click"
-      onClick={e => e.stopPropagation()}
     >
       <Button icon={<SettingOutlined />} style={{ paddingLeft: 8, paddingRight: 8 }}>
         <CaretDownOutlined />

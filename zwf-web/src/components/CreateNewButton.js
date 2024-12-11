@@ -33,10 +33,17 @@ export const CreateNewButton = React.memo(props => {
     handleCreateTask();
   })
 
-  const menu = <Menu onClick={handleMenuSelected} size={size}>
-    <Menu.Item key="task_template"><TaskTemplateIcon />Create Task Template</Menu.Item>
-    <Menu.Item key="doc_template"><DocTemplateIcon />Create Doc Template</Menu.Item>
-  </Menu>
+  const menu = {
+    items: [{
+      key: 'task_template',
+      label: <><TaskTemplateIcon />Create Task Template</>
+    },{
+      key: 'doc_template',
+      label: <><DocTemplateIcon />Create Doc Template</>
+    }],
+    onClick: handleMenuSelected,
+    size,
+  }
 
   return <>
     <Dropdown.Button
