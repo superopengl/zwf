@@ -16,7 +16,7 @@ export const TaskTrackingDrawer = React.memo((props) => {
   }
 
   return <Drawer
-    visible={visible}
+  open={visible}
     onClose={onClose}
     title="Interactions & Messages"
     destroyOnClose={false}

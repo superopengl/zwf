@@ -98,7 +98,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   </StyledMenu>
 
   return <div style={props.style}>
-    <Dropdown overlay={avatarMenu} trigger={['click']}>
+    <Dropdown menu={avatarMenu} trigger={['click']}>
       <a onClick={e => e.preventDefault()}>
         {/* <Avatar size={40}
       icon={<UserOutlined style={{ fontSize: 20 }} />}
@@ -112,21 +112,21 @@ export const AvatarDropdownMenu = React.memo(props => {
       </a>
     </Dropdown>
     <ChangePasswordModal
-      visible={changePasswordVisible}
+      open={changePasswordVisible}
       onOk={() => setChangePasswordVisible(false)}
       onCancel={() => setChangePasswordVisible(false)}
     />
     <ProfileModal
-      visible={profileVisible}
+      open={profileVisible}
       onOk={() => setProfileVisible(false)}
       onCancel={() => setProfileVisible(false)}
     />
     <AboutModal
-      visible={aboutVisible}
+      open={aboutVisible}
       onClose={() => setAboutVisible(false)}
     />
     <Modal
-      visible={tcVisible}
+      open={tcVisible}
       onOk={() => setTcVisible(false)}
       onCancel={() => setTcVisible(false)}
       title={null}
@@ -138,7 +138,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       <TermAndConditionPage />
     </Modal>
     <Modal
-      visible={ppVisible}
+      open={ppVisible}
       onOk={() => setPpVisible(false)}
       onCancel={() => setPpVisible(false)}
       title={null}
@@ -151,7 +151,7 @@ export const AvatarDropdownMenu = React.memo(props => {
     </Modal>
     <Modal
       title="Organization Profile"
-      visible={orgProfileVisible}
+      open={orgProfileVisible}
       onOk={() => setOrgProfileVisible(false)}
       onCancel={() => setOrgProfileVisible(false)}
       footer={null}

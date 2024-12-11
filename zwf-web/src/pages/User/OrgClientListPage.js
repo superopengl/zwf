@@ -268,7 +268,7 @@ const OrgClientListPage = () => {
         />
       </PageHeader>
       <Drawer
-        visible={profileModalVisible}
+        open={profileModalVisible}
         destroyOnClose={true}
         maskClosable={true}
         title="Client Contact"
@@ -289,7 +289,7 @@ const OrgClientListPage = () => {
           </Descriptions>
         </Space>}
       </Drawer>
-      <InviteClientModal visible={inviteUserModalVisible}
+      <InviteClientModal open={inviteUserModalVisible}
         onOk={() => {
           setInviteUserModalVisible(false);
           loadList$();
@@ -297,7 +297,7 @@ const OrgClientListPage = () => {
         onCancel={() => setInviteUserModalVisible(false)} />
       <CreateTaskModal
         client={currentUser}
-        visible={createTaskModalVisible}
+        open={createTaskModalVisible}
         onCancel={() => setCreateTaskModalVisible(false)}
         onOk={() => setCreateTaskModalVisible(false)}
       />

@@ -80,7 +80,7 @@
     "workbox-webpack-plugin": "^6.2.4"
   },
   "scripts": {
-    "start": "cross-env PORT=6003 REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",
+    "start": "cross-env PORT=6003 GENERATE_SOURCEMAP=true REACT_APP_GIT_HASH=$(git rev-parse --short HEAD) craco start",
     "start:prod": "pnpm build:prod && cross-env PORT=6003 serve -s build",
     "build": "pnpm run clean && cross-env CLIENT_ENV=development GENERATE_SOURCEMAP=true craco build",
     "build:prod": "pnpm run clean && pnpm compile",

@@ -24,7 +24,7 @@ function trimTrailingSlash(str) {
 }
 
 function getFullBaseUrl() {
-  const url = trimTrailingSlash(process.env.REACT_APP_ZWF_API_DOMAIN_NAME + process.env.REACT_APP_ZWF_API_ENDPOINT);
+  const url = trimTrailingSlash(`${process.env.REACT_APP_ZWF_API_DOMAIN_NAME}${process.env.REACT_APP_ZWF_API_ENDPOINT}`);
   if (url.charAt(0) === '/') {
     // Relative address
     return window.location.origin + url;

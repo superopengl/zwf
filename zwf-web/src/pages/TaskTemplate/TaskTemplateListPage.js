@@ -247,7 +247,7 @@ export const TaskTemplateListPage = props => {
         />
       </PageHeader>
       <Modal
-        visible={!!previewTaskTemplate}
+        open={!!previewTaskTemplate}
         onOk={() => setPreviewTaskTemplate(null)}
         onCancel={() => setPreviewTaskTemplate(null)}
         closable

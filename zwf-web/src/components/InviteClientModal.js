@@ -47,7 +47,7 @@ export const InviteClientModal = props => {
   }
 
   return <Modal
-    visible={visible}
+  open={visible}
     onCancel={handleCancel}
     onOk={onOk}
     title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#0FBFC4' }} />Invite Client</Space>}

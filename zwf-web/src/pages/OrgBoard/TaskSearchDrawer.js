@@ -20,7 +20,7 @@ export const TaskSearchDrawer = props => {
 
   return (
     <Drawer
-      visible={visible}
+    open={visible}
       onClose={onClose}
       title="Task Filter"
       placement="right"

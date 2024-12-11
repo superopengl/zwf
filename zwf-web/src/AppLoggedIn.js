@@ -178,10 +178,12 @@ const NavMenu = props => {
   const navigate = useNavigate();
 
   const components = [];
+  let index = 0;
   for (const group of items) {
-    components.push(<div className="menu-group">{group.label}</div>)
+    components.push(<div className="menu-group" key={index++}>{group.label}</div>)
     for (const item of group.children) {
       components.push(<Button
+        key={index++}
         className="menu-button"
         size={size}
         block

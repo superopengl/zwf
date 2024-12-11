@@ -12,7 +12,7 @@ export const OrgRegisterModal = props => {
 
   return <Modal
     title="Org Registration"
-    visible={visible}
+    open={visible}
     onCancel={onCancel}
     destroyOnClose
     maskClosable={false}

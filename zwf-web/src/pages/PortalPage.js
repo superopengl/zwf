@@ -125,7 +125,7 @@ export const PortalPage = () => {
     <Drawer
       title={<Image src="/images/logo-full-primary.svg" preview={false} height={24} />}
       extra={<Button type="text" size="large" icon={<CloseOutlined />} onClick={() => setModalMenuVisible(false)}/>}
-      visible={modalMenuVisible}
+      open={modalMenuVisible}
       onClose={() => setModalMenuVisible(false)}
       closable={false}
       destroyOnClose={true}

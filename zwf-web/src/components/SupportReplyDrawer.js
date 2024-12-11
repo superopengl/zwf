@@ -64,7 +64,7 @@ export const SupportReplyDrawer = React.memo((props) => {
   }
 
   return <Drawer
-    visible={visible}
+    open={visible}
     onClose={onClose}
     title={title}
     destroyOnClose

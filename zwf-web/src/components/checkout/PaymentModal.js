@@ -83,7 +83,7 @@ const PaymentModal = (props) => {
     return (
       <ContainerStyled>
         <Modal
-          visible={modalVisible}
+          open={modalVisible}
           closable={!paymentLoading}
           maskClosable={false}
           title="Buy licenses"
