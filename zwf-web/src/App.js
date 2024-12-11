@@ -166,7 +166,8 @@ export const App = React.memo(() => {
                 <Route path="/scheduler" element={<RecurringListPage />} />
                 <Route path="/client" element={<OrgClientListPage />} />
                 <Route path="/tags" element={<TagsSettingPage />} />
-                <Route path="/account" element={<OrgAccountPage />} />
+                <Route path="/invoices" element={<OrgAccountPage />} />
+                <Route path="/payment_methods" element={<OrgAccountPage />} />
                 <Route path="/team" element={<OrgMemberListPage />} />
                 <Route path="/config" element={<ConfigListPage />} />
                 <Route path="/org" element={<OrgListPage />} />
