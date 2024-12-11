@@ -1,2 +1,3 @@
 export const notes=`
-clean up`
+fix avatar dropdown menu
+dropdown menu fix`
