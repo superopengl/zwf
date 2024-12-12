@@ -186,7 +186,7 @@ importers:
       serve: ^12.0.0
       smoothscroll-polyfill: ^0.4.4
       source-map-explorer: ^2.5.2
-      styled-components: ^5.2.1
+      styled-components: ^5.3.6
       tfn: ^1.0.0
       tinymce: ^6.1.0
       uniqolor: ^1.0.1

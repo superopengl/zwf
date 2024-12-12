@@ -141,13 +141,13 @@ export const App = React.memo(() => {
             },
             Typography: {
               fontWeightStrong: 800,
-            }
+            },
           },
           token: {
             colorPrimary: '#0FBFC4',
             colorInfo: '#0FBFC4',
             colorWarning: '#F7BA1E',
-            colorLink: '#0FBFC4',
+            colorLink: '#0051D9',
             colorSuccess: '#00B42A',
             colorError:'#F53F3F',
             borderRadius: 4,

@@ -59,7 +59,7 @@
     "rooks": "^5.10.2",
     "rxjs": "^7.8.0",
     "smoothscroll-polyfill": "^0.4.4",
-    "styled-components": "^5.2.1",
+    "styled-components": "^5.3.6",
     "tfn": "^1.0.0",
     "tinymce": "^6.1.0",
     "uniqolor": "^1.0.1",
