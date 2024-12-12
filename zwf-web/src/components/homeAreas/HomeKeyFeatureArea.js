@@ -77,7 +77,7 @@ export const HomeKeyFeatureArea = () => {
         <Title style={{ textAlign: 'center' }}>Key Features</Title>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
           <Col {...span}>
-            <Title level={2}><Text style={{ color: '#0FBFC4' }}>Task</Text> Template</Title>
+            <Title level={2}><span style={{ color: '#0FBFC4' }}>Task</span> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span} >
@@ -86,7 +86,7 @@ export const HomeKeyFeatureArea = () => {
         </Row>
         <Row gutter={[24, 24]} justify='center'>
           <Col span={24}>
-            <Title level={2}><Text style={{ color: '#0051D9' }}>Doc</Text> Template</Title>
+            <Title level={2}><span style={{ color: '#0051D9' }}>Doc</span> Template</Title>
             <Paragraph style={{ width: 600 }}>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           {isWide && <Col span={24} style={{ display: 'flex', justifyContent: 'center', maxWidth: 1000 }}>
@@ -98,7 +98,7 @@ export const HomeKeyFeatureArea = () => {
         </Row>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
           <Col {...span}>
-            <Title level={2}>Doc <Text style={{ color: '#F77234' }}>Sign</Text></Title>
+            <Title level={2}>Doc <span style={{ color: '#F77234' }}>Sign</span></Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span}>
@@ -110,7 +110,7 @@ export const HomeKeyFeatureArea = () => {
             <Image src="/images/feature-timeline.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>
           <Col {...span}>
-            <Title level={2}><Text style={{ color: '#0FBFC4' }}>Timeline</Text></Title>
+            <Title level={2}><span style={{ color: '#0FBFC4' }}>Timeline</span></Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
         </Row>

@@ -89,7 +89,7 @@ export const HomeCarouselArea = () => {
           <Col style={{padding: '0 32px'}}>
             <Space direction="vertical" style={{ maxWidth: 500, margin: '40px auto' }}>
               <Title style={{ fontSize: 'clamp(28px, 3vw, 36px)', fontWeight: 800 }}>
-                <Text style={{ color: '#0FBFC4' }}>All in one system</Text> for file, doc, job, task, e-sign, CMS, and workflow management.
+                <span style={{ color: '#0FBFC4' }}>All in one system</span> for file, doc, job, task, e-sign, CMS, and workflow management.
               </Title>
               <Paragraph>
                 All in one system for file, doc, job, task and workflow management. Come on, join us today!!
