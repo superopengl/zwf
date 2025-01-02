@@ -109,18 +109,6 @@ const TaskListPage = () => {
           <Tooltip key="refresh" title="Refresh">
             <Button icon={<SyncOutlined />} onClick={handleReload} />
           </Tooltip>,
-          <Radio.Group key="view" buttonStyle="solid" onChange={onChangeViewMode} value={viewMode}>
-            <Tooltip title="Board view">
-              <Radio.Button value="board">
-                <Icon component={HiOutlineViewBoards} />
-              </Radio.Button>
-            </Tooltip>
-            <Tooltip title="List view">
-              <Radio.Button value="list">
-                <Icon component={HiOutlineViewList} />
-              </Radio.Button>
-            </Tooltip>
-          </Radio.Group>,
           <Segmented key="views"
             value={viewMode}
             onChange={setViewMode}
