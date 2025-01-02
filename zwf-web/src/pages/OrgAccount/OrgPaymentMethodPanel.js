@@ -6,6 +6,7 @@ import { PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
+import { PageContainer } from '@ant-design/pro-layout';
 
 const { Text } = Typography;
 
@@ -84,41 +85,44 @@ const OrgPaymentMethodPanel = () => {
   }
 
   return (
-    <Loading loading={loading} style={{ width: '100%' }}>
-      <Card
+    <PageContainer
+      loading={loading}
+      header={{
+        title: 'Payment Methods',
+      }}
+      bordered={false}
+      bodyStyle={{ paddingTop: 0, paddingBottom: 0 }}
+      extra={[
+        <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
+      ]}
+      footer={[
+        <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
+      ]}
+    >
+      <List
+        dataSource={list}
+        loading={loading}
         bordered={false}
-        title="Payment Methods"
-        style={{ width: '100%' }}
-        bodyStyle={{paddingTop: 0, paddingBottom: 0}}
-        extra={
-          <Button type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
-        }
-      >
-        <List
-          dataSource={list}
-          loading={loading}
-          bordered={false}
-          locale={{
-            emptyText: <>
-              No payment method is set.<br />
-              <Button type="link" onClick={handleAddNew}>Click to add new payment method</Button>
-            </>
-          }}
-          renderItem={item => <List.Item
-            actions={item.primary || list.length <= 1 ? null : [
-              <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
-              <Button key="delete" type="link" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
-            ]}
-          >
-            <Space size="large">
-              <Text code>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
-              <Text>{item.cardBrand}</Text>
-              <Text>{item.cardExpiry}</Text>
-              {item.primary && <Tag key="tag" color="#0FBFC4">primary</Tag>}
-            </Space>
-          </List.Item>}
-        />
-      </Card>
+        locale={{
+          emptyText: <>
+            No payment method is set.<br />
+            <Button type="link" onClick={handleAddNew}>Click to add new payment method</Button>
+          </>
+        }}
+        renderItem={item => <List.Item
+          actions={item.primary || list.length <= 1 ? null : [
+            <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
+            <Button key="delete" type="link" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
+          ]}
+        >
+          <Space size="large">
+            <Text code>XXXX-XXXX-XXXX-{item.cardLast4}</Text>
+            <Text>{item.cardBrand}</Text>
+            <Text>{item.cardExpiry}</Text>
+            {item.primary && <Tag key="tag" color="#0FBFC4">primary</Tag>}
+          </Space>
+        </List.Item>}
+      />
       <Modal
         open={modalVisible}
         closable={!paymentLoading}
@@ -139,7 +143,7 @@ const OrgPaymentMethodPanel = () => {
 
         </Loading>
       </Modal>
-    </Loading>
+    </PageContainer>
   );
 };
 
