@@ -101,7 +101,7 @@ const OrgPaymentMethodPage = () => {
         rowKey="id"
         ghost={true}
         // toolBarRender={() => <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>}
-        grid={{ gutter: 16, column: 2 }}
+        grid={{ gutter: 16, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 3 }}
         metas={{
           title: {
             render: (value, item) => <Text strong={item.primary}>
