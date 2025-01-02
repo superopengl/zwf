@@ -108,7 +108,6 @@ export const DocTemplateListPage = props => {
   }
 
   return (<>
-    <LayoutStyled>
       <PageContainer
       header={{
         title: 'Doc Templates',
@@ -186,7 +185,6 @@ export const DocTemplateListPage = props => {
           </List.Item>}
         />
       </PageContainer>
-    </LayoutStyled>
   </>
   );
 };

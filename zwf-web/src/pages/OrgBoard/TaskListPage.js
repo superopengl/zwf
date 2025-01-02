@@ -102,6 +102,7 @@ const TaskListPage = () => {
   return (
     <PageContainer
       loading={loading}
+      fixedHeader
       header={{
         title: viewMode === 'board' ? 'Task Board' : 'Task List',
         extra: [
@@ -145,12 +146,6 @@ const TaskListPage = () => {
             total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
       </LayoutStyled>
-      {/* <TaskSearchDrawer
-        queryInfo={queryInfo}
-        onChange={handleFilterSearch}
-        visible={filterVisible}
-        onClose={() => setFilterVisible(false)}
-      /> */}
     </PageContainer>
   )
 }
