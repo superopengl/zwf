@@ -6,6 +6,7 @@ import { isValidABN } from "abnacn-validator";
 import { createMyOrg$, getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgService';
 import PropTypes from 'prop-types';
 import { CountrySelector } from 'components/CountrySelector';
+import { BetaSchemaForm, ProFormSelect, FooterToolbar, ProFormInstance } from '@ant-design/pro-components';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -24,13 +25,6 @@ const Container = styled.div`
   }
 `;
 
-const InnerContainer = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  text-align: center;
-  // background-color: #f3f3f3;
-`;
-
 const DEFAULT_PROFILE = {
   country: 'AU',
 }
@@ -40,6 +34,9 @@ const OrgProfileForm = (props) => {
   const [basicForm] = Form.useForm();
   const [org, setOrg] = React.useState(DEFAULT_PROFILE);
   const [requireAbn, setRequireAbn] = React.useState(true);
+  const [loading, setLoading] = React.useState(true);
+  const form = React.useRef();
+
 
   React.useEffect(() => {
     getMyOrgProfile$()
@@ -48,6 +45,7 @@ const OrgProfileForm = (props) => {
           ...DEFAULT_PROFILE,
           ...org
         });
+        setLoading(false);
       });
   }, []);
 
@@ -67,47 +65,106 @@ const OrgProfileForm = (props) => {
     }
   }
 
+  const handleSubmittion = () => {
+    form.current.submit();
+  }
+
+  const columns = [
+    {
+      title: 'Org name',
+      dataIndex: 'name',
+      formItemProps: {
+        help: <>The name of your organisation in ZeeWorkflow. Not necessarily the same as the legal name. The name will show up on some pages.</>,
+        rules: [{ required: true, message: ' ', whitespace: true, max: 50 }]
+      },
+      fieldProps: {
+        allowClear: true,
+        placeholder: 'Your org name',
+        autoComplete: 'organization'
+      }
+    },
+    {
+      title: 'Org legal business name',
+      dataIndex: 'businessName',
+      formItemProps: {
+        help: <>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>,
+        rules: [{ required: true, message: ' ', whitespace: true, max: 100 }]
+      },
+      fieldProps: {
+        allowClear: true,
+        placeholder: 'Your org legal business name',
+        autoComplete: 'organization'
+      }
+    },
+    {
+      title: 'Org registration country',
+      dataIndex: 'country',
+      formItemProps: {
+        rules: [{ required: true, message: ' ', whitespace: true, max: 50 }]
+      },
+      fieldProps: {
+        defaultValue: 'AU'
+      },
+      renderFormItem: () => <CountrySelector defaultValue="AU" />
+    },
+    {
+      title: 'Address',
+      dataIndex: 'address',
+      formItemProps: {
+        rules: [{ required: false, message: ' ', whitespace: true, max: 100 }]
+      },
+      fieldProps: {
+        allowClear: true,
+        placeholder: 'Unit 123, God Avenue, NSW 1234',
+        autoComplete: 'street-address'
+      }
+    },
+    {
+      title: 'Phone number',
+      dataIndex: 'tel',
+      formItemProps: {
+        rules: [{ required: false, message: ' ', whitespace: true, max: 100 }]
+      },
+      fieldProps: {
+        allowClear: true,
+        autoComplete: 'tel'
+      }
+    },
+  ].map((x, i) => ({
+    ...x,
+    // key: i,
+    initialValue: org[x.dataIndex],
+  }));
+
   return <Container>
-    <Form layout="vertical" form={basicForm}
+    {!loading && <BetaSchemaForm
+      // trigger={<>Org Profile</>}
+      // layoutType={props.mode === 'create' ? 'Form' : "ModalForm"}
+      // title="Org Profile"
+      // width={400}
+      formRef={form}
+      submitter={{
+        searchConfig: {
+          resetText: 'Cancel',
+          submitText: 'Save',
+        },
+        resetButtonProps: {
+          type: 'text',
+          style: {
+            display: 'none',
+          }
+        },
+        submitButtonProps: {
+          block: true
+        },
+        render: () => null
+      }}
+      shouldUpdate={true}
+      columns={columns}
       onValuesChange={handleValuesChange}
       onFinish={handleSubmitBasic}
-      style={{ textAlign: 'left' }}
-      initialValues={org}>
-      <Form.Item label="Organization name"
-        name="name"
-        help={<>The name of your organisation in ZeeWorkflow. Not necessarily the same as the legal name. The name will show up on some pages.</>}
-        rules={[{ required: true, message: ' ', whitespace: true, max: 50 }]}>
-        <Input allowClear={true} placeholder="ZeeWorkflow" autoComplete="organization" />
-      </Form.Item>
-
-      <Form.Item label="Organization legal name"
-        name="businessName"
-        help={<>The leagal name of your organisation. This name will be used in invoices and as the recipient name of certian notification emails.</>}
-        rules={[{ required: true, message: ' ', whitespace: true, max: 100 }]}>
-        <Input placeholder="ZeeWorkflow Inc." allowClear={true} autoComplete="organization" />
-      </Form.Item>
-      <Form.Item label="Organization registration country" name="country" rules={[{ required: true, whitespace: true, max: 50, message: ' ' }]}>
-        <CountrySelector defaultValue="AU" />
-      </Form.Item>
-      {requireAbn && <Form.Item label="ABN"
-        name="abn"
-        rules={[{ required: true, validator: (rule, value) => value && isValidABN(value) ? Promise.resolve() : Promise.reject('Invalid ABN') }]}>
-        <Input placeholder="" allowClear={true} maxLength={20} />
-      </Form.Item>}
-      <Form.Item label="Address"
-        name="address"
-        rules={[{ required: false, message: ' ', whitespace: true, max: 100 }]}>
-        <Input placeholder="Unit 123, God Avenue, NSW 1234" allowClear={true} autoComplete="street-address" />
-      </Form.Item>
-      <Form.Item label="Phone"
-        name="tel"
-        rules={[{ required: false, message: ' ', whitespace: true, max: 30 }]}>
-        <Input placeholder="" allowClear={true} />
-      </Form.Item>
-      <Form.Item>
-        <Button type="primary" block htmlType="submit">Save</Button>
-      </Form.Item>
-    </Form>
+    />}
+    <Button block type="primary" disabled={loading} onClick={handleSubmittion}>Save</Button>
   </Container>
 
 }
