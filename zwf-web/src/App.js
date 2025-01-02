@@ -13,7 +13,6 @@ import intlMessagesEN from "./translations/en-US.json";
 import intlMessagesZH from "./translations/zh-CN.json";
 import { getDefaultLocale } from './util/getDefaultLocale';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { AppLoggedIn } from 'AppLoggedIn';
 import { AppLoggedInPage } from 'AppLoggedInPage';
 import { PortalPage } from 'pages/PortalPage';
 import { Loading } from 'components/Loading';
