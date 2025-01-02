@@ -127,14 +127,14 @@ export const App = React.memo(() => {
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
   if (loading) {
-    return <Row justify='center' align='center' style={{height: 400, alignItems: 'center'}}>
+    return <Row justify='center' align='center' style={{ height: 400, alignItems: 'center' }}>
       <Loading loading={true} />
     </Row>
   }
 
   return (
     <GlobalContext.Provider value={contextValue}>
-      <ConfigProvider 
+      <ConfigProvider
         theme={{
           components: {
             Divider: {
@@ -149,7 +149,7 @@ export const App = React.memo(() => {
             colorWarning: '#F7BA1E',
             colorLink: '#0051D9',
             colorSuccess: '#00B42A',
-            colorError:'#F53F3F',
+            colorError: '#F53F3F',
             borderRadius: 4,
             colorTextBase: '#4B5B76',
             colorText: '#4B5B76',
@@ -168,8 +168,8 @@ export const App = React.memo(() => {
             <Routes>
               <Route path={'/'} element={<PortalPage />} >
                 <Route index element={<HomePage />} />
-                <Route path="resource" element={<ResourceListPage />} />
-                <Route path="resource/:key" element={<ResourcePage />} />
+                <Route path="/resource" element={<ResourceListPage />} />
+                <Route path="/resource/:key" element={<ResourcePage />} />
               </Route>
               <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
               <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
