@@ -26,6 +26,11 @@ const StyledList = styled(List)`
   .ant-list-item {
     padding: 0;
   }
+
+  .ant-list-footer {
+    display: flex;
+    justify-content: flex-end;
+  }
 `
 
 export const OrgPaymentMethodPanel = () => {
@@ -104,6 +109,7 @@ export const OrgPaymentMethodPanel = () => {
     <Container>
       <StyledList
         dataSource={list}
+        loading={loading}
         grid={{ column: 1, gutter: 24 }}
         footer={<Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>}
         renderItem={item => <List.Item>
@@ -111,10 +117,10 @@ export const OrgPaymentMethodPanel = () => {
             title={<Text strong={item.primary} style={{fontSize: 18}}>
               **** **** **** {item.cardLast4}
             </Text>}
-            subTitle={item.primary ? <Tag key="tag" color="cyan">Primary</Tag> : null}
+            subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
             extra={item.primary ? [
             ] : [
-              <Button key="primary" type="link" size="small" onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
+              <Button key="primary" type="link" size="small" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,
               <Button key="delete" type="text" size="small" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
             ]}
           >

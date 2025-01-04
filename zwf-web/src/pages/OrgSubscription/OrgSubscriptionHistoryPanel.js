@@ -1,37 +1,32 @@
-import { Tag, Space, Table, Button, Typography, Row, Col } from 'antd';
+import { Tag, Space, Table, Button, Row, Col } from 'antd';
 import React from 'react';
 
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
 import { downloadReceipt } from 'services/subscriptionService';
-import { ArrowRightOutlined } from '@ant-design/icons';
 import MoneyAmount from 'components/MoneyAmount';
-import { orderBy } from 'lodash';
-import * as moment from 'moment';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import { finalize } from 'rxjs/operators';
+import { listMySubscriptions$ } from 'services/subscriptionService';
 
-const { Text } = Typography;
-
-const StyledReceiptTable = styled(Table)`
-.ant-table {
-  margin: -8px !important;
-}
-`;
-
-export const OrgSubscriptionHistoryPanel = (props) => {
-  const { data } = props;
-  const [list, setList] = React.useState(data || []);
+export const OrgSubscriptionHistoryPanel = () => {
+  const [list, setList] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
 
   React.useEffect(() => {
-    setList(data);
-  }, [data]);
+    const sub$ = listMySubscriptions$().pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(data => setList(data));
+
+    return () => {
+      sub$.unsubscribe();
+    }
+  }, []);
 
   const handleReceipt = async (paymentId) => {
     await downloadReceipt(paymentId);
   }
 
-  const columnDef = [
+  const columns = [
     {
       title: 'Type',
       align: 'left',
@@ -94,11 +89,12 @@ export const OrgSubscriptionHistoryPanel = (props) => {
   return (
     <Table
       // showHeader={false}
+      loading={loading}
       showHeader={true}
       style={{ width: '100%' }}
       scroll={{ x: 'max-content' }}
       dataSource={list}
-      columns={columnDef}
+      columns={columns}
       size="small"
       pagination={false}
       rowKey="id"
@@ -108,10 +104,8 @@ export const OrgSubscriptionHistoryPanel = (props) => {
 };
 
 OrgSubscriptionHistoryPanel.propTypes = {
-  data: PropTypes.array.isRequired
 };
 
 OrgSubscriptionHistoryPanel.defaultProps = {
-  data: []
 };
 

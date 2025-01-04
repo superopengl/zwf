@@ -6,6 +6,14 @@ import { CardNumberElement, CardExpiryElement, CardCvcElement, useStripe, useEle
 import { CreditCardOutlined } from '@ant-design/icons';
 import { stripePromise } from 'services/stripeService';
 import { getPaymentMethodSecret } from 'services/orgPaymentMethodService';
+import styled from 'styled-components';
+
+const StripeElementWrapper = styled.div`
+border: 1px solid #d9d9d9;
+border-radius: 4px;
+padding-top: 8px;
+padding-bottom: 8px;
+`;
 
 const StripeCardPaymentForm = (props) => {
 
@@ -77,12 +85,14 @@ const StripeCardPaymentForm = (props) => {
   const options = {
     style: {
       base: {
-        fontSize: '14px',
+        fontSize: '16px',
         // color: '#3e9448',
         textAlign: 'center',
         '::placeholder': {
           color: 'rgba(0,0,0,0.2)',
         },
+        border: '1px solid #0FBFC4',
+
       },
       invalid: {
         color: '#d7183f',
@@ -95,39 +105,47 @@ const StripeCardPaymentForm = (props) => {
       {/* <label>Card Number <CardNumberElement /></label> */}
       <Row gutter={[10, 10]} style={{ marginBottom: 24 }}>
         <Col {...{ xs: 24, sm: 16, md: 14, lg: 14, xl: 14, xxl: 14 }}>
-          <CardNumberElement
-            onChange={handleCardNumberChange}
-            options={{
-              ...options,
-              placeholder: '1234 1234 1234 1234'
-            }}
-          />
+          <StripeElementWrapper>
+            <CardNumberElement
+              onChange={handleCardNumberChange}
+              options={{
+                ...options,
+                placeholder: '1234 1234 1234 1234',
+              }}
+            />
+          </StripeElementWrapper>
         </Col>
         <Col {...{ xs: 12, sm: 4, md: 6, lg: 6, xl: 6, xxl: 6 }}>
-          <CardExpiryElement
-            onChange={handleCardExpiryChange}
-            options={{
-              ...options,
-              placeholder: 'MM / YY'
-            }}
-          />
+          <StripeElementWrapper>
+            <CardExpiryElement
+              onChange={handleCardExpiryChange}
+              options={{
+                ...options,
+                placeholder: 'MM / YY'
+              }}
+            />
+          </StripeElementWrapper>
         </Col>
         <Col {...{ xs: 12, sm: 4, md: 4, lg: 4, xl: 4, xxl: 4 }}>
-          <CardCvcElement
-            onChange={handleCardCvcChange}
-            options={{
-              ...options,
-              placeholder: 'CVC'
-            }}
-          />
+          <StripeElementWrapper>
+            <CardCvcElement
+              onChange={handleCardCvcChange}
+              options={{
+                ...options,
+                placeholder: 'CVC'
+              }}
+            />
+          </StripeElementWrapper>
+        </Col>
+        <Col span={24}>
+          <Button type="primary" size="large" htmlType="submit"
+            icon={<CreditCardOutlined />}
+            block
+            disabled={loading || !isInfoComplete} loading={loading}>
+            {buttonText}
+          </Button>
         </Col>
       </Row>
-      <Button type="primary" size="large" htmlType="submit"
-        icon={<CreditCardOutlined />}
-        block
-        disabled={loading || !isInfoComplete} loading={loading}>
-        {buttonText}
-        </Button>
     </form>
   )
 }
