@@ -35,6 +35,7 @@ const OrgMemberListPage = () => {
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const context = React.useContext(GlobalContext);
+  const [modal, contextHolder] = Modal.useModal();
 
   const columnDef = [
     {
@@ -116,7 +117,7 @@ const OrgMemberListPage = () => {
 
   const handleDelete = async (item) => {
     const { id } = item;
-    Modal.confirm({
+    modal.confirm({
       title: <>Delete user</>,
       content: <UserNameCard userId={item.id} />,
       onOk: async () => {
@@ -138,7 +139,7 @@ const OrgMemberListPage = () => {
   const handleImpersonante = (item) => {
     // setSetPasswordVisible(true);
     // setCurrentUser(item);
-    Modal.confirm({
+    modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
       content: <UserNameCard userId={item.id} />,
@@ -159,7 +160,7 @@ const OrgMemberListPage = () => {
 
   const handleResendInvite = (item) => {
     reinviteMember$(item.email, true).subscribe(() => {
-      Modal.success({
+      modal.success({
         title: 'Resent invite',
         content: <>Has resent an invite email to email <Text code>{item.email}</Text></>
       });
@@ -327,6 +328,7 @@ const OrgMemberListPage = () => {
           onLoading={loading => setPaymentLoading(loading)}
         />
       </Modal>
+      {contextHolder}
     </ContainerStyled>
 
   );
