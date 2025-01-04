@@ -39,9 +39,7 @@ const ConfigListPage = loadable(() => import('pages/Config/ConfigListPage'));
 const OrgMemberListPage = loadable(() => import('pages/User/OrgMemberListPage'));
 const OrgClientListPage = loadable(() => import('pages/User/OrgClientListPage'));
 const SupportListPage = loadable(() => import('pages/Support/SupportListPage'));
-const OrgInvoicesPage = loadable(() => import('pages/OrgAccount/OrgInvoicesPage'));
-const OrgPaymentMethodPage = loadable(() => import('pages/OrgAccount/OrgPaymentMethodPage'));
-const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
+const OrgSubscriptionPage = loadable(() => import('pages/OrgSubscription/OrgSubscriptionPage'));
 const RevenuePage = loadable(() => import('pages/AdminDashboard/RevenuePage'));
 const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplateListPage'));
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
@@ -195,8 +193,7 @@ export const App = React.memo(() => {
                 <Route path="/scheduler" element={<RecurringListPage />} />
                 <Route path="/client" element={<OrgClientListPage />} />
                 <Route path="/tags" element={<TagsSettingPage />} />
-                <Route path="/invoices" element={<OrgInvoicesPage />} />
-                <Route path="/payment_methods" element={<OrgPaymentMethodPage />} />
+                <Route path="/subscription" element={<OrgSubscriptionPage />} />
                 <Route path="/team" element={<OrgMemberListPage />} />
                 <Route path="/config" element={<ConfigListPage />} />
                 <Route path="/org" element={<OrgListPage />} />

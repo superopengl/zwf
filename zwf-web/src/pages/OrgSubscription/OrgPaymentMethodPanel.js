@@ -1,4 +1,4 @@
-import { Card, Button, Modal, Space, Typography, Tag, List } from 'antd';
+import { Card, Button, Modal, Space, Typography, Tag, List, Descriptions, Row } from 'antd';
 import React from 'react';
 
 import { Loading } from 'components/Loading';
@@ -8,10 +8,27 @@ import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget
 import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
 // import { PageContainer } from '@ant-design/pro-layout';
 import { PageContainer, ProCard, ProList } from '@ant-design/pro-components';
+import styled from 'styled-components';
 
 const { Text } = Typography;
 
-const OrgPaymentMethodPage = () => {
+const Container = styled.div`
+width: 100%;
+display: flex;
+justify-content: center;
+`
+
+const StyledList = styled(List)`
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+
+  .ant-list-item {
+    padding: 0;
+  }
+`
+
+export const OrgPaymentMethodPanel = () => {
 
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
@@ -84,50 +101,29 @@ const OrgPaymentMethodPage = () => {
   }
 
   return (
-    <PageContainer
-      loading={loading}
-      fixedHeader
-      header={{
-        title: 'Payment Methods',
-        extra: [
-          <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>
-        ]
-      }}
-    >
-      <ProList
-        loading={loading}
+    <Container>
+      <StyledList
         dataSource={list}
-        split={true}
-        rowKey="id"
-        ghost={true}
-        // toolBarRender={() => <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>}
-        grid={{ gutter: 16, xs: 1, sm: 1, md: 1, lg: 2, xl: 2, xxl: 3 }}
-        metas={{
-          title: {
-            render: (value, item) => <Text strong={item.primary}>
-              XXXX-XXXX-XXXX-{item.cardLast4}
-            </Text>
-          },
-          content: {
-            render: (value, item) => <Space size="large">
-              <Text>{item.cardBrand}</Text>
-              <Text>{item.cardExpiry}</Text>
-            </Space>
-          },
-          // subTitle: {
-          //   render: (value, item) => item.primary ? <Tag color="#0FBFC4">being used</Tag> : null
-          // },
-          actions: {
-            render: (value, item) => item.primary ? [
-              <Tag key="tag" color="#0FBFC4">being used</Tag>
+        grid={{ column: 1, gutter: 24 }}
+        footer={<Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>}
+        renderItem={item => <List.Item>
+          <ProCard
+            title={<Text strong={item.primary} style={{fontSize: 18}}>
+              **** **** **** {item.cardLast4}
+            </Text>}
+            subTitle={item.primary ? <Tag key="tag" color="cyan">Primary</Tag> : null}
+            extra={item.primary ? [
             ] : [
-              <Button key="primary" type="text" onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
-              <Button key="delete" type="text" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
-            ]
-          }
-        }}
+              <Button key="primary" type="link" size="small" onClick={() => handleSetPrimary(item)} size="small">Set Primary</Button>,
+              <Button key="delete" type="text" size="small" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
+            ]}
+          >
+            <Descriptions colon={false} labelStyle={{ opacity: 0.6 }}>
+              <Descriptions.Item label="Expiry">{item.cardExpiry}</Descriptions.Item>
+            </Descriptions>
+          </ProCard>
+        </List.Item>}
       />
-
       <Modal
         open={modalVisible}
         closable={!paymentLoading}
@@ -148,12 +144,11 @@ const OrgPaymentMethodPage = () => {
 
         </Loading>
       </Modal>
-    </PageContainer>
+    </Container>
   );
 };
 
-OrgPaymentMethodPage.propTypes = {};
+OrgPaymentMethodPanel.propTypes = {};
 
-OrgPaymentMethodPage.defaultProps = {};
+OrgPaymentMethodPanel.defaultProps = {};
 
-export default OrgPaymentMethodPage;
