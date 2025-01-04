@@ -47,6 +47,7 @@ const OrgSignUpForm = (props) => {
 
   const intl = useIntl();
   const [loading, setLoading] = React.useState(false);
+  const [modal, contextHolder] = Modal.useModal();
 
   const handleSignIn = (values) => {
     if (loading) {
@@ -60,7 +61,7 @@ const OrgSignUpForm = (props) => {
     signUpOrg$(email).subscribe(
       () => {
         onOk();
-        Modal.success({
+        modal.success({
           title: '🎉 Successfully signed up!',
           content: <>
             <Paragraph>
@@ -149,6 +150,7 @@ const OrgSignUpForm = (props) => {
             )}
         />
       </Loading>
+      {contextHolder}
     </ContainerStyled>
   );
 }

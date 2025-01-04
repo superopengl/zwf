@@ -45,6 +45,7 @@ export const ResourceEditListPage = props => {
   const [searchText, setSearchText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
   const navigate = useNavigate();
+  const [modal, contextHolder] = Modal.useModal();
 
   React.useEffect(() => {
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
@@ -65,7 +66,7 @@ export const ResourceEditListPage = props => {
 
   const handleDelete = async (item) => {
     const { id, title } = item;
-    Modal.confirm({
+    modal.confirm({
       title: <>Delete resource page <strong>{title}</strong>?</>,
       onOk: () => {
         deleteResourcePage$(id)
@@ -184,6 +185,7 @@ export const ResourceEditListPage = props => {
           </List.Item>}
         />
       </PageContainer>
+      {contextHolder}
     </LayoutStyled>
   </>
   );
