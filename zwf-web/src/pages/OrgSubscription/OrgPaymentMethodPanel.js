@@ -9,8 +9,9 @@ import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
 // import { PageContainer } from '@ant-design/pro-layout';
 import { PageContainer, ProCard, ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
+import { useNavigate, Link } from 'react-router-dom';
 
-const { Text } = Typography;
+const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 width: 100%;
@@ -118,10 +119,18 @@ export const OrgPaymentMethodPanel = () => {
         dataSource={list}
         loading={loading}
         grid={{ column: 1, gutter: 24 }}
-        footer={<Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add New Method</Button>}
+        footer={list.length ? <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add Payment Method</Button> : null}
+        locale={{
+          emptyText: <>
+            <Paragraph type="secondary">
+              There is no payment method.
+            </Paragraph>
+            <Button type="link" ghost onClick={() => handleAddNew()}>Add payment method</Button>
+          </>
+        }}
         renderItem={item => <List.Item>
           <ProCard
-            title={<Text strong={item.primary} style={{fontSize: 18}}>
+            title={<Text strong={item.primary} style={{ fontSize: 18 }}>
               **** **** **** {item.cardLast4}
             </Text>}
             subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
@@ -147,7 +156,7 @@ export const OrgPaymentMethodPanel = () => {
         width={460}
         onOk={hideModal}
         onCancel={hideModal}
-        bodyStyle={{paddingTop: 24}}
+        bodyStyle={{ paddingTop: 24 }}
       >
         <Loading loading={paymentLoading}>
           <StripeCardPaymentWidget
