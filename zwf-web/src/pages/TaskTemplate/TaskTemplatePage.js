@@ -1,5 +1,5 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Card, Tag } from 'antd';
+import { Row, Col, Modal, Button, Card, Tag, Segmented } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
@@ -14,6 +14,11 @@ import { finalize } from 'rxjs/operators';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
 import { of } from 'rxjs';
+import { Divider } from 'antd';
+import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
+import { FieldControlItem } from './FieldControlItem';
+import { DndProvider } from 'react-dnd'
+import { HTML5Backend } from 'react-dnd-html5-backend'
 
 const LayoutStyled = styled.div`
   margin: 0 auto;
@@ -79,8 +84,8 @@ export const TaskTemplatePage = props => {
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(!isNew);
-  const [preview, setPreview] = React.useState(false);
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
+  const [previewMode, setPreviewMode] = React.useState('agent');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
   const formRef = React.useRef();
   const navigate = useNavigate();
@@ -154,7 +159,6 @@ export const TaskTemplatePage = props => {
         </Row>,
         onBack: goBack,
         extra: [
-          <Button key="modal" type="primary" ghost icon={<Icon component={MdOpenInNew} />} onClick={() => setPreview(true)}>Preview</Button>,
           <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
         ]
       }}
@@ -165,41 +169,42 @@ export const TaskTemplatePage = props => {
         onChange={setTaskTemplate}
         debug={debugMode}
       />}
+      <Divider />
+      <Row>
 
-      <StyledModal
-        open={preview}
-        onOk={() => setPreview(false)}
-        onCancel={() => setPreview(false)}
-        closable={false}
-        destroyOnClose
-        maskClosable
-        footer={null}
-        width="100vw"
-      >
-        <Row gutter={40}>
-          <Col span={12}>
-            <Row justify="center" style={{ marginBottom: 12 }}><Tag color="processing">Agent view</Tag></Row>
-            <Card>
-              <TaskTemplatePreviewPanel
-                value={taskTemplate}
-                debug={debugMode}
-                type="agent"
-              />
-            </Card>
-          </Col>
-          <Col span={12}>
-            <Row justify="center" style={{ marginBottom: 12 }}><Tag color="warning">Client view</Tag></Row>
+      </Row>
+      <DndProvider backend={HTML5Backend}>
+      <Row gutter={[20, 20]} wrap={false}>
+        <Col flex="240px">
+          {TaskTemplateWidgetDef.map((d, i) => <FieldControlItem
+            key={i}
+            icon={d.icon}
+            label={d.label}
+            type={d.type}/>)}
+        </Col>
+        <Col flex="auto">
 
-            <Card>
-              <TaskTemplatePreviewPanel
-                value={taskTemplate}
-                debug={debugMode}
-                type="client"
-              />
-            </Card>
-          </Col>
-        </Row>
-      </StyledModal>
+        </Col>
+        <Col flex="auto">
+          <Card
+            title={<>Preview - {previewMode}</>}
+            type='inner'
+            extra={<Segmented options={[
+              'agent',
+              'client'
+            ]}
+              onChange={setPreviewMode} />}
+          >
+
+            <TaskTemplatePreviewPanel
+              value={taskTemplate}
+              debug={debugMode}
+              type={previewMode}
+            />
+          </Card>
+        </Col>
+      </Row>
+      </DndProvider>
     </PageContainer>
 
   );

@@ -6,8 +6,8 @@ import {
   FaDotCircle,
   FaCalendarAlt,
 } from 'react-icons/fa';
-import {TiSortNumerically} from 'react-icons/ti'
-import Icon, { FilePdfFilled, FilePdfOutlined, UploadOutlined } from '@ant-design/icons'
+import { AiOutlineFieldNumber } from 'react-icons/ai'
+import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
 import { Upload } from 'antd';
@@ -25,17 +25,6 @@ export const TaskTemplateWidgetDef = Object.freeze([
     },
   },
   {
-    type: 'number',
-    label: 'Number',
-    icon: <Icon component={() => <small><strong>123</strong></small>} />,
-    widget: 'number',
-    widgetPorps: {
-      style: {
-        width: '100%'
-      }
-    },
-  },
-  {
     type: 'textarea',
     label: 'Paragraph (multiple lines)',
     icon: <FaAlignLeft />,
@@ -47,24 +36,35 @@ export const TaskTemplateWidgetDef = Object.freeze([
     },
   },
   {
-    type: 'radio',
-    label: 'Multiple choice',
-    icon: <FaDotCircle />,
-    widget: 'radio-group',
-    widgetPorps: null,
+    type: 'number',
+    label: 'Number',
+    icon: <FieldNumberOutlined />,
+    widget: 'number',
+    widgetPorps: {
+      style: {
+        width: '100%'
+      }
+    },
   },
   {
     type: 'checkbox',
-    label: 'Checkboxes',
+    label: 'Checkbox',
     icon: <FaCheckSquare />,
     widget: 'checkbox-group',
     widgetPorps: null,
   },
   {
     type: 'select',
-    label: 'Dropdown',
+    label: 'Single choice',
     icon: <FaChevronCircleDown />,
     widget: 'select',
+    widgetPorps: null,
+  },
+  {
+    type: 'radio',
+    label: 'Multiple choice',
+    icon: <FaDotCircle />,
+    widget: 'radio-group',
     widgetPorps: null,
   },
   {
@@ -108,7 +108,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
   },
   {
     type: 'upload',
-    label: 'Attachments',
+    label: 'Upload files',
     icon: <UploadOutlined />,
     widget: TaskFileUploader,
     widgetPorps: {
@@ -116,7 +116,7 @@ export const TaskTemplateWidgetDef = Object.freeze([
   },
   {
     type: 'autodoc',
-    label: 'Auto generated PDF',
+    label: 'Doc template (PDF)',
     icon: <FilePdfFilled />,
     widget: AutoDocInput,
     widgetPorps: {
