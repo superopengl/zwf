@@ -45,6 +45,7 @@ const OrgListPage = () => {
   const [currentOrg, setCurrentOrg] = React.useState();
   const [list, setList] = React.useState([]);
   const [tags, setTags] = React.useState([]);
+  const [modal, contextHolder] = Modal.useModal();
   const context = React.useContext(GlobalContext);
   const [queryInfo, setQueryInfo] = React.useState(reactLocalStorage.getObject(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO, true))
 
@@ -183,7 +184,7 @@ const OrgListPage = () => {
   const handleDelete = async (e, item) => {
     e.stopPropagation();
     const { id, email } = item;
-    Modal.confirm({
+    modal.confirm({
       title: <>Delete user</>,
       content: <>Delete user <Text code>{email}</Text>?</>,
       onOk: async () => {
@@ -200,7 +201,7 @@ const OrgListPage = () => {
   }
 
   const handleImpersonante = async (org) => {
-    Modal.confirm({
+    modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
       content: <>To impersonate org <Text code>{org.name}</Text>?</>,
@@ -298,6 +299,7 @@ const OrgListPage = () => {
           loadList();
         }} />}
       </Drawer>
+      {contextHolder}
     </ContainerStyled>
 
   );
