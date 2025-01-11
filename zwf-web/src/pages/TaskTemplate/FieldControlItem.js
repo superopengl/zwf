@@ -38,10 +38,10 @@ export const FieldControlItem = (props) => {
   const opacity = isDragging ? 0.2 : 1;
   const background = isDragging ? 'transparent' : 'white';
 
-  return <Card size="small" ref={drag} bodyStyle={{ padding: 6, opacity }} style={{border,  background, marginBottom: 8}} hoverable>
+  return <Card size="small" ref={drag} bodyStyle={{ padding: '0.5rem 0.5rem', opacity }} style={{border,  background, marginBottom: 8}} hoverable>
     <Space size="small">
       <Icon component={() => icon} />
-      <span style={{ marginLeft: 10 }}>{label}</span>
+      {label}
     </Space>
   </Card>
 

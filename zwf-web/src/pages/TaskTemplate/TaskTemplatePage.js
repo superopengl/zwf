@@ -145,16 +145,29 @@ export const TaskTemplatePage = props => {
 
   const handleAddControl = (controlType) => {
     const newField = createFieldItemSchema(controlType);
-    setTaskTemplate(pre => ({
-      ...pre,
-      fields: [
-        ...pre?.fields,
-        {
-          ...newField,
-          name: `Field ${pre?.fields?.length || 0}`
-        }
-      ]
-    }));
+    setTaskTemplate(pre => {
+      return {
+        ...pre,
+        fields: [
+          ...pre?.fields,
+          {
+            ...newField,
+            name: getUniqueNewFieldName(pre?.fields)
+          }
+        ]
+      };
+    });
+  }
+
+  const getUniqueNewFieldName = (allFields) => {
+    const existingNames = new Set(allFields.map(f => f.name));
+    let number = allFields?.length || 0;
+    let name = `Field ${number}`;
+    do {
+      name = `Field ${number}`;
+      number++;
+    } while (existingNames.has(name));
+    return name;
   }
 
   const handleFieldListChange = (fields) => {

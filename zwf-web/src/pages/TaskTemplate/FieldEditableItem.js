@@ -1,9 +1,12 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Card } from 'antd';
+import { Card, Tooltip, Form, Switch, Input, Button } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
+import React from 'react';
+import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
+import { Divider } from 'antd';
 
 const style = {
   // border: '1px dashed gray',
@@ -13,9 +16,11 @@ const style = {
   cursor: 'move',
 }
 
-export const FieldItem = (props) => {
+export const FieldEditableItem = (props) => {
   const { value, index, onDragging, onDrop } = props;
   const { id, name, type } = value;
+
+  const [collapsed, setCollapsed] = React.useState(true);
 
 
   const ref = useRef(null)
@@ -65,7 +70,7 @@ export const FieldItem = (props) => {
       item.index = hoverIndex
     },
   })
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     type: 'field',
     item: () => {
       return { id, index }
@@ -85,17 +90,50 @@ export const FieldItem = (props) => {
 
   return <ProCard ref={ref}
     data-handler-id={handlerId}
-    title={<>{name} ({type}: {index} {isDragging ? 'dragging': ''})</>}
+    title={<>{name} ({type}: {index} {isDragging ? 'dragging' : ''})</>}
     size="small"
     bordered
     hoverable
+    extra={[
+      <Button key="delete" danger type="text" icon={<DeleteOutlined />}></Button>,
+      <Tooltip
+        key="edit"
+        placement="rightTop"
+        color="white"
+        trigger="click"
+        title={<div style={{ padding: '1rem' }}>
+          <Form
+            // labelCol={{ span: 8 }}
+            // wrapperCol={{ span: 16 }}
+            layout="vertical"
+            autoComplete="off"
+          >
+            <Form.Item name="name" label="Field Name" valuePropName="checked" required>
+              <Input allowClear />
+            </Form.Item>
+            <Form.Item name="required" label="Required" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+            <Form.Item name="official" label="Official only" valuePropName="checked">
+              <Switch />
+            </Form.Item>
+            <Form.Item name="description" label="Description" valuePropName="checked">
+              <Input.TextArea allowClear showCount maxLength={200} autoSize={{ minRows: 3 }} />
+            </Form.Item>
+          </Form>
+        </div>}
+      >
+        <Button type="link" icon={<EditOutlined />}></Button>
+      </Tooltip>
+    ]
+    }
     style={{ ...style, opacity }}>
-      <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
+    <Field valueType={type || 'text'} text={['open', 'closed']} mode="edit" />
   </ProCard>
 }
 
 
-FieldItem.propTypes = {
+FieldEditableItem.propTypes = {
   index: PropTypes.number.isRequired,
   value: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
@@ -104,7 +142,7 @@ FieldItem.propTypes = {
   onDrop: PropTypes.func.isRequired,
 };
 
-FieldItem.defaultProps = {
+FieldEditableItem.defaultProps = {
   onChange: () => { },
   onDelete: () => { },
   onDragging: () => { },

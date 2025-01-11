@@ -6,7 +6,8 @@ import {
   FaDotCircle,
   FaCalendarAlt,
 } from 'react-icons/fa';
-import { AiOutlineFieldNumber } from 'react-icons/ai'
+import { MdOutlineFormatColorText } from 'react-icons/md'
+import {BsCloudUpload} from 'react-icons/bs';
 import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
@@ -36,7 +37,7 @@ export const TaskTemplateControlDef = Object.freeze([
   {
     type: 'text',
     label: 'Text',
-    icon: <FaTextWidth />,
+    icon: <MdOutlineFormatColorText />,
     widget: 'input',
     fieldProps: {
       allowClear: true,
@@ -45,7 +46,7 @@ export const TaskTemplateControlDef = Object.freeze([
   },
   {
     type: 'textarea',
-    label: 'Paragraph (multiple lines)',
+    label: 'Textarea',
     icon: <FaAlignLeft />,
     widget: 'textarea',
     fieldProps: {
@@ -128,7 +129,7 @@ export const TaskTemplateControlDef = Object.freeze([
   {
     type: 'upload',
     label: 'Upload files',
-    icon: <UploadOutlined />,
+    icon: <BsCloudUpload />,
     widget: TaskFileUploader,
     fieldProps: {
     },
