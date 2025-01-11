@@ -14,7 +14,7 @@ const style = {
 }
 
 export const FieldItem = (props) => {
-  const { value, index, onMove } = props;
+  const { value, index, onDragging, onDrop } = props;
   const { id, name, type } = value;
 
 
@@ -57,7 +57,7 @@ export const FieldItem = (props) => {
         return
       }
       // Time to actually perform the action
-      onMove(dragIndex, hoverIndex)
+      onDragging(dragIndex, hoverIndex)
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
@@ -69,6 +69,12 @@ export const FieldItem = (props) => {
     type: 'field',
     item: () => {
       return { id, index }
+    },
+    end: (item, monitor) => {
+      const dropResult = monitor.getDropResult()
+      if (item && dropResult) {
+        onDrop();
+      }
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
@@ -94,10 +100,13 @@ FieldItem.propTypes = {
   value: PropTypes.object.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-
+  onDragging: PropTypes.func.isRequired,
+  onDrop: PropTypes.func.isRequired,
 };
 
 FieldItem.defaultProps = {
   onChange: () => { },
   onDelete: () => { },
+  onDragging: () => { },
+  onDrop: () => { },
 };
