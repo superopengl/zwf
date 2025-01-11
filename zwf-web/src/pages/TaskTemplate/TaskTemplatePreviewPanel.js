@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { TaskFormWidget } from 'components/TaskFormWidget';
+import { TaskSchemaRenderer } from 'components/TaskSchemaRenderer';
 
 const { Title } = Typography;
 
@@ -29,11 +30,15 @@ export const TaskTemplatePreviewPanel = props => {
       <Title level={3}>{taskTemplate.name}</Title>
       <p type="secondary">{taskTemplate.description}</p>
       <Divider style={{ marginTop: 4 }} />
-        <TaskFormWidget
-          fields={taskTemplate.fields}
-          type={type}
-          mode="create"
-        />
+      {/* <TaskFormWidget
+        fields={taskTemplate.fields}
+        type={type}
+        mode="create"
+      /> */}
+      <TaskSchemaRenderer
+        fields={taskTemplate.fields}
+        mode={type}
+      />
     </Container >
   );
 };

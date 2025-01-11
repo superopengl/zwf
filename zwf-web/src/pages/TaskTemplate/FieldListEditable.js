@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Row, Col, Card } from 'antd';
+import { Row, Col, Card, List } from 'antd';
 import { FieldItem } from './FieldItem';
 import update from 'immutability-helper'
 
@@ -13,6 +13,10 @@ export const FieldListEditable = props => {
   const { fields, onChange } = props;
 
   const [list, setList] = React.useState(fields);
+
+  React.useEffect(() => {
+    setList(fields)
+  }, [fields]);
 
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: 'field-control',
@@ -44,7 +48,7 @@ export const FieldListEditable = props => {
   return (
     <Card ref={drop} style={{ ...style, backgroundColor }} bodyStyle={{backgroundColor}}>
       <Row gutter={[10, 10]}>
-        {list.map((field, i) => <Col key={field.id} span={24}>
+        {list.map((field, i) => <Col key={field.name} span={24}>
           <FieldItem value={field} index={i} onMove={handleMove}/>
         </Col>)}
       </Row>

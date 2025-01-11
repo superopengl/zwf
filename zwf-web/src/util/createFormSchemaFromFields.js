@@ -1,4 +1,5 @@
-import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
+import { TaskTemplateWidgetDef } from 'util/TaskTemplateWidgetDef';
+import {TaskTemplateControlDef} from 'util/TaskTemplateControlDef';
 
 export function createFormSchemaFromFields(fields, official) {
   const fieldList = fields
@@ -32,4 +33,37 @@ export function createFormSchemaFromFields(fields, official) {
     columns: 1,
     fields: fieldList
   }
+}
+
+export function generateFormSchemaFromFields(fields, official) {
+  const fieldList = fields
+    .map((f, i) => {
+      if (!!f.official !== official)
+        return null;
+      let controlDef = TaskTemplateControlDef.find(x => x.type === f.type);
+      if(!controlDef) {
+        console.error(`Unsupported control type (${f.type})`);
+        controlDef = TaskTemplateControlDef[0]
+      }
+      const name = f.name || `Unnamed (field ${i + 1})`;
+      return {
+        title: name,
+        dataIndex: f.id,
+        initialValue: f.value,
+        formItemProps: {
+          help: f.description,
+          rules: [{ required: f.required, message: ' ', whitespace: true }]
+        },
+        fieldProps: {
+          allowClear: true,
+          placeholder: f.name,
+          ...controlDef.fieldProps,
+        },
+        renderFormItem: controlDef.renderFormItem,
+        options: f.options,
+      };
+    })
+    .filter(t => t);
+
+  return fieldList;
 }

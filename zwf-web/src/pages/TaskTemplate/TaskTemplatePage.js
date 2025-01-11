@@ -15,10 +15,12 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
 import { of } from 'rxjs';
 import { Divider } from 'antd';
-import { TaskTemplateWidgetDef } from 'util/taskTemplateWidgetDef';
+import { createFieldItemSchema, TaskTemplateControlDef } from 'util/TaskTemplateControlDef';
 import { FieldControlItem } from './FieldControlItem';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { FieldListEditable } from './FieldListEditable';
+import Field from '@ant-design/pro-field';
 
 const LayoutStyled = styled.div`
   margin: 0 auto;
@@ -141,6 +143,24 @@ export const TaskTemplatePage = props => {
     }
   }
 
+  const handleAddControl = (controlType) => {
+    const newField = createFieldItemSchema(controlType);
+    setTaskTemplate(pre => ({
+      ...pre,
+      fields: [
+        ...pre?.fields,
+        {
+          ...newField,
+          name: `Field ${pre?.fields?.length || 0}`
+        }
+      ]
+    }));
+  }
+
+  const handleFieldListChange = (fields) => {
+    setTaskTemplate(pre => ({ ...pre, fields }));
+  }
+
   return (
     // <PageContainer>
 
@@ -163,47 +183,53 @@ export const TaskTemplatePage = props => {
         ]
       }}
     >
-      {taskTemplate && <TaskTemplateEditorPanel
+      {/* {taskTemplate && <TaskTemplateEditorPanel
         ref={formRef}
         value={taskTemplate}
         onChange={setTaskTemplate}
         debug={debugMode}
-      />}
+      />} */}
+      <Field valueType="jsonCode" text={JSON.stringify(taskTemplate?.fields)} />
       <Divider />
       <Row>
 
       </Row>
       <DndProvider backend={HTML5Backend}>
-      <Row gutter={[20, 20]} wrap={false}>
-        <Col flex="240px">
-          {TaskTemplateWidgetDef.map((d, i) => <FieldControlItem
-            key={i}
-            icon={d.icon}
-            label={d.label}
-            type={d.type}/>)}
-        </Col>
-        <Col flex="auto">
+        <Row gutter={[20, 20]} wrap={false}>
+          <Col flex="240px">
+            {/* Control list column */}
+            {TaskTemplateControlDef.map((d, i) => <FieldControlItem
+              key={i}
+              icon={d.icon}
+              label={d.label}
+              type={d.type}
+              onDropDone={() => handleAddControl(d.type)}
+            />)}
+          </Col>
+          <Col flex="1 1 200px">
+            {/* Field list column*/}
+            <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
+          </Col>
+          <Col flex="1 1 200px">
+            {/* Preview column */}
+            <Card
+              title={<>Preview - {previewMode}</>}
+              type='inner'
+              extra={<Segmented options={[
+                'agent',
+                'client'
+              ]}
+                onChange={setPreviewMode} />}
+            >
 
-        </Col>
-        <Col flex="auto">
-          <Card
-            title={<>Preview - {previewMode}</>}
-            type='inner'
-            extra={<Segmented options={[
-              'agent',
-              'client'
-            ]}
-              onChange={setPreviewMode} />}
-          >
-
-            <TaskTemplatePreviewPanel
-              value={taskTemplate}
-              debug={debugMode}
-              type={previewMode}
-            />
-          </Card>
-        </Col>
-      </Row>
+              <TaskTemplatePreviewPanel
+                value={taskTemplate}
+                debug={debugMode}
+                type={previewMode}
+              />
+            </Card>
+          </Col>
+        </Row>
       </DndProvider>
     </PageContainer>
 

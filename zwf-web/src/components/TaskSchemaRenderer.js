@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import { Typography, Form, Divider } from 'antd';
 import FormBuilder from 'antd-form-builder'
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
-import { createFormSchemaFromFields } from 'util/createFormSchemaFromFields';
+import { createFormSchemaFromFields, generateFormSchemaFromFields } from 'util/createFormSchemaFromFields';
 import { GlobalContext } from '../contexts/GlobalContext';
+import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
 
 const { Title, Text, Paragraph } = Typography;
 
-export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
+export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, type, onChange, disabled } = props;
+  const { fields, mode, onChange, disabled } = props;
   const context = React.useContext(GlobalContext);
   const role = context.role;
 
@@ -19,7 +20,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   const isClient = role === 'client';
 
   const clientFieldSchema = React.useMemo(() => {
-    const schema = createFormSchemaFromFields(fields, false);
+    const schema = generateFormSchemaFromFields(fields, false);
     schema?.fields?.forEach(f => {
       // f.required = false;
       f.disabled = disabled;
@@ -28,18 +29,24 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   }, [fields, disabled]);
 
   const agentFieldSchema = React.useMemo(() => {
-    const schema = type == 'agent' ? createFormSchemaFromFields(fields, true) : null;
+    const schema = mode === 'agent' ? generateFormSchemaFromFields(fields, true) : null;
     schema?.fields?.forEach(f => {
       f.disabled = disabled;
     });
     return schema;
-  }, [fields, type, disabled]);
+  }, [fields, mode, disabled]);
 
   const showOfficialFields = agentFieldSchema?.fields?.length > 0;
 
   const handleFormValueChange = (changedValues, allValues) => {
     onChange(changedValues);
   }
+
+  return <BetaSchemaForm 
+    layoutType='Form'
+    columns={clientFieldSchema}
+    onValuesChange={handleFormValueChange}
+  />
 
   return (
     <Form
@@ -50,7 +57,7 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
       colon={false}
       // size={isClient ? 'large' : 'middle'}
     >
-      {type !== 'client' && <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Client fields</Divider>}
+      {mode !== 'client' && <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Client fields</Divider>}
       {!isClient && <>
         <Paragraph type="secondary">
           You can prefill some fileds on behalf of the client if you already have some of the information for this task.
@@ -68,18 +75,18 @@ export const TaskFormWidget = React.memo(React.forwardRef((props, ref) => {
   );
 }));
 
-TaskFormWidget.propTypes = {
+TaskSchemaRenderer.propTypes = {
   fields: PropTypes.arrayOf(PropTypes.object).isRequired,
   readonly: PropTypes.bool,
   disabled: PropTypes.bool,
-  type: PropTypes.oneOf(['agent', 'client']),
+  mode: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
 };
 
-TaskFormWidget.defaultProps = {
+TaskSchemaRenderer.defaultProps = {
   readonly: false,
   disabled: false,
-  type: 'agent',
+  mode: 'agent',
   onChange: (fieldId, newValue) => { },
 };
 

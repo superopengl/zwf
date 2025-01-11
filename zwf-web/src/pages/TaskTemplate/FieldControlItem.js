@@ -15,7 +15,7 @@ const style = {
 }
 
 export const FieldControlItem = (props) => {
-  const { icon, label, type, onDone } = props;
+  const { icon, label, type, onDropDone } = props;
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'field-control',
     item: { 
@@ -26,7 +26,7 @@ export const FieldControlItem = (props) => {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult()
       if (item && dropResult) {
-        onDone();
+        onDropDone();
       }
     },
     collect: (monitor) => ({
@@ -52,12 +52,12 @@ export const FieldControlItem = (props) => {
 
 
 FieldControlItem.propTypes = {
-  onDone: PropTypes.func.isRequired,
+  onDropDone: PropTypes.func.isRequired,
   icon: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
 };
 
 FieldControlItem.defaultProps = {
-  onDone: () => { }
+  onDropDone: () => { }
 };
