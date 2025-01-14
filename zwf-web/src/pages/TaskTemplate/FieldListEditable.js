@@ -29,7 +29,7 @@ export const FieldListEditable = props => {
   const isActive = canDrop && isOver
   let backgroundColor = '#ffffff';
   if (isActive) {
-    backgroundColor = 'darkgreen'
+    backgroundColor = '#0FBFC433'
   } else if (canDrop) {
     backgroundColor = 'transparent'
   }
@@ -50,7 +50,7 @@ export const FieldListEditable = props => {
   };
 
   return (
-    <Card ref={drop} style={{ ...style, backgroundColor }} bodyStyle={{ backgroundColor }}>
+    <Card ref={drop} style={{ ...style, backgroundColor }}>
       <Row gutter={[10, 10]}>
         {list.map((field, i) => <Col key={field.name} span={24}>
           <FieldEditableItem value={field} index={i} onDragging={handleDragging} onDrop={handleDrop} />

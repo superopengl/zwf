@@ -4,13 +4,15 @@ import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from 
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import styled from 'styled-components';
+import { ProCard } from '@ant-design/pro-components';
 
-const StyledCard = styled(Card)`
-border: 1px dashed red,
+const StyledCard = styled(ProCard)`
 margin-bottom: 8px;
+background-color: white;
+cursor: move;
 
 &:hover {
-  border: 1px dashed #0FBFC4,
+  border-color: #0FBFC4;
 }
 `;
 
@@ -28,11 +30,11 @@ export const FieldControlItem = (props) => {
   const { icon, label, type, onDropDone } = props;
   const [{ isDragging }, drag] = useDrag(() => ({
     type: 'field-control',
-    item: { 
+    item: {
       id: uuidv4(),
       name: 'New field',
       type
-     },
+    },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult()
       if (item && dropResult) {
@@ -44,18 +46,27 @@ export const FieldControlItem = (props) => {
       handlerId: monitor.getHandlerId(),
     }),
   }))
-  const border = isDragging ? '1px dashed #0FBFC4' : '1px solid #f0f0f0';
-  const opacity = isDragging ? 0.2 : 1;
-  const background = isDragging ? 'transparent' : 'white';
 
-  return <Card size="small" ref={drag} bodyStyle={{ padding: '0.5rem 0.5rem', opacity }} 
-  style={{border,  background, marginBottom: 8}} 
-  hoverable>
+
+  const style = isDragging ? {
+    borderStyle: 'dashed',
+    opacity: 0.4,
+    background: 'transparent'
+  } : null;
+
+  return <StyledCard
+    bordered
+    size="small"
+    ref={drag}
+    bodyStyle={{ padding: '0.5rem 0.5rem' }}
+    style={style}
+    hoverable
+  >
     <Space size="small">
       <Icon component={() => icon} />
       {label}
     </Space>
-  </Card>
+  </StyledCard>
 
   // return <div ref={drag} style={{ ...style, opacity }} data-testid={`box`}>
   //   {label}
