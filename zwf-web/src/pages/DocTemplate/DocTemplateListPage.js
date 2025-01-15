@@ -31,8 +31,6 @@ const LayoutStyled = styled.div`
 
 
 export const DocTemplateListPage = props => {
-
-
   const [list, setList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
@@ -109,6 +107,7 @@ export const DocTemplateListPage = props => {
 
   return (<>
       <PageContainer
+      loading={loading}
       header={{
         title: 'Doc Templates',
         extra: [

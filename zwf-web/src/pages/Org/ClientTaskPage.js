@@ -10,7 +10,7 @@ import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { TaskMessageForm } from 'components/TaskMessageForm';
 import { TaskTrackingPanel } from 'components/TaskTrackingPanel';
 import { combineLatest } from 'rxjs';
-import { PageContainer } from '@ant-design/pro-layout';
+import { PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
 import { LeftOutlined } from '@ant-design/icons';

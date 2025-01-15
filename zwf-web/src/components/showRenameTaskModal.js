@@ -37,7 +37,6 @@ const Content = props => {
 
 export function showRenameTaskModal(id, oldName, onOk) {
   const modalRef = Modal.info({
-    title: <>Rename task</>,
     title: <Space>
       <Avatar icon={<Icon component={MdDriveFileRenameOutline} />} style={{ backgroundColor: '#0FBFC4' }} />
       Rename task

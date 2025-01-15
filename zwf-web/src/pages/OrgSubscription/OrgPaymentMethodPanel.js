@@ -6,7 +6,6 @@ import { CloseCircleFilled, CloseOutlined, PlusOutlined } from '@ant-design/icon
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import { saveOrgPaymentMethod } from 'services/orgPaymentMethodService';
-// import { PageContainer } from '@ant-design/pro-layout';
 import { PageContainer, ProCard, ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
