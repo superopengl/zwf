@@ -7,33 +7,49 @@ import {
   FaCalendarAlt,
 } from 'react-icons/fa';
 import { MdOutlineFormatColorText } from 'react-icons/md'
+import {RxSwitch} from 'react-icons/rx';
 import {BsCloudUpload} from 'react-icons/bs';
 import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
 import { Upload } from 'antd';
 import { AutoDocInput } from 'components/AutoDocInput';
+import {
+  ProForm,
+  ProFormCheckbox,
+  ProFormDigit,
+  ProFormDigitRange,
+  ProFormGroup,
+  ProFormRadio,
+  ProFormRate,
+  ProFormSegmented,
+  ProFormSelect,
+  ProFormSlider,
+  ProFormSwitch,
+  ProFormText,
+  ProFormTextArea,
+  ProFormDateTimePicker,
+  ProFormUploadButton,
+  ProFormUploadDragger,
+} from '@ant-design/pro-components';
 
-export const createFieldItemSchema = (controlType) => {
-  const controlDef = TaskTemplateControlDef.find(x => x.type === controlType);
+export const createFieldItemSchema = (controlType, name) => {
+  const controlDef = TaskTemplateFieldControlDef.find(x => x.type === controlType);
   if (!controlDef) {
     throw new Error(`Unknown control type ${controlType}`);
   }
   const { type } = controlDef;
+  const options = type === 'select' || type === 'radio' ? ['Option 1', 'Option 2'] : undefined;
 
   return {
     type,
-    name: '',
+    name,
     description: '',
-    required: false,
-    value: null,
-    widget: 'input',
-    official: false,
-    disabled: false,
+    options
   }
 }
 
-export const TaskTemplateControlDef = Object.freeze([
+export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'text',
     label: 'Text',
@@ -43,6 +59,7 @@ export const TaskTemplateControlDef = Object.freeze([
       allowClear: true,
       maxLength: 150,
     },
+    control: ProFormText,
   },
   {
     type: 'textarea',
@@ -54,6 +71,7 @@ export const TaskTemplateControlDef = Object.freeze([
       showCount: true,
       maxLength: 1000,
     },
+    control: ProFormTextArea,
   },
   {
     type: 'digit',
@@ -65,27 +83,33 @@ export const TaskTemplateControlDef = Object.freeze([
         width: '100%'
       }
     },
+    control: ProFormDigit,
   },
   {
     type: 'checkbox',
-    label: 'Checkbox',
-    icon: <FaCheckSquare />,
+    label: 'Switch (checkbox)',
+    icon: <RxSwitch />,
     widget: 'checkbox-group',
     fieldProps: null,
+    control: ProFormSwitch,
   },
   {
     type: 'select',
     label: 'Single choice',
     icon: <FaChevronCircleDown />,
     widget: 'select',
-    fieldProps: null,
+    fieldProps: {
+    },
+    control: ProFormSelect,
   },
   {
     type: 'radio',
     label: 'Multiple choice',
     icon: <FaDotCircle />,
     widget: 'radio-group',
-    fieldProps: null,
+    fieldProps: {
+    },
+    control: ProFormRadio.Group,
   },
   {
     type: 'date',
@@ -93,8 +117,11 @@ export const TaskTemplateControlDef = Object.freeze([
     icon: <FaCalendarAlt />,
     widget: DateInput,
     fieldProps: {
-      picker: 'date'
+      picker: 'date',
+      format: 'DD MMM YYYY',
+      showTime: false,
     },
+    control: ProFormDateTimePicker,
   },
   {
     type: 'dateMonth',
@@ -103,8 +130,9 @@ export const TaskTemplateControlDef = Object.freeze([
     widget: DateInput,
     fieldProps: {
       picker: 'month',
-      format: 'YYYY-MM'
+      format: 'MMM YYYY'
     },
+    control: ProFormDateTimePicker,
   },
   {
     type: 'dateQuarter',
@@ -115,6 +143,7 @@ export const TaskTemplateControlDef = Object.freeze([
       picker: 'quarter',
       format: 'YYYY-\\QQ'
     },
+    control: ProFormDateTimePicker,
   },
   {
     type: 'dateYear',
@@ -125,6 +154,7 @@ export const TaskTemplateControlDef = Object.freeze([
       picker: 'year',
       format: 'YYYY'
     },
+    control: ProFormDateTimePicker,
   },
   {
     type: 'upload',
@@ -133,7 +163,8 @@ export const TaskTemplateControlDef = Object.freeze([
     widget: TaskFileUploader,
     fieldProps: {
     },
-    renderFormItem: (schema, config, form) => <TaskFileUploader />
+    renderFormItem: (schema, config, form) => <TaskFileUploader />,
+    control: TaskFileUploader,
   },
   {
     type: 'autodoc',
@@ -141,6 +172,7 @@ export const TaskTemplateControlDef = Object.freeze([
     icon: <FilePdfFilled />,
     fieldProps: {
     },
-    renderFormItem: (schema, config, form) => <AutoDocInput />
+    renderFormItem: (schema, config, form) => <AutoDocInput />,
+    control: AutoDocInput,
   },
 ]);

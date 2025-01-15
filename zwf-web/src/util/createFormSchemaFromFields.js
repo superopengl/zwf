@@ -1,5 +1,5 @@
 import { TaskTemplateWidgetDef } from 'util/TaskTemplateWidgetDef';
-import {TaskTemplateControlDef} from 'util/TaskTemplateControlDef';
+import {TaskTemplateFieldControlDef} from 'util/TaskTemplateFieldControlDef';
 
 export function createFormSchemaFromFields(fields, official) {
   const fieldList = fields
@@ -40,10 +40,10 @@ export function generateFormSchemaFromFields(fields, official) {
     .map((f, i) => {
       if (!!f.official !== official)
         return null;
-      let controlDef = TaskTemplateControlDef.find(x => x.type === f.type);
+      let controlDef = TaskTemplateFieldControlDef.find(x => x.type === f.type);
       if(!controlDef) {
         console.error(`Unsupported control type (${f.type})`);
-        controlDef = TaskTemplateControlDef[0]
+        controlDef = TaskTemplateFieldControlDef[0]
       }
       const name = f.name || `Unnamed (field ${i + 1})`;
       return {

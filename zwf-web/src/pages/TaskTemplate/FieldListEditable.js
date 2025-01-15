@@ -49,11 +49,19 @@ export const FieldListEditable = props => {
     onChange(list);
   };
 
+  const handleFieldChange = (index, newValues) => {
+    // setList(pre => {
+    //   pre[index] = newValues;
+    //   return [...pre];
+    // })
+    list[index] = newValues;
+  }
+
   return (
     <Card ref={drop} style={{ ...style, backgroundColor }}>
       <Row gutter={[10, 10]}>
         {list.map((field, i) => <Col key={field.name} span={24}>
-          <FieldEditableItem value={field} index={i} onDragging={handleDragging} onDrop={handleDrop} />
+          <FieldEditableItem field={field} onChange={(newValues) => handleFieldChange(i, newValues)} index={i} onDragging={handleDragging} onDrop={handleDrop} />
         </Col>)}
       </Row>
     </Card>
