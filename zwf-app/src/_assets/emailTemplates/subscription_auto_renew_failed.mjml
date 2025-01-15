@@ -17,17 +17,17 @@
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
+        <mj-text align="left" font-size="20px" font-weight="400">
           Please go back to ZeeWorkflow and check the primary payment method to make sure it's valid, so that system can automatically renew the subscription.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
+        <mj-text align="left" font-size="20px" font-weight="400">
           If the primary payment method is still unavailable after {{endDate}}, your organization's current subscription of {{seats}} seats will end. To keep on your business smoothly, please go back to ZeeWorkflow and fix the primary payment method as soon.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
+        <mj-text align="left" font-size="20px" font-weight="400">
           Should you have any questions about this task, please contact us.
         </mj-text>
       </mj-column>

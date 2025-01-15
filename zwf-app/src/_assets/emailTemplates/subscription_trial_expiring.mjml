@@ -17,12 +17,12 @@
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
+        <mj-text align="left" font-size="20px" font-weight="400">
           To keep on your business smoothly, please go back to ZeeWorkflow and set a primary payment method and purchase a subscription.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
-        <mj-text align="left" font-size="14px" font-weight="400">
+        <mj-text align="left" font-size="20px" font-weight="400">
           Should you have any questions about this task, please contact us.
         </mj-text>
       </mj-column>
