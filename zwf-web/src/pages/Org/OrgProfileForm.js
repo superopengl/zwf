@@ -18,7 +18,6 @@ const Container = styled.div`
   margin: 0;
   position: relative;
   text-align: left;
-  // background-color: #f3f3f3;
 
   .ant-form-item {
     margin-bottom: 2rem;

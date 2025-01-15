@@ -1,11 +1,31 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Form, Divider } from 'antd';
+import { Typography, Form, Divider, Space, Tooltip } from 'antd';
 import FormBuilder from 'antd-form-builder'
 import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { createFormSchemaFromFields, generateFormSchemaFromFields } from 'util/createFormSchemaFromFields';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
+import { generateSchemaFromColumns } from 'util/TaskTemplateFieldControlDef';
+import Field from '@ant-design/pro-field';
+import styled from 'styled-components';
+import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
+
+const Container = styled.div`
+.ant-form-item {
+  margin-bottom: 0;
+}
+
+.ant-form-item-label {
+  margin-top: 1rem;
+}
+
+.ant-space {
+  margin-top: 2rem;
+  width: 100%;
+  justify-content: end;
+}
+`;
 
 const { Title, Text, Paragraph } = Typography;
 
@@ -17,62 +37,48 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
   fields.sort((a, b) => a.ordinal - b.ordinal);
 
-  const isClient = role === 'client';
-
-  const clientFieldSchema = React.useMemo(() => {
-    const schema = generateFormSchemaFromFields(fields, false);
-    schema?.fields?.forEach(f => {
+  const fieldSchema = React.useMemo(() => {
+    const schema = generateSchemaFromColumns(fields, mode);
+    schema?.forEach(f => {
       // f.required = false;
-      f.disabled = disabled;
+      f.fieldProps.disabled = disabled;
     });
     return schema;
-  }, [fields, disabled]);
-
-  const agentFieldSchema = React.useMemo(() => {
-    const schema = mode === 'agent' ? generateFormSchemaFromFields(fields, true) : null;
-    schema?.fields?.forEach(f => {
-      f.disabled = disabled;
-    });
-    return schema;
-  }, [fields, mode, disabled]);
-
-  const showOfficialFields = agentFieldSchema?.fields?.length > 0;
+  }, [fields, disabled, mode]);
 
   const handleFormValueChange = (changedValues, allValues) => {
     onChange(changedValues);
   }
 
-  return <BetaSchemaForm 
-    layoutType='Form'
-    columns={clientFieldSchema}
-    onValuesChange={handleFormValueChange}
-  />
+  const handleSubmit = (values) => {
+    debugger;
+  }
 
-  return (
-    <Form
-      ref={ref}
+  console.log(fieldSchema)
+
+  return <Container>
+    <BetaSchemaForm
+      layoutType='Form'
+      columns={fieldSchema}
       onValuesChange={handleFormValueChange}
-      // onFieldsChange={handleFieldsChange}
-      layout="horizontal"
-      colon={false}
-      // size={isClient ? 'large' : 'middle'}
-    >
-      {mode !== 'client' && <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Client fields</Divider>}
-      {!isClient && <>
-        <Paragraph type="secondary">
-          You can prefill some fileds on behalf of the client if you already have some of the information for this task.
-        </Paragraph>
-      </>}
-      <FormBuilder meta={clientFieldSchema} form={ref} />
-      {showOfficialFields && <>
-        <Divider style={{ marginTop: 4 }} orientation="left" orientationMargin="0">Official only fields</Divider>
-        <Paragraph type="secondary">
-          These fields are not visible to clients.
-        </Paragraph>
-        <FormBuilder meta={agentFieldSchema} form={ref} />
-      </>}
-    </Form>
-  );
+      onFinish={handleSubmit}
+      submitter={{
+        searchConfig: {
+          resetText: 'Reset',
+          submitText: 'Submit',
+        },
+        resetButtonProps: {
+          type: 'text',
+        },
+        submitButtonProps: {
+          block: true
+        },
+        // render: () => null
+      }}
+    />
+    {/* <Divider />
+    <Field valueType="jsonCode" text={JSON.stringify(fieldSchema)} /> */}
+  </Container>
 }));
 
 TaskSchemaRenderer.propTypes = {

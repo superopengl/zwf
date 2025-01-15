@@ -1,3 +1,4 @@
+import React from 'react';
 import { useDrag } from 'react-dnd'
 import { Card, Space } from 'antd';
 import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined } from '@ant-design/icons'
@@ -9,7 +10,7 @@ import { ProCard } from '@ant-design/pro-components';
 const StyledCard = styled(ProCard)`
 margin-bottom: 8px;
 background-color: white;
-cursor: move;
+cursor: grab;
 
 &:hover {
   border-color: #0FBFC4;
@@ -36,13 +37,22 @@ export const FieldControlItem = (props) => {
       isDragging: monitor.isDragging(),
       handlerId: monitor.getHandlerId(),
     }),
+    options: {
+      dropEffect: 'copy'
+    }
   }))
+
+  // React.useEffect(() => {
+  //   if (isDragging) document.body.style.cursor = 'grab !important';
+  //   else document.body.style.cursor = 'normal';
+  // }, [isDragging]);
 
 
   const style = isDragging ? {
     borderStyle: 'dashed',
     opacity: 0.4,
-    background: 'transparent'
+    background: 'transparent',
+    cursor: 'grabbing',
   } : null;
 
   return <StyledCard

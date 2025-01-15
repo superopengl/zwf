@@ -1,9 +1,10 @@
 import React from 'react';
 import { useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Row, Col, Card, List } from 'antd';
+import { Row, Col, Card, Typography } from 'antd';
 import { FieldEditableItem } from './FieldEditableItem';
 import update from 'immutability-helper'
+const {Paragraph} = Typography;
 
 const style = {
   height: '100%',
@@ -27,7 +28,7 @@ export const FieldListEditable = props => {
     }),
   }))
   const isActive = canDrop && isOver
-  let backgroundColor = '#ffffff';
+  let backgroundColor = 'transparent';
   if (isActive) {
     backgroundColor = '#0FBFC433'
   } else if (canDrop) {
@@ -50,21 +51,21 @@ export const FieldListEditable = props => {
   };
 
   const handleFieldChange = (index, newValues) => {
-    // setList(pre => {
-    //   pre[index] = newValues;
-    //   return [...pre];
-    // })
     list[index] = newValues;
+    onChange([...list]);
   }
 
   return (
-    <Card ref={drop} style={{ ...style, backgroundColor }}>
+    <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[10, 10]}>
         {list.map((field, i) => <Col key={field.name} span={24}>
           <FieldEditableItem field={field} onChange={(newValues) => handleFieldChange(i, newValues)} index={i} onDragging={handleDragging} onDrop={handleDrop} />
         </Col>)}
+        <Col span={24}>
+        <Paragraph type="secondary" style={{textAlign: 'center', margin: '2rem auto'}}>Drag a control from the left list to here to add a new field.</Paragraph>
+        </Col>
       </Row>
-    </Card>
+    </div>
   )
 }
 
