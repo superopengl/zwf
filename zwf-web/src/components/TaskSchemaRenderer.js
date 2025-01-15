@@ -31,7 +31,7 @@ const { Title, Text, Paragraph } = Typography;
 
 export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
 
-  const { fields, mode, onChange, disabled } = props;
+  const { fields, mode, onChange, disabled, onSubmit } = props;
   const context = React.useContext(GlobalContext);
   const role = context.role;
 
@@ -51,7 +51,7 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   }
 
   const handleSubmit = (values) => {
-    debugger;
+    onSubmit(values);
   }
 
   console.log(fieldSchema)
@@ -59,6 +59,7 @@ export const TaskSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   return <Container>
     <BetaSchemaForm
       layoutType='Form'
+      formRef={ref}
       columns={fieldSchema}
       onValuesChange={handleFormValueChange}
       onFinish={handleSubmit}
@@ -87,6 +88,7 @@ TaskSchemaRenderer.propTypes = {
   disabled: PropTypes.bool,
   mode: PropTypes.oneOf(['agent', 'client']),
   onChange: PropTypes.func,
+  onSubmit: PropTypes.func,
 };
 
 TaskSchemaRenderer.defaultProps = {
@@ -94,5 +96,6 @@ TaskSchemaRenderer.defaultProps = {
   disabled: false,
   mode: 'agent',
   onChange: (fieldId, newValue) => { },
+  onSubmit: () => { },
 };
 

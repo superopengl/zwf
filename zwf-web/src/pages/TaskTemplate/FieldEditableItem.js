@@ -42,7 +42,7 @@ height: 100%;
 
 
 export const FieldEditableItem = (props) => {
-  const { field, index, onDragging, onChange, onDrop } = props;
+  const { field, index, onDragging, onChange, onDrop, onDelete } = props;
   const { id, name, type } = field;
 
   const [editPanelOpen, setEditPanelOpen] = React.useState(false);
@@ -121,7 +121,9 @@ export const FieldEditableItem = (props) => {
   const opacity = isDragging ? 0 : 1;
 
   React.useEffect(() => {
-    setEditPanelOpen(!isDragging);
+    if(isDragging) {
+      setEditPanelOpen(false);
+    }
   }, [isDragging]);
   drag(drop(ref))
 
@@ -133,9 +135,12 @@ export const FieldEditableItem = (props) => {
     borderColor: '#0FBFC4',
   } : null
 
-
-
-  return <FieldEditPanel trigger="click" open={editPanelOpen} onOpenChange={setEditPanelOpen} field={fieldItem} onChange={handleFieldChange}>
+  return <FieldEditPanel trigger="click" open={editPanelOpen} 
+  onOpenChange={setEditPanelOpen} 
+  field={fieldItem} 
+  onChange={handleFieldChange}
+  onDelete={onDelete}
+  >
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}

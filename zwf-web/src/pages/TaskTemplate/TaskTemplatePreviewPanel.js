@@ -10,7 +10,7 @@ const { Title, Paragraph } = Typography;
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
-  min-width: 300px;
+  width: 100%;
   max-width: 600px;
   background-color: #ffffff;
   padding: 2rem;
@@ -31,12 +31,6 @@ export const TaskTemplatePreviewPanel = props => {
     <Container style={props.style}>
       <Title level={3}>{taskTemplate.name}</Title>
       <Alert type="info" description={taskTemplate.description} showIcon />
-      {/* <Divider style={{ marginTop: 4 }} /> */}
-      {/* <TaskFormWidget
-        fields={taskTemplate.fields}
-        type={type}
-        mode="create"
-      /> */}
       <TaskSchemaRenderer
         fields={taskTemplate.fields}
         mode={mode}

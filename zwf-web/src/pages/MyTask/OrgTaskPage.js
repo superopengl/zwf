@@ -145,7 +145,7 @@ const OrgTaskPage = React.memo((props) => {
         <Row wrap={false} gutter={40}>
           <Col span={16}>
             <Card size="large">
-              <AutoSaveTaskFormPanel value={task} type="agent" onSavingChange={setSaving} />
+              <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} />
             </Card>
             {/* <em>{JSON.stringify(task.fields, null, 2)}</em> */}
           </Col>

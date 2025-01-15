@@ -71,7 +71,7 @@ const ClientTaskPage = (props) => {
         <Row gutter={40} wrap={false}>
           <Col span={16}>
             <Card size="large">
-              <AutoSaveTaskFormPanel value={task} type="client" onSavingChange={setSaving} />
+              <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
             </Card>
           </Col>
           <Col span={8} >

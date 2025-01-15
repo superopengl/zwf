@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { Row, Col, Card, Typography } from 'antd';
 import { FieldEditableItem } from './FieldEditableItem';
 import update from 'immutability-helper'
-const {Paragraph} = Typography;
+const { Paragraph } = Typography;
 
 const style = {
   height: '100%',
@@ -55,14 +55,24 @@ export const FieldListEditable = props => {
     onChange([...list]);
   }
 
+  const handleDelete = (index) => {
+    list.splice(index, 1);
+    onChange([...list]);
+  }
+
   return (
     <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[10, 10]}>
         {list.map((field, i) => <Col key={field.name} span={24}>
-          <FieldEditableItem field={field} onChange={(newValues) => handleFieldChange(i, newValues)} index={i} onDragging={handleDragging} onDrop={handleDrop} />
+          <FieldEditableItem field={field}
+            onChange={(newValues) => handleFieldChange(i, newValues)}
+            onDelete={() => handleDelete(i)}
+            index={i}
+            onDragging={handleDragging}
+            onDrop={handleDrop} />
         </Col>)}
         <Col span={24}>
-        <Paragraph type="secondary" style={{textAlign: 'center', margin: '2rem auto'}}>Drag a control from the left list to here to add a new field.</Paragraph>
+          <Paragraph type="secondary" style={{ textAlign: 'center', margin: '2rem auto' }}>Drag a control from the left list to here to add a new field.</Paragraph>
         </Col>
       </Row>
     </div>
