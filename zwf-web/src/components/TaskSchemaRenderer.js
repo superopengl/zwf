@@ -7,7 +7,6 @@ import { createFormSchemaFromFields, generateFormSchemaFromFields } from 'util/c
 import { GlobalContext } from '../contexts/GlobalContext';
 import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
 import { generateSchemaFromColumns } from 'util/TaskTemplateFieldControlDef';
-import Field from '@ant-design/pro-field';
 import styled from 'styled-components';
 import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
 
