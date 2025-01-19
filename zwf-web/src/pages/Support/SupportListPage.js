@@ -32,6 +32,7 @@ import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, Use
 import { MdMessage } from 'react-icons/md';
 import { useLocalstorageState } from 'rooks';
 import { RoleTag } from 'components/RoleTag';
+import { PageContainer } from '@ant-design/pro-components';
 
 
 const { Text } = Typography;
@@ -113,7 +114,7 @@ const SupportListPage = () => {
     {
       title: 'Owner',
       dataIndex: 'orgOwner',
-      render: (isOrgOwner, item) => isOrgOwner ? <Text strong><CheckOutlined/></Text> : null
+      render: (isOrgOwner, item) => isOrgOwner ? <Text strong><CheckOutlined /></Text> : null
     },
 
     {
@@ -269,10 +270,14 @@ const SupportListPage = () => {
 
 
   return (
-    <>
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+    <PageContainer
+      loading={loading}
+      ghost={true}
+      header={{
+        title: 'Users & Supports',
+        extra: [
           <Input.Search
+            key="search"
             placeholder="Search name or email"
             enterButton={<SearchOutlined />}
             onSearch={value => handleSearch(value)}
@@ -281,52 +286,51 @@ const SupportListPage = () => {
             loading={loading}
             value={queryInfo?.text}
             allowClear
-          />
-          <Space>
-            <Button danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>
-            <Button type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-          </Space>
-        </Space>
-        <StyledTable columns={columnDef}
-          dataSource={list}
-          size="small"
-          scroll={{
-            x: 'max-content'
-          }}
-          rowKey="userId"
-          loading={loading}
-          style={{ marginTop: 20 }}
-          rowClassName={item => {
-            const classNames = [];
-            if (item === currentUser) {
-              classNames.push('current-item');
-            }
-            if (item.unreadCount) {
-              classNames.push('pending-reply');
-            }
-            return classNames.join(' ');
-          }}
-          onRow={item => {
-            return {
-              onDoubleClick: () => handleChatWith(item)
-            }
-          }}
-          pagination={{
-            current: queryInfo.page,
-            pageSize: queryInfo.size,
-            total: total,
-            showTotal: total => `Total ${total}`,
-            pageSizeOptions: [20, 50, 100],
-            showSizeChanger: true,
-            showQuickJumper: true,
-            disabled: loading,
-            onChange: handlePaginationChange,
-            onShowSizeChange: (page, size) => {
-              setQueryInfo(q => ({ ...q, page, size }));
-            }
-          }}
-        />
-      </Space>
+          />,
+          <Button key="clear" danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>,
+          <Button key="refresh" type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
+        ]
+      }}
+    >
+      <StyledTable columns={columnDef}
+        dataSource={list}
+        size="small"
+        scroll={{
+          x: 'max-content'
+        }}
+        rowKey="userId"
+        loading={loading}
+        style={{ marginTop: 20 }}
+        rowClassName={item => {
+          const classNames = [];
+          if (item === currentUser) {
+            classNames.push('current-item');
+          }
+          if (item.unreadCount) {
+            classNames.push('pending-reply');
+          }
+          return classNames.join(' ');
+        }}
+        onRow={item => {
+          return {
+            onDoubleClick: () => handleChatWith(item)
+          }
+        }}
+        pagination={{
+          current: queryInfo.page,
+          pageSize: queryInfo.size,
+          total: total,
+          showTotal: total => `Total ${total}`,
+          pageSizeOptions: [20, 50, 100],
+          showSizeChanger: true,
+          showQuickJumper: true,
+          disabled: loading,
+          onChange: handlePaginationChange,
+          onShowSizeChange: (page, size) => {
+            setQueryInfo(q => ({ ...q, page, size }));
+          }
+        }}
+      />
       {contextHolder}
       <SupportReplyDrawer
         title={currentUser ? <UserNameCard userId={currentUser.userId} /> : null}
@@ -335,7 +339,7 @@ const SupportListPage = () => {
         onClose={() => setChatVisible(false)}
         eventSource={eventSource$.current}
       />
-    </>
+    </PageContainer>
 
   );
 };
