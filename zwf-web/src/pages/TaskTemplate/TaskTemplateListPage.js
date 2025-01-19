@@ -118,6 +118,7 @@ export const TaskTemplateListPage = () => {
   }
 
   const dataSource = filteredList.map(item => ({
+    id: item.id,
     data: item,
     title: item.name,
     avatar: <TaskTemplateIcon />,
@@ -179,7 +180,7 @@ export const TaskTemplateListPage = () => {
           };
         }}
         ghost={viewMode === 'grid'}
-        rowKey="name"
+        rowKey="id"
         dataSource={dataSource}
         showActions="hover"
         showExtra="hover"
@@ -208,6 +209,7 @@ export const TaskTemplateListPage = () => {
                   }}></Button>
               </Tooltip>,
               <DropdownMenu
+                key="others"
                 config={[
                   {
                     icon: <EditOutlined />,

@@ -5,6 +5,7 @@ import { Row, Col, Card, Typography } from 'antd';
 import { FieldEditableItem } from './FieldEditableItem';
 import update from 'immutability-helper'
 import { v4 as uuidv4 } from 'uuid';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Paragraph } = Typography;
 
@@ -16,7 +17,7 @@ const style = {
 export const FieldListEditable = props => {
   const { fields, onChange, onSelect } = props;
 
-  const [list, setList] = React.useState(fields);
+  const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
     setList(fields.map((f, i) => ({
@@ -77,6 +78,7 @@ export const FieldListEditable = props => {
   return (
     <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
       <Row gutter={[8, 8]}>
+        {/* <DebugJsonPanel value={list} /> */}
         {list.map((field, i) => <Col key={field.id} span={24}>
           <FieldEditableItem field={field}
             onSelect={() => onSelect(field)}
