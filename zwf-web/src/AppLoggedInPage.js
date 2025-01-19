@@ -51,14 +51,14 @@ const ROUTES = [
         roles: ['admin', 'agent', 'client'],
       },
       {
-        key: '/activity',
-        label: 'Interactions & Messages',
+        path: '/activity',
+        name: 'Interactions & Messages',
         icon: <Icon component={AiOutlineHistory} />,
         roles: ['client'],
       },
       {
-        key: '/scheduler',
-        label: <FormattedMessage id="menu.scheduler" />,
+        path: '/scheduler',
+        name: <FormattedMessage id="menu.scheduler" />,
         icon: <Icon component={AiFillCalendar} />,
         roles: ['admin', 'agent'],
       },
