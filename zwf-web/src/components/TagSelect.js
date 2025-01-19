@@ -52,23 +52,6 @@ export const TagSelect = React.memo((props) => {
         allowCreate={allowCreate}
       />
     </div>
-    // <StyledSelect
-    //   {...others}
-    //   style={{ minWidth: 30, width: '100%' }}
-    //   value={value}
-    //   mode="tags"
-    //   options={options}
-    //   // tagRender={item => {
-    //   //   return <Tag key={item.id} color={item.colorHex}>{item.name}</Tag>
-    //   // }}
-    //   // dropdownRender={item => <Tag key={item.id} color={item.colorHex}>{item.name}</Tag>}
-    //   onChange={handleChange}
-    // // onSearch={handleSearch}
-    // >
-    //   {/* {allTags.map(item => <Select.Option key={item.id} value={item.id}>
-    //     <Tag color={item.colorHex}>{item.name}</Tag>
-    //   </Select.Option>)} */}
-    // </StyledSelect>
   );
 });
 

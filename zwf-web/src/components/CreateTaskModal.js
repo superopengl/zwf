@@ -17,7 +17,7 @@ export const CreateTaskModal = React.memo(props => {
     maskClosable={false}
     destroyOnClose={true}
     footer={null}
-    width={600}
+    width={480}
     focusTriggerAfterClose={false}
     onCancel={onCancel}
     onOk={onOk}
