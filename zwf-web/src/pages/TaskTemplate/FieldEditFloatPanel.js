@@ -36,12 +36,12 @@ export const FieldEditFloatPanel = (props) => {
     {...others}
     // open={open}
     // arrow={false}
-    align={{ offset: [24, 0] }}
+    align={{ offset: [14, 0] }}
     zIndex={200}
     placement="rightTop"
     color="white"
     trigger={trigger}
-    overlayInnerStyle={{ width: 400 }}
+    overlayInnerStyle={{ width: 300 }}
     title={<div style={{ padding: '1rem' }}>
       {deleting ? <>
         <Space align='center'>
