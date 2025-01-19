@@ -7,17 +7,17 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="30px" font-weight="500" line-height="130%">Hi {{toWhom}}, Thank you for contacting ZeeWorkflow</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, Thank you for contacting ZeeWorkflow</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           We have received your below contact. We will get you back soon.
         </mj-text>
       </mj-column>
       <mj-column css-class="contact-body" width="100%" padding="16px">
-        <mj-text align="left" font-size="20px" font-weight="400">
+        <mj-text align="left" font-size="18px" font-weight="400">
           {{body}}
         </mj-text>
       </mj-column>

@@ -16,15 +16,15 @@
 
   .inner-footer {
     width: 100%;
-    color: #FFFFFF;
-    background-color: #062638;
+    color: #BCC4D0;
+    background-color: #13161B;
     border-radius: 0px 0px 4px 4px;
     -webkit-print-color-adjust: exact !important;
     color-adjust: exact !important;
   }
 
   .inner-footer a {
-    color: #FFFFFF;
+    color: #BCC4D0;
   }
 
   a.verify-url {
