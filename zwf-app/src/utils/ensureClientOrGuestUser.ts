@@ -27,7 +27,13 @@ export async function ensureClientOrGuestUser(m: EntityManager, email: string, o
     user = guestUser;
     user.profile = profile;
     newlyCreated = true;
+  }
 
+  /**
+   * If the user already has an account in ZeeWorkflow, send an invite to this org.
+   * If the user hasn't accept the invite, resend the invite to ask for joining ZeeWorkflow.
+   */
+  if (user.role === Role.Guest) {
     const resetPasswordToken = uuidv4();
     user.resetPasswordToken = resetPasswordToken;
     user.status = UserStatus.ResetPassword;
@@ -35,7 +41,7 @@ export async function ensureClientOrGuestUser(m: EntityManager, email: string, o
 
     const url = `${process.env.ZWF_API_DOMAIN_NAME}/r/${resetPasswordToken}/`;
 
-    const org = await m.findOneBy(Org, {id: orgId});
+    const org = await m.findOneBy(Org, { id: orgId });
 
     await sendEmail({
       to: email,
