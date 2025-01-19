@@ -7,52 +7,35 @@ import Field from '@ant-design/pro-field';
 import React from 'react';
 import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
 import { Divider } from 'antd';
-import { FieldEditPanel } from './FieldEditPanel';
 import styled from 'styled-components';
 import { FieldItem } from './FieldItem';
+import { useOutsideClick } from "rooks";
+import { FieldEditFloatPanel } from './FieldEditFloatPanel';
 
-const { Text, Paragraph } = Typography
+const { Text } = Typography
 
 const StyledCard = styled(ProCard)`
-cursor: move;
+cursor: grab;
+border: 1px solid white;
+
 &:hover {
   border: 1px solid #0FBFC4;
-
-  .itemHolder {
-    background-color: #0FBFC444;
-  }
+  // box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 `;
-
-const StyledHolder = styled(ProCard)`
-height: 100%;
-// background-color: #f0f0f0;
-
-.ant-pro-card-body {
-  padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 900;
-  font-size: 20px;
-}
-`;
-
-
-
 
 export const FieldEditableItem = (props) => {
-  const { field, index, onDragging, onChange, onDrop, onDelete } = props;
-  const { id, name, type } = field;
+  const { field, index, onDragging, onSelect, onDrop, onChange, onDelete } = props;
+  const { id } = field;
 
-  const [editPanelOpen, setEditPanelOpen] = React.useState(false);
-  const [fieldItem, setFieldItem] = React.useState(field);
+  const [focused, setFocused] = React.useState(false);
+  const [editing, setEditing] = React.useState(false);
 
   React.useEffect(() => {
-    if (!editPanelOpen && field !== fieldItem) {
-      onChange(fieldItem);
+    if (focused) {
+      onSelect()
     }
-  }, [editPanelOpen, onChange]);
+  }, [focused, onSelect]);
 
   const ref = useRef(null)
   const [{ handlerId }, drop] = useDrop({
@@ -104,7 +87,6 @@ export const FieldEditableItem = (props) => {
   const [{ isDragging }, drag, preview] = useDrag({
     type: 'field',
     item: () => {
-      setEditPanelOpen(false);
       return { id, index }
     },
     end: (item, monitor) => {
@@ -112,34 +94,32 @@ export const FieldEditableItem = (props) => {
       if (item && dropResult) {
         onDrop();
       }
-      setEditPanelOpen(true);
     },
     collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   })
   const opacity = isDragging ? 0 : 1;
-
-  React.useEffect(() => {
-    if(isDragging) {
-      setEditPanelOpen(false);
-    }
-  }, [isDragging]);
   drag(drop(ref))
 
-  const handleFieldChange = (values) => {
-    setFieldItem(values);
+
+  const handleClick = () => {
+    setFocused(true);
   }
 
-  const style = editPanelOpen ? {
-    borderColor: '#0FBFC4',
-  } : null
+  const handleEditPanelOpenChange = open => {
+    setEditing(open)
+  }
 
-  return <FieldEditPanel trigger="click" open={editPanelOpen} 
-  onOpenChange={setEditPanelOpen} 
-  field={fieldItem} 
-  onChange={handleFieldChange}
-  onDelete={onDelete}
+  // useOutsideClick(ref, handleClickOutside);
+
+  return <FieldEditFloatPanel 
+    field={field}
+    trigger="click"
+    onChange={onChange}
+    onDelete={onDelete}
+    // open={focused}
+    onOpenChange={handleEditPanelOpenChange}
   >
     <StyledCard
       ref={ref}
@@ -147,28 +127,24 @@ export const FieldEditableItem = (props) => {
       size="small"
       bordered
       hoverable
-      split="vertical"
-      style={{ ...style, opacity }}>
-      <StyledHolder
-        colSpan="24px"
-        // title={fieldItem.official ? <Tooltip title="Official only field"><LockFilled /></Tooltip> : null}
-        className="itemHolder">
-        <HolderOutlined />
-      </StyledHolder>
+      // split="vertical"
+      onClick={handleClick}
+      style={{ opacity, borderColor: editing ? "#0FBFC4" : undefined}}
+      bodyStyle={{ padding: 0 }}>
       <ProCard
-      title={<Space>
-        {fieldItem.required && <Text type="danger">*</Text>}
-        {fieldItem.name} 
-        {fieldItem.official && <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip>}
+        title={<Space>
+          {field.required && <Text type="danger">*</Text>}
+          {field.name}
+          {field.official && <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip>}
         </Space>}
-      // extra={fieldItem.official ? <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip> : null}
+      // extra={field.official ? <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip> : null}
       >
-        {/* <Field valueType={fieldItem.type || 'text'} text={['open', 'closed']} mode="edit" /> */}
-        <FieldItem field={fieldItem} />
-        {/* {fieldItem.description && <Paragraph type="secondary">{fieldItem.description}</Paragraph>} */}
+        {/* <Field valueType={field.type || 'text'} text={['open', 'closed']} mode="edit" /> */}
+        <FieldItem field={field} />
+        {/* {field.description && <Paragraph type="secondary">{field.description}</Paragraph>} */}
       </ProCard>
     </StyledCard>
-  </FieldEditPanel>
+  </FieldEditFloatPanel>
 }
 
 
@@ -180,8 +156,9 @@ FieldEditableItem.propTypes = {
     official: PropTypes.bool,
     description: PropTypes.string,
   }),
-  onChange: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
+  onSelect: PropTypes.func,
+  onChange: PropTypes.func,
+  onDelete: PropTypes.func,
   onDragging: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
 };
@@ -190,6 +167,7 @@ FieldEditableItem.defaultProps = {
   field: {},
   onChange: () => { },
   onDelete: () => { },
+  onSelect: () => { },
   onDragging: () => { },
   onDrop: () => { },
 };

@@ -9,11 +9,11 @@ import { TaskSchemaRenderer } from 'components/TaskSchemaRenderer';
 const { Title, Paragraph } = Typography;
 
 const Container = styled.div`
-  margin: 0 auto 0 auto;
+  // margin: 0 auto 0 auto;
   width: 100%;
-  max-width: 600px;
+  // max-width: 600px;
   background-color: #ffffff;
-  padding: 2rem;
+  // padding: 2rem;
   // height: calc(100vh - 64px);
   // height: 100%;
 `;
@@ -30,7 +30,9 @@ export const TaskTemplatePreviewPanel = props => {
   return (
     <Container style={props.style}>
       <Title level={3}>{taskTemplate.name}</Title>
-      <Alert type="info" description={taskTemplate.description} showIcon />
+      {/* <Alert type="info" description={taskTemplate.description} showIcon /> */}
+      <Paragraph>{taskTemplate.description}</Paragraph>
+      <Divider/>
       <TaskSchemaRenderer
         fields={taskTemplate.fields}
         mode={mode}

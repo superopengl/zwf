@@ -12,6 +12,13 @@ import { OrgRegisterModal } from 'components/OrgRegisterModal';
 import { useWindowScrollPosition } from "rooks";
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
+import {
+  PageContainer,
+  ProCard,
+  ProConfigProvider,
+  ProLayout,
+  SettingDrawer,
+} from '@ant-design/pro-components';
 
 const { Text } = Typography;
 
@@ -79,7 +86,7 @@ export const PortalPage = () => {
   }
 
   return <StyledLayoutPage>
-    <Layout.Header >
+    <Layout.Header fixed>
       <Space style={{ justifyContent: 'space-between', width: '100%' }}>
         <Link to="/">
           <Image src="/images/logo-full-primary.svg" preview={false} height={40} />

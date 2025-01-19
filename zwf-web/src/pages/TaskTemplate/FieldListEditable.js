@@ -9,9 +9,10 @@ const { Paragraph } = Typography;
 const style = {
   height: '100%',
   width: '100%',
+  padding: '1rem',
 }
 export const FieldListEditable = props => {
-  const { fields, onChange } = props;
+  const { fields, onChange, onSelect } = props;
 
   const [list, setList] = React.useState(fields);
 
@@ -28,7 +29,7 @@ export const FieldListEditable = props => {
     }),
   }))
   const isActive = canDrop && isOver
-  let backgroundColor = 'transparent';
+  let backgroundColor = '#ffffff';
   if (isActive) {
     backgroundColor = '#0FBFC433'
   } else if (canDrop) {
@@ -50,8 +51,8 @@ export const FieldListEditable = props => {
     onChange(list);
   };
 
-  const handleFieldChange = (index, newValues) => {
-    list[index] = newValues;
+  const handleFieldChange = (index, changedField) => {
+    list[index] = changedField;
     onChange([...list]);
   }
 
@@ -62,14 +63,16 @@ export const FieldListEditable = props => {
 
   return (
     <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
-      <Row gutter={[10, 10]}>
+      <Row gutter={[8, 8]}>
         {list.map((field, i) => <Col key={field.name} span={24}>
           <FieldEditableItem field={field}
-            onChange={(newValues) => handleFieldChange(i, newValues)}
-            onDelete={() => handleDelete(i)}
+            onSelect={() => onSelect(field)}
             index={i}
             onDragging={handleDragging}
-            onDrop={handleDrop} />
+            onDrop={handleDrop}
+            onChange={changedField => handleFieldChange(i, changedField)}
+            onDelete={() => handleDelete(i)}
+          />
         </Col>)}
         <Col span={24}>
           <Paragraph type="secondary" style={{ textAlign: 'center', margin: '2rem auto' }}>Drag a control from the left list to here to add a new field.</Paragraph>

@@ -56,7 +56,7 @@ export function createFormItemSchema(field, mode) {
     throw new Error(`Unknown control type ${field.type}`);
   }
   return {
-    title: mode === 'agent' && field.official ? <Space style={{margin: 0}}>{field.name}<Tooltip title="Official only field. Client cannot see."> <EyeInvisibleFilled /></Tooltip></Space> : field.name,
+    title: mode === 'agent' && field.official ? <Tooltip title="Official only field. Client cannot see."><a>{field.name} <EyeInvisibleFilled /></a></Tooltip> : field.name,
     dataIndex: field.name,
     initialValue: field.value,
     formItemProps: {

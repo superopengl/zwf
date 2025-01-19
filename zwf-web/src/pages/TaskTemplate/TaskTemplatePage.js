@@ -1,10 +1,10 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Card, Typography, Segmented } from 'antd';
+import { Row, Col, Modal, Button, Drawer, Typography, Segmented, Layout } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
-import Icon, { LeftOutlined, SaveFilled } from '@ant-design/icons';
+import Icon, { EyeOutlined, LeftOutlined, SaveFilled } from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate$ } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
@@ -23,6 +23,7 @@ import { FieldListEditable } from './FieldListEditable';
 import Field from '@ant-design/pro-field';
 import { ProCard } from '@ant-design/pro-components';
 import { Input } from 'antd';
+import { FieldEditPanel } from './FieldEditPanel';
 
 const { Paragraph } = Typography;
 
@@ -62,6 +63,9 @@ export const TaskTemplatePage = () => {
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(!isNew);
+  const [openPreview, setOpenPreview] = React.useState(false);
+  const [affixContainer, setAffixContainer] = React.useState(null);
+  const [currentField, setCurrentField] = React.useState();
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Task Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
@@ -151,12 +155,16 @@ export const TaskTemplatePage = () => {
     setTaskTemplate(pre => ({ ...pre, description: e.target.value }));
   }
 
-  return (
-    // <PageContainer>
+  const handleChangeField = () => {
 
+  }
+
+  const handleDeleteField = () => {
+
+  }
+
+  return (<>
     <PageContainer
-      // style={{ margin: 0, overflow: 'hidden' }}
-      fixedHeader
       loading={loading}
       ghost={true}
       header={{
@@ -169,67 +177,59 @@ export const TaskTemplatePage = () => {
         </Row>,
         onBack: goBack,
         extra: [
+          <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
           <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
         ]
       }}
     >
-      {/* {taskTemplate && <TaskTemplateEditorPanel
-        ref={formRef}
-        value={taskTemplate}
-        onChange={setTaskTemplate}
-        debug={debugMode}
-      />} */}
       <DndProvider backend={HTML5Backend}>
-        <ProCard ghost gutter={[40, 0]}>
-          <ProCard colSpan={12} direction="column" ghost>
-            <ProCard title="Edit description" ghost>
-              <Input.TextArea placeholder='task description' maxLength={1000} showCount allowClear
-                autoSize={{ minRows: 3 }}
-                value={taskTemplate?.description}
-                onChange={handleDescriptionChange}
-              />
-            </ProCard>
-            <ProCard gutter={[20, 20]} title="Edit fields" ghost>
-              <ProCard colSpan={"210px"} direction="column" layout="center" ghost>
-                {TaskTemplateFieldControlDef.map((d, i) => <FieldControlItem
-                  key={i}
-                  icon={d.icon}
-                  label={d.label}
-                  type={d.type}
-                  onDropDone={() => handleAddControl(d.type)}
-                />)}
-              </ProCard>
-              <ProCard ghost style={{ height: '100%' }} layout="center">
-                <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
-              </ProCard>
-            </ProCard>
+        <ProCard colSpan={12} direction="column" ghost>
+          <ProCard title="Edit description" ghost>
+            <Input.TextArea placeholder='task description' maxLength={1000} showCount allowClear
+              autoSize={{ minRows: 3 }}
+              value={taskTemplate?.description}
+              onChange={handleDescriptionChange}
+            />
           </ProCard>
-          <ProCard colSpan={12} ghost direction="column">
-            <ProCard
-              title={<>Preview - {previewMode}</>}
-              // type='inner'
-              extra={<Segmented
-                options={['agent', 'client']}
-                onChange={setPreviewMode} />}
-              layout="center"
-              // bordered
-              direction="column"
-            // ghost
-            >
-              <TaskTemplatePreviewPanel
-                value={taskTemplate}
-                debug={debugMode}
-                mode={previewMode}
-              />
+          <ProCard gutter={[20, 20]} title="Edit fields" ghost>
+            <ProCard colSpan={"200px"} direction="column" layout="center" ghost>
+              {TaskTemplateFieldControlDef.map((d, i) => <FieldControlItem
+                key={i}
+                icon={d.icon}
+                label={d.label}
+                type={d.type}
+                onDropDone={() => handleAddControl(d.type)}
+              />)}
             </ProCard>
+            <ProCard colSpan={"auto"} ghost style={{ }} bodyStyle={{ padding: 0 }} layout="center">
+              <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} onSelect={setCurrentField} />
+            </ProCard>
+            <ProCard colSpan="400px" ghost layout="center" direction='column'>
+              {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}
+            </ProCard>
+
           </ProCard>
         </ProCard>
-
-        {/* <Divider />
-        <Field valueType="jsonCode" text={JSON.stringify(taskTemplate)} /> */}
       </DndProvider>
+      <Drawer
+        title="Preview"
+        closable
+        open={openPreview}
+        onClose={() => setOpenPreview(false)}
+        maskClosable
+        width="50%"
+        extra={<Segmented
+          options={['agent', 'client']}
+          onChange={setPreviewMode} />}
+      >
+        <TaskTemplatePreviewPanel
+          value={taskTemplate}
+          debug={debugMode}
+          mode={previewMode}
+        />
+      </Drawer>
     </PageContainer>
-
+  </>
   );
 };
 
