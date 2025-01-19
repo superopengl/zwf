@@ -1,12 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge } from 'antd';
+import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge, Row, Col } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
   ClearOutlined,
   CheckCircleFilled,
-  CheckOutlined
+  CheckOutlined,
+  MessageOutlined
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
@@ -33,6 +34,8 @@ import { MdMessage } from 'react-icons/md';
 import { useLocalstorageState } from 'rooks';
 import { RoleTag } from 'components/RoleTag';
 import { PageContainer } from '@ant-design/pro-components';
+import { Tooltip } from 'antd';
+import { GiDominoMask } from 'react-icons/gi';
 
 
 const { Text } = Typography;
@@ -84,6 +87,7 @@ const LOCAL_STORAGE_KEY = 'user_support_query';
 const SupportListPage = () => {
 
   const [chatVisible, setChatVisible] = React.useState(false);
+  const [clientTrackingVisible, setClientTrackingVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState();
@@ -123,20 +127,22 @@ const SupportListPage = () => {
       render: (value) => <TimeAgo value={value} />
     },
     {
-      width: 60,
+      width: 120,
       align: 'right',
       fixed: 'right',
       render: (text, item) => {
-        return (
+        return <Row>
+          <Tooltip title="Message">
+            <Button icon={<MessageOutlined />} type="text" onClick={() => handleChatWith(item)} />
+          </Tooltip>
+          <Tooltip title="Impersonate">
+            <Button icon={<Icon component={GiDominoMask} />} type="text" onClick={() => handleImpersonante(item)} disabled={item.role === 'guest'} />
+          </Tooltip>
           <DropdownMenu
             config={[
-              {
-                menu: 'Chat',
-                onClick: () => handleChatWith(item)
-              },
-              item.role !== 'guest' ? {
-                menu: 'Impersonate',
-                onClick: () => handleImpersonante(item)
+              item.role === 'client' ? {
+                menu: 'Trackings',
+                onClick: () => handleClientTrackings(item)
               } : null,
               {
                 menu: 'Resend invite',
@@ -144,7 +150,7 @@ const SupportListPage = () => {
               }
             ]}
           />
-        )
+        </Row>
       },
     },
   ].filter(x => !!x);
@@ -236,6 +242,10 @@ const SupportListPage = () => {
 
   const searchByQueryInfo = async () => {
 
+  }
+
+  const handleClientTrackings = () => {
+    setClientTrackingVisible(true)
   }
 
   const handleImpersonante = async (user) => {
@@ -339,6 +349,13 @@ const SupportListPage = () => {
         onClose={() => setChatVisible(false)}
         eventSource={eventSource$.current}
       />
+      <Drawer
+        title="Tracking"
+        open={clientTrackingVisible}
+        onClose={() => setClientTrackingVisible(false)}
+      >
+        Coming soon
+      </Drawer>
     </PageContainer>
 
   );
