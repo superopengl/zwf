@@ -9,10 +9,10 @@ import {
 import { MdOutlineFormatColorText } from 'react-icons/md'
 import { RxSwitch } from 'react-icons/rx';
 import { BsCloudUpload } from 'react-icons/bs';
-import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined } from '@ant-design/icons'
+import Icon, { FilePdfFilled, FieldNumberOutlined, UploadOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { DateInput } from 'components/DateInput';
-import { Tooltip, Space } from 'antd';
+import { Tooltip, Input } from 'antd';
 import { AutoDocInput } from 'components/AutoDocInput';
 import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
 import {
@@ -33,6 +33,7 @@ import {
   ProFormUploadButton,
   ProFormUploadDragger,
 } from '@ant-design/pro-components';
+import { Divider } from 'antd';
 
 export const createFieldItemSchema = (controlType, name) => {
   const controlDef = TaskTemplateFieldControlDefMap.get(controlType);
@@ -56,10 +57,11 @@ export function createFormItemSchema(field, mode) {
     throw new Error(`Unknown control type ${field.type}`);
   }
   return {
-    title: mode === 'agent' && field.official ? <Tooltip title="Official only field. Client cannot see."><a>{field.name} <EyeInvisibleFilled /></a></Tooltip> : field.name,
+    title: field.type === 'divider' ? null : mode === 'agent' && field.official ? <Tooltip title="Official only field. Client cannot see."><a>{field.name} <EyeInvisibleFilled /></a></Tooltip> : field.name,
     dataIndex: field.name,
     initialValue: field.value,
     formItemProps: {
+      ...field.formItemProps,
       help: field.description,
       rules: [{ required: field.required, whitespace: true }]
     },
@@ -83,7 +85,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'text',
     label: 'Text',
     icon: <MdOutlineFormatColorText />,
-    widget: 'input',
     fieldProps: {
       allowClear: true,
       maxLength: 150,
@@ -94,7 +95,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'textarea',
     label: 'Textarea',
     icon: <FaAlignLeft />,
-    widget: 'textarea',
     fieldProps: {
       allowClear: true,
       showCount: true,
@@ -106,7 +106,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'digit',
     label: 'Number',
     icon: <FieldNumberOutlined />,
-    widget: 'number',
     fieldProps: {
       style: {
         width: '100%'
@@ -118,7 +117,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'checkbox',
     label: 'Switch (checkbox)',
     icon: <RxSwitch />,
-    widget: 'checkbox-group',
     fieldProps: null,
     control: ProFormSwitch,
   },
@@ -126,7 +124,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'select',
     label: 'Single choice',
     icon: <FaChevronCircleDown />,
-    widget: 'select',
     fieldProps: {
     },
     control: ProFormSelect,
@@ -135,7 +132,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'radio',
     label: 'Multiple choice',
     icon: <FaDotCircle />,
-    widget: 'radio-group',
     fieldProps: {
     },
     control: ProFormRadio.Group,
@@ -144,7 +140,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'date',
     label: 'Date',
     icon: <FaCalendarAlt />,
-    widget: DateInput,
     fieldProps: {
       picker: 'date',
       format: 'DD MMM YYYY',
@@ -156,7 +151,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'dateMonth',
     label: 'Month',
     icon: <FaCalendarAlt />,
-    widget: DateInput,
     fieldProps: {
       picker: 'month',
       format: 'MMM YYYY'
@@ -167,7 +161,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'dateQuarter',
     label: 'Quarter',
     icon: <FaCalendarAlt />,
-    widget: DateInput,
     fieldProps: {
       picker: 'quarter',
       format: 'YYYY-\\QQ'
@@ -178,7 +171,6 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'dateYear',
     label: 'Year',
     icon: <FaCalendarAlt />,
-    widget: DateInput,
     fieldProps: {
       picker: 'year',
       format: 'YYYY'
@@ -189,10 +181,33 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     type: 'upload',
     label: 'Upload files',
     icon: <BsCloudUpload />,
-    widget: TaskFileUploader,
     fieldProps: {
     },
     control: TaskFileUploader,
+  },
+  {
+    type: 'divider',
+    label: 'Divider',
+    icon: <LineOutlined />,
+    formItemProps: {
+      label: null,
+    },
+    fieldProps: {
+    },
+    control: Divider,
+  },
+  {
+    type: 'instruction',
+    label: 'Instraction (readonly)',
+    icon: <QuestionCircleOutlined />,
+    formItemProps: {
+    },
+    hideInForm: true,
+    fieldProps: {
+      bordered: false,
+      disabled: true,
+    },
+    control: () => <div className="description-field-control"></div>,
   },
   // {
   //   type: 'autodoc',

@@ -136,7 +136,7 @@ export const FieldEditableItem = (props) => {
       style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined}}
       bodyStyle={{ padding: 0 }}>
       <ProCard
-        title={<Space>
+        title={field.type === 'divider' ? null : <Space>
           {field.required && <Text type="danger">*</Text>}
           {field.name}
           {field.official && <Tooltip title="Official only field. Client cannot see."><EyeInvisibleFilled /></Tooltip>}
