@@ -30,9 +30,6 @@ export const TaskTemplatePreviewPanel = props => {
   return (
     <Container style={props.style}>
       <Title level={3}>{taskTemplate.name}</Title>
-      {/* <Alert type="info" description={taskTemplate.description} showIcon /> */}
-      <Paragraph>{taskTemplate.description}</Paragraph>
-      <Divider/>
       <TaskSchemaRenderer
         fields={taskTemplate.fields}
         mode={mode}

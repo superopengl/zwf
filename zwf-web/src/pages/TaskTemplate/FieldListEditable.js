@@ -89,9 +89,7 @@ export const FieldListEditable = props => {
             onDelete={() => handleDelete(i)}
           />
         </Col>)}
-        <Col span={24}>
-          <Paragraph type="secondary" style={{ textAlign: 'center', margin: '2rem auto' }}>Drag a control from the left list to here to add a new field.</Paragraph>
-        </Col>
+
       </Row>
     </div>
   )

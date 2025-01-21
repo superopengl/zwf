@@ -78,7 +78,7 @@ const RecurringListPage = (props) => {
       ellipsis: false
     },
     {
-      title: 'Task Template',
+      title: 'Form Template',
       dataIndex: 'taskTemplateName',
       render: (text, record) => record.taskTemplateName ? <Link to={`/task_template/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
       ellipsis: false

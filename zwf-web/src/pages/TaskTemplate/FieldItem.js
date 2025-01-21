@@ -5,10 +5,10 @@ import { createFormItemSchema, TaskTemplateFieldControlDefMap } from 'util/TaskT
 import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import styled from 'styled-components';
-import {EyeInvisibleOutlined} from '@ant-design/icons';
+import { EyeInvisibleOutlined } from '@ant-design/icons';
 import { Tooltip } from 'antd';
 
-const {Text} = Typography;
+const { Text } = Typography;
 
 const Container = styled.div`
 position: relative;
@@ -26,28 +26,21 @@ position: relative;
 }
 `;
 
-export const FieldItem = (props) => {
+export const FieldItem = React.memo((props) => {
   const { field } = props;
 
-  const controlDef = TaskTemplateFieldControlDefMap.get(field.type);
+  const fieldSchema = createFormItemSchema(field, 'agent');
 
   return <Container>
-    {/* <BetaSchemaForm
+    <BetaSchemaForm
       layoutType='Form'
       columns={[fieldSchema]}
       submitter={{
         render: () => null
       }}
-    /> */}
-    {/* <Field valueType="jsonCode" text={JSON.stringify(field)} /> */}
-    {/* <Field valueType="jsonCode" text={JSON.stringify(fieldSchema)} /> */}
-    <controlDef.control {...controlDef.fieldProps} placeholder={field.name} options={field.options} autoFocus={false}/>
-    <Text type="secondary">{field.description}</Text>
-    {/* <div className="mask"></div> */}
+    />
   </Container>
-
-  // return <controlDef.control  {...fieldProps} {...otherProps} help={otherProps.description} />
-}
+})
 
 
 FieldItem.propTypes = {
