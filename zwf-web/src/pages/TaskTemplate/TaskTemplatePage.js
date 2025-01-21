@@ -82,8 +82,6 @@ export const TaskTemplatePage = () => {
 
   const [loading, setLoading] = React.useState(!isNew);
   const [openPreview, setOpenPreview] = React.useState(false);
-  const [affixContainer, setAffixContainer] = React.useState(null);
-  const [currentField, setCurrentField] = React.useState();
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Form Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
@@ -230,7 +228,7 @@ export const TaskTemplatePage = () => {
             </Col>
           </ProCard>
           <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
-            <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} onSelect={setCurrentField} />
+            <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
           </ProCard>
           <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
             {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}

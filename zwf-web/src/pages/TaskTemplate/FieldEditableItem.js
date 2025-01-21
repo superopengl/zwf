@@ -25,11 +25,11 @@ border: 1px solid white;
 `;
 
 export const FieldEditableItem = (props) => {
-  const { field, index, onDragging, onSelect, onDrop, onChange, onDelete } = props;
+  const { field, index, onDragging, onSelect, onDrop, onChange, onDelete, open } = props;
   const { id } = field;
 
   const [focused, setFocused] = React.useState(false);
-  const [editing, setEditing] = React.useState(false);
+  const [editing, setEditing] = React.useState(open);
 
   React.useEffect(() => {
     if (focused) {
@@ -123,6 +123,7 @@ export const FieldEditableItem = (props) => {
     trigger="click"
     onChange={onChange}
     onDelete={onDelete}
+    open={editing}
     onOpenChange={handleEditPanelOpenChange}
   >
     <StyledCard
@@ -154,10 +155,12 @@ FieldEditableItem.propTypes = {
   onDelete: PropTypes.func,
   onDragging: PropTypes.func.isRequired,
   onDrop: PropTypes.func.isRequired,
+  open: PropTypes.bool
 };
 
 FieldEditableItem.defaultProps = {
   field: {},
+  open: false,
   onChange: () => { },
   onDelete: () => { },
   onSelect: () => { },

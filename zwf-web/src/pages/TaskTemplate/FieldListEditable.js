@@ -16,7 +16,7 @@ const style = {
   padding: '1rem',
 }
 export const FieldListEditable = props => {
-  const { fields, onChange, onSelect } = props;
+  const { fields, onChange } = props;
 
   const [list, setList] = React.useState([]);
 
@@ -86,8 +86,8 @@ export const FieldListEditable = props => {
           <Empty description="No field defined. Drag control from the left panel to here to add new field." image={Empty.PRESENTED_IMAGE_SIMPLE} />
           : list.map((field, i) => <Col key={field.id} span={24}>
             <FieldEditableItem field={field}
-              onSelect={() => onSelect(field)}
               index={i}
+              open={i === 0}
               onDragging={handleDragging}
               onDrop={handleDrop}
               onChange={changedField => handleFieldChange(i, changedField)}
