@@ -62,13 +62,13 @@ export const FieldEditPanel = (props) => {
       <Form.Item name="name" label="Field Name" required>
         <Input allowClear />
       </Form.Item>
-      {field.type === 'autodoc' && <Form.Item
+      {/* {field.type === 'autodoc' && <Form.Item
         label="Doc Template"
         name={['value', 'docTemplateId']}
         rules={[{ required: true, message: ' ' }]}
       >
         <DocTemplateSelect showVariables={true} isMultiple={false} />
-      </Form.Item>}
+      </Form.Item>} */}
       <Form.Item name="required" label="Required" valuePropName="checked">
         <Switch />
       </Form.Item>
@@ -76,7 +76,7 @@ export const FieldEditPanel = (props) => {
         <Switch />
       </Form.Item>
       <Form.Item name="description" label="Description">
-        <Input.TextArea allowClear showCount maxLength={200} autoSize={{ minRows: 3 }} />
+        <Input.TextArea allowClear showCount maxLength={field.type === 'instruction' ? 1000 : 200} autoSize={{ minRows: 3 }} />
       </Form.Item>
       {['radio', 'select'].includes(field.type) &&
         <Form.Item label="Options"

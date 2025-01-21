@@ -79,7 +79,7 @@ export const FieldEditFloatPanel = (props) => {
             <Switch />
           </Form.Item>
           <Form.Item name="description" label="Description">
-            <Input.TextArea allowClear showCount maxLength={200} autoSize={{ minRows: 3 }} />
+            <Input.TextArea allowClear showCount maxLength={field.type === 'instruction' ? 1000 : 200} autoSize={{ minRows: 3 }} />
           </Form.Item>
           {['radio', 'select'].includes(field.type) &&
             <Form.Item label="Options"

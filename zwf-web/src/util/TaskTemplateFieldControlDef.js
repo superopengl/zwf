@@ -198,7 +198,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   },
   {
     type: 'instruction',
-    label: 'Instraction (readonly)',
+    label: 'Instruction (help text)',
     icon: <QuestionCircleOutlined />,
     formItemProps: {
     },

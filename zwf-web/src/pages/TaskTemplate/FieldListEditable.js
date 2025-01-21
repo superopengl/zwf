@@ -6,8 +6,9 @@ import { FieldEditableItem } from './FieldEditableItem';
 import update from 'immutability-helper'
 import { v4 as uuidv4 } from 'uuid';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { Empty } from 'antd';
 
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 
 const style = {
   height: '100%',
@@ -55,7 +56,7 @@ export const FieldListEditable = props => {
 
   const handleOnChange = () => {
     const changedFields = list.map(f => {
-      const {id, ...cleanedField} = f;
+      const { id, ...cleanedField } = f;
       return cleanedField;
     })
     onChange(changedFields);
@@ -75,20 +76,24 @@ export const FieldListEditable = props => {
     handleOnChange([...list]);
   }
 
+  const isEmpty = !list?.length;
+
   return (
     <div ref={drop} style={{ ...style, backgroundColor, height: '100%' }}>
-      <Row gutter={[8, 8]}>
+      <Row gutter={[8, 8]} justify="center">
         {/* <DebugJsonPanel value={list} /> */}
-        {list.map((field, i) => <Col key={field.id} span={24}>
-          <FieldEditableItem field={field}
-            onSelect={() => onSelect(field)}
-            index={i}
-            onDragging={handleDragging}
-            onDrop={handleDrop}
-            onChange={changedField => handleFieldChange(i, changedField)}
-            onDelete={() => handleDelete(i)}
-          />
-        </Col>)}
+        {isEmpty ?
+          <Empty description="No field defined. Drag control from the left panel to here to add new field." image={Empty.PRESENTED_IMAGE_SIMPLE} />
+          : list.map((field, i) => <Col key={field.id} span={24}>
+            <FieldEditableItem field={field}
+              onSelect={() => onSelect(field)}
+              index={i}
+              onDragging={handleDragging}
+              onDrop={handleDrop}
+              onChange={changedField => handleFieldChange(i, changedField)}
+              onDelete={() => handleDelete(i)}
+            />
+          </Col>)}
 
       </Row>
     </div>
