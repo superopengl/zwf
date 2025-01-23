@@ -141,7 +141,7 @@ export const FieldEditableItem = (props) => {
     open={editing}
     onOpenChange={handleEditPanelOpenChange}
   >
-    {/* <DebugJsonPanel value={isControlDragging} /> */}
+    {/* <DebugJsonPanel value={field} /> */}
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}

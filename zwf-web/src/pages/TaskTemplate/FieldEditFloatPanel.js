@@ -10,6 +10,7 @@ import { DeleteOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons'
 import { Divider } from 'antd';
 import { OptionsBuilder } from './formBuilder/OptionsBuilder';
 import DocTemplateSelect from 'components/DocTemplateSelect';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -18,11 +19,9 @@ export const FieldEditFloatPanel = (props) => {
   const { field, onChange, trigger, children, onDelete, ...others } = props;
   const [deleting, setDeleting] = React.useState(field.type === 'divider');
 
-  // React.useEffect(() => {
-  //   if (open) {
-  //     setDeleting(false);
-  //   }
-  // }, [open])
+  React.useEffect(() => {
+    setDeleting(field.type === 'divider')
+  }, [field])
 
   const handleValuesChange = (changedValues, allValues) => {
     onChange({ ...field, ...changedValues });
@@ -43,10 +42,12 @@ export const FieldEditFloatPanel = (props) => {
     trigger={trigger}
     overlayInnerStyle={{ width: 300 }}
     title={<div style={{ padding: '1rem' }}>
+    {/* <DebugJsonPanel value={field} /> */}
+
       {deleting ? <>
         <Space align='center'>
           <Avatar icon={<Icon component={DeleteOutlined} />} style={{ backgroundColor: '#F53F3F' }} />
-          <Paragraph style={{margin: 0}}>Are you sure you want to delete field <Text strong>{field.name}</Text>?</Paragraph>
+          <Paragraph style={{margin: 0}}>Are you sure you want to delete {field.type === 'divider' ? 'this divider' : <>field <Text strong>{field.name}</Text></>}?</Paragraph>
         </Space>
         <Space style={{ width: '100%', marginTop: 30, justifyContent: 'end' }}>
           {field.type !== 'divider' && <Button type="text" autoFocus onClick={() => setDeleting(false)}>Cancel</Button>}
