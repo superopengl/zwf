@@ -4,11 +4,11 @@ import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Space, Typography, Row, Col, Card, Skeleton } from 'antd';
 
-import { getTask$, listTaskTrackings$ } from 'services/taskService';
+import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { TaskMessageForm } from 'components/TaskMessageForm';
-import { TaskTrackingPanel } from 'components/TaskTrackingPanel';
+import { TaskCommentPanel } from 'components/TaskCommentPanel';
 import { combineLatest } from 'rxjs';
 import { PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
@@ -86,7 +86,7 @@ const ClientTaskPage = (props) => {
                 </div>
               ]}
             >
-              <TaskTrackingPanel taskId={task.id} />
+              <TaskCommentPanel taskId={task.id} />
             </Card>
           </Col>
         </Row>

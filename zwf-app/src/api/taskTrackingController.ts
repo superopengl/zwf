@@ -19,6 +19,7 @@ import { publishEvent } from '../services/globalEventSubPubService';
 import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { logTaskChat, nudgeTrackingAccess, TASK_ACTIVITY_EVENT_TYPE } from '../services/taskTrackingService';
 import { assertRole } from '../utils/assertRole';
+import { TaskActionType } from '../types/TaskActionType';
 
 
 export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
@@ -29,7 +30,7 @@ export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const listTaskTrackings = handlerWrapper(async (req, res) => {
+export const listTaskComment = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
@@ -41,6 +42,7 @@ export const listTaskTrackings = handlerWrapper(async (req, res) => {
     list = await m.find(TaskTrackingInformation, {
       where: {
         taskId: id,
+        action: TaskActionType.Chat,
         ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {

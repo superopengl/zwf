@@ -1,3 +1,5 @@
+import { TaskActionType } from './../types/TaskActionType';
+import { TaskTrackingInformation } from './../entity/views/TaskTrackingInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
@@ -7,7 +9,7 @@ import { OrgClientInformation } from './../entity/views/OrgClientInformation';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
 import * as moment from 'moment';
-import { In } from 'typeorm';
+import { In, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskTemplate } from '../entity/TaskTemplate';
 import { Task } from '../entity/Task';
@@ -559,10 +561,10 @@ export const notifyTask = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const getTaskHistory = handlerWrapper(async (req, res) => {
+export const getTaskLog = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent', 'client');
   const { id } = req.params;
-  let query: any = { taskId: id };
+  let query: any = { taskId: id, action: Not(TaskActionType.Chat) };
   const role = getRoleFromReq(req);
   switch (role) {
     case Role.Admin:
@@ -580,7 +582,7 @@ export const getTaskHistory = handlerWrapper(async (req, res) => {
     default:
       break;
   }
-  const list = await db.getRepository(TaskHistoryInformation).find({ where: query });
+  const list = await db.getRepository(TaskTrackingInformation).find({ where: query });
 
   res.json(list);
 });

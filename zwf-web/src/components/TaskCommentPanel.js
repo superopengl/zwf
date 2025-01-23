@@ -6,7 +6,7 @@ import React from 'react';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import ScrollToBottom, { useScrollToBottom, useSticky } from 'react-scroll-to-bottom';
-import { listTaskTrackings$, } from 'services/taskService';
+import { listTaskComment$, } from 'services/taskService';
 import { nudgeTrackingAccess$ } from 'services/taskTrackingService';
 import { subscribeTaskTracking } from "services/taskTrackingService";
 import * as moment from 'moment';
@@ -22,7 +22,7 @@ const containerCss = css({
 });
 
 
-export const TaskTrackingPanel = React.memo((props) => {
+export const TaskCommentPanel = React.memo((props) => {
   const { taskId } = props;
 
   const [list, setList] = React.useState([]);
@@ -33,7 +33,7 @@ export const TaskTrackingPanel = React.memo((props) => {
   // }, [list]);
 
   React.useEffect(() => {
-    const sub$ = listTaskTrackings$(taskId).subscribe(allData => {
+    const sub$ = listTaskComment$(taskId).subscribe(allData => {
       allData.forEach(x => {
         x.createdAt = moment.utc(x.createdAt).local().toDate()
       });
@@ -60,10 +60,10 @@ export const TaskTrackingPanel = React.memo((props) => {
   </ScrollToBottom >
 });
 
-TaskTrackingPanel.propTypes = {
+TaskCommentPanel.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-TaskTrackingPanel.defaultProps = {
+TaskCommentPanel.defaultProps = {
 };
 
