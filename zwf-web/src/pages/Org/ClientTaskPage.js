@@ -69,15 +69,15 @@ const ClientTaskPage = (props) => {
         }}
       >
         <Row gutter={40} wrap={false}>
-          <Col span={12}>
+          <Col span={14}>
             <Card size="large">
               <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
             </Card>
           </Col>
-          <Col span={12} >
+          <Col span={10} >
             <Card
               bordered={false}
-              title="Interactions & Messages"
+              title="Comment"
               size="large"
               bodyStyle={{ overflowX: 'hidden', overflowY: 'auto' }}
               // actions={[
