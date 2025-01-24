@@ -8,7 +8,7 @@ import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 
 export const UserNameCard = React.memo((props) => {
-  const { userId, searchText, size, showTooltip, showName, showEmail } = props;
+  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar } = props;
 
   const [data, setData] = React.useState();
 
@@ -37,21 +37,22 @@ export const UserNameCard = React.memo((props) => {
 
   if (!data) {
     return <Space size="small">
-      <Skeleton.Avatar active={true} size={size} shape="circle" />
+      {showAvatar && <Skeleton.Avatar active={true} size={size} shape="circle" />}
       {showName && <Skeleton.Input style={{ width: 180 }} active={true} size={size} />}
     </Space>
   }
 
   const contentComponent = <Row size="small" wrap={false} gutter={8} align="top">
-    <Col>
+    {showAvatar && <Col>
       <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
-    </Col>
+    </Col>}
     {(showName || showEmail) && <Col flex="auto"><UserDisplayName
       surname={data.surname}
       givenName={data.givenName}
       email={data.email}
       searchText={searchText}
       showEmail={showEmail}
+      size={fontSize}
     />
     </Col>}
   </Row>
@@ -66,15 +67,19 @@ UserNameCard.propTypes = {
   userId: PropTypes.string,
   searchText: PropTypes.string,
   size: PropTypes.number,
+  fontSize: PropTypes.number,
   showTooltip: PropTypes.bool,
   showName: PropTypes.bool,
   showEmail: PropTypes.bool,
+  showAvatar: PropTypes.bool,
 };
 
 UserNameCard.defaultProps = {
   searchText: '',
   size: 32,
+  fontSize: 14,
   showTooltip: false,
   showName: true,
   showEmail: true,
+  showAvatar: true,
 };

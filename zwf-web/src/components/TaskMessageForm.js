@@ -1,9 +1,9 @@
 import { EnterOutlined } from '@ant-design/icons';
-import { Button, Form, Input } from 'antd';
+import { Button, Form, Input, Space, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { createNewTaskTracking$ } from 'services/taskTrackingService';
+import { addTaskComment$ } from 'services/taskTrackingService';
 import { finalize } from 'rxjs/operators';
 
 export const TaskMessageForm = React.memo((props) => {
@@ -30,7 +30,7 @@ export const TaskMessageForm = React.memo((props) => {
     }
 
     setLoading(true)
-    createNewTaskTracking$(taskId, message).pipe(
+    addTaskComment$(taskId, message).pipe(
       finalize(() => setLoading(false))
     ).subscribe(() => {
       onDone?.()
@@ -54,7 +54,16 @@ export const TaskMessageForm = React.memo((props) => {
         ref={textareaRef}
       />
     </Form.Item>
-    <Button block type="primary" htmlType="submit" disabled={loading}>Send <EnterOutlined /></Button>
+    <Form.Item>
+      <Row justify="start" gutter={8} style={{position: 'relative', top: -16}}>
+        <Col>
+          <Button type="primary" htmlType="submit" disabled={loading}>Save</Button>
+        </Col>
+        <Col>
+          <Button htmlType="reset" disabled={loading}>Cancel</Button>
+        </Col>
+      </Row>
+    </Form.Item>
   </Form>
 
 });

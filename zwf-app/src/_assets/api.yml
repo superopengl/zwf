@@ -793,7 +793,7 @@ paths:
         200:
           description: OK
     post:
-      operationId: createNewTaskTracking
+      operationId: addTaskComment
       parameters:
         - name: id
           in: path

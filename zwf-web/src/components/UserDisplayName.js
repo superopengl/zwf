@@ -7,7 +7,7 @@ import { getUserDisplayName } from '../util/getUserDisplayName';
 const { Text } = Typography;
 
 export const UserDisplayName = (props) => {
-  const { email, givenName, surname, searchText, showEmail } = props;
+  const { email, size, givenName, surname, searchText, showEmail } = props;
 
   const displayName = React.useMemo(() => {
     return getUserDisplayName(email, givenName, surname);
@@ -16,12 +16,12 @@ export const UserDisplayName = (props) => {
   ]);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', fontSize: 14 }}>
+    <div style={{ display: 'flex', flexDirection: 'column'}}>
         {/* <HighlightingText value={displayName} search={searchText} /> */}
-        <Text ellipsis={true} style={{ maxWidth: "100%" }}>
+        <Text ellipsis={true} style={{ maxWidth: "100%", fontSize: size }}>
           <HighlightingText value={displayName} search={searchText} />
           </Text>
-      {showEmail && <Text ellipsis={true} style={{ margin: 0, lineHeight: '0.8rem',  maxWidth: '100%' }} type="secondary"><small>
+      {showEmail && <Text ellipsis={true} style={{ margin: 0, lineHeight: 1.1,  maxWidth: '100%', fontSize: size }} type="secondary"><small>
         <HighlightingText value={email} search={searchText} />
       </small></Text>}
     </div>
@@ -34,6 +34,7 @@ UserDisplayName.propTypes = {
   email: PropTypes.string.isRequired,
   searchText: PropTypes.string,
   showEmail: PropTypes.bool,
+  size: PropTypes.number,
 };
 
 UserDisplayName.defaultProps = {
@@ -41,5 +42,6 @@ UserDisplayName.defaultProps = {
   givenName: null,
   searchText: '',
   showEmail: true,
+  size: 32,
 };
 
