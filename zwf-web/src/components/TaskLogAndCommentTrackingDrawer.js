@@ -5,14 +5,14 @@ import 'react-chat-elements/dist/main.css';
 import { listTaskComment$ } from 'services/taskService';
 import { TaskCommentPanel } from './TaskCommentPanel';
 import { TaskMessageForm } from './TaskMessageForm';
-import { CommentOutlined, HistoryOutlined } from '@ant-design/icons';
+import { CommentOutlined, HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { UserNameCard } from './UserNameCard';
 import { TaskLogPanel } from './TaskLogPanel';
 
 
 
-export const TaskTrackingDrawer = React.memo((props) => {
+export const TaskLogAndCommentTrackingDrawer = React.memo((props) => {
   const { taskId, userId, visible, onClose, width } = props;
   const context = React.useContext(GlobalContext);
 
@@ -46,7 +46,7 @@ export const TaskTrackingDrawer = React.memo((props) => {
         },
         {
           key: 'comment',
-          label: <div style={{paddingRight: 16}}><CommentOutlined /> Comment</div>,
+          label: <div style={{paddingRight: 16}}><MessageOutlined /> Comment</div>,
           children: <TaskCommentPanel taskId={taskId} />
         }
       ]}
@@ -54,7 +54,7 @@ export const TaskTrackingDrawer = React.memo((props) => {
   </Drawer>
 });
 
-TaskTrackingDrawer.propTypes = {
+TaskLogAndCommentTrackingDrawer.propTypes = {
   taskId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   width: PropTypes.number,
@@ -62,7 +62,7 @@ TaskTrackingDrawer.propTypes = {
   onClose: PropTypes.func,
 };
 
-TaskTrackingDrawer.defaultProps = {
+TaskLogAndCommentTrackingDrawer.defaultProps = {
   width: 500,
   visible: false,
   onClose: () => { },
