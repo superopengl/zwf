@@ -29,6 +29,10 @@ export const FieldEditableItem = (props) => {
   const { field, index, onDragging, onSelect, onDrop, onChange, onDelete, open } = props;
   const { id } = field;
 
+  if(!id) {
+    throw new Error(`id is missing from field '${field?.name}'`);
+  }
+
   const [focused, setFocused] = React.useState(false);
   const [editing, setEditing] = React.useState(open);
   const [isControlDragging, setDragging] = React.useState(false);
@@ -37,7 +41,7 @@ export const FieldEditableItem = (props) => {
 
   const handleStateChange = () => {
     const dragging = dragDropManager.getMonitor().isDragging();
-    if(!dragging) {
+    if (!dragging) {
       setDragging(false);
     }
   }
@@ -138,7 +142,7 @@ export const FieldEditableItem = (props) => {
     trigger="click"
     onChange={onChange}
     onDelete={onDelete}
-    open={editing}
+    open={editing && !dragging}
     onOpenChange={handleEditPanelOpenChange}
   >
     {/* <DebugJsonPanel value={field} /> */}
@@ -150,9 +154,9 @@ export const FieldEditableItem = (props) => {
       hoverable={false}
       // split="vertical"
       onClick={handleClick}
-      style={{ ...style, borderColor: editing ? "#0FBFC4" : undefined, opacity: isDragging ? 0 : 1, padding: 6 }}
+      style={{ ...style, borderColor: editing && !dragging ? "#0FBFC4" : undefined, opacity: isDragging ? 0 : 1, padding: 6 }}
       bodyStyle={{ padding: 0, opacity: dragging ? 0 : 1 }}>
-      <FieldItem field={field}  />
+      <FieldItem field={field} />
     </StyledCard>
   </FieldEditFloatPanel>
 }
