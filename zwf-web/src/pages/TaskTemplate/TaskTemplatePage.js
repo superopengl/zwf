@@ -50,6 +50,7 @@ const EMPTY_TASK_TEMPLATE = {
   name: 'New form template',
   fields: [
     {
+      id: uuidv4(),
       name: 'Unnamed field',
       description: '',
       type: 'text',
@@ -139,11 +140,13 @@ export const TaskTemplatePage = () => {
     }
   }
 
-  const handleAddControl = (controlType) => {
+  const handleAddControl = (controlType, newFieldId) => {
     setTaskTemplate(pre => {
       const name = getUniqueNewFieldName(pre.fields, controlType);
       const newField = createFieldItemSchema(controlType, name);
-      newField.id = pre.fields.length;
+      newField.id = newFieldId;
+
+      console.log('just added', newField);
       return {
         ...pre,
         fields: [
@@ -220,7 +223,7 @@ export const TaskTemplatePage = () => {
               icon={c.icon}
               label={c.label}
               type={c.type}
-              onDropStart={() => handleAddControl(c.type)}
+              onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
               // onDropDone={() => handleAddControl(c.type)}
               index={taskTemplate?.fields.length}
             />)}

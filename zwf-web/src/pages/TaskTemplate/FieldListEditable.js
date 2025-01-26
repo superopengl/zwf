@@ -21,8 +21,9 @@ export const FieldListEditable = props => {
   const [list, setList] = React.useState([]);
 
   React.useEffect(() => {
+    console.log('fields', fields)
     setList(fields.map((f, i) => ({
-      id: i,
+      // id: i,
       ...f,
     })))
   }, [fields]);

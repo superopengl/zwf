@@ -21,18 +21,21 @@ cursor: grab;
 export const FieldControlItem = (props) => {
   const { icon, label, type, onDropStart, onDropDone, index } = props;
   const indexRef = React.useRef(index);
+  const newFieldIdRef = React.useRef(uuidv4());
 
   React.useEffect(() => {
     indexRef.current = index;
+    newFieldIdRef.current = uuidv4();
   }, [index]);
 
   const [{ isDragging }, drag] = useDrag(() => ({
     // type: 'field-control',
     type: 'field',
     item: () => {
-      onDropStart(type);
+      const newFieldId = newFieldIdRef.current;
+      onDropStart(newFieldId);
       return {
-        id: indexRef.current,
+        id: newFieldId,
         index: indexRef.current,
         type
       };
@@ -94,6 +97,6 @@ FieldControlItem.propTypes = {
 };
 
 FieldControlItem.defaultProps = {
-  onDropStart: () => { },
+  onDropStart: (newFieldId) => { },
   onDropDone: () => { },
 };
