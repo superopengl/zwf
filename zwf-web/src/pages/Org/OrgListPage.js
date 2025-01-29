@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge } from 'antd';
+import { Typography, Button, Table, Input, Modal, Row, Tooltip, Drawer, Badge } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
@@ -19,6 +19,8 @@ import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
 import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { GiDominoMask } from 'react-icons/gi';
+import Icon from '@ant-design/icons';
 
 
 const { Text, Paragraph } = Typography;
@@ -99,13 +101,12 @@ const OrgListPage = () => {
       align: 'right',
       fixed: 'right',
       render: (text, org) => {
-        return (
+        return <Row>
+          <Tooltip title="Impersonate owner">
+            <Button icon={<Icon component={GiDominoMask} />} type="text" onClick={() => handleImpersonante(org)} />
+          </Tooltip>
           <DropdownMenu
             config={[
-              {
-                menu: 'Impersonate owner',
-                onClick: () => handleImpersonante(org)
-              },
               // {
               //   menu: 'Billing',
               //   onClick: () => handleOpenBilling(org)
@@ -116,7 +117,7 @@ const OrgListPage = () => {
               },
             ]}
           />
-        )
+        </Row>
       },
     },
   ].filter(x => !!x);
