@@ -23,6 +23,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { UserAvatar } from 'components/UserAvatar';
 import { CreateTaskModal } from 'components/CreateTaskModal';
 import { PageContainer } from '@ant-design/pro-components';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 
 const { Text } = Typography;
@@ -228,14 +229,21 @@ const OrgClientListPage = () => {
 
   return (
     <ContainerStyled>
-      <PageContainer
-        header={{
-          title: 'Clients',
-          extra: [
-            <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}>Refresh</Button>,
-            <Button key="invite" icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
-          ]
-        }}
+      <PageHeaderContainer
+        breadcrumb={[
+          {
+            name: 'Users'
+          },
+          {
+            name: 'Clients',
+          },
+        ]}
+        loading={loading}
+        title='Clients'
+        extra={[
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}>Refresh</Button>,
+          <Button key="invite" icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
+        ]}
       >
         <Table columns={columnDef}
           dataSource={list}
@@ -244,7 +252,6 @@ const OrgClientListPage = () => {
             x: 'max-content'
           }}
           rowKey="id"
-          loading={loading}
           style={{ marginTop: 20 }}
           pagination={{
             current: queryInfo.current,
@@ -261,7 +268,7 @@ const OrgClientListPage = () => {
             }
           }}
         />
-      </PageContainer>
+      </PageHeaderContainer>
       <Drawer
         open={profileModalVisible}
         destroyOnClose={true}

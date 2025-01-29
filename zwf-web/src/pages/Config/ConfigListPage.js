@@ -7,6 +7,7 @@ import {
 
 import { Space } from 'antd';
 import { listConfig, saveConfig } from 'services/configService';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Title } = Typography;
 
@@ -117,11 +118,9 @@ const ConfigListPage = () => {
   }
 
   return (
-      <ContainerStyled>
-        <Space direction="vertical" style={{ width: '100%' }}>
-          <StyledTitleRow>
-            <Title level={2} style={{ margin: 'auto' }}>System Configurations</Title>
-          </StyledTitleRow>
+      <PageHeaderContainer
+        title="System Configurations"
+      >
           <Table columns={columnDef}
             dataSource={list}
             size="small"
@@ -129,8 +128,7 @@ const ConfigListPage = () => {
             loading={loading}
             pagination={false}
           />
-        </Space>
-      </ContainerStyled>
+      </PageHeaderContainer>
   );
 };
 

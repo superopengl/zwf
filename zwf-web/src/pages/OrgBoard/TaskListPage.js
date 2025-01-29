@@ -9,7 +9,7 @@ import { TaskBoardPanel } from './TaskBoardPanel';
 import { TaskListPanel } from './TaskListPanel';
 import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Link: TextLink } = Typography;
 
@@ -100,33 +100,39 @@ const TaskListPage = () => {
   }
 
   return (
-    <PageContainer
+    <PageHeaderContainer
+    breadcrumb={[
+      {
+        name: 'Tasks'
+      },
+      {
+        name: 'Tasks',
+      },
+    ]}
       loading={loading}
       fixedHeader
-      header={{
-        title: viewMode === 'board' ? 'Task Board' : 'Task List',
-        extra: [
-          <Tooltip key="refresh" title="Refresh">
-            <Button icon={<SyncOutlined />} onClick={handleReload} />
-          </Tooltip>,
-          <Segmented key="views"
-            value={viewMode}
-            onChange={setViewMode}
-            options={[
-              {
-                icon: <Icon component={HiOutlineViewBoards} />,
-                value: 'board'
-              },
-              {
-                icon: <Icon component={HiOutlineViewList} />,
-                value: 'list'
-              },
-            ]} />,
-          <Tooltip key="filter" title="Filter">
-            <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
-          </Tooltip>,
-        ]
-      }}
+      title={viewMode === 'board' ? 'Task Board' : 'Task List'}
+      extra={[
+        <Tooltip key="refresh" title="Refresh">
+          <Button icon={<SyncOutlined />} onClick={handleReload} />
+        </Tooltip>,
+        <Segmented key="views"
+          value={viewMode}
+          onChange={setViewMode}
+          options={[
+            {
+              icon: <Icon component={HiOutlineViewBoards} />,
+              value: 'board'
+            },
+            {
+              icon: <Icon component={HiOutlineViewList} />,
+              value: 'list'
+            },
+          ]} />,
+        <Tooltip key="filter" title="Filter">
+          <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
+        </Tooltip>
+      ]}
     >
       {filterVisible && <Row style={{ marginBottom: 20 }}>
         <Card
@@ -147,7 +153,7 @@ const TaskListPage = () => {
             total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
       </LayoutStyled>
-    </PageContainer>
+    </PageHeaderContainer>
   )
 }
 

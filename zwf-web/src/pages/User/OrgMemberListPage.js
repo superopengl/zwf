@@ -16,6 +16,7 @@ import { finalize } from 'rxjs/operators';
 import { UserNameCard } from 'components/UserNameCard';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { PageContainer } from '@ant-design/pro-components';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -220,19 +221,26 @@ const OrgMemberListPage = () => {
 
   return (
     <ContainerStyled>
-      <PageContainer
-        header={{
-          title: "Team & Member Accounts",
-          extra: [<Button
-            key="add"
-            type="primary"
-            ghost
-            onClick={() => handleNewUser()}
-            icon={<UserAddOutlined />}>
-            Add Member
-          </Button>
-          ].filter(x => !!x)
-        }}
+      <PageHeaderContainer
+        breadcrumb={[
+          {
+            name: 'Users'
+          },
+          {
+            name: 'Team',
+          },
+        ]}
+        loading={loading}
+        title="Team & Member Accounts"
+        extra={[<Button
+          key="add"
+          type="primary"
+          ghost
+          onClick={() => handleNewUser()}
+          icon={<UserAddOutlined />}>
+          Add Member
+        </Button>
+        ]}
       >
         <Table columns={columnDef}
           dataSource={list}
@@ -241,12 +249,11 @@ const OrgMemberListPage = () => {
             x: 'max-content'
           }}
           rowKey="id"
-          loading={loading}
           style={{ marginTop: 20 }}
           pagination={false}
         />
 
-      </PageContainer>
+      </PageHeaderContainer>
 
       <Modal
         open={setPasswordVisible}

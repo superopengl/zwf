@@ -12,6 +12,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { finalize } from 'rxjs/operators';
 import { deleteResourcePage$, listAllResourcePages$, saveResourcePage$ } from 'services/resourcePageService';
 import { PageContainer } from '@ant-design/pro-components';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -102,13 +103,12 @@ export const ResourceEditListPage = props => {
 
   return (<>
     <LayoutStyled>
-      <PageContainer
-        header={{
-          title: 'Resources',
-          extra: [
-            <Button type="primary" ghost key="refres" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
-            <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>,          ]
-        }}
+      <PageHeaderContainer
+        title='Resources'
+        extra={[
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
+          <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Page</Button>
+        ]}
       >
         <List
           size="small"
@@ -184,7 +184,7 @@ export const ResourceEditListPage = props => {
             </Card>
           </List.Item>}
         />
-      </PageContainer>
+      </PageHeaderContainer>
       {contextHolder}
     </LayoutStyled>
   </>

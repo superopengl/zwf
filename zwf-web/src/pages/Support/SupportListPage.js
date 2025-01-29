@@ -33,7 +33,7 @@ import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, Use
 import { MdMessage } from 'react-icons/md';
 import { useLocalstorageState } from 'rooks';
 import { RoleTag } from 'components/RoleTag';
-import { PageContainer } from '@ant-design/pro-components';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Tooltip } from 'antd';
 import { GiDominoMask } from 'react-icons/gi';
 
@@ -280,27 +280,25 @@ const SupportListPage = () => {
 
 
   return (
-    <PageContainer
+    <PageHeaderContainer
       loading={loading}
       ghost={true}
-      header={{
-        title: 'Users & Supports',
-        extra: [
-          <Input.Search
-            key="search"
-            placeholder="Search name or email"
-            enterButton={<SearchOutlined />}
-            onSearch={value => handleSearch(value)}
-            onPressEnter={e => handleSearch(e.target.value)}
-            onChange={e => handleSearchTextChange(e.target.value)}
-            loading={loading}
-            value={queryInfo?.text}
-            allowClear
-          />,
-          <Button key="clear" danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>,
-          <Button key="refresh" type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-        ]
-      }}
+      title='Users & Supports'
+      extra={[
+        <Input.Search
+          key="search"
+          placeholder="Search name or email"
+          enterButton={<SearchOutlined />}
+          onSearch={value => handleSearch(value)}
+          onPressEnter={e => handleSearch(e.target.value)}
+          onChange={e => handleSearchTextChange(e.target.value)}
+          loading={loading}
+          value={queryInfo?.text}
+          allowClear
+        />,
+        <Button key="clear" danger ghost onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>,
+        <Button key="refresh" type="primary" ghost onClick={() => loadList()} icon={<SyncOutlined />}></Button>
+      ]}
     >
       <StyledTable columns={columnDef}
         dataSource={list}
@@ -356,7 +354,7 @@ const SupportListPage = () => {
       >
         Coming soon
       </Drawer>
-    </PageContainer>
+    </PageHeaderContainer>
 
   );
 };
