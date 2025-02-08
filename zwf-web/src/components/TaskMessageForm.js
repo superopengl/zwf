@@ -45,7 +45,7 @@ export const TaskMessageForm = React.memo((props) => {
       <Input.TextArea
         showCount
         autoSize={{ minRows: 3, maxRows: 20 }}
-        maxLength={2000}
+        maxLength={1000}
         placeholder="Type here and press enter to send"
         allowClear
         autoFocus={true}
