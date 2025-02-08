@@ -68,7 +68,7 @@ export const DocTemplatePreviewPanel = props => {
       {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
 
 
-      {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="right" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+      {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="end" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
         <Collapse.Panel key="1"
           header="Preview by filling values of linked fields"
           // style={{ border: 'none' }}
