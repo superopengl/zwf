@@ -35,19 +35,19 @@ export const TaskLogAndCommentTrackingDrawer = React.memo((props) => {
     // bodyStyle={{ padding: 0 }}
     // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
-    <UserNameCard userId={userId} size={64} fontSize={20} />
+    <UserNameCard userId={userId} size={56} fontSize={18} />
     <Tabs
       destroyInactiveTabPane={true}
       items={[
         {
-          key: 'log',
-          label: <div style={{paddingRight: 16}}><HistoryOutlined /> Log</div>,
-          children: <TaskLogPanel taskId={taskId} />
-        },
-        {
           key: 'comment',
           label: <div style={{paddingRight: 16}}><MessageOutlined /> Comment</div>,
           children: <TaskCommentPanel taskId={taskId} />
+        },
+        {
+          key: 'log',
+          label: <div style={{paddingRight: 16}}><HistoryOutlined /> Log</div>,
+          children: <TaskLogPanel taskId={taskId} />
         }
       ]}
     />
