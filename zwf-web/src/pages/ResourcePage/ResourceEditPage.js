@@ -11,13 +11,16 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { getEditResourcePage$, saveResourcePage$ } from 'services/resourcePageService';
 import { useDebouncedValue } from "rooks";
 import { PageContainer } from '@ant-design/pro-components';
+import { useNavigate } from 'react-router-dom';
 
 import { SavingAffix } from 'components/SavingAffix';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
+  max-width: 700px;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
@@ -51,6 +54,7 @@ export const ResourceEditPage = React.memo((props) => {
   const [saving, setSaving] = React.useState(false);
   const [page, setPage] = React.useState(isNew ? createEmptyPage() : null);
   const [debouncedPage, setPageImmidiately] = useDebouncedValue(page, 500);
+  const navigate = useNavigate();
   const debugMode = false;
 
   // Initial load
@@ -96,41 +100,33 @@ export const ResourceEditPage = React.memo((props) => {
 
   const canPublish = page?.html?.trim().length > 0;
   return <LayoutStyled>
-    <Loading loading={loading}>
-      <PageContainer
-        ghost
-        style={{ maxWidth: 900, margin: '0 auto' }}
-        header={{
-          title: <Row align="middle" wrap={false}>
-            <Col>
-              <ResourcePageIcon />
-            </Col>
-            <Col flex={1}>
-              <ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />
-            </Col>
-          </Row>,
-          extra: [
-            debouncedPage
-              ? <Button
-                type="primary"
-                ghost={!!debouncedPage.publishedAt}
-                onClick={handleTogglePublish}
-                disabled={!canPublish}>
-                {debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}
-              </Button>
-              : <Skeleton.Button />
-          ]
-        }}
-      >
-        <div style={{ position: 'relative' }}>
-          {!loading && <ResourceEditorPanel
-            value={page}
-            onChange={handlePageChange}
-            debug={debugMode}
-          />}
-        </div>
-      </PageContainer>
-    </Loading>
+    <PageHeaderContainer
+      loading={loading}
+      onBack={() => navigate('/resource')}
+      icon={<ResourcePageIcon />}
+      title={<ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />}
+      ghost
+      style={{ maxWidth: 900, margin: '0 auto' }}
+      extra={[
+        debouncedPage
+          ? <Button
+            type="primary"
+            ghost={!!debouncedPage.publishedAt}
+            onClick={handleTogglePublish}
+            disabled={!canPublish}>
+            {debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}
+          </Button>
+          : <Skeleton.Button />
+      ]}
+    >
+      <div style={{ position: 'relative' }}>
+        {!loading && <ResourceEditorPanel
+          value={page}
+          onChange={handlePageChange}
+          debug={debugMode}
+        />}
+      </div>
+    </PageHeaderContainer>
     {saving && <SavingAffix />}
   </LayoutStyled>
 });

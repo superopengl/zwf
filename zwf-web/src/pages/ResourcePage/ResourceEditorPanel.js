@@ -33,9 +33,9 @@ export const ResourceEditorPanel = props => {
         onValuesChange={(changedValues, allValues) => onChange(allValues)}
         initialValues={entity}
         style={{ position: 'relative' }}>
-        <Form.Item name="keywords" label="Keywords" rules={[{ required: false, message: ' ' }]}>
+        {/* <Form.Item name="keywords" label="Keywords" rules={[{ required: false, message: ' ' }]}>
           <Input allowClear placeholder="Keywords, space delimited" />
-        </Form.Item>
+        </Form.Item> */}
         <Form.Item name="imageBase64" label="Picture" rules={[{ required: false, message: ' ' }]}>
           <ResourcePagePictureUpload />
         </Form.Item>
