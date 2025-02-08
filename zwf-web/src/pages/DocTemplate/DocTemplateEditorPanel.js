@@ -8,9 +8,9 @@ import { RichTextInput } from 'components/RichTextInput';
 
 const Container = styled.div`
   margin: 0 auto 0 auto;
-  padding-top: 20px;
-  // background-color: #ffffff;
-  // height: calc(100vh - 64px);
+  // padding-top: 20px;
+  // background-color: red;
+  height: calc(100vh - 220px);
   // height: 100%;
 `;
 
