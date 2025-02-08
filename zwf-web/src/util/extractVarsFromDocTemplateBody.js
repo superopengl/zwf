@@ -8,7 +8,7 @@ export const extractVarsFromDocTemplateBody = (html) => {
     };
   }
   const regex = /\{\{([^\}]+)\}\}/ig;
-  const varNameValidator = /[a-z][a-z0-9_]*/i;
+  const varNameValidator = /^[a-z][a-z0-9_\-\. ]*$/i;
 
   const vars = new Set();
   const invalidVars = new Set();
@@ -16,7 +16,7 @@ export const extractVarsFromDocTemplateBody = (html) => {
   let match;
   while ((match = regex.exec(html))) {
     const name = match[1];
-    if (varNameValidator.test(name)) {
+    if (true || varNameValidator.test(name)) {
       vars.add(name);
     } else {
       invalidVars.add(name);
@@ -28,4 +28,5 @@ export const extractVarsFromDocTemplateBody = (html) => {
     invalidVars: Array.from(invalidVars)
   };
 }
+
 
