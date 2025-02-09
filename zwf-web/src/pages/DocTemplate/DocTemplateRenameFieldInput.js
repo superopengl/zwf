@@ -80,6 +80,7 @@ export const DocTemplateRenameFieldInput = (props) => {
   const handleDelete = () => {
     modal.confirm({
       title: <>Delete field <Text code>{propValue}</Text>?</>,
+      content: <>This action will delete all the places of using field notation <Text code>{'{{'}{propValue}{'}}'}</Text>.</>,
       closable: true,
       maskClosable: true,
       okButtonProps: {
