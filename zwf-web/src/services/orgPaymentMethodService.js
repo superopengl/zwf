@@ -1,4 +1,4 @@
-import {httpGet, httpPost, httpGet$, httpPost$, httpDelete$ } from './http';
+import {httpGet, httpGet$, httpPost$, httpDelete$ } from './http';
 
 export function listOrgPaymentMethods$() {
   return httpGet$(`/org/payment_method`);
@@ -12,8 +12,8 @@ export function deleteOrgPaymentMethod$(id) {
   return httpDelete$(`/org/payment_method/${id}`);
 }
 
-export async function saveOrgPaymentMethod(stripePaymentMethodId) {
-  return httpPost(`/org/payment_method`, { stripePaymentMethodId });
+export function saveOrgPaymentMethod$(stripePaymentMethodId) {
+  return httpPost$(`/org/payment_method`, { stripePaymentMethodId });
 }
 
 export function setOrgPrimaryPaymentMethod$(id) {

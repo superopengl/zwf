@@ -3,7 +3,7 @@ import { GlobalContext } from './contexts/GlobalContext';
 import Icon, {
   SettingOutlined, BankOutlined, TagFilled, CreditCardFilled
 } from '@ant-design/icons';
-import { Space, Typography, Row, Col, Layout, Button, Image } from 'antd';
+import { Space, Typography, Row, Col, Alert, notification, Button, Image, message } from 'antd';
 import styled from 'styled-components';
 import { FormattedMessage } from 'react-intl';
 import { AvatarDropdownMenu } from 'components/AvatarDropdownMenu';
@@ -21,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { VersionMismatchAlert } from "components/VersionMismatchAlert";
 import { ProLayout , PageContainer} from '@ant-design/pro-components';
 import { Divider } from 'antd';
+import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -166,6 +167,7 @@ export const AppLoggedInPage = React.memo(() => {
     routes: g.routes.filter(x => !x.roles || x.roles.includes(role))
   })).filter(g => g.routes.length > 0), [role]);
 
+
   if (!user) {
     return null;
   }
@@ -175,6 +177,14 @@ export const AppLoggedInPage = React.memo(() => {
 
   return <StyledContainer>
     <ProLayout
+      token={{
+        header: {
+          // heightLayoutHeader: 200
+        },
+        sider: {
+          colorTextMenu: '#1C222B'
+        }
+      }}
       logo={<Image src="/images/logo-full-primary.png" preview={false} width={150} />}
       title={"ZeeWorkflow"}
       actionsRender={() => [
@@ -184,11 +194,6 @@ export const AppLoggedInPage = React.memo(() => {
         </Space> : null,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
-      token={{
-        sider: {
-          colorTextMenu: '#4B5B76'
-        }
-      }}
       headerTitleRender={() => {
         return <Image src="/images/logo-full-primary.png" preview={false} width={150} />
       }}
@@ -223,7 +228,7 @@ export const AppLoggedInPage = React.memo(() => {
       <Outlet />
     </ProLayout>
     {!isSystem && <SupportAffix />}
-
+    {!isSystem && <GlobalNotificationBar/>}
   </StyledContainer>
 })
 
