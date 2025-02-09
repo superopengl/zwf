@@ -94,7 +94,7 @@ export const RichTextInput = React.memo((props) => {
           //   progress(100);
           // },
           placeholder,
-          min_height: 842,
+          // min_height: 842,
           // min_height: 'calc(100vh - 240px)',
           ...editorConfig
         }}

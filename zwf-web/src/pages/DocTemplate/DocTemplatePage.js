@@ -32,7 +32,7 @@ const { Paragraph, Text } = Typography
 const Container = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
-  max-width: 1000px;
+  max-width: 1200px;
   // height: calc(100vh - 64px);
   height: 100%;
 
@@ -176,8 +176,8 @@ export const DocTemplatePage = (props) => {
     >
       {contextHolder}
       {!loading && <Row gutter={20} wrap={false}>
-        <Col flex={"620px"}>
-          <RichTextInput value={html} onChange={setHtml} />
+        <Col flex={"740px"}>
+          <RichTextInput value={html} onChange={setHtml} editorConfig={{min_height: 842}} />
         </Col>
         <Col flex="auto">
           <Card
