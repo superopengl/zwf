@@ -28,6 +28,12 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
+const Container = styled.div`
+  .ant-pro-table-list-toolbar {
+    display: none;
+  }
+`;
+
 export const TaskTemplateListPage = () => {
   const [list, setList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
@@ -134,16 +140,16 @@ export const TaskTemplateListPage = () => {
   }))
 
 
-  return (
+  return (<Container>
     <PageHeaderContainer
-    breadcrumb={[
-      {
-        name: 'Templates'
-      },
-      {
-        name: 'Form Template',
-      }
-    ]}
+      breadcrumb={[
+        {
+          name: 'Templates'
+        },
+        {
+          name: 'Form Template',
+        }
+      ]}
       title='Form Template'
       extra={[
         <Segmented key="views"
@@ -282,7 +288,7 @@ export const TaskTemplateListPage = () => {
         onOk={() => setModalVisible(false)}
       />
     </PageHeaderContainer>
-  );
+  </Container>)
 };
 
 TaskTemplateListPage.propTypes = {};
