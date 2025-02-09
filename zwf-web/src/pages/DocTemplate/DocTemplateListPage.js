@@ -14,6 +14,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { finalize, switchMap, tap } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
+import { Descriptions } from 'antd';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -55,7 +57,7 @@ export const DocTemplateListPage = props => {
   const handleDelete = (item) => {
     const { id, name } = item;
     Modal.confirm({
-      title: <>Delete Dot Template <strong>{name}</strong>?</>,
+      title: <>Delete Dot Template <Text code>{name}</Text>?</>,
       onOk: () => {
         setLoading(true);
         deleteDocTemplate$(id).pipe(
@@ -67,10 +69,14 @@ export const DocTemplateListPage = props => {
         });
       },
       maskClosable: true,
+      closable: true,
       okButtonProps: {
         danger: true
       },
-      okText: 'Yes, delete it!'
+      cancelButtonProps: {
+        type: 'text',
+      },
+      okText: 'Yes, delete'
     });
   }
 
@@ -106,6 +112,23 @@ export const DocTemplateListPage = props => {
     });
   }
 
+  const dataSource = filteredList.map(item =>({
+    id: item.id,
+    data: item,
+    title: item.name,
+    avatar: <DocTemplateIcon />,
+    content: <>
+    <Descriptions size="small">
+      <Descriptions.Item label="created" span={12}>
+        <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
+      </Descriptions.Item>
+      <Descriptions.Item label="updated" span={12}>
+        <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
+      </Descriptions.Item>
+    </Descriptions>
+  </>
+  }));
+
   return (<>
       <PageHeaderContainer
       breadcrumb={[
@@ -122,9 +145,9 @@ export const DocTemplateListPage = props => {
         <Button type="primary" key="new" icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
       ]}
       >
-        <List
-          size="small"
-          grid={{
+        <ProList
+        headerTitle=" "
+        grid={{
             gutter: [24, 24],
             xs: 1,
             sm: 1,
@@ -133,7 +156,8 @@ export const DocTemplateListPage = props => {
             xl: 3,
             xxl: 4
           }}
-          dataSource={filteredList}
+          ghost
+          dataSource={dataSource}
           loading={loading}
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
@@ -143,52 +167,49 @@ export const DocTemplateListPage = props => {
               <Link to="/doc_template/new">Create new doc template</Link>
             </div>
           }}
-          renderItem={item => <List.Item>
-            <Card
-              // size="small"
-              bordered={true}
-              hoverable
-              // type="inner"
-              title={<Space>
-                <DocTemplateIcon />
-                <HighlightingText search={searchText} value={item.name} />
-              </Space>}
-              extra={<DropdownMenu
-                config={[
-                  {
-                    icon: <EditOutlined />,
-                    menu: 'Edit',
-                    onClick: () => handleEdit(item)
-                  },
-                  // {
-                  //   menu: 'Preview',
-                  //   onClick: () => handlePreview(item)
-                  // },
-                  {
-                    icon: <CopyOutlined />,
-                    menu: 'Clone',
-                    onClick: () => handleClone(item)
-                  },
-                  {
-                    menu: '-'
-                  },
-                  {
-                    icon: <Text type="danger"><DeleteOutlined /></Text>,
-                    menu: <Text type="danger">Delete</Text>,
-                    onClick: () => handleDelete(item)
-                  },
-                ].filter(x => !!x)}
-              />}
-              bodyStyle={{ paddingTop: 16 }}
-              onClick={() => handleEdit(item)}
-            >
-              <Paragraph>{item.description}</Paragraph>
-              <Space size="large">
-                <TimeAgo key="1" value={item.createdAt} showTime={false} prefix={<Text type="secondary">Created:</Text>} direction="horizontal" />
-                <TimeAgo key="2" value={item.updatedAt} showTime={false} prefix={<Text type="secondary">Updated:</Text>} direction="horizontal" />
-              </Space>
-            </Card>
-          </List.Item>}
+          onItem={(row) => {
+            return {
+              onMouseEnter: () => {
+              },
+              onClick: () => {
+                handleEdit(row.data)
+              },
+            };
+          }}
+          metas={{
+            title: {},
+            subTitle: {},
+            type: {},
+            avatar: {},
+            content: {},
+            actions: {
+              render: (text, row) => [
+                <DropdownMenu
+                  key="others"
+                  config={[
+                    {
+                      icon: <EditOutlined />,
+                      menu: 'Edit',
+                      onClick: () => handleEdit(row.data)
+                    },
+                    {
+                      icon: <CopyOutlined />,
+                      menu: 'Clone',
+                      onClick: () => handleClone(row.data)
+                    },
+                    {
+                      menu: '-'
+                    },
+                    {
+                      icon: <Text type="danger"><DeleteOutlined /></Text>,
+                      menu: <Text type="danger">Delete</Text>,
+                      onClick: () => handleDelete(row.data)
+                    }]}
+                />
+              ],
+            },
+          }}
+
         />
       </PageHeaderContainer>
   </>
