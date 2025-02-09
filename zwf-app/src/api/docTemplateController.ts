@@ -99,12 +99,11 @@ export const renameDocTemplate = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplate) {
+async function getUniqueCopyName(m: EntityManager, orgId: string, preferredName: string) {
   let round = 1;
-  const { orgId, name } = sourceDocTemplate;
   while (true) {
-    const tryName = round === 1 ? `Copy of ${name}` : `Copy ${round} of ${name}`;
-    const existing = await m.findOne(DocTemplate, { where: { name: tryName, orgId } });
+    const tryName = round === 1 ? preferredName : `${preferredName} (${round})`;
+    const existing = await m.findOne(DocTemplate, { where: { name: tryName, orgId }, select: ['id'] });
     if (!existing) {
       return tryName;
     }
@@ -115,6 +114,9 @@ async function getUniqueCopyName(m: EntityManager, sourceDocTemplate: DocTemplat
 export const cloneDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin', 'agent');
   const { id } = req.params;
+  const { name } = req.body;
+  const preferredName = name?.trim();
+  assert(preferredName, 400, 'No name provided');
   const orgId = getOrgIdFromReq(req);
   let docTemplate: DocTemplate;
   await db.transaction(async m => {
@@ -125,7 +127,7 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
     docTemplate.id = newTaskTemplateId;
     docTemplate.createdAt = getUtcNow();
     docTemplate.updatedAt = getUtcNow();
-    docTemplate.name = await getUniqueCopyName(m, docTemplate);
+    docTemplate.name = await getUniqueCopyName(m, orgId, preferredName);
 
     await m.save(docTemplate);
   });

@@ -1,31 +1,25 @@
-import { List, Button, Layout, Row, Col, Drawer, Typography, Modal, Card } from 'antd';
+import { List, Button, Layout, Row, Col, Drawer, Typography, Modal, Card, Tooltip } from 'antd';
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
-import { Loading } from 'components/Loading';
-import { DocTemplateEditorPanel } from './DocTemplateEditorPanel';
 import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
-import Icon, { DeleteOutlined, EyeOutlined, QuestionCircleOutlined, QuestionOutlined, SaveFilled } from '@ant-design/icons';
-import { VscOpenPreview } from 'react-icons/vsc';
-import { MdOpenInNew } from 'react-icons/md';
+import { CopyOutlined, EyeOutlined, QuestionCircleOutlined, SaveFilled } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { DocTemplateIcon } from 'components/entityIcon';
-import { showDocTemplatePreviewModal } from 'components/showDocTemplatePreviewModal';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
-import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
-import { ProCard } from '@ant-design/pro-components';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { renameFieldInDocTemplateBody } from 'util/renameFieldInDocTemplateBody';
 import DocTemplateRenameFieldInput from './DocTemplateRenameFieldInput';
 import { RichTextInput } from 'components/RichTextInput';
+import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
+
 const { Paragraph, Text } = Typography
 
 
@@ -72,6 +66,7 @@ export const DocTemplatePage = (props) => {
   const [docTemplateName, setDocTemplateName] = React.useState('New Doc Template');
   const [html, setHtml] = React.useState(docTemplate.html);
   const [modal, contextHolder] = Modal.useModal();
+  const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
 
   const navigate = useNavigate();
   const debugMode = false;
@@ -126,7 +121,7 @@ export const DocTemplatePage = (props) => {
       title: 'How to insert fields?',
       closable: true,
       content: <Paragraph type="secondary">
-        The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field with name "Client Name". The variable replacement is <Text strong>case sensitive</Text>. So please make sure the variables specified in this doc template content are aligned with the field names when <Link to="/task_template">design task templates</Link>.
+        The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field "Client Name" on the form. The field replacement is <Text strong>case sensitive</Text>. So please make sure the field specified in this doc template content are aligned with the field names when design a <Link to="/task_template">form template</Link>.
       </Paragraph>
     })
   }
@@ -149,6 +144,13 @@ export const DocTemplatePage = (props) => {
     setHtml(newHtml);
   }
 
+  const handleClone = () => {
+    cloneAction({
+      targetId: docTemplate.id,
+      name: `Clone - ${docTemplate.name}`,
+    })
+  }
+
   return <Container>
     <PageHeaderContainer
       style={{ maxWidth: 900, margin: '0 auto' }}
@@ -169,7 +171,8 @@ export const DocTemplatePage = (props) => {
       onBack={goBack}
       title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
       extra={[
-        <Button key="help" icon={<QuestionCircleOutlined />} onClick={() => showHelp()} />,
+        <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => showHelp()} /></Tooltip>,
+        <Tooltip key="clone" title="Clone"><Button icon={<CopyOutlined />} onClick={() => handleClone()} /></Tooltip>,
         <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}
@@ -177,7 +180,7 @@ export const DocTemplatePage = (props) => {
       {contextHolder}
       {!loading && <Row gutter={20} wrap={false}>
         <Col flex={"740px"}>
-          <RichTextInput value={html} onChange={setHtml} editorConfig={{min_height: 842}} />
+          <RichTextInput value={html} onChange={setHtml} editorConfig={{ min_height: 842 }} />
         </Col>
         <Col flex="auto">
           <Card
@@ -215,6 +218,7 @@ export const DocTemplatePage = (props) => {
         allowTest={true}
       />
     </Drawer>
+    {cloneContextHolder}
   </Container >
 };
 

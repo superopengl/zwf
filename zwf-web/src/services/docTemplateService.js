@@ -8,8 +8,8 @@ export function saveDocTemplate$(docTemplate) {
   return httpPost$('doc_template', docTemplate);
 }
 
-export function cloneDocTemplate$(sourceTemplateId) {
-  return httpPut$(`/doc_template/${sourceTemplateId}/clone`,);
+export function cloneDocTemplate$(sourceTemplateId, name) {
+  return httpPut$(`/doc_template/${sourceTemplateId}/clone`, {name});
 }
 
 export function deleteDocTemplate$(id) {
