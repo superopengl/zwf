@@ -1,5 +1,5 @@
 import React from 'react';
-import { message, Typography } from 'antd';
+import { message, Typography, Button, Space } from 'antd';
 import { listOrgPaymentMethods$ } from 'services/orgPaymentMethodService';
 import { useAddPaymentMethodModal } from './useAddPaymentMethodModal';
 import { delay } from 'rxjs';
@@ -31,9 +31,10 @@ export const GlobalNotificationBar = () => {
       key: MESSAGE_KEY,
       // icon: <ExclamationCircleOutlined />,
       className: 'global-notification-bar',
-      content: <>
+      content: <Space>
         To ensure the success of your business, please <Link strong onClick={handleAddPaymentMethod}>add a payment method</Link> as soon as possible, as none has been specified.
-      </>,
+        <Button ghost onClick={handleAddPaymentMethod}>Add Payment Method</Button>
+      </Space>,
       duration: 0,
     })
   }
