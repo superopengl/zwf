@@ -1,24 +1,21 @@
 import {
   DeleteOutlined, EditOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { Button, Modal, Space, Typography, List, Card } from 'antd';
-import { PageContainer } from '@ant-design/pro-components';
+import { Button, Modal, Typography } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
-import { deleteDocTemplate$, listDocTemplate$, cloneDocTemplate$ } from 'services/docTemplateService';
+import { deleteDocTemplate$, listDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import { HighlightingText } from 'components/HighlightingText';
 import { DocTemplateIcon } from '../../components/entityIcon';
 import { useNavigate, Link } from 'react-router-dom';
-import { finalize, switchMap, tap } from 'rxjs/operators';
-import { notify } from 'util/notify';
+import { finalize, switchMap } from 'rxjs/operators';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
-import { ProFormRadio, ProFormSwitch, ProList } from '@ant-design/pro-components';
+import { ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
 import {useCloneDocTemplateModal} from './useCloneDocTemplateModal';
 
-const { Text, Paragraph, Link: TextLink } = Typography;
+const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
   .ant-pro-table-list-toolbar {
@@ -28,14 +25,11 @@ const Container = styled.div`
 
 
 
-export const DocTemplateListPage = props => {
+export const DocTemplateListPage = () => {
   const [list, setList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [loading, setLoading] = React.useState(true);
-  const [drawerVisible, setDrawerVisible] = React.useState(false);
-  const [currentId, setCurrentId] = React.useState();
-  const [cloneOpen, setCloneOpen] = React.useState(false);
   const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
   const navigate = useNavigate();
 
