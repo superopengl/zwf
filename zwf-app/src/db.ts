@@ -75,11 +75,10 @@ const mviews = [
 
 export async function connectDatabase(shouldSyncSchema = false) {
   await db.initialize();
-  // const connection = await createConnection();
-  // if (shouldSyncSchema) {
-  //   await syncDatabaseSchema(connection);
-  await initializeData();
-  // }
+  if (shouldSyncSchema) {
+    await syncDatabaseSchema(db);
+    await initializeData();
+  }
   // return connection;
   return db;
 }
@@ -88,7 +87,7 @@ async function initializeData() {
   await initializeConfig();
 }
 
-async function syncDatabaseSchema(connection: DataSource) {
+async function syncDatabaseSchema(db: DataSource) {
   /**
    * We have to drop all views manually before typeorm sync up the database schema,
    * because typeorm cannot handle the view dependencies (view A depends on view B) correctly
@@ -100,8 +99,8 @@ async function syncDatabaseSchema(connection: DataSource) {
 
   await dropAllViewsAndMatviews();
 
-  await connection.synchronize(false);
-  await connection.runMigrations();
+  await db.synchronize(false);
+  await db.runMigrations();
 
   await createIndexOnMaterilializedView();
   // await refreshMaterializedView();
