@@ -1,6 +1,6 @@
 import React from 'react';
 import { Typography, Input, Button, Space, Grid } from 'antd';
-import { OrgRegisterModal } from './OrgRegisterModal';
+import { useOrgRegisterModal } from './OrgRegisterModal';
 import { MailOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 
@@ -22,15 +22,10 @@ input {
 
 export const OrgRegisterInput = React.memo(props => {
 
-  const [visible, setVisible] = React.useState(false);
+  const [openModal, contextHolder] = useOrgRegisterModal();
 
   const handleShowModal = (e) => {
-    e.stopPropagation();
-    setVisible(true);
-  }
-
-  const handleHideModal = () => {
-    setVisible(false);
+    openModal();
   }
 
 
@@ -43,11 +38,7 @@ export const OrgRegisterInput = React.memo(props => {
       onClick={handleShowModal}
     /> */}
     <Button type="primary" size="large" onClick={handleShowModal} style={{color: '#ffffff'}}>Try it Now</Button>
-    <OrgRegisterModal
-      visible={visible}
-      onOk={handleHideModal}
-      onCancel={handleHideModal}
-    />
+    {contextHolder}
   </Space>
 
 });

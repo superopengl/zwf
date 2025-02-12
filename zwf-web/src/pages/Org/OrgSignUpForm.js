@@ -12,6 +12,7 @@ import { GoogleSsoButton } from 'components/GoogleSsoButton';
 import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
 import { Loading } from 'components/Loading';
+import { finalize } from 'rxjs';
 const { Title, Text, Paragraph } = Typography;
 
 const GoogleButton = styled(Button)`
@@ -47,38 +48,18 @@ const OrgSignUpForm = (props) => {
 
   const intl = useIntl();
   const [loading, setLoading] = React.useState(false);
-  const [modal, contextHolder] = Modal.useModal();
 
   const handleSignIn = (values) => {
     if (loading) {
       return;
     }
 
-    setLoading(true);
-
     const { email } = values;
-
-    signUpOrg$(email).subscribe(
-      () => {
-        onOk();
-        modal.success({
-          title: '🎉 Successfully signed up!',
-          content: <>
-            <Paragraph>
-              Thank you very much for signing up ZeeWorkflow. We will send out the registration to <Text strong>{email}</Text>.
-            </Paragraph>
-            <Paragraph>
-              If you cannot receieve the verification email within 30 minutes, please check your spam box, whether the email address is valid, or if the email address has been registered in ZeeWorkflow before, in which case, you may use forgot password to find back your credential.
-            </Paragraph>
-          </>,
-          maskClosable: true,
-          closable: true,
-          destroyOnClose: true,
-        })
-      }
-    ).add(() => {
-      setLoading(false)
-    });
+    setLoading(true);
+    signUpOrg$(email)
+      .pipe(
+        finalize(() => setLoading(false))
+      ).subscribe(() => onOk(email));
   }
 
   return (
@@ -150,7 +131,6 @@ const OrgSignUpForm = (props) => {
             )}
         />
       </Loading>
-      {contextHolder}
     </ContainerStyled>
   );
 }

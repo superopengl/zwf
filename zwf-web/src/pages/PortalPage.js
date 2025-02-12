@@ -8,7 +8,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import smoothscroll from 'smoothscroll-polyfill';
 import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
-import { OrgRegisterModal } from 'components/OrgRegisterModal';
+import { OrgRegisterModal, useOrgRegisterModal } from 'components/OrgRegisterModal';
 import { useWindowScrollPosition } from "rooks";
 import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
@@ -59,11 +59,11 @@ background: #ffffff;
 export const PortalPage = () => {
 
   const navigate = useNavigate();
-  const [orgRegisterVisible, setOrgRegisterVisible] = React.useState(false);
   const [modalMenuVisible, setModalMenuVisible] = React.useState(false);
   // const position = useWindowScrollPosition(); 
   const context = React.useContext(GlobalContext);
   const screens = Grid.useBreakpoint();
+  const [openModal, contextHolder] = useOrgRegisterModal();
 
 
   const { role } = context;
@@ -76,12 +76,11 @@ export const PortalPage = () => {
   }
 
   const handleShowRegisterModal = () => {
-    setOrgRegisterVisible(true);
+    openModal();
     setModalMenuVisible(false);
   }
 
   const handleHideRegisterModal = () => {
-    setOrgRegisterVisible(false);
     setModalMenuVisible(false);
   }
 
@@ -140,11 +139,7 @@ export const PortalPage = () => {
       <Outlet />
     </Layout.Content>
     <HomeFooter />
-    <OrgRegisterModal
-      visible={orgRegisterVisible}
-      onOk={handleHideRegisterModal}
-      onCancel={handleHideRegisterModal}
-    />
+    {contextHolder}
     <Drawer
       title={<Image src="/images/logo-full-primary.svg" preview={false} height={24} />}
       extra={<Button type="text" size="large" icon={<CloseOutlined />} onClick={() => setModalMenuVisible(false)} />}

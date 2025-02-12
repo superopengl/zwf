@@ -8,7 +8,7 @@ import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'reac
 import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { OrgRegisterModal } from 'components/OrgRegisterModal';
+import { OrgRegisterModal, useOrgRegisterModal } from 'components/OrgRegisterModal';
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -66,16 +66,11 @@ padding: 6rem 1rem 0;
 
 
 export const HomePricingArea = props => {
-  const [visible, setVisible] = React.useState(false);
   const screens = Grid.useBreakpoint();
+  const [openModal, contextHolder] = useOrgRegisterModal();
 
   const handleShowModal = (e) => {
-    e.stopPropagation();
-    setVisible(true);
-  }
-
-  const handleHideModal = () => {
-    setVisible(false);
+    openModal();
   }
 
   return (
@@ -121,11 +116,7 @@ export const HomePricingArea = props => {
             </div>
           </Col>
         </Row>
-        <OrgRegisterModal
-          visible={visible}
-          onOk={handleHideModal}
-          onCancel={handleHideModal}
-        />
+    {contextHolder}
       </InnerContainer>
     </Container>
   )
