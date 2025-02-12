@@ -45,8 +45,7 @@ export const LogInPanel = props => {
             if (user.role === 'system') {
               navigate(returnUrl || '/support')
             } else {
-              const isAdminFirstLogin = user.role === 'admin' && !user.orgId;
-              navigate(isAdminFirstLogin ? '/onboard' : (returnUrl || '/task'));
+              navigate('/task');
             }
           }
         },

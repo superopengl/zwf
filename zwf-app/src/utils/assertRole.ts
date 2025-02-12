@@ -34,3 +34,4 @@ export function assertRole(req, ...roles) {
     assert(canAccess, 403, `Invalid permission ('${reqRole}' is to access '${roles.join()}')`);
   }
 }
+

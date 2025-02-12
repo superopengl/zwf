@@ -7,6 +7,8 @@ import { createMyOrg$, getMyOrgProfile$, saveMyOrgProfile$ } from 'services/orgS
 import PropTypes from 'prop-types';
 import { CountrySelector } from 'components/CountrySelector';
 import { BetaSchemaForm, ProFormSelect, FooterToolbar, ProFormInstance } from '@ant-design/pro-components';
+import { catchError, finalize } from 'rxjs';
+import { useNavigate } from 'react-router-dom';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -34,17 +36,20 @@ const OrgProfileForm = (props) => {
   const [org, setOrg] = React.useState(DEFAULT_PROFILE);
   const [requireAbn, setRequireAbn] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
+  const navigate = useNavigate();
   const form = React.useRef();
 
 
   React.useEffect(() => {
     getMyOrgProfile$()
+      .pipe(
+        finalize(() => setLoading(false))
+      )
       .subscribe(org => {
         setOrg({
           ...DEFAULT_PROFILE,
           ...org
         });
-        setLoading(false);
       });
   }, []);
 
@@ -54,7 +59,10 @@ const OrgProfileForm = (props) => {
 
   const handleSubmitBasic = values => {
     const source$ = props.mode === 'create' ? createMyOrg$(values) : saveMyOrgProfile$(values);
-    source$.subscribe(() => props.onOk())
+    setLoading(true)
+    source$.pipe(
+      finalize(() => setLoading(false))
+    ).subscribe(() => props.onOk())
   }
 
   const handleValuesChange = (changedValues, allValues) => {
