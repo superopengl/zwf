@@ -5,7 +5,7 @@ import { UserInformation } from './../entity/views/UserInformation';
 import { OrgMemberInformation } from './../entity/views/OrgMemberInformation';
 import { Tag } from '../entity/Tag';
 
-import { Not, In, IsNull } from 'typeorm';
+import { Not, In, IsNull, MoreThan } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../entity/User';
 import { assert } from '../utils/assert';
@@ -188,7 +188,18 @@ export const deleteUser = handlerWrapper(async (req, res) => {
     await db.transaction(async m => {
       await m.getRepository(User).softDelete(id);
       await m.getRepository(UserProfile).delete(profileId);
-      await m.getRepository(LicenseTicket).update({ userId: id, ticketTo: IsNull() }, { ticketTo: getUtcNow() });
+      const { orgId } = user;
+      if (orgId) {
+        await m.getRepository(LicenseTicket).createQueryBuilder()
+          .update()
+          .set({
+            ticketTo: () => `now()`
+          })
+          .where(`"userId" = :id`, { id })
+          .andWhere(`"orgId" = :orgId`, { orgId })
+          .andWhere(`"ticketTo" > now()`)
+          .execute();
+      }
     });
   }
 

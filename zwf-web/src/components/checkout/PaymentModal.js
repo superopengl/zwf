@@ -2,7 +2,7 @@ import { Modal, Typography } from 'antd';
 import React from 'react';
 
 import styled from 'styled-components';
-import { getMyCurrentSubscription, listMySubscriptionHistory } from 'services/subscriptionService';
+import { getMyCurrentSubscription, listMySubscriptionHistory } from 'services/billingService';
 import { getMyAccount } from 'services/accountService';
 import { getAuthUser } from 'services/authService';
 import { GlobalContext } from 'contexts/GlobalContext';

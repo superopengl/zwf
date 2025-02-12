@@ -1126,12 +1126,41 @@ paths:
       responses:
         200:
           description: OK        
-  /subscription/usages/search:
-    post:
-      operationId: searchTicketUsage
+  /subscription/period/current:
+    get:
+      operationId: getCurrentPeriod
       responses:
         200:
-          description: OK                
+          description: OK  
+  /subscription/period/:periodId/usage:
+    get:
+      operationId: getPeriodUsage
+      parameters:
+        - name: periodId
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK             
+  /subscription/period/:periodId/:direction:
+    get:
+      operationId: getSiblingPeriod
+      parameters:
+        - name: periodId
+          in: path
+          type: string
+          format: uuid
+          required: true
+        - name: direction
+          in: path
+          type: string
+          required: true          
+      responses:
+        200:
+          description: OK                        
+             
   /subscription/receipt/:paymentId:
     get:
       operationId: downloadReceipt

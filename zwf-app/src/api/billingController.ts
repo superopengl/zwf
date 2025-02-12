@@ -1,3 +1,6 @@
+import { OrgSubscriptionPeriod } from './../entity/OrgSubscriptionPeriod';
+import { LicenseTicketUsageInformation } from './../entity/views/LicenseTicketUsageInformation';
+import { OrgBasicInformation } from './../entity/views/OrgBasicInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { PaymentRollupInfo } from '../services/payment/PaymentRollupInfo';
 import { assert } from '../utils/assert';
@@ -9,6 +12,7 @@ import { OrgSubscriptionPeriodHistoryInformation } from '../entity/views/OrgSubs
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
 import { rollupTicketUsageInPeriod } from '../services/payment/rollupTicketUsageInPeriod';
+import { LessThan, MoreThan } from 'typeorm';
 
 async function getOrgPaymentHistory(orgId) {
   const list = db.getRepository(OrgSubscriptionPeriodHistoryInformation).find({
@@ -32,15 +36,99 @@ export const listMySubscriptions = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const searchTicketUsage = handlerWrapper(async (req, res) => {
+export const getCurrentPeriod = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const { from, to } = req.body;
-  assert(from, 400, 'from date is not specified');
-  const periodFrom = from;
-  const periodTo = to ?? getUtcNow();
+  const { currentPeriodId } = await db.getRepository(OrgBasicInformation).findOneOrFail({
+    where: {
+      id: orgId
+    },
+    select: {
+      currentPeriodId: true
+    }
+  });
 
-  const list = [] // await rollupTicketUsageInPeriod(db.manager, orgId, periodFrom, periodTo);
+  const currentPeriod = await db.getRepository(OrgSubscriptionPeriod).findOne({
+    where: {
+      id: currentPeriodId
+    },
+    relations: {
+      payment: true,
+    }
+  });
+
+  res.json(currentPeriod);
+});
+
+export const getSiblingPeriod = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const orgId = getOrgIdFromReq(req);
+  const { periodId, direction } = req.params;
+
+  const pivotPeriod = await db.getRepository(OrgSubscriptionPeriod).findOneOrFail({
+    where: { orgId, id: periodId },
+    select: { seq: true }
+  });
+  const { seq } = pivotPeriod;
+
+  let siblingPeriod: OrgSubscriptionPeriod = null;
+  if (direction === 'next') {
+    siblingPeriod = await db.getRepository(OrgSubscriptionPeriod).findOne({
+      where: {
+        orgId,
+        seq: MoreThan(seq)
+      },
+      order: {
+        orgId: 'ASC',
+        seq: 'ASC'
+      },
+      relations: {
+        payment: true,
+      }
+    });
+  } else if (direction === 'previous') {
+    siblingPeriod = await db.getRepository(OrgSubscriptionPeriod).findOne({
+      where: {
+        orgId,
+        seq: LessThan(seq)
+      },
+      order: {
+        orgId: 'ASC',
+        seq: 'DESC'
+      },
+      relations: {
+        payment: true,
+      }
+    })
+  } else {
+    assert(false, 400, `Invalid direction '${direction}'`);
+  }
+
+  res.json(siblingPeriod);
+});
+
+export const getPeriodUsage = handlerWrapper(async (req, res) => {
+  assertRole(req, 'admin');
+  const orgId = getOrgIdFromReq(req);
+
+  const { periodId } = req.params;
+
+  const list = await db.getRepository(LicenseTicketUsageInformation)
+    .find({
+      where: {
+        orgId,
+        periodId
+      },
+      select: {
+        email: true,
+        givenName: true,
+        surname: true,
+        usedDays: true,
+        ticketDays: true,
+        ticketFrom: true,
+        ticketTo: true,
+      }
+    })
 
   res.json(list);
 });

@@ -25,13 +25,17 @@ import { Role } from '../../types/Role';
       'p."givenName" as "givenName"',
       'p.surname as surname',
       'u.role as role',
+      'm."checkoutDate" as "checkoutDate"',
       'm."periodFrom" as "periodFrom"',
       'm."periodTo" as "periodTo"',
       't."ticketFrom" as "ticketFrom"',
       't."ticketTo" as "ticketTo"',
       't."ticketFrom" as "billingFrom"',
-      't."ticketTo" as "billingTo"',
-      't."usedDays" as "usedDays"',
+      'LEAST(now(), t."ticketTo") as "billingTo"',
+      // 'EXTRACT(DAY FROM t."ticketFrom"::timestamp - m."periodFrom"::timestamp) as "billingFrom"',
+      // 'EXTRACT(DAY FROM LEAST(now(), t."ticketTo")::timestamp - m."periodFrom"::timestamp) + 1 as "billingTo"',
+      'EXTRACT(DAY FROM LEAST(now(), t."ticketTo")::timestamp - "ticketFrom"::timestamp) + 1 as "usedDays"',
+      't."ticketDays" as "ticketDays"',
       'm."periodDays" as "periodDays"'
     ]),
   dependsOn: [User, UserProfile, Org, LicenseTicket, OrgSubscriptionPeriod]
@@ -91,6 +95,12 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   usedDays: number;
+
+  @ViewColumn()
+  ticketDays: number;
+
+  @ViewColumn()
+  checkoutDate: Date;
 
   @ViewColumn()
   periodDays: number;

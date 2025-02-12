@@ -19,7 +19,9 @@ const JOB_NAME = 'daily-subscription-check';
 
 async function chargeLastSubscriptionPriodIfDue() {
   let duePeriod: OrgSubscriptionPeriod;
+  let counter = 0;
   do {
+    counter++;
     await db.transaction(async m => {
       duePeriod = await m.getRepository(OrgSubscriptionPeriod)
         .createQueryBuilder()
@@ -30,26 +32,26 @@ async function chargeLastSubscriptionPriodIfDue() {
       if (!duePeriod) {
         return;
       }
-      logProgress('Handling payment', duePeriod);
+      logProgress('Handling payment'.bgCyan, counter, duePeriod);
 
-      const shouldExtend = await checkoutDueSubscriptionPeriod(m, duePeriod);
+      const checkoutSuccess = await checkoutDueSubscriptionPeriod(m, duePeriod);
 
-      if (shouldExtend) {
+      if (checkoutSuccess) {
         const newPeriod = await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
-        logProgress('Created new period', newPeriod);
+        logProgress('Created new period'.bgGreen, counter, newPeriod);
       } else {
-        logProgress('Failed to pay. Suspending period', duePeriod);
+        logProgress('Failed to pay. Suspending org'.bgRed, counter, duePeriod);
         await suspendOrg(m, duePeriod);
       }
     });
   } while (duePeriod)
 }
 
-function logProgress(message: string, period: OrgSubscriptionPeriod) {
-  const msg = `${message} 
-  org     : ${period.orgId}
-  periodId: ${period.id} (${period.type})
-  period  : ${moment(period.periodFrom).toISOString()} - ${moment(period.periodTo).toISOString()} (${period.periodDays} days)
+function logProgress(message: string, index: number, period: OrgSubscriptionPeriod) {
+  const msg = `
+[${index}] ${message} 
+    periodId: ${period.id}    orgId ${period.orgId}
+    period  : ${moment(period.periodFrom).toISOString()} - ${moment(period.periodTo).toISOString()} (${period.periodDays} days)
 `;
   console.log(msg);
 }
@@ -58,7 +60,6 @@ async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const { orgId } = period;
   await m.update(LicenseTicket, {
     periodId: period.id,
-    voidedAt: IsNull()
   }, {
     ticketTo: () => `NOW()`
   });
@@ -102,13 +103,6 @@ async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, prev
     return ticket;
   });
 
-  // await m.update(LicenseTicket, {
-  //   periodId: previousPeriod.id,
-  //   voidedAt: IsNull()
-  // }, {
-  //   ticketTo: () => `NOW()`
-  // });
-
   await m.save([...newTickets]);
 
   // 3. Enable users and org if they are suspended.
@@ -120,10 +114,10 @@ async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, prev
 
 
 start(JOB_NAME, async () => {
-  console.log('Starting charging for the last subscription');
+  console.log('Starting charging for the last subscription'.yellow);
   await chargeLastSubscriptionPriodIfDue();
-  console.log('Finished charging for the last subscription');
+  console.log('Finished charging for the last subscription'.yellow);
 
-}, { daemon: false });
+}, { daemon: false, syncSchema: false });
 
 

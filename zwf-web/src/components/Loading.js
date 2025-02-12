@@ -7,7 +7,7 @@ const loadingIndicator = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 export const Loading = props => {
   const { loading, children } = props;
 
-return <Spin spinning={loading} indicator={loadingIndicator}>{children}</Spin>
+return <Spin spinning={loading} indicator={loadingIndicator} style={{width: '100%'}}>{!loading && children}</Spin>
 }
 
 Loading.propTypes = {
