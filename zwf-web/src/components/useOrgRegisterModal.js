@@ -3,27 +3,7 @@ import { Typography } from 'antd';
 import { Modal } from 'antd';
 import OrgSignUpForm from 'pages/Org/OrgSignUpForm';
 
-const { Text, Title, Paragraph } = Typography;
-
-export const OrgRegisterModal = props => {
-
-  const { visible, onOk, onCancel } = props;
-
-
-  return <Modal
-    title="Org Registration"
-    open={visible}
-    onCancel={onCancel}
-    destroyOnClose
-    maskClosable={false}
-    closable={true}
-    footer={null}
-  >
-    <OrgSignUpForm onOk={onOk} />
-  </Modal>
-
-};
-
+const { Text, Paragraph } = Typography;
 
 export const useOrgRegisterModal = () => {
   const [modalForm, formContextHolder] = Modal.useModal();
@@ -34,7 +14,6 @@ export const useOrgRegisterModal = () => {
       formModalInstance.destroy();
       
       modalSuccess.success({
-        key: 'org-signup-success',
         title: '🎉 Successfully signed up!',
         content: <>
           <Paragraph>
@@ -52,7 +31,6 @@ export const useOrgRegisterModal = () => {
     }
 
     const formModalInstance = modalForm.info({
-      key: 'org-signup-form',
       icon: null,
       title: 'Org Registration',
       content: <OrgSignUpForm onOk={handleFinish} />,
@@ -66,8 +44,8 @@ export const useOrgRegisterModal = () => {
   }
 
   return [open, <>
-    {formContextHolder}
-    {successContextHolder}
+    <div key="1">{formContextHolder}</div>
+    <div key="2">{successContextHolder}</div>
   </>];
 
 };

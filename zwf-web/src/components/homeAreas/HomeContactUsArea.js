@@ -8,7 +8,7 @@ import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'reac
 import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { OrgRegisterModal } from 'components/OrgRegisterModal';
+import { OrgRegisterModal } from 'components/useOrgRegisterModal';
 import { submitContact$ } from 'services/contactService';
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
