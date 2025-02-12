@@ -7,6 +7,6 @@ export async function terminatePlan(orgId: string) {
     {
       orgId
     }, {
-    voidedAt: () => `NOW()`
+    ticketTo: () => `NOW()`
   });
 }

@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 import moment = require('moment');
 import { LicenseTicket } from '../src/entity/LicenseTicket';
 import { getCurrentUnitPricePerTicket } from '../src/utils/getCurrentUnitPricePerTicket';
-import { checkoutSubscriptionPeriod } from '../src/utils/checkoutSubscriptionPeriod';
+import { checkoutSubscriptionPeriod as checkoutDueSubscriptionPeriod } from '../src/utils/checkoutSubscriptionPeriod';
 import { OrgSubscriptionPeriod } from '../src/entity/OrgSubscriptionPeriod';
 import { User } from '../src/entity/User';
 import { v4 as uuidv4 } from 'uuid';
@@ -17,36 +17,32 @@ import { Org } from '../src/entity/Org';
 
 const JOB_NAME = 'daily-subscription-check';
 
-async function chargeLastSubscriptionIfDue() {
-  let payingPeriod: OrgSubscriptionPeriod;
+async function chargeLastSubscriptionPriodIfDue() {
+  let duePeriod: OrgSubscriptionPeriod;
   do {
     await db.transaction(async m => {
-      payingPeriod = await m.getRepository(OrgSubscriptionPeriod)
+      duePeriod = await m.getRepository(OrgSubscriptionPeriod)
         .createQueryBuilder()
-        .where(`latest IS TRUE`)
-        .andWhere(`"paymentId" IS NULL`)
+        .where(`"checkoutDate" IS NULL`)
         .andWhere('"periodTo"::date <= NOW()::date')
         .getOne();
 
-      if (!payingPeriod) {
+      if (!duePeriod) {
         return;
       }
-      logProgress('Handling payment', payingPeriod);
+      logProgress('Handling payment', duePeriod);
 
-      let shouldExtend = true;
-      if(payingPeriod.type !== 'trial') {
-        shouldExtend = await checkoutSubscriptionPeriod(m, payingPeriod);
-      }
+      const shouldExtend = await checkoutDueSubscriptionPeriod(m, duePeriod);
 
       if (shouldExtend) {
-        const newPeriod = await createNewSubscriptionPeriod(m, payingPeriod);
+        const newPeriod = await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
         logProgress('Created new period', newPeriod);
       } else {
-        logProgress('Failed to pay. Suspending period', payingPeriod);
-        await suspendOrg(m, payingPeriod);
+        logProgress('Failed to pay. Suspending period', duePeriod);
+        await suspendOrg(m, duePeriod);
       }
     });
-  } while (payingPeriod)
+  } while (duePeriod)
 }
 
 function logProgress(message: string, period: OrgSubscriptionPeriod) {
@@ -64,30 +60,29 @@ async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
     periodId: period.id,
     voidedAt: IsNull()
   }, {
-    voidedAt: () => `NOW()`
+    ticketTo: () => `NOW()`
   });
   await m.update(User, { orgId }, { suspended: true });
   await m.update(Org, { id: orgId }, { suspended: true });
 }
 
-async function createNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
-  const { orgId } = previousPeriod;
-  previousPeriod.latest = false;
-  await m.save(previousPeriod);
+async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
+  const { orgId, seq } = previousPeriod;
 
   const now = getUtcNow();
 
+  // 1. Create a new subscription period after the current one.
   const newPeriod = new OrgSubscriptionPeriod();
   newPeriod.id = uuidv4();
   newPeriod.orgId = orgId;
   newPeriod.type = 'monthly';
   newPeriod.periodFrom = previousPeriod.periodTo < now ? now : previousPeriod.periodTo;
   newPeriod.periodTo = moment(newPeriod.periodFrom).add(1, 'month').add(-1, 'day').toDate();
-  newPeriod.previousPeriodId = previousPeriod.id;
+  newPeriod.seq = seq + 1;
   newPeriod.unitFullPrice = getCurrentUnitPricePerTicket();
-  newPeriod.latest = true;
   await m.save(newPeriod);
 
+  // 2. Issue new tickets for users
   const users = await m.getRepository(User).find({
     where: {
       orgId
@@ -102,17 +97,21 @@ async function createNewSubscriptionPeriod(m: EntityManager, previousPeriod: Org
     ticket.userId = u.id;
     ticket.orgId = orgId;
     ticket.periodId = newPeriod.id;
+    ticket.ticketFrom = newPeriod.periodFrom;
+    ticket.ticketTo = newPeriod.periodTo;
     return ticket;
   });
 
-  await m.update(LicenseTicket, {
-    periodId: previousPeriod.id,
-    voidedAt: IsNull()
-  }, {
-    voidedAt: () => `NOW()`
-  });
+  // await m.update(LicenseTicket, {
+  //   periodId: previousPeriod.id,
+  //   voidedAt: IsNull()
+  // }, {
+  //   ticketTo: () => `NOW()`
+  // });
 
   await m.save([...newTickets]);
+
+  // 3. Enable users and org if they are suspended.
   await m.update(User, { orgId }, { suspended: false });
   await m.update(Org, { id: orgId }, { suspended: false });
 
@@ -122,7 +121,7 @@ async function createNewSubscriptionPeriod(m: EntityManager, previousPeriod: Org
 
 start(JOB_NAME, async () => {
   console.log('Starting charging for the last subscription');
-  await chargeLastSubscriptionIfDue();
+  await chargeLastSubscriptionPriodIfDue();
   console.log('Finished charging for the last subscription');
 
 }, { daemon: false });

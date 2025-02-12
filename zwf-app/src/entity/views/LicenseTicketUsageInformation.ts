@@ -27,13 +27,12 @@ import { Role } from '../../types/Role';
       'u.role as role',
       'm."periodFrom" as "periodFrom"',
       'm."periodTo" as "periodTo"',
-      't."createdAt" as "ticketFrom"',
-      't."voidedAt" as "ticketTo"',
-      't."createdAt" as "billingFrom"',
-      'COALESCE(t."voidedAt", m."periodTo") as "billingTo"',
-      'EXTRACT(DAY FROM COALESCE(t."voidedAt", m."periodTo") - t."createdAt") + 1 as "usedDays"',
-      'm."periodDays" as "periodDays"',
-      'CASE WHEN t."voidedAt" IS NULL THEN TRUE ELSE FALSE END as "ticketAlive"',
+      't."ticketFrom" as "ticketFrom"',
+      't."ticketTo" as "ticketTo"',
+      't."ticketFrom" as "billingFrom"',
+      't."ticketTo" as "billingTo"',
+      't."usedDays" as "usedDays"',
+      'm."periodDays" as "periodDays"'
     ]),
   dependsOn: [User, UserProfile, Org, LicenseTicket, OrgSubscriptionPeriod]
 })
@@ -95,7 +94,4 @@ export class LicenseTicketUsageInformation {
 
   @ViewColumn()
   periodDays: number;
-
-  @ViewColumn()
-  ticketAlive: boolean;
 }
