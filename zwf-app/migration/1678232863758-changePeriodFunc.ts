@@ -47,7 +47,7 @@ begin
     zwf.payment
     set
     "createdAt" = "createdAt" + time_offset,
-    "paidAt" = "paidAt" + time_offset
+    "checkoutDate" = "checkoutDate" + time_offset
     where
     "orgId" = $1;
     

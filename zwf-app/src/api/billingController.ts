@@ -26,7 +26,7 @@ async function getOrgPaymentHistory(orgId) {
   return list;
 }
 
-export const listMySubscriptions = handlerWrapper(async (req, res) => {
+export const listMyInvoices = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
 

@@ -19,11 +19,12 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       's."periodFrom" as "periodFrom"',
       's."periodTo" as "periodTo"',
       's."periodDays" as "periodDays"',
+      's."tail" as "tail"',
       'p.id as "paymentId"',
       'p."seqId" as "paymentSeq"',
       'p.amount as amount',
-      `to_char(p."paidAt", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
-      'p."paidAt" as "issuedAt"',
+      `to_char(p."checkoutDate", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "receiptNumber"`,
+      'p."checkoutDate" as "checkoutDate"',
       'p.payable as payable',
       'org."ownerEmail" as email',
       'm."cardLast4" as "cardLast4"',
@@ -50,6 +51,9 @@ export class OrgSubscriptionPeriodHistoryInformation {
   periodTo: Date;
 
   @ViewColumn()
+  tail: boolean;
+
+  @ViewColumn()
   periodDays: string;
 
   @ViewColumn()
@@ -65,7 +69,7 @@ export class OrgSubscriptionPeriodHistoryInformation {
   receiptNumber: string;
 
   @ViewColumn()
-  issuedAt: Date;
+  checkoutDate: Date;
 
   @ViewColumn()
   payable: number;

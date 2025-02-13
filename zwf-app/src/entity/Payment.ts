@@ -24,7 +24,7 @@ export class Payment {
 
   @Column({ nullable: true })
   @Index()
-  paidAt?: Date;
+  checkoutDate?: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   amount: number;
