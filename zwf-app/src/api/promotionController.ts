@@ -22,8 +22,8 @@ function generatePromotionCode() {
 
 export const listPromotionCode = handlerWrapper(async (req, res) => {
   assertRole(req, 'system');
-  const {orgId} = req.params;
-  const list = await db.getRepository(OrgPromotionCode).findBy({orgId});
+  const { orgId } = req.params;
+  const list = await db.getRepository(OrgPromotionCode).findBy({ orgId });
   res.json(list);
 });
 
@@ -40,7 +40,10 @@ export const savePromotion = handlerWrapper(async (req, res) => {
   promotion.endingAt = endingAt;
   promotion.createdBy = (req as any).user.id;
 
-  await db.manager.save(promotion);
+  await db.manager.transaction(async m => {
+    await m.update(OrgPromotionCode, { orgId }, { active: false });
+    await m.save(promotion);
+  });
 
   res.json();
 });
@@ -52,7 +55,7 @@ export const newPromotionCode = handlerWrapper(async (req, res) => {
   let existing;
   do {
     code = generatePromotionCode();
-    existing = await db.getRepository(OrgPromotionCode).findOne({where: {code}});
+    existing = await db.getRepository(OrgPromotionCode).findOne({ where: { code } });
   } while (existing);
 
   res.json(code);
