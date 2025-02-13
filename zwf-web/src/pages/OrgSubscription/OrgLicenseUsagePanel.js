@@ -1,4 +1,4 @@
-import { Card, Button, Modal, Space, Typography, Tag, List, Tooltip, Row, Col } from 'antd';
+import { Card, Button, Modal, Space, Typography, Tag, Alert, Tooltip, Row, Col } from 'antd';
 import React from 'react';
 
 import { Loading } from 'components/Loading';
@@ -128,6 +128,11 @@ export const OrgLicenseUsagePanel = () => {
                     </Text>.
                     Please kindly ensure that the primary payment method is valid and has enough balance.
                   </Paragraph>
+                  {period.promotionCode && <Alert
+                    showIcon
+                    type="success"
+                    message="Discount eligiable"
+                    description={<>Congratulations! Your organization is eligible for a discounted rate of <MoneyAmount value={period.promotionUnitPrice} strong underline /> per person-month, as opposed to the regular price of  <MoneyAmount value={period.unitFullPrice} delete />.</>} />}
                 </> : <>
                   <Row wrap={false} gutter={20} justify="space-between">
                     <Col span={8}>

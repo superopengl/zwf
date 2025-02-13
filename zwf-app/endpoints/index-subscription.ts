@@ -9,11 +9,12 @@ import * as _ from 'lodash';
 import moment = require('moment');
 import { LicenseTicket } from '../src/entity/LicenseTicket';
 import { getCurrentUnitPricePerTicket } from '../src/utils/getCurrentUnitPricePerTicket';
-import { checkoutSubscriptionPeriod as checkoutDueSubscriptionPeriod } from '../src/utils/checkoutSubscriptionPeriod';
+import { checkoutSubscriptionPeriod } from '../src/utils/checkoutSubscriptionPeriod';
 import { OrgSubscriptionPeriod } from '../src/entity/OrgSubscriptionPeriod';
 import { User } from '../src/entity/User';
 import { v4 as uuidv4 } from 'uuid';
 import { Org } from '../src/entity/Org';
+import { getOrgActivePromotionCode } from '../src/utils/getOrgActivePromotionCode';
 
 const JOB_NAME = 'daily-subscription-check';
 
@@ -36,7 +37,7 @@ async function chargeLastSubscriptionPriodIfDue() {
       logProgress('Renew period'.bgCyan, counter, duePeriod);
 
       try {
-        const canRenew = duePeriod.type === 'trial' || await checkoutDueSubscriptionPeriod(m, duePeriod);
+        const canRenew = duePeriod.type === 'trial' || await checkoutSubscriptionPeriod(m, duePeriod);
 
         if (canRenew) {
           const newPeriod = await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
@@ -87,6 +88,10 @@ async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, prev
   newPeriod.periodTo = moment(newPeriod.periodFrom).add(1, 'month').add(-1, 'day').toDate();
   newPeriod.seq = seq + 1;
   newPeriod.unitFullPrice = getCurrentUnitPricePerTicket();
+
+  const alivePromotionCode = await getOrgActivePromotionCode(m, orgId);
+  newPeriod.promotionCode = alivePromotionCode?.code;
+  newPeriod.promotionUnitPrice = alivePromotionCode?.promotionUnitPrice;
 
   // 2. Issue new tickets for users
   const users = await m.getRepository(User).find({
