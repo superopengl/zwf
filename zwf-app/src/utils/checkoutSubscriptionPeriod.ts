@@ -27,7 +27,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
 
     const billingInfo = await calcBillingAmountForPeriod(m, period);
 
-    const { amount, payable, paymentMethodId, stripePaymentMethodId } = billingInfo;
+    const { amount, payable, paymentMethodId, stripePaymentMethodId, cardLast4 } = billingInfo;
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
@@ -41,6 +41,7 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     payment.amount = amount;
     payment.payable = payable;
     payment.orgPaymentMethodId = paymentMethodId;
+    payment.cardLast4 = cardLast4;
     payment.rawResponse = stripeRawResponse;
 
     period.paymentId = payment.id;

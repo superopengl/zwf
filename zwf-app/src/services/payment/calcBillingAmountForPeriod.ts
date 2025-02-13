@@ -9,8 +9,7 @@ import { rollupTicketUsageInPeriod } from './rollupTicketUsageInPeriod';
 export async function calcBillingAmountForPeriod(m: EntityManager, period: OrgSubscriptionPeriod): Promise<PaymentRollupInfo> {
   const { orgId } = period;
   const primaryPaymentMethod = await m.findOneOrFail(OrgPaymentMethod, { where: { orgId, primary: true } });
-  const paymentMethodId = primaryPaymentMethod.id;
-  const stripePaymentMethodId = primaryPaymentMethod.stripePaymentMethodId;
+  const { id: paymentMethodId, cardLast4, stripePaymentMethodId } = primaryPaymentMethod;
 
   const { amount, payable } = await rollupTicketUsageInPeriod(m, period);
 
@@ -19,6 +18,7 @@ export async function calcBillingAmountForPeriod(m: EntityManager, period: OrgSu
     payable,
     paymentMethodId,
     stripePaymentMethodId,
+    cardLast4,
   };
 }
 

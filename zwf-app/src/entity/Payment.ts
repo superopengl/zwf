@@ -37,4 +37,7 @@ export class Payment {
 
   @Column('jsonb', { nullable: true })
   rawResponse: object;
+
+  @Column({nullable: true})
+  cardLast4: string;
 }
