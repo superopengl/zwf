@@ -13,7 +13,7 @@ export class LicenseTicket {
   @Column()
   ticketTo: Date;
 
-  @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `EXTRACT(DAY FROM "ticketTo"::timestamp - "ticketFrom"::timestamp) + 1` })
+  @Column({ type: 'smallint', generatedType: 'STORED', asExpression: `DATE("ticketTo") - DATE("ticketFrom") + 1` })
   ticketDays: number;
 
   @Column('uuid')
