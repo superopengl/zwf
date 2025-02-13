@@ -13,6 +13,9 @@ import PropTypes from 'prop-types';
 import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
 import { compareDates } from 'util/compareDates';
 import { finalize } from 'rxjs';
+import { Switch } from 'antd';
+import MoneyAmount from 'components/MoneyAmount';
+import moment from 'moment';
 
 const { Text, Paragraph } = Typography;
 
@@ -31,23 +34,25 @@ const PromotionListPanel = (props) => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [newCode, setNewCode] = React.useState();
 
-
+  const isValidCode = promotion => {
+    return promotion.active && moment(promotion.endingAt).isAfter();
+  }
   const columnDef = [
     {
       title: 'Code',
       dataIndex: 'code',
       fixed: 'left',
       render: (value, item) => <ClickToCopyTooltip value={value}>
-        <Text strong type={item.active ? "success" : 'secondary'} delete={!item.active} style={{ fontSize: 18 }}>{value}</Text>
+        <Text strong type={isValidCode(item) ? "success" : 'secondary'} delete={!isValidCode(item)} style={{ fontSize: 18 }}>{value}</Text>
       </ClickToCopyTooltip>
     },
     {
-      title: 'Promotion unit price',
-      dataIndex: 'promotionUnitPrice',
+      title: 'Created at',
+      dataIndex: 'createdAt',
       sorter: {
-        compare: (a, b) => a.promotionUnitPrice - b.promotionUnitPrice
+        compare: (a, b) => compareDates(a.createdAt, b.createdAt)
       },
-      render: (value) => value,
+      render: (value) => <TimeAgo value={value} />
     },
     {
       title: 'End',
@@ -58,12 +63,13 @@ const PromotionListPanel = (props) => {
       render: (value) => <TimeAgo value={value} />
     },
     {
-      title: 'Created at',
-      dataIndex: 'createdAt',
+      title: 'Promotion unit price',
+      dataIndex: 'promotionUnitPrice',
+      align: 'right',
       sorter: {
-        compare: (a, b) => compareDates(a.createdAt, b.createdAt)
+        compare: (a, b) => a.promotionUnitPrice - b.promotionUnitPrice
       },
-      render: (value) => <TimeAgo value={value} />
+      render: (value) => <MoneyAmount value={value} />,
     },
   ];
 
@@ -126,12 +132,12 @@ const PromotionListPanel = (props) => {
         onClose={() => setModalVisible(false)}
         title={<>New Promotion Code</>}
         footer={null}
-        width={300}
+        width={400}
       >
         <Form layout="horizontal"
           onFinish={handleSavePromotion}
-          labelCol={{ span: 10 }}
-          wrapperCol={{ span: 14 }}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
           requiredMark={false}
           initialValues={{ code: newCode, promotionUnitPrice: 39 }}>
           <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true }]}>
@@ -150,6 +156,9 @@ const PromotionListPanel = (props) => {
           </Form.Item>
           <Form.Item label="End" name="endingAt" rules={[{ required: true, type: 'date', whitespace: true }]}>
             <DatePicker type="date" />
+          </Form.Item>
+          <Form.Item label="Apply now?" name="applyNow" extra="Should apply this discount to the org's current unpaid billing period? Otherwise it will take effect starting from the next billing period.">
+            <Switch />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>
             <Button block type="primary" htmlType="submit" disabled={loading}>Create</Button>
