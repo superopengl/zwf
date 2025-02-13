@@ -136,7 +136,10 @@ export const OrgLicenseUsagePanel = () => {
                 </> : <>
                   <Row wrap={false} gutter={20} justify="space-between">
                     <Col span={8}>
+                      <Space direction='vertical'>
                       <MoneyAmount value={period.payment?.payable} strong style={{ fontSize: 32, whiteSpace: 'nowrap' }} />
+                      {period.promotionCode && 'Discount rate'}
+                      </Space>
                     </Col>
                     <Col>
                       <Descriptions column={2}>
@@ -147,10 +150,16 @@ export const OrgLicenseUsagePanel = () => {
                           Card ending with {period.payment.cardLast4}
                         </Descriptions.Item>
                         <Descriptions.Item label="Charged amount">
-                          <MoneyAmount value={period.payment.amount} delete={period.promotionCode} />{period.promotionCode && <> <MoneyAmount value={period.payment.payable} strong /></>}
+                          <Space>
+                            <MoneyAmount value={period.payment.amount} delete={period.promotionCode} />
+                            {period.promotionCode && <MoneyAmount value={period.payment.payable} strong />}
+                          </Space>
                         </Descriptions.Item>
                         <Descriptions.Item label="Unit price">
-                          <MoneyAmount value={period.unitFullPrice} delete={period.promotionCode} postfix="/ mo" />{period.promotionCode && <> <MoneyAmount value={period.promotionUnitPrice} strong postfix="/ mo" /></>}
+                          <Space>
+                          <MoneyAmount value={period.unitFullPrice} delete={period.promotionCode} postfix="/ mo" />
+                          {period.promotionCode && <MoneyAmount value={period.promotionUnitPrice} strong postfix="/ mo" />}
+                          </Space>
                         </Descriptions.Item>
                         <Descriptions.Item label="Used person-days">
                           {period.payment.payableDays}
