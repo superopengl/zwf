@@ -23,7 +23,7 @@ import { GiDominoMask } from 'react-icons/gi';
 import Icon from '@ant-design/icons';
 
 
-const { Text, Paragraph } = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 
 
 const DEFAULT_QUERY_INFO = {
@@ -79,7 +79,9 @@ const OrgListPage = () => {
     {
       title: 'Owner User',
       dataIndex: 'ownerEmail',
-      render: (value) => value
+      render: (value, org) => <Tooltip title="Click to impersonate">
+        <TextLink underline onClick={() => handleImpersonante(org)}>{value}</TextLink>
+        </Tooltip>
     },
     {
       title: 'Type',
@@ -87,7 +89,7 @@ const OrgListPage = () => {
       render: (value) => value
     },
     {
-      title: 'Period',
+      title: 'Current Billing Period',
       render: (value, item) => <Space>
         <TimeAgo value={item.periodFrom} />
         -
@@ -240,7 +242,7 @@ const OrgListPage = () => {
 
   return (
     <PageHeaderContainer
-      title="Orgs Management"
+      title="Org Management"
       extra={[
         <Input.Search
           key="search"
