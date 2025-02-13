@@ -4,8 +4,7 @@ import { OrgSubscriptionPeriod } from '../../entity/OrgSubscriptionPeriod';
 
 export async function rollupTicketUsageInPeriod(m: EntityManager, period: OrgSubscriptionPeriod) {
 
-  const data = await m.findBy(LicenseTicketUsageInformation, { periodId: period.id });
-  const stats = period.type === 'trial' ? null : await m.createQueryBuilder()
+  const stats = period.type === 'trial' ? {} : await m.createQueryBuilder()
     .from(q => q
       .from(LicenseTicketUsageInformation, 'sub')
       .where(`"periodId" = :periodId`, { periodId: period.id })
@@ -13,13 +12,14 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, period: OrgSub
     .select([
       `ROUND(SUM(s."unitFullPrice" * s."ticketDays" / s."periodDays"), 2) as amount`,
       `ROUND(SUM(s."realUnitPrice" * s."ticketDays" / s."periodDays"), 2) as payable`,
+      `SUM(s."ticketDays") as "payableDays"`,
     ])
     .getRawOne();
 
   return {
-    data,
-    amount: +stats?.amount || 0,
-    payable: +stats?.payable || 0,
+    amount: +stats.amount || 0,
+    payable: +stats.payable || 0,
     periodDays: +period.periodDays,
+    payableDays: +stats.payableDays || 0,
   };
 }

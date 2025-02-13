@@ -11,7 +11,6 @@ import { generateReceiptPdfStream } from '../services/receiptService';
 import { OrgSubscriptionPeriodHistoryInformation } from '../entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
-import { rollupTicketUsageInPeriod } from '../services/payment/rollupTicketUsageInPeriod';
 import { LessThan, MoreThan } from 'typeorm';
 
 async function getOrgPaymentHistory(orgId) {

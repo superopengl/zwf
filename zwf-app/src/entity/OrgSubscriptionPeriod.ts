@@ -49,7 +49,7 @@ export class OrgSubscriptionPeriod {
   @Column({ nullable: true })
   promotionCode: string;
 
-  @Column('decimal', { transformer: new ColumnNumericTransformer(), default: 0 })
+  @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: true })
   promotionUnitPrice: number;
 
   @Column({ default: true })
