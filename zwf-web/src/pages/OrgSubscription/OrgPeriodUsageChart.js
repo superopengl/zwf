@@ -112,7 +112,7 @@ export const OrgPeriodUsageChart = React.memo((props) => {
   return (
     <Loading loading={loading} >
       <Bar {...config} />
-      <DebugJsonPanel value={list} />
+      {/* <DebugJsonPanel value={list} /> */}
     </Loading>
   );
 });

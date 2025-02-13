@@ -14,9 +14,7 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
     .leftJoin(UserProfile, 'p', `u."profileId" = p.id`)
     .leftJoin(q => q
       .from(OrgSubscriptionPeriod, 'm')
-      .distinctOn(['"orgId", seq'])
-      .orderBy('"orgId"')
-      .addOrderBy('seq', 'DESC')
+      .where('tail IS TRUE')
       , 'm', 'o.id = m."orgId"')
     .leftJoin(q => q
       .from(OrgPromotionCode, 'y')

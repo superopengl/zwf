@@ -39,18 +39,11 @@ export const listMySubscriptions = handlerWrapper(async (req, res) => {
 export const getCurrentPeriod = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const orgId = getOrgIdFromReq(req);
-  const { currentPeriodId } = await db.getRepository(OrgBasicInformation).findOneOrFail({
-    where: {
-      id: orgId
-    },
-    select: {
-      currentPeriodId: true
-    }
-  });
 
   const currentPeriod = await db.getRepository(OrgSubscriptionPeriod).findOne({
     where: {
-      id: currentPeriodId
+      orgId,
+      tail: true
     },
     relations: {
       payment: true,

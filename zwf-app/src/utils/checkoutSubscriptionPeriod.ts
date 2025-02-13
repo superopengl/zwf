@@ -10,9 +10,12 @@ import { terminatePlan } from './terminatePlan';
 import { OrgSubscriptionPeriod } from '../entity/OrgSubscriptionPeriod';
 import { v4 as uuidv4 } from 'uuid';
 import { getOrgActivePromotionCode } from './getOrgActivePromotionCode';
+import { assert } from './assert';
 
 export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSubscriptionPeriod) {
-  const { id: periodId, orgId } = period;
+  const { id: periodId, orgId, type } = period;
+  assert(type !== 'trial', 500, 'Cannot checkout for trial period');
+  
   console.log(`Charging subscription period ${periodId} for org ${orgId}`);
 
   try {

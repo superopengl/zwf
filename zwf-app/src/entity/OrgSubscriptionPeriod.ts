@@ -8,6 +8,7 @@ import { Payment } from './Payment';
 @Index('idx_orgId_periodTo', ['orgId', 'periodTo'])
 @Index('idx_orgId_seq_unique', ['orgId', 'seq'], { unique: true })
 @Index('idx_orgId_not_checkedout_unique', ['orgId', 'checkoutDate'], { unique: true, where: '"checkoutDate" IS NULL' })
+@Index('idx_orgId_tail_unique', ['orgId', 'tail'], { unique: true, where: 'tail IS TRUE' })
 export class OrgSubscriptionPeriod {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -38,7 +39,7 @@ export class OrgSubscriptionPeriod {
   unitFullPrice: number;
 
   @OneToOne(() => Payment, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
-  @JoinColumn({ name: 'profileId', referencedColumnName: 'id' })
+  @JoinColumn({ name: 'paymentId', referencedColumnName: 'id' })
   payment: Payment;
 
   @Column('uuid', { nullable: true })
@@ -50,4 +51,7 @@ export class OrgSubscriptionPeriod {
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), default: 0 })
   promotionUnitPrice: number;
+
+  @Column({ default: true })
+  tail: boolean;
 }
