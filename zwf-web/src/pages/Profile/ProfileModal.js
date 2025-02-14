@@ -3,18 +3,21 @@ import React from 'react';
 import ProfileForm from '../Profile/ProfileForm';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { Modal } from 'antd';
-import { getAuthUser } from 'services/authService';
+import { getAuthUser$ } from 'services/authService';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const ProfileModal = props => {
   const context = React.useContext(GlobalContext);
-  const { user, setUser } = context;
+  const { user } = context;
+  const setAuthUser = useSetAuthUser();
 
   const { onOk } = props;
 
-  const handlePostSave = async () => {
-    const updatedUser = await getAuthUser();
-    setUser(updatedUser);
-    onOk();
+  const handlePostSave = () => {
+    getAuthUser$().subscribe(user => {
+      setAuthUser(user);
+      onOk();
+    });
   }
 
 

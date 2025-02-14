@@ -19,6 +19,7 @@ import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -73,6 +74,7 @@ export const App = React.memo(() => {
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
   const event$ = React.useRef(new Subject()).current;
+  const setAuthUser = useSetAuthUser();
 
   const globalContextValue = {
     event$,
@@ -93,7 +95,7 @@ export const App = React.memo(() => {
 
   React.useEffect(() => {
     const sub$ = getAuthUser$().subscribe(user => {
-      setUser(user);
+      setAuthUser(user);
       setLoading(false);
     })
     return () => sub$.unsubscribe()

@@ -2,24 +2,23 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { GlobalContext } from '../contexts/GlobalContext';
 import { ssoGoogleRegisterOrg$, ssoGoogleLogin$ } from 'services/authService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
 import { catchError, finalize } from 'rxjs/operators';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 export const GoogleSsoButton = props => {
-  const context = React.useContext(GlobalContext);
-  const { setUser } = context;
   const { render, type, onStart, onEnd } = props;
   const navigate = useNavigate();
+  const setAuthUser = useSetAuthUser();
 
   const loginWithUser = (user) => {
     if (!user) {
       throw new Error('User is null');
     }
-    setUser(user);
+    setAuthUser(user);
     navigate('/task');
   }
 

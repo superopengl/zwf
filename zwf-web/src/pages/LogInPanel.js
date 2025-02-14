@@ -2,10 +2,10 @@ import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Input, Button, Form,  } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
-import { GlobalContext } from '../contexts/GlobalContext';
 import { login$ } from 'services/authService';
 import { finalize } from 'rxjs/operators';
 import PropTypes from 'prop-types';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 
 export const LogInPanel = props => {
@@ -16,8 +16,7 @@ export const LogInPanel = props => {
 
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
-  const context = React.useContext(GlobalContext);
-  const { setUser } = context;
+  const setAuthUser = useSetAuthUser();
 
   const validateName = async (rule, value) => {
     const isValid = value && isEmail(value);
@@ -40,7 +39,7 @@ export const LogInPanel = props => {
       .subscribe(
         (user) => {
           if (user) {
-            setUser(user);
+            setAuthUser(user);
 
             if (user.role === 'system') {
               navigate(returnUrl || '/support')

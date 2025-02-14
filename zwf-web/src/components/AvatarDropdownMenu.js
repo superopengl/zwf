@@ -16,6 +16,7 @@ import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { QuestionCircleFilled } from '@ant-design/icons';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
@@ -46,6 +47,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
+  const setAuthUser = useSetAuthUser();
 
   const { email, avatarFileId, loginType } = user ?? {};
 
@@ -69,9 +71,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       autoFocusButton: 'cancel',
       onOk: () => {
         logout$().subscribe(() => {
-          // reactLocalStorage.clear();
-          setUser(null);
-          goToHomePage();
+          setAuthUser(null);
         });
       },
       cancelButtonProps: {

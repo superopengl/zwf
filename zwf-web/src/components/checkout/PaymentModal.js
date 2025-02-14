@@ -9,6 +9,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
 import { from } from 'rxjs';
 import PropTypes from 'prop-types';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -41,6 +42,7 @@ const PaymentModal = (props) => {
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [subscriptionHistory, setSubscriptionHistory] = React.useState([]);
   const context = React.useContext(GlobalContext);
+  const setAuthUser = useSetAuthUser();
 
   const load = async (refreshAuthUser = false) => {
     try {
@@ -53,7 +55,7 @@ const PaymentModal = (props) => {
       setAccount(account);
       setCurrentSubscription(subscription);
       if (refreshAuthUser) {
-        context.setUser(user);
+        setAuthUser(user);
       }
       setSubscriptionHistory(subscriptionHistory);
     } finally {
