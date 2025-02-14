@@ -30,11 +30,3 @@ export function getSiblingPeriod$(periodId, direction) {
 export function getPeriodUsage$(periodId) {
   return httpGet$(`/subscription/period/${periodId}/usage`);
 }
-
-export async function listUserSubscriptionHistory(userId) {
-  return httpGet(`/user/${userId}/subscription`);
-}
-
-export async function fetchStripeCheckoutSession() {
-  return httpGet(`/checkout/stripe/session`);
-}
