@@ -142,7 +142,7 @@ export const App = React.memo(() => {
           },
           token: {
             colorPrimary: '#0FBFC4',
-            colorInfo: '#0FBFC4',
+            colorInfo: '#0051D9',
             colorWarning: '#F7BA1E',
             colorLink: '#0051D9',
             colorSuccess: '#00B42A',
