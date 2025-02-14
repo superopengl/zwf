@@ -91,9 +91,9 @@ const OrgListPage = () => {
     {
       title: 'Current Billing Period',
       render: (value, item) => <Space>
-        <TimeAgo value={item.periodFrom} />
+        <TimeAgo value={item.periodFrom} accurate={false}/>
         -
-        <TimeAgo value={item.periodTo} />
+        <TimeAgo value={item.periodTo} accurate={false}/>
       </Space>
     },
     {
