@@ -4,7 +4,7 @@ import { Typography, Button, Table, Input, Modal, Form, Drawer, Select } from 'a
 import {
   UserAddOutlined, QuestionOutlined
 } from '@ant-design/icons';
-import { deleteUser, setPasswordForUser, setUserRole } from 'services/userService';
+import { deleteUser$, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteMember$, impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -121,9 +121,8 @@ const OrgMemberListPage = () => {
     modal.confirm({
       title: <>Delete user</>,
       content: <UserNameCard userId={item.id} />,
-      onOk: async () => {
-        await deleteUser(id);
-        loadList();
+      onOk: () => {
+        deleteUser$(id).subscribe(() => loadList());
       },
       maskClosable: true,
       okButtonProps: {
