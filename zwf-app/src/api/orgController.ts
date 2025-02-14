@@ -82,7 +82,6 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   period.periodTo = moment(now).add(TRIAL_PERIOD_DAYS - 1, 'days').toDate();
   period.checkoutDate = now;
   period.orgId = orgId;
-  period.seq = 1;
   period.type = 'trial';
   period.unitFullPrice = 0;
 

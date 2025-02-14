@@ -37,6 +37,10 @@
 				color: #555;
 			}
 
+			p {
+				margin: 40px auto;
+			}
+
 			body a {
 				color: #06f;
 			}
@@ -85,8 +89,9 @@
 			}
 
 			.invoice-box table tr.heading td {
-				background: rgba(0,0,0,0.06);
+				background: #14C9C9;
 				border: none;
+				color: white;
 				/* border-bottom: 1px solid #ddd; */
 				font-weight: 800;
 			}
@@ -121,6 +126,7 @@
 					text-align: center;
 				}
 			}
+
 		</style>
 	</head>
 	<body>
@@ -135,21 +141,21 @@
 									alt="logo" style="width: 100%;max-width: 200px;"/> 
 								</td>
 								<td>
-									Invoice Number: {{invoiceNumber}}<br>
-									Invoice Date: {{date}}
-								</td>
-							</tr>
-						</tbody></table>
-					</td>
-				</tr>
-				<tr class="information">
-					<td colspan="2">
-						<table>
-							<tbody><tr>
-								<td>
-								</td>
-								<td>
-									https://zeeworkflow.com
+									<table class="info-box">
+										<tr>
+											<td>
+												Invoice Number: {{invoiceNumber}}<br>
+												Invoice Date: {{date}}
+											</td>
+										</tr>
+										<tr>
+											<td>
+												ZeeWorkflow PTY LTD<br>
+												ABN: 14663597680<br>
+												https://zeeworkflow.com
+											</td>
+										</tr>
+									</table>
 								</td>
 							</tr>
 						</tbody></table>
@@ -157,15 +163,43 @@
 				</tr>
 
 				<tr class="heading">
-					<td>Subscription Plan</td>
+					<td>{{subscriptionDescription}}</td>
 
 					<td>Price</td>
 				</tr>
 
-				<tr class="details">
-					<td>{{subscriptionDescription}}</td>
 
-					<td>$ {{subscriptionPrice}}</td>
+				{{#if promotionCode}}
+				<tr class="item">
+					<td>Full unit price per person-month</td>
+
+					<td style="text-decoration:line-through;">$ {{unitFullPrice}}</td>
+				</tr>
+
+				<tr class="item">
+					<td>Promotion unit price ({{promotionCode}})</td>
+
+					<td>$ {{promotionUnitPrice}}</td>
+				</tr>
+				{{else}}
+				<tr class="item">
+					<td>Full unit price (per person-month)</td>
+
+					<td>$ {{unitFullPrice}}</td>
+				</tr>
+
+				{{/if}}
+
+				<tr class="item">
+					<td>Usage in person-days</td>
+
+					<td>{{payableDays}}</td>
+				</tr>
+
+				<tr class="details">
+					<td>Usage in person-months</td>
+
+					<td>{{payableMonths}}</td>
 				</tr>
 
 				<tr class="heading">
@@ -175,23 +209,33 @@
 				</tr>
 
 				<tr class="item">
-					<td>Credit deduction</td>
+					<td>GST 10%</td>
 
-					<td>$ {{creditDeduction}}</td>
+					<td>$ {{gst}}</td>
 				</tr>
 				<tr class="item last">
-					<td>Payable amount ({{paymentMethod}})</td>
+					<td>Subtotal</td>
 
-					<td>$ {{payableAmount}}</td>
+					<td>$ {{payableExcludingGst}}</td>
 				</tr>
 
 				<tr class="total">
 					<td></td>
-
-					<td>Total: $ {{subscriptionPrice}}</td>
+					<td style="font-size: 20px;">Total amount: $ {{payable}}</td>
 				</tr>
+		
 			</tbody></table>
+
+			<p>
+				The amount has been paid successfully <br>
+				with the card ending with {{cardLast4}} <br>
+				on {{date}} <br>
+				by ZeeWorkflow  system automatically.
+			</p>
+			<p>
+				Thank you very much for choosing ZeeWorkflow!
+			</p>
 		</div>
-	
+		<div></div>
 
 </body></html>

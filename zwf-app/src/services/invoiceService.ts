@@ -8,26 +8,31 @@ import { generatePdfBufferFromHtml } from '../utils/generatePdfBufferFromHtml';
 const invoiceTemplateHtml = fs.readFileSync(`${__dirname}/../_assets/invoice_template.html`);
 const compiledTemplate = handlebars.compile(invoiceTemplateHtml.toString());
 
-function getPaymentMethodName(cardLast4: string) {
-  return `Card ending with ${cardLast4}`;
-}
-
 function getSubscriptionDescription(invoice: OrgSubscriptionPeriodHistoryInformation) {
   const start = moment(invoice.periodFrom).format('D MMM YYYY');
   const end = moment(invoice.periodTo).format('D MMM YYYY');
 
-  return `ZeeWorkflow Invoice (${start} - ${end})`;
+  return `ZeeWorkflow All-In-One Plan (${start} - ${end})`;
 }
 
 function getVarBag(invoice: OrgSubscriptionPeriodHistoryInformation): {[key: string]: any} {
-  const subscriptionPrice = +invoice.payable || 0;
+  const payable = (+invoice.payable || 0);
+  const gst = +((payable / 11).toFixed(2));
+  const payableExcludingGst = payable - gst;
   return {
     invoiceNumber: invoice.invoiceNumber,
     date: moment(invoice.checkoutDate).format('D MMM YYYY'),
     subscriptionDescription: getSubscriptionDescription(invoice),
-    subscriptionPrice: subscriptionPrice.toFixed(2),
-    paymentMethod: getPaymentMethodName(invoice.cardLast4),
-    payableAmount: (+invoice.amount || 0).toFixed(2),
+    unitFullPrice: (+invoice.unitFullPrice || 0).toFixed(2),
+    periodDays: invoice.periodDays,
+    promotionCode: invoice.promotionCode ?? '',
+    promotionUnitPrice: invoice.promotionCode ? (+invoice.promotionUnitPrice || 0).toFixed(2) : '',
+    payableDays: invoice.payableDays,
+    payableMonths: (invoice.payableDays/invoice.periodDays).toFixed(2),
+    cardLast4: invoice.cardLast4,
+    payable: payable.toFixed(2),
+    gst: gst.toFixed(2),
+    payableExcludingGst: payableExcludingGst.toFixed(2),
   };
 }
 

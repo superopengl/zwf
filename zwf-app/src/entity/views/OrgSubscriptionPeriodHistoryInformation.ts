@@ -11,7 +11,6 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
     .innerJoin(OrgBasicInformation, 'org', 'org.id = s."orgId"')
     .leftJoin(Payment, 'p', 's."paymentId" = p.id')
     .leftJoin(OrgPaymentMethod, 'm', 'p."orgPaymentMethodId" = m.id')
-    .leftJoin(OrgPromotionCode, 'x', 'x.code = s."promotionCode"')
     .select([
       's.id as id',
       's."orgId" as "orgId"',
@@ -26,10 +25,12 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       `to_char(p."checkoutDate", 'YYYYMMDD-') || lpad(p."seqId"::text, 8, '0') as "invoiceNumber"`,
       'p."checkoutDate" as "checkoutDate"',
       'p.payable as payable',
+      'p."payableDays" as "payableDays"',
       'org."ownerEmail" as email',
       'm."cardLast4" as "cardLast4"',
-      'x.code as "promotionCode"',
-      'x."promotionUnitPrice" as "promotionUnitPrice"'
+      's."unitFullPrice" as "unitFullPrice"',
+      's."promotionCode" as "promotionCode"',
+      's."promotionUnitPrice" as "promotionUnitPrice"'
     ]),
   dependsOn: [Payment, OrgPaymentMethod, OrgBasicInformation, OrgSubscriptionPeriod, OrgPromotionCode]
 })
@@ -54,13 +55,13 @@ export class OrgSubscriptionPeriodHistoryInformation {
   tail: boolean;
 
   @ViewColumn()
-  periodDays: string;
+  periodDays: number;
 
   @ViewColumn()
   paymentId: string;
 
   @ViewColumn()
-  paymentSeq: string;
+  paymentSeq: number;
 
   @ViewColumn()
   amount: number;
@@ -74,6 +75,7 @@ export class OrgSubscriptionPeriodHistoryInformation {
   @ViewColumn()
   payable: number;
 
+
   @ViewColumn()
   email: string;
 
@@ -81,8 +83,14 @@ export class OrgSubscriptionPeriodHistoryInformation {
   cardLast4: string;
 
   @ViewColumn()
+  unitFullPrice: number;
+
+  @ViewColumn()
   promotionCode: string;
 
   @ViewColumn()
   promotionUnitPrice: number;
+
+  @ViewColumn()
+  payableDays: number;
 }
