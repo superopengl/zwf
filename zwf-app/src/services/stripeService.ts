@@ -57,7 +57,7 @@ export async function chargeStripeForCardPayment(amount: number, stripeCustomerI
 
   const paymentIntent = amount ? await getStripe().paymentIntents.create({
     amount: Math.ceil(amount * 100),
-    currency: 'usd',
+    currency: 'aud',
     customer: stripeCustomerId,
     payment_method: stripePaymentMethodId,
     off_session: !onSessionPayment,
