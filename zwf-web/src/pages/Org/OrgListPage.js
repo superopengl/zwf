@@ -21,10 +21,9 @@ import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { GiDominoMask } from 'react-icons/gi';
 import Icon from '@ant-design/icons';
-
+import { UserNameCard } from 'components/UserNameCard';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
-
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -78,9 +77,10 @@ const OrgListPage = () => {
     },
     {
       title: 'Owner User',
-      dataIndex: 'ownerEmail',
-      render: (value, org) => <Tooltip title="Click to impersonate">
-        <TextLink underline onClick={() => handleImpersonante(org)}>{value}</TextLink>
+      render: (_, org) => <Tooltip title="Click to impersonate">
+        <TextLink onClick={() => handleImpersonante(org)}>
+          <UserNameCard userId={org.ownerUserId} type="link"/>
+        </TextLink>
         </Tooltip>
     },
     {
@@ -187,7 +187,7 @@ const OrgListPage = () => {
     modal.confirm({
       title: 'Impersonate',
       icon: <QuestionOutlined />,
-      content: <>To impersonate org <Text code>{org.name}</Text>?</>,
+      content: <>Impersonate the owner user of org <Text code>{org.name}</Text>?</>,
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
@@ -286,7 +286,6 @@ const OrgListPage = () => {
       </Drawer>
       {contextHolder}
     </PageHeaderContainer>
-
   );
 };
 

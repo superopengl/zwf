@@ -29,7 +29,7 @@ import { OrgSubscriptionPeriod } from '../OrgSubscriptionPeriod';
       'o.tel as tel',
       'o.suspended as suspended',
       'o.testing as testing',
-      'u.id as "adminUserId"',
+      'u.id as "ownerUserId"',
       'p.email as "ownerEmail"',
       'p."givenName" as "givenName"',
       'p."surname" as "surname"',
@@ -69,7 +69,7 @@ export class OrgBasicInformation {
   testing: boolean;
 
   @ViewColumn()
-  adminUserId: string;
+  ownerUserId: string;
 
   @ViewColumn()
   ownerEmail: string;

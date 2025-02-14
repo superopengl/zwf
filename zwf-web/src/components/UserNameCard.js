@@ -8,7 +8,7 @@ import { UserAvatar } from './UserAvatar';
 import { UserDisplayName } from './UserDisplayName';
 
 export const UserNameCard = React.memo((props) => {
-  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar } = props;
+  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type } = props;
 
   const [data, setData] = React.useState();
 
@@ -53,6 +53,7 @@ export const UserNameCard = React.memo((props) => {
       searchText={searchText}
       showEmail={showEmail}
       size={fontSize}
+      type={type}
     />
     </Col>}
   </Row>
@@ -66,6 +67,7 @@ export const UserNameCard = React.memo((props) => {
 UserNameCard.propTypes = {
   userId: PropTypes.string,
   searchText: PropTypes.string,
+  type: PropTypes.oneOf(['link']),
   size: PropTypes.number,
   fontSize: PropTypes.number,
   showTooltip: PropTypes.bool,
@@ -76,7 +78,7 @@ UserNameCard.propTypes = {
 
 UserNameCard.defaultProps = {
   searchText: '',
-  size: 32,
+  size: 36,
   fontSize: 14,
   showTooltip: false,
   showName: true,
