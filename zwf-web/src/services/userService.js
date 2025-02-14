@@ -38,24 +38,44 @@ export async function setUserRole(userId, role) {
   return httpPost(`user/${userId}/role`, { role });
 }
 
-const userNameCardInfoMap = new Map();
+const userNameCardInfoCache = new Map();
 
-export function getUserNameCardInfo$(userId, force = false) {
-  let cachedSource$ = userNameCardInfoMap.get(userId);
+export function getUserNameCardInfo$(userId) {
+  let cachedSource$ = userNameCardInfoCache.get(userId);
   if (!cachedSource$) {
     cachedSource$ = new BehaviorSubject().pipe(
       filter(x => !!x),
     );
-    userNameCardInfoMap.set(userId, cachedSource$);
 
-    httpGet$(`/user/${userId}/brief`).pipe(
-      tap(data => {
-        cachedSource$.next(data)
-      }),
-    ).subscribe();
+    userNameCardInfoCache.set(userId, cachedSource$);
+    enqueueRequest(userId);
   }
 
   return cachedSource$;
+}
+
+const requestBuffer = [];
+function enqueueRequest(userId) {
+  requestBuffer.push(userId);
+
+  of(null).pipe(
+    delay(0),
+    switchMap(() => {
+      const ids = [];
+      let first;
+      while ((first = requestBuffer.shift())) {
+        ids.push(first);
+      }
+      return ids.length ? httpPost$(`/user/brief`, { ids }) : of([])
+    }),
+  ).subscribe(result => {
+    for(const info of result) {
+      const userId = info.id;
+      const cachedSource$ = userNameCardInfoCache.get(userId);
+      cachedSource$.next(info);
+    }
+  });
+
 }
 
 

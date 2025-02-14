@@ -258,9 +258,9 @@ paths:
       responses:
         200:
           description: OK
-  /user/:id/brief:
-    get:
-      operationId: getUserBrief
+  /user/brief:
+    post:
+      operationId: getBulkUserBrief
       # security:
       #   - authClient: []
       responses:
