@@ -1,11 +1,11 @@
-import {httpGet, httpGet$, httpPost$, httpDelete$ } from './http';
+import { httpGet$, httpPost$, httpDelete$ } from './http';
 
 export function listOrgPaymentMethods$() {
   return httpGet$(`/org/payment_method`);
 }
 
-export async function getPaymentMethodSecret() {
-  return httpGet(`/org/payment_method/secret`);
+export function getPaymentMethodSecret$() {
+  return httpGet$(`/org/payment_method/secret`);
 }
 
 export function deleteOrgPaymentMethod$(id) {

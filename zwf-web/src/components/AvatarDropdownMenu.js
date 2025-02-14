@@ -2,42 +2,22 @@ import React from 'react';
 import { GlobalContext } from '../contexts/GlobalContext';
 import { useNavigate } from 'react-router-dom';
 import { logout$ } from 'services/authService';
-import { Dropdown, Menu, Modal, Layout, Button, Typography } from 'antd';
-import styled from 'styled-components';
+import { Dropdown, Modal } from 'antd';
 import ProfileModal from 'pages/Profile/ProfileModal';
 import AboutModal from 'pages/About/AboutModal';
-import { Switch } from 'react-router-dom';
 import loadable from '@loadable/component'
 import { FormattedMessage } from 'react-intl';
 import { UserAvatar } from 'components/UserAvatar';
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
-import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
 
-const { Link: TextLink } = Typography;
-
-const StyledLayout = styled(Layout)`
-.ant-layout-footer {
-  border-top: 1px solid rgba(0,0,0,0.1);
-}
-
-`;
-
-const StyledMenu = styled(Menu)`
-.ant-dropdown-menu-item {
-  padding: 12px !important;
-}
-`;
-
 export const AvatarDropdownMenu = React.memo(props => {
-  const { user, role, setUser } = React.useContext(GlobalContext);
+  const { user, role } = React.useContext(GlobalContext);
 
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
@@ -72,6 +52,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       onOk: () => {
         logout$().subscribe(() => {
           setAuthUser(null);
+          goToHomePage();
         });
       },
       cancelButtonProps: {

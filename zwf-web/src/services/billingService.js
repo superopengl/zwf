@@ -1,5 +1,5 @@
 import { from, tap } from 'rxjs';
-import { httpGet$, httpGet, request } from './http';
+import { httpGet$, httpPost$, request } from './http';
 
 export function downloadInvoice$(paymentId) {
   if (!paymentId) {
@@ -29,4 +29,12 @@ export function getSiblingPeriod$(periodId, direction) {
 
 export function getPeriodUsage$(periodId) {
   return httpGet$(`/subscription/period/${periodId}/usage`);
+}
+
+export function getOrgResurgingInfo$(code) {
+  return httpGet$(`/subscription/resurge/${code}`);
+}
+
+export function resurgeOrg$(code, payload) {
+  return httpPost$(`/subscription/resurge/${code}`, payload);
 }

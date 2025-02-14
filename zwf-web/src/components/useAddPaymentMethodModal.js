@@ -3,6 +3,8 @@ import { Modal } from 'antd';
 import { Loading } from 'components/Loading';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
+import { getPaymentMethodSecret$ } from 'services/orgPaymentMethodService';
+import { firstValueFrom, map } from 'rxjs';
 
 export const useAddPaymentMethodModal = () => {
   const [loading, setLoading] = React.useState(false);
@@ -10,12 +12,19 @@ export const useAddPaymentMethodModal = () => {
 
   const open = (onOk) => {
 
-    const handleSavePayment = async (stripePaymentMethodId) => {
+    const handleSavePayment = (stripePaymentMethodId) => {
       saveOrgPaymentMethod$(stripePaymentMethodId)
         .subscribe(() => {
           modalInstance.destroy();
           onOk?.();
         });
+    }
+
+    const handleGetClientSecret = () => {
+      const source$ = getPaymentMethodSecret$().pipe(
+        map(result => result.clientSecret)
+      );
+      return firstValueFrom(source$);
     }
 
     const modalInstance = modal.info({
@@ -30,6 +39,7 @@ export const useAddPaymentMethodModal = () => {
         <StripeCardPaymentWidget
           onOk={handleSavePayment}
           onLoading={loading => setLoading(loading)}
+          onClientSecret={handleGetClientSecret}
           buttonText="Add this card"
         />
       </Loading>,

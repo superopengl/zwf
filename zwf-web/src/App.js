@@ -19,7 +19,6 @@ import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -27,6 +26,7 @@ const LogInPage = loadable(() => import('pages/LogInPage'));
 const ResetPasswordPage = loadable(() => import('pages/ResetPasswordPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
+const OrgResurgingPage = loadable(() => import('pages/OrgResurgingPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
 const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
@@ -74,7 +74,6 @@ export const App = React.memo(() => {
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
   const [user, setUser] = React.useState(null);
   const event$ = React.useRef(new Subject()).current;
-  const setAuthUser = useSetAuthUser();
 
   const globalContextValue = {
     event$,
@@ -95,7 +94,7 @@ export const App = React.memo(() => {
 
   React.useEffect(() => {
     const sub$ = getAuthUser$().subscribe(user => {
-      setAuthUser(user);
+      setUser(user);
       setLoading(false);
     })
     return () => sub$.unsubscribe()
@@ -145,6 +144,7 @@ export const App = React.memo(() => {
         {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
         {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
         {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
+        {isGuest && <Route path="/resurge/:code" element={<OrgResurgingPage />} />}
         {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
         <Route path="/onboard" element={<OrgOnBoardPage />} />
 

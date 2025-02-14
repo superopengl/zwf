@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, OneToMany, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, DeleteDateColumn, Index, Unique } from 'typeorm';
 
 @Entity()
 export class Org {
@@ -34,6 +34,10 @@ export class Org {
 
   @Column({ default: false })
   suspended: boolean;
+
+  @Column('uuid', { nullable: true })
+  @Index()
+  resurgingCode: string;
 
   @Column({ default: false })
   testing: boolean;
