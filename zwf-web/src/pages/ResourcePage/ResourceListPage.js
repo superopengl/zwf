@@ -116,7 +116,7 @@ export const ResourceListPage = React.memo(props => {
             bordered={false}
             hoverable
             title={null}
-            onClick={() => navigate(`/resource/${item.titleKey}`)}
+            onClick={() => navigate(`/resource/${item.id}`)}
             style={{ height: 430 }}
           >
             <div

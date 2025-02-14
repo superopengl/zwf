@@ -18,9 +18,9 @@ export class ResourcePage {
   @Column()
   title: string;
 
-  // Stripe URL reserved symbols https://developers.google.com/maps/url-encoding, and replace whitespace with dash
-  @Column({unique: true, generatedType: "STORED", asExpression: `LOWER(TRANSLATE("title", ' !*''();:@&=+$,/?%#[]', '-'))`})
-  titleKey: string;
+  // // Stripe URL reserved symbols https://developers.google.com/maps/url-encoding, and replace whitespace with dash
+  // @Column({unique: true, generatedType: "STORED", asExpression: `LOWER(TRANSLATE("title", ' !*''();:@&=+$,/?%#[]', '-'))`})
+  // titleKey: string;
 
   @Column({nullable: true})
   imageBase64: string;
