@@ -84,7 +84,7 @@ const orgFeatures = [
 ].map((x, i) => ({
   key: i,
   name: x.name,
-  extra: x.release ? `alive from ${x.release}` : x.dev ? 'coming soon' : ''
+  extra: x.release ? `alive` : x.dev ? 'coming soon' : ''
 }))
 
 
@@ -93,11 +93,11 @@ const clientFeatures = [
   { name: 'Realtime chat communication', release: 'v1' },
   { name: 'Task event timeline', release: 'v1' },
   { name: 'Doc Sign', release: 'v1' },
-  { name: 'Doc Sign on blockchian', dev: true },
+  // { name: 'Doc Sign on blockchian', dev: true },
 ].map((x, i) => ({
   key: i,
   name: x.name,
-  extra: x.release ? `alive from ${x.release}` : x.dev ? 'coming soon' : ''
+  extra: x.release ? `alive` : x.dev ? 'coming soon' : ''
 }))
 
 export const HomeFeatureListArea = props => {

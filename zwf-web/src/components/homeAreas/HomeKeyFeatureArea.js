@@ -116,7 +116,7 @@ export const HomeKeyFeatureArea = () => {
         </Row>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
           <Col {...span}>
-            <Title level={2}><span style={{ color: '#0FBFC4' }}>Client Portal</span></Title>
+            <Title level={2}><span style={{ color: '#0051D9' }}>Client</span> Portal</Title>
             <Paragraph>Task management desocription. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span}>
