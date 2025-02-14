@@ -1,6 +1,6 @@
 import React from 'react';
 // import 'antd/dist/antd.less';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, createBrowserRouter, createRoutesFromElements, Routes, Route, RouterProvider } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { Subject } from 'rxjs';
@@ -129,6 +129,54 @@ export const App = React.memo(() => {
     </Row>
   }
 
+  const router = createBrowserRouter(
+    createRoutesFromElements(
+      <Route path="/">
+        <Route path={'/'} element={<PortalPage />} >
+          <Route index element={<HomePage />} />
+          <Route path="/resource" element={<ResourceListPage />} />
+          <Route path="/resource/:key" element={<ResourcePage />} />
+        </Route>
+        <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
+        <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
+        {isGuest && <Route path="/login" element={<LogInPage />} />}
+        {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
+        {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
+        {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
+        {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
+        <Route path="/onboard" element={<OrgOnBoardPage />} />
+
+        {!isGuest && <Route path="/" element={<AppLoggedInPage />} >
+          {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
+          {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
+          {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}
+          {isClient && <Route path="/task/:id" element={<ClientTaskPage />} />}
+          {(isAdmin || isAgent) && <Route path="/task/:id" element={<OrgTaskPage />} />}
+          {isClient && <Route path="/activity" element={<ClientTrackingListPage />} />}
+          <Route path="/doc_template" element={<DocTemplateListPage />} />
+          <Route path="/doc_template/new" element={<DocTemplatePage />} />
+          <Route path="/doc_template/:id" element={<DocTemplatePage />} />
+          <Route path="/task_template" element={<TaskTemplateListPage />} />
+          <Route path="/task_template/new" element={<TaskTemplatePage />} />
+          <Route path="/task_template/:id" element={<TaskTemplatePage />} />
+          <Route path="/scheduler" element={<RecurringListPage />} />
+          <Route path="/client" element={<OrgClientListPage />} />
+          <Route path="/tags" element={<TagsSettingPage />} />
+          <Route path="/subscription" element={<OrgSubscriptionPage />} />
+          <Route path="/team" element={<OrgMemberListPage />} />
+          <Route path="/config" element={<ConfigListPage />} />
+          <Route path="/org" element={<OrgListPage />} />
+          <Route path="/support" element={<SupportListPage />} />
+          <Route path="/manage/resource" element={<ResourceEditListPage />} />
+          <Route path="/manage/resource/new" element={<ResourceEditPage />} />
+          <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
+          <Route path="/revenue" element={<RevenuePage />} />
+        </Route>}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Route>
+    )
+  )
+
   return (
     <GlobalContext.Provider value={contextValue}>
       <ConfigProvider
@@ -161,51 +209,7 @@ export const App = React.memo(() => {
         }}
         locale={antdLocale}>
         <IntlProvider locale={intlLocale} messages={intlMessages}>
-          <BrowserRouter basename="/">
-            <Routes>
-              <Route path={'/'} element={<PortalPage />} >
-                <Route index element={<HomePage />} />
-                <Route path="/resource" element={<ResourceListPage />} />
-                <Route path="/resource/:key" element={<ResourcePage />} />
-              </Route>
-              <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
-              <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
-              {isGuest && <Route path="/login" element={<LogInPage />} />}
-              {isGuest && <Route path="/signup/org" element={<OrgSignUpPage />} />}
-              {isGuest && <Route path="/forgot_password" element={<ForgotPasswordPage />} />}
-              {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
-              {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
-              <Route path="/onboard" element={<OrgOnBoardPage />} />
-
-              {!isGuest && <Route path="/" element={<AppLoggedInPage />} >
-                {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
-                {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
-                {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}
-                {isClient && <Route path="/task/:id" element={<ClientTaskPage />} />}
-                {(isAdmin || isAgent) && <Route path="/task/:id" element={<OrgTaskPage />} />}
-                {isClient && <Route path="/activity" element={<ClientTrackingListPage />} />}
-                <Route path="/doc_template" element={<DocTemplateListPage />} />
-                <Route path="/doc_template/new" element={<DocTemplatePage />} />
-                <Route path="/doc_template/:id" element={<DocTemplatePage />} />
-                <Route path="/task_template" element={<TaskTemplateListPage />} />
-                <Route path="/task_template/new" element={<TaskTemplatePage />} />
-                <Route path="/task_template/:id" element={<TaskTemplatePage />} />
-                <Route path="/scheduler" element={<RecurringListPage />} />
-                <Route path="/client" element={<OrgClientListPage />} />
-                <Route path="/tags" element={<TagsSettingPage />} />
-                <Route path="/subscription" element={<OrgSubscriptionPage />} />
-                <Route path="/team" element={<OrgMemberListPage />} />
-                <Route path="/config" element={<ConfigListPage />} />
-                <Route path="/org" element={<OrgListPage />} />
-                <Route path="/support" element={<SupportListPage />} />
-                <Route path="/manage/resource" element={<ResourceEditListPage />} />
-                <Route path="/manage/resource/new" element={<ResourceEditPage />} />
-                <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
-                <Route path="/revenue" element={<RevenuePage />} />
-              </Route>}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          </BrowserRouter>
+          <RouterProvider router={router} />
           <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
             We use cookies to improve your experiences on our website.
           </CookieConsent>
