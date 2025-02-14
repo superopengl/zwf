@@ -25,7 +25,6 @@ import Field from '@ant-design/pro-field';
 import { ProCard } from '@ant-design/pro-components';
 import { Input } from 'antd';
 import { FieldEditPanel } from './FieldEditPanel';
-import { HashRouter, Link, Route, Routes, useLocation } from 'react-router-dom';
 
 const Container = styled.div`
 max-width: 1000px;

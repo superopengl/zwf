@@ -1,4 +1,4 @@
-import { List, Button, Layout, Row, Col, Drawer, Typography, Modal, Card, Tooltip } from 'antd';
+import { List, Button, Layout, Row, Col, Drawer, Typography, Modal, Card, Tooltip, Alert } from 'antd';
 import React from 'react';
 import { renameDocTemplate$ } from 'services/docTemplateService';
 import styled from 'styled-components';
@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
 import { of } from 'rxjs';
-import { finalize } from 'rxjs/operators';
+import { delay, finalize, tap } from 'rxjs/operators';
 import { DocTemplateIcon } from 'components/entityIcon';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,6 +19,7 @@ import { renameFieldInDocTemplateBody } from 'util/renameFieldInDocTemplateBody'
 import DocTemplateRenameFieldInput from './DocTemplateRenameFieldInput';
 import { RichTextInput } from 'components/RichTextInput';
 import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
+import ReactRouterPrompt from "react-router-prompt";
 
 const { Paragraph, Text } = Typography
 
@@ -61,10 +62,12 @@ export const DocTemplatePage = (props) => {
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(true);
+  const [showingHelp, setShowingHelp] = React.useState(false);
   const [docTemplate, setDocTemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
   const [previewSider, setPreviewSider] = React.useState(false);
   const [docTemplateName, setDocTemplateName] = React.useState('New Doc Template');
   const [html, setHtml] = React.useState(docTemplate.html);
+  const [dirty, setDirty] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
   const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
 
@@ -95,9 +98,13 @@ export const DocTemplatePage = (props) => {
       name: docTemplateName,
     };
 
-    saveDocTemplate$(entity).subscribe(() => {
-      goBack();
-      notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
+    saveDocTemplate$(entity).pipe(
+      tap(() => setDirty(false)),
+      tap(() => {
+        notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
+      }),
+    ).subscribe(() => {
+      // goBack();
     });
   }
 
@@ -116,14 +123,9 @@ export const DocTemplatePage = (props) => {
     }
   }
 
-  const showHelp = () => {
-    modal.info({
-      title: 'How to insert fields?',
-      closable: true,
-      content: <Paragraph type="secondary">
-        The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field "Client Name" on the form. The field replacement is <Text strong>case sensitive</Text>. So please make sure the field specified in this doc template content are aligned with the field names when design a <Link to="/task_template">form template</Link>.
-      </Paragraph>
-    })
+  const handleChangeHtml = (html) => {
+    setDirty(true);
+    setHtml(html)
   }
 
   const fieldNames = React.useMemo(() => {
@@ -152,6 +154,30 @@ export const DocTemplatePage = (props) => {
   }
 
   return <Container>
+    <ReactRouterPrompt when={dirty}>
+      {({ isActive, onConfirm, onCancel }) => {
+        if (isActive) {
+          modal.confirm({
+            key: 'leave-confirm',
+            title: 'Leave without saving?',
+            content: 'This page has unsaved changes. Leave without saving?',
+            closable: false,
+            maskClosable: false,
+            destroyOnClose: true,
+            onOk: onConfirm,
+            onCancel: onCancel,
+            okButtonProps: {
+              danger: true
+            },
+            okText: 'Leave',
+            cancelButtonProps: {
+              type: 'text'
+            },
+            autoFocusButton: 'cancel'
+          })
+        }
+      }}
+    </ReactRouterPrompt>
     <PageHeaderContainer
       style={{ maxWidth: 900, margin: '0 auto' }}
       breadcrumb={[
@@ -171,16 +197,25 @@ export const DocTemplatePage = (props) => {
       onBack={goBack}
       title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
       extra={[
-        <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => showHelp()} /></Tooltip>,
+        <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => setShowingHelp(true)} /></Tooltip>,
         <Tooltip key="clone" title="Clone"><Button icon={<CopyOutlined />} onClick={() => handleClone()} /></Tooltip>,
         <Button key="modal" type="primary" ghost icon={<EyeOutlined />} onClick={handlePopPreview}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}
     >
       {contextHolder}
+      {showingHelp && <Alert
+        type="info"
+        style={{ marginBottom: 20 }}
+        showIcon
+        message="How to insert fields?"
+        description={<Paragraph>
+          The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client Name}}'}</Text> will be replaced by the value of the field "Client Name" on the form. The field replacement is <Text strong>case sensitive</Text>. So please make sure the field specified in this doc template content are aligned with the field names when design a <Link to="/task_template">form template</Link>.
+        </Paragraph>}
+        closable onClose={() => setShowingHelp(false)} />}
       {!loading && <Row gutter={20} wrap={false}>
         <Col flex={"740px"}>
-          <RichTextInput value={html} onChange={setHtml} editorConfig={{ min_height: 842 }} />
+          <RichTextInput value={html} onChange={handleChangeHtml} editorConfig={{ min_height: 842 }} />
         </Col>
         <Col flex="auto">
           <Card
