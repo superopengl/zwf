@@ -10,10 +10,6 @@ export function searchOrgClientUsers$(payload) {
   return httpPost$(`/org/client`, { page: 1, size: 50, ...payload });
 }
 
-export async function listAllUsers() {
-  return httpGet(`user`);
-}
-
 export function deleteUser$(id) {
   return httpDelete$(`user/${id}`);
 }
