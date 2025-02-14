@@ -10,7 +10,7 @@ import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import { finalize, switchMap } from 'rxjs';
 import { useAddPaymentMethodModal } from 'components/useAddPaymentMethodModal';
-import { getCurrentPeriod$, downloadReceipt$, getSiblingPeriod$ } from '../../services/billingService';
+import { getCurrentPeriod$, downloadInvoice$, getSiblingPeriod$ } from '../../services/billingService';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { OrgPeriodUsageChart } from './OrgPeriodUsageChart';
 import moment from 'moment';
@@ -94,7 +94,7 @@ export const OrgLicenseUsagePanel = () => {
   }
 
   const handleDownloadInvoice = (paymentId) => {
-    downloadReceipt$(paymentId).subscribe();
+    downloadInvoice$(paymentId).subscribe();
   }
 
   if (!period) {

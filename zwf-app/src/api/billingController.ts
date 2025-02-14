@@ -7,7 +7,7 @@ import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
-import { generateReceiptPdfStream } from '../services/receiptService';
+import { generateInvoicePdfStream } from '../services/invoiceService';
 import { OrgSubscriptionPeriodHistoryInformation } from '../entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { db } from '../db';
@@ -134,7 +134,7 @@ export const listUserSubscriptionHistory = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const downloadReceipt = handlerWrapper(async (req, res) => {
+export const downloadInvoice = handlerWrapper(async (req, res) => {
   assertRole(req, 'admin');
   const { paymentId } = req.params;
   const orgId = getOrgIdFromReq(req);
@@ -142,7 +142,7 @@ export const downloadReceipt = handlerWrapper(async (req, res) => {
   const period = await db.getRepository(OrgSubscriptionPeriodHistoryInformation).findOneBy({ paymentId, orgId });
   assert(period, 404);
 
-  const { pdfStream, fileName } = await generateReceiptPdfStream(period);
+  const { pdfStream, fileName } = await generateInvoicePdfStream(period);
 
   res.set('Cache-Control', `public, max-age=36536000, immutable`);
   res.attachment(fileName);

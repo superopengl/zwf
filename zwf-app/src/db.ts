@@ -57,7 +57,7 @@ const views = [
   // CoreDataLatestSnapshot,
   // CoreDataWatchlistEmailTask,
   // AliveSubscriptionInformation,
-  // ReceiptInformation,
+  // InvoiceInformation,
   // RevertableCreditTransactionInformation,
   // RevenueChartInformation
   //  OrgBasicInformation,

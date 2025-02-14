@@ -1161,9 +1161,9 @@ paths:
         200:
           description: OK                        
              
-  /subscription/receipt/:paymentId:
+  /subscription/invoice/:paymentId:
     get:
-      operationId: downloadReceipt
+      operationId: downloadInvoice
       parameters:
         - name: paymentId
           in: path
