@@ -11,7 +11,7 @@ import { checkoutSubscriptionPeriod } from '../src/utils/checkoutSubscriptionPer
 import { OrgSubscriptionPeriod } from '../src/entity/OrgSubscriptionPeriod';
 import { User } from '../src/entity/User';
 import { Org } from '../src/entity/Org';
-import { createNewPendingCheckoutSubscriptionPeriod } from '../src/utils/createNewPendingCheckoutSubscriptionPeriod';
+import { grantNewSubscriptionPeriod } from '../src/utils/grantNewSubscriptionPeriod';
 
 const JOB_NAME = 'daily-subscription-check';
 
@@ -34,10 +34,10 @@ async function chargeLastSubscriptionPriodIfDue() {
       logProgress('Renew period'.bgCyan, counter, duePeriod);
 
       try {
-        const canRenew = duePeriod.type === 'trial' || await checkoutSubscriptionPeriod(m, duePeriod);
+        const renewSucceeded = duePeriod.type === 'trial' || await checkoutSubscriptionPeriod(m, duePeriod);
 
-        if (canRenew) {
-          const newPeriod = await createNewPendingCheckoutSubscriptionPeriod(m, duePeriod);
+        if (renewSucceeded) {
+          const newPeriod = await grantNewSubscriptionPeriod(m, duePeriod);
           logProgress('Created new period'.bgGreen, counter, newPeriod);
         } else {
           logProgress('Failed to renew. Suspending org'.bgRed, counter, duePeriod);

@@ -10,7 +10,7 @@ import { Org } from '../entity/Org';
 import { getOrgActivePromotionCode } from './getOrgActivePromotionCode';
 
 
-export async function createNewPendingCheckoutSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
+export async function grantNewSubscriptionPeriod(m: EntityManager, previousPeriod: OrgSubscriptionPeriod) {
   const { orgId, seq } = previousPeriod;
 
   const now = getUtcNow();
