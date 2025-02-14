@@ -18,7 +18,7 @@ import { ProCard } from '@ant-design/pro-components';
 import MoneyAmount from 'components/MoneyAmount';
 import { Descriptions } from 'antd';
 
-const { Title, Text, Paragraph } = Typography;
+const { Title, Text, Paragraph, Link: TextLink } = Typography;
 
 const Container = styled.div`
 width: 100%;
@@ -34,7 +34,6 @@ export const OrgLicenseUsagePanel = () => {
   const [period, setPeriod] = React.useState();
   const [hasPrevious, setHasPrevious] = React.useState(true);
   const [hasNext, setHasNext] = React.useState(true);
-  const [helpModal, contextHolder] = Modal.useModal();
 
   React.useEffect(() => {
     const sub$ = getCurrentPeriod();
@@ -84,14 +83,6 @@ export const OrgLicenseUsagePanel = () => {
     return sub$;
   }
 
-  const handleShowHelp = () => {
-    helpModal.info({
-      title: 'How the payment amount is calculated based on the usage',
-      closable: true,
-      maskClosable: true,
-
-    })
-  }
 
   const handleDownloadInvoice = (paymentId) => {
     downloadInvoice$(paymentId).subscribe();
@@ -137,8 +128,8 @@ export const OrgLicenseUsagePanel = () => {
                   <Row wrap={false} gutter={20} justify="space-between">
                     <Col span={8}>
                       <Space direction='vertical'>
-                      <MoneyAmount value={period.payment?.payable} strong style={{ fontSize: 32, whiteSpace: 'nowrap' }} />
-                      {period.promotionCode && 'Discount rate'}
+                        <MoneyAmount value={period.payment?.payable} strong style={{ fontSize: 32, whiteSpace: 'nowrap' }} />
+                        {period.promotionCode && 'Discount rate'}
                       </Space>
                     </Col>
                     <Col>
@@ -157,8 +148,8 @@ export const OrgLicenseUsagePanel = () => {
                         </Descriptions.Item>
                         <Descriptions.Item label="Unit price">
                           <Space>
-                          <MoneyAmount value={period.unitFullPrice} delete={period.promotionCode} postfix="/ mo" />
-                          {period.promotionCode && <MoneyAmount value={period.promotionUnitPrice} strong postfix="/ mo" />}
+                            <MoneyAmount value={period.unitFullPrice} delete={period.promotionCode} postfix="/ mo" />
+                            {period.promotionCode && <MoneyAmount value={period.promotionUnitPrice} strong postfix="/ mo" />}
                           </Space>
                         </Descriptions.Item>
                         <Descriptions.Item label="Used person-days">
@@ -169,8 +160,14 @@ export const OrgLicenseUsagePanel = () => {
                   </Row>
                 </>}
             </ProCard>
-            <ProCard title="Usage" extra={<Tooltip title="How the payment amount is calculated based on the usage">
-              <Button icon={<QuestionCircleOutlined />} type="link" onClick={handleShowHelp} />
+            <ProCard title="Usage" extra={<Tooltip title={<>
+              The calculation of total usage during the billing period is based on person-days, representing the number of active members in your organization. To learn more about the usage calculation algorithm, click on this icon.
+            </>}>
+              <Button icon={<QuestionCircleOutlined />}
+                type="link"
+                href="/resource/5f3158de-671f-43f3-b250-85b8c0f2dd87"
+                target="_blank"
+               />
             </Tooltip>}>
               <OrgPeriodUsageChart period={period} />
             </ProCard>
@@ -186,7 +183,6 @@ export const OrgLicenseUsagePanel = () => {
           </Tooltip>
         </Col>
       </Row>
-      {contextHolder}
     </Container >
   );
 };
