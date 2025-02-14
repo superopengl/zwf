@@ -9,7 +9,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { db } from '../db';
 
 export const saveTag = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
   const { id, name, colorHex } = req.body;
   const tag = new Tag();
@@ -22,7 +22,7 @@ export const saveTag = handlerWrapper(async (req, res) => {
 });
 
 export const listTags = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
   const { names } = req.body;
   const list = await db.getRepository(Tag).find({
@@ -41,7 +41,7 @@ export const listTags = handlerWrapper(async (req, res) => {
 });
 
 export const deleteTag = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
   await db.getRepository(Tag).delete({

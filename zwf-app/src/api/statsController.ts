@@ -45,7 +45,7 @@ async function getTaskStat() {
 }
 
 export const getAdminStats = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
 
   const taskStat = await db.getRepository(Task)
     .createQueryBuilder('x')

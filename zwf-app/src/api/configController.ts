@@ -8,7 +8,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgConfig } from '../entity/OrgConfig';
 
 export const listConfig = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const orgId = getOrgIdFromReq(req);
   const list = await db.getRepository(SystemConfig).find({
     order: { key: 'ASC' }
@@ -17,7 +17,7 @@ export const listConfig = handlerWrapper(async (req, res) => {
 });
 
 export const saveConfig = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system', 'admin');
+  assertRole(req,[ 'system', 'admin']);
   const orgId = getOrgIdFromReq(req);
   const { key, value } = req.body;
   assert(key, 400, 'Translation value is empty');

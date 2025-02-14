@@ -23,7 +23,7 @@ import { TaskActionType } from '../types/TaskActionType';
 
 
 export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { id } = req.params;
   const userId = getUserIdFromReq(req);
   await nudgeTrackingAccess(db.manager, id, userId);
@@ -31,7 +31,7 @@ export const nudgeTrackingCursor = handlerWrapper(async (req, res) => {
 });
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   const { id } = req.params;
@@ -67,7 +67,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 
 
 export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) => {
-  assertRole(req, 'client');
+  assertRole(req,[ 'client']);
   const userId = getUserIdFromReq(req);
   const page = +req.query.page || 1;
   const size = +req.query.size || 50;
@@ -99,7 +99,7 @@ export const listAllMyHistoricalTaskTrackings = handlerWrapper(async (req, res) 
 
 
 export const subscribeTaskTracking = handlerWrapper(async (req, res) => {
-  // assertRole(req, 'admin', 'agent', 'client', 'guest');
+  // assertRole(req,[ 'admin', 'agent', 'client', 'guest']);
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   const { id } = req.params;

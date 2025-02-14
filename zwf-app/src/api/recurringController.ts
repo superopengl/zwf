@@ -14,7 +14,7 @@ import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id, clientId, name, taskTemplateId, firstRunOn, every, period } = req.body;
   const orgId = getOrgIdFromReq(req);
 
@@ -39,7 +39,7 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const listRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
 
   const list = await db.getRepository(RecurringInformation)
@@ -51,7 +51,7 @@ export const listRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const getRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const repo = db.getRepository(Recurring);
   const recurring = await repo.findOne({ where: { id } });
@@ -61,7 +61,7 @@ export const getRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const deleteRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const repo = db.getRepository(Recurring);
   await repo.delete({ id });
@@ -70,7 +70,7 @@ export const deleteRecurring = handlerWrapper(async (req, res) => {
 });
 
 export const runRecurring = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
 
   const task = await testRunRecurring(id);

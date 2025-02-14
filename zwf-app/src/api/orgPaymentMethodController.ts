@@ -10,7 +10,7 @@ import { getStripeClientSecretForOrg, retrieveStripePaymentMethod as retrieveStr
 import * as moment from 'moment';
 
 export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const entity = new OrgPaymentMethod();
   const { stripePaymentMethodId } = req.body;
@@ -40,7 +40,7 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
 });
 
 export const setOrgPrimaryPaymentMethod = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
 
@@ -53,14 +53,14 @@ export const setOrgPrimaryPaymentMethod = handlerWrapper(async (req, res) => {
 });
 
 export const listOrgPaymentMethods = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const list = await db.getRepository(OrgPaymentMethod).find({ where: { orgId }, order: {createdAt: 'ASC'} });
   res.json(list);
 });
 
 export const deleteOrgPaymentMethod = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
   await db.getRepository(OrgPaymentMethod).delete({
@@ -72,7 +72,7 @@ export const deleteOrgPaymentMethod = handlerWrapper(async (req, res) => {
 });
 
 export const getOrgStripeClientSecret = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   const clientSecret = await getStripeClientSecretForOrg(db.manager, orgId);
   const result = { clientSecret };

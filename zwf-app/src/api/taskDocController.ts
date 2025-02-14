@@ -19,7 +19,7 @@ import { generatePdfDocFile } from '../services/genDocService';
 import { db } from '../db';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { fieldId } = req.params;
   const orgId = getOrgIdFromReq(req);
 

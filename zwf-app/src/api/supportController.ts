@@ -45,7 +45,7 @@ export const getMySupport = handlerWrapper(async (req, res) => {
 });
 
 export const searchSupportList = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const userId = getUserIdFromReq(req);
   const { text, page, size, orderField, orderDirection, tags } = req.body;
 
@@ -82,7 +82,7 @@ export const searchSupportList = handlerWrapper(async (req, res) => {
 });
 
 export const getUserSupport = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { userId } = req.params;
 
   const list = await db.getRepository(SupportMessage).find({
@@ -133,7 +133,7 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
 });
 
 export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent', 'client');
+  assertRole(req,[ 'admin', 'agent', 'client']);
   const { messageId } = req.body;
   assert(messageId, 400, `messageId is not specified.`);
   const userId = getUserIdFromReq(req);

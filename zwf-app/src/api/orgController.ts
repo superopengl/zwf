@@ -23,7 +23,7 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   let org: Org = null;
   if (orgId) {
-    assertRole(req, 'admin');
+    assertRole(req,[ 'admin']);
     org = await db.manager.findOneBy(Org, { id: orgId })
   } else {
     assert(role === Role.Admin, 403);
@@ -34,14 +34,14 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
 });
 
 export const listOrg = handlerWrapper(async (req, res) => {
-  assertRole(req, 'system');
+  assertRole(req,[ 'system']);
   const { user: { id } } = req as any;
   const list = await db.getRepository(OrgBasicInformation).find({});
   res.json(list);
 });
 
 export const saveOrgProfile = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const orgId = getOrgIdFromReq(req);
   assert(orgId, 400, 'orgId not found');
 

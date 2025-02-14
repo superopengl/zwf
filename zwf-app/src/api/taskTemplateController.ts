@@ -16,7 +16,7 @@ import { isRole } from '../utils/isRole';
 import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'agent', 'admin');
+  assertRole(req,[ 'agent', 'admin']);
   const orgId = getOrgIdFromReq(req);
 
   const { id, name, description, docTemplateIds, fields } = req.body;
@@ -43,7 +43,7 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
 
 
 export const renameTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const { name } = req.body;
   assert(name, 400, 'name is empty');
   const { id } = req.params;
@@ -56,7 +56,7 @@ export const renameTaskTemplate = handlerWrapper(async (req, res) => {
 
 
 export const listTaskTemplates = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'agent');
+  assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
   const list = await db.getRepository(TaskTemplate)
     .find({
@@ -75,7 +75,7 @@ export const listTaskTemplates = handlerWrapper(async (req, res) => {
 });
 
 export const getTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin', 'client', 'agent');
+  assertRole(req,[ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
   const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: query, relations: { docs: true } });
@@ -85,7 +85,7 @@ export const getTaskTemplate = handlerWrapper(async (req, res) => {
 });
 
 export const deleteTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   const repo = db.getRepository(TaskTemplate);
@@ -108,7 +108,7 @@ async function getUniqueCopyName(m: EntityManager, sourceTaskTemplate: TaskTempl
 }
 
 export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
-  assertRole(req, 'admin');
+  assertRole(req,[ 'admin']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   let taskTemplate: TaskTemplate;
