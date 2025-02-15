@@ -1,12 +1,14 @@
-import { Tag, Space, Table, Button, Row, Col } from 'antd';
+import { Tag, Space, Table, Button, Row, Col, Typography } from 'antd';
 import React from 'react';
 
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
-import { downloadInvoice$ } from 'services/billingService';
+import { downloadInvoice$, getInvoiceUrl } from 'services/billingService';
 import MoneyAmount from 'components/MoneyAmount';
 import { finalize } from 'rxjs/operators';
 import { listMyInvoices$ } from 'services/billingService';
+
+const {Text} = Typography;
 
 export const OrgSubscriptionHistoryPanel = () => {
   const [list, setList] = React.useState([]);
@@ -22,7 +24,7 @@ export const OrgSubscriptionHistoryPanel = () => {
     }
   }, []);
 
-  const handleDownloadInvoice = (paymentId) => {
+  const getDownloadInvoice = (paymentId) => {
     downloadInvoice$(paymentId).subscribe();
   }
 
@@ -35,6 +37,7 @@ export const OrgSubscriptionHistoryPanel = () => {
           <TimeAgo value={item.periodFrom} showAgo={false} accurate={false} />
           -
           <TimeAgo value={item.periodTo} showAgo={false} accurate={false} />
+          <Text>({item.periodDays} days)</Text>
           {/* <DoubleRightOutlined /> */}
           {/* {item.recurring && <Tag>auto renew</Tag>} */}
           {item.tail && <Tag>current</Tag>}
@@ -58,13 +61,6 @@ export const OrgSubscriptionHistoryPanel = () => {
       }
     },
     {
-      title: 'Days',
-      align: 'right',
-      render: (value, item) => {
-        return item.checkoutDate ? item.periodDays : null;
-      }
-    },
-    {
       title: 'Amount',
       align: 'right',
       render: (value, item) => {
@@ -76,7 +72,7 @@ export const OrgSubscriptionHistoryPanel = () => {
       title: 'Billing',
       align: 'center',
       render: (value, item) => {
-        return item.checkoutDate ? <Button type="link" size="small" onClick={() => handleDownloadInvoice(item.paymentId)} icon={<DownloadOutlined />}>Invoice</Button> : null;
+        return item.checkoutDate ? <Button type="link" target="_blank" href={getInvoiceUrl(item.invoiceFileId)} icon={<DownloadOutlined />}>Invoice</Button> : null;
       }
     },
   ];

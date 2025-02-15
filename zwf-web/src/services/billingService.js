@@ -38,3 +38,8 @@ export function getOrgResurgingInfo$(code) {
 export function resurgeOrg$(code, payload) {
   return httpPost$(`/subscription/resurge/${code}`, payload);
 }
+
+export const getInvoiceUrl = (invoiceFileId) => {
+  console.error(`invoiceFileId is not specified`);
+  return invoiceFileId ? `${process.env.REACT_APP_ZWF_API_DOMAIN_NAME}/blob/${invoiceFileId}` : null;
+}

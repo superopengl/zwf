@@ -1,17 +1,11 @@
-import { Card, Button, Modal, Space, Typography, Tag, Alert, Tooltip, Row, Col } from 'antd';
+import { Button, Space, Typography, Alert, Tooltip, Row, Col } from 'antd';
 import React from 'react';
 
 import { Loading } from 'components/Loading';
-import { ClockCircleFilled, ClockCircleOutlined, CloseCircleFilled, CloseOutlined, DollarCircleOutlined, DownloadOutlined, LeftOutlined, PlusOutlined, QuestionCircleOutlined, RightOutlined } from '@ant-design/icons';
-import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
-import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
-import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
+import { ClockCircleOutlined, DownloadOutlined, LeftOutlined, QuestionCircleOutlined, RightOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { useNavigate, Link } from 'react-router-dom';
-import { finalize, switchMap } from 'rxjs';
-import { useAddPaymentMethodModal } from 'components/useAddPaymentMethodModal';
-import { getCurrentPeriod$, downloadInvoice$, getSiblingPeriod$ } from '../../services/billingService';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { finalize } from 'rxjs';
+import { getCurrentPeriod$, getInvoiceUrl, getSiblingPeriod$ } from '../../services/billingService';
 import { OrgPeriodUsageChart } from './OrgPeriodUsageChart';
 import moment from 'moment';
 import { ProCard } from '@ant-design/pro-components';
@@ -81,11 +75,6 @@ export const OrgLicenseUsagePanel = () => {
         }
       })
     return sub$;
-  }
-
-
-  const getInvoiceUrl = (invoiceFileId) => {
-   return invoiceFileId ? `${process.env.REACT_APP_ZWF_API_DOMAIN_NAME}/blob/${invoiceFileId}` : null;
   }
 
   if (!period) {
