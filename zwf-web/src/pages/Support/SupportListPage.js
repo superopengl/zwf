@@ -26,6 +26,7 @@ import { RoleTag } from 'components/RoleTag';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Tooltip } from 'antd';
 import { GiDominoMask } from 'react-icons/gi';
+import { compareDates } from 'util/compareDates';
 
 
 const { Text, Link: TextLink} = Typography;
@@ -92,9 +93,7 @@ const SupportListPage = () => {
       fixed: 'left',
       render: (_, item) => <Space>
         <Tooltip title="Click to open messages">
-          <TextLink onClick={() => handleChatWith(item)}>
-            <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link"/>
-          </TextLink>
+            <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link" onClick={() => handleChatWith(item)}/>
         </Tooltip>
 
         <Badge count={item.unreadCount} showZero={false} />
@@ -108,16 +107,25 @@ const SupportListPage = () => {
     {
       title: 'Org',
       dataIndex: 'orgName',
+      sorter: {
+        compare: (a, b) =>  a?.orgName?.localeCompare(b.orgName)
+      },
       render: (value) => <HighlightingText search={queryInfo.text} value={value} />,
     },
     {
       title: 'Org',
       dataIndex: 'orgId',
+      sorter: {
+        compare: (a, b) =>  a?.orgId?.localeCompare(b.orgId)
+      },
       render: (value) => value && <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
     },
     {
       title: 'Role',
       dataIndex: 'role',
+      sorter: {
+        compare: (a, b) =>  a?.role?.localeCompare(b.role)
+      },
       render: (role, item) => <RoleTag role={item.role} />
     },
     {
@@ -128,11 +136,17 @@ const SupportListPage = () => {
     {
       title: 'Created At',
       dataIndex: 'createdAt',
+      sorter: {
+        compare: (a, b) => compareDates(a.createdAt, b.createdAt)
+      },
       render: (value) => <TimeAgo value={value} />
     },
     {
       title: 'Last Contact At',
       dataIndex: 'lastMessageAt',
+      sorter: {
+        compare: (a, b) => compareDates(a.lastMessageAt, b.lastMessageAt)
+      },
       render: (value) => <TimeAgo value={value} />
     },
     {
