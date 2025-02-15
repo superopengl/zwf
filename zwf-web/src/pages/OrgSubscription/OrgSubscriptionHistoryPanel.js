@@ -3,7 +3,7 @@ import React from 'react';
 
 import { TimeAgo } from 'components/TimeAgo';
 import { DownloadOutlined } from '@ant-design/icons';
-import { downloadInvoice$, getInvoiceUrl } from 'services/billingService';
+import { getInvoiceUrl } from 'services/billingService';
 import MoneyAmount from 'components/MoneyAmount';
 import { finalize } from 'rxjs/operators';
 import { listMyInvoices$ } from 'services/billingService';
@@ -23,10 +23,6 @@ export const OrgSubscriptionHistoryPanel = () => {
       sub$.unsubscribe();
     }
   }, []);
-
-  const getDownloadInvoice = (paymentId) => {
-    downloadInvoice$(paymentId).subscribe();
-  }
 
   const columns = [
     {

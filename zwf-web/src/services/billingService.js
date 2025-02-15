@@ -1,19 +1,4 @@
-import { from, tap } from 'rxjs';
-import { httpGet$, httpPost$, request } from './http';
-
-export function downloadInvoice$(paymentId) {
-  if (!paymentId) {
-    throw new Error('paymentId is null');
-  }
-  const path = `/subscription/invoice/${paymentId}`;
-  return from(request('GET', path, null, null, 'blob'))
-    .pipe(
-      tap(data => {
-        const fileUrl = URL.createObjectURL(data);
-        window.open(fileUrl);
-      })
-    );
-}
+import { httpGet$, httpPost$ } from './http';
 
 export function listMyInvoices$() {
   return httpGet$(`/subscription`);
