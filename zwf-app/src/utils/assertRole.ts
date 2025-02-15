@@ -33,7 +33,7 @@ export function assertRole(req, roles, options = { ignoreSuspendCheck: false }) 
       }
     }
 
-    assert(!beingSuspended, 403, `The organization has been suspended. Please get in touch with your organization's owner to request for it to be unlocked.`);
+    assert(!beingSuspended, 423, `The organization has been suspended. Please get in touch with your organization's owner to request for it to be unlocked.`);
     assert(canAccess, 403, `Invalid permission ('${reqRole}' is to access '${roles.join()}')`);
   }
 }

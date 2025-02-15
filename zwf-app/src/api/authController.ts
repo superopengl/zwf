@@ -37,7 +37,12 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
     const email = user.email;
     user = await getActiveUserInformation(email);
     assert(user, 400, 'User not found');
-    attachJwtCookie(user, res);
+    if (user.suspended) {
+      clearJwtCookie(res);
+      user = null;
+    } else {
+      attachJwtCookie(user, res);
+    }
   }
   res.json(user || null);
 });
@@ -221,7 +226,7 @@ export const retrievePassword = handlerWrapper(async (req, res) => {
 });
 
 export const impersonate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'system', 'admin']);
+  assertRole(req, ['system', 'admin']);
   const { email } = req.body;
   assert(email, 400, 'Invalid email');
   const role = getRoleFromReq(req);
@@ -245,7 +250,7 @@ export const impersonate = handlerWrapper(async (req, res) => {
 });
 
 export const inviteOrgMember = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin']);
+  assertRole(req, ['admin']);
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
   const existingUser = await getActiveUserInformation(email);
@@ -265,7 +270,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
 });
 
 export const reinviteOrgMember = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'system', 'admin']);
+  assertRole(req, ['system', 'admin']);
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
   const role = getRoleFromReq(req);
@@ -283,7 +288,7 @@ export const reinviteOrgMember = handlerWrapper(async (req, res) => {
 });
 
 export const inviteClientToOrg = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, ['admin', 'agent']);
   const { email } = req.body;
   const orgId = getOrgIdFromReq(req);
 

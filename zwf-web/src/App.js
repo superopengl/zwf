@@ -119,6 +119,7 @@ export const App = React.memo(() => {
   const isAdmin = role === 'admin';
   const isSystem = role === 'system';
   const isAgent = role === 'agent';
+  const beingSuspended = user?.suspended;
 
   const isLoggedIn = !isGuest;
 
@@ -148,7 +149,7 @@ export const App = React.memo(() => {
         {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
         <Route path="/onboard" element={<OrgOnBoardPage />} />
 
-        {!isGuest && <Route path="/" element={<AppLoggedInPage />} >
+        {!isGuest && !beingSuspended && <Route path="/" element={<AppLoggedInPage />} >
           {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
           {isClient && <Route path="/task" element={<ClientTaskListPage />} />}
           {(isAdmin || isAgent) && <Route path="/task" element={<OrgTaskListPage />} />}

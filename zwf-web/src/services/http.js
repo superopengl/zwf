@@ -70,7 +70,12 @@ export async function request(method, path, queryParams, body, responseType = 'j
   } catch (e) {
     const code = _.get(e, 'response.status', null);
     if (code === 401) {
+      // Session timeout
       handleSessionTimeout();
+      return false;
+    } else if(code === 423) {
+      // Subscription suspended
+      reloadPage();
       return false;
     }
     const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
