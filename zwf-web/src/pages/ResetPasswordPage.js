@@ -8,6 +8,7 @@ import { notify } from 'util/notify';
 import { finalize } from 'rxjs/operators';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
 import HomeFooter from 'components/HomeFooter';
+import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
 const LayoutStyled = styled(Layout)`
 margin: 0 auto;
@@ -33,10 +34,7 @@ const ResetPasswordPage = props => {
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-
-  const goBack = () => {
-    navigate(-1);
-  }
+  const setAuthUser = useSetAuthUser();
 
   const handleSubmit = values => {
     if (loading) {
@@ -52,9 +50,11 @@ const ResetPasswordPage = props => {
       .pipe(
         finalize(() => setLoading(false))
       )
-      .subscribe(() => {
+      .subscribe(user => {
+        setAuthUser(user);
         notify.success('Successfully reset password');
-        navigate('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
+        // navigate('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
+        navigate('/');
       });
   }
 

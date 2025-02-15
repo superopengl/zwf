@@ -190,27 +190,28 @@ export const forgotPassword = handlerWrapper(async (req, res) => {
 export const resetPassword = handlerWrapper(async (req, res) => {
   const { token, password } = req.body;
   validatePasswordStrength(password);
-
+  
+  const user = await db.manager.getRepository(User).findOneByOrFail({
+    resetPasswordToken: token,
+    status: UserStatus.ResetPassword
+  });
+  
   const salt = uuidv4();
   const secret = computeUserSecret(password, salt);
+  user.secret = secret;
+  user.salt = salt;
+  user.resetPasswordToken = null;
+  user.status = UserStatus.Enabled;
+  if(user.role === Role.Guest) {
+    user.role = Role.Client;
+  }
 
+  await db.manager.save(user);
+  const userInfo = await db.getRepository(UserInformation).findOneByOrFail({ id: user.id });
 
-  await db
-    .createQueryBuilder()
-    .update(User)
-    .set({
-      secret,
-      salt,
-      resetPasswordToken: null,
-      status: UserStatus.Enabled
-    })
-    .where({
-      resetPasswordToken: token,
-      status: UserStatus.ResetPassword
-    })
-    .execute();
+  attachJwtCookie(userInfo, res);
 
-  res.json();
+  res.json(sanitizeUser(userInfo));
 });
 
 export const retrievePassword = handlerWrapper(async (req, res) => {
@@ -242,11 +243,9 @@ export const impersonate = handlerWrapper(async (req, res) => {
     assert(user.orgId === orgId, 404, 'User not found');
   }
 
-
   attachJwtCookie(user, res);
 
   emitUserAuditLog(user.id, 'is-impersonated', { by: loginUser.id });
-
 
   res.json(sanitizeUser(user));
 });
@@ -255,7 +254,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin']);
   const { emails: emailStrings } = req.body;
   const emails = emailStrings?.split(',').map(x => x.trim()).filter(x => !!x);
-  
+
   assert(emails?.length, 400, 'No email address found');;
   assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
 
