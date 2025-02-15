@@ -7,13 +7,13 @@
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, we apologize for the inconvenience, but your account has been suspended.</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, account has been suspended.</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          Your organization's accounts have been suspended because of either an unpaid outstanding bill or an issue with the primary payment method specified in ZeeWorkflow.
+          We apologize for the inconvenience, but your organization's accounts have been suspended because of either an unpaid outstanding bill or an issue with the primary payment method specified in ZeeWorkflow.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
