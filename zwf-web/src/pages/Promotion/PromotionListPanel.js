@@ -63,11 +63,11 @@ const PromotionListPanel = (props) => {
       render: (value) => <TimeAgo value={value} />
     },
     {
-      title: 'Promotion unit price',
-      dataIndex: 'promotionUnitPrice',
+      title: 'Promotion plan price',
+      dataIndex: 'promotionPlanPrice',
       align: 'right',
       sorter: {
-        compare: (a, b) => a.promotionUnitPrice - b.promotionUnitPrice
+        compare: (a, b) => a.promotionPlanPrice - b.promotionPlanPrice
       },
       render: (value) => <MoneyAmount value={value} />,
     },
@@ -139,11 +139,11 @@ const PromotionListPanel = (props) => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           requiredMark={false}
-          initialValues={{ code: newCode, promotionUnitPrice: 39 }}>
+          initialValues={{ code: newCode, promotionPlanPrice: 39 }}>
           <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true }]}>
             <Input readOnly={true} />
           </Form.Item>
-          <Form.Item label="Unit price" name="promotionUnitPrice" rules={[{ required: true, type: 'number', min: 0, max: 100, whitespace: true }]}>
+          <Form.Item label="Plan price" name="promotionPlanPrice" rules={[{ required: true, type: 'number', min: 0, max: 100, whitespace: true }]}>
             <InputNumber
               min={0}
               max={100}

@@ -28,9 +28,9 @@ import { OrgPromotionCode } from '../OrgPromotionCode';
       'p."payableDays" as "payableDays"',
       'org."ownerEmail" as email',
       'm."cardLast4" as "cardLast4"',
-      's."unitFullPrice" as "unitFullPrice"',
+      's."planFullPrice" as "planFullPrice"',
       's."promotionCode" as "promotionCode"',
-      's."promotionUnitPrice" as "promotionUnitPrice"'
+      's."promotionPlanPrice" as "promotionPlanPrice"'
     ]),
   dependsOn: [Payment, OrgPaymentMethod, OrgBasicInformation, OrgSubscriptionPeriod, OrgPromotionCode]
 })
@@ -83,13 +83,13 @@ export class OrgSubscriptionPeriodHistoryInformation {
   cardLast4: string;
 
   @ViewColumn()
-  unitFullPrice: number;
+  planFullPrice: number;
 
   @ViewColumn()
   promotionCode: string;
 
   @ViewColumn()
-  promotionUnitPrice: number;
+  promotionPlanPrice: number;
 
   @ViewColumn()
   payableDays: number;

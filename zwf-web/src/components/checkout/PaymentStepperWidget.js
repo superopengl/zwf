@@ -98,7 +98,7 @@ const PaymentStepperWidget = (props) => {
     {
       component: !paymentInfo ? null : <Space direction="vertical" style={{ width: '100%' }} size="middle">
         <Descriptions column={1}>
-          <Descriptions.Item label="Unit price" contentStyle={{ textAlign: 'right' }}>
+          <Descriptions.Item label="Plan price" contentStyle={{ textAlign: 'right' }}>
             <MoneyAmount value={paymentInfo.seatPrice} />
           </Descriptions.Item>
           <Descriptions.Item label="License count" contentStyle={{ textAlign: 'right' }}>
@@ -107,7 +107,7 @@ const PaymentStepperWidget = (props) => {
           <Descriptions.Item label="Full price" contentStyle={{ textAlign: 'right' }}>
             <MoneyAmount value={paymentInfo.fullPriceBeforeDiscount} />
           </Descriptions.Item>
-          <Descriptions.Item label={<>Total price with promotion price {paymentInfo.promotionUnitPrice}</>} contentStyle={{ textAlign: 'right' }}>
+          <Descriptions.Item label={<>Total price with promotion price {paymentInfo.promotionPlanPrice}</>} contentStyle={{ textAlign: 'right' }}>
             <MoneyAmount strong value={paymentInfo.fullPriceAfterDiscount} />
           </Descriptions.Item>
         </Descriptions>

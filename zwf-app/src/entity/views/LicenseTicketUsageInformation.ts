@@ -19,8 +19,8 @@ import { Role } from '../../types/Role';
       't."userId" as "userId"',
       't."periodId" as "periodId"',
       'm."type" as "type"',
-      'm."unitFullPrice" as "unitFullPrice"',
-      'COALESCE(m."promotionUnitPrice", m."unitFullPrice") as "realUnitPrice"',
+      'm."planFullPrice" as "planFullPrice"',
+      'COALESCE(m."promotionPlanPrice", m."planFullPrice") as "realUnitPrice"',
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
@@ -58,7 +58,7 @@ export class LicenseTicketUsageInformation {
   type: string;
 
   @ViewColumn()
-  unitFullPrice: number;
+  planFullPrice: number;
 
   @ViewColumn()
   realUnitPrice: number;

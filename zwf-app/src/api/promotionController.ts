@@ -30,14 +30,14 @@ export const listPromotionCode = handlerWrapper(async (req, res) => {
 
 export const savePromotion = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'system']);
-  const { code, promotionUnitPrice, endingAt, orgId, applyNow } = req.body;
-  assert(0 <= promotionUnitPrice, 400, `promotionUnitPrice cannot be minus number`);
+  const { code, promotionPlanPrice, endingAt, orgId, applyNow } = req.body;
+  assert(0 <= promotionPlanPrice, 400, `promotionPlanPrice cannot be minus number`);
   assert(endingAt && moment(endingAt).isAfter(), 400, 'endingAt must be a future date');
 
   const promotion = new OrgPromotionCode();
   promotion.code = code;
   promotion.orgId = orgId;
-  promotion.promotionUnitPrice = promotionUnitPrice;
+  promotion.promotionPlanPrice = promotionPlanPrice;
   promotion.endingAt = endingAt;
   promotion.createdBy = (req as any).user.id;
 
@@ -47,7 +47,7 @@ export const savePromotion = handlerWrapper(async (req, res) => {
     if (applyNow) {
       const currentPeriod = await m.findOneBy(OrgSubscriptionPeriod, { orgId, tail: true });
       currentPeriod.promotionCode = promotion.code;
-      currentPeriod.promotionUnitPrice = promotion.promotionUnitPrice;
+      currentPeriod.promotionPlanPrice = promotion.promotionPlanPrice;
       m.save(currentPeriod);
     }
   });

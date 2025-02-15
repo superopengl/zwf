@@ -3,7 +3,7 @@ import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 
 
 @Entity()
-@Check(`0 <= "promotionUnitPrice"`)
+@Check(`0 <= "promotionPlanPrice"`)
 @Index('single_code_per_org', ['orgId', 'active'], {unique: true, where: 'active IS TRUE'})
 export class OrgPromotionCode {
   @PrimaryColumn()
@@ -23,7 +23,7 @@ export class OrgPromotionCode {
   endingAt: Date;
 
   @Column('decimal', { transformer: new ColumnNumericTransformer(), nullable: false })
-  promotionUnitPrice: number;
+  promotionPlanPrice: number;
 
   @Column('uuid')
   createdBy: string;

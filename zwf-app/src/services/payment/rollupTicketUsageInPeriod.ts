@@ -10,7 +10,7 @@ export async function rollupTicketUsageInPeriod(m: EntityManager, period: OrgSub
       .where(`"periodId" = :periodId`, { periodId: period.id })
       , 's')
     .select([
-      `ROUND(SUM(s."unitFullPrice" * s."ticketDays" / s."periodDays"), 2) as amount`,
+      `ROUND(SUM(s."planFullPrice" * s."ticketDays" / s."periodDays"), 2) as amount`,
       `ROUND(SUM(s."realUnitPrice" * s."ticketDays" / s."periodDays"), 2) as payable`,
       `SUM(s."ticketDays") as "payableDays"`,
     ])
