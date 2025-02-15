@@ -20,6 +20,7 @@ import DocTemplateRenameFieldInput from './DocTemplateRenameFieldInput';
 import { RichTextInput } from 'components/RichTextInput';
 import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
 import ReactRouterPrompt from "react-router-prompt";
+import { DOC_TEMPLATE_DEFAULT_HTML_BODY } from './DocTemplateDefaultBody';
 
 const { Paragraph, Text } = Typography
 
@@ -50,7 +51,7 @@ const StyledList = styled(List)`
 const EMPTY_DOC_TEMPLATE = {
   name: 'New doc template',
   description: '',
-  html: ''
+  html: DOC_TEMPLATE_DEFAULT_HTML_BODY,
 };
 
 
