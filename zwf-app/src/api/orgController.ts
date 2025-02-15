@@ -59,7 +59,7 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
   assert(role === Role.Admin, 403);
 
   const reqOrgId = getOrgIdFromReq(req);
-  assert(!reqOrgId, 400, 'Cannot recreate org');
+  assert(!reqOrgId, 400, 'Cannot setup org again');
 
   const userId = getUserIdFromReq(req);
   const { name, businessName, country, address, tel, abn } = req.body;

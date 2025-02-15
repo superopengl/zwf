@@ -44,7 +44,7 @@ const OrgOnBoardPage = (props) => {
       <InnerContainer>
         <Logo />
         <Title level={2} style={{ margin: '2rem auto' }}>
-          Organization Profile
+          Setup Organization
         </Title>
         <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
       </InnerContainer>
