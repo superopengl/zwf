@@ -55,7 +55,7 @@ export async function chargeStripeForCardPayment(amount: number, stripeCustomerI
   assert(stripeCustomerId, 400, 'Stripe customer ID is missing');
   assert(stripePaymentMethodId, 500, 'stripePaymentMethodId is missing');
 
-  // throw new Error('Failed to charge card (false error for debugging only)');
+  // throw new Error('[Debugging] Failed to charge card (false error for debugging only)');
 
   const paymentIntent = amount ? await getStripe().paymentIntents.create({
     amount: Math.ceil(amount * 100),
