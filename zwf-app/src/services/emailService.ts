@@ -20,7 +20,9 @@ import 'colors';
 import { getEmailTemplate } from './mjmlService';
 import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment';
-import { EntityManager } from 'typeorm';
+import { EntityManager, IsNull, LessThan } from 'typeorm';
+import { filter, from, of, defer } from 'rxjs';
+import { concatAll, concatMap, delay, switchMap, tap } from 'rxjs/operators'
 
 let emailTransporter = null;
 
@@ -167,4 +169,48 @@ export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailR
   }
 }
 
+const EMAIL_RATE_LIMIT_PER_SEC = 13; // Max limit rate is 14/sec right now
+const EMAIL_POLLING_INTERVAL_SEC = 30;
 
+function wakeUpEmailerWorker() {
+  const takeSize = EMAIL_RATE_LIMIT_PER_SEC * EMAIL_POLLING_INTERVAL_SEC;
+  const sleepTimeMs = 1000 / EMAIL_RATE_LIMIT_PER_SEC;
+  const emailTasksPromise = db.getRepository(EmailSentOutTask).find({
+    where: {
+      sentAt: IsNull(),
+      failedCount: LessThan(5)
+    },
+    order: {
+      id: 'ASC'
+    },
+    take: takeSize
+  });
+
+  from(emailTasksPromise).pipe(
+    filter(tasks => tasks.length > 0),
+    concatAll(),
+    concatMap(task => from(sendOneEmailTask(task)).pipe(
+      delay(sleepTimeMs)
+    )),
+  ).subscribe();
+}
+
+async function sendOneEmailTask(task: EmailSentOutTask) {
+  try {
+    await sendEmail({
+      to: task.to,
+      from: task.from,
+      template: task.template as EmailTemplateType,
+      vars: task.vars,
+      attachments: task.attachments as { filename: string; path: string }[],
+      shouldBcc: task.shouldBcc,
+    });
+    task.sentAt = getUtcNow();
+    await db.getRepository(EmailSentOutTask).save(task);
+    return true;
+  } catch (err) {
+    console.log(`Failed to send out email ${task.id}`, errorToJson(err));
+    await db.getRepository(EmailSentOutTask).increment({ id: task.id }, 'failedCount', 1);
+    return false;
+  }
+}
