@@ -20,6 +20,11 @@ const StyledSpace = styled(Space)`
 }
 `
 
+const ColumnSpace = styled.div`
+display: flex;
+flex-direction: column;
+`;
+
 export const TimeAgo = React.memo(props => {
   const { prefix, value, defaultContent, direction, strong, extra, accurate, showAgo, showTime, type, toLocalTime } = props;
   if (!value) {
@@ -30,11 +35,13 @@ export const TimeAgo = React.memo(props => {
     m = m.local();
   }
   return <StyledSpace size="small" direction="horizontal">
-    <Space direction={direction} size="small">
+    <ColumnSpace>
       {prefix}
       {showAgo && <ReactTimeAgo date={m.toDate()} />}
-      {showTime && m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}
-    </Space>
+      {showTime && <Text style={{fontSize: showAgo ? 'smaller' : undefined}} type={showAgo ? 'secondary' : undefined}>
+        {m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}
+        </Text>}
+    </ColumnSpace>
     {extra}
   </StyledSpace>
 })

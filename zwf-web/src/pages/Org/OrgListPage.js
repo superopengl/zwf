@@ -71,6 +71,11 @@ const OrgListPage = () => {
       render: (value) => value
     },
     {
+      title: 'Org',
+      dataIndex: 'id',
+      render: (value) => value && <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
+    },
+    {
       title: 'Tel',
       dataIndex: 'tel',
       render: (value) => value

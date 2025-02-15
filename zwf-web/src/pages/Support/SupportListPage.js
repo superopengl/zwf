@@ -101,9 +101,19 @@ const SupportListPage = () => {
       </Space >
     },
     {
+      title: 'User Id',
+      dataIndex: 'userId',
+      render: (value) => <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
+    },
+    {
       title: 'Org',
       dataIndex: 'orgName',
       render: (value) => <HighlightingText search={queryInfo.text} value={value} />,
+    },
+    {
+      title: 'Org',
+      dataIndex: 'orgId',
+      render: (value) => value && <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
     },
     {
       title: 'Role',
