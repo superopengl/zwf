@@ -26,7 +26,9 @@ const ChangePasswordModal = props => {
       await changePassword(password, newPassword);
 
       notify.success('Successfully changed password');
-    } catch (e) {
+
+      props.onOk?.();
+    } finally {
       setLoading(false);
     }
   }
