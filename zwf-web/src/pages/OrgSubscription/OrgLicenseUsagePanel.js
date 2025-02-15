@@ -152,7 +152,7 @@ export const OrgLicenseUsagePanel = () => {
                             {period.promotionCode && <MoneyAmount value={period.promotionPlanPrice} strong postfix="/ mo" />}
                           </Space>
                         </Descriptions.Item>
-                        <Descriptions.Item label="Used units (person-days)">
+                        <Descriptions.Item label="Used units (user-days)">
                           {period.payment.payableDays}
                         </Descriptions.Item>
                       </Descriptions>
@@ -161,7 +161,7 @@ export const OrgLicenseUsagePanel = () => {
                 </>}
             </ProCard>
             <ProCard title="Usage" extra={<Tooltip title={<>
-              The calculation of total usage during the billing period is based on person-days, representing the number of active members in your organization. To learn more about the usage calculation algorithm, click on this icon.
+              The calculation of total usage during the billing period is based on user-days, representing the number of active members in your organization. To learn more about the usage calculation algorithm, click on this icon.
             </>}>
               <Button icon={<QuestionCircleOutlined />}
                 type="link"

@@ -7,13 +7,14 @@ import { Logo } from 'components/Logo';
 import HomeFooter from 'components/HomeFooter';
 import { Loading } from 'components/Loading';
 import { getOrgResurgingInfo$, resurgeOrg$ } from 'services/billingService';
-import { finalize } from 'rxjs';
+import { catchError, finalize } from 'rxjs';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import moment from 'moment';
 import MoneyAmount from 'components/MoneyAmount';
 import { Divider } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
+import ProSkeleton from '@ant-design/pro-skeleton';
 
 const ContainerStyled = styled.div`
 padding: 2rem 1rem 4rem;
@@ -45,7 +46,7 @@ h3 {
   }
 }
 `;
-const { Title, Paragraph } = Typography;
+const { Title, Text, Paragraph } = Typography;
 const OrgResurgingPage = () => {
   const params = useParams();
   const { code } = params;
@@ -57,7 +58,13 @@ const OrgResurgingPage = () => {
   React.useEffect(() => {
     getOrgResurgingInfo$(code).pipe(
       finalize(() => setLoading(false))
-    ).subscribe(setData);
+    ).subscribe(data => {
+      if (data) {
+        setData(data);
+      } else {
+        navigate('/')
+      }
+    });
   }, []);
 
   const handleCheckout = (stripePaymentMethodId) => {
@@ -91,7 +98,7 @@ const OrgResurgingPage = () => {
   return <Layout>
     <ContainerStyled>
       <div style={{ width: '100%', textAlign: 'center', marginBottom: '2rem' }}><Logo /></div>
-      <Title style={{ textAlign: 'center', marginBottom: 40 }}>Resume subscription</Title>
+      <Title style={{ textAlign: 'center', marginBottom: 40 }}>Reactivate Organization</Title>
       {/* <Paragraph>
         Your organization has an unpaid bill that needs to be settled. Kindly make payment for the amount due to resume using our system. Thank you for your cooperation.
       </Paragraph> */}
@@ -103,19 +110,24 @@ const OrgResurgingPage = () => {
         description="Your organization has an unpaid bill that needs to be settled. Kindly make payment for the amount due to resume using our system. Thank you for your cooperation."
       /> */}
       <Loading loading={loading}>
-        <ProCard split={'horizontal'} bodyStyle={{ paddingTop: 24 }}>
+        <ProCard split={'horizontal'} >
           <ProCard>
+            <Text type="info">
+              There is an overdue bill that needs to be settled for your organization. Once the outstanding amount is paid, the account will be immediately unlocked. We appreciate your cooperation in this matter. Thank you very much.
+            </Text>
+          </ProCard>
+          {loading ? <ProSkeleton type="descriptions"/> : <ProCard>
             <Descriptions size="large" column={1} colon={false}>
               <Descriptions.Item label="Organization">
                 {data?.orgName}
               </Descriptions.Item>
-              <Descriptions.Item label="Billing Period">
+              <Descriptions.Item label="Billing period">
                 {moment(period.periodFrom).format('MMM DD YYYY')} - {moment(period.periodTo).format('MMM DD YYYY')}
               </Descriptions.Item>
               <Descriptions.Item label="Period days">
                 {period.periodDays} days
               </Descriptions.Item>
-              <Descriptions.Item label="Billing Unit">
+              <Descriptions.Item label="Billing unit">
                 {billingInfo.payableDays}
               </Descriptions.Item>
               <Descriptions.Item label="Plan price">
@@ -124,14 +136,11 @@ const OrgResurgingPage = () => {
               {period.promotionCode && <Descriptions.Item label="Plan price (after discount)">
                 <MoneyAmount value={period.promotionPlanPrice} postfix="/ mo" />
               </Descriptions.Item>}
-              <Descriptions.Item label="Due amount (GST included)">
+              <Descriptions.Item label="Due amount (GST inc.)">
                 <MoneyAmount value={billingInfo.payable} style={{ fontSize: 30 }} strong />
               </Descriptions.Item>
             </Descriptions>
-            <Paragraph type="warning">
-              Please note that your organization currently has an outstanding bill that must be settled. As soon as the due amount is paid, the account will be unlocked immediately. Thank you for your cooperation in this matter.
-            </Paragraph>
-          </ProCard>
+          </ProCard>}
           <ProCard bodyStyle={{ padding: 24 }}>
             <StripeCardPaymentWidget
               onOk={handleCheckout}

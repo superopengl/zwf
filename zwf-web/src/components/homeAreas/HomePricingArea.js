@@ -80,7 +80,7 @@ export const HomePricingArea = props => {
         <Title style={{ textAlign: 'center', fontWeight: 800, margin: 0 }}>Hassle-Free with <span style={{ color: '#0FBFC4' }}>Just one plan</span></Title>
         <Row justify='center'
           style={{
-            backgroundImage: screens.xs ? 'none': 'url("/images/pricing-section-background.svg")',
+            backgroundImage: screens.xs ? 'none' : 'url("/images/pricing-section-background.svg")',
             backgroundRepeat: 'no-repeat',
             backgroundPosition: 'bottom',
             margin: '0 -1rem',
@@ -90,9 +90,13 @@ export const HomePricingArea = props => {
             style={{ position: 'relative', top: 80, display: 'flex', justifyContent: 'center', minWidth: 360 }}
           >
             <div className='price-card'>
-              <Row justify="space-between">
+              <Row justify="space-between" align="middle">
                 <Col span={12}><Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text></Col>
-                <Col span={12}><Space><Text style={{ color: '#ffffff', fontSize: 36, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}> <small>/Month</small></Text></Space></Col>
+                <Col><Text style={{ color: '#ffffff', fontSize: 40, lineHeight: 1.4, fontWeight: 800 }}>$39.0</Text><Text style={{ color: '#97A3B7' }}></Text></Col>
+                <Col>
+                  <small>/Month</small><br />
+                  <small>GST Inc.</small>
+                </Col>
               </Row>
               <Paragraph style={{ fontSize: 16, marginTop: '1rem' }}>
                 Description description description description description description description description description description description description description description
@@ -101,22 +105,25 @@ export const HomePricingArea = props => {
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> 14 days free trial
               </Paragraph>
               <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Monthly auto renew after trial
+              </Paragraph>              
+              <Paragraph>
+                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> GST included
+              </Paragraph>              
+              <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> All the features included
               </Paragraph>
               <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Coming-up features always included
               </Paragraph>
               <Paragraph>
-                <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> Monthly auto renew payment
-              </Paragraph>
-              <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> No long term contract bound
-              </Paragraph>
+              </Paragraph>          
               <Button type="primary" size="large" block style={{ margin: '1rem 0 0' }} onClick={handleShowModal} ><strong>Join Now</strong></Button>
             </div>
           </Col>
         </Row>
-    {contextHolder}
+        {contextHolder}
       </InnerContainer>
     </Container>
   )

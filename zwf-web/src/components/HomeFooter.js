@@ -113,7 +113,7 @@ const HomeFooter = () => {
               <Space style={{ position: 'relative' }} direction={screens.xs ? 'vertical' : 'horizontal'} size={screens.xs ? 'small' : 'large'}>
                 <Button type="link" href="/#features" block>Key features</Button>
                 <Button type="link" href="/#pricing" block>Pricing</Button>
-                <Button type="link" href="/#qa" block>Q&A</Button>
+                <Button type="link" href="/#contactus" block>Contact us</Button>
               </Space>
             </Col>
           </Row>
