@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Input, Button, Form,  } from 'antd';
+import { Input, Button, Form, } from 'antd';
 import isEmail from 'validator/es/lib/isEmail';
 import { login$ } from 'services/authService';
-import { finalize } from 'rxjs/operators';
+import { delay, finalize, filter, tap, map } from 'rxjs/operators';
 import PropTypes from 'prop-types';
 import { useSetAuthUser } from 'hooks/useSetAuthUser';
 
@@ -34,21 +34,19 @@ export const LogInPanel = props => {
 
     login$(values.name, values.password)
       .pipe(
-        finalize(() => setLoading(false))
+        finalize(() => setLoading(false)),
+        filter(u => !!u),
+        tap(user => setAuthUser(user)),
+        // delay(100),
+        map(u => u.role)
       )
-      .subscribe(
-        (user) => {
-          if (user) {
-            setAuthUser(user);
-
-            if (user.role === 'system') {
-              navigate(returnUrl || '/support')
-            } else {
-              navigate('/task');
-            }
-          }
-        },
-      )
+      .subscribe(role => {
+        if (role === 'system') {
+          navigate(returnUrl || '/support')
+        } else {
+          navigate('/task');
+        }
+      })
   }
 
   return (

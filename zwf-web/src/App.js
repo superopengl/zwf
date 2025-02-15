@@ -19,6 +19,7 @@ import { Loading } from 'components/Loading';
 import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
@@ -75,7 +76,21 @@ export const App = React.memo(() => {
   const [user, setUser] = React.useState(null);
   const event$ = React.useRef(new Subject()).current;
 
-  const globalContextValue = {
+  // const globalContextValue = {
+  //   event$,
+  //   role: 'guest',
+  //   user,
+  //   setUser,
+  //   // members,
+  //   // setMembers,
+  //   setLoading,
+  //   setLocale: locale => {
+  //     reactLocalStorage.set('locale', locale);
+  //     setLocale(locale);
+  //   },
+  // }
+
+  const [contextValue, setContextValue] = React.useState({
     event$,
     role: 'guest',
     user,
@@ -87,9 +102,7 @@ export const App = React.memo(() => {
       reactLocalStorage.set('locale', locale);
       setLocale(locale);
     },
-  }
-
-  const [contextValue, setContextValue] = React.useState(globalContextValue);
+  });
 
 
   React.useEffect(() => {
@@ -147,7 +160,7 @@ export const App = React.memo(() => {
         {isGuest && <Route path="/reset_password" element={<ResetPasswordPage />} />}
         {isGuest && <Route path="/resurge/:code" element={<OrgResurgingPage />} />}
         {!isSystem && <Route path="/task/direct/:token" element={<TaskDirectPage />} />}
-        <Route path="/onboard" element={<OrgOnBoardPage />} />
+        {isAdmin && !user?.orgId && <Route path="/onboard" element={<OrgOnBoardPage />} />}
 
         {!isGuest && !beingSuspended && <Route path="/" element={<AppLoggedInPage />} >
           {isSystem && <Route path="/task" element={<SystemBoardPage />} />}
@@ -216,6 +229,7 @@ export const App = React.memo(() => {
           <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
             We use cookies to improve your experiences on our website.
           </CookieConsent>
+          <DebugJsonPanel value={user} />
         </IntlProvider>
       </ConfigProvider>
     </GlobalContext.Provider>

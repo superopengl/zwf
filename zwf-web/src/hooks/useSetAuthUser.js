@@ -31,6 +31,12 @@ export const useSetAuthUser = () => {
         });
         return;
       }
+
+      if(user.role === 'admin' && !user.orgId) {
+        setUser(user);
+        navigate('/onboard')
+        return;
+      }
     }
 
     setUser(user);

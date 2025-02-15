@@ -160,9 +160,9 @@ export const AppLoggedInPage = React.memo(() => {
   const [pathname, setPathname] = React.useState('/task');
   const navigate = useNavigate();
 
-  const { user, role } = context;
-
+  const { role } = context;
   React.useEffect(() => {
+    const { user } = context;
     if (user.role === 'admin' && !user.orgId) {
       navigate('/onboard')
     }
@@ -174,7 +174,7 @@ export const AppLoggedInPage = React.memo(() => {
   })).filter(g => g.routes.length > 0), [role]);
 
 
-  if (!user) {
+  if (!context.user) {
     return null;
   }
 
