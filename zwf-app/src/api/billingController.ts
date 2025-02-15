@@ -77,7 +77,7 @@ export const resurgeOrg = handlerWrapper(async (req, res) => {
 
     await saveNewPaymentMethod(m, orgId, stripePaymentMethodId, true);
 
-    const renewSucceeded = await checkoutSubscriptionPeriod(m, duePeriod);
+    const renewSucceeded = await checkoutSubscriptionPeriod(m, duePeriod, true);
     if (renewSucceeded) {
       await grantNewSubscriptionPeriod(m, duePeriod);
     } else {

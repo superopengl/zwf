@@ -35,7 +35,6 @@ function getEmailer() {
 }
 
 async function composeEmailOption(req: EmailRequest) {
-  const { orgId } = req;
   const { subject, text, html } = await compileEmailBody(req);
 
   return {
@@ -98,7 +97,7 @@ async function sendEmailImmediately(req: EmailRequest) {
 }
 
 export async function sendEmail(req: EmailRequest) {
-  const { orgId, to, template } = req;
+  const { to, template } = req;
   assert(to, 400, 'Email recipient is not specified');
   assert(template, 400, 'Email template is not specified');
 

@@ -1,11 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Tag, Drawer, Badge, Row, Col } from 'antd';
+import { Typography, Button, Table, Input, Modal, Drawer, Badge, Row } from 'antd';
 import {
   SyncOutlined, QuestionOutlined,
   SearchOutlined,
   ClearOutlined,
-  CheckCircleFilled,
   CheckOutlined,
   MessageOutlined
 } from '@ant-design/icons';
@@ -14,22 +13,14 @@ import { Space } from 'antd';
 import { impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { reactLocalStorage } from 'reactjs-localstorage';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { HighlightingText } from 'components/HighlightingText';
-import TagFilter from 'components/TagFilter';
-import { listOrgs$ } from 'services/orgService';
 import DropdownMenu from 'components/DropdownMenu';
-import PromotionListPanel from 'pages/Promotion/PromotionListPanel';
-import { getMySupport$, getUserSupport$, subscribeSupportMessage, sendContact$, searchUserSupports$ } from 'services/supportService';
+import { subscribeSupportMessage, searchUserSupports$ } from 'services/supportService';
 import { finalize } from 'rxjs/operators';
-import { UserDisplayName } from 'components/UserDisplayName';
-import { SupportMessageList } from 'components/SupportMessageList';
 import { SupportReplyDrawer } from 'components/SupportReplyDrawer';
 import { Subject } from 'rxjs';
-import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserNameCard } from 'components/UserNameCard';
-import Icon, { BorderOutlined, FileOutlined, FilePdfFilled, FilePdfOutlined, UserOutlined } from '@ant-design/icons';
-import { MdMessage } from 'react-icons/md';
+import Icon from '@ant-design/icons';
 import { useLocalstorageState } from 'rooks';
 import { RoleTag } from 'components/RoleTag';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
@@ -37,7 +28,7 @@ import { Tooltip } from 'antd';
 import { GiDominoMask } from 'react-icons/gi';
 
 
-const { Text } = Typography;
+const { Text, Link: TextLink} = Typography;
 
 const StyledTable = styled(Table)`
 .ant-table-tbody {
@@ -100,9 +91,14 @@ const SupportListPage = () => {
       title: 'User',
       fixed: 'left',
       render: (_, item) => <Space>
-        <UserNameCard userId={item.userId} searchText={queryInfo.text} />
+        <Tooltip title="Click to open messages">
+          <TextLink onClick={() => handleChatWith(item)}>
+            <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link"/>
+          </TextLink>
+        </Tooltip>
+
         <Badge count={item.unreadCount} showZero={false} />
-      </Space>
+      </Space >
     },
     {
       title: 'Org',
@@ -119,7 +115,11 @@ const SupportListPage = () => {
       dataIndex: 'orgOwner',
       render: (isOrgOwner, item) => isOrgOwner ? <Text strong><CheckOutlined /></Text> : null
     },
-
+    {
+      title: 'Created At',
+      dataIndex: 'createdAt',
+      render: (value) => <TimeAgo value={value} />
+    },
     {
       title: 'Last Contact At',
       dataIndex: 'lastMessageAt',
@@ -153,7 +153,6 @@ const SupportListPage = () => {
       },
     },
   ].filter(x => !!x);
-
 
   const handleResendInvite = (user) => {
     switch (user.role) {

@@ -40,7 +40,7 @@ async function chargeLastSubscriptionPriodIfDue() {
       logProgress('Renew period'.bgCyan, counter, duePeriod);
 
       try {
-        const renewSucceeded = duePeriod.type === 'trial' || await checkoutSubscriptionPeriod(m, duePeriod);
+        const renewSucceeded = duePeriod.type === 'trial' || await checkoutSubscriptionPeriod(m, duePeriod, false);
 
         if (renewSucceeded) {
           const newPeriod = await grantNewSubscriptionPeriod(m, duePeriod);

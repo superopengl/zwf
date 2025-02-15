@@ -15,7 +15,9 @@ import { sseMiddleware } from 'express-sse-middleware';
 import * as serveStatic from 'serve-static';
 import { taskDirectLinkHanlder } from './api/taskDirectLinkHanlder';
 import { clearJwtCookie } from './utils/jwt';
+import { getPublicFileStream } from './api/fileController';
 
+const isProd = process.env.NODE_ENV === 'prod';
 
 function errorHandler(err, req, res, next) {
   if (err && !/^4/.test(res.status)) {
@@ -113,6 +115,11 @@ export function createAppInstance() {
 
 
   app.get('/healthcheck', (req, res) => res.send('OK'));
+
+
+  if (!isProd) {
+    app.get('/blob/:id', getPublicFileStream);
+  }
 
   app.get('/r/:token', (req, res) => {
     const { token } = req.params;

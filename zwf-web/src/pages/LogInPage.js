@@ -24,7 +24,7 @@ const ContainerStyled = styled.div`
   margin: 1rem auto;
   padding: 2rem 3rem;
   text-align: center;
-  max-width: 460px;
+  max-width: 400px;
   // background-color: #ffffff;
   border: 1px solid #E3E6EB;
   border-radius: 8px;
