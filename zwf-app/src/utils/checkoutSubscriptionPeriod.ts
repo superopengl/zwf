@@ -48,12 +48,16 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
 
     period.paymentId = payment.id;
     period.checkoutDate = payment.checkoutDate;
+    period.payment = payment;
 
-    await m.save([payment, period]);
+    await m.save([period, payment]);
 
-    const invoiceInfo = await generateInvoiceFileAndUrl(m, payment.id, orgId);
+    const invoiceInfo = await createInvoice(m, payment);
 
-    await sendPaymentCompletedEmail(m, EmailTemplateType.SubscriptionAutoRenewSuccessful, period, invoiceInfo);
+    payment.invoiceFileId = invoiceInfo.fileId;
+    await m.save(payment);
+
+    await sendPaymentCompletedEmail(m, EmailTemplateType.SubscriptionOkPaymentInvoice, period, invoiceInfo);
     console.log('Successfully handled auto payments for org', orgId);
 
     return true;
@@ -72,25 +76,25 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
     return false;
   }
 }
-async function generateInvoiceFileAndUrl(m: EntityManager, paymentId, orgId) {
-  const period = await m.getRepository(OrgSubscriptionPeriodHistoryInformation).findOneBy({ paymentId, orgId });
-  const { pdfStream, fileName } = await generateInvoicePdfStream(period);
-  const id = uuidv4();
+async function createInvoice(m: EntityManager, payment: Payment) {
+  const { pdfStream, fileName } = await generateInvoicePdfStream(m, payment.id);
+  const fileId = uuidv4();
 
-  const location = await uploadToS3(id, fileName, pdfStream);
-  const fileEntity: File = {
-    id,
-    fileName,
-    mime: 'application/pdf',
-    location,
-    md5: md5(pdfStream),
-    public: true
-  };
-  await m.insert(File, fileEntity);
+  const location = await uploadToS3(fileId, fileName, pdfStream);
+  const file = new File();
+  file.id = fileId;
+  file.fileName = fileName;
+  file.mime = 'application/pdf';
+  file.location = location;
+  file.md5 = md5(pdfStream);
+  file.public = true;
+
+  await m.save(file);
 
   return {
+    fileId,
     fileName,
-    url: `${process.env.ZWF_API_DOMAIN_NAME}/blob/${id}`
+    url: `${process.env.ZWF_API_DOMAIN_NAME}/blob/${fileId}`
   };
 }
 

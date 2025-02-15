@@ -18,6 +18,7 @@ import { grantNewSubscriptionPeriod } from '../utils/grantNewSubscriptionPeriod'
 import { calcBillingAmountForPeriod } from '../services/payment/calcBillingAmountForPeriod';
 import { getStripeClientSecretForOrg } from '../services/stripeService';
 import { saveNewPaymentMethod } from '../utils/saveNewPaymentMethod';
+import { streamFileToResponse } from '../utils/streamFileToResponse';
 
 async function getOrgPaymentHistory(orgId) {
   const list = db.getRepository(OrgSubscriptionPeriodHistoryInformation).find({
@@ -40,11 +41,11 @@ export const getOrgResurgingInfo = handlerWrapper(async (req, res) => {
   let result = null;
   await db.manager.transaction(async m => {
     const org = await db.manager.findOneBy(Org, { resurgingCode: code, suspended: true });
-    if(!org) {
+    if (!org) {
       return;
     }
     const duePeriod = await getDuePeriod(m, org.id);
-    if(!duePeriod) {
+    if (!duePeriod) {
       return;
     }
 
@@ -191,15 +192,15 @@ export const downloadInvoice = handlerWrapper(async (req, res) => {
   const { paymentId } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  const period = await db.getRepository(OrgSubscriptionPeriodHistoryInformation).findOneBy({ paymentId, orgId });
-  assert(period, 404);
+  const period = await db.getRepository(OrgSubscriptionPeriod).findOne({
+    where: { paymentId, orgId },
+    relations: ['payment', 'payment.invoiceFile']
+  });
+  const invoiceFile = period?.payment?.invoiceFile;
+  assert(invoiceFile, 404);
 
-  const { pdfStream, fileName } = await generateInvoicePdfStream(period);
-
-  res.set('Cache-Control', `public, max-age=36536000, immutable`);
-  res.attachment(fileName);
-  res.send(pdfStream);
-  // pdfStream.pipe(res);
+  const { payment: {} } = period;
+  streamFileToResponse(invoiceFile, res);
 });
 
 

@@ -13,11 +13,8 @@ export enum EmailTemplateType {
   TaskRequireAction = 'task_require_action',
 
   // Subscription and payment
-  SubscriptionTrialExpiring = 'subscription_trial_expiring',
-  SubscriptionAutoRenewing = 'subscription_auto_renewing',
   SubscriptionSuspended = 'subscription_suspended',
-  SubscriptionPaymentSuccessful = 'subscription_payment_successful',
-  SubscriptionAutoRenewSuccessful = 'subscription_auto_renew_successful',
+  SubscriptionOkPaymentInvoice = 'subscription_ok_payment_invoice',
   SubscriptionAutoRenewFailed = 'subscription_auto_renew_failed',
 
   // Contact

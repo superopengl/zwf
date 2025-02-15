@@ -46,6 +46,7 @@ async function composeEmailOption(req: EmailRequest) {
     subject: subject,
     text: text,
     html: html,
+    attachments: req.attachments,
   };
 }
 
@@ -167,6 +168,8 @@ export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailR
   if (entities.length) {
     await m.save(entities);
   }
+
+  // wakeUpEmailerWorker();
 }
 
 const EMAIL_RATE_LIMIT_PER_SEC = 13; // Max limit rate is 14/sec right now
@@ -209,7 +212,6 @@ async function sendOneEmailTask(task: EmailSentOutTask) {
     await db.getRepository(EmailSentOutTask).save(task);
     return true;
   } catch (err) {
-    console.log(`Failed to send out email ${task.id}`, errorToJson(err));
     await db.getRepository(EmailSentOutTask).increment({ id: task.id }, 'failedCount', 1);
     return false;
   }
