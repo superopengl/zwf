@@ -230,7 +230,7 @@ const OrgMemberListPage = () => {
           },
         ]}
         loading={loading}
-        title="Team & Member Accounts"
+        title="Team Members"
         extra={[<Button
           key="add"
           type="primary"

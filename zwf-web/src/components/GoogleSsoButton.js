@@ -45,7 +45,7 @@ export const GoogleSsoButton = props => {
     } else if (type === 'login') {
       ssoGoogleLogin$(tokenId)
         .pipe(
-          catchError(err => notify.error('Failed to log in with Google. You may need to be invited by an agent.')),
+          catchError(err => notify.error('Cannot log in with Google. You might require an invitation from an organization.')),
           finalize(() => onEnd())
         ).subscribe(user => loginWithUser(user));
     } else {
