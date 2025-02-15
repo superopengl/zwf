@@ -5,23 +5,7 @@ import { enqueueEmailInBulk } from '../../src/services/emailService';
 import { EmailTemplateType } from '../../src/types/EmailTemplateType';
 import { EmailRequest } from '../../src/types/EmailRequest';
 import { getEmailRecipientName } from '../../src/utils/getEmailRecipientName';
-import { UserInformation } from '../../src/entity/views/UserInformation';
-import { Role } from '../../src/types/Role';
-
-async function getOrgAdminUsers(m: EntityManager, orgId: string) {
-  const users = await m.getRepository(UserInformation).find({
-    where: {
-      orgId,
-      role: Role.Admin,
-    },
-    select: {
-      email: true,
-      givenName: true,
-      surname: true,
-    }
-  });
-  return users;
-}
+import { getOrgAdminUsers } from './getOrgAdminUsers';
 
 export async function sendPaymentEmail(m: EntityManager, emailTemplate: EmailTemplateType, period: OrgSubscriptionPeriod) {
   const { orgId, periodTo } = period;
