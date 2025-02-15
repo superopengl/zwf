@@ -180,6 +180,7 @@ export const AppLoggedInPage = React.memo(() => {
 
   const canCreateNew = role === 'admin' || role === 'agent';
   const isSystem = role === 'system';
+  const isAdmin = role === 'admin';
 
   return <StyledContainer>
     <ProLayout
@@ -234,7 +235,7 @@ export const AppLoggedInPage = React.memo(() => {
       <Outlet />
     </ProLayout>
     {!isSystem && <SupportAffix />}
-    {!isSystem && <GlobalNotificationBar />}
+    {isAdmin && <GlobalNotificationBar />}
   </StyledContainer>
 })
 
