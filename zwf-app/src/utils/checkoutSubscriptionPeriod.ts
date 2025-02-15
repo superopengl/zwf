@@ -14,6 +14,7 @@ import { generateInvoicePdfStream } from '../services/invoiceService';
 import { OrgSubscriptionPeriodHistoryInformation } from '../entity/views/OrgSubscriptionPeriodHistoryInformation';
 import { uploadToS3 } from './uploadToS3';
 import * as md5 from 'md5';
+import { OrgPaymentMethod } from '../entity/OrgPaymentMethod';
 
 export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSubscriptionPeriod, onSessionCheckout: boolean) {
   const { id: periodId, orgId, type } = period;
@@ -22,9 +23,12 @@ export async function checkoutSubscriptionPeriod(m: EntityManager, period: OrgSu
   console.log(`Charging subscription period ${periodId} for org ${orgId}`);
 
   try {
-    const billingInfo = await calcBillingAmountForPeriod(m, period);
+    const primaryPaymentMethod = await m.findOneOrFail(OrgPaymentMethod, { where: { orgId, primary: true } });
+    const { id: paymentMethodId, cardLast4, stripePaymentMethodId } = primaryPaymentMethod;
 
-    const { amount, payable, payableDays, paymentMethodId, stripePaymentMethodId, cardLast4 } = billingInfo;
+    const billingInfo = await calcBillingAmountForPeriod(m, period);
+    const { amount, payable, payableDays } = billingInfo;
+
 
     // Call stripe to pay
     const stripeCustomerId = await getOrgStripeCustomerId(m, orgId);
