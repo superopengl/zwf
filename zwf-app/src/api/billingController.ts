@@ -177,7 +177,6 @@ export const getPeriodUsage = handlerWrapper(async (req, res) => {
         email: true,
         givenName: true,
         surname: true,
-        usedDays: true,
         ticketDays: true,
         ticketFrom: true,
         ticketTo: true,
