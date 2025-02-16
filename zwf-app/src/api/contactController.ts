@@ -10,7 +10,6 @@ import { sendEmail } from '../services/emailService';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 
 export const submitContact = handlerWrapper(async (req, res) => {
-  await sleep(2000);
   const user = getReqUser(req);
   assert(!user, 404);
   const { name, email, body } = req.body;
