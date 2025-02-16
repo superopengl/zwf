@@ -8,7 +8,7 @@ import { GiCurvyKnife, GiFireAxe, GiSawedOffShotgun, GiPirateCannon } from 'reac
 import { VscRocket } from 'react-icons/vsc';
 import { AiOutlineHome } from 'react-icons/ai';
 import { subscriptionDef } from 'def/subscriptionDef';
-import { OrgRegisterModal, useOrgRegisterModal } from 'components/useOrgRegisterModal';
+import { OrgRegisterModal, useOrgRegisterModal } from 'hooks/useOrgRegisterModal';
 
 const { Title, Paragraph, Text } = Typography;
 

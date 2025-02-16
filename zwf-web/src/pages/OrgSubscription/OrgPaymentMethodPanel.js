@@ -10,7 +10,7 @@ import { PageContainer, ProCard, ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { useNavigate, Link } from 'react-router-dom';
 import { switchMap } from 'rxjs';
-import { useAddPaymentMethodModal } from 'components/useAddPaymentMethodModal';
+import { useAddPaymentMethodModal } from 'hooks/useAddPaymentMethodModal';
 import Visa from "react-pay-icons/lib/Visa";
 import Mastercard from "react-pay-icons/lib/Mastercard";
 
