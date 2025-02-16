@@ -21,6 +21,7 @@ import { RichTextInput } from 'components/RichTextInput';
 import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
 import ReactRouterPrompt from "react-router-prompt";
 import { DOC_TEMPLATE_DEFAULT_HTML_BODY } from './DocTemplateDefaultBody';
+import { normalizeVarsInDocTemplateHtml } from 'util/normalizeVarsInDocTemplateHtml';
 
 const { Paragraph, Text } = Typography
 
@@ -126,7 +127,7 @@ export const DocTemplatePage = (props) => {
 
   const handleChangeHtml = (html) => {
     setDirty(true);
-    setHtml(html)
+    setHtml(normalizeVarsInDocTemplateHtml(html));
   }
 
   const fieldNames = React.useMemo(() => {
@@ -220,7 +221,7 @@ export const DocTemplatePage = (props) => {
         </Col>
         <Col flex="auto">
           <Card
-            title="Fields"
+            title="Defined Fields"
           >
             <Paragraph type="secondary">All fields in the doc template are list here</Paragraph>
             <StyledList

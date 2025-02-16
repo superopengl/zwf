@@ -1,4 +1,4 @@
-import { Form, Input, Card, Space, Collapse } from 'antd';
+import { Form, Input, Card, Space, Collapse, Button, Drawer } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -6,7 +6,7 @@ import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
-import { CaretRightOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, RightOutlined } from '@ant-design/icons';
 
 const Container = styled(Space)`
   margin: 0;
@@ -43,6 +43,7 @@ export const DocTemplatePreviewPanel = props => {
   const [varBag, setVarBag] = React.useState(getPendingVarBag(docTemplate?.html, propVarBag));
   const [html, setHtml] = React.useState(docTemplate?.html);
   const [renderedHtml, setRenderedHtml] = React.useState();
+  const [showTestFields, setShowTestFields] = React.useState(false);
   const form = React.createRef();
 
   React.useEffect(() => {
@@ -66,31 +67,39 @@ export const DocTemplatePreviewPanel = props => {
   return (
     <Container style={props.style} direction="vertical" size="large">
       {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
-
-
-      {shouldShowTestPanel && <Collapse bordered={true} expandIconPosition="end" expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
-        <Collapse.Panel key="1"
-          header="Preview by filling values of linked fields"
-          // style={{ border: 'none' }}
-        // extra={<Button type="link" onClick={handleResetVarBag}>reset</Button>}
-        >
-          <Form
-            style={{ marginTop: 20 }}
-            ref={form}
-            labelCol={{ span: 8 }}
-            wrapperCol={{ span: 16 }}
-            onValuesChange={handleVarValueChange}
-          >
-            {Object.entries(varBag).map(([k]) => <Form.Item key={k} label={k} name={k}>
-              <Input placeholder={`Value of ${k}`} />
-            </Form.Item>)}
-          </Form>
-        </Collapse.Panel>
-      </Collapse>}
+      {shouldShowTestPanel && <Button onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>}
 
       <PreviewDocContainer bordered>
         <RawHtmlDisplay value={renderedHtml} />
       </PreviewDocContainer>
+
+      {shouldShowTestPanel && <Drawer
+        title="Input field valus"
+        open={showTestFields}
+        onClose={() => setShowTestFields(false)}
+        destroyOnClose={false}
+        // mask={false}
+        maskStyle={{backgroundColor: 'transparent'}}
+        push={380}
+        width={400}
+        // footer={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
+      >
+        <Form
+          style={{ marginTop: 20 }}
+          ref={form}
+          labelCol={{ span: 8 }}
+          wrapperCol={{ span: 16 }}
+          onValuesChange={handleVarValueChange}
+        >
+          {Object.entries(varBag).map(([k]) => <Form.Item key={k} label={k} name={k}>
+            <Input placeholder={`Value of ${k}`} />
+          </Form.Item>)}
+          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+            <Button htmlType="button" onClick={() => setShowTestFields(false)} type="primary">Apply</Button>
+            {/* <Button htmlType="reset">Reset</Button> */}
+          </Form.Item>
+        </Form>
+      </Drawer>}
     </Container >
   );
 };
