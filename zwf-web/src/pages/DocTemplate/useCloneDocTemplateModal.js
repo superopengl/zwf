@@ -37,7 +37,7 @@ export const useCloneDocTemplateModal = () => {
         requiredMark={false}
       >
         <Form.Item label="Name of new doc template" name="name" rules={[{ required: true, whitespace: true, max: 100 }]}
-          extra={"System will clone doc template in favor of this name. If duplicated name has existed, a number surfix, like (2), will be appended."}>
+          extra={`The system will create a duplicate of the document template with the specified name. In case a document with the same name already exists, the system will append a number suffix (such as "(2)") to the name.`}>
           <Input placeholder='Doc template name' allowClear/>
         </Form.Item>
       </Form>,
