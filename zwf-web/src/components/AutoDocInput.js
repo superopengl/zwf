@@ -1,25 +1,22 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Button, Form, Typography, Row, Col, Tooltip, Space } from 'antd';
-import * as moment from 'moment';
-import { DocTemplatePreviewPanel } from './DocTemplatePreviewPanel';
-import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
+import { Button, Typography, Row, Col, Tooltip, Space } from 'antd';
+import { getDocTemplate$ } from 'services/docTemplateService';
 import { Loading } from './Loading';
 import { finalize } from 'rxjs/operators';
-import { DocTemplateIcon } from './entityIcon';
-import { EditOutlined, EyeOutlined, FileAddFilled, FileAddOutlined, SyncOutlined } from '@ant-design/icons';
+import { FileAddFilled, SyncOutlined } from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { showDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { VarTag } from './VarTag';
-import { generateAutoDoc$, getTaskDocDownloadUrl } from 'services/taskService';
+import { generateAutoDoc$ } from 'services/taskService';
 import { FileIcon } from './FileIcon';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { TaskFileName } from './TaskFileName';
 import styled from 'styled-components';
 import { FaSignature } from 'react-icons/fa';
 import { showSignTaskFileModal } from './showSignTaskFileModal';
+import { useRole } from 'hooks/useRole';
 
 const { Link, Paragraph } = Typography;
 
@@ -38,13 +35,11 @@ background-color: white;
 export const AutoDocInput = (props) => {
   const { value, mode, fieldId, onChange, disabled } = props;
   const { docTemplateId } = value || {};
-  const form = Form.useFormInstance();
 
   const [loading, setLoading] = React.useState(!!docTemplateId);
   const [docTemplate, setDocTemplate] = React.useState({});
-  const context = React.useContext(GlobalContext);
 
-  const { role } = context;
+  const role = useRole();
 
   const isClient = role === 'client';
 

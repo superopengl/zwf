@@ -1,19 +1,19 @@
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getDeepLinkedTask$ } from 'services/taskService';
-import { GlobalContext } from 'contexts/GlobalContext';
 import { catchError } from 'rxjs/operators';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { useRole } from 'hooks/useRole';
 
 const TaskDirectPage = (props) => {
   useAssertRole(['guest', 'client', 'agent', 'admin'],  '/404');
   const params = useParams();
   const { token } = params;
 
-  const context = React.useContext(GlobalContext);
+  const role = useRole();
   const navigate = useNavigate();
 
-  const isGuest = context.role === 'guest';
+  const isGuest = role === 'guest';
 
   React.useEffect(() => {
     if (isGuest) {

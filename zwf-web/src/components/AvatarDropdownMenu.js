@@ -1,5 +1,4 @@
 import React from 'react';
-import { GlobalContext } from '../contexts/GlobalContext';
 import { useNavigate } from 'react-router-dom';
 import { logout$ } from 'services/authService';
 import { Dropdown, Modal, Typography } from 'antd';
@@ -11,15 +10,13 @@ import { UserAvatar } from 'components/UserAvatar';
 import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { QuestionCircleFilled } from '@ant-design/icons';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const {Text} = Typography;
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
 const OrgProfileForm = loadable(() => import('pages/Org/OrgProfileForm'));
 
 export const AvatarDropdownMenu = React.memo(props => {
-  const { user, role } = React.useContext(GlobalContext);
-
   const [changePasswordVisible, setChangePasswordVisible] = React.useState(false);
   const [profileVisible, setProfileVisible] = React.useState(false);
   const [aboutVisible, setAboutVisible] = React.useState(false);
@@ -28,7 +25,7 @@ export const AvatarDropdownMenu = React.memo(props => {
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
-  const setAuthUser = useSetAuthUser();
+  const [user, role, setAuthUser] = useAuthUser();
 
   const { email, avatarFileId, loginType } = user ?? {};
 

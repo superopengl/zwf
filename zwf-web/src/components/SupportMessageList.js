@@ -1,12 +1,12 @@
 import React from 'react';
 import { List, Typography, Space, Card } from 'antd';
-import { GlobalContext } from 'contexts/GlobalContext';
 import ScrollToBottom from 'react-scroll-to-bottom';
 import styled from 'styled-components';
 import { css } from '@emotion/css'
 import PropTypes from 'prop-types';
 import { TimeAgo } from './TimeAgo';
 import { RawHtmlDisplay } from './RawHtmlDisplay';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const { Paragraph, Title, Text } = Typography;
 
@@ -30,8 +30,8 @@ padding-right: 16px;
 
 const ChatMessage = React.memo(props => {
   const { userId, message, createdAt } = props;
-  const context = React.useContext(GlobalContext);
-  const currentUserId = context.user.id;
+  const [user] = useAuthUser();
+  const currentUserId = user?.id;
   const isMe = userId === currentUserId;
 
   return <Space style={{ flexDirection: isMe ? 'row-reverse' : 'row', alignItems: 'flex-start', width: '100%' }}>

@@ -1,6 +1,5 @@
 import React from 'react';
-import { Affix, Space, Button, Card, Typography, Badge, FloatButton } from 'antd';
-import { AiOutlineDown } from "react-icons/ai";
+import { Affix, Space, Button, Card, Typography, FloatButton } from 'antd';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
 import styled from 'styled-components';
 import { getMySupport$, subscribeSupportMessage, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
@@ -8,34 +7,12 @@ import { finalize, catchError } from 'rxjs/operators';
 import { SupportMessageList } from './SupportMessageList';
 import { SupportMessageInput } from './SupportMessageInput';
 import { sendContact$ } from 'services/supportService';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { getUserDisplayName } from 'util/getUserDisplayName';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 
 const { Paragraph, Title } = Typography;
 
-
-const AffixContactButton = styled(Button)`
-width: 48px;
-height: 48px;
-display: flex;
-border-radius: 12px;
-align-items: center;
-justify-content: center;
-border: none;
-background-color:  #0FBFC4bb;
-color: white;
-// box-shadow: 1px 1px 5px #222222;
-box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-// border: 1px solid white;
-
-&:focus,&:hover,&:active {
-color: white;
-background-color: #0FBFC4;
-// border: 1px solid white;
-}
-`;
 
 const StyledCard = styled(Card)`
 box-shadow: 0 5px 10px rgba(0,0,0,0.3);
@@ -57,10 +34,10 @@ export const SupportAffix = () => {
   const [loading, setLoading] = React.useState(true);
   const [unreadCount, setUnreadCount] = React.useState(0);
   const [list, setList] = React.useState([]);
-  const context = React.useContext(GlobalContext);
 
-  const { givenName } = context.user ?? {};
-  const cheerName = givenName?.trim() || 'Hi There';
+  const [user] = useAuthUser();
+
+  const cheerName = user?.givenName?.trim() || 'Hi There';
 
   // Eventsource subscription
   React.useEffect(() => {

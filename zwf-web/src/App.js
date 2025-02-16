@@ -20,9 +20,7 @@ import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { Error404 } from 'pages/Error404';
-import { useAssertRole } from 'hooks/useAssertRole';
 
-const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
 const ActivateAccountPage = loadable(() => import('pages/ActivateAccountPage'));
@@ -47,10 +45,9 @@ const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplate
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
-const OrgTaskListPage = loadable(() => import('pages/OrgBoard/OrgTaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
-const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
-const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
+const TaskPage = loadable(() => import('pages/TaskPage'));
+const TaskListPage = loadable(() => import('pages/TaskListPage'));
 const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
 const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
 const ResourceEditListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
@@ -141,11 +138,9 @@ export const App = React.memo(() => {
         <Route path="/onboard" element={<OrgOnBoardPage />} />
 
         <Route path="/" element={<AppLoggedInPage />} >
-          <Route path="/case" element={<ClientTaskListPage />} />
-          <Route path="/case/:id" element={<ClientTaskPage />} />
           <Route path="/sysboard" element={<SystemBoardPage />} />
-          <Route path="/task" element={<OrgTaskListPage />} />
-          <Route path="/task/:id" element={<OrgTaskPage /> } />
+          <Route path="/task" element={<TaskListPage />} />
+          <Route path="/task/:id" element={<TaskPage /> } />
           <Route path="/activity" element={<ClientTrackingListPage />} />
           <Route path="/doc_template" element={<DocTemplateListPage />} />
           <Route path="/doc_template/new" element={<DocTemplatePage />} />

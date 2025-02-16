@@ -1,17 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { TaskFormWidget } from './TaskFormWidget';
-import { updateTaskFields$, saveTaskFieldValues$, subscribeTaskFieldsChange } from 'services/taskService';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { useDebounce, useDebouncedValue } from "rooks";
-import { isEmpty } from 'lodash';
-import { Alert, Row, Col, Space, Typography, Button, Modal } from 'antd';
+import { useDebouncedValue } from "rooks";
+import { Alert, Row, Space, Typography } from 'antd';
 import { FileIcon } from 'components/FileIcon';
 import { FaSignature } from 'react-icons/fa';
-import Icon, { DeleteOutlined } from '@ant-design/icons';
+import Icon from '@ant-design/icons';
 import { showSignTaskFileModal } from './showSignTaskFileModal';
 
-const { Paragraph, Link: TextLink } = Typography;
+const { Link: TextLink } = Typography;
 
 const shouldSign = file => {
   return file?.requiresSign && !file?.signedAt;
@@ -34,19 +30,15 @@ const getSignnableFiles = (fields) => {
 
 export const TaskDocRequireSignBar = React.memo((props) => {
 
-  const { value: task, type, onSavingChange, onChange } = props;
+  const { value: task, onChange } = props;
 
   const [files, setFiles] = React.useState([]);
   const [visible, setVisible] = React.useState(false);
   const [changedFields, setChangedFields] = React.useState({});
   const [aggregatedChangedFields] = useDebouncedValue(changedFields, 1000);
   const [disabled, setDisabled] = React.useState(false);
-  const context = React.useContext(GlobalContext);
   // const [bufferedChangedFields, setBu]
-  const ref = React.useRef();
 
-  const role = context.role;
-  const isClient = role === 'client';
 
   React.useEffect(() => {
     const files = getSignnableFiles(task?.fields);
@@ -120,6 +112,6 @@ TaskDocRequireSignBar.propTypes = {
 
 TaskDocRequireSignBar.defaultProps = {
   type: 'client',
-  onSavingChange: saving => { },
+  onSavingChange: () => { },
 };
 

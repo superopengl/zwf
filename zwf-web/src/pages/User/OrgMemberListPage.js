@@ -14,11 +14,10 @@ import loadable from '@loadable/component'
 import { listOrgMembers$ } from 'services/memberService';
 import { finalize } from 'rxjs/operators';
 import { UserNameCard } from 'components/UserNameCard';
-import { GlobalContext } from 'contexts/GlobalContext';
-import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Loading } from 'components/Loading';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -38,7 +37,7 @@ const OrgMemberListPage = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
-  const context = React.useContext(GlobalContext);
+  const [user] = useAuthUser();
   const [modal, contextHolder] = Modal.useModal();
 
   const columnDef = [
@@ -71,32 +70,32 @@ const OrgMemberListPage = () => {
     {
       align: 'right',
       fixed: 'right',
-      render: (text, user) => {
-        const isMe = user.id === context.user.id;
+      render: (text, item) => {
+        const isMe = item.id === user.id;
         return (
           <DropdownMenu
             disabled={isMe}
             config={[
               {
                 menu: 'Update profile',
-                onClick: () => openProfileModal(user)
+                onClick: () => openProfileModal(item)
               },
-              user.loginType === 'local' ? {
+              item.loginType === 'local' ? {
                 menu: 'Set password',
-                onClick: () => openSetPasswordModal(user)
+                onClick: () => openSetPasswordModal(item)
               } : null,
               {
                 menu: 'Impersonate',
-                onClick: () => handleImpersonante(user)
+                onClick: () => handleImpersonante(item)
               },
               {
                 menu: 'Resend invite',
-                onClick: () => handleResendInvite(user)
+                onClick: () => handleResendInvite(item)
               },
-              user.orgOwner ? null : {
+              item.orgOwner ? null : {
                 menu: <Text type="danger">Delete user</Text>,
-                onClick: () => handleDelete(user),
-                disabled: user.orgOwner
+                onClick: () => handleDelete(item),
+                disabled: item.orgOwner
               },
             ].filter(x => !!x)}
           />

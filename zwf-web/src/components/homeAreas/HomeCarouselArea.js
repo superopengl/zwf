@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import { Typography, Button, Space, Row, Col, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import { useWindowWidth } from '@react-hook/window-size'
-import { GlobalContext } from 'contexts/GlobalContext';
 import { OrgRegisterInput } from 'components/OrgRegisterInput';
 
 

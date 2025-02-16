@@ -1,25 +1,22 @@
 import { ArrowRightOutlined, MessageFilled } from '@ant-design/icons';
 import { Timeline, Space, Typography, Card, Row, Col, Button } from 'antd';
-import { GlobalContext } from 'contexts/GlobalContext';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TaskIcon } from './entityIcon';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
-import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
 import { TaskStatusTag } from './TaskStatusTag';
 import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from 'services/taskService';
-import { TaskDocItem } from './TaskDocItem';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const { Text, Link: TextLink } = Typography
 
 const ChatMessage = React.memo(props => {
   const { userId, message } = props;
-  const context = React.useContext(GlobalContext);
-  const currentUserId = context.user.id;
+  const [user] = useAuthUser();
+  const currentUserId = user?.id;
   const isMe = userId === currentUserId;
 
   return <Space style={{ flexDirection: isMe ? 'row-reverse' : 'row', alignItems: 'flex-start', width: '100%' }}>
@@ -46,9 +43,9 @@ const ChatMessage = React.memo(props => {
 export const TaskTrackingTimeline = React.memo((props => {
   const { dataSource, mode, ...others } = props;
 
-  const context = React.useContext(GlobalContext);
+  const [user] = useAuthUser();
   const navigate = useNavigate();
-  const currentUserId = context.user.id;
+  const currentUserId = user?.id;
 
   const multiMode = mode === 'multi';
   const singleMode = mode === 'single';

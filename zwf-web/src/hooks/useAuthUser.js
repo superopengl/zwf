@@ -5,20 +5,25 @@ import { message, Typography } from 'antd';
 import { logout$ } from 'services/authService';
 import { notify } from 'util/notify';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
-export const useSetAuthUser = () => {
-  const context = React.useContext(GlobalContext);
+export const useAuthUser = () => {
   const navigate = useNavigate();
+  const context = React.useContext(GlobalContext);
 
-  const { setUser } = context;
+  const { user } = context;
+
+  const updateContextUser = (user) => {
+    context.user = user;
+    context.role = user?.role ?? 'guest';;
+  }
 
   const setAuthUser = (user) => {
     if (user) {
       const { suspended } = user;
       if (suspended) {
         // When org/account is suspended.
-        setUser(null);
+        updateContextUser(null);
         logout$().subscribe(() => {
           notify.error(
             'Account has been suspended',
@@ -32,15 +37,16 @@ export const useSetAuthUser = () => {
         return;
       }
 
-      if (user.role === 'admin' && !user.orgId) {
-        setUser(user);
+      if (user?.role === 'admin' && !user.orgId) {
+        updateContextUser(user);
         navigate('/onboard')
         return;
       }
     }
 
-    setUser(user);
+    updateContextUser(user);
   }
 
-  return setAuthUser;
+  return [user, setAuthUser];
 }
+

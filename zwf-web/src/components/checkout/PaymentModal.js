@@ -5,11 +5,10 @@ import styled from 'styled-components';
 import { getMyCurrentSubscription, listMySubscriptionHistory } from 'services/billingService';
 import { getMyAccount } from 'services/accountService';
 import { getAuthUser } from 'services/authService';
-import { GlobalContext } from 'contexts/GlobalContext';
 import loadable from '@loadable/component'
 import { from } from 'rxjs';
 import PropTypes from 'prop-types';
-import { useSetAuthUser } from 'hooks/useSetAuthUser';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -37,12 +36,10 @@ const PaymentModal = (props) => {
 
   const [loading, setLoading] = React.useState(true);
   const [modalVisible, setModalVisible] = React.useState(false);
-  const [creditHistoryVisible, setCreditHistoryVisible] = React.useState(false);
   const [account, setAccount] = React.useState({});
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [subscriptionHistory, setSubscriptionHistory] = React.useState([]);
-  const context = React.useContext(GlobalContext);
-  const setAuthUser = useSetAuthUser();
+  const [user, setAuthUser] = useAuthUser();
 
   const load = async (refreshAuthUser = false) => {
     try {
