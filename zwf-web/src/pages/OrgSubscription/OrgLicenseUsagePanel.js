@@ -100,7 +100,15 @@ export const OrgLicenseUsagePanel = () => {
             </ProCard>
             {/* <DebugJsonPanel value={period} /> */}
             <ProCard title="Payment" extra={period.payment && <Button type="link" target="_blank" icon={<DownloadOutlined />} href={getInvoiceUrl(period.payment.invoiceFileId)}>Download Invoice</Button>}>
-              {period.type === 'trial' ? '14 Day Free Trial' :
+              {period.type === 'trial' ? <>
+                <Paragraph>
+                  Free for unlimited accounts during 14 Day Free Trial period.
+                </Paragraph>
+                <Paragraph>
+                <Text strong>What will happen after the trial period ends?</Text><br/>
+                Upon the conclusion of the trial period, the system will automatically transition to a monthly plan at a rate of AUD $39.00 per account per month (unless an alternative, agreed-upon price is in effect). The payment for the monthly plan will be processed on or after the last day of the period. For example, if a trial period ends on <Text underline>{moment(period.periodTo).format('MMM D YYYY')}</Text>, the first monthly plan will begin around <Text underline>{moment(period.periodTo).add(1, 'day').format('MMM D YYYY')}</Text>, and the initial payment will be processed around <Text underline>{moment(period.periodTo).add(1, 'month').add(-1, 'day').format('MMM D YYYY')}</Text>. Please note that the payment may be processed later than expected due to various reasons.
+                </Paragraph>
+              </> :
                 !period.payment ? <>
                   <Paragraph>
                     Pending Payment. The subsequent automatic deduction is scheduled after <Text strong>
@@ -156,7 +164,7 @@ export const OrgLicenseUsagePanel = () => {
                 type="link"
                 href="/resource/5f3158de-671f-43f3-b250-85b8c0f2dd87"
                 target="_blank"
-               />
+              />
             </Tooltip>}>
               <OrgPeriodUsageChart period={period} />
             </ProCard>
