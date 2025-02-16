@@ -152,6 +152,9 @@ export const OrgLicenseUsagePanel = () => {
                         <Descriptions.Item label="Used units (user-days)">
                           {period.payment.payableDays}
                         </Descriptions.Item>
+                        {period.promotionCode && <Descriptions.Item label="Promotion code">
+                          {period.promotionCode}
+                        </Descriptions.Item>}
                       </Descriptions>
                     </Col>
                   </Row>
