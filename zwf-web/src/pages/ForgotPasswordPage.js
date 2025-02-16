@@ -44,9 +44,9 @@ const ForgotPasswordPage = props => {
       <Title level={2}>Forgot Password</Title>
       <ContainerStyled>
         <ForgotPasswordPanel onFinish={() => navigate('/')} />
-        <Form.Item >
+        {/* <Form.Item >
           <Button block type="link" onClick={() => goBack()}>Cancel</Button>
-        </Form.Item>
+        </Form.Item> */}
       </ContainerStyled>
     </Layout.Content>
     <HomeFooter />

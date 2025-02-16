@@ -14,7 +14,7 @@ export function forgotPassword$(email, returnUrl) {
 }
 
 export function resetPassword$(token, password) {
-  return httpPost$(`auth/reset_password`, { token, password });
+  return httpPost$(`auth/set_password`, { token, password });
 }
 
 export function logout$() {
