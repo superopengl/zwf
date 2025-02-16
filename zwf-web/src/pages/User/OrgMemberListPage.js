@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input, Modal, Form, Drawer, Select , Row} from 'antd';
+import { Typography, Button, Table, Input, Modal, Form, Drawer, Select, Row } from 'antd';
 import {
-  UserAddOutlined, QuestionOutlined
+  UserAddOutlined, QuestionOutlined, SyncOutlined
 } from '@ant-design/icons';
 import { deleteUser$, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteMember$, impersonate$, reinviteMember$ } from 'services/authService';
@@ -41,12 +41,12 @@ const OrgMemberListPage = () => {
 
   const columnDef = [
     {
-      // title: 'User',
+      title: 'Member',
       fixed: 'left',
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
     {
-      // title: 'Role',
+      title: 'Role',
       dataIndex: 'role',
       render: (value, item) => <Select bordered={false}
         disabled={item.orgOwner}
@@ -103,7 +103,7 @@ const OrgMemberListPage = () => {
     },
   ].filter(x => !!x);
 
-  const loadList = () => {
+  const loadList$ = () => {
     setLoading(true);
     return listOrgMembers$().pipe(
       finalize(() => setLoading(false))
@@ -113,7 +113,7 @@ const OrgMemberListPage = () => {
   }
 
   React.useEffect(() => {
-    const sub = loadList();
+    const sub = loadList$();
     return () => sub.unsubscribe();
   }, []);
 
@@ -123,7 +123,7 @@ const OrgMemberListPage = () => {
       title: <>Delete user</>,
       content: <UserNameCard userId={item.id} />,
       onOk: () => {
-        deleteUser$(id).subscribe(() => loadList());
+        deleteUser$(id).subscribe(() => loadList$());
       },
       maskClosable: true,
       okButtonProps: {
@@ -198,13 +198,13 @@ const OrgMemberListPage = () => {
       finalize(() => setLoading(false))
     ).subscribe(() => {
       setInviteVisible(false);
-      loadList();
+      loadList$();
     });
   }
 
   const handlePaymentOk = async () => {
     setModalVisible(false);
-    await loadList();
+    await loadList$();
   }
 
   const handleCancelPayment = () => {
@@ -214,7 +214,7 @@ const OrgMemberListPage = () => {
   const handleUserRoleChange = async (item, role) => {
     if (role && role !== item.role) {
       await setUserRole(item.id, role);
-      loadList();
+      loadList$();
     }
   }
 
@@ -232,6 +232,11 @@ const OrgMemberListPage = () => {
         loading={loading}
         title="Team Members"
         extra={[<Button
+          key="refresh"
+          onClick={() => loadList$()}
+          icon={<SyncOutlined />}>
+        </Button>,
+        <Button
           key="add"
           type="primary"
           ghost
@@ -284,17 +289,21 @@ const OrgMemberListPage = () => {
         onCancel={() => setInviteVisible(false)}
         title={<>Add Members</>}
         footer={null}
-        // width={500}
+      // width={500}
       >
         <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
         {/* <Paragraph>Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"</Paragraph> */}
         <Loading loading={loading} >
-          <Form layout="vertical" onFinish={handleInviteUser}>
-            <Form.Item label="Emails"
+          <Form layout="vertical"
+            onFinish={handleInviteUser}
+            requiredMark={false}
+          >
+            <Form.Item label=""
               extra='Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"'
               name="emails" rules={[{ required: true, whitespace: true, max: 1000 }]}>
               <Input.TextArea placeholder="andy@zeeworkflow.com, bob@zeeworkflow.com"
                 autoSize={{ minRows: 3 }}
+                autoComplete="email"
                 allowClear={true}
                 maxLength="1000"
                 autoFocus={true}
@@ -311,7 +320,7 @@ const OrgMemberListPage = () => {
           </Form.Item> */}
             <Form.Item>
               <Row justify="end">
-              <Button type="primary" htmlType="submit" disabled={loading}>Invite</Button>
+                <Button type="primary" htmlType="submit" disabled={loading}>Invite</Button>
 
               </Row>
             </Form.Item>

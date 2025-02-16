@@ -241,8 +241,8 @@ const OrgClientListPage = () => {
         loading={loading}
         title='Clients'
         extra={[
-          <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}>Refresh</Button>,
-          <Button key="invite" icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => loadList$()}></Button>,
+          <Button key="invite" ghost icon={<UserAddOutlined />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Invite Client</Button>
         ]}
       >
         <Table columns={columnDef}

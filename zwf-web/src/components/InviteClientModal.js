@@ -44,12 +44,13 @@ export const InviteClientModal = props => {
     open={open}
     onCancel={handleCancel}
     onOk={onOk}
-    title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#0FBFC4' }} />Invite Client</Space>}
+    // title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#0FBFC4' }} />Invite Client</Space>}
+    title="Invite Client"
     closable
     destroyOnClose={true}
-    maskClosable
+    maskClosable={false}
     footer={<Space style={{ width: '100%', justifyContent: 'end' }}>
-      <Button type="text" onClick={handleCancel} disabled={loading}>Cancel</Button>
+      {/* <Button type="text" onClick={handleCancel} disabled={loading}>Cancel</Button> */}
       <Button type="primary" onClick={handleInvite} disabled={loading}>Invite</Button>
     </Space>}
   >
@@ -58,12 +59,14 @@ export const InviteClientModal = props => {
         ref={ref}
         layout="vertical"
         onFinish={handleFormSubmit}
+        requiredMark={false}
       >
         <Form.Item name="emails" label="Client email addresses" 
         extra='Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"'
         rules={[{ required: true, whitespace: true, max: 1000 }]}>
           <Input.TextArea placeholder="andy@zeeworkflow.com, bob@zeeworkflow.com"
             autoSize={{ minRows: 3 }}
+            autoComplete="email"
             allowClear={true}
             maxLength="1000"
             autoFocus={true}
