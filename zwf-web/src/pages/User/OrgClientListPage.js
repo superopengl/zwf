@@ -24,6 +24,7 @@ import { UserAvatar } from 'components/UserAvatar';
 import { CreateTaskModal } from 'components/CreateTaskModal';
 import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 
 const { Text } = Typography;
@@ -43,7 +44,7 @@ const DEFAULT_QUERY_INFO = {
 const LOCAL_STORAGE_KEY = 'user_query';
 
 const OrgClientListPage = () => {
-
+  useAssertRole(['admin', 'agent'])
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [createTaskModalVisible, setCreateTaskModalVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);

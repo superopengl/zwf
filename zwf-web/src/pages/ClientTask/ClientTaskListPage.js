@@ -10,6 +10,7 @@ import { orderBy, uniq } from 'lodash';
 import { useLocalstorageState } from 'rooks';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import Icon from '@ant-design/icons';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Title, Paragraph, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
@@ -79,6 +80,7 @@ const TASK_FILTER_DEFAULT = {
 
 
 export const ClientTaskListPage = () => {
+  useAssertRole(['client']);
   const [loading, setLoading] = React.useState(true);
   const [allList, setAllList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);

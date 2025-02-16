@@ -20,16 +20,16 @@ import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { Error404 } from 'pages/Error404';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const ClientTaskListPage = loadable(() => import('pages/ClientTask/ClientTaskListPage'));
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
-const ActivateAccountPage = loadable(() => import('pages/ActivateAccountApage'));
+const ActivateAccountPage = loadable(() => import('pages/ActivateAccountPage'));
 const ForgotPasswordPage = loadable(() => import('pages/ForgotPasswordPage'));
 const PrivacyPolicyPage = loadable(() => import('pages/PrivacyPolicyPage'));
 const OrgResurgingPage = loadable(() => import('pages/OrgResurgingPage'));
 const TermAndConditionPage = loadable(() => import('pages/TermAndConditionPage'));
-const BlogsPage = loadable(() => import('pages/BlogsPage'));
 const OrgSignUpPage = loadable(() => import('pages/Org/OrgSignUpPage'));
 const OrgOnBoardPage = loadable(() => import('pages/Org/OrgOnBoardPage'));
 const TaskDirectPage = loadable(() => import('pages/MyTask/TaskDirectPage'))
@@ -47,7 +47,7 @@ const DocTemplateListPage = loadable(() => import('pages/DocTemplate/DocTemplate
 const DocTemplatePage = loadable(() => import('pages/DocTemplate/DocTemplatePage'));
 const TaskTemplateListPage = loadable(() => import('pages/TaskTemplate/TaskTemplateListPage'));
 const TaskTemplatePage = loadable(() => import('pages/TaskTemplate/TaskTemplatePage'));
-const OrgTaskListPage = loadable(() => import('pages/OrgBoard/TaskListPage'));
+const OrgTaskListPage = loadable(() => import('pages/OrgBoard/OrgTaskListPage'));
 const RecurringListPage = loadable(() => import('pages/Recurring/RecurringListPage'));
 const OrgTaskPage = loadable(() => import('pages/MyTask/OrgTaskPage'));
 const ClientTaskPage = loadable(() => import('pages/Org/ClientTaskPage'));
@@ -90,13 +90,11 @@ export const App = React.memo(() => {
   //   },
   // }
 
-  const [contextValue, setContextValue] = React.useState({
+  const contextValueRef = React.useRef({
     event$,
     role: 'guest',
     user,
     setUser,
-    // members,
-    // setMembers,
     setLoading,
     setLocale: locale => {
       reactLocalStorage.set('locale', locale);
@@ -114,27 +112,11 @@ export const App = React.memo(() => {
   }, []);
 
   React.useEffect(() => {
-    if (user !== contextValue.user) {
-
-      setContextValue({
-        ...contextValue,
-        user,
-        role: user?.role || 'guest',
-      });
-
-      // contextValue.setLocale(user?.profile?.locale || DEFAULT_LOCALE);
+    if (user !== contextValueRef.current.user) {
+      contextValueRef.current.user = user;
+      contextValueRef.current.role = user?.role || 'guest';
     }
   }, [user]);
-
-  const role = contextValue.role || 'guest';
-  const isGuest = role === 'guest';
-  const isClient = role === 'client';
-  const isAdmin = role === 'admin';
-  const isSystem = role === 'system';
-  const isAgent = role === 'agent';
-  const beingSuspended = user?.suspended;
-
-  const isLoggedIn = !isGuest;
 
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
@@ -147,44 +129,48 @@ export const App = React.memo(() => {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
+
+        <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
+        <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
+        <Route path="/login" element={<LogInPage />} />
+        <Route path="/signup/org" element={<OrgSignUpPage />} />
+        <Route path="/forgot_password" element={<ForgotPasswordPage />} />
+        <Route path="/activate" element={<ActivateAccountPage />} />
+        <Route path="/resurge/:code" element={<OrgResurgingPage />} />
+        <Route path="/task/direct/:token" element={<TaskDirectPage />} />
+        <Route path="/onboard" element={<OrgOnBoardPage />} />
+
+        <Route path="/" element={<AppLoggedInPage />} >
+          <Route path="/case" element={<ClientTaskListPage />} />
+          <Route path="/case/:id" element={<ClientTaskPage />} />
+          <Route path="/sysboard" element={<SystemBoardPage />} />
+          <Route path="/task" element={<OrgTaskListPage />} />
+          <Route path="/task/:id" element={<OrgTaskPage /> } />
+          <Route path="/activity" element={<ClientTrackingListPage />} />
+          <Route path="/doc_template" element={<DocTemplateListPage />} />
+          <Route path="/doc_template/new" element={<DocTemplatePage />} />
+          <Route path="/doc_template/:id" element={<DocTemplatePage />} />
+          <Route path="/task_template" element={<TaskTemplateListPage />} />
+          <Route path="/task_template/new" element={<TaskTemplatePage />} />
+          <Route path="/task_template/:id" element={<TaskTemplatePage />} />
+          <Route path="/scheduler" element={<RecurringListPage />} />
+          <Route path="/client" element={<OrgClientListPage />} />
+          <Route path="/tags" element={<TagsSettingPage />} />
+          <Route path="/subscription" element={<OrgSubscriptionPage />} />
+          <Route path="/team" element={<OrgMemberListPage />} />
+          <Route path="/config" element={<ConfigListPage />} />
+          <Route path="/org" element={<OrgListPage />} />
+          <Route path="/support" element={<SupportListPage />} />
+          <Route path="/manage/resource" element={<ResourceEditListPage />} />
+          <Route path="/manage/resource/new" element={<ResourceEditPage />} />
+          <Route path="/manage/resource/:id" element={<ResourceEditPage />} />
+          <Route path="/revenue" element={<RevenuePage />} />
+        </Route>
+
         <Route path={'/'} element={<PortalPage />} >
           <Route index element={<HomePage />} />
           <Route path="/resource" element={<ResourceListPage />} />
           <Route path="/resource/:key" element={<ResourcePage />} />
-        </Route>
-        <Route path="/terms_and_conditions" element={<TermAndConditionPage />} />
-        <Route path="/privacy_policy" element={<PrivacyPolicyPage />} />
-        <Route path="/login" element={isGuest ? <LogInPage /> : <Navigate to="/" />} />
-        <Route path="/signup/org" element={isGuest ? <OrgSignUpPage /> : <Navigate to="/" />} />
-        <Route path="/forgot_password" element={isGuest ? <ForgotPasswordPage /> : <Navigate to="/" />} />
-        <Route path="/activate" element={isGuest ? <ActivateAccountPage /> : <Navigate to="/" />} />
-        <Route path="/resurge/:code" element={isGuest ? <OrgResurgingPage /> : <Navigate to="/" />} />
-        <Route path="/task/direct/:token" element={!isSystem ? <TaskDirectPage /> : <Navigate to="/" />} />
-        <Route path="/onboard" element={isAdmin && !user?.orgId ? <OrgOnBoardPage /> : <Navigate to="/" />} />
-
-
-        <Route path="/" element={!isGuest && !beingSuspended ? <AppLoggedInPage /> : <PortalPage />} >
-          <Route path="/task" element={isSystem ? <SystemBoardPage /> : isClient ? <ClientTaskListPage /> : <OrgTaskListPage />} />
-          <Route path="/task/:id" element={isClient ? <ClientTaskPage /> : (isAdmin || isAgent) ? <OrgTaskPage /> : <Navigate to="/" />} />
-          <Route path="/activity" element={isClient ? <ClientTrackingListPage /> : <Navigate to="/" />} />
-          <Route path="/doc_template" element={(isAdmin || isAgent) ? <DocTemplateListPage /> : <Navigate to="/" />} />
-          <Route path="/doc_template/new" element={(isAdmin || isAgent) ? <DocTemplatePage /> : <Navigate to="/" />} />
-          <Route path="/doc_template/:id" element={(isAdmin || isAgent) ? <DocTemplatePage /> : <Navigate to="/" />} />
-          <Route path="/task_template" element={(isAdmin || isAgent) ? <TaskTemplateListPage /> : <Navigate to="/" />} />
-          <Route path="/task_template/new" element={(isAdmin || isAgent) ? <TaskTemplatePage /> : <Navigate to="/" />} />
-          <Route path="/task_template/:id" element={(isAdmin || isAgent) ? <TaskTemplatePage /> : <Navigate to="/" />} />
-          <Route path="/scheduler" element={(isAdmin || isAgent) ? <RecurringListPage /> : <Navigate to="/" />} />
-          <Route path="/client" element={(isAdmin || isAgent) ? <OrgClientListPage /> : <Navigate to="/" />} />
-          <Route path="/tags" element={(isAdmin || isAgent) ? <TagsSettingPage /> : <Navigate to="/" />} />
-          <Route path="/subscription" element={(isAdmin || isAgent) ? <OrgSubscriptionPage /> : <Navigate to="/" />} />
-          <Route path="/team" element={(isAdmin || isAgent) ? <OrgMemberListPage /> : <Navigate to="/" />} />
-          <Route path="/config" element={isSystem ? <ConfigListPage /> : <Navigate to="/" />} />
-          <Route path="/org" element={isSystem ? <OrgListPage /> : <Navigate to="/" />} />
-          <Route path="/support" element={isSystem ? <SupportListPage /> : <Navigate to="/" />} />
-          <Route path="/manage/resource" element={isSystem ? <ResourceEditListPage /> : <Navigate to="/" />} />
-          <Route path="/manage/resource/new" element={isSystem ? <ResourceEditPage /> : <Navigate to="/" />} />
-          <Route path="/manage/resource/:id" element={isSystem ? <ResourceEditPage /> : <Navigate to="/" />} />
-          <Route path="/revenue" element={isSystem ? <RevenuePage /> : <Navigate to="/" />} />
         </Route>
 
         <Route path="/404" element={<Error404 />} />
@@ -194,7 +180,7 @@ export const App = React.memo(() => {
   )
 
   return (
-    <GlobalContext.Provider value={contextValue}>
+    <GlobalContext.Provider value={contextValueRef.current}>
       <ConfigProvider
         theme={{
           components: {

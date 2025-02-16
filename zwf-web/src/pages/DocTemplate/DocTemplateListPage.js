@@ -13,7 +13,8 @@ import { finalize, switchMap } from 'rxjs/operators';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
-import {useCloneDocTemplateModal} from './useCloneDocTemplateModal';
+import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text, Paragraph } = Typography;
 
@@ -26,6 +27,7 @@ const Container = styled.div`
 
 
 export const DocTemplateListPage = () => {
+  useAssertRole(['admin', 'agent'])
   const [list, setList] = React.useState([]);
   const [filteredList, setFilteredList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');

@@ -15,6 +15,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { SavingAffix } from 'components/SavingAffix';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text } = Typography;
 
@@ -46,6 +47,7 @@ const createEmptyPage = () => {
 
 
 export const ResourceEditPage = React.memo((props) => {
+  useAssertRole(['system']);
   const params = useParams();
 
   const { id } = params;

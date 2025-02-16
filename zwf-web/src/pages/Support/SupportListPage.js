@@ -27,9 +27,10 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Tooltip } from 'antd';
 import { GiDominoMask } from 'react-icons/gi';
 import { compareDates } from 'util/compareDates';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 
-const { Text, Link: TextLink} = Typography;
+const { Text, Link: TextLink } = Typography;
 
 const StyledTable = styled(Table)`
 .ant-table-tbody {
@@ -76,7 +77,7 @@ const DEFAULT_QUERY_INFO = {
 const LOCAL_STORAGE_KEY = 'user_support_query';
 
 const SupportListPage = () => {
-
+  useAssertRole(['system']);
   const [chatVisible, setChatVisible] = React.useState(false);
   const [clientTrackingVisible, setClientTrackingVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
@@ -93,7 +94,7 @@ const SupportListPage = () => {
       fixed: 'left',
       render: (_, item) => <Space>
         <Tooltip title="Click to open messages">
-            <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link" onClick={() => handleChatWith(item)}/>
+          <UserNameCard userId={item.userId} searchText={queryInfo.text} type="link" onClick={() => handleChatWith(item)} />
         </Tooltip>
 
         <Badge count={item.unreadCount} showZero={false} />
@@ -102,13 +103,13 @@ const SupportListPage = () => {
     {
       title: 'User Id',
       dataIndex: 'userId',
-      render: (value) => <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
+      render: (value) => <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
     },
     {
       title: 'Org',
       dataIndex: 'orgName',
       sorter: {
-        compare: (a, b) =>  a?.orgName?.localeCompare(b.orgName)
+        compare: (a, b) => a?.orgName?.localeCompare(b.orgName)
       },
       render: (value) => <HighlightingText search={queryInfo.text} value={value} />,
     },
@@ -116,15 +117,15 @@ const SupportListPage = () => {
       title: 'Org',
       dataIndex: 'orgId',
       sorter: {
-        compare: (a, b) =>  a?.orgId?.localeCompare(b.orgId)
+        compare: (a, b) => a?.orgId?.localeCompare(b.orgId)
       },
-      render: (value) => value && <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
+      render: (value) => value && <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
     },
     {
       title: 'Role',
       dataIndex: 'role',
       sorter: {
-        compare: (a, b) =>  a?.role?.localeCompare(b.role)
+        compare: (a, b) => a?.role?.localeCompare(b.role)
       },
       render: (role, item) => <RoleTag role={item.role} />
     },

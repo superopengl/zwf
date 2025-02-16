@@ -23,6 +23,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { GiDominoMask } from 'react-icons/gi';
 import Icon from '@ant-design/icons';
 import { UserNameCard } from 'components/UserNameCard';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const Container = styled.div`
 
@@ -59,7 +60,7 @@ const DEFAULT_QUERY_INFO = {
 const LOCAL_STORAGE_KEY = 'user_query';
 
 const OrgListPage = () => {
-
+  useAssertRole(['system'])
   const [promotionCodeDrawerVisible, setPromotionCodeDrawerVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
@@ -76,7 +77,7 @@ const OrgListPage = () => {
       dataIndex: 'name',
       fixed: 'left',
       sorter: {
-        compare: (a, b) =>  a?.name?.localeCompare(b.name)
+        compare: (a, b) => a?.name?.localeCompare(b.name)
       },
       render: (text, item) => <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
     },
@@ -89,14 +90,14 @@ const OrgListPage = () => {
       title: 'Business Name',
       dataIndex: 'businessName',
       sorter: {
-        compare: (a, b) =>  a?.businessName?.localeCompare(b.businessName)
+        compare: (a, b) => a?.businessName?.localeCompare(b.businessName)
       },
       render: (value) => value
     },
     {
       title: 'Org',
       dataIndex: 'id',
-      render: (value) => value && <Text code copyable ellipsis={true} style={{width: '6rem'}}>{value}</Text>,
+      render: (value) => value && <Text code copyable ellipsis={true} style={{ width: '6rem' }}>{value}</Text>,
     },
     {
       title: 'Tel',
@@ -106,23 +107,23 @@ const OrgListPage = () => {
     {
       title: 'Owner User',
       render: (_, org) => <Tooltip title="Click to impersonate">
-          <UserNameCard userId={org.ownerUserId} type="link" onClick={() => handleImpersonante(org)}/>
-        </Tooltip>
+        <UserNameCard userId={org.ownerUserId} type="link" onClick={() => handleImpersonante(org)} />
+      </Tooltip>
     },
     {
       title: 'Type',
       dataIndex: 'type',
       sorter: {
-        compare: (a, b) =>  a?.type?.localeCompare(b.type)
+        compare: (a, b) => a?.type?.localeCompare(b.type)
       },
       render: (value) => value
     },
     {
       title: 'Current Billing Period',
       render: (value, item) => <Space>
-        <TimeAgo value={item.periodFrom} accurate={false}/>
+        <TimeAgo value={item.periodFrom} accurate={false} />
         -
-        <TimeAgo value={item.periodTo} accurate={false}/>
+        <TimeAgo value={item.periodTo} accurate={false} />
       </Space>
     },
     {
@@ -254,71 +255,71 @@ const OrgListPage = () => {
 
   return (
     <Container>
-    <PageHeaderContainer
-      title="Org Management"
-      extra={[
-        <Input.Search
-          key="search"
-          placeholder="Search name or email"
-          enterButton={<SearchOutlined />}
-          onSearch={value => handleSearch(value)}
-          onPressEnter={e => handleSearch(e.target.value)}
-          onChange={e => handleSearchTextChange(e.target.value)}
-          loading={loading}
-          value={queryInfo?.text}
-          allowClear
-        />,
-        <Button key="clear" onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>,
-        <Button key="refresh" onClick={() => loadList()} icon={<SyncOutlined />}></Button>
-      ]}
-    >
-
-      <Space direction="vertical" style={{ width: '100%' }}>
-        {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
-        <Table columns={columnDef}
-          dataSource={list}
-          size="small"
-          scroll={{
-            x: 'max-content'
-          }}
-          rowKey="id"
-          loading={loading}
-          style={{ marginTop: 20 }}
-          rowClassName={item => item.suspended ? 'org-suspended' : item.type === 'trial'  ? 'org-trial' : null}
-          pagination={{
-            current: queryInfo.current,
-            pageSize: queryInfo.size,
-            total: total,
-            showTotal: total => `Total ${total}`,
-            pageSizeOptions: [10, 30, 60],
-            showSizeChanger: true,
-            showQuickJumper: true,
-            disabled: loading,
-            onChange: handlePaginationChange,
-            onShowSizeChange: (page, size) => {
-              searchByQueryInfo({ ...queryInfo, page, size });
-            }
-          }}
-        />
-      </Space>
-      <Drawer
-        open={promotionCodeDrawerVisible}
-        destroyOnClose={true}
-        maskClosable={true}
-        title={<>{currentOrg?.name} - Promotion Codes</>}
-        onClose={() => setPromotionCodeDrawerVisible(false)}
-        footer={null}
-        width={700}
+      <PageHeaderContainer
+        title="Org Management"
+        extra={[
+          <Input.Search
+            key="search"
+            placeholder="Search name or email"
+            enterButton={<SearchOutlined />}
+            onSearch={value => handleSearch(value)}
+            onPressEnter={e => handleSearch(e.target.value)}
+            onChange={e => handleSearchTextChange(e.target.value)}
+            loading={loading}
+            value={queryInfo?.text}
+            allowClear
+          />,
+          <Button key="clear" onClick={() => handleClearFilter()} icon={<ClearOutlined />}>Clear Filter</Button>,
+          <Button key="refresh" onClick={() => loadList()} icon={<SyncOutlined />}></Button>
+        ]}
       >
-        {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
 
-        {currentOrg && <PromotionListPanel org={currentOrg} onOk={() => {
-          setPromotionCodeDrawerVisible(false);
-          loadList();
-        }} />}
-      </Drawer>
-      {contextHolder}
-    </PageHeaderContainer>
+        <Space direction="vertical" style={{ width: '100%' }}>
+          {tags && <TagFilter value={queryInfo.tags} onChange={handleTagFilterChange} tags={tags} />}
+          <Table columns={columnDef}
+            dataSource={list}
+            size="small"
+            scroll={{
+              x: 'max-content'
+            }}
+            rowKey="id"
+            loading={loading}
+            style={{ marginTop: 20 }}
+            rowClassName={item => item.suspended ? 'org-suspended' : item.type === 'trial' ? 'org-trial' : null}
+            pagination={{
+              current: queryInfo.current,
+              pageSize: queryInfo.size,
+              total: total,
+              showTotal: total => `Total ${total}`,
+              pageSizeOptions: [10, 30, 60],
+              showSizeChanger: true,
+              showQuickJumper: true,
+              disabled: loading,
+              onChange: handlePaginationChange,
+              onShowSizeChange: (page, size) => {
+                searchByQueryInfo({ ...queryInfo, page, size });
+              }
+            }}
+          />
+        </Space>
+        <Drawer
+          open={promotionCodeDrawerVisible}
+          destroyOnClose={true}
+          maskClosable={true}
+          title={<>{currentOrg?.name} - Promotion Codes</>}
+          onClose={() => setPromotionCodeDrawerVisible(false)}
+          footer={null}
+          width={700}
+        >
+          {/* <Alert style={{ marginBottom: '0.5rem' }} type="warning" showIcon message="Changing email will change the login account. After changing, system will send out a new invitation to the new email address to reset your password." /> */}
+
+          {currentOrg && <PromotionListPanel org={currentOrg} onOk={() => {
+            setPromotionCodeDrawerVisible(false);
+            loadList();
+          }} />}
+        </Drawer>
+        {contextHolder}
+      </PageHeaderContainer>
     </Container>
   );
 };

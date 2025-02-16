@@ -13,6 +13,7 @@ import { GoogleSsoButton } from 'components/GoogleSsoButton';
 import { GoogleLogoSvg } from 'components/GoogleLogoSvg';
 import Icon from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Paragraph } = Typography;
 
@@ -34,7 +35,8 @@ const LogoContainer = styled.div`
 `;
 
 const { Title } = Typography;
-const ActivateAccountApage = props => {
+const ActivateAccountPage = props => {
+  useAssertRole(['guest']);
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -56,9 +58,9 @@ const ActivateAccountApage = props => {
       )
       .subscribe(user => {
         setAuthUser(user);
-        notify.success('Successfully reset password');
+        notify.success('Successfully set password');
         // navigate('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
-        navigate('/');
+        navigate('/task');
       });
   }
 
@@ -137,8 +139,8 @@ const ActivateAccountApage = props => {
   </LayoutStyled>
 }
 
-ActivateAccountApage.propTypes = {};
+ActivateAccountPage.propTypes = {};
 
-ActivateAccountApage.defaultProps = {};
+ActivateAccountPage.defaultProps = {};
 
-export default ActivateAccountApage;
+export default ActivateAccountPage;

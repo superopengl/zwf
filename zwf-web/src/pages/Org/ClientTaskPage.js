@@ -15,6 +15,7 @@ import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
 import { LeftOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Text } = Typography;
 
@@ -27,6 +28,7 @@ const Container = styled.div`
 `;
 
 const ClientTaskPage = (props) => {
+  useAssertRole(['client']);
   const params = useParams();
   const {id} = params;
 

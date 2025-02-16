@@ -10,6 +10,7 @@ import { TaskListPanel } from './TaskListPanel';
 import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Link: TextLink } = Typography;
 
@@ -34,7 +35,8 @@ const DEFAULT_QUERY = {
 
 const TASK_BOARD_VIEW_WARNING = 'task.boardView.closed';
 
-const TaskListPage = () => {
+const OrgTaskListPage = () => {
+  useAssertRole(['admin', 'agent']);
   const [loading, setLoading] = React.useState(true);
   const [taskList, setTaskList] = React.useState([]);
   const [viewMode, setViewMode] = React.useState('board');
@@ -157,8 +159,8 @@ const TaskListPage = () => {
   )
 }
 
-TaskListPage.propTypes = {};
+OrgTaskListPage.propTypes = {};
 
-TaskListPage.defaultProps = {};
+OrgTaskListPage.defaultProps = {};
 
-export default TaskListPage;
+export default OrgTaskListPage;

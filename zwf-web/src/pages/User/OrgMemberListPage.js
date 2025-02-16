@@ -18,6 +18,7 @@ import { GlobalContext } from 'contexts/GlobalContext';
 import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Loading } from 'components/Loading';
+import { useAssertRole } from 'hooks/useAssertRole';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -28,6 +29,7 @@ const ContainerStyled = styled.div`
 
 const OrgMemberListPage = () => {
 
+  useAssertRole(['admin', 'agent']);
   const [profileModalVisible, setProfileModalVisible] = React.useState(false);
   const [loading, setLoading] = React.useState(true);
   const [setPasswordVisible, setSetPasswordVisible] = React.useState(false);
