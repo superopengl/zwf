@@ -16,5 +16,7 @@ export function sanitizeUser(user: UserInformation) {
     'avatarColorHex',
     'subscriptionAlive',
     'suspended',
+    'currentPlanType',
+    'currentPeriodTo',
   ]);
 }
