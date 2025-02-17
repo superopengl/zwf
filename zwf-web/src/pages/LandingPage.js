@@ -1,5 +1,4 @@
 import React from 'react';
-import loadable from '@loadable/component'
 import { useRole } from 'hooks/useRole';
 import { useNavigate } from 'react-router-dom';
 import { useAuthUser } from 'hooks/useAuthUser';

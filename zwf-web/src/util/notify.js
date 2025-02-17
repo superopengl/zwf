@@ -23,7 +23,7 @@ function request(level, title, content, duration) {
     description: content,
     key,
     duration,
-    placement: 'topLeft',
+    placement: 'bottomLeft',
     style: { width: '85vw', maxWidth: '380px' },
   });
 
