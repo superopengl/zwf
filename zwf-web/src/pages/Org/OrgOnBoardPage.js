@@ -1,15 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Layout } from 'antd';
+import { Typography, Layout, Button , Space, Alert} from 'antd';
 import { Logo } from 'components/Logo';
 import OrgProfileForm from './OrgProfileForm';
-import { getAuthUser$ } from 'services/authService';
+import { getAuthUser$, logout$ } from 'services/authService';
 import { SupportAffix } from 'components/SupportAffix';
 import HomeFooter from 'components/HomeFooter';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useNavigate } from 'react-router-dom';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAssertUser } from 'hooks/useAssertUser';
+import { ProCard } from '@ant-design/pro-components';
+import { catchError } from 'rxjs';
 
 const { Title } = Typography;
 
@@ -36,18 +38,21 @@ const OrgOnBoardPage = (props) => {
   useAssertRole(['admin']);
   useAssertUser(user => !user.orgId);
 
-  const navigate = useNavigate();
   const [user, setAuthUser] = useAuthUser();
-  
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe((user) => {
-      setAuthUser(user);
-      debugger;
-      navigate('/task');
+      setAuthUser(user, '/task');
     });
   }
 
+  const handleLogout = () => {
+    logout$().pipe(
+      catchError(err => {}),
+    ).subscribe(() => {
+      setAuthUser(null, '/');
+    });
+  }
 
   return <Container>
     <Layout.Content>
@@ -56,7 +61,18 @@ const OrgOnBoardPage = (props) => {
         <Title level={2} style={{ margin: '2rem auto' }}>
           Setup Organization
         </Title>
-        <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
+        <Space direction="vertical" size="large">
+          <Alert 
+          style={{textAlign: 'left'}}
+          type="warning" message="Organization Initial Setup"
+          description="It appears that your organization needs to be set up before you can begin."
+          showIcon
+          />
+        <ProCard bordered>
+          <OrgProfileForm onOk={handleAfterOrgCreated} mode="create" />
+        </ProCard>
+        <Button type="link" block onClick={handleLogout}>Logout</Button>
+        </Space>
       </InnerContainer>
     </Layout.Content>
     <HomeFooter />

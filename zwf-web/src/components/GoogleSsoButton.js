@@ -6,29 +6,13 @@ import { ssoGoogleRegisterOrg$, ssoGoogleLogin$ } from 'services/authService';
 import { GoogleLogin } from 'react-google-login';
 import { notify } from 'util/notify';
 import PropTypes from 'prop-types';
-import { catchError, finalize } from 'rxjs/operators';
+import { catchError, filter, finalize } from 'rxjs/operators';
 import { useAuthUser } from 'hooks/useAuthUser';
 
 export const GoogleSsoButton = props => {
   const { render, type, onStart, onEnd } = props;
   const navigate = useNavigate();
   const [user, setAuthUser] = useAuthUser();
-
-  const loginWithUser = (user) => {
-    if (!user) {
-      throw new Error('User is null');
-    }
-    setAuthUser(user);
-    const {role} = user;
-    if (role === 'admin' && !user.orgId) {
-      // When org isn't initialized.
-      navigate('/onboard')
-    } else if (role === 'system') {
-      navigate('/sysboard');
-    } else {
-      navigate('/task');
-    }
-  }
 
   const handleGoogleSso = (response) => {
     // console.log('Google SSO', response);
@@ -39,21 +23,27 @@ export const GoogleSsoButton = props => {
 
     onStart();
 
+    let source$;
+
     if (type === 'register') {
-      ssoGoogleRegisterOrg$(tokenId)
-        .pipe(
-          catchError(err => notify.error('Failed to register with Google')),
-          finalize(() => onEnd())
-        ).subscribe((user) => loginWithUser(user));
+      source$ = ssoGoogleRegisterOrg$(tokenId)
     } else if (type === 'login') {
-      ssoGoogleLogin$(tokenId)
-        .pipe(
-          catchError(err => notify.error('Cannot log in with Google. You might require an invitation from an organization.')),
-          finalize(() => onEnd())
-        ).subscribe(user => loginWithUser(user));
+      source$ = ssoGoogleLogin$(tokenId);
     } else {
       throw new Error(`Unsupported type ${type}`);
     }
+
+    source$
+      .pipe(
+        catchError(err => notify.error('Cannot log in with Google. You might require an invitation from an organization.')),
+        finalize(() => onEnd())
+      ).subscribe(user => {
+        if (!user) {
+          throw new Error('User is null');
+        }
+        debugger;
+        setAuthUser(user, '/landing');
+      });
 
   }
 

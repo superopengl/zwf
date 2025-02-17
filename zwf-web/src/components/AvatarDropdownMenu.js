@@ -11,6 +11,7 @@ import TermAndConditionPage from 'pages/TermAndConditionPage';
 import PrivacyPolicyPage from 'pages/PrivacyPolicyPage';
 import { QuestionCircleFilled } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { useRole } from 'hooks/useRole';
 
 const {Text} = Typography;
 const ChangePasswordModal = loadable(() => import('components/ChangePasswordModal'));
@@ -25,7 +26,8 @@ export const AvatarDropdownMenu = React.memo(props => {
   const [orgProfileVisible, setOrgProfileVisible] = React.useState(false);
   const navigate = useNavigate();
   const [modal, contextHolder] = Modal.useModal();
-  const [user, role, setAuthUser] = useAuthUser();
+  const [user, setAuthUser] = useAuthUser();
+  const role = useRole();
 
   const { email, avatarFileId, loginType } = user ?? {};
 
@@ -49,8 +51,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       autoFocusButton: 'cancel',
       onOk: () => {
         logout$().subscribe(() => {
-          setAuthUser(null);
-          goToHomePage();
+          setAuthUser(null, '/');
         });
       },
       cancelButtonProps: {

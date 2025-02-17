@@ -22,6 +22,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { useAssertUser } from 'hooks/useAssertUser';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useRole } from 'hooks/useRole';
+import { useAssertOrgHasOnBoard } from 'hooks/useAssertOrgHasOnBoard';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -158,18 +159,13 @@ const FooterMenuItem = props => {
 export const AppLoggedInPage = React.memo(() => {
   useAssertRole(['client', 'agent', 'admin', 'system'])
   useAssertUser(user => user?.suspended !== true)
+  useAssertOrgHasOnBoard();
 
   const [user] = useAuthUser();
   const role = useRole();
 
   const [pathname, setPathname] = React.useState(role === 'system' ? '/sysboard' : '/task');
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    if (role === 'admin' && !user.orgId) {
-      navigate('/onboard')
-    }
-  }, []);
 
   const routes = React.useMemo(() => ROUTES.map(g => ({
     ...g,

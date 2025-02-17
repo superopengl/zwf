@@ -60,7 +60,6 @@ const ActivateAccountPage = props => {
         setAuthUser(user);
         notify.success('Successfully set password');
         // navigate('/login' + (r ? `?r=${encodeURIComponent(r)}` : ''));
-        navigate('/task');
       });
   }
 
