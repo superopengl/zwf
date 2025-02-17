@@ -46,8 +46,8 @@ export const notify = {
   info(title, content = null, duration = 5) {
     return request('info', title, content, duration);
   },
-  warn(title, content = null, duration = 5) {
-    return request('warn', title, content, duration);
+  warning(title, content = null, duration = 5) {
+    return request('warning', title, content, duration);
   }
 }
 
