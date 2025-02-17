@@ -110,8 +110,6 @@ export const App = React.memo(() => {
     </Row>
   }
 
-  debugger;
-  
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/">
