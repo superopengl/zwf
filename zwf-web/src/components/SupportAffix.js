@@ -24,6 +24,20 @@ width: 400px;
 .ant-card-head-title {
   font-weight: normal !important;
 }
+
+.ant-card-head-wrapper {
+  align-items: start;
+
+  .ant-typography {
+    color: #FFFFFFDD;
+  }
+  .ant-card-extra {
+    margin-top: 21px;
+    .anticon {
+      color: #FFFFFFDD;
+    }
+  }
+}
 `;
 
 export const SupportAffix = () => {
@@ -134,9 +148,10 @@ export const SupportAffix = () => {
     {chatOpen && <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 900 }}>
       <Space direction="vertical" style={{ alignItems: 'flex-end' }} size="large" >
         <StyledCard
+          // title="Contact support"
           title={<>
-            <Title>👋 {cheerName}</Title>
-            <Paragraph type="secondary" style={{ color: '#FFFFFF' }}>
+            <Title level={2}>Chat with support</Title>
+            <Paragraph>
               Ask us anything, or share your feedback.
             </Paragraph>
           </>}

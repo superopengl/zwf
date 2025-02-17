@@ -3,6 +3,7 @@ import { Button, Form, Input } from 'antd';
 import { finalize } from 'rxjs/operators';
 import PropTypes from 'prop-types';
 import { RichTextInput } from './RichTextInput';
+import { EnterOutlined } from '@ant-design/icons';
 
 export const SupportMessageInput = React.memo(props => {
   const { loading: propLoading, onSubmit } = props;
@@ -33,13 +34,15 @@ export const SupportMessageInput = React.memo(props => {
     });
   };
 
-  const handlePressEnter = () => {
-    form.submit();
+  const handlePressEnter = (e) => {
+    if(!e.shiftKey) {
+      form.submit();
+    }
   }
 
   return <Form form={form} onFinish={handleSubmit} style={{ padding: '10px 16px 0' }}>
-    <Form.Item name="message" rules={[{ required: true, message: ' '}]}>
-      {/* <Input.TextArea
+    <Form.Item name="message" rules={[{ required: true, message: ' '}]} extra="Enter to submit. Shift + Enter for link breaks">
+      <Input.TextArea
         autoSize={{ minRows: 3 }}
         allowClear={true}
         showCount
@@ -49,8 +52,8 @@ export const SupportMessageInput = React.memo(props => {
         disabled={loading}
         placeholder="Feedback, bug report, feature request..."
         onPressEnter={handlePressEnter}
-      /> */}
-      <RichTextInput
+      />
+      {/* <RichTextInput
         placeholder="Feedback, bug report, feature request..."
         editorConfig={{
           height: '200px',
@@ -61,10 +64,10 @@ export const SupportMessageInput = React.memo(props => {
           contextmenu: false,
           // a11y_advanced_options: true,
         }}
-      />
+      /> */}
     </Form.Item>
     <Form.Item>
-      <Button block type="primary" htmlType="submit" disabled={loading}>Submit</Button>
+      <Button block type="primary" ghost htmlType="submit" disabled={loading}>Submit <EnterOutlined/></Button>
     </Form.Item>
   </Form>
 
