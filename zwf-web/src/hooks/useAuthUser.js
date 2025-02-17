@@ -10,20 +10,17 @@ const { Paragraph } = Typography;
 export const useAuthUser = () => {
   const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
-  const [shouldNavigate, setShouldNavigate] = React.useState(false);
   const routePathRef = React.useRef(null);
   const { setUser } = context;
 
   React.useEffect(() => {
     if (routePathRef.current) {
       navigate(routePathRef.current);
-      routePathRef.current = null;
     }
   }, [routePathRef.current]);
 
   const setAuthUser = (updatedUser, pathAfter = null) => {
     routePathRef.current = pathAfter ?? null;
-    setShouldNavigate(true);
 
     if (updatedUser) {
       const { suspended } = updatedUser;
