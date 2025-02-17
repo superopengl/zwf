@@ -90,7 +90,6 @@ export const TaskTemplateBuilder = React.forwardRef((props, ref) => {
             required: true,
             message: 'Please add fields'
             // validator: async (rule, value, callback) => {
-            //   debugger
             //   if (!checkRequiredFields(value)) {
             //     throw new Error(
             //       'All fields are required.'

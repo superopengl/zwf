@@ -43,11 +43,6 @@ export const AutoDocInput = (props) => {
 
   const isClient = role === 'client';
 
-  // React.useEffect(() => {
-  //   const allFields = form.getFieldsValue();
-  //   debugger;
-  // });
-
   React.useEffect(() => {
     if (docTemplateId) {
       const sub$ = getDocTemplate$(docTemplateId)
