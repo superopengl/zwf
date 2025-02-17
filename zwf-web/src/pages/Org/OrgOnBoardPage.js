@@ -42,7 +42,7 @@ const OrgOnBoardPage = (props) => {
 
   const handleAfterOrgCreated = () => {
     getAuthUser$().subscribe((user) => {
-      setAuthUser(user, '/task');
+      setAuthUser(user, '/landing');
     });
   }
 
