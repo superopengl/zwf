@@ -8,7 +8,7 @@ import smoothscroll from 'smoothscroll-polyfill';
 import { Outlet } from 'react-router-dom';
 import { Tabs } from 'antd';
 import { useOrgRegisterModal } from 'hooks/useOrgRegisterModal';
-import { CloseOutlined, MenuOutlined } from '@ant-design/icons';
+import { CloseOutlined, MenuOutlined, RightOutlined } from '@ant-design/icons';
 import { Drawer } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useRole } from 'hooks/useRole';
@@ -117,7 +117,7 @@ export const PortalPage = () => {
           </Col>}
           {!isGuest && !beingSuspended && <Col>
             <Link to="/landing">
-              <Button type="primary">Go to App</Button>
+              <Button type="primary">Go to App <RightOutlined/></Button>
             </Link>
           </Col>}
           {!(screens.xxl || screens.xl || screens.lg) && <Col>
@@ -146,7 +146,7 @@ export const PortalPage = () => {
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
           {isGuest && <Button type="primary" block size="large" onClick={handleShowRegisterModal}>Try it Now</Button>}
           {isGuest && <Button type="link" block size="large" onClick={() => handleMenuChange('/login')}>Login</Button>}
-          {!isGuest && !beingSuspended && <Button type="primary" block size="large" onClick={() => handleMenuChange('/landing')}>Go to App</Button>}
+          {!isGuest && !beingSuspended && <Button type="primary" block size="large" onClick={() => handleMenuChange('/landing')}>Go to App <RightOutlined/></Button>}
         </Space>
       }
     >
