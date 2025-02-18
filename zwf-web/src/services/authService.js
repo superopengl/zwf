@@ -6,7 +6,7 @@ export function login$(name, password) {
 }
 
 export function signUpOrg$(email) {
-  return httpPost$(`auth/signup/org`, {email});
+  return httpPost$(`auth/signup/org`, { email });
 }
 
 export function forgotPassword$(email, returnUrl) {
@@ -29,8 +29,15 @@ export function getAuthUser$() {
   return httpGet$(`auth/user`);
 }
 
-export function impersonate$(email) {
-  return httpPost$(`auth/impersonate`, { email });
+export function impersonate$(id) {
+  if (!id) {
+    throw new Error(`ID not specified`);
+  }
+  return httpPost$(`auth/impersonate`, { id });
+}
+
+export function unimpersonate$() {
+  return httpPost$(`auth/unimpersonate`);
 }
 
 export function inviteMember$(emails) {

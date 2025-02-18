@@ -16,13 +16,17 @@ export const COOKIE_OPTIONS = {
   secure: isProd ? true : undefined,
 };
 
-export function attachJwtCookie(user: UserInformation, res) {
+export function attachJwtCookie(user: UserInformation, res, impersonatedBy: string = null) {
   assert(user.id, 500, 'User has no id');
   const payload = sanitizeUser(user);
   payload.expires = moment(getUtcNow()).add(30, 'minutes').toDate();
+  if(impersonatedBy) {
+    payload.impersonatedBy = impersonatedBy;
+  }
 
   const token = jwt.sign(payload, JwtSecret);
 
+  clearJwtCookie(res);
   res.cookie(cookieName, token, {
     ...COOKIE_OPTIONS,
     maxAge: 1000 * 60 * 60 * 24, // 24 hours

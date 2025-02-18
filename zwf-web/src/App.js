@@ -21,6 +21,7 @@ import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { Error404 } from 'pages/Error404';
 import { LandingPage } from 'pages/LandingPage';
+import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
 
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));

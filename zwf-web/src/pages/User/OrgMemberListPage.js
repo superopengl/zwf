@@ -18,6 +18,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Loading } from 'components/Loading';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { useLocalstorageState } from 'rooks';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -37,8 +38,9 @@ const OrgMemberListPage = () => {
   const [modalVisible, setModalVisible] = React.useState(false);
   const [paymentLoading, setPaymentLoading] = React.useState(false);
   const [inviteVisible, setInviteVisible] = React.useState(false);
-  const [user] = useAuthUser();
+  const [user, setAuthUser] = useAuthUser();
   const [modal, contextHolder] = Modal.useModal();
+  const [impersonated, setImpersonated] = useLocalstorageState('impersonated');
 
   const columnDef = [
     {
@@ -84,10 +86,10 @@ const OrgMemberListPage = () => {
                 menu: 'Set password',
                 onClick: () => openSetPasswordModal(item)
               } : null,
-              {
-                menu: 'Impersonate',
-                onClick: () => handleImpersonante(item)
-              },
+              // {
+              //   menu: 'Impersonate',
+              //   onClick: () => handleImpersonante(item)
+              // },
               {
                 menu: 'Resend invite',
                 onClick: () => handleResendInvite(item)
@@ -148,10 +150,12 @@ const OrgMemberListPage = () => {
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
-        impersonate$(item.email)
-          .subscribe(() => {
-            reactLocalStorage.clear();
-            window.location = '/';
+        impersonate$(item.id)
+          .subscribe(impersonatedUser => {
+            setAuthUser(impersonatedUser, '/landing');
+            setImpersonated(true);
+            // reactLocalStorage.clear();
+            // window.location = '/';
           });
       },
       cancelButtonProps: {

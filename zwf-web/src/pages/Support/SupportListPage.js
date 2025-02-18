@@ -32,6 +32,7 @@ import { ClickToCopyTooltip } from 'components/ClickToCopyTooltip';
 import { BsKeyFill } from 'react-icons/bs';
 import { HiOutlineKey } from 'react-icons/hi';
 import { IoKeyOutline } from 'react-icons/io5';
+import { useAuthUser } from 'hooks/useAuthUser';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -88,8 +89,10 @@ const SupportListPage = () => {
   const [currentUser, setCurrentUser] = React.useState();
   const [list, setList] = React.useState([]);
   const eventSource$ = React.useRef(new Subject());
+  const [user, setAuthUser] = useAuthUser();
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
   const [modal, contextHolder] = Modal.useModal();
+  const [impersonated, setImpersonated] = useLocalstorageState('impersonated');
 
   const columnDef = [
     {
@@ -280,10 +283,12 @@ const SupportListPage = () => {
       okText: 'Yes, impersonate',
       maskClosable: true,
       onOk: () => {
-        impersonate$(user.email)
-          .subscribe(() => {
-            reactLocalStorage.clear();
-            window.location = '/';
+        impersonate$(user.userId)
+          .subscribe(impersonatedUser => {
+            setAuthUser(impersonatedUser, '/landing');
+            setImpersonated(true);
+            // reactLocalStorage.clear();
+            // window.location = '/';
           });
       }
     })
