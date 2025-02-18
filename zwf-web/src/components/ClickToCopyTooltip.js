@@ -15,8 +15,8 @@ const Container = styled.div`
 
 export const ClickToCopyTooltip = React.memo((props) => {
 
-  const { value } = props;
-  const MESSAGE_BEFORE_COPY = 'Click to copy to clipboard';
+  const { name, value } = props;
+  const MESSAGE_BEFORE_COPY = 'Click to copy';
   const MESSAGE_AFTER_COPY = 'Copied';
 
   const [tipMessage, setTipMessage] = React.useState(MESSAGE_BEFORE_COPY);
@@ -33,8 +33,10 @@ export const ClickToCopyTooltip = React.memo((props) => {
     }
   }
 
+  const title = name ? <>{tipMessage} {name}</> : tipMessage;
+
   return (
-    <Tooltip title={tipMessage} onVisibleChange={handleTipVisibleChange}>
+    <Tooltip title={title} onOpenChange={handleTipVisibleChange}>
       <CopyToClipboard text={value} onCopy={handleCopied}>
         <Container>
           {props.children}
@@ -46,6 +48,7 @@ export const ClickToCopyTooltip = React.memo((props) => {
 
 ClickToCopyTooltip.propTypes = {
   value: PropTypes.string,
+  name: PropTypes.string,
 };
 
 ClickToCopyTooltip.defaultProps = {
