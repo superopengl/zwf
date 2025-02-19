@@ -4,7 +4,6 @@ import { useAuthUser } from 'hooks/useAuthUser';
 import { ExportOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { unimpersonate$ } from 'services/authService';
-import { useLocalstorageState } from 'rooks';
 
 const StyledFloatButton = styled(FloatButton)`
 top: 0;
@@ -36,12 +35,12 @@ z-index: 300;
 
 export const UnimpersonatedFloatButton = () => {
   const [user, setAuthUser] = useAuthUser();
-  const [impersonated, setImpersonated] = useLocalstorageState('impersonated');
 
+  const impersonated = user?.impersonatedBy;
+  
   const handleUmimpersonate = () => {
     unimpersonate$().subscribe(user => {
       setAuthUser(user, '/landing');
-      setImpersonated();
     })
   }
 

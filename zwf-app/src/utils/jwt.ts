@@ -4,10 +4,11 @@ import * as jwt from 'jsonwebtoken';
 import { getUtcNow } from './getUtcNow';
 import * as moment from 'moment';
 import { assert } from './assert';
-import { sanitizeUser } from './sanitizeUser';
+import { sanitizeUserForCookie } from './sanitizeUserForCookie';
 
 const cookieName = 'jwt';
 const isProd = process.env.NODE_ENV === 'prod';
+export const JwtSecret = 'zeeworkflow.com';
 
 export const COOKIE_OPTIONS = {
   httpOnly: true,
@@ -16,13 +17,11 @@ export const COOKIE_OPTIONS = {
   secure: isProd ? true : undefined,
 };
 
-export function attachJwtCookie(user: UserInformation, res, impersonatedBy: string = null) {
+export function attachJwtCookie(res, user: UserInformation) {
   assert(user.id, 500, 'User has no id');
-  const payload = sanitizeUser(user);
+  const payload = sanitizeUserForCookie(user)
   payload.expires = moment(getUtcNow()).add(30, 'minutes').toDate();
-  if(impersonatedBy) {
-    payload.impersonatedBy = impersonatedBy;
-  }
+
 
   const token = jwt.sign(payload, JwtSecret);
 
@@ -33,8 +32,6 @@ export function attachJwtCookie(user: UserInformation, res, impersonatedBy: stri
     expires: moment(getUtcNow()).add(24, 'hours').toDate(),
   });
 }
-
-export const JwtSecret = 'zeeworkflow.com';
 
 export function verifyJwtFromCookie(req) {
   const token = req.cookies[cookieName];
@@ -47,6 +44,18 @@ export function verifyJwtFromCookie(req) {
 
   return user;
 }
+
+export function nudgeJwtCookie(req, res) {
+  const token = req.cookies[cookieName];
+
+  clearJwtCookie(res);
+  res.cookie(cookieName, token, {
+    ...COOKIE_OPTIONS,
+    maxAge: 1000 * 60 * 60 * 24, // 24 hours
+    expires: moment(getUtcNow()).add(24, 'hours').toDate(),
+  });
+}
+
 
 export function clearJwtCookie(res) {
   res.clearCookie(cookieName, COOKIE_OPTIONS);

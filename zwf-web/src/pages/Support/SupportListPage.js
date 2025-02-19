@@ -12,7 +12,6 @@ import {
 import { Space } from 'antd';
 import { impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
-import { reactLocalStorage } from 'reactjs-localstorage';
 import { HighlightingText } from 'components/HighlightingText';
 import DropdownMenu from 'components/DropdownMenu';
 import { subscribeSupportMessage, searchUserSupports$ } from 'services/supportService';
@@ -92,7 +91,6 @@ const SupportListPage = () => {
   const [user, setAuthUser] = useAuthUser();
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
   const [modal, contextHolder] = Modal.useModal();
-  const [impersonated, setImpersonated] = useLocalstorageState('impersonated');
 
   const columnDef = [
     {
@@ -286,7 +284,6 @@ const SupportListPage = () => {
         impersonate$(user.userId)
           .subscribe(impersonatedUser => {
             setAuthUser(impersonatedUser, '/landing');
-            setImpersonated(true);
             // reactLocalStorage.clear();
             // window.location = '/';
           });

@@ -18,7 +18,6 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Loading } from 'components/Loading';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { useLocalstorageState } from 'rooks';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -40,7 +39,6 @@ const OrgMemberListPage = () => {
   const [inviteVisible, setInviteVisible] = React.useState(false);
   const [user, setAuthUser] = useAuthUser();
   const [modal, contextHolder] = Modal.useModal();
-  const [impersonated, setImpersonated] = useLocalstorageState('impersonated');
 
   const columnDef = [
     {
@@ -153,7 +151,6 @@ const OrgMemberListPage = () => {
         impersonate$(item.id)
           .subscribe(impersonatedUser => {
             setAuthUser(impersonatedUser, '/landing');
-            setImpersonated(true);
             // reactLocalStorage.clear();
             // window.location = '/';
           });
