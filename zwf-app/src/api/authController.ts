@@ -34,17 +34,17 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
   let { user } = (req as any);
+  clearJwtCookie(res);
+
   if (user) {
     const email = user.email;
     user = await getActiveUserInformation(email);
-    if (!user || user.suspended) {
-      clearJwtCookie(res);
-      user = null;
-    } else {
+    if (user.suspended) {
       attachJwtCookie(user, res);
+      user = null;
     }
   }
-  res.json(user || null);
+  res.json(user);
 });
 
 export const login = handlerWrapper(async (req, res) => {

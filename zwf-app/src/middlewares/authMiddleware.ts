@@ -8,7 +8,7 @@ export const authMiddleware = async (req, res, next) => {
 
   try {
     let user = verifyJwtFromCookie(req);
-
+    
     if (user) {
       // Logged in users
       const { expires } = user;
@@ -19,11 +19,17 @@ export const authMiddleware = async (req, res, next) => {
           // User not existing anymore
           clearJwtCookie(res);
           res.sendStatus(401);
+          res.send(`Session timeout`);
           return;
+        } else if (existingUser.suspended) {
+          clearJwtCookie(res);
+          res.sendStatus(423);
+          res.send(`The organization has been suspended. Please get in touch with your organization's owner to request for it to be unlocked.`);
+          return;
+        } else {
+          user = existingUser;
+          attachJwtCookie(user, res);
         }
-
-        user = existingUser;
-        attachJwtCookie(user, res);
       }
 
       nudgeUser(user.id);
@@ -31,7 +37,7 @@ export const authMiddleware = async (req, res, next) => {
     } else {
       // Guest user (hasn't logged in)
       // req.user = null;
-      // clearJwtCookie(res);
+      clearJwtCookie(res);
     }
   } catch {
     clearJwtCookie(res);
