@@ -8,7 +8,7 @@
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          You are invited and to be served by the orgnization <strong>{{org}}</strong> in ZeeWorkflow. Orgnization <strong>{{org}}</strong> will contact you in near future when necessary.
+          You have been invited to join and receive services from the organization <strong>{{org}}</strong> in ZeeWorkflow. Orgnization <strong>{{org}}</strong> will contact you in the near future if necessary.
         </mj-text>
       </mj-column>
     </mj-section>
