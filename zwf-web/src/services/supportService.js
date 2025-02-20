@@ -28,9 +28,3 @@ export function subscribeSupportMessage() {
 export function getUserSupport$(userId) {
   return httpGet$(`/support/${userId}`);
 }
-
-export function subscribeUserSupportMessage(userId) {
-  const url = `${API_BASE_URL}/support/${userId}/sse`;
-  const es = new EventSource(url, { withCredentials: true });
-  return es;
-}
