@@ -294,17 +294,16 @@ const OrgMemberListPage = () => {
       // width={500}
       >
         <Paragraph>System will send an invitation to the email address if the email address hasn't signed up before.</Paragraph>
-        {/* <Paragraph>Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"</Paragraph> */}
         <Loading loading={loading} >
           <Form layout="vertical"
             onFinish={handleInviteUser}
             requiredMark={false}
           >
             <Form.Item label=""
-              extra='Multiple email addresses can be splitted by comma, like "andy@zeeworkflow.com, bob@zeeworkflow.com"'
+              extra='Multiple email addresses can be splitted by comma or line-break'
               name="emails" rules={[{ required: true, whitespace: true, max: 1000 }]}>
-              <Input.TextArea placeholder="andy@zeeworkflow.com, bob@zeeworkflow.com"
-                autoSize={{ minRows: 3 }}
+              <Input.TextArea placeholder={`andy@zeeworkflow.com\nbob@zeeworkflow.com`}
+                autoSize={{ minRows: 5 }}
                 autoComplete="email"
                 allowClear={true}
                 maxLength="1000"
