@@ -11,6 +11,17 @@ definitions:
   PingResponse:
     type: "object"
 paths:
+  /notification:
+    get:
+      operationId: getMyNotificationMessages
+      responses:
+        200:
+          description: OK
+    post:
+      operationId: reactOnNotificationMessage
+      responses:
+        200:
+          description: OK
   /support:
     get:
       operationId: getMySupport
