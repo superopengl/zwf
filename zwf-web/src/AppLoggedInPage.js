@@ -25,6 +25,7 @@ import { useRole } from 'hooks/useRole';
 import { useAssertOrgHasOnBoard } from 'hooks/useAssertOrgHasOnBoard';
 import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
 import { useDocumentTitle } from 'hooks/useDocumentTitle';
+import { NotificationButton } from 'components/NotificationButton';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -181,7 +182,7 @@ export const AppLoggedInPage = React.memo(() => {
     return null;
   }
 
-  const canCreateNew = role === 'admin' || role === 'agent';
+  const canCreateNew = false && role === 'admin' || role === 'agent';
   const isSystem = role === 'system';
   const isAdmin = role === 'admin';
 
@@ -198,10 +199,11 @@ export const AppLoggedInPage = React.memo(() => {
       logo={<Image src="/images/logo-full-primary.png" preview={false} width={150} onClick={() => navigate('/')} />}
       title={"ZeeWorkflow"}
       actionsRender={() => [
-        canCreateNew ? <Space key="search">
+        canCreateNew ? <Space key="search" size="large">
           <SmartSearch />
           <CreateNewButton />
         </Space> : null,
+        <NotificationButton key="notification"/>,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
       headerTitleRender={() => {
