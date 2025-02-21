@@ -28,7 +28,8 @@ import { FieldEditPanel } from './FieldEditPanel';
 import { useAssertRole } from 'hooks/useAssertRole';
 
 const Container = styled.div`
-max-width: 1000px;
+min-width: 800px;
+max-width: 1200px;
 width: 100%;
 margin: 0 auto;
 
