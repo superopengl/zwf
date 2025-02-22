@@ -13,13 +13,17 @@ import { switchMap } from 'rxjs';
 import { useAddPaymentMethodModal } from 'hooks/useAddPaymentMethodModal';
 import Visa from "react-pay-icons/lib/Visa";
 import Mastercard from "react-pay-icons/lib/Mastercard";
-
+import { CheckCard } from '@ant-design/pro-components';
 const { Text, Paragraph } = Typography;
 
 const Container = styled.div`
 width: 100%;
 display: flex;
 justify-content: center;
+
+.ant-pro-checkcard {
+  background-color: white;
+}
 `
 
 const StyledList = styled(List)`
@@ -67,7 +71,8 @@ export const OrgPaymentMethodPanel = () => {
     });
   }
 
-  const handleDelete = (item) => {
+  const handleDelete = (e, item) => {
+    e.stopPropagation();
     modal.confirm({
       title: 'Remove payment method',
       content: <>Delete card <Text code>{item.cardLast4}</Text>?</>,
@@ -89,6 +94,7 @@ export const OrgPaymentMethodPanel = () => {
   }
 
   const handleSetPrimary = (item) => {
+    if (item.primary) return;
     modal.confirm({
       title: 'Set primary payment method',
       content: <>Set card <Text code>{item.cardLast4}</Text> as primary payment method for future payment?</>,
@@ -125,33 +131,36 @@ export const OrgPaymentMethodPanel = () => {
           </>
         }}
         renderItem={item => <List.Item>
-          <ProCard
+          <CheckCard
+            size="large"
             title={<Text strong={item.primary} style={{ fontSize: 18 }}>
               **** **** **** {item.cardLast4}
             </Text>}
             // subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
             style={{ borderColor: item.primary ? '#0FBFC4' : undefined }}
+            checked={item.primary}
             bordered
+            onClick={() => handleSetPrimary(item)}
             extra={item.primary ? [
               <Tag key="tag" color="#0FBFC4">Primary</Tag>
             ] : [
-              <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,
-              <Button key="delete" type="text" danger onClick={() => handleDelete(item)} size="small">Remove</Button>
+              // <Button key="primary" type="link" onClick={() => handleSetPrimary(item)} size="small">Use this</Button>,
+              <Button key="delete" type="text" danger onClick={(e) => handleDelete(e, item)} size="small" icon={<CloseOutlined />}>Delete</Button>
             ]}
-          >
-            <Row wrap={false} justify="space-between" align="top">
+            description={<Row wrap={false} justify="space-between" align="top">
               <Col>
                 <Descriptions colon={false}>
                   <Descriptions.Item label="Expiry">{item.cardExpiry}</Descriptions.Item>
                 </Descriptions>
               </Col>
               <Col>
-                {item.cardBrand === 'visa' ? <Visa style={{ marginRight: 8, width: 60 }} /> :
-                  item.cardBrand === 'master' ? <Mastercard style={{ marginRight: 8, width: 60 }} /> :
+                {item.cardBrand === 'visa' ? <Visa style={{ width: 60, marginRight: 8 }} /> :
+                  item.cardBrand === 'master' ? <Mastercard style={{ width: 60, marginRight: 8 }} /> :
                     item.cardBrand}
               </Col>
-            </Row>
-          </ProCard>
+            </Row>}
+          />
+
         </List.Item>}
       />
       <>{contextHolder}</>
