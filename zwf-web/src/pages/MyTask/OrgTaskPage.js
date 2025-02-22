@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip, Form } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
 import { catchError } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -22,6 +22,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { TaskFileUploader } from 'components/TaskFileUploader';
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -187,6 +188,11 @@ const OrgTaskPage = React.memo((props) => {
               </Col>
               <Col span={24}>
                 <ProCard title="Attachments">
+                  <Form>
+                    <Form.Item label="" name="files">
+                      <TaskFileUploader taskId={task.id}/>
+                    </Form.Item>
+                  </Form>
                 </ProCard>
               </Col>
             </Row>

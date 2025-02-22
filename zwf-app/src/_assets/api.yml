@@ -881,11 +881,11 @@ paths:
       responses:
         200:
           description: OK      
-  /task/field/{fieldId}/file:
+  /task/{taskId}/file:
     post:
-      operationId: uploadTaskFieldFile
+      operationId: uploadTaskFile
       parameters:
-        - name: fieldId
+        - name: taskId
           in: path
           type: string
           format: uuid

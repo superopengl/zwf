@@ -104,12 +104,12 @@ const FileIconWithOverlay = props => {
 }
 
 export const TaskFileUploader = React.memo((props) => {
-  const { value, fieldId, size, disabled, showsLastReadAt, showsSignedAt, onChange } = props;
+  const { value, taskId, size, disabled, showsLastReadAt, showsSignedAt, onChange } = props;
 
   const [fileList, setFileList] = React.useState([]);
   const [loading, setLoading] = React.useState(false);
 
-  const isPreviewMode = !fieldId;
+  const isPreviewMode = !taskId;
   const maxSize = size || 30;
 
   React.useEffect(() => {
@@ -173,7 +173,7 @@ export const TaskFileUploader = React.memo((props) => {
         />)}
         {!disabled && <Dragger
           multiple={true}
-          action={`${API_BASE_URL}/task/field/${fieldId}/file`}
+          action={`${API_BASE_URL}/task/${taskId}/file`}
           withCredentials={true}
           accept="*/*"
           listType="text"
@@ -206,7 +206,7 @@ TaskFileUploader.propTypes = {
     fileId: PropTypes.string,
     name: PropTypes.string,
   })),
-  fieldId: PropTypes.string,
+  taskId: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   onAdd: PropTypes.func,
   size: PropTypes.number,

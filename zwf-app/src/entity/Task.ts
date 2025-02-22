@@ -15,7 +15,7 @@ export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column()
+  @Column({select: false})
   @Index({ unique: true })
   deepLinkId: string;
 
@@ -31,9 +31,6 @@ export class Task {
 
   @Column()
   name: string;
-
-  @Column({ nullable: true })
-  description: string;
 
   @Column({ default: TaskStatus.TODO })
   status: TaskStatus;

@@ -20,7 +20,7 @@ export class File {
    * User ID of the uploader.
    * For auto-gen doc, it's the org ID.
    */
-  @Column('uuid', { nullable: true })
+  @Column('uuid', { nullable: true, select: false })
   createdBy?: string;
 
   @Column()
@@ -29,15 +29,15 @@ export class File {
   @Column()
   mime: string;
 
-  @Column()
+  @Column({select: false})
   location: string;
 
-  @Column()
+  @Column({select: false})
   md5: string;
 
   /**
    * True for public accessible files, like avatar files. Otherwise, false
    */
-  @Column({ default: false })
+  @Column({ default: false, select: false })
   public?: boolean;
 }

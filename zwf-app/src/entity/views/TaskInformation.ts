@@ -28,7 +28,6 @@ import { Tag } from '../Tag';
       't.id as id',
       't."deepLinkId" as "deepLinkId"',
       't.name as name',
-      't.description as description',
       // 't.fields as fields',
       't.status as status',
       't."userId" as "userId"',
@@ -55,9 +54,6 @@ import { Tag } from '../Tag';
 
   @ViewColumn()
   name: string;
-
-  @ViewColumn()
-  description: string;
 
   // @ViewColumn()
   // fields: any;
