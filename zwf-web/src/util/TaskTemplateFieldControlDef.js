@@ -170,14 +170,14 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     },
     control: ProFormDateTimePicker,
   },
-  {
-    type: 'upload',
-    label: 'Upload files',
-    icon: <BsCloudUpload />,
-    fieldProps: {
-    },
-    control: TaskFileUploader,
-  },
+  // {
+  //   type: 'upload',
+  //   label: 'Upload files',
+  //   icon: <BsCloudUpload />,
+  //   fieldProps: {
+  //   },
+  //   control: TaskFileUploader,
+  // },
   {
     type: 'divider',
     label: 'Divider',
