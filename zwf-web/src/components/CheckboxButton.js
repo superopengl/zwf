@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography, Button } from 'antd';
+import { Typography, Button, Checkbox } from 'antd';
+import { BorderOutlined, CheckSquareOutlined } from '@ant-design/icons';
 
 const { Text } = Typography;
 
@@ -17,8 +18,7 @@ const CheckboxButton = (props) => {
   }
 
   return (
-    <Button type="primary" ghost={!checked} {...other} onClick={handleToggle} 
-    size="small" style={{borderRadius: 80, fontSize: 12}}>
+    <Button type="primary" ghost={!checked} {...other} onClick={handleToggle} icon={checked ?<CheckSquareOutlined /> : <BorderOutlined/> }>
       {children}
       </Button>
   );

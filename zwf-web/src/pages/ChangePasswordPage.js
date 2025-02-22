@@ -5,6 +5,7 @@ import { Layout, Typography, Input, Button, Form } from 'antd';
 import { changePassword } from 'services/userService';
 import { notify } from 'util/notify';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { useNavigate } from 'react-router-dom';
 
 const ContainerStyled = styled.div`
   margin: 4rem auto 2rem auto;
@@ -27,6 +28,13 @@ const ChangePasswordPage = props => {
   const [sending, setSending] = React.useState(false);
   const [user] = useAuthUser();
   const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    if(user.loginType !== 'local') {
+      navigate('/');
+    }
+  }, []);
 
 
   const goBack = () => {
