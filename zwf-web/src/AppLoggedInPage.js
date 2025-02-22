@@ -203,7 +203,7 @@ export const AppLoggedInPage = React.memo(() => {
           <SmartSearch />
           <CreateNewButton />
         </Space> : null,
-        <NotificationButton key="notification"/>,
+        isSystem ? null : <NotificationButton key="notification"/>,
         <AvatarDropdownMenu key="avatar" />
       ].filter(x => !!x)}
       headerTitleRender={() => {
