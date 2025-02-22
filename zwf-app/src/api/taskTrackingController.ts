@@ -155,7 +155,7 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
   const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
 
   const m = db.manager;
-  await logTaskChat(m, taskId, senderId, message);
+  await logTaskChat(m, task, senderId, message);
 
   res.json();
 });

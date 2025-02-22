@@ -63,6 +63,12 @@ paths:
       responses:
         200:
           description: OK
+  /zevent:
+    get:
+      operationId: establishZeventStream
+      responses:
+        200:
+          description: OK          
   /file/meta:
     post:
       operationId: searchFileMetaList

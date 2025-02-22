@@ -7,21 +7,32 @@ import { Task } from '../entity/Task';
 import { TaskTrackingLastAccess } from '../entity/TaskTrackingLastAccess';
 import { TaskStatus } from '../types/TaskStatus';
 import { publishEvent } from '../services/globalEventSubPubService';
+import { v4 as uuidv4 } from 'uuid';
+import { TaskInformation } from '../entity/views/TaskInformation';
 
 export const TASK_ACTIVITY_EVENT_TYPE = 'task.activity';
 
 
-async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType, taskId: string, by: string, info?: any) {
-  assert(taskId, 500);
-  const entity = new TaskTracking();
-  entity.action = action;
-  entity.taskId = taskId;
-  entity.by = by;
-  entity.info = info;
-  const result = await m.save(entity);
+async function insertNewTrackingEntity(m: EntityManager, action: TaskActionType, task: Task | TaskInformation, by: string, info?: any) {
+  assert(task, 500);
+  const tracking = new TaskTracking();
+  const {userId, orgId, id: taskId} = task;
+  tracking.id = uuidv4();
+  tracking.action = action;
+  tracking.taskId = taskId;
+  tracking.by = by;
+  tracking.info = info;
+  const result = await m.save(tracking);
   await nudgeTrackingAccess(m, taskId, by);
 
-  publishEvent(TASK_ACTIVITY_EVENT_TYPE, entity);
+  publishEvent({
+    type: 'task',
+    subtype: 'trackings',
+    userId,
+    taskId,
+    orgId,
+    payload: tracking
+  });
 
   return result;
 }
@@ -35,26 +46,22 @@ export async function nudgeTrackingAccess(m: EntityManager, taskId: string, user
     .execute();
 }
 
-export async function logTaskCreated(m: EntityManager, taskId: string, by: string) {
-  return await insertNewTrackingEntity(m, TaskActionType.Created, taskId, by);
+export async function logTaskCreated(m: EntityManager, task: Task, by: string) {
+  return await insertNewTrackingEntity(m, TaskActionType.Created, task, by);
 }
 
-export async function logTaskAssigned(m: EntityManager, taskId: string, by: string, assigneeId: string) {
-  return await insertNewTrackingEntity(m, TaskActionType.Assigned, taskId, by, assigneeId);
+export async function logTaskAssigned(m: EntityManager, task: Task, by: string, assigneeId: string) {
+  return await insertNewTrackingEntity(m, TaskActionType.Assigned, task, by, assigneeId);
 }
 
-export async function logTaskRenamed(m: EntityManager, taskId: string, by: string, newName: string) {
-  return await insertNewTrackingEntity(m, TaskActionType.Assigned, taskId, by, newName);
+export async function logTaskDocSignedByClient(m: EntityManager, task: Task, clientId: string, taskDocId: string, name: string) {
+  return await insertNewTrackingEntity(m, TaskActionType.DocSigned, task, clientId, {taskDocId, name});
 }
 
-export async function logTaskDocSignedByClient(m: EntityManager, taskId: string, clientId: string, taskDocId: string, name: string) {
-  return await insertNewTrackingEntity(m, TaskActionType.DocSigned, taskId, clientId, {taskDocId, name});
+export async function logTaskStatusChange(m: EntityManager, task: Task, by: string, oldStatus: TaskStatus, newStatus: TaskStatus) {
+  return await insertNewTrackingEntity(m, TaskActionType.StatusChange, task, by, { oldStatus, newStatus });
 }
 
-export async function logTaskStatusChange(m: EntityManager, taskId: string, by: string, oldStatus: TaskStatus, newStatus: TaskStatus) {
-  return await insertNewTrackingEntity(m, TaskActionType.StatusChange, taskId, by, { oldStatus, newStatus });
-}
-
-export async function logTaskChat(m: EntityManager, taskId: string, by: string, message: string) {
-  return await insertNewTrackingEntity(m, TaskActionType.Chat, taskId, by, message);
+export async function logTaskChat(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
+  return await insertNewTrackingEntity(m, TaskActionType.Chat, task, by, message);
 }

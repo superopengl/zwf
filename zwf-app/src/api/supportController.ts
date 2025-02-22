@@ -121,12 +121,11 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
 
   await db.manager.save(sm);
 
-  publishEvent(CONTACT_EVENT_TYPE, {
-    id: sm.id,
+  publishEvent({
+    type: 'support',
+    subtype: 'support',
     userId: sm.userId,
-    message,
-    createdAt: sm.createdAt,
-    by: sm.by,
+    payload: sm,
   });
 
   res.json();
