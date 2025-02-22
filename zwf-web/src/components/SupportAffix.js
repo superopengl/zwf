@@ -2,7 +2,7 @@ import React from 'react';
 import { Affix, Space, Button, Card, Typography, FloatButton } from 'antd';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
 import styled from 'styled-components';
-import { getMySupport$, subscribeSupportMessage, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
+import { getMySupport$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
 import { finalize, catchError } from 'rxjs/operators';
 import { SupportMessageList } from './SupportMessageList';
 import { SupportMessageInput } from './SupportMessageInput';

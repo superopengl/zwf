@@ -14,7 +14,7 @@ import { impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
 import DropdownMenu from 'components/DropdownMenu';
-import { subscribeSupportMessage, searchUserSupports$ } from 'services/supportService';
+import { searchUserSupports$ } from 'services/supportService';
 import { finalize } from 'rxjs/operators';
 import { SupportReplyDrawer } from 'components/SupportReplyDrawer';
 import { Subject } from 'rxjs';
@@ -232,29 +232,6 @@ const SupportListPage = () => {
     }
   }, [queryInfo]);
 
-
-
-
-  // // Subscribe message events
-  // React.useEffect(() => {
-  //   const es = subscribeSupportMessage();
-  //   es.onmessage = (e) => {
-  //     const event = JSON.parse(e.data);
-  //     eventSource$.current.next(event);
-  //     setList(list => {
-  //       const item = list.find(x => x.userId === event.userId);
-  //       if (item) {
-  //         item.unreadCount += event.by === event.userId ? 1 : 0;
-  //         return [...list];
-  //       }
-  //       return list;
-  //     })
-  //   }
-
-  //   return () => {
-  //     es?.close()
-  //   }
-  // }, []);
 
   const updateQueryInfo = (queryInfo) => {
     setQueryInfo(queryInfo);
