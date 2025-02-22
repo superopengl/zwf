@@ -91,19 +91,19 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
     where: {
       id: fileId,
     },
-    relations: {
-      field: isClient
-    }
+    // relations: {
+    //   field: isClient
+    // }
   });
 
   assert(file, 404);
-  await assertTaskAccess(req, file.taskId);
+  // await assertTaskAccess(req, file.taskId);
 
   if (isClient) {
-    const taskField = file.field;
-    const { value } = taskField;
-    value.lastClientReadAt = getUtcNow();
-    await db.getRepository(TaskField).save(taskField);
+    // const taskField = file.field;
+    // const { value } = taskField;
+    // value.lastClientReadAt = getUtcNow();
+    // await db.getRepository(TaskField).save(taskField);
   }
 
   streamFileToResponse(file, res);
@@ -118,35 +118,36 @@ export const signTaskFile = handlerWrapper(async (req, res) => {
       id: fileId,
     },
     relations: {
-      field: true,
-      task: true,
+      // field: true,
+      // task: true,
     }
   });
 
   const userId = getUserIdFromReq(req);
-  assert(file?.task?.userId === userId, 404);
-  assert(!file.esign, 400, 'Has been esigned');
+  // assert(file?.task?.userId === userId, 404);
+  // assert(!file.esign, 400, 'Has been esigned');
 
-  const taskField = file.field;
-  const { value, type } = taskField;
-  let fileItem;
-  if (type === 'upload') {
-    fileItem = value.find(x => x.fileId === fileId);
-  } else if (type === 'autodoc') {
-    fileItem = value;
-  } else {
-    assert(false, 400, `Invalid field type '${type}'`);
-  }
+  // const taskField = file.field;
+  // const { value, type } = taskField;
+  // let fileItem;
+  // if (type === 'upload') {
+  //   fileItem = value.find(x => x.fileId === fileId);
+  // } else if (type === 'autodoc') {
+  //   fileItem = value;
+  // } else {
+  //   assert(false, 400, `Invalid field type '${type}'`);
+  // }
 
   const now = getUtcNow();
-  file.signedBy = userId;
-  file.signedAt = now;
-  file.esign = computeTaskFileSignedHash(file.md5, userId, now);
+  // file.signedBy = userId;
+  // file.signedAt = now;
+  // file.esign = computeTaskFileSignedHash(file.md5, userId, now);
 
-  fileItem.signedAt = now;
-  await db.manager.save([file, taskField]);
+  // fileItem.signedAt = now;
+  // await db.manager.save([file, taskField]);
 
-  res.json(fileItem);
+  // res.json(fileItem);
+  res.json();
 });
 
 export const updateTaskFields = handlerWrapper(async (req, res) => {
@@ -419,8 +420,8 @@ export const uploadTaskFieldFile = handlerWrapper(async (req, res) => {
 
   const fileEntity = new File();
   fileEntity.id = fileId;
-  fileEntity.taskId = taskField.taskId;
-  fileEntity.fieldId = taskField.id;
+  // fileEntity.taskId = taskField.taskId;
+  // fileEntity.fieldId = taskField.id;
   fileEntity.fileName = name;
   fileEntity.createdBy = userId;
   fileEntity.mime = mimetype;

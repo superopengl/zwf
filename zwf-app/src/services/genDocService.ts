@@ -94,8 +94,8 @@ export async function generatePdfDocFile(m: EntityManager, docTemplate: DocTempl
   file.location = location;
   file.md5 = createHash('md5').update(pdfData).digest('hex');
   file.public = false;
-  file.usedValueBag = usedValueBag;
-  file.usedValueHash = computeObjectHash(usedValueBag);
+  // file.usedValueBag = usedValueBag;
+  // file.usedValueHash = computeObjectHash(usedValueBag);
 
   return file;
 }

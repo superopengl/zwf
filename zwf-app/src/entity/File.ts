@@ -1,5 +1,6 @@
+import { TaskDoc } from './TaskDoc';
 import { TaskField } from './TaskField';
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, ManyToOne, OneToOne } from 'typeorm';
 import { Task } from './Task';
 @Entity()
 export class File {
@@ -10,16 +11,10 @@ export class File {
   createdAt?: Date;
 
   @Column('uuid', { nullable: true })
-  taskId?: string;
+  taskDocId?: string;
 
-  @ManyToOne(() => Task, task => task.files, {onDelete: 'CASCADE', eager: false})
-  task?: Task;
-
-  @Column('uuid', { nullable: true })
-  fieldId?: string;
-
-  @ManyToOne(() => TaskField, f => f.files, {onDelete: 'CASCADE', eager: false})
-  field?: TaskField;
+  @OneToOne(() => TaskDoc, f => f.file, {onDelete: 'CASCADE', eager: false})
+  taskDoc?: TaskDoc;
 
   /**
    * User ID of the uploader.
@@ -45,25 +40,4 @@ export class File {
    */
   @Column({ default: false })
   public?: boolean;
-
-  /**
-   * Autodoc specific
-   */
-  @Column('jsonb', { nullable: true })
-  usedValueBag?: {[key: string]: any};
-
-  /**
-   * Autodoc specific
-   */
-  @Column({ nullable: true })
-  usedValueHash?: string;
-
-  @Column({ nullable: true })
-  esign?: string;
-
-  @Column({ nullable: true })
-  signedAt?: Date;
-
-  @Column({ nullable: true })
-  signedBy?: string;
 }
