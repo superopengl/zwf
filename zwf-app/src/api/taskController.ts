@@ -1,3 +1,4 @@
+import { DocTemplate } from './../entity/DocTemplate';
 import { TaskActionType } from './../types/TaskActionType';
 import { TaskTrackingInformation } from './../entity/views/TaskTrackingInformation';
 import { getUtcNow } from './../utils/getUtcNow';
@@ -445,6 +446,84 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
   res.json({
     fileId: fileId,
   });
+});
+
+export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { docTemplateIds } = req.body
+  assert(docTemplateIds?.length, 400, 'docTemplateIds is empty');
+  const userId = getUserIdFromReq(req);
+  const orgId = getOrgIdFromReq(req);
+  const { taskId } = req.params;
+
+
+  // Upload file binary to S3
+  let task:Task;
+
+  await db.transaction(async m => {
+    const docTemplates = await m.getRepository(DocTemplate).findBy({
+      id: In(docTemplateIds),
+      orgId,
+    });
+
+    if (docTemplates.length) {
+
+      const fieldCounts = await m.getRepository(TaskField).countBy({
+        taskId
+      })
+
+      const fieldsNamesToAdd = new Set<string>();
+      docTemplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
+      const taskFields = Array.from(fieldsNamesToAdd).map((n, index) => {
+        const taskField = new TaskField();
+        taskField.taskId = taskId;
+        taskField.name = n;
+        taskField.type = 'text';
+        taskField.ordinal = fieldCounts + index;
+        taskField.required = true;
+        taskField.official = false;
+        return taskField;
+      });
+
+      await m.createQueryBuilder()
+        .insert()
+        .into(TaskField)
+        .values(taskFields)
+        .orUpdate(['required', 'official'], ['taskId', 'name'])
+        .execute();
+
+      const taskDocs = docTemplates.map(t => {
+        const taskDoc = new TaskDoc();
+        taskDoc.taskId = taskId;
+        taskDoc.uploadedBy = userId;
+        taskDoc.type = 'autogen';
+        taskDoc.docTemplateId = t.id;
+        taskDoc.name = t.name;
+        taskDoc.fieldBag = t.refFieldNames.reduce((pre, curr) => {
+          pre[curr] = null;
+          return pre;
+        }, {});
+        return taskDoc;
+      })
+
+      await m.save([...taskFields, ...taskDocs]);
+    };
+
+    task = await m.getRepository(Task).findOne({
+      where: {
+        id: taskId,
+        orgId
+      },
+      relations: [
+        'fields',
+        'docs',
+        'tags',
+      ]
+    })
+
+  });
+
+  res.json(task);
 });
 
 export const getDeepLinkedTask = handlerWrapper(async (req, res) => {

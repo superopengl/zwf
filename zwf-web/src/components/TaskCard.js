@@ -41,7 +41,7 @@ export const TaskCard = (props) => {
 
   return <StyledCard
     title={<Tooltip title={name} placement="bottom"><HighlightingText value={name} search={searchText}></HighlightingText></Tooltip>}
-    extra={<TextLink onClick={e => goToTask(e, id)}><Icon component={MdOpenInNew } /></TextLink>}
+    extra={<TextLink onClick={e => goToTask(e, id)} target="_blank"><Icon component={MdOpenInNew } /></TextLink>}
     size="small"
     hoverable
     onClick={() => navigate(`/task/${id}`)}

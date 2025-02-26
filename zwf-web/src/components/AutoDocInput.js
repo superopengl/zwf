@@ -151,7 +151,7 @@ export const AutoDocInput = (props) => {
       {/* <DocTemplatePreviewPanel value={docTemplate} /> */}
       {!disabled && <small>
         <Paragraph type="secondary" style={{ margin: '4px 0 0 0' }}>
-          Depending on fields {docTemplate.refFields?.map(f => <VarTag key={f}>{f}</VarTag>)}
+          Depending on fields {docTemplate.refFieldNames?.map(f => <VarTag key={f}>{f}</VarTag>)}
         </Paragraph>
       </small>}
       {/* <em>{JSON.stringify(value, null, 2)}</em> */}

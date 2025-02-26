@@ -28,5 +28,5 @@ export class DocTemplate {
   html: string;
 
   @Column({ type: 'varchar', array: true, default: '{}' })
-  refFields: string[];
+  refFieldNames: string[];
 }

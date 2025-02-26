@@ -107,7 +107,7 @@ export const DocTemplatePreviewPanel = props => {
 DocTemplatePreviewPanel.propTypes = {
   value: PropTypes.shape({
     html: PropTypes.string.isRequired,
-    refFields: PropTypes.arrayOf(PropTypes.string),
+    refFieldNames: PropTypes.arrayOf(PropTypes.string),
   }),
   varBag: PropTypes.object,
   allowTest: PropTypes.bool,

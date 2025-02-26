@@ -37,7 +37,7 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   docTemplate.name = name;
   docTemplate.description = description;
   docTemplate.html = html;
-  docTemplate.refFields = extractVariables(html);
+  docTemplate.refFieldNames = extractVariables(html);
 
   await db.getRepository(DocTemplate).save(docTemplate);
 
@@ -59,7 +59,7 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
       id: true,
       name: true,
       description: true,
-      refFields: true,
+      refFieldNames: true,
       createdAt: true,
       updatedAt: true,
     }

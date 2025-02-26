@@ -18,7 +18,7 @@ import { DocTemplate } from '../DocTemplate';
       .groupBy('x."taskTemplateId"')
       .select([
         'x."taskTemplateId" as id',
-        `array_agg(json_build_object('id', d.id, 'name', d.name, 'refFields', d."refFields")) as docs`,
+        `array_agg(json_build_object('id', d.id, 'name', d.name, 'refFieldNames', d."refFieldNames")) as docs`,
       ])
       , 'y', 't.id = y.id')
     .select([
