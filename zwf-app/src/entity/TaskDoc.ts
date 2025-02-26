@@ -23,18 +23,6 @@ export class TaskDoc {
   @Column()
   type: 'upload' | 'autogen';
 
-  @Column({ default: false })
-  requiresSign: boolean;
-
-  @Column('uuid', { nullable: true, select: false })
-  signedBy: string;
-
-  @Column({ nullable: true })
-  signedAt: Date;
-
-  @Column({ nullable: true, select: false })
-  esign: string;
-
   @Column('uuid')
   taskId: string;
 
@@ -60,5 +48,5 @@ export class TaskDoc {
   generatedBy: string; // For 'autogen' type only
 
   @Column('jsonb', { nullable: true, select: false })
-  generatedWithFieldValues?: { [key: string]: any }; // For 'autogen' type only
+  fieldBag?: { [key: string]: any }; // For 'autogen' type only
 }
