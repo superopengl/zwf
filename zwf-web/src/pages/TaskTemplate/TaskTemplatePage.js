@@ -1,46 +1,26 @@
 import React from 'react';
-import { Row, Col, Modal, Button, Drawer, Typography, Segmented, Breadcrumb } from 'antd';
+import { Button, Drawer, Typography, Segmented } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import TaskTemplateEditorPanel from './TaskTemplateEditorPanel';
 import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
-import Icon, { EyeOutlined, LeftOutlined, SaveFilled } from '@ant-design/icons';
-import { MdOpenInNew } from 'react-icons/md';
+import { EyeOutlined, SaveFilled } from '@ant-design/icons';
 import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate$ } from 'services/taskTemplateService';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
-import { PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { TaskTemplateIcon } from 'components/entityIcon';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { of } from 'rxjs';
-import { Divider } from 'antd';
-import { createFieldItemSchema, TaskTemplateFieldControlDef, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
-import { FieldControlItem } from './FieldControlItem';
-import { DndProvider } from 'react-dnd'
-import { HTML5Backend } from 'react-dnd-html5-backend'
-import { FieldListEditable } from './FieldListEditable';
-import Field from '@ant-design/pro-field';
-import { ProCard } from '@ant-design/pro-components';
-import { Input } from 'antd';
-import { FieldEditPanel } from './FieldEditPanel';
+import { TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
 import { useAssertRole } from 'hooks/useAssertRole';
+import TaskFieldEditorPanel from './TaskFieldEditorPanel';
 
 const Container = styled.div`
 min-width: 800px;
 max-width: 1200px;
 width: 100%;
 margin: 0 auto;
-
-
-
-.field-control-column {
-
-  .ant-pro-card-col:first-child {
-    padding-inline: 0 !important;
-  }
-}
 `;
 
 const { Paragraph } = Typography;
@@ -110,13 +90,8 @@ export const TaskTemplatePage = () => {
     }
   }, [taskTemplateName])
 
-  const goBack = () => {
-    navigate('/task_template')
-  }
 
   const handleSave = () => {
-    // await formRef.current.validateFields();
-
     if (!taskTemplate.fields?.length) {
       notify.error("Cannot Save", "This form template fields not defined.")
       return;
@@ -145,22 +120,6 @@ export const TaskTemplatePage = () => {
     }
   }
 
-  const handleAddControl = (controlType, newFieldId) => {
-    setTaskTemplate(pre => {
-      const name = getUniqueNewFieldName(pre.fields, controlType);
-      const newField = createFieldItemSchema(controlType, name);
-      newField.id = newFieldId;
-
-      console.log('just added', newField);
-      return {
-        ...pre,
-        fields: [
-          ...pre?.fields,
-          newField,
-        ]
-      };
-    });
-  }
 
   const getUniqueNewFieldName = (allFields, newControlType) => {
     const existingNames = new Set(allFields.map(f => f.name));
@@ -178,18 +137,6 @@ export const TaskTemplatePage = () => {
 
   const handleFieldListChange = (fields) => {
     setTaskTemplate(pre => ({ ...pre, fields }));
-  }
-
-  const handleDescriptionChange = (e) => {
-    setTaskTemplate(pre => ({ ...pre, description: e.target.value }));
-  }
-
-  const handleChangeField = () => {
-
-  }
-
-  const handleDeleteField = () => {
-
   }
 
   return (<Container>
@@ -220,7 +167,7 @@ export const TaskTemplatePage = () => {
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}
     >
-      <DndProvider backend={HTML5Backend}>
+      {/* <DndProvider backend={HTML5Backend}>
         <ProCard gutter={[20, 20]} ghost className="field-control-column">
           <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
             {TaskTemplateFieldControlDef.map(c => <FieldControlItem
@@ -242,10 +189,10 @@ export const TaskTemplatePage = () => {
             <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
           </ProCard>
           <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
-            {/* <FieldEditPanel field={currentField} onChange={handleChangeField} onDelete={handleDeleteField} /> */}
           </ProCard>
         </ProCard>
-      </DndProvider>
+      </DndProvider> */}
+      <TaskFieldEditorPanel fields={taskTemplate?.fields ?? []} onChange={handleFieldListChange} />
       <Drawer
         title="Preview"
         closable
