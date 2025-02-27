@@ -893,6 +893,42 @@ paths:
       responses:
         200:
           description: OK     
+  /task/doc/{docId}:
+    delete:
+      operationId: deleteTaskDoc
+      parameters: 
+        - name: docId
+          in: path
+          type: string
+          format: uuid
+          required: true              
+      responses:
+        200:
+          description: OK               
+  /task/doc/{docId}/request_sign:
+    post:
+      operationId: requestSignTaskDoc
+      parameters:
+        - name: docId
+          in: path
+          type: string
+          format: uuid
+          required: true                   
+      responses:
+        200:
+          description: OK       
+  /task/doc/{docId}/unrequest_sign:
+    post:
+      operationId: unrequestSignTaskDoc
+      parameters:
+        - name: docId
+          in: path
+          type: string
+          format: uuid
+          required: true                   
+      responses:
+        200:
+          description: OK                       
   /task/{taskId}/doc_template:
     post:
       operationId: addDocTemplateToTask

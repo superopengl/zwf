@@ -1,4 +1,3 @@
-import { TaskDocSign } from './entity/TaskDocSign';
 import { TaskDoc } from './entity/TaskDoc';
 import { LicenseTicket } from './entity/LicenseTicket';
 import { RecurringInformation } from './entity/views/RecurringInformation';
@@ -188,7 +187,6 @@ export const db = new DataSource({
     Task,
     TaskField,
     TaskDoc,
-    TaskDocSign,
     File,
     TaskTemplate,
     DocTemplate,

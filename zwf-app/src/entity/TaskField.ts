@@ -9,7 +9,7 @@ export class TaskField {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column('uuid')
+  @Column('uuid', { select: false })
   taskId: string;
 
   @ManyToOne(() => Task, task => task.fields, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
@@ -30,13 +30,13 @@ export class TaskField {
   @Column('int')
   ordinal: number;
 
-  @CreateDateColumn()
+  @CreateDateColumn({ select: false })
   createdAt: Date;
 
-  @UpdateDateColumn()
+  @UpdateDateColumn({ select: false })
   updatedAt: Date;
 
-  @Column('uuid', { nullable: true })
+  @Column('uuid', { nullable: true, select: false })
   updatedBy: string;
 
   @Column({ default: false })

@@ -23,7 +23,7 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { TaskFileUploader } from 'components/TaskFileUploader';
-import { useAddTaskDocModal } from './useAddTaskDocModal';
+import { TaskDocListPanel } from 'components/TaskDocListPanel';
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -69,7 +69,6 @@ const OrgTaskPage = React.memo((props) => {
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
-  const [openAddDoc, docContextHolder] = useAddTaskDocModal();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -197,15 +196,9 @@ const OrgTaskPage = React.memo((props) => {
                   </Collapse>
                 </ProCard>
               </Col>
-              <Col span={24}>
-                <ProCard title="Attachments" extra={<Button icon={<PlusOutlined />} type="link" onClick={() => openAddDoc({onChange: handleAddDocTemplates})}>Add</Button>}>
-                  <Form initialValues={task.docs}>
-                    <Form.Item label="" name="files">
-                      <TaskFileUploader taskId={task.id} />
-                    </Form.Item>
-                  </Form>
-                </ProCard>
-              </Col>
+              {task && <Col span={24}>
+                  <TaskDocListPanel task={task} />
+              </Col>}
             </Row>
           </Col>
         </Row>
@@ -222,7 +215,6 @@ const OrgTaskPage = React.memo((props) => {
         onCancel={() => setEditFieldVisible(false)}
       />}
       {saving && <SavingAffix />}
-      {docContextHolder}
     </ContainerStyled>
   </>
   );

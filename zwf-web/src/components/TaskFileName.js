@@ -26,21 +26,26 @@ const StyledFileIcon = styled.div`
 
 export const TaskFileName = props => {
   const { taskFile } = props;
-  const { name, docTemplateId, fileId, signedAt, requiresSign } = taskFile
+  
+  const { name, fileId, signedAt, requiresSign } = taskFile
 
   let iconType = 'default';
   if (signedAt) {
     iconType = 'signed'
   } else if (requiresSign) {
     iconType = 'await-sign';
+  } else if (!fileId) {
+    iconType = 'pending';
   }
 
-  return <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
+  const Wraper = fileId ? Link : React.Fragment;
+
+  return <Wraper href={getTaskDocDownloadUrl(fileId)} target="_blank">
     <Space>
       <FileIcon name={name} type={iconType} />
       {name}
     </Space>
-  </Link>
+  </Wraper>
 }
 
 TaskFileName.propTypes = {

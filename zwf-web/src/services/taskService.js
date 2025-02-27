@@ -18,9 +18,30 @@ export function changeTaskStatus$(id, status) {
 
 export function addDocTemplateToTask$(taskid, docTemplateIds) {
   if (!docTemplateIds?.length) {
-    throw new Error(`docTemplateIds is empty`);
+    throw new Error(`docTemplateIds cannot be empty`);
   }
   return httpPost$(`task/${taskid}/doc_template/`, { docTemplateIds });
+}
+
+export function deleteTaskDoc$(docId) {
+  if (!docId) {
+    throw new Error(`docId cannot be empty`);
+  }
+  return httpDelete$(`task/doc/${docId}`);
+}
+
+export function requestSignTaskDoc$(docId) {
+  if (!docId) {
+    throw new Error(`docId cannot be empty`);
+  }
+  return httpPost$(`task/doc/${docId}/request_sign`);
+}
+
+export function unrequestSignTaskDoc$(docId) {
+  if (!docId) {
+    throw new Error(`docId cannot be empty`);
+  }
+  return httpPost$(`task/doc/${docId}/unrequest_sign`);
 }
 
 export async function saveTask(item) {
