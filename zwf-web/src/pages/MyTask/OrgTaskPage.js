@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip, Form } from 'antd';
+import { Layout, Skeleton, Row, Col, Collapse, Button, Space, Tooltip, Form, Drawer } from 'antd';
 import { addDocTemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
 import { catchError, finalize } from 'rxjs/operators';
 import { TaskStatusButton } from 'components/TaskStatusButton';
@@ -24,6 +24,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { TaskFileUploader } from 'components/TaskFileUploader';
 import { TaskDocListPanel } from 'components/TaskDocListPanel';
+import TaskFieldEditorPanel from 'pages/TaskTemplate/TaskFieldEditorPanel';
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -115,14 +116,24 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleTaskFieldsChange = fields => {
-    task.fields = fields;
-    setTask({ ...task });
+    setTask(task => ({ ...task, fields }));
   }
 
   const handleRename = (name) => {
     renameTask$(task.id, name).subscribe(() => {
       setTask({ ...task, name });
     })
+  }
+
+  const handleEditFields = () => {
+    // openFieldEditor({
+    //   fields: task.fields,
+    //   onChange: handleTaskFieldsChange,
+    // })
+
+    // setEditFieldVisible(true);
+
+    navigate(`/task/${task?.id}/edit`)
   }
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
@@ -151,7 +162,7 @@ const OrgTaskPage = React.memo((props) => {
             <Button type="primary" danger icon={<DeleteOutlined />} onClick={() => showArchiveTaskModal(task.id, load$)} />
           </Tooltip>,
           <Tooltip key="edit" title="Edit">
-            <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => setEditFieldVisible(true)} />
+            <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
           </Tooltip>,
           <Tooltip key="share" title="Share">
             <Button icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)} />
@@ -197,23 +208,13 @@ const OrgTaskPage = React.memo((props) => {
                 </ProCard>
               </Col>
               {task && <Col span={24}>
-                  <TaskDocListPanel task={task} />
+                <TaskDocListPanel task={task} />
               </Col>}
             </Row>
           </Col>
         </Row>
       </PageHeaderContainer>}
       {task && <TaskLogAndCommentTrackingDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
-      {task && <TaskFieldsEditorModal
-        task={task}
-        visible={editFieldVisible}
-        onOk={() => {
-          load$().add(() => {
-            setEditFieldVisible(false)
-          });
-        }}
-        onCancel={() => setEditFieldVisible(false)}
-      />}
       {saving && <SavingAffix />}
     </ContainerStyled>
   </>

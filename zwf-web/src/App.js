@@ -54,6 +54,7 @@ const TaskListPage = loadable(() => import('pages/TaskListPage'));
 const ClientTrackingListPage = loadable(() => import('pages/ClientTask/ClientTrackingListPage'));
 const ResourceEditPage = loadable(() => import('pages/ResourcePage/ResourceEditPage'));
 const ResourceEditListPage = loadable(() => import('pages/ResourcePage/ResourceEditListPage'));
+const OrgTaskEditPage = loadable(() => import('pages/MyTask/OrgTaskEditPage'));
 
 const localeDic = {
   'en-US': {
@@ -132,6 +133,7 @@ export const App = React.memo(() => {
           <Route path="/sysboard" element={<SystemBoardPage />} />
           <Route path="/task" element={<TaskListPage />} />
           <Route path="/task/:id" element={<TaskPage />} />
+          <Route path="/task/:id/edit" element={<OrgTaskEditPage />} />
           <Route path="/activity" element={<ClientTrackingListPage />} />
           <Route path="/doc_template" element={<DocTemplateListPage />} />
           <Route path="/doc_template/new" element={<DocTemplatePage />} />
