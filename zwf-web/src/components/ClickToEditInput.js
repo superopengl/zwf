@@ -5,20 +5,24 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
 const StyledInput = styled(Input)`
-border-radius: 0px;
+border-radius: 4px;
 width: 100%;
 
 &.error {
   border-color: #cf222e;
 }
 
-&:focus, &:active {
-  border-bottom: 1px solid #0FBFC4;
-  background-color: white;
+&:hover {
+  border: 1px solid #0FBFC4AA;
+}
 
-  &.error {
-    border-color: #cf222e;
-  }
+&:focus, &:active {
+  border: 1px solid #0FBFC4;
+  background-color: white;
+}
+
+&.error {
+  border: 1px solid #cf222e;
 }
 `;
 
@@ -26,6 +30,7 @@ export const ClickToEditInput = React.memo((props) => {
   const { value: propValue, size, onChange, ...others } = props;
 
   const [value, setValue] = React.useState(propValue);
+  const [focused, setFocused] = React.useState(false);
   const [className, setClassName] = React.useState(propValue ? '' : 'error');
 
   React.useEffect(() => {
@@ -33,6 +38,7 @@ export const ClickToEditInput = React.memo((props) => {
   }, [propValue])
 
   const handleSave = (e) => {
+    setFocused(false)
     const text = e.target.value?.trim();
     if (!text) {
       setClassName('error');
@@ -51,7 +57,9 @@ export const ClickToEditInput = React.memo((props) => {
       className={className}
       value={value}
       onChange={e => setValue(e.target.value)}
+      onFocus={() => setFocused(true)}
       bordered={false}
+      allowClear={focused}
       onBlur={handleSave}
       style={{ fontSize: size }}
     // onPressEnter={handleSave}

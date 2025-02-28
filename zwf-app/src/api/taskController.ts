@@ -43,8 +43,9 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
   const { id, taskTemplateId, clientEmail, taskName } = req.body;
   const creatorId = getUserIdFromReq(req);
+  const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, creatorId, id);
+  const task = await createTaskByTaskTemplateAndUserEmail(taskTemplateId, taskName, clientEmail, creatorId, id, orgId);
 
   res.json(task);
 });
@@ -322,9 +323,9 @@ export const searchTask = handlerWrapper(async (req, res) => {
 
   if (text) {
     if (isClient) {
-      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.description ILIKE :text)', { text: `%${text}%` });
+      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text)', { text: `%${text}%` });
     } else {
-      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.description ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
+      query = query.andWhere('(x.name ILIKE :text OR x."taskTemplateName" ILIKE :text OR x.email ILIKE :text OR x."givenName" ILIKE :text OR x.surname ILIKE :text)', { text: `%${text}%` });
     }
   }
   // if (dueDateRange?.length === 2) {

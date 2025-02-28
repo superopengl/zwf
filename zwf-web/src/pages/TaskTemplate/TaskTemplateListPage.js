@@ -15,7 +15,7 @@ import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
 import { TaskTemplateIcon } from '../../components/entityIcon';
 import { notify } from 'util/notify';
-import TaskTemplatePreviewPanel from './TaskTemplatePreviewPanel';
+import {TaskFieldsPreviewPanel} from './TaskFieldsPreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
 import { HiViewList } from 'react-icons/hi';
 import { CreateTaskModal } from 'components/CreateTaskModal';
@@ -278,8 +278,9 @@ export const TaskTemplateListPage = () => {
           onChange={setPreviewMode} />}
         footer={null}
       >
-        <TaskTemplatePreviewPanel
-          value={previewTaskTemplate}
+        <TaskFieldsPreviewPanel
+          name={previewTaskTemplate?.name}
+          fields={previewTaskTemplate?.fields}
           mode={previewMode}
         />
       </Modal>

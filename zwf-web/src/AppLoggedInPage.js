@@ -182,7 +182,7 @@ export const AppLoggedInPage = React.memo(() => {
     return null;
   }
 
-  const canCreateNew = false && role === 'admin' || role === 'agent';
+  const canCreateNew = true && role === 'admin' || role === 'agent';
   const isSystem = role === 'system';
   const isAdmin = role === 'admin';
 
