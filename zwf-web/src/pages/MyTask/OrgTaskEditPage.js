@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Layout, Skeleton, Button } from 'antd';
-import { getTask$, renameTask$ } from 'services/taskService';
+import { getTask$, renameTask$, updateTaskFields$ } from 'services/taskService';
 import { catchError, finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
 import { SavingAffix } from 'components/SavingAffix';
@@ -49,38 +49,45 @@ const OrgTaskEditPage = React.memo(() => {
   const { id } = params;
 
   const [loading, setLoading] = React.useState(true);
-  const [historyVisible, setHistoryVisible] = React.useState(false);
-  const [editFieldVisible, setEditFieldVisible] = React.useState(false);
   const [taskName, setTaskName] = React.useState('');
-  const [task, setTask] = React.useState();
+  const [fields, setFields] = React.useState([]);
   const [saving, setSaving] = React.useState(null);
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const subscription$ = load$();
-    return () => {
-      subscription$.unsubscribe();
-    }
+    const sub$ = load$();
+    return () => sub$.unsubscribe()
   }, [id]);
+
+  React.useEffect(() => {
+    setSaving(true);
+    const sub$ = updateTaskFields$(id, fields).pipe(
+      finalize(() => setSaving(false))
+    ).subscribe();
+    return () => sub$.unsubscribe()
+  }, [fields]);
 
   const load$ = () => {
     setLoading(true);
     return getTask$(id).pipe(
       finalize(() => setLoading(false))
-    ).subscribe(setTask);
+    ).subscribe(task => {
+      setTaskName(task.name);
+      setFields(task.fields);
+    });
   }
 
   const handleGoBack = () => {
-    navigate(`/task/${task?.id}`);
+    navigate(`/task/${id}`);
   }
 
   const handleTaskFieldsChange = fields => {
-    setTask(task => ({ ...task, fields }));
+    setFields(fields);
   }
 
   return (<>
     <ContainerStyled>
-      {task && <PageHeaderContainer
+      <PageHeaderContainer
         loading={loading}
         onBack={handleGoBack}
         ghost={true}
@@ -93,15 +100,15 @@ const OrgTaskEditPage = React.memo(() => {
             name: 'Tasks',
           },
           {
-            path: `/task/${task.id}`,
-            name: task?.name
+            path: `/task/${id}`,
+            name: taskName
           },
           {
             name: 'Edit Fields'
           }
         ]}
         // fixedHeader
-        title={task?.name ? <>{task?.name}</> : <Skeleton paragraph={false} />}
+        title={taskName ? <>{taskName}</> : <Skeleton paragraph={false} />}
         icon={<TaskIcon />}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
@@ -109,9 +116,9 @@ const OrgTaskEditPage = React.memo(() => {
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
       >
-        <TaskFieldEditorPanel fields={task?.fields} onChange={handleTaskFieldsChange} />
+        <TaskFieldEditorPanel fields={fields} onChange={handleTaskFieldsChange} />
 
-      </PageHeaderContainer>}
+      </PageHeaderContainer>
       {saving && <SavingAffix />}
     </ContainerStyled>
   </>
