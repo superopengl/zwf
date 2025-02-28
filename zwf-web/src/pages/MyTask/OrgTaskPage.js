@@ -153,6 +153,18 @@ const OrgTaskPage = React.memo((props) => {
         loading={loading}
         onBack={handleGoBack}
         ghost={true}
+        breadcrumb={[
+          {
+            name: 'Tasks'
+          },
+          {
+            path: '/task',
+            name: 'Tasks',
+          },
+          {
+            name: task?.name
+          }
+        ]}
         // fixedHeader
         title={task?.name ? <ClickToEditInput placeholder="Task name" value={task.name} size={22} onChange={handleRename} maxLength={100} /> : <Skeleton paragraph={false} />}
         icon={<TaskIcon />}
