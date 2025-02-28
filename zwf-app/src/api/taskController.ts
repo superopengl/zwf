@@ -174,8 +174,9 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   });
   assert(task, 404);
 
-  fields.forEach(f => {
+  fields.forEach((f, index) => {
     f.taskId = id;
+    f.ordinal = index + 1;
   });
 
   const originalFieldIds = task.fields.map(x => x.id);
