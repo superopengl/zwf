@@ -59,14 +59,6 @@ const OrgTaskEditPage = React.memo(() => {
     return () => sub$.unsubscribe()
   }, [id]);
 
-  React.useEffect(() => {
-    setSaving(true);
-    const sub$ = updateTaskFields$(id, fields).pipe(
-      finalize(() => setSaving(false))
-    ).subscribe();
-    return () => sub$.unsubscribe()
-  }, [fields]);
-
   const load$ = () => {
     setLoading(true);
     return getTask$(id).pipe(
@@ -83,6 +75,13 @@ const OrgTaskEditPage = React.memo(() => {
 
   const handleTaskFieldsChange = fields => {
     setFields(fields);
+  }
+
+  const handleSave = () => {
+    setSaving(true);
+    updateTaskFields$(id, fields).pipe(
+      finalize(() => setSaving(false))
+    ).subscribe(() => handleGoBack());
   }
 
   return (<>
@@ -112,12 +111,11 @@ const OrgTaskEditPage = React.memo(() => {
         icon={<TaskIcon />}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
-          <Button key="done" type="primary" onClick={handleGoBack}>Done</Button>
+          <Button key="done" type="primary" onClick={handleSave}>Save</Button>
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
       >
         <TaskFieldEditorPanel fields={fields} onChange={handleTaskFieldsChange} />
-
       </PageHeaderContainer>
       {saving && <SavingAffix />}
     </ContainerStyled>
