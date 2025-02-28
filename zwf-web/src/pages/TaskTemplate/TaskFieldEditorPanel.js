@@ -96,7 +96,7 @@ export const TaskFieldEditorPanel = (props) => {
         </ProCard>
       </ProCard>
     </DndProvider>
-    <DebugJsonPanel value={fields} />
+    {/* <DebugJsonPanel value={fields} /> */}
   </Container>
   );
 };
