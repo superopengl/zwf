@@ -8,7 +8,7 @@ import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Link: TextLink } = Typography
 
-export const useAddTaskDocModal = () => {
+export const useAddDocTemplateToTaskModal = () => {
   const [modal, contextHolder] = Modal.useModal();
   const [form] = Form.useForm();
   const [formValues, setFormValues] = React.useState();
@@ -55,9 +55,6 @@ export const useAddTaskDocModal = () => {
           >
             <DocTemplateSelect isMultiple={true} />
           </Form.Item>
-          {/* <Form.Item label="" name="uploadFiles">
-            <TaskFileUpload taskId={task?.id} />
-          </Form.Item> */}
         </Form>
         {/* <DebugJsonPanel value={formValues} /> */}
       </>,

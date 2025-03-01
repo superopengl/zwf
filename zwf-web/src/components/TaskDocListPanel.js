@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space, Button, Tooltip, List, Table, Modal } from 'antd';
+import { Upload, Typography, Space, Button, Tooltip, Table, Modal, Dropdown } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { getFileMeta, getFileMetaList } from 'services/fileService';
@@ -17,10 +17,13 @@ import { deleteTaskDoc$, getTaskDocDownloadUrl, requestSignTaskDoc$, unrequestSi
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { TaskFileName } from './TaskFileName';
 import { FaSignature } from 'react-icons/fa';
-import Icon, { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import Icon, { CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
-import { useAddTaskDocModal } from 'hooks/useAddTaskDocModal';
+import { useAddDocTemplateToTaskModal } from 'hooks/useAddDocTemplateToTaskModal';
+import { DocTemplateIcon } from './entityIcon';
+import { BsFileEarmarkTextFill } from 'react-icons/bs';
+import { TaskFileUpload } from './TaskFileUpload';
 
 
 const { Dragger } = Upload;
@@ -36,6 +39,7 @@ const Container = styled.div`
   margin-left: -8px;
   margin-right: -8px;
 }
+
 `;
 
 const FileIconContainer = styled.div`
@@ -88,7 +92,7 @@ export const TaskDocListPanel = React.memo((props) => {
   const [loading, setLoading] = React.useState(!!task);
   const [deleteModal, deleteModalContextHolder] = Modal.useModal();
   const [docs, setDocs] = React.useState(task?.docs ?? []);
-  const [openAddDoc, docContextHolder] = useAddTaskDocModal();
+  const [openAddDocTemplate, docTemplateContextHolder] = useAddDocTemplateToTaskModal();
 
   const taskId = task.id;
   // const isPreviewMode = !taskId;
@@ -208,85 +212,63 @@ export const TaskDocListPanel = React.memo((props) => {
       .subscribe(docs => setDocs(docList => [...docList, ...docs]));
   }
 
+  const handleUploadDone = () => {
+    setLoading(false);
+    onChange();
+  }
+
+  const items = [{
+    key: 'upload',
+    label: <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} />
+  }, {
+    key: 'doc_template',
+    label: <Button
+      icon={<Icon component={BsFileEarmarkTextFill} />}
+      type="text"
+      block
+      onClick={() => openAddDocTemplate({ onChange: handleAddDocTemplates })}
+    >Add Doc Template</Button>
+  }]
 
   return <Container>
     <ProCard
       title="Documents"
-      extra={<Button icon={<PlusOutlined />}
-        type="link"
-        onClick={() => openAddDoc({ onChange: handleAddDocTemplates })}>Add</Button>}
+      // extra={<Tooltip
+      //   placement="bottomRight"
+      //   trigger="click"
+      //   arrow={false}
+      //   color="white"
+      //   title={<>
+      //     <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} />
+      //     <Button
+      //       icon={<Icon component={BsFileEarmarkTextFill} />}
+      //       type="text"
+      //       block
+      //       onClick={() => openAddDocTemplate({ onChange: handleAddDocTemplates })}
+      //     >Add Doc Template</Button>
+      //   </>}
+      // >
+      //   <Button icon={<PlusOutlined />}      >Add</Button>
+      // </Tooltip>
+      // }
+      extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu">
+        <Button icon={<PlusOutlined />}>Add</Button>
+      </Dropdown>}
     >
       <Table
         size="small"
         pagination={false}
         bordered={false}
-        // rowSelection={{
-        //   selectedRowKeys,
-        //   onChange: handleSelectChange,
-        // }}
         rowKey="id"
         showHeader={false}
         columns={columns}
         dataSource={docs}
+        locale={{ emptyText: 'Upload or add doc templates' }}
       />
-      {deleteModalContextHolder}
     </ProCard>
-    {docContextHolder}
+    {deleteModalContextHolder}
+    {docTemplateContextHolder}
   </Container>
-
-  // return <Container>
-  //   <List
-  //     grid={{ column: 1 }}
-  //     dataSource={task.docs}
-  //     renderItem={item => <List.Item>
-  //       <TaskDocItem value={item} />
-  //     </List.Item>}
-  //   />
-  // </Container>
-
-  return (
-    <Container className={disabled ? 'disabled' : ''}>
-      {/* {!isPreviewMode && value?.map((f, i) => <TaskDocItem key={i}
-          value={f}
-          onDelete={handleRemove}
-          onChange={handleSingleFileChange}
-          disabled={disabled}
-        />)} */}
-      {!disabled && <Dragger
-        multiple={true}
-        action={`${API_BASE_URL}/task/${taskId}/file`}
-        withCredentials={true}
-        accept="*/*"
-        listType="text"
-        fileList={fileList}
-        // onPreview={handlePreview}
-        onChange={handleChange}
-        // onRemove={handleRemove}
-        // beforeUpload={handleBeforeUpload}
-        showUploadList={true}
-        // showUploadList={false}
-        // iconRender={() => <UploadOutlined />}
-        disabled={disabled || fileList.length >= maxSize}
-        iconRender={getFileIcon}
-        itemRender={renderFileItem}
-      // showUploadList={true}
-      >
-        {/* <List
-          grid={{ column: 1 }}
-          dataSource={task.docs}
-          renderItem={item => <List.Item>
-            <TaskDocItem value={item} />
-          </List.Item>}
-        /> */}
-        <Paragraph type="secondary" style={{ display: 'flex', flexDirection: 'column', width: '100%', alignItems: 'center' }}>
-          <AiOutlineUpload size={30} />
-          Click or drag file to this area to upload
-        </Paragraph>
-      </Dragger>}
-      {/* {!doc.length && <Text style={{ color: 'rgba(0, 0, 0, 0.25)' }}>File upload is disabled</Text>} */}
-      {/* <DebugJsonPanel value={fileList} /> */}
-    </Container>
-  );
 })
 
 TaskDocListPanel.propTypes = {
