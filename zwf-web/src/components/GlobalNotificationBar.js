@@ -20,7 +20,7 @@ export const GlobalNotificationBar = () => {
   const periodTo = moment(currentPeriodTo);
 
   const shouldPromptBeforeDays = (beforeDays = 3) => {
-    return periodTo.add(-beforeDays, 'days').isBefore();
+    return moment(periodTo).add(-beforeDays, 'days').isBefore();
   }
 
   const source$ = of(null).pipe(
