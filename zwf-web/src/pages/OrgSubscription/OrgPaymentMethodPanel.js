@@ -2,7 +2,7 @@ import { Card, Button, Modal, Space, Typography, Tag, List, Descriptions, Row, C
 import React from 'react';
 
 import { Loading } from 'components/Loading';
-import { CloseCircleFilled, CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseCircleFilled, CloseOutlined, CreditCardFilled, PlusOutlined } from '@ant-design/icons';
 import { deleteOrgPaymentMethod$, listOrgPaymentMethods$, setOrgPrimaryPaymentMethod$ } from 'services/orgPaymentMethodService';
 import StripeCardPaymentWidget from 'components/checkout/StripeCardPaymentWidget';
 import { saveOrgPaymentMethod$ } from 'services/orgPaymentMethodService';
@@ -27,7 +27,7 @@ justify-content: center;
 `
 
 const StyledList = styled(List)`
-  max-width: 600px;
+  max-width: 440px;
   margin-left: auto;
   margin-right: auto;
 
@@ -121,7 +121,7 @@ export const OrgPaymentMethodPanel = () => {
         dataSource={list}
         loading={loading}
         grid={{ column: 1, gutter: 24 }}
-        footer={list.length ? <Button key="add" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleAddNew()}>Add Payment Method</Button> : null}
+        footer={list.length ? <Button key="add" style={{height: 108}} icon={<CreditCardFilled />} block onClick={() => handleAddNew()}>Add New Card</Button> : null}
         locale={{
           emptyText: <>
             <Paragraph type="secondary">
@@ -137,7 +137,7 @@ export const OrgPaymentMethodPanel = () => {
               **** **** **** {item.cardLast4}
             </Text>}
             // subTitle={item.primary ? <Tag key="tag" color="cyan">Being used</Tag> : null}
-            style={{ borderColor: item.primary ? '#0FBFC4' : undefined }}
+            style={{ borderColor: item.primary ? '#0FBFC4' : undefined}}
             checked={item.primary}
             bordered
             onClick={() => handleSetPrimary(item)}
