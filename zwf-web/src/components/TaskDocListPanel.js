@@ -86,20 +86,20 @@ const FileIconWithOverlay = props => {
 }
 
 export const TaskDocListPanel = React.memo((props) => {
-  const { task, size, disabled, showsLastReadAt, showsSignedAt, onChange } = props;
+  const { task, size, showsLastReadAt, showsSignedAt, onChange } = props;
 
   const [fileList, setFileList] = React.useState(task.docs);
-  const [loading, setLoading] = React.useState(!!task);
+  const [loading, setLoading] = React.useState(true);
   const [deleteModal, deleteModalContextHolder] = Modal.useModal();
   const [docs, setDocs] = React.useState(task?.docs ?? []);
   const [openAddDocTemplate, docTemplateContextHolder] = useAddDocTemplateToTaskModal();
 
   const taskId = task.id;
   // const isPreviewMode = !taskId;
-  const maxSize = size || 30;
 
   React.useEffect(() => {
     setDocs(task?.docs ?? []);
+    setLoading(false);
   }, [task]);
 
 
@@ -111,47 +111,6 @@ export const TaskDocListPanel = React.memo((props) => {
       url: doc.fileId ? getTaskDocDownloadUrl(doc.fileId) : null,
     })));
   }, [docs]);
-
-  const handleChange = (info) => {
-    const { file, fileList } = info;
-    setFileList(fileList);
-
-    if (file.status === 'done') {
-      // props.onAdd?.(_.get(file, 'response.id', file.uid));
-      const newFileId = file.response?.fileId
-      if (newFileId) {
-        file.uid = newFileId;
-        file.url = getTaskDocDownloadUrl(newFileId)
-      }
-      onChange(fileList.map(f => ({ fileId: f.uid, name: f.name })));
-    }
-
-    const uploading = file.status === 'uploading';
-    setLoading(uploading);
-  };
-
-  const handleRemove = file => {
-    // onChange(value.filter(f => f !== file));
-  }
-
-  const getFileIcon = file => <FileIconWithOverlay
-    id={file.uid}
-    name={file.name}
-    showsLastReadAt={showsLastReadAt}
-    showsSignedAt={showsSignedAt}
-  />
-
-  const renderFileItem = (originNode, file, fileList) => {
-    return <div style={{ height: 40 }}>
-      {/* {originNode} */}
-      <TaskDocItem value={file} />
-    </div>
-  }
-
-  const handleSingleFileChange = file => {
-    // onChange([...value]);
-  }
-
 
   const handleDeleteDoc = doc => {
     deleteModal.confirm({
@@ -233,30 +192,13 @@ export const TaskDocListPanel = React.memo((props) => {
   return <Container>
     <ProCard
       title="Documents"
-      // extra={<Tooltip
-      //   placement="bottomRight"
-      //   trigger="click"
-      //   arrow={false}
-      //   color="white"
-      //   title={<>
-      //     <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} />
-      //     <Button
-      //       icon={<Icon component={BsFileEarmarkTextFill} />}
-      //       type="text"
-      //       block
-      //       onClick={() => openAddDocTemplate({ onChange: handleAddDocTemplates })}
-      //     >Add Doc Template</Button>
-      //   </>}
-      // >
-      //   <Button icon={<PlusOutlined />}      >Add</Button>
-      // </Tooltip>
-      // }
-      extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu">
+      extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu" disabled={loading}>
         <Button icon={<PlusOutlined />}>Add</Button>
       </Dropdown>}
     >
       <Table
         size="small"
+        loading={loading}
         pagination={false}
         bordered={false}
         rowKey="id"

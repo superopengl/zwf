@@ -1,31 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space, List, Button } from 'antd';
+import { Upload, Button } from 'antd';
 import * as _ from 'lodash';
-import styled from 'styled-components';
-import { getFileMeta, getFileMetaList } from 'services/fileService';
-import { FileIcon } from './FileIcon';
-import { saveAs } from 'file-saver';
-import { AiOutlineUpload } from 'react-icons/ai';
-import { Badge } from 'antd';
-import { Popover } from 'antd';
-import { TimeAgo } from './TimeAgo';
 import { API_BASE_URL } from 'services/http';
-import { Loading } from 'components/Loading';
-import { TaskDocItem } from './TaskDocItem';
 import { getTaskDocDownloadUrl } from 'services/taskService';
-import { DebugJsonPanel } from './DebugJsonPanel';
 import { UploadOutlined } from '@ant-design/icons';
-
-const { Dragger } = Upload;
-const { Text } = Typography;
-
-
-const FileIconContainer = styled.div`
-  display: inline-block;
-  position: relative;
-`;
-
 
 export const TaskFileUpload = React.memo((props) => {
   const { taskId, onLoading, onDone } = props;
