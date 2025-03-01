@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space, Button, Tooltip, Table, Modal, Dropdown } from 'antd';
+import { Upload, Typography, Space, Button, Tooltip, Table, Modal, Dropdown, Descriptions } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { getFileMeta, getFileMetaList } from 'services/fileService';
@@ -17,12 +17,12 @@ import { deleteTaskDoc$, getTaskDocDownloadUrl, requestSignTaskDoc$, unrequestSi
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { TaskFileName } from './TaskFileName';
 import { FaSignature } from 'react-icons/fa';
-import Icon, { CloseOutlined, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import Icon, { CloseOutlined, InfoCircleFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { useAddDocTemplateToTaskModal } from 'hooks/useAddDocTemplateToTaskModal';
 import { DocTemplateIcon } from './entityIcon';
-import { BsFileEarmarkTextFill } from 'react-icons/bs';
+import { BsFileEarmarkTextFill, BsInfoLg } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 
 
@@ -144,19 +144,49 @@ export const TaskDocListPanel = React.memo((props) => {
   const columns = [
     {
       title: '',
-      render: (_, doc) => <TaskFileName taskFile={doc} />,
+      render: (_, doc) => <Tooltip
+        color="white"
+        placement='leftTop'
+        overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
+        title={<Space direction='vertical'>
+          <TaskFileName taskFile={doc} />
+          <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
+          <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />
+        </Space>
+        }>
+          <div>
+
+        <TaskFileName taskFile={doc} />
+          </div>
+      </Tooltip>
+
     },
+    // {
+    //   align: 'right',
+    //   width: 32,
+    //   render: (_, doc) => <Tooltip
+    //     color="white"
+    //     overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
+    //     title={<Space direction='vertical'>
+    //       <TaskFileName taskFile={doc} />
+    //       <TimeAgo prefix="created" direction="horizontal" value={doc.createdAt} />
+    //       <TimeAgo prefix="sign requested" direction="horizontal" value={doc.signRequestedAt} />
+    //     </Space>
+    //     }>
+    //     <Button shape="circle" icon={<Icon component={BsInfoLg} />} type="text" />
+    //   </Tooltip>
+    // },
     {
       align: 'right',
       width: 32,
-      render: (_, doc) => <Tooltip title={`Request sign for ${doc.name}`}>
+      render: (_, doc) => <Tooltip title={`Request sign`}>
         <Button shape="circle" type={doc.signRequestedAt ? 'primary' : 'default'} icon={<Icon component={FaSignature} />} onClick={() => handleRequestSign(doc)} />
       </Tooltip>
     },
     {
       align: 'right',
       width: 32,
-      render: (_, doc) => <Tooltip title={`Delete ${doc.name}`}>
+      render: (_, doc) => <Tooltip title={`Delete ${doc.name}`} placement="topRight">
         <Button type="text" shape="circle" danger icon={<CloseOutlined />} onClick={() => handleDeleteDoc(doc)} />
       </Tooltip>
     },
@@ -191,7 +221,7 @@ export const TaskDocListPanel = React.memo((props) => {
 
   return <Container>
     <ProCard
-      title={<>{docs.length ?? 0} Document{docs.length === 1 ? '': 's'}</>}
+      title={<>{docs.length ?? 0} Document{docs.length === 1 ? '' : 's'}</>}
       type="inner"
       extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu" disabled={loading}>
         <Button icon={<PlusOutlined />}>Add</Button>
@@ -207,9 +237,9 @@ export const TaskDocListPanel = React.memo((props) => {
         columns={columns}
         dataSource={docs}
         locale={{ emptyText: 'Upload or add doc templates' }}
-        // scroll={{
-        //   y: 200
-        // }}
+      // scroll={{
+      //   y: 200
+      // }}
       />
     </ProCard>
     {deleteModalContextHolder}
