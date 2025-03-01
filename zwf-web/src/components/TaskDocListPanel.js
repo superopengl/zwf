@@ -191,7 +191,8 @@ export const TaskDocListPanel = React.memo((props) => {
 
   return <Container>
     <ProCard
-      title="Documents"
+      title={<>{docs.length ?? 0} Document{docs.length === 1 ? '': 's'}</>}
+      type="inner"
       extra={<Dropdown menu={{ items }} overlayClassName="task-add-doc-menu" disabled={loading}>
         <Button icon={<PlusOutlined />}>Add</Button>
       </Dropdown>}
@@ -206,6 +207,9 @@ export const TaskDocListPanel = React.memo((props) => {
         columns={columns}
         dataSource={docs}
         locale={{ emptyText: 'Upload or add doc templates' }}
+        // scroll={{
+        //   y: 200
+        // }}
       />
     </ProCard>
     {deleteModalContextHolder}
