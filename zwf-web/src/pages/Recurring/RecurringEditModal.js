@@ -1,4 +1,4 @@
-import { Button, Form, Select, Space, Typography, InputNumber, Modal, Switch } from 'antd';
+import { Button, Form, Select, Space, Typography, InputNumber, Modal, Alert, DatePicker } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 // import 'pages/AdminTask/node_modules/react-chat-elements/dist/main.css';
@@ -57,6 +57,11 @@ const RecurringEditModal = (props) => {
     formRef.current.submit();
   }
 
+  const disabledPastDate = (current) => {
+    // Can not select days before today and today
+    return current && current.endOf('day').isBefore();
+  };
+
   return <Modal
     title={isNew ? 'New Schedular' : 'Edit Schedular'}
     open={visible}
@@ -68,58 +73,58 @@ const RecurringEditModal = (props) => {
     okText="Save"
     cancelButtonProps={{ type: 'text' }}
   >
+    {/* <Paragraph type="secondary">The recurrence is scheduled for approximately 5:00 am (Sydney time) on the designated day.</Paragraph> */}
+    <Alert type="info" showIcon description="The recurrence is scheduled for approximately 5:00 am (Sydney time) on the designated day." style={{marginBottom: 20, marginTop: 20}}/>
     {!loading && <Form
       layout="vertical"
+      preserve={false}
       onFinish={handleSaveRecurring}
       ref={formRef}
       initialValues={recurring}>
-      <Space direction="vertical" size="small">
-        <Paragraph type="secondary">The recurring will happen at 5:00 am (Sydney time) on the specified day.</Paragraph>
-        <Form.Item label="Name" name="name" rules={[{ required: true, message: ' ' }]}>
-          <Input autoFocus allowClear />
-        </Form.Item>
-        <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
-          <ClientSelect style={{ width: '100%' }} valueProp="id" />
-        </Form.Item>
-        <Form.Item label="Form Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
-          <TaskTemplateSelect />
-        </Form.Item>
-        <Form.Item
-          label="Start On (First Run)" name="firstRunOn"
-          extra="If chosse 29, 30, or 31, system will calculate the closest date in future month. For example, if starting on Jan 31 and repeat monthly, next recurring will be on Feb 28."
-          rules={[{
-            required: true, message: ' ', validator: async (rule, value) => {
-              if (!value || !moment(value).isValid()) {
-                throw new Error();
-              }
+      <Form.Item label="Name" name="name" rules={[{ required: true, message: ' ' }]}>
+        <Input autoFocus allowClear />
+      </Form.Item>
+      <Form.Item label="Client" name="clientId" rules={[{ required: true, message: ' ' }]}>
+        <ClientSelect style={{ width: '100%' }} valueProp="id" />
+      </Form.Item>
+      <Form.Item label="Form Template" name="taskTemplateId" rules={[{ required: true, message: ' ' }]}>
+        <TaskTemplateSelect />
+      </Form.Item>
+      <Form.Item
+        label="Start On (First Run)" name="firstRunOn"
+        extra="If you select either 29, 30, or 31, the system will determine the nearest date in the upcoming month or year. For instance, if the starting date is January 31 and the recurrence is monthly, the subsequent occurrence will be on February 28."
+        rules={[{
+          required: true, type: 'object', message: ' ', validator: async (rule, value) => {
+            if (!value.isValid()) {
+              throw new Error('Invalid date');
             }
-          }]}
-        >
-          <DateInput placeholder="DD/MM/YYYY" style={{ display: 'block' }} />
-        </Form.Item>
-        <Form.Item
-          label="Repeat Every" name="every" rules={[{ required: true, message: ' ' }]}
+          }
+        }]}
+      >
+        <DatePicker disabledDate={disabledPastDate}/>
+      </Form.Item>
+      <Form.Item label="Repeat Every" >
+        <Form.Item name="every" rules={[{ required: true, message: ' ' }]} style={{display: 'inline-block', marginRight: 12}}
         // help={`Preview: ${cornPreview}`}
         >
           {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
           <InputNumber min={1} max={52} />
         </Form.Item>
-        <Form.Item
-          label="Repeat Period" name="period" rules={[{ required: true, message: ' ' }]}
+        <Form.Item name="period" rules={[{ required: true, message: ' ' }]} style={{display: 'inline-block', width: 100}}
         // help={`Preview: ${cornPreview}`}
         >
           {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
           <Select>
-            <Select.Option value="year">Yearly</Select.Option>
-            <Select.Option value="month">Monthly</Select.Option>
-            <Select.Option value="week">Weekly</Select.Option>
-            <Select.Option value="day">Daily</Select.Option>
+            <Select.Option value="year">Year</Select.Option>
+            <Select.Option value="month">Month</Select.Option>
+            <Select.Option value="week">Week</Select.Option>
+            <Select.Option value="day">Day</Select.Option>
           </Select>
         </Form.Item>
-        {/* <Form.Item style={{ marginTop: '1rem' }}>
+      </Form.Item>
+      {/* <Form.Item style={{ marginTop: '1rem' }}>
           <Button type="primary" block htmlType="submit" disabled={loading} >Save</Button>
         </Form.Item> */}
-      </Space>
     </Form>}
   </Modal>;
 };
