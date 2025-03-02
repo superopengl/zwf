@@ -4,13 +4,14 @@ import { searchTask$ } from '../../services/taskService';
 import styled from 'styled-components';
 import { catchError } from 'rxjs/operators';
 import { HiOutlineViewBoards, HiOutlineViewList } from 'react-icons/hi';
-import Icon, { FilterFilled, SyncOutlined } from '@ant-design/icons';
+import Icon, { FilterFilled, PlusOutlined, SyncOutlined } from '@ant-design/icons';
 import { TaskBoardPanel } from './TaskBoardPanel';
 import { TaskListPanel } from './TaskListPanel';
 import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 
 const { Link: TextLink } = Typography;
 
@@ -44,6 +45,7 @@ const OrgTaskListPage = () => {
   const [messageClosed, setMessageClosed] = useLocalstorageState(TASK_BOARD_VIEW_WARNING, false);
   const [filterVisible, setFilterVisible] = React.useState(false);
   const [message, setMessage] = React.useState();
+  const [openCreator, creatorContextHolder] = useCreateTaskModal();
 
   React.useEffect(() => {
     const subscription = reloadWithQueryInfo$(queryInfo)
@@ -101,16 +103,20 @@ const OrgTaskListPage = () => {
     reloadWithQueryInfo$(newQueryInfo);
   }
 
+  const handleCreateTask = () => {
+    openCreator({})
+  }
+
   return (
     <PageHeaderContainer
-    breadcrumb={[
-      {
-        name: 'Tasks'
-      },
-      {
-        name: 'Tasks',
-      },
-    ]}
+      breadcrumb={[
+        {
+          name: 'Tasks'
+        },
+        {
+          name: 'Tasks',
+        },
+      ]}
       loading={loading}
       fixedHeader
       title={viewMode === 'board' ? 'Task Board' : 'Task List'}
@@ -133,7 +139,8 @@ const OrgTaskListPage = () => {
           ]} />,
         <Tooltip key="filter" title="Filter">
           <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
-        </Tooltip>
+        </Tooltip>,
+        <Button type="primary" ghost icon={<PlusOutlined />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
       {filterVisible && <Row style={{ marginBottom: 20 }}>
@@ -155,6 +162,7 @@ const OrgTaskListPage = () => {
             total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
       </LayoutStyled>
+      {creatorContextHolder}
     </PageHeaderContainer>
   )
 }

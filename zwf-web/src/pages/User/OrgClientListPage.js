@@ -25,6 +25,7 @@ import { CreateTaskModal } from 'components/CreateTaskModal';
 import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 
 
 const { Text } = Typography;
@@ -53,6 +54,7 @@ const OrgClientListPage = () => {
   const [inviteUserModalVisible, setInviteUserModalVisible] = React.useState(false);
   const [list, setList] = React.useState([]);
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO)
+  const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
 
   const handleTagChange = (user, tags) => {
     setUserTags$(user.id, tags).subscribe()
@@ -104,8 +106,9 @@ const OrgClientListPage = () => {
   }
 
   const createTaskForUser = (user) => {
-    setCreateTaskModalVisible(true);
-    setCurrentUser(user);
+    openTaskCreator({
+      client: user,
+    });
   }
 
   const handleTagFilterChange = (tags) => {
@@ -298,12 +301,7 @@ const OrgClientListPage = () => {
           loadList$();
         }}
         onCancel={() => setInviteUserModalVisible(false)} />
-      <CreateTaskModal
-        client={currentUser}
-        open={createTaskModalVisible}
-        onCancel={() => setCreateTaskModalVisible(false)}
-        onOk={() => setCreateTaskModalVisible(false)}
-      />
+      {taskCreatorContextHolder}
     </ContainerStyled>
 
   );

@@ -22,7 +22,7 @@ const { Text, Link: TextLink } = Typography;
 const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
 export const TaskGenerator = React.memo(props => {
-  const {client} = props;
+  const {client, postCreateMode} = props;
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
   const [taskName, setTaskName] = React.useState();
@@ -93,14 +93,25 @@ export const TaskGenerator = React.memo(props => {
     setLoading(true);
     return createNewTask$(payload).pipe(
       finalize(() => setLoading(false)),
-      mapTo({ id, name: taskName })
     )
   }
 
   const handleCreateAndEdit = () => {
     createTaskWithVarBag$().subscribe(task => {
       props.onCreated(task)
-      navigate(`/task/${task.id}`)
+      debugger;
+      if(postCreateMode === 'notify') {
+        const notice = notify.success(
+          'Successfully created task',
+          <Text>Task <TextLink strong onClick={() => {
+            notice.close();
+            navigate(`/task/${task.id}`);
+          }}>{task.name}</TextLink> was created</Text>,
+          15
+        );
+      } else if(postCreateMode === 'navigate') {
+        navigate(`/task/${task.id}`)
+      }
     });
   }
 
@@ -153,9 +164,11 @@ TaskGenerator.propTypes = {
   client: PropTypes.object,
   onCancel: PropTypes.func,
   onCreated: PropTypes.func,
+  postCreateMode: PropTypes.oneOf(['notify', 'navigate']).isRequired
 };
 
 TaskGenerator.defaultProps = {
   onCancel: () => { },
   onCreated: () => { },
+  postCreateMode: 'notify',
 };
