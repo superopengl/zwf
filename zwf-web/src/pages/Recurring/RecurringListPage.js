@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Row } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import {
-  DeleteOutlined, EditOutlined, CaretRightFilled, PlusOutlined, DashOutlined, CloseOutlined
+  CloseOutlined, EditOutlined, CaretRightFilled, PlusOutlined
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
@@ -15,48 +15,9 @@ import { UserNameCard } from 'components/UserNameCard';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 
-const { Title, Link: TextLink } = Typography;
+const { Link: TextLink } = Typography;
 
-const ContainerStyled = styled.div`
-margin: 6rem 0 2rem 0;
-padding: 0 1rem 4rem;
-`;
-
-const StyledTitleRow = styled.div`
- display: flex;
- justify-content: space-between;
- align-items: center;
- width: 100%;
-`
-
-
-
-const StyledDrawer = styled(Drawer)`
-
-.ant-drawer-content-wrapper {
-  max-width: 90vw;
-}
-
-.rce-mbox {
-  padding-bottom: 2rem;
-
-  .rce-mbox-time {
-    bottom: -1.5rem;
-  }
-}
-`;
-
-const StylePatternTable = styled.table`
-td.label {
-  width: 70px;
-}
-
-td {
-  padding: 0;
-}
-`;
-
-const RecurringListPage = (props) => {
+const RecurringListPage = () => {
   useAssertRole(['admin', 'agent']);
   const [loading, setLoading] = React.useState(true);
   const [formVisible, setFormVisible] = React.useState(false);
@@ -78,7 +39,7 @@ const RecurringListPage = (props) => {
       title: 'Client',
       dataIndex: 'userId',
       onFilter: (value, record) => record.agentId === value,
-      render: (value, record) => <UserNameCard userId={value} />
+      render: (value) => <UserNameCard userId={value} />
     },
     {
       title: 'Form Template',

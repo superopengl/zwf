@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { CloseOutlined, EditOutlined } from '@ant-design/icons';
 import { Modal, Space, Table, Tag, Tooltip } from 'antd';
 import Text from 'antd/lib/typography/Text';
 
@@ -150,7 +150,7 @@ export const TaskListPanel = (props) => {
               onClick: () => navigate(`/tasks/${record.id}`)
             },
             {
-              icon: <Text type="danger"><DeleteOutlined /></Text>,
+              icon: <Text type="danger"><CloseOutlined /></Text>,
               menu: <Text type="danger">Archive</Text>,
               onClick: () => handleDelete(record)
             }

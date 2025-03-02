@@ -1,5 +1,5 @@
 import {
-  DeleteOutlined, EditOutlined
+  CloseOutlined, EditOutlined
 } from '@ant-design/icons';
 import { Button, Tooltip, List, Typography, Space, Divider } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
@@ -75,7 +75,7 @@ export const BlogList = props => {
                   <Button type="link"  icon={<EditOutlined />} onClick={e => handleEdit(e, item)} />
                 </Tooltip>
                 <Tooltip key="delete" placement="bottom" title="Delete post">
-                  <Button type="link" danger icon={<DeleteOutlined />} onClick={e => handleDelete(e, item)} />
+                  <Button type="link" danger icon={<CloseOutlined />} onClick={e => handleDelete(e, item)} />
                 </Tooltip>
               </Space>}
             </Space>

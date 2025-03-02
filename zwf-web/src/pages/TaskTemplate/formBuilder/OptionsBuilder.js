@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Radio, Button, Tooltip, Input, Col, Row, Form, Typography } from 'antd';
 import { filter, uniq } from 'lodash';
-import { CloseOutlined, DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 const { Text } = Typography;

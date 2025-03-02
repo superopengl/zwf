@@ -1,12 +1,8 @@
 import React from 'react';
-import { Card, Space, Row, Avatar, Form, Col, Modal, Tooltip, Typography, Button, Checkbox, Switch } from 'antd';
-import Icon, { CloseOutlined, DeleteFilled, DeleteOutlined, EditOutlined, EyeFilled, EyeInvisibleOutlined, EyeOutlined, HolderOutlined } from '@ant-design/icons'
-import { OptionsBuilder } from './OptionsBuilder';
+import { Space, Row, Avatar, Col, Modal, Typography, Button } from 'antd';
+import Icon, { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons'
 import { TaskTemplateWidgetDef } from 'util/TaskTemplateWidgetDef';
 import PropTypes from 'prop-types';
-import { TaskTemplateEditorContext } from 'contexts/TaskTemplateEditorContext';
-import { VarTag } from 'components/VarTag';
-import DocTemplateSelect from 'components/DocTemplateSelect';
 import FormBuilder from 'antd-form-builder'
 import { showFieldItemEditor } from './showFieldItemEditor';
 import {RiDeleteRow} from 'react-icons/ri'
@@ -15,7 +11,6 @@ const { Text } = Typography;
 
 export const FieldItemEditor = (props) => {
   const { value: item, index, onDelete, onChange } = props;
-  const formRef = React.createRef()
   const handleEditItem = () => {
     showFieldItemEditor(item, onChange);
   }
@@ -77,7 +72,7 @@ export const FieldItemEditor = (props) => {
       <Button type="link" icon={<EditOutlined />} onClick={handleEditItem}></Button>
       {/* <Button type="link" icon={item.official ? <EyeInvisibleOutlined/> : <EyeFilled />} onClick={handleToggleOfficial}></Button>
       <Switch checked={item.required} size="small"/> */}
-      <Button type="link" danger icon={<DeleteOutlined />} onClick={handleDelete}></Button>
+      <Button type="link" danger icon={<CloseOutlined />} onClick={handleDelete}></Button>
       <Button type="text" icon={<HolderOutlined />} style={{cursor: 'move'}}></Button>
     </Col>
   </Row>

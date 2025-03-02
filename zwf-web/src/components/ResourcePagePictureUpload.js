@@ -4,7 +4,7 @@ import { Image as AntdImage, Upload, Button, Space } from 'antd';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs';
 import { API_BASE_URL } from 'services/http';
-import { DeleteOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs/operators';
 import { notify } from 'util/notify';
 import styled from 'styled-components';
@@ -85,7 +85,7 @@ export const ResourcePagePictureUpload = React.memo((props) => {
       >
         {value ? <AntdImage src={value} alt="picture" preview={false} width="100%" /> : uploadButton}
       </Upload>
-      {value && <Button type="link" icon={<DeleteOutlined />} danger onClick={handleDelete} >delete</Button>}
+      {value && <Button type="link" icon={<CloseOutlined />} danger onClick={handleDelete} >delete</Button>}
     </Container>
   );
 });

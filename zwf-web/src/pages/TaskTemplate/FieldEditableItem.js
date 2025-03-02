@@ -5,7 +5,7 @@ import { Card, Tooltip, Form, Switch, Input, Space, Typography } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
-import { DeleteOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
+import { CloseOutlined, LockFilled, HolderOutlined, EyeInvisibleFilled } from '@ant-design/icons';
 import { Divider } from 'antd';
 import styled from 'styled-components';
 import { FieldItem } from './FieldItem';
