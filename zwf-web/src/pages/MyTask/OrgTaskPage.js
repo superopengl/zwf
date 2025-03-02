@@ -15,7 +15,6 @@ import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskLogAndCommentTrackingDrawer } from 'components/TaskLogAndCommentTrackingDrawer';
 import { SavingAffix } from 'components/SavingAffix';
-import { TaskFieldsEditorModal } from 'components/TaskFieldsEditorModal';
 import { showCompleteTaskModal } from 'components/showCompleteTaskModal';
 import { showRequireActionModal } from 'components/showRequireActionModal';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';

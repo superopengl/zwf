@@ -99,7 +99,6 @@ export const TaskGenerator = React.memo(props => {
   const handleCreateAndEdit = () => {
     createTaskWithVarBag$().subscribe(task => {
       props.onCreated(task)
-      debugger;
       if(postCreateMode === 'notify') {
         const notice = notify.success(
           'Successfully created task',
