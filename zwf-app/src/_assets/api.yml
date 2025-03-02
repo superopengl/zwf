@@ -471,21 +471,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
-  /recurring/:id/run:
-    post:
-      operationId: runRecurring
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK          
+          description: OK     
   /resource:
     get:
       operationId: listPublishedResourcePages
@@ -1070,7 +1056,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
+          description: OK          
   /tracking:
     post:
       operationId: listMessage
