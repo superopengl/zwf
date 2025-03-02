@@ -2,12 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Drawer, Select, Row } from 'antd';
 import {
-  UserAddOutlined, QuestionOutlined, SyncOutlined
+  UserAddOutlined, QuestionOutlined, SyncOutlined, QuestionCircleOutlined
 } from '@ant-design/icons';
 import { deleteUser$, setPasswordForUser, setUserRole } from 'services/userService';
 import { inviteMember$, impersonate$, reinviteMember$ } from 'services/authService';
 import { TimeAgo } from 'components/TimeAgo';
-import { reactLocalStorage } from 'reactjs-localstorage';
 import ProfileForm from 'pages/Profile/ProfileForm';
 import DropdownMenu from 'components/DropdownMenu';
 import loadable from '@loadable/component'
@@ -40,6 +39,24 @@ const OrgMemberListPage = () => {
   const [user, setAuthUser] = useAuthUser();
   const [modal, contextHolder] = Modal.useModal();
 
+  const showRoleHelp = () => {
+    modal.info({
+      title: 'About roles',
+      content: <>
+      <Paragraph>
+        <Text code>owner</Text> The superuser of the organization, along with the user who registered this organization in ZeeWorkflow, has the same level of access to features as the <Text code>admin</Text> role.
+      </Paragraph>
+      <Paragraph>
+        <Text code>admin</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags. Moreover, they have the ability to manage team members and subscriptions, which includes handling billing, invoices, and payment methods.
+      </Paragraph>
+      <Paragraph>
+        <Text code>member</Text> This user can access all the features related to tasks, scheduler, templates, users, and tags in the same manner as the <Text code>admin</Text> role.
+      </Paragraph>
+      </>,
+      closable: true,
+    })
+  }
+
   const columnDef = [
     {
       title: 'Member',
@@ -47,7 +64,7 @@ const OrgMemberListPage = () => {
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
     {
-      title: 'Role',
+      title: <>Role <QuestionCircleOutlined onClick={showRoleHelp}/></>,
       dataIndex: 'role',
       render: (value, item) => <Select bordered={false}
         disabled={item.orgOwner}
