@@ -16,6 +16,7 @@ import { TaskIcon } from 'components/entityIcon';
 import { LeftOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { PageHeaderContainer } from 'components/PageHeaderContainer';
 
 const { Text } = Typography;
 
@@ -57,18 +58,12 @@ const ClientTaskPage = (props) => {
 
   return (<>
     <Container>
-      {!task ? <Skeleton active /> : <PageContainer
+      {!task ? <Skeleton active /> : <PageHeaderContainer
         loading={loading}
-        backIcon={<LeftOutlined />}
         onBack={handleGoBack}
-        ghost={true}
         // fixedHeader
-        header={{
-          title: <Space style={{ height: 34 }}>
-            <TaskIcon />
-            {task?.name || <Skeleton paragraph={false} />}
-          </Space>
-        }}
+        icon={<TaskIcon />}
+        title={task?.name || <Skeleton paragraph={false} />}
       >
         <Row gutter={40} wrap={false}>
           <Col span={14}>
@@ -92,7 +87,7 @@ const ClientTaskPage = (props) => {
             </Card>
           </Col>
         </Row>
-      </PageContainer>}
+      </PageHeaderContainer>}
       {saving && <SavingAffix />}
     </Container>
   </>

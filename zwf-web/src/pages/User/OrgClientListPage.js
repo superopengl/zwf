@@ -21,8 +21,6 @@ import { useLocalstorageState } from 'rooks';
 import { InviteClientModal } from 'components/InviteClientModal';
 import { TimeAgo } from 'components/TimeAgo';
 import { UserAvatar } from 'components/UserAvatar';
-import { CreateTaskModal } from 'components/CreateTaskModal';
-import { PageContainer } from '@ant-design/pro-components';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
