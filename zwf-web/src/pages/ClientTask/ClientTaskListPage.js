@@ -95,6 +95,7 @@ export const ClientTaskListPage = () => {
       id: item.id,
       data: item,
       title: <HighlightingText value={item.name} search={query.text} />,
+      subTitle:<>by {item.orgName}</>,
       avatar: <TaskIcon />,
       content: <>
         <Descriptions size="small" column={2}>
@@ -227,9 +228,9 @@ export const ClientTaskListPage = () => {
             xs: 1,
             sm: 1,
             md: 1,
-            lg: 2,
-            xl: 2,
-            xxl: 2
+            lg: 1,
+            xl: 1,
+            xxl: 1
           }}
           ghost
           dataSource={filteredList}
