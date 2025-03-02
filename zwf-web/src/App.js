@@ -23,6 +23,9 @@ import { Error404 } from 'pages/Error404';
 import { LandingPage } from 'pages/LandingPage';
 import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
 import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
+import dayjs from 'dayjs';
+import 'dayjs/locale/en-au';
+import locale from 'antd/locale/en_US';
 
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
@@ -170,6 +173,7 @@ export const App = React.memo(() => {
   return (
     <GlobalContext.Provider value={contextValueRef.current}>
       <ConfigProvider
+        locale={locale}
         theme={{
           components: {
             Divider: {
