@@ -177,8 +177,13 @@ export const TaskListPanel = (props) => {
         changeTaskStatus$(id, 'archived').subscribe(() => onChange());
       },
       maskClosable: true,
+      closable: true,
+      autoFocusButton: 'cancel',
       okButtonProps: {
         danger: true
+      },
+      cancelButtonProps: {
+        type: 'text',
       }
     });
   }

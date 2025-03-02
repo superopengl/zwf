@@ -217,13 +217,18 @@ const OrgListPage = () => {
       icon: <QuestionOutlined />,
       content: <>Impersonate the owner user of org <Text code>{org.name}</Text>?</>,
       okText: 'Yes, impersonate',
+      closable: true,
       maskClosable: true,
+      autoFocusButton: 'ok',
       onOk: () => {
         impersonate$(org.ownerUserId)
           .subscribe(impersonatedUser => {
             setAuthUser(impersonatedUser, '/landing');
             // reactLocalStorage.clear();
           });
+      },
+      cancelButtonProps: {
+        type: 'text'
       }
     })
   }

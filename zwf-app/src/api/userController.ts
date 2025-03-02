@@ -67,7 +67,6 @@ export const saveProfile = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.System, Role.Admin, Role.Agent, Role.Client]);
   const { id } = req.params;
   const { id: loginUserId, role } = (req as any).user as User;
-  const repo = db.getRepository(User);
   const userQuery: any = { id };
   switch (role) {
     case Role.Agent:
@@ -80,40 +79,41 @@ export const saveProfile = handlerWrapper(async (req, res) => {
       break;
   }
 
-  const { email } = req.body;
-  const user = await repo.findOne({
-    where: userQuery,
-    relations: ['profile']
-  });
-  assert(user, 404);
+  // const { email } = req.body;
 
-  user.profile.avatarFileId = req.body.avatar;
-  user.profile.givenName = req.body.givenName;
-  user.profile.surname = req.body.surname;
-  user.profile.locale = req.body.locale;
+  await db.transaction(async m => {
+    const user = await m.findOne(User, {
+      where: userQuery,
+      relations: ['profile']
+    });
+    assert(user, 404);
+  
+    user.profile.avatarFileId = req.body.avatar;
+    user.profile.givenName = req.body.givenName;
+    user.profile.surname = req.body.surname;
+    user.profile.locale = req.body.locale;
+  
+    // let hasEmailChange = false;
+    // if (email) {
+    //   const newEmailHash = computeEmailHash(email);
+    //   hasEmailChange = user.emailHash !== newEmailHash;
+  
+    //   if (hasEmailChange) {
+    //     assert(user.emailHash !== BUILTIN_SYSTEM_ADMIN_EMIAL_HASH, 400, 'Cannot change the email for the builtin admin');
+    //     user.emailHash = newEmailHash;
+    //     user.profile.email = email;
+  
+    //     // await inviteOrgMemberWithSendingEmail(m, user, user.profile);
+    //   }
+    // }
 
-  let hasEmailChange = false;
-  if (email) {
-    const newEmailHash = computeEmailHash(email);
-    hasEmailChange = user.emailHash !== newEmailHash;
-
-    if (hasEmailChange) {
-      assert(user.emailHash !== BUILTIN_SYSTEM_ADMIN_EMIAL_HASH, 400, 'Cannot change the email for the builtin admin');
-      user.emailHash = newEmailHash;
-      user.profile.email = email;
-
-      await inviteOrgMemberWithSendingEmail(db.manager, user, user.profile);
-    }
-  }
-
-  if (!hasEmailChange) {
-    await db.manager.save(user.profile);
-  }
-
-  if (id === loginUserId) {
-    const userInfo = await getActiveUserInformation(user.profile.email);
-    assert(userInfo, 400, 'User not found');
-  }
+    // const entitiesToSave: any[] = [user.profile];
+    // if(hasEmailChange) {
+    //   entitiesToSave.push(user);
+    // }
+  
+    await m.save(user.profile);
+  })
 
   res.json();
 });
