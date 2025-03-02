@@ -15,7 +15,7 @@ export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
-  @Column({select: false})
+  @Column()
   @Index({ unique: true })
   deepLinkId: string;
 
