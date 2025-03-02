@@ -12,7 +12,6 @@ import { TaskTemplate } from '../entity/TaskTemplate';
 import { TaskStatus } from '../types/TaskStatus';
 import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 import { v4 as uuidv4 } from 'uuid';
-import * as voucherCodes from 'voucher-code-generator';
 import { User } from '../entity/User';
 import { sendEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
@@ -22,15 +21,8 @@ import { logTaskCreated } from '../services/taskTrackingService';
 import { Role } from '../types/Role';
 import * as path from 'path';
 import { TaskTemplateField } from '../types/TaskTemplateField';
-
-function generateDeepLinkId() {
-  const result = voucherCodes.generate({
-    length: 64,
-    count: 1,
-    charset: voucherCodes.charset('alphanumeric')
-  });
-  return result[0];
-}
+import { generateDeepLinkId } from './generateDeepLinkId';
+import { EntityManager } from 'typeorm';
 
 function prefillTaskTemplateFields(taskTemplateFields, varBag: { [key: string]: any }) {
   if (!varBag) return taskTemplateFields;
@@ -74,48 +66,45 @@ export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: numb
   return field;
 };
 
-export const createTaskByTaskTemplateAndUserEmail = async (taskTemplateId, taskName, email, creatorId: string, id, orgId) => {
+export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, taskTemplateId, taskName, email, creatorId: string, id, orgId) => {
   assert(email, 400, 'email is not specified');
 
-  let task: Task;
-  await db.transaction(async m => {
-    const taskTemplate = taskTemplateId ? await m.findOne(TaskTemplate, {
-      where: {
-        id: taskTemplateId
-      },
-      relations: {
-        docs: true
-      }
-    }) : null;
+  const taskTemplate = taskTemplateId ? await m.findOne(TaskTemplate, {
+    where: {
+      id: taskTemplateId
+    },
+    relations: {
+      docs: true
+    }
+  }) : null;
 
-    const { user } = await ensureClientOrGuestUser(m, email, orgId);
+  const { user } = await ensureClientOrGuestUser(m, email, orgId);
 
-    task = new Task();
-    task.id = id || uuidv4();
-    task.deepLinkId = generateDeepLinkId();
-    task.name = taskName || generateTaskDefaultName(taskTemplate?.name, user.profile);
-    task.userId = user.id;
-    task.orgId = orgId;
-    task.status = TaskStatus.TODO;
+  const task = new Task();
+  task.id = id || uuidv4();
+  task.deepLinkId = generateDeepLinkId();
+  task.name = taskName || generateTaskDefaultName(taskTemplate?.name, user.profile);
+  task.userId = user.id;
+  task.orgId = orgId;
+  task.status = TaskStatus.TODO;
 
-    // Provision taskFields based on taskTemplate.fields
-    const fields = taskTemplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
+  // Provision taskFields based on taskTemplate.fields
+  const fields = taskTemplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
 
-    await m.save([task, ...fields]);
+  await m.save([task, ...fields]);
 
-    // Add the user to org clients
-    const orgClient = new OrgClient();
-    orgClient.orgId = task.orgId;
-    orgClient.userId = task.userId;
-    await m.createQueryBuilder()
-      .insert()
-      .into(OrgClient)
-      .values(orgClient)
-      .orIgnore()
-      .execute();
+  // Add the user to org clients
+  const orgClient = new OrgClient();
+  orgClient.orgId = task.orgId;
+  orgClient.userId = task.userId;
+  await m.createQueryBuilder()
+    .insert()
+    .into(OrgClient)
+    .values(orgClient)
+    .orIgnore()
+    .execute();
 
-    await logTaskCreated(m, task, creatorId);
-  });
+  await logTaskCreated(m, task, creatorId);
 
   // const org = await db.getRepository(Org).findOne({ where: { id: task.orgId } });
 
