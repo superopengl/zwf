@@ -31,7 +31,7 @@ function request(level, title, content, duration) {
 
   return {
     close: () => {
-      notification.close(key);
+      notification.destroy(key);
     }
   }
 }
