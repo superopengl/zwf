@@ -26,17 +26,20 @@ const StyledFileIcon = styled.div`
 `;
 
 export const TaskFileName = props => {
-  const { taskFile } = props;
+  const { taskFile, showOverlay } = props;
 
-  const { name, fileId, signedAt, requiresSign } = taskFile
+  const { name, fileId, signedAt, requiresSign, type, docTemplateId } = taskFile
 
   let iconType = 'default';
-  if (signedAt) {
-    iconType = 'signed'
-  } else if (requiresSign) {
-    iconType = 'await-sign';
-  } else if (!fileId) {
-    iconType = 'pending';
+
+  if (showOverlay) {
+    if (signedAt) {
+      iconType = 'signed'
+    } else if (requiresSign) {
+      iconType = 'await-sign';
+    } else if (!fileId) {
+      iconType = 'pending';
+    }
   }
 
   const innerContext = <Space>
@@ -44,7 +47,13 @@ export const TaskFileName = props => {
     {name}
   </Space>
 
+  const openDocTemplatePreview = docTemplateId => {
+    
+  }
+
   return fileId ? <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
+    {innerContext}
+  </Link> : docTemplateId ? <Link onClick={() => openDocTemplatePreview(docTemplateId)}>
     {innerContext}
   </Link> : innerContext;
 }
@@ -55,8 +64,9 @@ TaskFileName.propTypes = {
     docTemplateId: PropTypes.string,
     name: PropTypes.string.isRequired,
   }),
+  showOverlay: PropTypes.bool,
 };
 
 TaskFileName.defaultProps = {
-
+  showOverlay: true,
 };

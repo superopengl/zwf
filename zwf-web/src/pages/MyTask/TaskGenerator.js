@@ -9,7 +9,6 @@ import { getTaskTemplate$ } from 'services/taskTemplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
 import { RightOutlined } from '@ant-design/icons';
 import { createNewTask$ } from 'services/taskService';
-import { DocTemplateListPanel } from 'components/DocTemplateListPanel';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import Icon from '@ant-design/icons';
@@ -65,6 +64,7 @@ export const TaskGenerator = React.memo(props => {
     const name = e.target.value?.trim();
     setTaskName(name);
   }
+
   const handleCreateEmptyTask = () => {
     createTaskWithVarBag$().subscribe(task => {
       const notifyHandler = notify.success('Task created', <>
@@ -126,10 +126,6 @@ export const TaskGenerator = React.memo(props => {
             value={clientInfo?.email} />
           <StyledDescription value="Choose a task template to begin with." />
           <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-          {/* {taskTemplate?.docs.length > 0 && <>
-            <StyledDescription value="Associated docs that will be auto-generated based on the form fields." />
-            <DocTemplateListPanel value={taskTemplate.docs} />
-          </>} */}
           {/* <StyledDescription value="Input a meaningful task name. This name will appear in the emails to the client." />
           <Input style={{ height: 50 }}
             placeholder="Task name"

@@ -42,57 +42,14 @@ const Container = styled.div`
 
 `;
 
-const FileIconContainer = styled.div`
-  display: inline-block;
-  position: relative;
-`;
 
-
-const FileIconWithOverlay = props => {
-  const { id, name, size, showsLastReadAt, showsSignedAt } = props
-
-  const [file, setFile] = React.useState();
-
-  const loadEntity = async () => {
-    if (showsLastReadAt || showsSignedAt) {
-      const file = await getFileMeta(id);
-      setFile(file);
-    }
-  }
-
-  React.useEffect(() => {
-    loadEntity();
-  }, []);
-
-  if (!file) {
-    return <FileIcon name={name} width={size} />
-  }
-
-  const { lastReadAt, signedAt } = file;
-
-  return <Popover content={
-    <Space direction="vertical">
-      <TimeAgo value={lastReadAt} prefix="Last read:" direction="horizontal" defaultContent="Unread" />
-      <TimeAgo value={signedAt} prefix="Signed at:" direction="horizontal" defaultContent="Unsigned" />
-    </Space>
-  } trigger="click">
-    <FileIconContainer>
-      <FileIcon name={name} width={size} />
-      {!lastReadAt ? <Badge color="blue" style={{ position: 'absolute', top: -8, left: -8 }} /> :
-        !signedAt ? <Badge color="red" style={{ position: 'absolute', top: -8, left: -8 }} /> :
-          null}
-    </FileIconContainer>
-  </Popover>
-}
 
 export const ClientTaskDocListPanel = React.memo((props) => {
-  const { task, size, showsLastReadAt, showsSignedAt, onChange } = props;
+  const { task, onChange } = props;
 
   const [fileList, setFileList] = React.useState(task.docs);
   const [loading, setLoading] = React.useState(true);
-  const [deleteModal, deleteModalContextHolder] = Modal.useModal();
   const [docs, setDocs] = React.useState(task?.docs ?? []);
-  const [openAddDocTemplate, docTemplateContextHolder] = useAddDocTemplateToTaskModal();
 
   const taskId = task.id;
   // const isPreviewMode = !taskId;
@@ -102,7 +59,6 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     setLoading(false);
   }, [task]);
 
-
   React.useEffect(() => {
     setFileList(docs.map(doc => ({
       uid: doc.id,
@@ -111,28 +67,6 @@ export const ClientTaskDocListPanel = React.memo((props) => {
       url: doc.fileId ? getTaskDocDownloadUrl(doc.fileId) : null,
     })));
   }, [docs]);
-
-  const handleDeleteDoc = doc => {
-    deleteModal.confirm({
-      title: <>Delete doc {doc.name}?</>,
-      maskClosable: true,
-      closable: true,
-      autoFocusButton: 'cancel',
-      okButtonProps: {
-        danger: true
-      },
-      cancelButtonProps: {
-        type: 'text',
-      },
-      okText: 'Delete',
-      onOk: () => {
-        deleteTaskDoc$(doc.id).pipe(
-        ).subscribe(() => {
-          setDocs(docList => docList.filter(x => x.id !== doc.id));
-        });
-      }
-    });
-  }
 
   const handleRequestSign = doc => {
     const action$ = doc.signRequestedAt ? unrequestSignTaskDoc$ : requestSignTaskDoc$;
@@ -154,45 +88,20 @@ export const ClientTaskDocListPanel = React.memo((props) => {
           <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />
         </Space>
         }>
-          <div>
-
-        <TaskFileName taskFile={doc} />
-          </div>
+        <div>
+          <TaskFileName taskFile={doc} />
+        </div>
       </Tooltip>
-
     },
-    // {
-    //   align: 'right',
-    //   width: 32,
-    //   render: (_, doc) => <Tooltip
-    //     color="white"
-    //     overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
-    //     title={<Space direction='vertical'>
-    //       <TaskFileName taskFile={doc} />
-    //       <TimeAgo prefix="created" direction="horizontal" value={doc.createdAt} />
-    //       <TimeAgo prefix="sign requested" direction="horizontal" value={doc.signRequestedAt} />
-    //     </Space>
-    //     }>
-    //     <Button shape="circle" icon={<Icon component={BsInfoLg} />} type="text" />
-    //   </Tooltip>
-    // },
     {
       align: 'right',
       width: 32,
       render: (_, doc) => doc.signRequestedAt ? <Tooltip title={`Sign document`}>
-        <Button shape="circle" type={doc.signRequestedAt ? 'primary' : 'default'} icon={<Icon component={FaSignature} />} onClick={() => handleRequestSign(doc)} />
+        <Button type={doc.signRequestedAt ? 'primary' : 'default'} icon={<Icon component={FaSignature} />} onClick={() => handleRequestSign(doc)} >Sign</Button>
       </Tooltip> : null
     },
   ];
 
-  const handleAddDocTemplates = (docTemplateIds) => {
-    setLoading(true);
-    addDocTemplateToTask$(task.id, docTemplateIds)
-      .pipe(
-        finalize(() => setLoading(false)),
-      )
-      .subscribe(docs => setDocs(docList => [...docList, ...docs]));
-  }
 
   const handleUploadDone = () => {
     setLoading(false);
@@ -220,8 +129,6 @@ export const ClientTaskDocListPanel = React.memo((props) => {
       // }}
       />
     </ProCard>
-    {deleteModalContextHolder}
-    {docTemplateContextHolder}
   </Container>
 })
 

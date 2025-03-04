@@ -6,7 +6,7 @@ import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
 import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
-import { CaretRightOutlined, RightOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
 const Container = styled(Space)`
   margin: 0;
@@ -77,27 +77,29 @@ export const DocTemplatePreviewPanel = props => {
         title="Input field valus"
         open={showTestFields}
         onClose={() => setShowTestFields(false)}
+        closeIcon={<LeftOutlined/>}
         destroyOnClose={false}
         // mask={false}
         maskStyle={{backgroundColor: 'transparent'}}
         push={380}
         width={400}
+        // extra={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
         // footer={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
       >
         <Form
           style={{ marginTop: 20 }}
           ref={form}
-          labelCol={{ span: 8 }}
-          wrapperCol={{ span: 16 }}
+          // labelCol={{ span: 8 }}
+          // wrapperCol={{ span: 16 }}
+          layout="vertical"
           onValuesChange={handleVarValueChange}
         >
           {Object.entries(varBag).map(([k]) => <Form.Item key={k} label={k} name={k}>
             <Input placeholder={`Value of ${k}`} />
           </Form.Item>)}
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          {/* <Form.Item >
             <Button htmlType="button" onClick={() => setShowTestFields(false)} type="primary">Apply</Button>
-            {/* <Button htmlType="reset">Reset</Button> */}
-          </Form.Item>
+          </Form.Item> */}
         </Form>
       </Drawer>}
     </Container >

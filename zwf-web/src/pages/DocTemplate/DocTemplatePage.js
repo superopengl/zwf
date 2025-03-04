@@ -30,7 +30,7 @@ const { Paragraph, Text } = Typography
 const Container = styled(Layout)`
   margin: 0 auto 0 auto;
   background-color: #ffffff;
-  max-width: 1200px;
+  // max-width: 1200px;
   // height: calc(100vh - 64px);
   height: 100%;
 
@@ -182,7 +182,7 @@ export const DocTemplatePage = (props) => {
       }}
     </ReactRouterPrompt>
     <PageHeaderContainer
-      style={{ maxWidth: 900, margin: '0 auto' }}
+      // style={{ maxWidth: 900, margin: '0 auto' }}
       breadcrumb={[
         {
           name: 'Templates'
@@ -195,6 +195,7 @@ export const DocTemplatePage = (props) => {
           name: docTemplateName
         }
       ]}
+      maxWidth={1200}
       loading={loading}
       icon={<DocTemplateIcon />}
       onBack={goBack}
@@ -217,10 +218,10 @@ export const DocTemplatePage = (props) => {
         </Paragraph>}
         closable onClose={() => setShowingHelp(false)} />}
       {!loading && <Row gutter={20} wrap={false}>
-        <Col flex={"740px"}>
+        <Col flex={"auto"}>
           <RichTextInput value={html} onChange={handleChangeHtml} editorConfig={{ min_height: 842 }} />
         </Col>
-        <Col flex="auto">
+        <Col flex="320px">
           <Card
             title="Defined Fields"
           >

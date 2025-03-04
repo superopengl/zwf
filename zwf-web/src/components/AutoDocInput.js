@@ -147,8 +147,6 @@ export const AutoDocInput = (props) => {
           </Space>
         </Col>}
       </Row>
-      {/* <Button type="link" icon={<EyeOutlined/>}/> */}
-      {/* <DocTemplatePreviewPanel value={docTemplate} /> */}
       {!disabled && <small>
         <Paragraph type="secondary" style={{ margin: '4px 0 0 0' }}>
           Depending on fields {docTemplate.refFieldNames?.map(f => <VarTag key={f}>{f}</VarTag>)}
