@@ -67,7 +67,7 @@ export const PageHeaderContainer = React.memo((props) => {
           margin: '0 auto',
         }
       }}
-    ><div style={{ maxWidth, margin: '0 auto' }}>{children}</div></PageContainer>
+    ><div style={{ maxWidth, margin: '0 auto', padding: '0 40px' }}>{children}</div></PageContainer>
     {footer && <Footer>
       <div style={{ maxWidth, margin: '0 auto', width: '100%', display: 'flex', justifyContent: 'end' }}>
         {footer}
