@@ -9,6 +9,7 @@ import { BsFillPenFill } from 'react-icons/bs';
 import { FileIcon } from './FileIcon';
 import { getTaskDocDownloadUrl } from "services/taskService";
 import { DebugJsonPanel } from './DebugJsonPanel';
+import { useDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 
 const { Link } = Typography
 
@@ -29,6 +30,7 @@ export const TaskFileName = props => {
   const { taskFile, showOverlay } = props;
 
   const { name, fileId, signedAt, requiresSign, type, docTemplateId } = taskFile
+  const [openPreview, previewContextHolder] = useDocTemplatePreviewModal();
 
   let iconType = 'default';
 
@@ -47,15 +49,20 @@ export const TaskFileName = props => {
     {name}
   </Space>
 
-  const openDocTemplatePreview = docTemplateId => {
-    
+  const openDocTemplatePreview = (e) => {
+    e.stopPropagation();
+    console.log('click')
+    openPreview(docTemplateId, name);
   }
 
-  return fileId ? <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
+  return <>
+   {fileId ? <Link href={getTaskDocDownloadUrl(fileId)} target="_blank">
     {innerContext}
-  </Link> : docTemplateId ? <Link onClick={() => openDocTemplatePreview(docTemplateId)}>
+  </Link> : docTemplateId ? <Link onClick={openDocTemplatePreview}>
     {innerContext}
-  </Link> : innerContext;
+  </Link> : innerContext}
+  {previewContextHolder}
+  </>
 }
 
 TaskFileName.propTypes = {
