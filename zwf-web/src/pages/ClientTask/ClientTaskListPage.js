@@ -1,4 +1,4 @@
-import { ClearOutlined, SyncOutlined } from '@ant-design/icons';
+import { ClearOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
 import { Button, Space, Typography, Row, Col, Tabs, Grid, Alert, Badge, Tooltip, Select, Input, Card, Tag, Checkbox, ConfigProvider } from 'antd';
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-components';
@@ -20,6 +20,8 @@ import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { BiRightArrow } from 'react-icons/bi';
 
 const { useBreakpoint } = Grid;
 const { CheckableTag } = Tag;
@@ -95,9 +97,9 @@ export const ClientTaskListPage = () => {
       id: item.id,
       data: item,
       title: <HighlightingText value={item.name} search={query.text} />,
-      subTitle:<>by {item.orgName}</>,
+      subTitle: <>by {item.orgName}</>,
       avatar: <TaskIcon />,
-      content: <>
+      description: <>
         <Descriptions size="small" column={2}>
           <Descriptions.Item label="created">
             <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
@@ -106,7 +108,10 @@ export const ClientTaskListPage = () => {
             <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
           </Descriptions.Item>
         </Descriptions>
-      </>
+      </>,
+      extra: {
+        render: () => <Tag>blah</Tag>
+      }
     }))
     setFilteredList(formatted);
   }, [allList, query]);
@@ -160,10 +165,7 @@ export const ClientTaskListPage = () => {
         loading={loading}
         title='All My Cases'
         extra={[
-          <Button key="refresh"
-            icon={<SyncOutlined />}
-            onClick={() => load$()}
-            type="link">Refresh</Button>
+
         ]}
       >
         <Row gutter={[12, 24]}>
@@ -251,12 +253,48 @@ export const ClientTaskListPage = () => {
               },
             };
           }}
+          toolBarRender={() => {
+            return [
+              <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} type="primary" ghost>Refresh</Button>
+            ];
+          }}
+          rowKey="id"
+          itemLayout="vertical"
           metas={{
             title: {},
             subTitle: {},
             type: {},
             avatar: {},
             content: {},
+            extra: {
+              render: () => [
+                <div
+                  style={{
+                    minWidth: 200,
+                    flex: 1,
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                  }}
+                >
+                  <div
+                    style={{
+                      width: '200px',
+                    }}
+                  >
+                    <div>发布中</div>
+                    {/* <Progress percent={80} /> */}
+                  </div>
+                </div>
+              ],
+            },
+            actions: {
+              render: (_, item) => {
+                return [
+                <Tag key="status">{item.data.status}</Tag>,
+                <Button icon={<RightOutlined/>} type="text"/>
+                ];
+              },
+            },
           }}
 
         />
