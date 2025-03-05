@@ -11,6 +11,7 @@ import { getTaskDocDownloadUrl } from "services/taskService";
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { useDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { openTaskDoc } from 'services/fileService';
+import { Loading } from './Loading';
 
 const { Link } = Typography
 
@@ -31,6 +32,7 @@ export const TaskDocName = props => {
   const { taskFile, showOverlay } = props;
 
   const { id, name, fileId, signedAt, requiresSign, type, docTemplateId } = taskFile
+  const [loading, setLoading] = React.useState(false);
   const [openPreview, previewContextHolder] = useDocTemplatePreviewModal();
 
   let iconType = 'default';
@@ -45,25 +47,27 @@ export const TaskDocName = props => {
     }
   }
 
-  const innerContext = <Space>
-    <FileIcon name={name} type={iconType} />
-    {name}
-  </Space>
-
   const handleOpenTaskDoc = async (e) => {
     e.stopPropagation();
-    const hasFile = await openTaskDoc(id, name);
-    if (!hasFile && docTemplateId) {
-      openPreview(docTemplateId, name);
-    } else {
-      throw new Error('Cannot open task doc');
+    if(loading) {
+      return;
     }
+    setLoading(true)
+    try {
+      const hasFile = await openTaskDoc(id, name);
+      if (!hasFile && docTemplateId) {
+        openPreview(docTemplateId, name);
+      }
+    } finally {
+      setLoading(false);
+    }
+
   }
 
   return <>
   <Link onClick={handleOpenTaskDoc}><Space>
     <FileIcon name={name} type={iconType} />
-    {name}
+    {name} <Loading loading={loading} size={14}/>
   </Space>
   </Link>
   {previewContextHolder}
