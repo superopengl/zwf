@@ -880,6 +880,17 @@ paths:
         200:
           description: OK     
   /task/doc/{docId}:
+    get:
+      operationId: downloadTaskDoc
+      parameters: 
+        - name: docId
+          in: path
+          type: string
+          format: uuid
+          required: true              
+      responses:
+        200:
+          description: OK       
     delete:
       operationId: deleteTaskDoc
       parameters: 
@@ -890,7 +901,7 @@ paths:
           required: true              
       responses:
         200:
-          description: OK               
+          description: OK                     
   /task/doc/{docId}/request_sign:
     post:
       operationId: requestSignTaskDoc

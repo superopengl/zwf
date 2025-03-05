@@ -8,7 +8,7 @@ import { Modal } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { reactLocalStorage } from 'reactjs-localstorage';
 import * as queryString from 'query-string';
-import {showVersionMismatchAlert} from 'components/showVersionMismatchAlert';
+import { showVersionMismatchAlert } from 'components/showVersionMismatchAlert';
 
 axios.defaults.withCredentials = true;
 
@@ -73,13 +73,16 @@ export async function request(method, path, queryParams, body, responseType = 'j
       // Session timeout
       handleSessionTimeout();
       return false;
-    } else if(code === 423) {
+    } else if (code === 423) {
       // Subscription suspended
       reloadPage();
       return false;
     }
-    const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
-    notify.error('Error', errorMessage);
+    const shouldSilent = code === 425;
+    if (!shouldSilent) {
+      const errorMessage = responseType === 'blob' ? e.message : _.get(e, 'response.data.message') || _.get(e, 'response.data') || e.message;
+      notify.error('Error', errorMessage);
+    }
     console.error(e.response);
     throw e;
   }

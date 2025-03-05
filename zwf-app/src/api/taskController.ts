@@ -113,6 +113,53 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   streamFileToResponse(file, res);
 });
 
+export const downloadTaskDoc = handlerWrapper(async (req, res) => {
+  assert(getUserIdFromReq(req), 404);
+
+  assertRole(req, ['system', 'admin', 'client', 'agent']);
+  const { docId } = req.params;
+  const role = getRoleFromReq(req);
+  const isClient = role === Role.Client;
+
+  const query: any = {
+    id: docId
+  }
+
+  switch(role) {
+    case Role.Agent:
+    case Role.Admin:
+      query.orgId = getOrgIdFromReq(req);
+      break;
+    default:
+      break;
+  }
+
+  const doc = await db.getRepository(TaskDoc).findOne({
+    where:  {
+      id: docId
+    },
+    relations: {
+      task: true,
+      file: true,
+    }
+  });
+
+  assert(doc, 404);
+  assert(role !== Role.Client || doc.task.userId === getUserIdFromReq(req), 404);
+
+  const { file, docTemplateId } = doc;
+
+  if (file) {
+    streamFileToResponse(file, res);
+  } else if(docTemplateId) {
+    // Hand over to frontend.
+    res.status(425).send("Dependency fields for doc template are not ready").end();
+    return;
+  } else {
+    assert(doc, 500, 'Invalid doc file condition');
+  }
+});
+
 export const signTaskFile = handlerWrapper(async (req, res) => {
   assertRole(req, ['client']);
   const { fileId } = req.params;
@@ -415,8 +462,8 @@ export const getTask = handlerWrapper(async (req, res) => {
     }
   });
 
-  if(role === Role.Client) {
-    const {name: orgName} = await db.getRepository(Org).findOneBy({id: task.orgId});
+  if (role === Role.Client) {
+    const { name: orgName } = await db.getRepository(Org).findOneBy({ id: task.orgId });
     (task as any).orgName = orgName;
   }
 

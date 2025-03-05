@@ -16,15 +16,22 @@ export async function getFileMetaList(ids) {
   return ids?.length ? httpPost('file/meta', { ids }) : [];
 }
 
-export async function downloadFile(fileId) {
-  if (!fileId) throw new Error('Missing fileId');
-  return request('GET', `/file/${fileId}/data`, null, null, 'blob');
+export async function downloadTaskDoc(taskDocId) {
+  if (!taskDocId) throw new Error('Missing taskDocId');
+  return request('GET', `/task/doc/${taskDocId}`, null, null, 'blob');
 }
 
-export async function openFile(fileId) {
-  const data = await downloadFile(fileId);
-  const fileUrl = URL.createObjectURL(data);
-  window.open(fileUrl);
+export async function openTaskDoc(docId, docName) {
+  try {
+    const data = await downloadTaskDoc(docId);
+    var link = document.createElement("a"); // Or maybe get it from the current document
+    link.href = URL.createObjectURL(data);
+    link.download = docName;
+    link.click();
+    return true;
+  } catch (e) {
+    return false;
+  }
 }
 
 export function getPublicFileUrl(fileId) {
