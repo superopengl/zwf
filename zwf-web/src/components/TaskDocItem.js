@@ -90,7 +90,7 @@ export const TaskDocItem = React.memo(props => {
   // className={missingVars.length > 0 ? 'error-doc' : !taskFile.fileId ? 'not-generated' : null}
   >
     <Col flex={1}>
-      <TaskDocName taskFile={taskDoc} />
+      <TaskDocName taskDoc={taskDoc} />
     </Col>
     {!disabled && <Col style={{ paddingTop: 6 }}>
       <Space size="small">

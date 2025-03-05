@@ -952,13 +952,13 @@ paths:
       responses:
         200:
           description: OK           
-  /task/file/{fileId}/sign:
+  /task/doc/{docId}/sign:
     post:
-      operationId: signTaskFile
+      operationId: signTaskDoc
       # security:
       #   - authLoggedInUser: []
       parameters:
-        - name: fileId
+        - name: docId
           in: path
           type: string
           format: uuid

@@ -1,28 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Upload, Typography, Space, Button, Tooltip, Table, Modal, Dropdown, Descriptions } from 'antd';
+import { Space, Button, Tooltip, Table, Modal, Dropdown } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
-import { getFileMeta, getFileMetaList } from 'services/fileService';
-import { FileIcon } from './FileIcon';
-import { saveAs } from 'file-saver';
-import { AiOutlineUpload } from 'react-icons/ai';
-import { Badge } from 'antd';
-import { Popover } from 'antd';
 import { TimeAgo } from './TimeAgo';
-import { API_BASE_URL } from 'services/http';
-import { Loading } from 'components/Loading';
-import { TaskDocItem } from './TaskDocItem';
-import { deleteTaskDoc$, getTaskDocDownloadUrl, requestSignTaskDoc$, unrequestSignTaskDoc$, addDocTemplateToTask$, } from 'services/taskService';
-import { DebugJsonPanel } from './DebugJsonPanel';
+import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDocTemplateToTask$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
-import Icon, { CloseOutlined, InfoCircleFilled, PlusOutlined, UploadOutlined } from '@ant-design/icons';
+import Icon, { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { useAddDocTemplateToTaskModal } from 'hooks/useAddDocTemplateToTaskModal';
-import { DocTemplateIcon } from './entityIcon';
-import { BsFileEarmarkTextFill, BsInfoLg } from 'react-icons/bs';
+import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 
 const Container = styled.div`
@@ -40,7 +29,6 @@ const Container = styled.div`
 export const TaskDocListPanel = React.memo((props) => {
   const { task, onChange } = props;
 
-  const [fileList, setFileList] = React.useState(task.docs);
   const [loading, setLoading] = React.useState(true);
   const [deleteModal, deleteModalContextHolder] = Modal.useModal();
   const [docs, setDocs] = React.useState(task?.docs ?? []);
@@ -54,15 +42,6 @@ export const TaskDocListPanel = React.memo((props) => {
     setLoading(false);
   }, [task]);
 
-
-  React.useEffect(() => {
-    setFileList(docs.map(doc => ({
-      uid: doc.id,
-      name: doc.name,
-      status: 'done',
-      url: doc.fileId ? getTaskDocDownloadUrl(doc.fileId) : null,
-    })));
-  }, [docs]);
 
   const handleDeleteDoc = doc => {
     deleteModal.confirm({
@@ -101,13 +80,13 @@ export const TaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          <TaskDocName taskFile={doc} showOverlay={false} />
+          <TaskDocName taskDoc={doc} showOverlay={false} />
           <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
           <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />
         </Space>
         }>
         <div>
-          <TaskDocName taskFile={doc} />
+          <TaskDocName taskDoc={doc} />
         </div>
       </Tooltip>
 

@@ -32,7 +32,7 @@ export class File {
   @Column({select: false})
   location: string;
 
-  @Column({select: false})
+  @Column()
   md5: string;
 
   /**

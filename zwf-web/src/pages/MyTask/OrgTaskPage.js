@@ -21,9 +21,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
-import { TaskFileUploader } from 'components/TaskFileUploader';
 import { TaskDocListPanel } from 'components/TaskDocListPanel';
-import TaskFieldEditorPanel from 'pages/TaskTemplate/TaskFieldEditorPanel';
 
 
 const ContainerStyled = styled(Layout.Content)`
