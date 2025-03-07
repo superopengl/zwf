@@ -41,38 +41,6 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   res.json(task);
 });
 
-const TASK_CONTENT_EVENT_TYPE = 'task.content';
-
-export const subscribeTaskContent = handlerWrapper(async (req, res) => {
-  // assertRole(req,[ 'admin', 'agent', 'client', 'guest']);
-  const role = getRoleFromReq(req);
-  assert(role !== Role.System, 404);
-  const { id } = req.params;
-
-  await assertTaskAccess(req, id);
-
-  // const { user: { id: userId } } = req as any;
-  const isProd = process.env.NODE_ENV === 'prod';
-  if (!isProd) {
-    res.setHeader('Access-Control-Allow-Origin', process.env.ZWF_WEB_DOMAIN_NAME);
-  }
-  res.sse();
-
-  const channelSubscription$ = getEventChannel(TASK_CONTENT_EVENT_TYPE)
-    .pipe(
-      filter(x => x?.taskId === id)
-    )
-    .subscribe((event) => {
-      res.write(`data: ${JSON.stringify(event)}\n\n`);
-      (res as any).flush();
-    });
-
-  res.on('close', () => {
-    channelSubscription$.unsubscribe();
-    res.end();
-  });
-});
-
 export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assert(getUserIdFromReq(req), 404);
 
@@ -170,7 +138,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
       assert(false, 404, 'Task is not found');
   }
 
-  const task = await db.getRepository(Task).findOne({ where: query, select: { id: true } });
+  const task = await db.getRepository(Task).findOneBy(query);
   assert(task, 404);
 
   const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));

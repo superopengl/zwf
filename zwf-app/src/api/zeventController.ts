@@ -28,11 +28,10 @@ export const establishZeventStream = handlerWrapper(async (req, res) => {
 
   const source$ = getEventSource$(filter)
     .pipe(
-  )
-    .subscribe((zevent) => {
-      res.write(`data: ${JSON.stringify(zevent)}\n\n`);
-      (res as any).flush();
-    });
+  ).subscribe((zevent) => {
+    res.write(`data: ${JSON.stringify(zevent)}\n\n`);
+    (res as any).flush();
+  });
 
   res.on('close', () => {
     source$.unsubscribe();
@@ -44,20 +43,26 @@ export const establishZeventStream = handlerWrapper(async (req, res) => {
 function getEventFilter(role: string, userId: string, orgId: string, taskId: string) {
   switch (role) {
     case Role.System:
-      return (zevent: Zevent) => zevent.type === 'support';
+      return (zevent: Zevent) => {
+        return zevent.type === 'support';
+      }
     case Role.Client:
-      return (zevent: Zevent) => zevent.userId === userId && (
-        zevent.type === 'support' ||
-        (zevent.type === 'task' && (!taskId || zevent.taskId === taskId))
-      );
+      return (zevent: Zevent) => {
+        return zevent.userId === userId && (
+          zevent.type === 'support' ||
+          (zevent.type === 'task' && (!taskId || zevent.taskId === taskId))
+        );
+      }
     case Role.Agent:
     case Role.Admin:
-      return (zevent: Zevent) => (zevent.userId === userId && zevent.type === 'support') ||
-        (
-          zevent.type === 'task' &&
-          zevent.orgId === orgId &&
-          (!taskId || zevent.taskId === taskId)
-        );
+      return (zevent: Zevent) => {
+        return (zevent.userId === userId && zevent.type === 'support') ||
+          (
+            zevent.type === 'task' &&
+            zevent.orgId === orgId &&
+            (!taskId || zevent.taskId === taskId)
+          )
+      };
     default:
       assert(false, 403, `Does not support SSE`);
   }

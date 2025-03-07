@@ -803,18 +803,6 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/content/sse:
-    get:
-      operationId: subscribeTaskContent
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /task/{id}/tracking/sse:
     get:
       operationId: subscribeTaskTracking
