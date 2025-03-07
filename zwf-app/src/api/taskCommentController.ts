@@ -1,12 +1,5 @@
 import { db } from '../db';
-import { TaskStatus } from '../types/TaskStatus';
 import { TaskCommentInformation } from '../entity/views/TaskCommentInformation';
-import { TaskComment } from '../entity/TaskComment';
-import { getEventChannel } from '../services/globalEventSubPubService';
-import { filter } from 'rxjs/operators';
-
-import { In } from 'typeorm';
-import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../entity/Task';
 import { assert } from '../utils/assert';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -15,9 +8,7 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-import { publishEvent } from '../services/globalEventSubPubService';
-import { assertTaskAccess } from '../utils/assertTaskAccess';
-import { logTaskChat, nudgeCommentAccess, TASK_ACTIVITY_EVENT_TYPE } from '../services/taskCommentService';
+import { logTaskChat, nudgeCommentAccess } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
 import { TaskActionType } from '../types/TaskActionType';
 

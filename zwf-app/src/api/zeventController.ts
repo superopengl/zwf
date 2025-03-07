@@ -2,12 +2,13 @@
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { getEventSource$ } from '../services/globalEventSubPubService';
+import { getEventSource$ } from '../services/zeventSubPubService';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Zevent } from '../types/Zevent';
+import { filter } from 'rxjs';
 
 
 export const establishZeventStream = handlerWrapper(async (req, res) => {
@@ -17,7 +18,7 @@ export const establishZeventStream = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   const orgId = getOrgIdFromReq(req);
   const taskId = req.query.taskId as string;
-  const filter = getEventFilter(role, userId, orgId, taskId);
+  const filterFunc = getSourcePipelines(role, userId, orgId, taskId);
 
   // const { user: { id: userId } } = req as any;
   const isProd = process.env.NODE_ENV === 'prod';
@@ -26,12 +27,13 @@ export const establishZeventStream = handlerWrapper(async (req, res) => {
   }
   res.sse();
 
-  const source$ = getEventSource$(filter)
+  const source$ = getEventSource$()
     .pipe(
-  ).subscribe((zevent) => {
-    res.write(`data: ${JSON.stringify(zevent)}\n\n`);
-    (res as any).flush();
-  });
+      filter(filterFunc),
+    ).subscribe((zevent) => {
+      res.write(`data: ${JSON.stringify(zevent)}\n\n`);
+      (res as any).flush();
+    });
 
   res.on('close', () => {
     source$.unsubscribe();
@@ -40,7 +42,7 @@ export const establishZeventStream = handlerWrapper(async (req, res) => {
 });
 
 
-function getEventFilter(role: string, userId: string, orgId: string, taskId: string) {
+function getSourcePipelines(role: string, userId: string, orgId: string, taskId: string) {
   switch (role) {
     case Role.System:
       return (zevent: Zevent) => {

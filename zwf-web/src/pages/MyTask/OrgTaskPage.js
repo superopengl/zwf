@@ -22,6 +22,7 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { TaskDocListPanel } from 'components/TaskDocListPanel';
+import { TaskChangeNoticable } from 'components/TaskChangeNoticable';
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -167,9 +168,12 @@ const OrgTaskPage = React.memo((props) => {
         icon={<TaskIcon />}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
-          <Tooltip title="Refresh" key="refresh">
+          <TaskChangeNoticable key="refresh"
+            message="This task has changes. Click to refresh"
+            filter={z => z.type === 'task.change' && z.taskId === task.id}
+          >
             <Button icon={<SyncOutlined />} onClick={() => load$()} />
-          </Tooltip>,
+          </TaskChangeNoticable>,
           <Tooltip key="edit" title="Edit">
             <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
           </Tooltip>,

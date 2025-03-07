@@ -5,21 +5,29 @@ import { SupportMessage } from '../entity/SupportMessage';
 export type Zevent = {
   type: 'support';
   userId: string;
+  by: string;
   payload: SupportMessage;
+// } | {
+//   type: 'task.fields';
+//   userId: string;
+//   taskId: string;
+//   orgId: string;
+//   payload: {
+//     taskId: string;
+//     fields: {[key: string]: any}
+//   };
 } | {
-  type: 'task.fields';
+  type: 'task.change';
   userId: string;
   taskId: string;
   orgId: string;
-  payload: {
-    taskId: string;
-    fields: {[key: string]: any}
-  };
+  by: string;
 } | {
   type: 'task.comment';
   userId: string;
   taskId: string;
   orgId: string;
+  by: string;
   payload: TaskComment;
 };
 

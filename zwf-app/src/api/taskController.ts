@@ -6,7 +6,7 @@ import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
-import { EntityManager, In, Not } from 'typeorm';
+import { In, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../entity/Task';
 import { TaskStatus } from '../types/TaskStatus';
@@ -22,13 +22,11 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
 import { logTaskStatusChange, logTaskAssigned, logTaskChat } from '../services/taskCommentService';
 import { File } from '../entity/File';
-import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
-import { assertTaskAccess } from '../utils/assertTaskAccess';
-import { filter } from 'rxjs/operators';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
+import { publishTaskChangeEvent } from '../utils/publishTaskChangeEvent';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
@@ -89,7 +87,9 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
       id: true,
       fields: {
         id: true
-      }
+      },
+      orgId: true,
+      userId: true,
     }
   });
   assert(task, 404);
@@ -109,6 +109,8 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
     }
     await m.getRepository(TaskField).save(fields);
   });
+
+  publishTaskChangeEvent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -145,16 +147,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
 
   await db.getRepository(TaskField).save(fieldEntities);
 
-  publishEvent({
-    type: 'task.fields',
-    userId: task.userId,
-    taskId: task.id,
-    orgId: task.orgId,
-    payload: {
-      taskId: task.id,
-      fields,
-    }
-  });
+  publishTaskChangeEvent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -181,33 +174,12 @@ const defaultSearch: ISearchTaskQuery = {
   orderDirection: 'DESC'
 };
 
-const getFullTask = async (m: EntityManager, taskId: string, orgId: string) => {
-  const task = await m.getRepository(Task).findOne({
-    where: {
-      id: taskId,
-      orgId
-    },
-    order: {
-      fields: {
-        ordinal: 'ASC'
-      }
-    },
-    relations: [
-      'fields',
-      'docs',
-      'docs.sign',
-      'tags',
-    ]
-  });
-
-  return task;
-}
 
 export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
-  const { text, status, page, assignee, orderDirection, orderField, dueDateRange, taskTemplateId, portfolioId, clientId } = option;
+  const { text, status, page, assignee, orderDirection, orderField, taskTemplateId, portfolioId, clientId } = option;
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
@@ -353,8 +325,9 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
 
   // Upload file binary to S3
   let taskDocs: TaskDoc[] = [];
-
+  let task: Task;
   await db.transaction(async m => {
+    task = await m.getRepository(Task).findOneByOrFail({id: taskId, orgId});
     const docTemplates = await m.getRepository(DocTemplate).findBy({
       id: In(docTemplateIds),
       orgId,
@@ -404,6 +377,8 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
       await m.save([...taskFields, ...taskDocs]);
     };
   });
+  
+  publishTaskChangeEvent(task, getUserIdFromReq(req));
 
   res.json(taskDocs);
 });
@@ -469,10 +444,14 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
   const { name } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  await db.getRepository(Task).update({
+  const task = await db.getRepository(Task).findOneBy({
     id,
     orgId,
-  }, { name });
+  });
+  task.name = name;
+  await db.manager.save(task);
+
+  publishTaskChangeEvent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -499,8 +478,9 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   const userId = getUserIdFromReq(req);
 
+  let task: Task;
   await db.transaction(async m => {
-    const task = await m.findOneOrFail(Task, { where: { id, orgId } });
+    task = await m.findOneOrFail(Task, { where: { id, orgId } });
     const oldStatus = task.status;
     const newStatus = status as TaskStatus;
     if (oldStatus !== newStatus) {
@@ -508,6 +488,8 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
       await logTaskStatusChange(m, task, userId, oldStatus, newStatus);
     }
   });
+
+  publishTaskChangeEvent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -594,7 +576,12 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
 
   let taskDoc: TaskDoc = null;
   await db.transaction(async m => {
-    taskDoc = await m.getRepository(TaskDoc).findOneByOrFail({ id: docId, orgId });
+    taskDoc = await m.getRepository(TaskDoc).findOneOrFail({
+      where: { id: docId, orgId },
+      relations: {
+        task: true
+      }
+    });
     assert(taskDoc, 404);
     assert(!taskDoc.esign, 400, 'Cannot change sign request for a signed doc');
 
@@ -605,6 +592,8 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
     }
   })
 
+  publishTaskChangeEvent(taskDoc.task, getUserIdFromReq(req));
+
   res.json(taskDoc);
 });
 
@@ -612,11 +601,15 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { docId } = req.params;
   const orgId = getOrgIdFromReq(req);
-  const userId = getUserIdFromReq(req);
 
   let taskDoc: TaskDoc = null;
   await db.transaction(async m => {
-    taskDoc = await m.getRepository(TaskDoc).findOneByOrFail({ id: docId, orgId });
+    taskDoc = await m.getRepository(TaskDoc).findOneOrFail({
+      where: { id: docId, orgId },
+      relations: {
+        task: true
+      }
+    });
     assert(taskDoc, 404);
     assert(!taskDoc.esign, 400, 'Cannot change sign request for a signed doc');
 
@@ -625,6 +618,8 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
 
     await m.save(taskDoc)
   })
+
+  publishTaskChangeEvent(taskDoc.task, getUserIdFromReq(req));
 
   res.json(taskDoc);
 });

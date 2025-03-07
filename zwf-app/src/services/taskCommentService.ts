@@ -6,7 +6,7 @@ import { assert } from '../utils/assert';
 import { Task } from '../entity/Task';
 import { TaskCommentLastAccess } from '../entity/TaskCommentLastAccess';
 import { TaskStatus } from '../types/TaskStatus';
-import { publishEvent } from './globalEventSubPubService';
+import { publishEvent } from './zeventSubPubService';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskInformation } from '../entity/views/TaskInformation';
 
@@ -30,6 +30,7 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
     userId,
     taskId,
     orgId,
+    by,
     payload: comment
   });
 

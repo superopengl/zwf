@@ -1,19 +1,14 @@
 import { db } from './../db';
 import { SupportUserUnreadInformation } from '../entity/views/SupportUserUnreadInformation';
-import { getUtcNow } from './../utils/getUtcNow';
 import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
 import { SupportInformation } from '../entity/views/SupportInformation';
-import { UserInformation } from '../entity/views/UserInformation';
 import { v4 as uuidv4 } from 'uuid';
 
 import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { handlerWrapper } from '../utils/asyncHandler';
-import * as delay from 'delay';
-import { filter } from 'rxjs';
-import { getEventChannel, publishEvent } from '../services/globalEventSubPubService';
+import { publishEvent } from '../services/zeventSubPubService';
 import { Role } from '../types/Role';
-import { assertTaskAccess } from '../utils/assertTaskAccess';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { SupportMessage } from '../entity/SupportMessage';
@@ -125,6 +120,7 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
     type: 'support',
     userId: sm.userId,
     payload: sm,
+    by: userId,
   });
 
   res.json();
