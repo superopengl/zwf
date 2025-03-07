@@ -146,8 +146,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   await db.getRepository(TaskField).save(fieldEntities);
 
   publishEvent({
-    type: 'task',
-    subtype: 'fields',
+    type: 'task.fields',
     userId: task.userId,
     taskId: task.id,
     orgId: task.orgId,

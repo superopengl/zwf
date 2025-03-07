@@ -123,7 +123,6 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
 
   publishEvent({
     type: 'support',
-    subtype: 'support',
     userId: sm.userId,
     payload: sm,
   });

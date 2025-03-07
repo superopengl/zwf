@@ -53,14 +53,14 @@ export const SupportAffix = () => {
 
   const cheerName = user?.givenName?.trim() || 'Hi There';
 
-  useSubscribeZevent(zevent => {
+  useSubscribeZevent('support', zevent => {
     setList(list => {
       return [...list, zevent.payload]
     })
     if (!visibleRef.current) {
       setUnreadCount(x => x + 1);
     }
-  }, []);
+  });
 
   // Initial data load
   React.useEffect(() => {
