@@ -3,16 +3,16 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
-import ScrollToBottom, {  } from 'react-scroll-to-bottom';
+import ScrollToBottom, { } from 'react-scroll-to-bottom';
 import { listTaskComment$, } from 'services/taskService';
 import { nudgeCommentAccess$ } from 'services/taskCommentService';
-import { subscribeTaskComment } from "services/taskCommentService";
 import * as moment from 'moment';
 import { css } from '@emotion/css'
 import { ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { TaskMessageForm } from './TaskMessageForm';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
 
 const StyledList = styled(ProList)`
 .ant-pro-card-body {
@@ -67,6 +67,15 @@ export const TaskCommentPanel = React.memo((props) => {
   //   scrollToBottom();
   // }, [list]);
 
+  const handleZevent = zevent => {
+    const event = zevent.payload;
+    event.createdAt = moment.utc(event.createdAt).local().toDate();
+    setList(list => [...list, event]);
+    nudgeCommentAccess$(taskId).subscribe();
+  };
+
+  useSubscribeZevent('task.comment', handleZevent);
+
   React.useEffect(() => {
     const sub$ = listTaskComment$(taskId).subscribe(allData => {
       allData.forEach(x => {
@@ -76,18 +85,7 @@ export const TaskCommentPanel = React.memo((props) => {
       setLoading(false);
     });
 
-    const eventSource = subscribeTaskComment(taskId);
-    eventSource.onmessage = (message) => {
-      const event = JSON.parse(message.data);
-      event.createdAt = moment.utc(event.createdAt).local().toDate();
-      setList(list => [...list, event]);
-      nudgeCommentAccess$(taskId).subscribe();
-    }
-
-    return () => {
-      sub$?.unsubscribe();
-      eventSource?.close();
-    }
+    return () => sub$.unsubscribe();
   }, []);
 
   return <ScrollToBottom className={containerCss} debug={false}>
@@ -109,7 +107,7 @@ export const TaskCommentPanel = React.memo((props) => {
         subTitle: <TimeAgo value={item.createdAt} showTime={false} />,
         description: item.info,
       }))}
-      locale={{emptyText: <></>}}
+      locale={{ emptyText: <></> }}
       metas={{
         avatar: {},
         title: {},

@@ -803,18 +803,6 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/comment/sse:
-    get:
-      operationId: subscribeTaskComment
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /task/{id}/comment/nudge:
     get:
       operationId: nudgeCommentCursor
