@@ -17,7 +17,7 @@ import { sendEmail } from '../services/emailService';
 import { getEmailRecipientName } from './getEmailRecipientName';
 import { Org } from '../entity/Org';
 import { DocTemplate } from '../entity/DocTemplate';
-import { logTaskCreated } from '../services/taskTrackingService';
+import { logTaskCreated } from '../services/taskCommentService';
 import { Role } from '../types/Role';
 import * as path from 'path';
 import { TaskTemplateField } from '../types/TaskTemplateField';

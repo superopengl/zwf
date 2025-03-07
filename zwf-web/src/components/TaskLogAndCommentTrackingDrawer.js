@@ -10,7 +10,7 @@ import { TaskLogPanel } from './TaskLogPanel';
 
 
 
-export const TaskLogAndCommentTrackingDrawer = React.memo((props) => {
+export const TaskLogAndCommentCommentDrawer = React.memo((props) => {
   const { taskId, userId, visible, onClose, width } = props;
 
   const handleMessageSent = () => {
@@ -48,7 +48,7 @@ export const TaskLogAndCommentTrackingDrawer = React.memo((props) => {
   </Drawer>
 });
 
-TaskLogAndCommentTrackingDrawer.propTypes = {
+TaskLogAndCommentCommentDrawer.propTypes = {
   taskId: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired,
   width: PropTypes.number,
@@ -56,7 +56,7 @@ TaskLogAndCommentTrackingDrawer.propTypes = {
   onClose: PropTypes.func,
 };
 
-TaskLogAndCommentTrackingDrawer.defaultProps = {
+TaskLogAndCommentCommentDrawer.defaultProps = {
   width: 500,
   visible: false,
   onClose: () => { },

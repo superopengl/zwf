@@ -23,8 +23,10 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   useSubscribeZevent(zevent => {
     const { fields: changedFields } = zevent.payload;
-    updateFieldsWithChangedFields(changedFields);
-    ref.current?.setFieldsValue(changedFields)
+    if (changedFields) {
+      updateFieldsWithChangedFields(changedFields);
+      ref.current?.setFieldsValue(changedFields)
+    }
   }, []);
 
   React.useEffect(() => {

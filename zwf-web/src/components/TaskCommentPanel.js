@@ -5,8 +5,8 @@ import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import ScrollToBottom, {  } from 'react-scroll-to-bottom';
 import { listTaskComment$, } from 'services/taskService';
-import { nudgeTrackingAccess$ } from 'services/taskTrackingService';
-import { subscribeTaskTracking } from "services/taskTrackingService";
+import { nudgeCommentAccess$ } from 'services/taskCommentService';
+import { subscribeTaskComment } from "services/taskCommentService";
 import * as moment from 'moment';
 import { css } from '@emotion/css'
 import { ProList } from '@ant-design/pro-components';
@@ -76,12 +76,12 @@ export const TaskCommentPanel = React.memo((props) => {
       setLoading(false);
     });
 
-    const eventSource = subscribeTaskTracking(taskId);
+    const eventSource = subscribeTaskComment(taskId);
     eventSource.onmessage = (message) => {
       const event = JSON.parse(message.data);
       event.createdAt = moment.utc(event.createdAt).local().toDate();
       setList(list => [...list, event]);
-      nudgeTrackingAccess$(taskId).subscribe();
+      nudgeCommentAccess$(taskId).subscribe();
     }
 
     return () => {

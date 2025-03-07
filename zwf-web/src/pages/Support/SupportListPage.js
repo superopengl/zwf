@@ -83,7 +83,7 @@ const LOCAL_STORAGE_KEY = 'user_support_query';
 const SupportListPage = () => {
   useAssertRole(['system']);
   const [chatVisible, setChatVisible] = React.useState(false);
-  const [clientTrackingVisible, setClientTrackingVisible] = React.useState(false);
+  const [clientCommentVisible, setClientCommentVisible] = React.useState(false);
   const [total, setTotal] = React.useState(0);
   const [loading, setLoading] = React.useState(true);
   const [currentUser, setCurrentUser] = React.useState();
@@ -179,8 +179,8 @@ const SupportListPage = () => {
           <DropdownMenu
             config={[
               item.role === 'client' ? {
-                menu: 'Trackings',
-                onClick: () => handleClientTrackings(item)
+                menu: 'Comments',
+                onClick: () => handleClientComments(item)
               } : null,
               {
                 menu: 'Resend invite',
@@ -261,8 +261,8 @@ const SupportListPage = () => {
 
   }
 
-  const handleClientTrackings = () => {
-    setClientTrackingVisible(true)
+  const handleClientComments = () => {
+    setClientCommentVisible(true)
   }
 
   const handleImpersonante = async (user) => {
@@ -370,9 +370,9 @@ const SupportListPage = () => {
         onClose={() => setChatVisible(false)}
       />
       <Drawer
-        title="Tracking"
-        open={clientTrackingVisible}
-        onClose={() => setClientTrackingVisible(false)}
+        title="Comment"
+        open={clientCommentVisible}
+        onClose={() => setClientCommentVisible(false)}
       >
         Coming soon
       </Drawer>

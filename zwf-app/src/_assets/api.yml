@@ -679,9 +679,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/tracking:
+  /task/comment:
     get:
-      operationId: listAllMyHistoricalTaskTrackings
+      operationId: listAllMyHistoricalTaskComments
       # security:
       #   - authLoggedInUser: []
       responses:
@@ -803,9 +803,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/tracking/sse:
+  /task/{id}/comment/sse:
     get:
-      operationId: subscribeTaskTracking
+      operationId: subscribeTaskComment
       parameters:
         - name: id
           in: path
@@ -815,9 +815,9 @@ paths:
       responses:
         200:
           description: OK
-  /task/{id}/tracking/nudge:
+  /task/{id}/comment/nudge:
     get:
-      operationId: nudgeTrackingCursor
+      operationId: nudgeCommentCursor
       parameters:
         - name: taskId
           in: path
@@ -1056,7 +1056,7 @@ paths:
       responses:
         200:
           description: OK          
-  /tracking:
+  /comment:
     post:
       operationId: listMessage
       # security:
@@ -1064,13 +1064,13 @@ paths:
       responses:
         200:
           description: OK
-  /tracking/count/unread:
+  /comment/count/unread:
     get:
       operationId: getMessageUnreadCount
       responses:
         200:
           description: OK
-  /tracking/:id:
+  /comment/:id:
     get:
       operationId: getMessage
       # security:

@@ -4,7 +4,7 @@ export * from './userController';
 export * from './taskTemplateController';
 export * from './docTemplateController';
 export * from './taskController';
-export * from './taskTrackingController';
+export * from './taskCommentController';
 export * from './recurringController';
 export * from './messageController';
 export * from './supportController';

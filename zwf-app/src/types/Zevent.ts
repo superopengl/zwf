@@ -1,4 +1,4 @@
-import { TaskTracking } from '../entity/TaskTracking';
+import { TaskComment } from '../entity/TaskComment';
 import { SupportMessage } from '../entity/SupportMessage';
 
 export type Zevent = {
@@ -18,9 +18,9 @@ export type Zevent = {
   };
 } | {
   type: 'task';
-  subtype: 'trackings';
+  subtype: 'comment';
   userId: string;
   taskId: string;
   orgId: string;
-  payload: TaskTracking;
+  payload: TaskComment;
 };

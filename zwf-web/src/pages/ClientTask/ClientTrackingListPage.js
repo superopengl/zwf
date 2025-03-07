@@ -4,8 +4,8 @@ import React from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 import styled from 'styled-components';
 import { finalize } from 'rxjs/operators';
-import { searchMyTaskTracking$ } from 'services/taskTrackingService';
-import { TaskTrackingTimeline } from 'components/TaskTrackingTimeline';
+import { searchMyTaskComment$ } from 'services/taskCommentService';
+import { TaskCommentTimeline } from 'components/TaskCommentTimeline';
 import ScrollToBottom, { useScrollToBottom } from 'react-scroll-to-bottom';
 import { css } from '@emotion/css'
 import { useAssertRole } from 'hooks/useAssertRole';
@@ -60,7 +60,7 @@ const containerCss = css({
   }
 });
 
-export const ClientTrackingListPage = () => {
+export const ClientCommentListPage = () => {
   useAssertRole(['client']);
   const [loading, setLoading] = React.useState(true);
   const [page, setPage] = React.useState(1);
@@ -69,7 +69,7 @@ export const ClientTrackingListPage = () => {
 
   const load$ = () => {
     setLoading(true);
-    return searchMyTaskTracking$(page)
+    return searchMyTaskComment$(page)
       .pipe(
         finalize(() => setLoading(false))
       )
@@ -116,7 +116,7 @@ export const ClientTrackingListPage = () => {
           </>}
         >
           <ScrollToBottom className={containerCss} debug={false}>
-            <TaskTrackingTimeline dataSource={list} mode="multi" />
+            <TaskCommentTimeline dataSource={list} mode="multi" />
           </ScrollToBottom >
         </Card>
       </PageContainer>
@@ -124,8 +124,8 @@ export const ClientTrackingListPage = () => {
   )
 }
 
-ClientTrackingListPage.propTypes = {};
+ClientCommentListPage.propTypes = {};
 
-ClientTrackingListPage.defaultProps = {};
+ClientCommentListPage.defaultProps = {};
 
-export default ClientTrackingListPage;
+export default ClientCommentListPage;
