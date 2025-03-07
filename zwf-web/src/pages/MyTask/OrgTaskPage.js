@@ -13,7 +13,7 @@ import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
-import { TaskLogAndCommentCommentDrawer } from 'components/TaskLogAndCommentCommentDrawer';
+import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
 import { SavingAffix } from 'components/SavingAffix';
 import { showCompleteTaskModal } from 'components/showCompleteTaskModal';
 import { showRequireActionModal } from 'components/showRequireActionModal';
@@ -223,7 +223,7 @@ const OrgTaskPage = React.memo((props) => {
           </Col>
         </Row>
       </PageHeaderContainer>}
-      {task && <TaskLogAndCommentCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+      {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       {saving && <SavingAffix />}
     </ContainerStyled>
   </>
