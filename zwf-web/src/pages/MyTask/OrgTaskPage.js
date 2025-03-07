@@ -8,7 +8,7 @@ import { TaskStatusButton } from 'components/TaskStatusButton';
 import { TagSelect } from 'components/TagSelect';
 import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
 import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
@@ -167,17 +167,20 @@ const OrgTaskPage = React.memo((props) => {
         icon={<TaskIcon />}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
-          <Tooltip title="Archieve" key="archieve">
-            <Button type="primary" danger icon={<CloseOutlined />} onClick={() => showArchiveTaskModal(task.id, load$)} />
+          <Tooltip title="Refresh" key="refresh">
+            <Button icon={<SyncOutlined />} onClick={() => load$()} />
           </Tooltip>,
           <Tooltip key="edit" title="Edit">
             <Button disabled={hasFinished} icon={<EditOutlined />} onClick={() => handleEditFields()} />
           </Tooltip>,
+          <Tooltip key="comment" title="Log & Comment">
+            <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
+          </Tooltip>,
           <Tooltip key="share" title="Share">
             <Button icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)} />
           </Tooltip>,
-          <Tooltip key="comment" title="Log & Comment">
-            <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
+          <Tooltip title="Archieve" key="archieve">
+            <Button type="primary" danger icon={<CloseOutlined />} onClick={() => showArchiveTaskModal(task.id, load$)} />
           </Tooltip>,
           <TaskStatusButton key="status" value={task.status} onChange={handleStatusChange} />
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
@@ -217,7 +220,7 @@ const OrgTaskPage = React.memo((props) => {
                 </ProCard>
               </Col>
               {task && <Col span={24}>
-                <TaskDocListPanel task={task} onChange={() => load$()}/>
+                <TaskDocListPanel task={task} onChange={() => load$()} />
               </Col>}
             </Row>
           </Col>

@@ -1,3 +1,4 @@
+import { TaskDoc } from './../entity/TaskDoc';
 import { TaskComment } from '../entity/TaskComment';
 import { SupportMessage } from '../entity/SupportMessage';
 
@@ -21,3 +22,5 @@ export type Zevent = {
   orgId: string;
   payload: TaskComment;
 };
+
+
