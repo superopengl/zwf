@@ -32,7 +32,7 @@ import { BsKeyFill } from 'react-icons/bs';
 import { HiOutlineKey } from 'react-icons/hi';
 import { IoKeyOutline } from 'react-icons/io5';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { useSubscribeZevent } from "hooks/useSubscribeZevent";
+import { useZevent } from "hooks/useZevent";
 
 const { Text, Link: TextLink } = Typography;
 
@@ -92,8 +92,8 @@ const SupportListPage = () => {
   const [queryInfo, setQueryInfo] = useLocalstorageState(LOCAL_STORAGE_KEY, DEFAULT_QUERY_INFO);
   const [modal, contextHolder] = Modal.useModal();
 
-  useSubscribeZevent('support', zevent => {
-    const { userId, payload } = zevent;
+  useZevent(z => z.type === 'support', z => {
+    const { userId, payload } = z;
     setList(list => {
       const item = list.find(x => x.userId === userId);
       if (item) {

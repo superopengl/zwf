@@ -7,7 +7,7 @@ import { SupportMessageList } from 'components/SupportMessageList';
 import { filter, finalize } from 'rxjs/operators';
 import { SupportMessageInput } from './SupportMessageInput';
 import { SyncOutlined } from '@ant-design/icons';
-import { useSubscribeZevent } from 'hooks/useSubscribeZevent';
+import { useZevent } from 'hooks/useZevent';
 
 
 
@@ -16,7 +16,7 @@ export const SupportReplyDrawer = React.memo((props) => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
-  useSubscribeZevent('support', zevent => {
+  useZevent('support', zevent => {
     if(zevent.userId === userId) {
       setList(list => {
         return [...list, zevent.payload]
