@@ -94,8 +94,8 @@ export const TaskDocListPanel = React.memo((props) => {
     {
       align: 'right',
       width: 32,
-      render: (_, doc) => <Tooltip title={`Request sign`}>
-        <Button shape="circle" type={doc.signRequestedAt ? 'primary' : 'default'} icon={<Icon component={FaSignature} />} onClick={() => handleRequestSign(doc)} />
+      render: (_, doc) => doc.signedAt ? null : <Tooltip title={doc.signRequestedAt ? `Revoke sign request` : `Request sign`}>
+        <Button shape="circle" type={doc.signRequestedAt ? 'default' : 'primary'} icon={<Icon component={FaSignature} />} onClick={() => handleRequestSign(doc)} />
       </Tooltip>
     },
     {
