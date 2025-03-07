@@ -1,4 +1,6 @@
 import { API_DOMAIN_NAME, API_BASE_URL, httpGet, httpPost, httpDelete, httpPut$, httpGet$, httpPost$, httpDelete$ } from 'services/http';
+import { isEmpty } from 'lodash';
+import { of } from 'rxjs';
 
 export function getTask(id) {
   return httpGet(`task/${id}`);
@@ -57,6 +59,9 @@ export function generateAutoDoc$(fieldId) {
 }
 
 export function saveTaskFieldValues$(taskId, fields) {
+  if (isEmpty(fields)) {
+    return of(null);
+  }
   return httpPost$(`/task/${taskId}/field/value`, { fields });
 }
 
