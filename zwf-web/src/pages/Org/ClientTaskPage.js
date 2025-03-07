@@ -20,7 +20,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
 import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
-import { TaskChangeNoticable } from 'components/TaskChangeNoticable';
+import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 
 const { Text } = Typography;
 
@@ -85,12 +85,12 @@ const ClientTaskPage = (props) => {
       title={<>{task?.name} <small><Text type="secondary">by {task?.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       // footer={<Button type="primary">Submit</Button>}
       extra={[
-        <TaskChangeNoticable key="refresh"
+        <ZeventNoticeableBadge key="refresh"
           message="This task has changes. Click to refresh"
           filter={z => z.type === 'task.change' && z.taskId === task.id}
         >
           <Button icon={<SyncOutlined />} onClick={() => load$()} />
-        </TaskChangeNoticable>,
+        </ZeventNoticeableBadge>,
         <Button key="comment" icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>,
         canRequestChange ? <Button key="request">Request change</Button> : null,
       ]}
