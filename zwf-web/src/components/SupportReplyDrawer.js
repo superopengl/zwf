@@ -2,7 +2,7 @@ import { Drawer, Button } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { getUserSupport$, sendContact$ } from 'services/supportService';
+import { getUserSupport$, sendSupportMessage$ } from 'services/supportService';
 import { SupportMessageList } from 'components/SupportMessageList';
 import { filter, finalize } from 'rxjs/operators';
 import { SupportMessageInput } from './SupportMessageInput';
@@ -44,7 +44,7 @@ export const SupportReplyDrawer = React.memo((props) => {
   }
 
   const handleSubmitMessage = (message) => {
-    return sendContact$(message, null, userId);
+    return sendSupportMessage$(message, null, userId);
   }
 
   const handleReload = () => {

@@ -44,6 +44,7 @@ code {
 .ant-input-textarea-show-count::after {
   font-size: 11px;
 }
+
 // tr {
 //   .ant-table-cell {
 //     font-size: 12px;
@@ -52,12 +53,14 @@ code {
 
 .resize-handler {
   width: 5px !important;
+
   &:hover {
     background-color: rgba(0, 0, 0, 0.1);
   }
 }
 
 .rich-editor {
+
   .w-e-toolbar p,
   .w-e-text-container p,
   .w-e-menu-panel p {
@@ -74,8 +77,9 @@ hr {
   .ant-btn-primary {
     border-color: #52c41a;
     background-color: #52c41a;
-  
-    &:hover, &:focus {
+
+    &:hover,
+    &:focus {
       border-color: #52c41a;
       background-color: #52c41a;
       filter: brightness(1.1);
@@ -115,11 +119,11 @@ hr {
 
 .tox-tinymce {
   border-width: 1px !important;
-  border-radius: 4px !important; 
+  border-radius: 4px !important;
 }
 
 .global-notification-bar {
-  
+
   .ant-message-notice-content {
     padding: 1rem;
     background-color: #fffdeb;
@@ -156,4 +160,10 @@ hr {
     text-align: left;
   }
 
+}
+
+.sign-doc-drawer {
+  .ant-drawer-content-wrapper {
+    height: calc(100vh - 120px) !important;
+  }
 }
