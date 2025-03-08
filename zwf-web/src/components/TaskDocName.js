@@ -13,20 +13,24 @@ export const TaskDocName = props => {
   const { taskDoc, showOverlay, allowDownload, onClick, strong } = props;
 
   const { id, name, fileId, signedAt, signRequestedAt, type, docTemplateId } = taskDoc
+  const [iconType, setIconType] = React.useState('default');
   const [loading, setLoading] = React.useState(false);
+  const [hasFile, setHasFile] = React.useState(!!fileId);
   const [openPreview, previewContextHolder] = useDocTemplatePreviewModal();
 
-  let iconType = 'default';
-
-  if (showOverlay) {
-    if (signedAt) {
-      iconType = 'signed'
-    } else if (signRequestedAt) {
-      iconType = 'await-sign';
-    } else if (!fileId) {
-      iconType = 'pending';
+  React.useEffect(() => {
+    if (showOverlay) {
+      if (signedAt) {
+        setIconType('signed')
+      } else if (signRequestedAt) {
+        setIconType('await-sign');
+      } else if (!hasFile) {
+        setIconType('pending');
+      } else {
+        setIconType('default')
+      }
     }
-  }
+  }, [taskDoc, hasFile]);
 
   const handleOpenTaskDoc = async (e) => {
     onClick?.();
@@ -39,10 +43,11 @@ export const TaskDocName = props => {
     }
     setLoading(true)
     try {
-      const hasFile = await openTaskDoc(id, name);
-      if (!hasFile && docTemplateId) {
+      const exists = await openTaskDoc(id, name);
+      if (!exists && docTemplateId) {
         openPreview(docTemplateId, name);
       }
+      setHasFile(exists);
     } finally {
       setLoading(false);
     }
