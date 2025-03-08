@@ -45,10 +45,10 @@ function formatHtmlForRendering(html) {
 }
 
 async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields: TaskField[]) {
-  let error: string = null;
   let renderedHtml = formatHtmlForRendering(docTemplate.html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
   const usedFieldBag = {};
+  const missingFields = [];
 
   for (const fieldName of docTemplate.refFieldNames) {
     const field = fieldMap.get(fieldName);
@@ -59,27 +59,26 @@ async function renderDocTemplateBodyWithVarBag(docTemplate: DocTemplate, fields:
       usedFieldBag[field.name] = field.value;
       renderedHtml = renderedHtml.replace(regex, replacementString);
     } else {
-      error = `The value of field '${fieldName}' is not specified yet on form`;
-      break;
+      missingFields.push(fieldName);
     }
   }
-  return { error, renderedHtml, usedFieldBag };
+  return { renderedHtml, usedFieldBag, missingFields };
 }
 
 async function generatePdfDataFromDocTemplate(docTemplate: DocTemplate, fields: TaskField[]) {
-  const { error, renderedHtml, usedFieldBag } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
+  const { renderedHtml, usedFieldBag, missingFields } = await renderDocTemplateBodyWithVarBag(docTemplate, fields);
 
-  const pdfData = error ? null : await generatePdfBufferFromHtml(renderedHtml);
+  const pdfData = missingFields.length === 0 ? await generatePdfBufferFromHtml(renderedHtml) : null;
   const fileName = `${docTemplate.name}.pdf`;
 
-  return { error, pdfData, fileName, usedFieldBag };
+  return { pdfData, fileName, usedFieldBag, missingFields };
 }
 
 export function computeObjectHash(variables) {
   return hash(variables, { unorderedObjects: true });
 }
 
-export async function generatePdfTaskDocFile(m: EntityManager, docId: string, generatorId: string): Promise<File> {
+export async function generatePdfTaskDocFile(m: EntityManager, docId: string, generatorId: string) {
   const doc = await m.findOne(TaskDoc, {
     where: { id: docId },
     relations: {
@@ -96,30 +95,39 @@ export async function generatePdfTaskDocFile(m: EntityManager, docId: string, ge
   const docTemplate = await m.findOneBy(DocTemplate, { id: doc.docTemplateId });
   assert(docTemplate, 500, 'docTemplate not found');
 
-  const { error, pdfData, fileName, usedFieldBag } = await generatePdfDataFromDocTemplate(docTemplate, doc.task.fields);
-  if (error) {
-    return null;
+  const { pdfData, fileName, usedFieldBag, missingFields } = await generatePdfDataFromDocTemplate(docTemplate, doc.task.fields);
+
+  if (pdfData) {
+    const id = uuidv4();
+    const location = await uploadToS3(id, fileName, pdfData);
+    const file = new File();
+    file.id = id;
+    file.fileName = fileName;
+    file.mime = 'application/pdf';
+    file.location = location;
+    file.md5 = createHash('md5').update(pdfData).digest('hex');
+    file.public = false;
+    // file.usedFieldBag = usedFieldBag;
+    // file.usedValueHash = computeObjectHash(usedFieldBag);
+
+    doc.file = file;
+    doc.generatedAt = getUtcNow();
+    doc.generatedBy = generatorId;
+    doc.fieldBag = usedFieldBag;
+
+
+    await m.save([file, doc]);
+
+    return {
+      succeeded: true,
+      file
+    };
+  } else {
+    return {
+      succeeded: false,
+      usedFieldBag,
+      missingFields
+    }
   }
-  const id = uuidv4();
-  const location = await uploadToS3(id, fileName, pdfData);
-  const file = new File();
-  file.id = id;
-  file.fileName = fileName;
-  file.mime = 'application/pdf';
-  file.location = location;
-  file.md5 = createHash('md5').update(pdfData).digest('hex');
-  file.public = false;
-  // file.usedFieldBag = usedFieldBag;
-  // file.usedValueHash = computeObjectHash(usedFieldBag);
-
-  doc.file = file;
-  doc.generatedAt = getUtcNow();
-  doc.generatedBy = generatorId;
-  doc.fieldBag = usedFieldBag;
-
-
-  await m.save([file, doc]);
-
-  return file;
 }
 

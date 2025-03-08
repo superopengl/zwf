@@ -240,14 +240,18 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
   const list = await db.getRepository(TaskInformation).find({
     where: {
       userId,
-      status: In([TaskStatus.TODO, TaskStatus.IN_PROGRESS, TaskStatus.ACTION_REQUIRED, TaskStatus.DONE]),
+      status: In([
+        // TaskStatus.TODO, 
+        TaskStatus.IN_PROGRESS, 
+        TaskStatus.ACTION_REQUIRED, 
+        TaskStatus.DONE
+      ]),
     },
     select: [
       'id',
       'name',
       'status',
       'orgName',
-      'taskTemplateName',
       'createdAt',
       'updatedAt'
     ]
