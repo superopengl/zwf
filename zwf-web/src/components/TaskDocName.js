@@ -7,10 +7,10 @@ import { useDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
 import { openTaskDoc } from 'services/fileService';
 import { Loading } from './Loading';
 
-const { Link } = Typography
+const { Link, Text } = Typography
 
 export const TaskDocName = props => {
-  const { taskDoc, showOverlay } = props;
+  const { taskDoc, showOverlay, allowDownload, onClick, strong } = props;
 
   const { id, name, fileId, signedAt, signRequestedAt, type, docTemplateId } = taskDoc
   const [loading, setLoading] = React.useState(false);
@@ -29,8 +29,12 @@ export const TaskDocName = props => {
   }
 
   const handleOpenTaskDoc = async (e) => {
+    onClick?.();
+    if (!allowDownload) {
+      return;
+    }
     e.stopPropagation();
-    if(loading) {
+    if (loading) {
       return;
     }
     setLoading(true)
@@ -45,12 +49,13 @@ export const TaskDocName = props => {
   }
 
   return <>
-  <Link onClick={handleOpenTaskDoc}><Space>
-    <FileIcon name={name} type={iconType} />
-    {name} <Loading loading={loading} size={14}/>
-  </Space>
-  </Link>
-  {previewContextHolder}
+    <Link onClick={handleOpenTaskDoc} strong={strong}>
+      <Space>
+        <FileIcon name={name} type={iconType} />
+        {name} <Loading loading={loading} size={14} />
+      </Space>
+    </Link>
+    {previewContextHolder}
   </>
 }
 
@@ -61,8 +66,13 @@ TaskDocName.propTypes = {
     name: PropTypes.string.isRequired,
   }),
   showOverlay: PropTypes.bool,
+  allowDownload: PropTypes.bool,
+  strong: PropTypes.bool,
+  onClick: PropTypes.func,
 };
 
 TaskDocName.defaultProps = {
   showOverlay: true,
+  allowDownload: true,
+  strong: false,
 };
