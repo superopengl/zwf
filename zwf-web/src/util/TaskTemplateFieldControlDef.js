@@ -79,6 +79,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     fieldProps: {
       allowClear: true,
       maxLength: 150,
+      placeholder: 'Enter text',
     },
     control: ProFormText,
   },
@@ -90,6 +91,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
       allowClear: true,
       showCount: true,
       maxLength: 1000,
+      placeholder: 'Enter text',
     },
     control: ProFormTextArea,
   },
@@ -98,6 +100,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     label: 'Number',
     icon: <FieldNumberOutlined />,
     fieldProps: {
+      placeholder: 'Enter number',
       style: {
         width: '100%'
       }
