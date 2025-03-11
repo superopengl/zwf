@@ -66,9 +66,9 @@ export const SupportMessageInput = React.memo(props => {
         }}
       /> */}
     </Form.Item>
-    <Form.Item>
-      <Button block type="primary" ghost htmlType="submit" disabled={loading}>Submit <EnterOutlined/></Button>
-    </Form.Item>
+    {/* <Form.Item>
+      <Button block type="primary" htmlType="submit" disabled={loading}>Submit <EnterOutlined/></Button>
+    </Form.Item> */}
   </Form>
 
 })
