@@ -106,6 +106,6 @@ export const useSupportChatWidget = () => {
     </Space>
   </Affix>
 
-  return [openSupport, contextHolder];
+  return [openSupport, contextHolder, open];
 }
 

@@ -6,19 +6,20 @@ import { Tag } from 'antd';
 const statusDefs = {
   'todo': {
     label: 'Not Started',
-    color: '#d9d9d9',
+    // color: '#d9d9d9',
+    color: 'default',
   },
   'in_progress': {
     label: 'In Progress',
-    color: '#0FBFC4',
+    color: 'processing',
   },
   'action_required': {
     label: 'Action Required',
-    color: '#cf222e'
+    color: 'error'
   },
   'done': {
     label: 'Completed',
-    color: '#2da44e',
+    color: 'success',
   },
   'archived': {
     label: 'Archived',
@@ -29,7 +30,7 @@ const statusDefs = {
 export const TaskStatusTag = React.memo(props => {
   const { status } = props;
   const def = statusDefs[status];
-  return <Tag color={def?.color} style={{margin: 0}}>{def?.label || status}</Tag>
+  return <Tag color={def?.color} style={{ margin: 0 }}>{def?.label || status}</Tag>
 });
 
 TaskStatusTag.propTypes = {

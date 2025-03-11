@@ -1,5 +1,5 @@
 import { ClearOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Space, Typography, Row, Col, Tabs, Grid, Alert, Badge, Tooltip, Select, Input, Card, Tag, Checkbox, ConfigProvider } from 'antd';
+import { Button, Space, Typography, Row, Col, List, Grid, Card, Badge, Tooltip, Select, Input, Tag, Checkbox, ConfigProvider } from 'antd';
 import React from 'react';
 import { PageContainer } from '@ant-design/pro-components';
 
@@ -22,10 +22,11 @@ import CheckboxButton from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { BiRightArrow } from 'react-icons/bi';
+import { TaskStatusTag } from 'components/TaskStatusTag';
 
 const { useBreakpoint } = Grid;
 const { CheckableTag } = Tag;
-const { Paragraph } = Typography;
+const { Paragraph, Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
@@ -37,8 +38,14 @@ const LayoutStyled = styled.div`
   .ant-tabs-tab-btn {
     width: 100%;
   }
+`;
 
+const StyledList = styled(List)`
+margin-top: 20px;
 
+.ant-list-item {
+  padding: 0;
+}
 `;
 
 
@@ -113,7 +120,7 @@ export const ClientTaskListPage = () => {
         render: () => <Tag>blah</Tag>
       }
     }))
-    setFilteredList(formatted);
+    setFilteredList(result);
   }, [allList, query]);
 
   const handleToggleStatus = (status) => {
@@ -165,10 +172,11 @@ export const ClientTaskListPage = () => {
         loading={loading}
         title='All My Cases'
         extra={[
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} type="primary" ghost>Refresh</Button>
 
         ]}
       >
-        <Row gutter={[12, 24]}>
+        <Row gutter={[12, 24]} style={{display: 'none'}}>
           <Col>
             <CheckboxButton value={isFilteringStatus('in_progress')} onChange={() => handleToggleStatus('in_progress')}>Pending</CheckboxButton>
           </Col>
@@ -223,10 +231,9 @@ export const ClientTaskListPage = () => {
             >Reset filters</Button>
           </Col>
         </Row>
-        <ProList
-          headerTitle=" "
+        <StyledList
           grid={{
-            gutter: [24, 24],
+            gutter: [10, 10],
             xs: 1,
             sm: 1,
             md: 1,
@@ -234,9 +241,9 @@ export const ClientTaskListPage = () => {
             xl: 1,
             xxl: 1
           }}
-          ghost
           dataSource={filteredList}
           loading={loading}
+          itemLayout="horizontal"
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
               <Paragraph type="secondary">
@@ -244,102 +251,26 @@ export const ClientTaskListPage = () => {
               </Paragraph>
             </div>
           }}
-          onItem={(item) => {
-            return {
-              onMouseEnter: () => {
-              },
-              onClick: () => {
-                navigate(`/task/${item.id}`);
-              },
-            };
-          }}
-          toolBarRender={() => {
-            return [
-              <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} type="primary" ghost>Refresh</Button>
-            ];
-          }}
           rowKey="id"
-          itemLayout="vertical"
-          metas={{
-            title: {},
-            subTitle: {},
-            type: {},
-            avatar: {},
-            content: {},
-            extra: {
-              render: () => [
-                <div
-                  style={{
-                    minWidth: 200,
-                    flex: 1,
-                    display: 'flex',
-                    justifyContent: 'flex-end',
-                  }}
-                >
-                  <div
-                    style={{
-                      width: '200px',
-                    }}
-                  >
-                    <div>发布中</div>
-                    {/* <Progress percent={80} /> */}
-                  </div>
-                </div>
-              ],
-            },
-            actions: {
-              render: (_, item) => {
-                return [
-                <Tag key="status">{item.data.status}</Tag>,
-                <Button icon={<RightOutlined/>} type="text"/>
-                ];
-              },
-            },
-          }}
-
+          renderItem={item => <List.Item>
+            <Card
+              title={<><HighlightingText value={item.name} search={query.text} /> <Text type="secondary"><small>by {item.orgName}</small></Text></>}
+              extra={<TaskStatusTag status={item.status} />}
+              onClick={() => navigate(`/task/${item.id}`)}
+              hoverable
+              bordered={false}
+            >
+              <Descriptions size="small" column={2}>
+                <Descriptions.Item label="created">
+                  <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
+                </Descriptions.Item>
+                <Descriptions.Item label="updated">
+                  <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
+                </Descriptions.Item>
+              </Descriptions>
+            </Card>
+          </List.Item>}
         />
-
-        {/* <Tabs tabPosition={screens.md ? 'left' : 'top'}
-          size="small"
-          type="line"
-          // animated={{inkBar: true, tabPane: true}}
-          onChange={tab => setQuery({ ...query, tab })}
-          defaultActiveKey={query.tab}>
-          {TAB_DEFS.map(tab => {
-            const count = allList.filter(tab.filter).length;
-            const data = filteredList.filter(tab.filter);
-            return <Tabs.TabPane
-              tab={<Tooltip title={tab.description} placement={screens.md ? "leftTop" : 'bottom'} mouseEnterDelay={1}>
-                <Space style={{ width: '100%', justifyContent: 'space-between' }}>
-                  {tab.label}
-                  <Badge showZero={false} count={count} style={{ backgroundColor: tab.badgeColor }} />
-                </Space>
-              </Tooltip>}
-              key={tab.label}>
-              <Alert description={tab.description}
-                type={tab.alertType || "info"}
-                showIcon
-                style={{ marginBottom: 20 }}
-              />
-              <List
-                loading={loading}
-                dataSource={data}
-                grid={{
-                  gutter: 24,
-                  xs: 1,
-                  sm: 1,
-                  md: 1,
-                  lg: 1,
-                  xl: 2,
-                  xxl: 2,
-                }}
-                renderItem={item => <List.Item>
-                  <TaskClientCard task={item} searchText={query.text} />
-                </List.Item>}
-              />
-            </Tabs.TabPane>
-          })}
-        </Tabs> */}
       </PageHeaderContainer>
     </LayoutStyled>
   )
