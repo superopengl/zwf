@@ -90,7 +90,7 @@ const OrgTaskPage = React.memo((props) => {
   }
 
   const handleGoBack = () => {
-    navigate('/task');
+    navigate(-1);
   }
 
   const handleStatusChange = newStatus => {
