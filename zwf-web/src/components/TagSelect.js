@@ -4,17 +4,20 @@ import { switchMapTo } from 'rxjs/operators';
 import { listTags$, saveTag$, subscribeTags } from 'services/tagService';
 import { TagSelectComponent } from './TagSelectComponent';
 import { useOutsideClick } from "rooks";
+import { Typography } from 'antd';
+
+const { Text } = Typography;
 
 export const TagSelect = React.memo((props) => {
 
-  const { value: propValues, onChange, readonly: propReadonly, allowCreate, inPlaceEdit, ...others } = props;
+  const { value: propValues, onChange, readonly: propReadonly, allowCreate, inPlaceEdit, placeholder, ...others } = props;
 
   const [tags, setTags] = React.useState();
   const [value, setValue] = React.useState(propValues);
   const [readonly, setReadonly] = React.useState(propReadonly || inPlaceEdit);
   const ref = React.useRef();
   useOutsideClick(ref, () => {
-    if(inPlaceEdit) {
+    if (inPlaceEdit) {
       setReadonly(true);
     }
   })
@@ -36,21 +39,27 @@ export const TagSelect = React.memo((props) => {
   }
 
   const handleFocus = () => {
-    if(inPlaceEdit) {
+    if (inPlaceEdit) {
       setReadonly(false);
     }
   }
 
+  const style = {
+    ...(others?.style),
+    height: 32,
+    width: '100%',
+  }
+
   return (
-    <div {...others} ref={ref} onClick={handleFocus}>
-      <TagSelectComponent
+    <div {...others} style={style} ref={ref} onClick={handleFocus}>
+      {!value && placeholder && readonly ? <Text type="secondary">{placeholder}</Text> : <TagSelectComponent
         value={value}
         onChange={handleChange}
         readonly={readonly}
         onSave={handleCreateNewTag}
         tags={tags}
         allowCreate={allowCreate}
-      />
+      />}
     </div>
   );
 });
@@ -61,6 +70,7 @@ TagSelect.propTypes = {
   allowCreate: PropTypes.bool,
   onChange: PropTypes.func,
   inPlaceEdit: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 TagSelect.defaultProps = {
