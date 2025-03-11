@@ -4,7 +4,6 @@ import { Upload, Typography, Space, Button, Tooltip, Table } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
-import { requestSignTaskDoc$, signTaskDoc$, unrequestSignTaskDoc$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
 import Icon, { CheckCircleOutlined } from '@ant-design/icons';
@@ -42,16 +41,6 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     setDocs(task?.docs ?? []);
     setLoading(false);
   }, [task]);
-
-  const handleSign = doc => {
-    setLoading(true);
-    signTaskDoc$(doc.id)
-      .pipe(
-        finalize(() => setLoading(false)),
-      ).subscribe(updatedDoc => {
-        setDocs(docList => docList.map(x => x.id === updatedDoc.id ? updatedDoc : x));
-      })
-  }
 
   const columns = [
     {

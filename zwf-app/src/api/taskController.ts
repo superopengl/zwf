@@ -20,7 +20,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { logTaskStatusChange, logTaskAssigned, logTaskChat } from '../services/taskCommentService';
+import { logTaskChat } from '../services/taskCommentService';
 import { File } from '../entity/File';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { EmailTemplateType } from '../types/EmailTemplateType';
@@ -470,7 +470,6 @@ export const assignTask = handlerWrapper(async (req, res) => {
   await db.transaction(async m => {
     const task = await m.findOneByOrFail(Task, { id, orgId });
     await m.update(Task, { id, orgId }, { agentId });
-    await logTaskAssigned(m, task, userId, agentId);
   });
 
   res.json();
@@ -489,7 +488,6 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
     const newStatus = status as TaskStatus;
     if (oldStatus !== newStatus) {
       await m.update(Task, { id }, { status: newStatus });
-      await logTaskStatusChange(m, task, userId, oldStatus, newStatus);
     }
   });
 

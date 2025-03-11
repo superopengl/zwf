@@ -2,12 +2,12 @@ import { Col, List, Button, Avatar, Row, Typography, Checkbox, Tooltip, Table } 
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
-import { listTaskComment$ } from 'services/taskService';
+import { listTaskComment$, signTaskDocs$ } from 'services/taskService';
 import { TaskCommentPanel } from './TaskCommentPanel';
 import { CloseOutlined, HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
 import { TaskLogPanel } from './TaskLogPanel';
-import { delay, of } from 'rxjs';
+import { delay, finalize, of } from 'rxjs';
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
@@ -65,6 +65,17 @@ export const TaskDocToSignPanel = React.memo((props) => {
     setSelectedRowKeys(newSelectedRowKeys);
   };
 
+  const handleSignSelected = () => {
+    if (selectedRowKeys.length > 0) {
+      setLoading(true);
+      signTaskDocs$(...selectedRowKeys).pipe(
+        finalize(() => setLoading(false))
+      ).subscribe(() => {
+        onChange();
+      });
+    }
+  };
+
   return <Container>
     {/* <Paragraph>
       You have 2 documents are waiting for signature
@@ -87,16 +98,26 @@ export const TaskDocToSignPanel = React.memo((props) => {
       showHeader={false}
       columns={columns}
       dataSource={docsToSign}
-      locale={{ emptyText: 'Upload or add doc templates' }}
+      locale={{ emptyText: 'No documents to sign currently' }}
     />
 
     <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
       <Col>
-        <Checkbox style={{ marginLeft: 8 }} checked={agreed} onClick={e => setAgreed(e.target.checked)}>I have read and agree on the <Link underline target="_blank" href="/terms_and_conditions">terms and conditions</Link></Checkbox>
+        <Checkbox style={{ marginLeft: 8 }}
+          checked={agreed}
+          onClick={e => setAgreed(e.target.checked)}
+          disabled={loading || !docsToSign.length}>
+          I have read and agree on the <Link underline target="_blank" href="/terms_and_conditions">terms and conditions</Link></Checkbox>
       </Col>
       <Col>
         <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms and conditions before signing'} >
-          <Button type="primary" icon={<Icon component={FaSignature} />} disabled={!agreed || !selectedRowKeys.length}>Sign {selectedRowKeys.length} selected document{selectedRowKeys.length === 1 ? '' : 's'}</Button>
+          <Button type="primary"
+            loading={loading}
+            icon={<Icon component={FaSignature} />}
+            onClick={handleSignSelected}
+            disabled={!agreed || !selectedRowKeys.length || loading}>
+            Sign {selectedRowKeys.length} selected document{selectedRowKeys.length === 1 ? '' : 's'}
+          </Button>
         </Tooltip>
       </Col>
     </Row>

@@ -928,17 +928,9 @@ paths:
       responses:
         200:
           description: OK           
-  /task/doc/{docId}/sign:
+  /task/doc/sign:
     post:
-      operationId: signTaskDoc
-      # security:
-      #   - authLoggedInUser: []
-      parameters:
-        - name: docId
-          in: path
-          type: string
-          format: uuid
-          required: true
+      operationId: signTaskDocs
       responses:
         200:
           description: OK              
