@@ -6,7 +6,7 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { NotificationMessage } from "../entity/NotificationMessage";
 
 
-export const getMyNotificationMessages = handlerWrapper(async (req, res) => {
+export const getMyNotifications = handlerWrapper(async (req, res) => {
   assertRole(req, ['client', 'agent', 'admin', 'system']);
 
   const page = +req.body.page;
@@ -18,6 +18,18 @@ export const getMyNotificationMessages = handlerWrapper(async (req, res) => {
 
   let list;
   let count;
+
+
+  await db.transaction(async m => {
+    // Get unread support messages
+  
+  
+    // Get unread task comment messages
+  
+  
+    // Get task status change to request_actions
+    
+  })
 
   await db.transaction(async m => {
     const query = {

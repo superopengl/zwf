@@ -1,6 +1,7 @@
+import { TaskActivity } from './../entity/TaskActivity';
 import { DocTemplate } from './../entity/DocTemplate';
 import { TaskActionType } from './../types/TaskActionType';
-import { TaskCommentInformation } from './../entity/views/TaskCommentInformation';
+import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
@@ -108,6 +109,14 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
       await m.getRepository(TaskField).delete(deletedFieldIds);
     }
     await m.getRepository(TaskField).save(fields);
+
+    const taskActivity = new TaskActivity();
+    taskActivity.action = TaskActionType.FieldChange;
+    taskActivity.taskId = task.id;
+    taskActivity.by = getUserIdFromReq(req);
+    taskActivity.info = fields;
+
+    await m.save(taskActivity);
   });
 
   publishTaskChangeEvent(task, getUserIdFromReq(req));
@@ -140,12 +149,25 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
       assert(false, 404, 'Task is not found');
   }
 
-  const task = await db.getRepository(Task).findOneBy(query);
-  assert(task, 404);
+  let task: Task;
+  await db.transaction(async m => {
+    task = await m.getRepository(Task).findOneBy(query);
+    assert(task, 404);
+  
+    const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));
+  
+    await m.getRepository(TaskField).save(fieldEntities);
+  
+    const taskActivity = new TaskActivity();
+    taskActivity.action = TaskActionType.FieldChange;
+    taskActivity.taskId = task.id;
+    taskActivity.by = getUserIdFromReq(req);
+    taskActivity.info = fields;
+  
+    await m.save(taskActivity);
 
-  const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));
+  })
 
-  await db.getRepository(TaskField).save(fieldEntities);
 
   publishTaskChangeEvent(task, getUserIdFromReq(req));
 
@@ -242,8 +264,8 @@ export const listMyTasks = handlerWrapper(async (req, res) => {
       userId,
       status: In([
         // TaskStatus.TODO, 
-        TaskStatus.IN_PROGRESS, 
-        TaskStatus.ACTION_REQUIRED, 
+        TaskStatus.IN_PROGRESS,
+        TaskStatus.ACTION_REQUIRED,
         TaskStatus.DONE
       ]),
     },
@@ -331,7 +353,7 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
   let taskDocs: TaskDoc[] = [];
   let task: Task;
   await db.transaction(async m => {
-    task = await m.getRepository(Task).findOneByOrFail({id: taskId, orgId});
+    task = await m.getRepository(Task).findOneByOrFail({ id: taskId, orgId });
     const docTemplates = await m.getRepository(DocTemplate).findBy({
       id: In(docTemplateIds),
       orgId,
@@ -378,10 +400,16 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
         return taskDoc;
       })
 
-      await m.save([...taskFields, ...taskDocs]);
+      const taskActivity = new TaskActivity();
+      taskActivity.action = TaskActionType.DocChange;
+      taskActivity.taskId = task.id;
+      taskActivity.by = getUserIdFromReq(req);
+      taskActivity.info = taskDocs;
+
+      await m.save([...taskFields, ...taskDocs, taskActivity]);
     };
   });
-  
+
   publishTaskChangeEvent(task, getUserIdFromReq(req));
 
   res.json(taskDocs);
@@ -448,12 +476,22 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
   const { name } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  const task = await db.getRepository(Task).findOneBy({
-    id,
-    orgId,
-  });
-  task.name = name;
-  await db.manager.save(task);
+  let task: Task;
+  await db.transaction(async m => {
+    task = await m.getRepository(Task).findOneBy({
+      id,
+      orgId,
+    });
+    task.name = name;
+
+    const taskActivity = new TaskActivity();
+    taskActivity.action = TaskActionType.Renamed;
+    taskActivity.taskId = task.id;
+    taskActivity.by = getUserIdFromReq(req);
+    taskActivity.info = name;
+
+    await m.save([task, taskActivity]);
+  })
 
   publishTaskChangeEvent(task, getUserIdFromReq(req));
 
@@ -488,6 +526,14 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
     const newStatus = status as TaskStatus;
     if (oldStatus !== newStatus) {
       await m.update(Task, { id }, { status: newStatus });
+
+      const taskActivity = new TaskActivity();
+      taskActivity.action = TaskActionType.StatusChange;
+      taskActivity.taskId = task.id;
+      taskActivity.by = getUserIdFromReq(req);
+      taskActivity.info = newStatus;
+
+      await m.save(taskActivity);
     }
   });
 
@@ -530,7 +576,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 export const getTaskLog = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
-  let query: any = { taskId: id, action: Not(TaskActionType.Chat) };
+  let query: any = { taskId: id, action: Not(TaskActionType.Comment) };
   const role = getRoleFromReq(req);
   switch (role) {
     case Role.Admin:
@@ -548,7 +594,7 @@ export const getTaskLog = handlerWrapper(async (req, res) => {
     default:
       break;
   }
-  const list = await db.getRepository(TaskCommentInformation).find({ where: query });
+  const list = await db.getRepository(TaskActivityInformation).find({ where: query });
 
   res.json(list);
 });

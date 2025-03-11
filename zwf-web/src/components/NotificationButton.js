@@ -11,7 +11,7 @@ import { Divider } from 'antd';
 import { OptionsBuilder } from '../pages/TaskTemplate/formBuilder/OptionsBuilder';
 import DocTemplateSelect from 'components/DocTemplateSelect';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { getMyNotificationMessages$, reactOnNotificationMessage$ } from 'services/notificationMessageService';
+import { getMyNotifications$, } from 'services/notificationMessageService';
 import { Badge } from 'antd';
 import { List } from 'antd';
 
@@ -25,7 +25,7 @@ export const NotificationButton = React.memo((props) => {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const sub$ = open ? getMyNotificationMessages$()
+    const sub$ = open ? getMyNotifications$()
       .pipe()
       .subscribe(result => {
         setList(result.list);
@@ -36,7 +36,6 @@ export const NotificationButton = React.memo((props) => {
   }, [open])
 
   const handleClick = (id) => {
-    reactOnNotificationMessage$(id).subscribe();
   }
 
   return <Tooltip

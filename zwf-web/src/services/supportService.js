@@ -1,6 +1,6 @@
 import { API_BASE_URL, httpGet$, httpPost$ } from './http';
 
-export function getMySupport$() {
+export function listMySupportMessages$() {
   return httpGet$(`/support`);
 }
 

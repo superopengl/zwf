@@ -2,7 +2,7 @@ import React from 'react';
 import { Affix, Space, Button, Card, Typography, FloatButton } from 'antd';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
 import styled from 'styled-components';
-import { getMySupport$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
+import { listMySupportMessages$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
 import { finalize, catchError } from 'rxjs/operators';
 import { SupportMessageList } from '../components/SupportMessageList';
 import { SupportMessageInput } from '../components/SupportMessageInput';
@@ -55,7 +55,7 @@ export const useSupportChatWidget = () => {
   // Initial data load
   React.useEffect(() => {
     if (open) {
-      const sub$ = getMySupport$()
+      const sub$ = listMySupportMessages$()
         .pipe(
           finalize(() => setLoading(false))
         ).subscribe(resp => {

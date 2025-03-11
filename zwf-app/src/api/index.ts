@@ -20,5 +20,5 @@ export * from './taskDocController';
 export * from './resourceController';
 export * from './recurringController';
 export * from './contactController';
-export * from './notificationMessageController';
+export * from './notificationController';
 export * from './zeventController';

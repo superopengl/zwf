@@ -2,7 +2,7 @@ import React from 'react';
 import { Affix, Space, Button, Card, Typography, FloatButton } from 'antd';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
 import styled from 'styled-components';
-import { getMySupport$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
+import { listMySupportMessages$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
 import { finalize, catchError } from 'rxjs/operators';
 import { SupportMessageList } from './SupportMessageList';
 import { SupportMessageInput } from './SupportMessageInput';
@@ -65,7 +65,7 @@ export const SupportAffix = () => {
 
   // Initial data load
   React.useEffect(() => {
-    const sub$ = getMySupport$().pipe(
+    const sub$ = listMySupportMessages$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(resp => {
       const { list, unreadCount } = resp;
