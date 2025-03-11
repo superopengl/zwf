@@ -1036,34 +1036,6 @@ paths:
       responses:
         200:
           description: OK          
-  /comment:
-    post:
-      operationId: listMessage
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
-  /comment/count/unread:
-    get:
-      operationId: getMessageUnreadCount
-      responses:
-        200:
-          description: OK
-  /comment/:id:
-    get:
-      operationId: getMessage
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /stats:
     get:
       operationId: getAdminStats

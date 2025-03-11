@@ -48,6 +48,7 @@ import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
+import { ActivityWatch } from './entity/ActivityWatch';
 dotenv.config();
 
 const views = [
@@ -209,6 +210,7 @@ export const db = new DataSource({
     LicenseTicket,
     OrgSubscriptionPeriod,
     NotificationMessage,
+    ActivityWatch,
     // Views below
     TaskInformation,
     UserInformation,
