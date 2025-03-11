@@ -34,7 +34,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     setFields(task?.fields);
     setDisabled(
       ['done', 'archived'].includes(task.status)
-      || (isClient && ['todo', 'in_progress'].includes(task.status))
+      || (isClient && ['todo'].includes(task.status))
     )
   }, [task]);
 

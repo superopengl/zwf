@@ -7,7 +7,7 @@ import { getTaskDocDownloadUrl } from 'services/taskService';
 import { UploadOutlined } from '@ant-design/icons';
 
 export const TaskFileUpload = React.memo((props) => {
-  const { taskId, onLoading, onDone } = props;
+  const { taskId, onLoading, disabled, onDone } = props;
 
 
   const handleChange = (info) => {
@@ -34,6 +34,7 @@ export const TaskFileUpload = React.memo((props) => {
       accept="*/*"
       listType="text"
       style={{ width: '100%' }}
+      disabled={disabled}
       // onPreview={handlePreview}
       onChange={handleChange}
       // onRemove={handleRemove}
@@ -45,7 +46,7 @@ export const TaskFileUpload = React.memo((props) => {
       // itemRender={renderFileItem}
     // showUploadList={true}
     >
-      <Button block icon={<UploadOutlined />} type="text">Upload</Button>
+      <Button block icon={<UploadOutlined />} type="text" disabled={disabled}>Upload</Button>
     </Upload>
   );
 })
@@ -54,9 +55,11 @@ TaskFileUpload.propTypes = {
   taskId: PropTypes.string.isRequired,
   onDone: PropTypes.func,
   onLoading: PropTypes.func,
+  disabled: PropTypes.bool,
 };
 
 TaskFileUpload.defaultProps = {
   onDone: () => { },
   onLoading: () => { },
+  disabled: false
 };

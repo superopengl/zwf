@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert } from 'antd';
+import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert, Modal } from 'antd';
 
 import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
@@ -94,6 +94,7 @@ const ClientTaskPage = (props) => {
   const [currentStep, setCurrentStep] = React.useState(FLOW_STEPS.FILL_IN_FORM);
   const [historyVisible, setHistoryVisible] = React.useState(false);
   const [docsToSign, setDocsToSign] = React.useState([]);
+  const [requestChangeModal, requestChangeContextHolder] = Modal.useModal();
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -136,11 +137,11 @@ const ClientTaskPage = (props) => {
 
   const span = { xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 };
   const canRequestChange = task?.status === 'todo' || task?.status === 'in_progress';
-  const canEditForm = task?.status === 'action_required';
+  const canEdit = task?.status === 'action_required' || task?.status === 'in_progress';
   const narrowScreen = (screens.xs || screens.sm) && !screens.md;
 
   const getInitialStep = (task) => {
-    if (canEditForm) {
+    if (canEdit) {
       return FLOW_STEPS.FILL_IN_FORM;
     }
   }
@@ -148,6 +149,19 @@ const ClientTaskPage = (props) => {
   const hasDocToSign = docsToSign.length > 0;
   const lastStep = hasDocToSign ? FLOW_STEPS.SIGN_DOCS : FLOW_STEPS.ATTACHMENTS;
   const alertMeta = ALERT_DEF[task?.status];
+
+  const handleRequestChange = () => {
+    requestChangeModal.confirm({
+      title: 'Request Amendment',
+      content: 'The task is being processed by agent. Do you want to amend by providing updated information?',
+      closable: true,
+      cancelButtonProps: {
+        type: 'text'
+      },
+      autoFocusButton: 'cancel',
+      okText: 'Request Amendment'
+    })
+  }
 
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
@@ -208,7 +222,7 @@ const ClientTaskPage = (props) => {
           {currentStep === FLOW_STEPS.FILL_IN_FORM && <ProCard title="Information Form" type="inner">
             <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
           </ProCard>}
-          {currentStep === FLOW_STEPS.ATTACHMENTS && <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} />}
+          {currentStep === FLOW_STEPS.ATTACHMENTS && <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} disabled={!canEdit} />}
           {currentStep === FLOW_STEPS.SIGN_DOCS && <ProCard
             title={`${docsToSign.length} Document Waiting for Your Signature`}
             bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
@@ -224,6 +238,7 @@ const ClientTaskPage = (props) => {
     <PageFooter>
       <Row gutter={[20, 20]} justify="space-between">
         <Col>
+        {/* {canRequestChange && <Button type="primary" ghost onClick={handleRequestChange}>Request Amendment</Button>} */}
         </Col>
         <Col>
           <Space style={{ justifyContent: 'end' }} size="large">
@@ -234,6 +249,7 @@ const ClientTaskPage = (props) => {
         </Col>
       </Row>
     </PageFooter>
+    {requestChangeContextHolder}
   </Container>
   );
 };
