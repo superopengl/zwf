@@ -27,7 +27,8 @@ import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { EmailTemplateType } from '../types/EmailTemplateType';
 import { TaskDoc } from '../entity/TaskDoc';
 import { Org } from '../entity/Org';
-import { publishTaskChangeEvent } from '../utils/publishTaskChangeEvent';
+import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
+import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
@@ -119,7 +120,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
     await m.save(taskActivity);
   });
 
-  publishTaskChangeEvent(task, getUserIdFromReq(req));
+  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -153,23 +154,23 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   await db.transaction(async m => {
     task = await m.getRepository(Task).findOneBy(query);
     assert(task, 404);
-  
+
     const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));
-  
+
     await m.getRepository(TaskField).save(fieldEntities);
-  
+
     const taskActivity = new TaskActivity();
     taskActivity.type = TaskActionType.FieldChange;
     taskActivity.taskId = task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = fields;
-  
+
     await m.save(taskActivity);
 
   })
 
 
-  publishTaskChangeEvent(task, getUserIdFromReq(req));
+  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -317,25 +318,37 @@ export const getTask = handlerWrapper(async (req, res) => {
       break;
   }
 
-  const task = await db.getRepository(Task).findOne({
-    where: query,
-    relations,
-    order: {
-      fields: {
-        ordinal: 'ASC'
-      },
-      docs: {
-        createdAt: 'ASC'
+  let task: Task;
+
+  await db.transaction(async m => {
+    task = await m.getRepository(Task).findOne({
+      where: query,
+      relations,
+      order: {
+        fields: {
+          ordinal: 'ASC'
+        },
+        docs: {
+          createdAt: 'ASC'
+        }
       }
+    });
+    assert(task, 404);
+
+    if (role === Role.Client) {
+      const { name: orgName } = await m.getRepository(Org).findOneBy({ id: task.orgId });
+      (task as any).orgName = orgName;
+
+      await m.createQueryBuilder()
+        .insert()
+        .into(TaskActivityLastSeen)
+        .values({ taskId: task.id, userId: task.userId, lastHappenAt: () => `NOW()` })
+        .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
+        .execute();
     }
-  });
+  })
 
-  if (role === Role.Client) {
-    const { name: orgName } = await db.getRepository(Org).findOneBy({ id: task.orgId });
-    (task as any).orgName = orgName;
-  }
 
-  assert(task, 404);
 
   res.json(task);
 });
@@ -410,7 +423,7 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
     };
   });
 
-  publishTaskChangeEvent(task, getUserIdFromReq(req));
+  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json(taskDocs);
 });
@@ -493,7 +506,7 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
     await m.save([task, taskActivity]);
   })
 
-  publishTaskChangeEvent(task, getUserIdFromReq(req));
+  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -537,7 +550,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
     }
   });
 
-  publishTaskChangeEvent(task, getUserIdFromReq(req));
+  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
@@ -640,7 +653,7 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
     }
   })
 
-  publishTaskChangeEvent(taskDoc.task, getUserIdFromReq(req));
+  publishTaskChangeZevent(taskDoc.task, getUserIdFromReq(req));
 
   res.json(taskDoc);
 });
@@ -667,7 +680,7 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     await m.save(taskDoc)
   })
 
-  publishTaskChangeEvent(taskDoc.task, getUserIdFromReq(req));
+  publishTaskChangeZevent(taskDoc.task, getUserIdFromReq(req));
 
   res.json(taskDoc);
 });

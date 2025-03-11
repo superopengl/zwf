@@ -48,11 +48,11 @@ const REDIS_CHANNEL_NAME = 'zwf-server-event-subpub';
 const globalPublisher = new RedisPubService(REDIS_CHANNEL_NAME);
 const golbalSubscriber = new RedisSubService(REDIS_CHANNEL_NAME);
 
-export const publishEvent = (event: Zevent) => {
+export const publishZevent = (event: Zevent) => {
   globalPublisher.publish(event);
 };
 
-export const getEventSource$ = (): Observable<Zevent> => {
+export const getZeventSource$ = (): Observable<Zevent> => {
   return golbalSubscriber.getObservable();
 };
 

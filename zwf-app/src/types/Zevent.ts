@@ -20,12 +20,14 @@ export type Zevent = {
   type: 'task.change';
   userId: string;
   taskId: string;
+  taskName: string;
   orgId: string;
   by: string;
 } | {
   type: 'task.comment';
   userId: string;
   taskId: string;
+  taskName: string;
   orgId: string;
   by: string;
   payload: TaskActivity;
