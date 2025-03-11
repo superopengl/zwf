@@ -35,7 +35,6 @@ import { Recurring } from './entity/Recurring';
 import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
 import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadInformation';
 import { TaskActivityInformation } from './entity/views/TaskActivityInformation';
-import { TaskCommentLastAccess } from './entity/TaskCommentLastAccess';
 import { TaskActivity } from './entity/TaskActivity';
 import { UserAudit } from './entity/UserAudit';
 import { TaskTagsTag } from './entity/TaskTagsTag';
@@ -48,7 +47,9 @@ import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
-import { ActivityLastSeen } from './entity/ActivityLastSeen';
+import { TaskActivityLastSeen } from './entity/TaskActivityLastSeen';
+import { TaskCommentNotificationInformation } from './entity/views/TaskCommentNotificationInformation';
+import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 dotenv.config();
 
 const views = [
@@ -199,18 +200,18 @@ export const db = new DataSource({
     OrgPromotionCode,
     SupportMessage,
     Contact,
-    TaskCommentLastAccess,
     TaskActivity,
     UserAudit,
     TaskTagsTag,
     Recurring,
     SupportUserLastAccess,
+    SupportMessageLastSeen,
     EmailSentOutTask,
     SystemConfig,
     LicenseTicket,
     OrgSubscriptionPeriod,
     NotificationMessage,
-    ActivityLastSeen,
+    TaskActivityLastSeen,
     // Views below
     TaskInformation,
     UserInformation,
@@ -223,6 +224,7 @@ export const db = new DataSource({
     SupportInformation,
     SupportPendingReplyInformation,
     TaskFileMetaInformation,
+    TaskCommentNotificationInformation,
     // TaskFileInformation,
     RecurringInformation,
     OrgSubscriptionPeriodHistoryInformation,

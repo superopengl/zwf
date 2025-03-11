@@ -16,10 +16,10 @@ export const SupportReplyDrawer = React.memo((props) => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
 
-  useZevent('support', zevent => {
-    if(zevent.userId === userId) {
+  useZevent(z => z.type === 'support', z => {
+    if(z.userId === userId) {
       setList(list => {
-        return [...list, zevent.payload]
+        return [...list, z.payload]
       });
     }
   }, [userId]);

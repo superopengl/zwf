@@ -48,7 +48,6 @@ export const SupportAffix = () => {
   const [chatOpen, setChatOpen] = React.useState(false);
   const visibleRef = React.useRef(visible);
   const [loading, setLoading] = React.useState(true);
-  const [unreadCount, setUnreadCount] = React.useState(0);
   const [list, setList] = React.useState([]);
   const [user] = useAuthUser();
 
@@ -58,19 +57,14 @@ export const SupportAffix = () => {
     setList(list => {
       return [...list, z.payload]
     })
-    if (!visibleRef.current) {
-      setUnreadCount(x => x + 1);
-    }
   });
 
   // Initial data load
   React.useEffect(() => {
     const sub$ = listMySupportMessages$().pipe(
       finalize(() => setLoading(false))
-    ).subscribe(resp => {
-      const { list, unreadCount } = resp;
+    ).subscribe(list => {
       setList(list);
-      setUnreadCount(unreadCount);
     });
 
     return () => sub$.unsubscribe()
@@ -87,9 +81,6 @@ export const SupportAffix = () => {
   }, [list, visible]);
 
   React.useEffect(() => {
-    if (visible) {
-      setUnreadCount(0);
-    }
     visibleRef.current = visible;
   }, [visible])
 

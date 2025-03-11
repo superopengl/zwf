@@ -111,7 +111,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
     await m.getRepository(TaskField).save(fields);
 
     const taskActivity = new TaskActivity();
-    taskActivity.action = TaskActionType.FieldChange;
+    taskActivity.type = TaskActionType.FieldChange;
     taskActivity.taskId = task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = fields;
@@ -159,7 +159,7 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
     await m.getRepository(TaskField).save(fieldEntities);
   
     const taskActivity = new TaskActivity();
-    taskActivity.action = TaskActionType.FieldChange;
+    taskActivity.type = TaskActionType.FieldChange;
     taskActivity.taskId = task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = fields;
@@ -401,7 +401,7 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
       })
 
       const taskActivity = new TaskActivity();
-      taskActivity.action = TaskActionType.DocChange;
+      taskActivity.type = TaskActionType.DocChange;
       taskActivity.taskId = task.id;
       taskActivity.by = getUserIdFromReq(req);
       taskActivity.info = taskDocs;
@@ -485,7 +485,7 @@ export const updateTaskName = handlerWrapper(async (req, res) => {
     task.name = name;
 
     const taskActivity = new TaskActivity();
-    taskActivity.action = TaskActionType.Renamed;
+    taskActivity.type = TaskActionType.Renamed;
     taskActivity.taskId = task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = name;
@@ -528,7 +528,7 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
       await m.update(Task, { id }, { status: newStatus });
 
       const taskActivity = new TaskActivity();
-      taskActivity.action = TaskActionType.StatusChange;
+      taskActivity.type = TaskActionType.StatusChange;
       taskActivity.taskId = task.id;
       taskActivity.by = getUserIdFromReq(req);
       taskActivity.info = newStatus;
@@ -576,7 +576,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 export const getTaskLog = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
-  let query: any = { taskId: id, action: Not(TaskActionType.Comment) };
+  let query: any = { taskId: id, type: Not(TaskActionType.Comment) };
   const role = getRoleFromReq(req);
   switch (role) {
     case Role.Admin:

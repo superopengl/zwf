@@ -106,7 +106,7 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     taskDoc.uploadedBy = userId;
 
     const taskActivity = new TaskActivity();
-    taskActivity.action = TaskActionType.DocChange;
+    taskActivity.type = TaskActionType.DocChange;
     taskActivity.taskId = task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = taskDoc;
@@ -206,7 +206,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
     })
 
     const taskActivity = new TaskActivity();
-    taskActivity.action = TaskActionType.DocSigned;
+    taskActivity.type = TaskActionType.DocSigned;
     taskActivity.taskId = docs[0].task.id;
     taskActivity.by = getUserIdFromReq(req);
     taskActivity.info = docs;

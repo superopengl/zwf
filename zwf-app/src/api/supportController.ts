@@ -13,28 +13,33 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { SupportMessage } from '../entity/SupportMessage';
 import { assertRole } from '../utils/assertRole';
+import { SupportMessageLastSeen } from '../entity/SupportMessageLastSeen';
 
 export const listMySupportMessages = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Client, Role.Agent, Role.Admin]);
   const userId = getUserIdFromReq(req);
   assert(userId, 404);
 
-  const list = await db.getRepository(SupportMessage).find({
-    where: {
-      userId
-    },
-    order: {
-      createdAt: 'ASC'
-    }
-  });
-  const unreadCountResult = await db.getRepository(SupportUserUnreadInformation).findOne({ where: { userId } });
-  const unreadCount = +unreadCountResult?.count ?? 0;
+  let list: SupportMessage[];
+  await db.transaction(async m => {
+    list = await m.getRepository(SupportMessage).find({
+      where: {
+        userId
+      },
+      order: {
+        createdAt: 'ASC'
+      }
+    });
 
-  const result = {
-    list,
-    unreadCount
-  };
+    await m.createQueryBuilder()
+      .insert()
+      .into(SupportMessageLastSeen)
+      .values({ userId, lastSeenAt: () => `NOW()` })
+      .orUpdate(['lastSeenAt'], ['userId'])
+      .execute();
+  })
 
-  res.json(result);
+  res.json(list);
 });
 
 export const searchSupportList = handlerWrapper(async (req, res) => {

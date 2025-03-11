@@ -8,13 +8,14 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-import { createTaskComment, nudgeCommentAccess } from '../services/taskCommentService';
+import { createTaskComment } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
 import { TaskActionType } from '../types/TaskActionType';
+import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
 
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent', 'client']);
+  assertRole(req, ['admin', 'agent', 'client']);
   const role = getRoleFromReq(req);
   assert(role !== Role.System, 404);
   const { id } = req.params;
@@ -25,7 +26,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
     list = await m.find(TaskActivityInformation, {
       where: {
         taskId: id,
-        action: TaskActionType.Comment,
+        type: TaskActionType.Comment,
         ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {
@@ -35,12 +36,17 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
         id: true,
         createdAt: true,
         by: true,
-        action: true,
+        type: true,
         info: true,
       }
     });
 
-    await nudgeCommentAccess(m, id, userId);
+    await m.createQueryBuilder()
+      .insert()
+      .into(TaskActivityLastSeen)
+      .values({ taskId: id, userId, lastSeenAt: () => `NOW()` })
+      .orUpdate(['lastSeenAt'], ['taskId', 'userId'])
+      .execute();
   });
 
 
@@ -50,7 +56,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 
 
 export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'client']);
+  assertRole(req, ['client']);
   const userId = getUserIdFromReq(req);
   const page = +req.query.page || 1;
   const size = +req.query.size || 50;
@@ -72,7 +78,7 @@ export const listAllMyHistoricalTaskComments = handlerWrapper(async (req, res) =
       'orgName',
       'createdAt',
       'by',
-      'action',
+      'type',
       'info',
     ]
   });
@@ -89,7 +95,7 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
   assert(message, 400, 'Empty message body');
 
   const taskRepo = db.getRepository(Task);
-  const task = await taskRepo.findOne({where: {id: taskId}});
+  const task = await taskRepo.findOne({ where: { id: taskId } });
   assert(task, 404);
 
   const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);

@@ -1,12 +1,10 @@
-import { ActivityLastSeen } from '../entity/ActivityLastSeen';
+import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
 import { getUtcNow } from '../utils/getUtcNow';
 import { TaskActivity } from '../entity/TaskActivity';
 import { TaskActionType } from '../types/TaskActionType';
 import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
 import { Task } from '../entity/Task';
-import { TaskCommentLastAccess } from '../entity/TaskCommentLastAccess';
-import { TaskStatus } from '../types/TaskStatus';
 import { publishEvent } from './zeventSubPubService';
 import { v4 as uuidv4 } from 'uuid';
 import { TaskInformation } from '../entity/views/TaskInformation';
@@ -19,12 +17,18 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
   const comment = new TaskActivity();
   const { userId, orgId, id: taskId } = task;
   comment.id = uuidv4();
-  comment.action = action;
+  comment.type = action;
   comment.taskId = taskId;
   comment.by = by;
   comment.info = info;
   const result = await m.save(comment);
-  await nudgeCommentAccess(m, taskId, by);
+
+  await m.createQueryBuilder()
+    .insert()
+    .into(TaskActivityLastSeen)
+    .values({ taskId, userId, lastHappenAt: () => `NOW()` })
+    .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
+    .execute();
 
   publishEvent({
     type: 'task.comment',
@@ -37,16 +41,6 @@ async function insertNewCommentEntity(m: EntityManager, action: TaskActionType, 
 
   return result;
 }
-
-export async function nudgeCommentAccess(m: EntityManager, taskId: string, userId: string) {
-  await m.createQueryBuilder()
-    .insert()
-    .into(ActivityLastSeen)
-    .values({ taskId, userId, type: 'task-comment', lastHappenAt: () => `NOW()` })
-    .orUpdate(['lastHappenAt'], ['taskId', 'userId', 'type'])
-    .execute();
-}
-
 
 export async function createTaskComment(m: EntityManager, task: Task | TaskInformation, by: string, message: string) {
   return await insertNewCommentEntity(m, TaskActionType.Comment, task, by, message);

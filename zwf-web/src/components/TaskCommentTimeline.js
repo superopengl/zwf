@@ -54,9 +54,9 @@ export const TaskCommentTimeline = React.memo((props => {
     <Timeline mode="left" style={{ padding: 16, paddingLeft: 20 }}>
       {(dataSource ?? []).map(item => <Timeline.Item
         key={item.id}
-        color={item.action === 'comment' ? (item.by === currentUserId ? 'blue' : 'gray') : 'blue'}
-        // position={item.action === 'comment' && item.by === currentUserId ? 'left' : 'right'}
-        dot={item.action === 'comment' ? <MessageFilled /> : null}
+        color={item.type === 'comment' ? (item.by === currentUserId ? 'blue' : 'gray') : 'blue'}
+        // position={item.type === 'comment' && item.by === currentUserId ? 'left' : 'right'}
+        dot={item.type === 'comment' ? <MessageFilled /> : null}
       // label={singleMode ? null : <TimeAgo value={item.createdAt} accurate={false} direction="horizontal" />}
       >
         <Row gutter={20} wrap={false}>
@@ -78,9 +78,9 @@ export const TaskCommentTimeline = React.memo((props => {
                 <Link to={`/task/${item.taskId}`}><strong>{item.taskName}</strong></Link>
                 <Text type="secondary">issued by <strong>{item.orgName}</strong></Text>
               </Space>}
-              {item.action === 'comment' ? <ChatMessage userId={item.by} message={item.info} />
-                : item.action === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
-                  : item.action === 'doc-signed' ? <Space size="small" onClick={e => e.stopPropagation()}>
+              {item.type === 'comment' ? <ChatMessage userId={item.by} message={item.info} />
+                : item.type === 'status-change' ? <Text strong><TaskStatusTag status={item.info.oldStatus} /> <ArrowRightOutlined /> <TaskStatusTag status={item.info.newStatus} /></Text>
+                  : item.type === 'doc-signed' ? <Space size="small" onClick={e => e.stopPropagation()}>
                     <TextLink href={getTaskDocDownloadUrl(item.info.taskDocId)} target="_blank" >
                       <Space>
                         <FileIcon name={item.info.name} />
@@ -89,7 +89,7 @@ export const TaskCommentTimeline = React.memo((props => {
                     </TextLink>
                     <strong>signed</strong>
                   </Space>
-                    : <Text strong>{item.action}</Text>}
+                    : <Text strong>{item.type}</Text>}
             </Space>
           </Col>
         </Row>
