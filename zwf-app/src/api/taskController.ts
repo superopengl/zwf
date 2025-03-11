@@ -21,7 +21,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { Tag } from '../entity/Tag';
-import { logTaskChat } from '../services/taskCommentService';
+import { createTaskComment } from '../services/taskCommentService';
 import { File } from '../entity/File';
 import { streamFileToResponse } from '../utils/streamFileToResponse';
 import { EmailTemplateType } from '../types/EmailTemplateType';
@@ -558,7 +558,7 @@ export const notifyTask = handlerWrapper(async (req, res) => {
 
   const message = req.body.message?.trim();
   if (message) {
-    await logTaskChat(db.manager, task, userId, message);
+    await createTaskComment(db.manager, task, userId, message);
   }
 
   const url = `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`;

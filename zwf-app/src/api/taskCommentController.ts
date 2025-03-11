@@ -8,18 +8,10 @@ import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-import { logTaskChat, nudgeCommentAccess } from '../services/taskCommentService';
+import { createTaskComment, nudgeCommentAccess } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
 import { TaskActionType } from '../types/TaskActionType';
 
-
-export const nudgeCommentCursor = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent', 'client']);
-  const { id } = req.params;
-  const userId = getUserIdFromReq(req);
-  await nudgeCommentAccess(db.manager, id, userId);
-  res.json();
-});
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent', 'client']);
@@ -103,7 +95,7 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
   const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
 
   const m = db.manager;
-  await logTaskChat(m, task, senderId, message);
+  await createTaskComment(m, task, senderId, message);
 
   res.json();
 });

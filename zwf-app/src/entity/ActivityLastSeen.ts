@@ -1,10 +1,11 @@
-import { Column, Index, PrimaryColumn, CreateDateColumn } from 'typeorm';
+import { Column, Index, PrimaryColumn, CreateDateColumn, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 
 @Index('idx_activityLog_userId_lastHappen', ['userId', 'lastHappenAt'])
 @Index('idx_activityLog_task_type_unique', ['userId', 'taskId', 'type'], { unique: true })
-export class ActivityWatch {
-  @PrimaryColumn('uuid')
+@Entity()
+export class ActivityLastSeen {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column('uuid')
@@ -21,5 +22,5 @@ export class ActivityWatch {
   lastHappenAt: Date;
 
   @Column({ nullable: true })
-  lastAccessAt: Date;
+  lastSeenAt: Date;
 }

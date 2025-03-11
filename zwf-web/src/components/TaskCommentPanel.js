@@ -5,7 +5,6 @@ import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 import ScrollToBottom, { } from 'react-scroll-to-bottom';
 import { listTaskComment$, } from 'services/taskService';
-import { nudgeCommentAccess$ } from 'services/taskCommentService';
 import * as moment from 'moment';
 import { css } from '@emotion/css'
 import { ProList } from '@ant-design/pro-components';
@@ -25,7 +24,7 @@ const StyledList = styled(ProList)`
     .ant-list-item-meta-title {
       margin-bottom: 4px;
     }
-    
+
     .ant-pro-list-row-subTitle {
       font-weight: 400;
     }
@@ -74,7 +73,6 @@ export const TaskCommentPanel = React.memo((props) => {
     const event = z.payload;
     event.createdAt = moment.utc(event.createdAt).local().toDate();
     setList(list => [...list, event]);
-    nudgeCommentAccess$(taskId).subscribe();
   };
 
   useZevent(z => z.type === 'task.comment' && z.taskId === taskId, handleZevent);
