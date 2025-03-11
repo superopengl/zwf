@@ -7,7 +7,7 @@ import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tool
 import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import { TaskMessageForm } from 'components/TaskMessageForm';
+import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
 import { TaskCommentPanel } from 'components/TaskCommentPanel';
 import { combineLatest } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
@@ -26,6 +26,7 @@ import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { ProCard } from '@ant-design/pro-components';
 import { DefaultFooter } from '@ant-design/pro-components';
 import { getPendingSignTaskDocs } from 'util/getPendingSignTaskDocs';
+import { ClientTaskCommentDrawer } from 'components/ClientTaskCommentDrawer';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -92,7 +93,7 @@ const ClientTaskPage = (props) => {
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [currentStep, setCurrentStep] = React.useState(FLOW_STEPS.FILL_IN_FORM);
-  const [historyVisible, setHistoryVisible] = React.useState(false);
+  const [commentOpen, setCommentOpen] = React.useState(false);
   const [docsToSign, setDocsToSign] = React.useState([]);
   const [requestChangeModal, requestChangeContextHolder] = Modal.useModal();
   const navigate = useNavigate();
@@ -183,7 +184,7 @@ const ClientTaskPage = (props) => {
           message="This task has unread comment"
           filter={z => z.type === 'task.comment' && z.taskId === task.id}
         >
-          <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)}>Comment & Log</Button>
+          <Button icon={<MessageOutlined />} onClick={() => setCommentOpen(true)}>Comment</Button>
         </ZeventNoticeableBadge>,
         canRequestChange ? <Button key="request">Request change</Button> : null,
       ]}
@@ -245,7 +246,7 @@ const ClientTaskPage = (props) => {
       </Row>
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
-    {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+    {task && <ClientTaskCommentDrawer taskId={task.id} open={commentOpen} onClose={() => setCommentOpen(false)} />}
     {/* <PageFooter>
       <Row gutter={[20, 20]} justify="space-between">
         <Col>

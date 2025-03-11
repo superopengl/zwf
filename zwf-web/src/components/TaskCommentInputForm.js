@@ -6,7 +6,7 @@ import 'react-chat-elements/dist/main.css';
 import { addTaskComment$ } from 'services/taskCommentService';
 import { finalize } from 'rxjs/operators';
 
-export const TaskMessageForm = React.memo((props) => {
+export const TaskCommentInputForm = React.memo((props) => {
   const { taskId, loading: propLoading, onDone } = props;
 
   const [loading, setLoading] = React.useState(propLoading);
@@ -68,13 +68,13 @@ export const TaskMessageForm = React.memo((props) => {
 
 });
 
-TaskMessageForm.propTypes = {
+TaskCommentInputForm.propTypes = {
   taskId: PropTypes.string.isRequired,
   loading: PropTypes.bool,
   onDone: PropTypes.func,
 };
 
-TaskMessageForm.defaultProps = {
+TaskCommentInputForm.defaultProps = {
   width: 500,
   loading: false,
   onDone: () => { },

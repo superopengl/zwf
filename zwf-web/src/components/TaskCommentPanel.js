@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { css } from '@emotion/css'
 import { ProList } from '@ant-design/pro-components';
 import styled from 'styled-components';
-import { TaskMessageForm } from './TaskMessageForm';
+import { TaskCommentInputForm } from './TaskCommentInputForm';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
 
@@ -99,7 +99,7 @@ export const TaskCommentPanel = React.memo((props) => {
           <UserNameCard size={40} userId={myUserId} showName={false} showEmail={false} showTooltip={true} />
         </Col>
         <Col flex="auto">
-          <TaskMessageForm taskId={taskId} />
+          <TaskCommentInputForm taskId={taskId} />
         </Col>
       </Row>}
       dataSource={list.map(item => ({

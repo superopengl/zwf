@@ -98,7 +98,7 @@ export const AvatarDropdownMenu = React.memo(props => {
       {
         key: 'email',
         // disabled: true,
-        label: <Text style={{ fontSize: 14, margin: 0 }}>{email}</Text>
+        label: <Text type="secondary">{email}</Text>
       },
       {
         key: 'divider',
