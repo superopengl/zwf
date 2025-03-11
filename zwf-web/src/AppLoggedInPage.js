@@ -203,7 +203,7 @@ export const AppLoggedInPage = React.memo(() => {
       title={""}
       actionsRender={() => [
         canCreateNew ? <Space key="search" size="large">
-          <SmartSearch />
+          {/* <SmartSearch /> */}
           <CreateNewButton />
         </Space> : null,
         isSystem? null: <HelpDropdownMenu onSupportOpen={openSupport}/>,
