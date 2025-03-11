@@ -100,7 +100,7 @@ const ClientTaskPage = (props) => {
   React.useEffect(() => {
     const sub$ = load$();
     return () => sub$.unsubscribe();
-  }, [])
+  }, [id])
 
   React.useEffect(() => {
     setDocsToSign(getPendingSignTaskDocs(task));
@@ -128,7 +128,7 @@ const ClientTaskPage = (props) => {
   }
 
   const handleGoBack = () => {
-    navigate(-1);
+    navigate('/task');
   }
 
   const isFormView = currentStep === 0;
@@ -136,7 +136,7 @@ const ClientTaskPage = (props) => {
   const screens = useBreakpoint();
 
   const span = { xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 };
-  const canRequestChange = task?.status === 'todo' || task?.status === 'in_progress';
+  const canRequestChange = false && (task?.status === 'todo' || task?.status === 'in_progress');
   const canEdit = task?.status === 'action_required' || task?.status === 'in_progress';
   const narrowScreen = (screens.xs || screens.sm) && !screens.md;
 
@@ -232,13 +232,8 @@ const ClientTaskPage = (props) => {
           </ProCard>}
         </Col>
       </Row>
-      {saving && <SavingAffix />}
-    </PageHeaderContainer>}
-    {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
-    <PageFooter>
-      <Row gutter={[20, 20]} justify="space-between">
+      <Row gutter={[20, 20]} justify="space-between" style={{marginTop: 30}}>
         <Col>
-        {/* {canRequestChange && <Button type="primary" ghost onClick={handleRequestChange}>Request Amendment</Button>} */}
         </Col>
         <Col>
           <Space style={{ justifyContent: 'end' }} size="large">
@@ -248,7 +243,22 @@ const ClientTaskPage = (props) => {
           </Space>
         </Col>
       </Row>
-    </PageFooter>
+      {saving && <SavingAffix />}
+    </PageHeaderContainer>}
+    {task && <TaskLogAndCommentDrawer taskId={task.id} userId={task.userId} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+    {/* <PageFooter>
+      <Row gutter={[20, 20]} justify="space-between">
+        <Col>
+        </Col>
+        <Col>
+          <Space style={{ justifyContent: 'end' }} size="large">
+            {currentStep !== 0 && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre - 1)}><LeftOutlined /> Previous</Button>}
+            {currentStep !== lastStep && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre + 1)}>Next <RightOutlined /></Button>}
+            {currentStep === lastStep && <Button type="primary" onClick={() => navigate('/task')}>Done</Button>}
+          </Space>
+        </Col>
+      </Row>
+    </PageFooter> */}
     {requestChangeContextHolder}
   </Container>
   );
