@@ -82,7 +82,6 @@ export const OrgSubscriptionHistoryPanel = () => {
       scroll={{ x: 'max-content' }}
       dataSource={list}
       columns={columns}
-      size="small"
       pagination={false}
       rowKey="id"
       bordered={false}
