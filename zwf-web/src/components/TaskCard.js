@@ -3,7 +3,6 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { UnreadMessageIcon } from './UnreadMessageIcon';
 import { MdOpenInNew } from 'react-icons/md';
 import Icon from '@ant-design/icons';
 import { TagSelect } from './TagSelect';

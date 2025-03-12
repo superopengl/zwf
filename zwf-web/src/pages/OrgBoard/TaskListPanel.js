@@ -1,6 +1,4 @@
-import { CloseOutlined, EditOutlined } from '@ant-design/icons';
-import { Modal, Space, Table, Tag, Tooltip } from 'antd';
-import Text from 'antd/lib/typography/Text';
+import { Modal, Table, Tag, Typography } from 'antd';
 
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
@@ -9,15 +7,14 @@ import { Link,useNavigate } from 'react-router-dom';
 import { assignTask$, changeTaskStatus$, } from '../../services/taskService';
 import { UnreadMessageIcon } from 'components/UnreadMessageIcon';
 import { TaskStatusButton } from 'components/TaskStatusButton';
-import DropdownMenu from 'components/DropdownMenu';
 import { notify } from 'util/notify';
 import { TagSelect } from 'components/TagSelect';
 import PropTypes from 'prop-types';
 import { MemberSelect } from 'components/MemberSelect';
 import { UserNameCard } from 'components/UserNameCard';
-import { TaskIcon, TaskTemplateIcon } from 'components/entityIcon';
+import { TaskIcon } from 'components/entityIcon';
 
-
+const {Text} = Typography;
 export const TaskListPanel = (props) => {
   const { tasks, onChange, searchText } = props;
 
