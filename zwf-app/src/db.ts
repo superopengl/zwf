@@ -3,7 +3,6 @@ import { LicenseTicket } from './entity/LicenseTicket';
 import { RecurringInformation } from './entity/views/RecurringInformation';
 import { SystemConfig } from './entity/SystemConfig';
 import { TaskFileMetaInformation } from './entity/views/TaskFileMetaInformation';
-import { TaskFileInformation } from './entity/views/TaskFileInformation';
 import { SupportInformation } from './entity/views/SupportInformation';
 import { SupportMessage } from './entity/SupportMessage';
 import { ResourcePage } from './entity/ResourcePage';
@@ -33,7 +32,6 @@ import { OrgClientStatInformation } from './entity/views/OrgClientStatInformatio
 import { OrgMemberInformation } from './entity/views/OrgMemberInformation';
 import { Recurring } from './entity/Recurring';
 import { SupportUserLastAccess } from './entity/SupportUserLastAccess';
-import { SupportUserUnreadInformation } from './entity/views/SupportUserUnreadInformation';
 import { TaskActivityInformation } from './entity/views/TaskActivityInformation';
 import { TaskActivity } from './entity/TaskActivity';
 import { UserAudit } from './entity/UserAudit';
@@ -48,7 +46,6 @@ import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsage
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
 import { TaskActivityLastSeen } from './entity/TaskActivityLastSeen';
-import { TaskCommentNotificationInformation } from './entity/views/TaskCommentNotificationInformation';
 import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 dotenv.config();
 
@@ -217,15 +214,12 @@ export const db = new DataSource({
     UserInformation,
     OrgClientStatInformation,
     OrgMemberInformation,
-    SupportUserUnreadInformation,
     TaskActivityInformation,
     OrgClientInformation,
     OrgBasicInformation,
     SupportInformation,
     SupportPendingReplyInformation,
     TaskFileMetaInformation,
-    TaskCommentNotificationInformation,
-    // TaskFileInformation,
     RecurringInformation,
     OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,

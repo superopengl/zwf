@@ -1,5 +1,4 @@
 import { db } from './../db';
-import { SupportUserUnreadInformation } from '../entity/views/SupportUserUnreadInformation';
 import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
 import { SupportInformation } from '../entity/views/SupportInformation';
 import { v4 as uuidv4 } from 'uuid';
