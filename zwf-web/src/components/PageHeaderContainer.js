@@ -4,6 +4,7 @@ import { PageContainer } from '@ant-design/pro-components';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { Loading } from './Loading';
 
 const { Title } = Typography;
 
@@ -41,11 +42,11 @@ padding: 16px 24px;
 `
 
 export const PageHeaderContainer = React.memo((props) => {
-  const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, footer, ...others } = props;
+  const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, footer, loading, ...others } = props;
 
 
   return <Container style={{ ...style, maxWidth }}>
-    <Breadcrumb style={{ padding: '1rem 40px 0'}}>
+    <Breadcrumb style={{ padding: '1rem 40px 0' }}>
       {breadcrumb?.map((item, i) => <Breadcrumb.Item key={i} menu={item.menu ? { items: item.menu.map((m, j) => ({ key: j, label: m })) } : null}>
         {
           i === breadcrumb.length - 1 || !item.path ? item.name :
@@ -72,13 +73,17 @@ export const PageHeaderContainer = React.memo((props) => {
           margin: '0 auto',
         }
       }}
-    ><div style={{ maxWidth, margin: '0 auto', padding: '0 40px' }}>{children}</div></PageContainer>
+    >
+      <Loading loading={loading}>
+        <div style={{ maxWidth, margin: '0 auto', padding: '0 40px' }}>{children}</div>
+      </Loading>
+    </PageContainer>
     {footer && <Footer>
       <div style={{ maxWidth, margin: '0 auto', width: '100%', display: 'flex', justifyContent: 'end' }}>
         {footer}
       </div>
     </Footer>}
-  </Container>
+  </Container >
 });
 
 PageHeaderContainer.propTypes = {
