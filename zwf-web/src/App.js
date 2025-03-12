@@ -77,12 +77,10 @@ const DEFAULT_LOCALE = getDefaultLocale();
 export const App = React.memo(() => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
-  const [user, setUser] = React.useState(null);
   const zeventBus$ = useEstablishZeventStream();
   const contextValueRef = React.useRef({
     zeventBus$,
-    user,
-    setUser,
+    user: null,
     setLoading,
     setLocale: locale => {
       reactLocalStorage.set('locale', locale);
@@ -96,17 +94,14 @@ export const App = React.memo(() => {
         finalize(() => setLoading(false))
       )
       .subscribe(user => {
-        setUser(user)
+        const context = contextValueRef.current;
+        if (user !== context.user) {
+          context.user = user;
+        }
       })
     return () => sub$.unsubscribe()
   }, []);
 
-  React.useEffect(() => {
-    const context = contextValueRef.current;
-    if (user !== context.user) {
-      context.user = user;
-    }
-  }, [user]);
 
   const { antdLocale, intlLocale, intlMessages } = localeDic[locale] || localeDic[DEFAULT_LOCALE];
 
@@ -203,7 +198,7 @@ export const App = React.memo(() => {
             fontSizeHeading4: 18,
           }
         }}
-        >
+      >
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <RouterProvider router={router} />
           {/* <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">

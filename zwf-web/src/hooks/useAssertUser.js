@@ -12,7 +12,7 @@ export const useAssertUser = (testerFn, fallbackRoute = '/') => {
       console.debug(`fallback to route ${fallbackRoute}`);
       navigate(fallbackRoute);
     }
-  }, []);
+  }, [user]);
 
   return null;
 }

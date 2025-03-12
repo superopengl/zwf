@@ -180,7 +180,6 @@ export const AppLoggedInPage = React.memo(() => {
     routes: g.routes.filter(x => !x.roles || x.roles.includes(role))
   })).filter(g => g.routes.length > 0), [role]);
 
-
   if (!user) {
     return null;
   }
