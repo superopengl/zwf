@@ -206,9 +206,9 @@ export const App = React.memo(() => {
         >
         <IntlProvider locale={intlLocale} messages={intlMessages}>
           <RouterProvider router={router} />
-          <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
+          {/* <CookieConsent location="bottom" overlay={false} expires={365} buttonStyle={{ borderRadius: 4 }} buttonText="Accept">
             We use cookies to improve your experiences on our website.
-          </CookieConsent>
+          </CookieConsent> */}
           {/* <DebugJsonPanel value={user} /> */}
         </IntlProvider>
       </ConfigProvider>
