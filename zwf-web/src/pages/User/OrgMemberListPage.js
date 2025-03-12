@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Typography, Button, Table, Input, Modal, Form, Drawer, Select, Row } from 'antd';
-import {
+import Icon, {
   UserAddOutlined, QuestionOutlined, SyncOutlined, QuestionCircleOutlined
 } from '@ant-design/icons';
 import { deleteUser$, setPasswordForUser, setUserRole } from 'services/userService';
@@ -17,6 +17,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { Loading } from 'components/Loading';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { MdGroupAdd } from 'react-icons/md';
 
 const PaymentStepperWidget = loadable(() => import('components/checkout/PaymentStepperWidget'));
 
@@ -260,7 +261,7 @@ const OrgMemberListPage = () => {
           type="primary"
           ghost
           onClick={() => handleNewUser()}
-          icon={<UserAddOutlined />}>
+          icon={<Icon component={MdGroupAdd} />}>
           Add Member
         </Button>
         ]}

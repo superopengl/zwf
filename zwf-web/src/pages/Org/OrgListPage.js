@@ -29,7 +29,7 @@ const Container = styled.div`
 
 .ant-table-tbody {
   .ant-table-cell:first-child {
-    border-left: 4px solid #0FBFC4;
+    border-left: 2px solid #0FBFC4;
   }
 }
 
@@ -80,7 +80,7 @@ const OrgListPage = () => {
         compare: (a, b) => a?.name?.localeCompare(b.name)
       },
       render: (text, item) => <Space>
-        <Badge dot={item.testing} offset={[4, 2]}><HighlightingText search={queryInfo.text} value={text} /></Badge>
+        <Space><HighlightingText search={queryInfo.text} value={text} />{item.testing && <Text type="secondary"><sub>test</sub></Text>}</Space>
         <ClickToCopyTooltip name="Org ID" value={item.id}><Icon component={IoKeyOutline} /></ClickToCopyTooltip>
       </Space>
     },
@@ -282,6 +282,7 @@ const OrgListPage = () => {
             }}
             rowKey="id"
             loading={loading}
+            bordered={false}
             style={{ marginTop: 20 }}
             rowClassName={item => item.suspended ? 'org-suspended' : item.type === 'trial' ? 'org-trial' : null}
             pagination={{

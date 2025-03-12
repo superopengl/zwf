@@ -158,7 +158,7 @@ export const TaskTemplatePage = () => {
           name: taskTemplateName
         }
       ]}
-      onBack={() => navigate('/task_template')}
+      onBack={() => navigate(-1)}
       loading={loading}
       ghost={true}
       icon={<TaskTemplateIcon />}

@@ -197,14 +197,14 @@ const OrgTaskPage = React.memo((props) => {
       //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
       // ]}
       >
-        <Row gutter={[20, 20]} >
+        <Row gutter={[30, 30]} >
           <Col span={14}>
             <ProCard>
               <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} />
             </ProCard>
           </Col>
           <Col span={10}>
-            <Row gutter={[20, 20]} >
+            <Row gutter={[30, 30]} >
               <Col span={24}>
                 <ProCard>
                   <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'procedure', 'actions', 'history']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
@@ -217,12 +217,12 @@ const OrgTaskPage = React.memo((props) => {
                     <Collapse.Panel key="tags" header="Tags">
                       <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} />
                     </Collapse.Panel>
-                    <Collapse.Panel key="actions" header="Actions">
+                    {/* <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                         {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>}
                         {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                       </Space>
-                    </Collapse.Panel>
+                    </Collapse.Panel> */}
                   </Collapse>
                 </ProCard>
               </Col>
