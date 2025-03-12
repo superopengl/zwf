@@ -21,7 +21,7 @@ const { Text } = Typography;
 
 const LayoutStyled = styled.div`
   margin: 0 auto 0 auto;
-  max-width: 700px;
+  width: 100%;
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
@@ -104,10 +104,11 @@ export const ResourceEditPage = React.memo((props) => {
   return <LayoutStyled>
     <PageHeaderContainer
       loading={loading}
-      onBack={() => navigate('/resource')}
+      onBack={() => navigate(-1)}
       icon={<ResourcePageIcon />}
       title={<ClickToEditInput placeholder={isNew ? 'Unnamed Page' : "Edit Page"} value={page?.title} size={24} onChange={handleRename} maxLength={100} />}
       ghost
+      maxWidth={1000}
       style={{ maxWidth: 900, margin: '0 auto' }}
       extra={[
         debouncedPage

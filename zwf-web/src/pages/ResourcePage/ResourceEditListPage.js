@@ -22,6 +22,7 @@ const LayoutStyled = styled.div`
   // background-color: #ffffff;
   // height: calc(100vh - 64px);
   height: 100%;
+  width: 100%;
 
   .ant-list-item {
     padding-left: 0;
@@ -172,9 +173,9 @@ export const ResourceEditListPage = props => {
               <Paragraph type="secondary">
                 <small>
                   <Space size="large">
-                    <TimeAgo value={item.createdAt} showTime={false} prefix="Created:" direction="horizontal" />
-                    <TimeAgo value={item.updatedAt} showTime={false} prefix="Updated" direction="horizontal" />
-                    <TimeAgo value={item.publishedAt} showTime={false} prefix="Published" direction="horizontal" />
+                    <TimeAgo value={item.createdAt} showTime={false} prefix="created:" direction="horizontal" />
+                    <TimeAgo value={item.updatedAt} showTime={false} prefix="updated" direction="horizontal" />
+                    <TimeAgo value={item.publishedAt} showTime={false} prefix="published" direction="horizontal" />
                   </Space>
                 </small>
               </Paragraph>
