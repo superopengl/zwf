@@ -97,9 +97,11 @@ PageHeaderContainer.propTypes = {
   extra: PropTypes.array,
   maxWidth: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   footer: PropTypes.object,
+  loading: PropTypes.bool,
 };
 
 PageHeaderContainer.defaultProps = {
   maxWidth: '100%',
+  loading: false,
 };
 
