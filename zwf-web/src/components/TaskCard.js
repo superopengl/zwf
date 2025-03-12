@@ -62,7 +62,7 @@ export const TaskCard = (props) => {
     title={<Tooltip title={name} placement="bottom">
       <HighlightingText value={name} search={searchText}></HighlightingText>
     </Tooltip>}
-    extra={<TextLink onClick={e => goToTask(e, id)} target="_blank"><Icon component={MdOpenInNew} /></TextLink>}
+    extra={<TextLink onClick={e => e.stopPropagation()} href={`/task/${id}`} target="_blank"><Icon component={MdOpenInNew} /></TextLink>}
     hoverable
     onClick={() => navigate(`/task/${id}`)}
   >
