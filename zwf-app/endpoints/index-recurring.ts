@@ -22,13 +22,13 @@ function logging(log: {
   const sysLog = new SysLog();
   sysLog.level = 'info';
   Object.assign(sysLog, log);
-  sysLog.createdBy = 'cron';
+  sysLog.createdBy = 'recurring';
   db.getRepository(SysLog).save(sysLog).catch(err => {
     console.error('Logging error', errorToJSON(err));
   });
 }
 
-async function executeSingleRecurringFromCron(recurring: Recurring): Promise<void> {
+async function executeSingleRecurring(recurring: Recurring): Promise<void> {
   const { id } = recurring;
 
   try {
@@ -62,24 +62,24 @@ const JOB_NAME = 'daily-recurring';
 
 start(JOB_NAME, async () => {
 
-  console.log('[Recurring]'.bgYellow, 'Cron job is executing');
+  console.log('[Recurring]'.bgYellow, 'Recurring job is executing');
   logging({
-    message: '[Recurring] Cron job is executing'
+    message: '[Recurring] Recurring job is executing'
   });
 
   const list = await db.getRepository(Recurring)
-    .createQueryBuilder('x')
-    .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = x."taskTemplateId"')
-    .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = p."userId"')
-    .where(`x."nextRunAt" <= now()`)
+    .createQueryBuilder('r')
+    .innerJoin(q => q.from(TaskTemplate, 'j'), 'j', 'j.id = r."taskTemplateId"')
+    .innerJoin(q => q.from(User, 'u'), 'u', 'u.id = r."userId"')
+    .where(`r."nextRunAt" <= now()`)
     .getMany();
 
   for (const r of list) {
-    await executeSingleRecurringFromCron(r);
+    await executeSingleRecurring(r);
   }
-  console.log('[Recurring]'.bgYellow, `Cron job finished ${list.length} recurrings`);
+  console.log('[Recurring]'.bgYellow, `Recurring job finished ${list.length} recurrings`);
   logging({
-    message: `[Recurring] Cron job finished ${list.length} recurrings`
+    message: `[Recurring] Recurring job finished ${list.length} recurrings`
   });
 });
 
