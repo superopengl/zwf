@@ -38,7 +38,7 @@ RUN apt-get install libfontconfig1 libfontconfig1-dev
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm@7
+RUN npm install -g pnpm@6
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
