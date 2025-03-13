@@ -87,22 +87,22 @@ export const saveProfile = handlerWrapper(async (req, res) => {
       relations: ['profile']
     });
     assert(user, 404);
-  
-    user.profile.avatarFileId = req.body.avatar;
+
+    user.profile.avatarFileId = req.body.avatarFileId;
     user.profile.givenName = req.body.givenName;
     user.profile.surname = req.body.surname;
     user.profile.locale = req.body.locale;
-  
+
     // let hasEmailChange = false;
     // if (email) {
     //   const newEmailHash = computeEmailHash(email);
     //   hasEmailChange = user.emailHash !== newEmailHash;
-  
+
     //   if (hasEmailChange) {
     //     assert(user.emailHash !== BUILTIN_SYSTEM_ADMIN_EMIAL_HASH, 400, 'Cannot change the email for the builtin admin');
     //     user.emailHash = newEmailHash;
     //     user.profile.email = email;
-  
+
     //     // await inviteOrgMemberWithSendingEmail(m, user, user.profile);
     //   }
     // }
@@ -111,7 +111,7 @@ export const saveProfile = handlerWrapper(async (req, res) => {
     // if(hasEmailChange) {
     //   entitiesToSave.push(user);
     // }
-  
+
     await m.save(user.profile);
   })
 
@@ -121,7 +121,14 @@ export const saveProfile = handlerWrapper(async (req, res) => {
 export const listOrgMembers = handlerWrapper(async (req, res) => {
   assertRole(req, ['system', 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
-  const list = await db.getRepository(OrgMemberInformation).find({ where: { orgId } });
+  const list = await db.getRepository(OrgMemberInformation).find({
+    where: {
+      orgId
+    },
+    order: {
+      createdAt: 'ASC'
+    }
+  });
   res.json(list);
 });
 
