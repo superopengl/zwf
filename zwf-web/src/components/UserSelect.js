@@ -28,7 +28,7 @@ width: 100%;
   }
 `;
 
-export const UserSelect = React.memo((props) => {
+export const UserSelect = (props) => {
   const { value, valueProp, placeholder, onChange, onTextChange, allowInput, dataSource, bordered, ...others } = props;
 
   const [userList, setUserList] = React.useState(dataSource);
@@ -104,7 +104,7 @@ export const UserSelect = React.memo((props) => {
     </StyledSelect>
   </>
   )
-});
+};
 
 UserSelect.propTypes = {
   value: PropTypes.string,
