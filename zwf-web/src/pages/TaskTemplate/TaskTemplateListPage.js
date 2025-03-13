@@ -154,19 +154,19 @@ export const TaskTemplateListPage = () => {
       title='Form Template'
       loading={loading}
       extra={[
-        <Segmented key="views"
-          onChange={setViewMode}
-          value={viewMode}
-          options={[
-            {
-              icon: <Icon component={BiGridAlt} />,
-              value: 'grid'
-            },
-            {
-              icon: <Icon component={HiViewList} />,
-              value: 'list'
-            },
-          ]} />,
+        // <Segmented key="views"
+        //   onChange={setViewMode}
+        //   value={viewMode}
+        //   options={[
+        //     {
+        //       icon: <Icon component={BiGridAlt} />,
+        //       value: 'grid'
+        //     },
+        //     {
+        //       icon: <Icon component={HiViewList} />,
+        //       value: 'list'
+        //     },
+        //   ]} />,
         <Button key="new" type="primary" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Form Template</Button>
       ]}
     >
