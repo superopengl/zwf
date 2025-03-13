@@ -1,4 +1,2 @@
 export const notes=`
-update release notes
-switch prod
-more fix`
+update release notes`

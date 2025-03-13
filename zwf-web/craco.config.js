@@ -26,7 +26,9 @@ module.exports = {
     //     },
     //   },
     // }
-    plugins: [],
+    // plugins: [
+    //   "@babel/plugin-proposal-private-methods",
+    // ],
     configure: webpackConfig => {
       webpackConfig.module.rules.push({
         test: /\.(js|mjs|jsx|ts|tsx)$/,
@@ -36,6 +38,10 @@ module.exports = {
           { loader: "react-hot-loader/webpack" },
         ],
       });
+      // webpackConfig.plugins = [
+      //   ["@babel/plugin-proposal-private-property-in-object", { "loose": true }], 
+      //   ["@babel/plugin-proposal-private-methods", { "loose": true }],
+      // ]
       return webpackConfig;
     },
   },
