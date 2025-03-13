@@ -20,7 +20,7 @@
     "abnacn-validator": "^0.0.5",
     "antd": "^5.2.1",
     "antd-form-builder": "^2.1.4",
-    "antd-img-crop": "^4.5.2",
+    "antd-img-crop": "^4.12.0",
     "axios": "^0.21.1",
     "dayjs": "^1.11.7",
     "dompurify": "^2.2.8",
