@@ -20,6 +20,7 @@ import { UserProfile } from '../UserProfile';
       'p."givenName" as "givenName"',
       'p."surname" as "surname"',
       'p."locale" as "locale"',
+      'p."avatarFileId" as "avatarFileId"',
       'u."loginType"',
       'u.role as role',
       'u.status as status',
@@ -50,6 +51,9 @@ import { UserProfile } from '../UserProfile';
 
   @ViewColumn()
   locale: string;
+
+  @ViewColumn()
+  avatarFileId: string;
 
   @ViewColumn()
   loginType: string;
