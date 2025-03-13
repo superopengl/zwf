@@ -1,4 +1,4 @@
-import { Space, Card, Typography, Tooltip, Grid, Avatar } from 'antd';
+import { Typography, Tooltip, Row, Col } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -12,9 +12,7 @@ import { TimeAgo } from './TimeAgo';
 import { ProCard } from '@ant-design/pro-components';
 import { useAuthUser } from 'hooks/useAuthUser';
 
-const { Link: TextLink } = Typography;
-
-const { useBreakpoint } = Grid;
+const {Text, Link: TextLink } = Typography;
 
 const StyledCard = styled(ProCard)`
 position: relative;
@@ -38,19 +36,19 @@ border-left: 2px solid transparent;
   background-color: rgb(255,255,220);
   font-weight: 600;
 }
+
+.task-title {
+  font-weight: 500;
+}
 `;
 
 export const TaskCard = (props) => {
 
   const { task, searchText } = props;
-  const { id, name, lastUnreadMessageAt, tags } = task;
+  const { id, name, tags } = task;
   const [user] = useAuthUser();
   const navigate = useNavigate();
 
-  const goToTask = (e, id) => {
-    e.stopPropagation();
-    navigate(`/task/${id}`);
-  }
   const tagIds = React.useMemo(() => tags.map(t => t.id), [tags]);
 
   return <StyledCard gutter={[20, 20]}
@@ -58,30 +56,43 @@ export const TaskCard = (props) => {
     split='horizontal'
     bordered
     headStyle={{ padding: '16px 16px 0' }}
-    style={{borderLeftColor: task.assigneeId === user.id ? '#0FBFC4' : 'transparent'}}
-    title={<Tooltip title={name} placement="bottom">
-      <HighlightingText value={name} search={searchText}></HighlightingText>
-    </Tooltip>}
-    extra={<TextLink onClick={e => e.stopPropagation()} href={`/task/${id}`} target="_blank"><Icon component={MdOpenInNew} /></TextLink>}
+    style={{ borderLeftColor: task.assigneeId === user.id ? '#0FBFC4' : 'transparent' }}
     hoverable
     onClick={() => navigate(`/task/${id}`)}
   >
-    <ProCard
-      title={<Avatar.Group>
-        <UserNameCard userId={task.userId} size={40} showTooltip={true} showName={true} showEmail={true} />
-        {/* {task.assigneeId && <UserNameCard userId={task.assigneeId} size={40} showTooltip={true} showName={false} showEmail={false} />} */}
-      </Avatar.Group>}
-      extra={<TimeAgo key="updatedAt" value={task.updatedAt} />}
-    >
+    <ProCard>
+      <Row gutter={[10, 10]} justify="space-between" align="top" style={{ marginBottom: 16 }} wrap={false}>
+        <Col flex="auto">
+          <Tooltip title={name} placement="bottom">
+            <Text ellipsis className='task-title'>
+              <HighlightingText value={name} search={searchText}></HighlightingText>
+            </Text>
+          </Tooltip>
+        </Col>
+        <Col>
+          <TextLink onClick={e => e.stopPropagation()} href={`/task/${id}`} target="_blank"><Icon component={MdOpenInNew} /></TextLink>
+        </Col>
+      </Row>
+      <Row gutter={[10, 10]} justify="space-between">
+        <Col>
+          <UserNameCard userId={task.userId} size={40} showTooltip={true} showName={true} showEmail={true} />
+        </Col>
+        <Col>
+          <TimeAgo key="updatedAt" value={task.updatedAt} />
+        </Col>
+      </Row>
     </ProCard>
 
     {(tagIds.length > 0 || task.assigneeId) &&
-      <ProCard
-        headStyle={{paddingTop: 0, paddingBottom: 0}}
-        title={<TagSelect readonly={true} value={tagIds} />}
-        extra={task.assigneeId ? <UserNameCard userId={task.assigneeId} size={40} showTooltip={true} showName={false} showEmail={false} /> : null}
-      >
-        
+      <ProCard>
+        <Row gutter={[10, 10]} justify="space-between">
+          <Col>
+            <TagSelect readonly={true} value={tagIds} />
+          </Col>
+          {task.assigneeId && <Col>
+            <UserNameCard userId={task.assigneeId} size={40} showTooltip={true} showName={false} showEmail={false} />
+          </Col>}
+        </Row>
       </ProCard>}
   </StyledCard>
 };
