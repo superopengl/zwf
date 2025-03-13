@@ -3,6 +3,8 @@ import React from 'react';
 import { searchOrgClientUsers$ } from 'services/userService';
 import { UserSelect } from './UserSelect';
 import { useDebounce } from "rooks";
+import { Avatar, Space } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 
 export const ClientSelect = (props) => {
   const { value, valueProp, onChange, allowInput } = props;
@@ -38,7 +40,7 @@ export const ClientSelect = (props) => {
       valueProp={valueProp}
       onChange={handleChange}
       onTextChange={handleTextChange}
-      placeholder={allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}
+      placeholder={<><Avatar size={28} icon={<UserOutlined/>}/> {allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}</>}
     />
   </>
 };
