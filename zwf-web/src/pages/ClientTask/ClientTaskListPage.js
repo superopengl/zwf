@@ -1,39 +1,31 @@
-import { ClearOutlined, RightOutlined, SyncOutlined } from '@ant-design/icons';
-import { Button, Space, Typography, Row, Col, List, Grid, Card, Badge, Tooltip, Select, Input, Tag, Checkbox, ConfigProvider } from 'antd';
+import { ClearOutlined, SyncOutlined } from '@ant-design/icons';
+import { Button, Space, Typography, Row, Col, List, Card, Select, Input, ConfigProvider } from 'antd';
 import React from 'react';
-import { PageContainer } from '@ant-design/pro-components';
 
 import { listClientTask$ } from '../../services/taskService';
 import styled from 'styled-components';
-import { TaskClientCard } from 'components/TaskClientCard';
 import { orderBy, uniq } from 'lodash';
 import { useLocalstorageState } from 'rooks';
 import { ImSortAmountAsc, ImSortAmountDesc } from 'react-icons/im';
 import Icon from '@ant-design/icons';
 import { useAssertRole } from 'hooks/useAssertRole';
-import { ProTable, TableDropdown } from '@ant-design/pro-components';
-import { ProList } from '@ant-design/pro-components';
 import { useNavigate } from 'react-router-dom';
-import { TaskIcon } from 'components/entityIcon';
 import { Descriptions } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import { HighlightingText } from 'components/HighlightingText';
 import CheckboxButton from 'components/CheckboxButton';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { BiRightArrow } from 'react-icons/bi';
 import { TaskStatusTag } from 'components/TaskStatusTag';
 
-const { useBreakpoint } = Grid;
-const { CheckableTag } = Tag;
 const { Paragraph, Text } = Typography;
 
-const LayoutStyled = styled.div`
+const Container = styled.div`
   margin: 0 auto 0 auto;
   // margin-left: -16px;
   // background-color: #ffffff;
   height: 100%;
-  max-width: 1200px;
+  max-width: 1000px;
+  width: 100%;
 
   .ant-tabs-tab-btn {
     width: 100%;
@@ -49,7 +41,7 @@ margin-top: 20px;
 `;
 
 
-const CLIENT_TASK_FILTER_KEY = 'client.tasks.filter';
+const CLIENT_TASK_FILTER_KEY = 'client.task.filter';
 const TASK_FILTER_DEFAULT = {
   text: '',
   org: '',
@@ -100,27 +92,7 @@ export const ClientTaskListPage = () => {
       result = orderBy(result, [field], [direction]);
     }
 
-    const formatted = result.map(item => ({
-      id: item.id,
-      data: item,
-      title: <HighlightingText value={item.name} search={query.text} />,
-      subTitle: <>by {item.orgName}</>,
-      avatar: <TaskIcon />,
-      description: <>
-        <Descriptions size="small" column={2}>
-          <Descriptions.Item label="created">
-            <TimeAgo value={item.createdAt} showTime={false} direction="horizontal" />
-          </Descriptions.Item>
-          <Descriptions.Item label="updated">
-            <TimeAgo value={item.updatedAt} showTime={false} direction="horizontal" />
-          </Descriptions.Item>
-        </Descriptions>
-      </>,
-      extra: {
-        render: () => <Tag>blah</Tag>
-      }
-    }))
-    setFilteredList(result);
+    setFilteredList(allList);
   }, [allList, query]);
 
   const handleToggleStatus = (status) => {
@@ -167,13 +139,12 @@ export const ClientTaskListPage = () => {
   }, [allList]);
 
   return (
-    <LayoutStyled>
+    <Container>
       <PageHeaderContainer
         loading={loading}
         title='All My Cases'
         extra={[
-          <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} type="primary" ghost>Refresh</Button>
-
+          <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} >Refresh</Button>
         ]}
       >
         <Row gutter={[12, 24]} style={{display: 'none'}}>
@@ -272,7 +243,7 @@ export const ClientTaskListPage = () => {
           </List.Item>}
         />
       </PageHeaderContainer>
-    </LayoutStyled>
+    </Container>
   )
 }
 

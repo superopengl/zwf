@@ -1,9 +1,9 @@
-import * as AWS from 'aws-sdk';
+import * as aws from 'aws-sdk';
 import * as moment from 'moment-timezone';
 import { start } from './jobStarter';
 
-AWS.config.update({ region: 'us-east-1' });
-const cloudwatchevents = new AWS.CloudWatchEvents();
+aws.config.update({ region: 'us-east-1' });
+const cloudwatchevents = new aws.CloudWatchEvents();
 
 const NY_TIMEZONE = 'America/New_York';
 const UTC_TIMEZONE = 'UTC';
