@@ -151,9 +151,9 @@ const OrgClientListPage = () => {
       render: (text, item) => <UserNameCard userId={item.id} />,
     },
     {
-      title: <span style={{fontWeight: 400}}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowCreate={false} /></span>,
+      title: <span style={{fontWeight: 400}}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} inPlaceEdit={true} placeholder="Click to select tags" />
+      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} bordered={false} inPlaceEdit={true} placeholder="Click to select tags" />
     },
     {
       title: "Invited",

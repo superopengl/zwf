@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { Popover, Button } from 'antd';
+import { Popover, Button, Typography } from 'antd';
 import PropTypes from 'prop-types';
 import { CloseOutlined } from '@ant-design/icons';
+
+const { Paragraph } = Typography;
 
 export const ConfirmDeleteButton = (props) => {
   const [visible, setVisible] = React.useState(false);
@@ -20,11 +22,12 @@ export const ConfirmDeleteButton = (props) => {
   }
 
   return <Popover
-    title={<>{props.message || 'Confirm'}</>}
+    title={ 'Confirm'}
     trigger="click"
-    visible={visible}
-    onVisibleChange={handleVisibleChange}
+    open={visible}
+    onOpenChange={handleVisibleChange}
     content={<>
+      <Paragraph>{props.message}</Paragraph>
       <Button type="text" onClick={() => setVisible(false)} disabled={loading}>Cancel</Button>
       <Button style={{ marginLeft: 10 }}
         type="text"
@@ -47,7 +50,8 @@ ConfirmDeleteButton.propTypes = {
 
 ConfirmDeleteButton.defaultProps = {
   okButtonProps: {
-    danger: true
+    danger: true,
+    type: 'primary',
   },
   okText: 'Yes, delete',
   message: 'Delete it?'
