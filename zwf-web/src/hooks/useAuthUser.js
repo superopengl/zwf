@@ -10,16 +10,9 @@ const { Paragraph } = Typography;
 export const useAuthUser = () => {
   const navigate = useNavigate();
   const context = React.useContext(GlobalContext);
-  const routePathRef = React.useRef(null);
-
-  React.useEffect(() => {
-    if (routePathRef.current) {
-      navigate(routePathRef.current);
-    }
-  }, [routePathRef.current]);
 
   const setAuthUser = (updatedUser, pathAfter = null) => {
-    routePathRef.current = pathAfter;
+    context.user = updatedUser;
 
     if (updatedUser) {
       const { suspended } = updatedUser;
@@ -27,6 +20,7 @@ export const useAuthUser = () => {
         // When org/account is suspended.
         logout$().subscribe(() => {
           context.user = null;
+          navigate('/');
           notify.error(
             'Account has been suspended',
             <>
@@ -40,7 +34,9 @@ export const useAuthUser = () => {
       }
     }
 
-    context.user = updatedUser;
+    if(pathAfter) {
+      navigate(pathAfter);
+    }
   }
 
   return [context.user, setAuthUser];
