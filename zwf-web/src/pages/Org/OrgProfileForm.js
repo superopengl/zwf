@@ -32,7 +32,6 @@ const DEFAULT_PROFILE = {
 
 const OrgProfileForm = (props) => {
 
-  const [basicForm] = Form.useForm();
   const [org, setOrg] = React.useState(DEFAULT_PROFILE);
   const [requireAbn, setRequireAbn] = React.useState(true);
   const [loading, setLoading] = React.useState(true);
@@ -54,7 +53,7 @@ const OrgProfileForm = (props) => {
   }, []);
 
   React.useEffect(() => {
-    basicForm.resetFields();
+    form.current?.resetFields();
   }, [org]);
 
   const handleSubmitBasic = values => {
