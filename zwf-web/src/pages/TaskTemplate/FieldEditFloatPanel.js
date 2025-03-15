@@ -22,7 +22,7 @@ export const FieldEditFloatPanel = (props) => {
   }
 
   const handleDeleteField = () => {
-    setDeleting(true);
+    onDelete()
   };
 
   return <Tooltip
