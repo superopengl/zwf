@@ -15,7 +15,7 @@ import { assertRole } from '../utils/assertRole';
 import { SupportMessageLastSeen } from '../entity/SupportMessageLastSeen';
 
 export const listMySupportMessages = handlerWrapper(async (req, res) => {
-  assertRole(req, [Role.Client, Role.Agent, Role.Admin]);
+  assertRole(req, [Role.Client, Role.Agent, Role.Admin], true);
   const userId = getUserIdFromReq(req);
   assert(userId, 404);
 
