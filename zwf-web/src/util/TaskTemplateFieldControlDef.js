@@ -1,13 +1,11 @@
 import React from 'react';
 import {
   FaAlignLeft,
-  FaChevronCircleDown,
-  FaDotCircle,
-  FaCalendarAlt,
+  FaHireAHelper,
 } from 'react-icons/fa';
-import { MdOutlineArrowDownward, MdOutlineArrowDropDown, MdOutlineArrowDropDownCircle, MdOutlineFormatColorText, MdOutlineRadioButtonChecked } from 'react-icons/md'
-import { RxSwitch } from 'react-icons/rx';
-import Icon, { FieldNumberOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import { MdOutlineFormatColorText } from 'react-icons/md'
+import { RxDropdownMenu, RxSwitch } from 'react-icons/rx';
+import { LineOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd';
 import { EyeInvisibleFilled } from '@ant-design/icons';
 import {
@@ -22,8 +20,10 @@ import {
 } from '@ant-design/pro-components';
 import { Divider } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
-import { IoCheckbox, IoCheckboxOutline } from 'react-icons/io5';
-import { IoIosArrowDropdown } from 'react-icons/io';
+import { IoCheckbox } from 'react-icons/io5';
+import { BsCalendarRangeFill, BsFillCalendarDateFill, BsFillCalendarFill, BsFillCalendarMonthFill } from 'react-icons/bs';
+import {TbNumbers} from 'react-icons/tb';
+import {RiRadioButtonFill} from'react-icons/ri';
 
 const getControleDefOrDefault = (controlType)  => {
   let controlDef = TaskTemplateFieldControlDefMap.get(controlType);
@@ -101,7 +101,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'digit',
     label: 'Number',
-    icon: <FieldNumberOutlined />,
+    icon: <TbNumbers />,
     fieldProps: {
       placeholder: 'Enter number',
       style: {
@@ -120,7 +120,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'select',
     label: 'Dropdown',
-    icon: <Icon component={IoIosArrowDropdown} />,
+    icon: <RxDropdownMenu />,
     fieldProps: {
     },
     control: ProFormSelect,
@@ -128,7 +128,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'checkbox',
     label: 'Multiple choices',
-    icon: <IoCheckboxOutline />,
+    icon: <IoCheckbox />,
     fieldProps: {
     },
     control: ProFormCheckbox.Group,
@@ -136,7 +136,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'radio',
     label: 'Single choice',
-    icon: <Icon component={MdOutlineRadioButtonChecked} />,
+    icon: <RiRadioButtonFill />,
     fieldProps: {
     },
     control: ProFormRadio.Group,
@@ -144,7 +144,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'date',
     label: 'Date',
-    icon: <FaCalendarAlt />,
+    icon: <BsFillCalendarDateFill />,
     fieldProps: {
       picker: 'date',
       format: 'DD MMM YYYY',
@@ -155,7 +155,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'dateMonth',
     label: 'Month',
-    icon: <FaCalendarAlt />,
+    icon: <BsFillCalendarMonthFill />,
     fieldProps: {
       picker: 'month',
       format: 'MMM YYYY'
@@ -165,7 +165,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'dateQuarter',
     label: 'Quarter',
-    icon: <FaCalendarAlt />,
+    icon: <BsCalendarRangeFill />,
     fieldProps: {
       picker: 'quarter',
       format: 'YYYY-\\QQ'
@@ -175,7 +175,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'dateYear',
     label: 'Year',
-    icon: <FaCalendarAlt />,
+    icon: <BsFillCalendarFill />,
     fieldProps: {
       picker: 'year',
       format: 'YYYY'
@@ -204,7 +204,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   {
     type: 'instruction',
     label: 'Instruction (help text)',
-    icon: <QuestionCircleOutlined />,
+    icon: <FaHireAHelper />,
     formItemProps: {
     },
     hideInForm: true,
