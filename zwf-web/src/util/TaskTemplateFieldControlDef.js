@@ -5,15 +5,16 @@ import {
   FaDotCircle,
   FaCalendarAlt,
 } from 'react-icons/fa';
-import { MdOutlineFormatColorText } from 'react-icons/md'
+import { MdOutlineArrowDownward, MdOutlineArrowDropDown, MdOutlineArrowDropDownCircle, MdOutlineFormatColorText, MdOutlineRadioButtonChecked } from 'react-icons/md'
 import { RxSwitch } from 'react-icons/rx';
-import { FieldNumberOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
+import Icon, { FieldNumberOutlined, LineOutlined, QuestionCircleOutlined } from '@ant-design/icons'
 import { Tooltip } from 'antd';
 import { EyeInvisibleFilled } from '@ant-design/icons';
 import {
   ProFormDigit,
   ProFormRadio,
   ProFormSelect,
+  ProFormCheckbox,
   ProFormSwitch,
   ProFormText,
   ProFormTextArea,
@@ -21,6 +22,8 @@ import {
 } from '@ant-design/pro-components';
 import { Divider } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
+import { IoCheckbox, IoCheckboxOutline } from 'react-icons/io5';
+import { IoIosArrowDropdown } from 'react-icons/io';
 
 const getControleDefOrDefault = (controlType)  => {
   let controlDef = TaskTemplateFieldControlDefMap.get(controlType);
@@ -109,23 +112,31 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   },
   {
     type: 'checkbox',
-    label: 'Switch (checkbox)',
+    label: 'Switch',
     icon: <RxSwitch />,
     fieldProps: null,
     control: ProFormSwitch,
   },
   {
     type: 'select',
-    label: 'Single choice',
-    icon: <FaChevronCircleDown />,
+    label: 'Dropdown',
+    icon: <Icon component={IoIosArrowDropdown} />,
     fieldProps: {
     },
     control: ProFormSelect,
   },
   {
+    type: 'checkbox',
+    label: 'Multiple choices',
+    icon: <IoCheckboxOutline />,
+    fieldProps: {
+    },
+    control: ProFormCheckbox.Group,
+  },
+  {
     type: 'radio',
-    label: 'Multiple choice',
-    icon: <FaDotCircle />,
+    label: 'Single choice',
+    icon: <Icon component={MdOutlineRadioButtonChecked} />,
     fieldProps: {
     },
     control: ProFormRadio.Group,
