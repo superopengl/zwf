@@ -141,7 +141,7 @@ const OrgTaskListPage = () => {
         <Tooltip key="filter" title="Filter">
           <Button icon={<FilterFilled />} type={filterVisible ? 'primary' : 'default'} onClick={() => setFilterVisible(x => !x)} >Filter</Button>
         </Tooltip>,
-        <Button type="primary" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
+        <Button type="primary" key="new" ghost icon={<Icon component={MdDashboardCustomize} />} onClick={handleCreateTask}>New Task</Button>
       ]}
     >
       {filterVisible && <Row style={{ marginBottom: 20 }}>

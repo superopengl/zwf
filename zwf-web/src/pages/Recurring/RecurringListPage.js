@@ -207,8 +207,7 @@ const RecurringListPage = () => {
       loading={loading}
       title="Scheduler"
       extra={[
-
-        <Button type="primary" ghost icon={<PlusOutlined />} onClick={handleCreateNew}>New Scheduler</Button>
+        <Button key="new" type="primary" ghost icon={<PlusOutlined />} onClick={handleCreateNew}>New Scheduler</Button>
       ]}
     >
       <Table columns={columnDef}
