@@ -19,7 +19,7 @@ cursor: grab;
 
 
 export const FieldControlItem = (props) => {
-  const { icon, label, type, onDropStart, onDropDone, index } = props;
+  const { icon, label, type, onDropStart, onDropDone, onClick, index } = props;
   const indexRef = React.useRef(index);
   const newFieldIdRef = React.useRef(uuidv4());
 
@@ -60,6 +60,10 @@ export const FieldControlItem = (props) => {
   //   else document.body.style.cursor = 'normal';
   // }, [isDragging]);
 
+  const handleClick = () => {
+    onClick(newFieldIdRef.current);
+  }
+
 
   const style = isDragging ? {
     borderStyle: 'dashed',
@@ -74,12 +78,13 @@ export const FieldControlItem = (props) => {
     ref={drag}
     bodyStyle={{ padding: '0.5rem 0.5rem' }}
     style={style}
+    onClick={handleClick}
     hoverable
   >
-    <Space size="small" align="center">
+    <div style={{gap: 8, display: 'flex', alignItems: 'center'}}>
       <Icon component={() => icon} style={{fontSize: 18}}/>
       {label}
-    </Space>
+    </div>
   </StyledCard>
 
   // return <div ref={drag} style={{ ...style, opacity }} data-testid={`box`}>
@@ -90,6 +95,7 @@ export const FieldControlItem = (props) => {
 
 FieldControlItem.propTypes = {
   onDropStart: PropTypes.func,
+  onClick: PropTypes.func,
   onDropDone: PropTypes.func.isRequired,
   icon: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
@@ -99,4 +105,5 @@ FieldControlItem.propTypes = {
 FieldControlItem.defaultProps = {
   onDropStart: (newFieldId) => { },
   onDropDone: () => { },
+  onClick: () => { },
 };
