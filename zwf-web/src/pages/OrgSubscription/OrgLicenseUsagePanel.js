@@ -27,7 +27,7 @@ flex-direction: column;
 const TerminationCard = styled(ProCard)`
 color: #F53F3F;
 border: 1px solid #F53F3F44;
-
+background-color: #F53F3F11;
 `;
 
 export const OrgLicenseUsagePanel = () => {
@@ -204,7 +204,7 @@ export const OrgLicenseUsagePanel = () => {
             </ProCard>
             {isOwner && <TerminationCard title="Termination" extra={
               <Button
-                type="primary"
+                // type="primary"
                 danger
                 onClick={handleTerminate}
               >Terminate Subscription & Delete Org</Button>
