@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, OneToOne, Check, Generated } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, OneToOne, Generated, DeleteDateColumn } from 'typeorm';
 import { ColumnNumericTransformer } from '../utils/ColumnNumericTransformer';
 import { Payment } from './Payment';
 
@@ -11,6 +11,12 @@ import { Payment } from './Payment';
 export class OrgSubscriptionPeriod {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
+
+  @CreateDateColumn({default: () => `NOW()`})
+  createdAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @CreateDateColumn()
   periodFrom: Date;

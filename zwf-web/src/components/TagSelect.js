@@ -26,7 +26,7 @@ export const TagSelect = React.memo((props) => {
   })
 
   React.useEffect(() => {
-    const sub$ = subscribeTags(setTags);
+    const sub$ = subscribeTags(list => setTags(list ?? []));
     return () => sub$.unsubscribe()
   }, [])
 

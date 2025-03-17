@@ -6,6 +6,7 @@ export function sanitizeUserForResponse(user: UserInformation) {
   return _.pick(user, [
     'id',
     'role',
+    'orgOwner',
     'orgId',
     'email',
     'givenName',

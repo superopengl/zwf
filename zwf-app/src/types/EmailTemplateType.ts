@@ -16,6 +16,7 @@ export enum EmailTemplateType {
   SubscriptionSuspended = 'subscription_suspended',
   SubscriptionOkPaymentInvoice = 'subscription_ok_payment_invoice',
   SubscriptionAutoRenewFailed = 'subscription_auto_renew_failed',
+  SubscriptionTerminated = 'subscription_terminated',
 
   // Contact
   InboundContact = 'inbound_contact',
