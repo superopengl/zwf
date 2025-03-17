@@ -19,7 +19,7 @@ const OrgSubscriptionPage = () => {
         },
       ]}
       maxWidth={1200}
-      fixedHeader
+      // fixedHeader
       title='Subscription & Billings'
       tabList={[
         {
