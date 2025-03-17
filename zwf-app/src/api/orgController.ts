@@ -135,7 +135,10 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
     await m.save(termination);
 
     const period = await m.findOneByOrFail(OrgSubscriptionPeriod, { orgId, tail: true });
-    await checkoutSubscriptionPeriod(m, period, true);
+    const isTrialPeriod = period.type === 'trial';
+    if(!isTrialPeriod) {
+      await checkoutSubscriptionPeriod(m, period, true);
+    }
 
     const adminUsers = await getOrgAdminUsers(m, orgId);
 
@@ -159,7 +162,7 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
     const emailRequests = adminUsers.map(user => {
       const ret: EmailRequest = {
         to: user.email,
-        template: EmailTemplateType.SubscriptionTerminated,
+        template: isTrialPeriod ? EmailTemplateType.SubscriptionTerminatedTrial : EmailTemplateType.SubscriptionTerminatedMonthly,
         shouldBcc: true,
         vars: {
           toWhom: getEmailRecipientName(user),

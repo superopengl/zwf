@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, Typography, Form, Input, Space, Button } from 'antd';
+import { Modal, Typography, Form, Input, Space, Button, Row, Col } from 'antd';
 import { TaskIcon } from 'components/entityIcon';
 import { TaskGenerator } from 'pages/MyTask/TaskGenerator';
 import { BsFillNutFill } from 'react-icons/bs';
@@ -9,13 +9,34 @@ import { terminateOrg$ } from 'services/orgService';
 import { useAuthUser } from './useAuthUser';
 import { finalize } from 'rxjs';
 import { Loading } from 'components/Loading';
+import styled from 'styled-components'
+
+
+const Container = styled(Loading)`
+.ant-checkbox-wrapper {
+  margin-inline-start: 0 !important;
+}
+`;
 
 const { Paragraph, Text } = Typography;
 
+const reasons = [
+  'Not useful as expected',
+  'Too many bugs',
+  'Poor user experience',
+  'Too expensive',
+  'Poor customer support',
+  'Other reason'
+];
+
 const SurveyPanel = props => {
-  const { onCancel, onOk } = props;
+  const { onCancel, onOk, onSetLoading } = props;
   const [loading, setLoading] = React.useState(false);
   const [user, setAuthUser] = useAuthUser();
+
+  React.useEffect(() => {
+    onSetLoading(loading);
+  }, [loading]);
 
   const handleSubmit = (values) => {
     setLoading(true);
@@ -27,45 +48,47 @@ const SurveyPanel = props => {
     })
   }
 
-  return <Loading loading={loading}>
+
+
+  return <Container loading={loading}>
     <Form
       layout="vertical"
       requiredMark={false}
       onFinish={handleSubmit}
     >
-      <Form.Item label="Reasons" name="reasons" rules={[{ required: true, type: 'array' }]}>
-        <Checkbox.Group options={[
-          'Not useful as expected',
-          'Too many bugs',
-          'Poor user experience',
-          'Too expensive',
-          'Poor customer support',
-          'Other reason'
-        ]} name="checked"
-          style={{ flexDirection: 'column' }}
-        />
+      <Paragraph type="secondary">
+        If you have any feedback or suggestions about how we can improve our services, please do not hesitate to let us know. We value your opinion and will take your feedback into consideration as we continue to develop and enhance our platform.
+      </Paragraph>
+      <Form.Item name="reasons" rules={[{ required: true, type: 'array' }]}>
+        <Checkbox.Group name="checked">
+          <Row gutter={[8, 8]}>
+            {reasons.map((r, i) => <Col key={i} span={24}>
+              <Checkbox value={r}>{r}</Checkbox>
+            </Col>)}
+          </Row>
+        </Checkbox.Group>
       </Form.Item>
-      <Form.Item label="Feedback" name="feedback" rules={[{ max: 1000 }]}>
-        <Input.TextArea placeholder='Tell us your feedback' allowClear />
+      <Form.Item name="feedback" rules={[{ max: 1000 }]}>
+        <Input.TextArea placeholder='Tell us your feedback' allowClear autoSize={{ minRows: 5 }} />
       </Form.Item>
       <Form.Item>
-        <Space style={{width: '100%', justifyContent: 'end'}}>
+        <Space style={{ width: '100%', justifyContent: 'end' }}>
           <Button type="text" onClick={onCancel}>Cancel</Button>
           <Button type="primary" danger htmlType="submit">Terminate Subscription</Button>
         </Space>
       </Form.Item>
     </Form>
-  </Loading>
+  </Container>
 }
 
 export const useTerminateModal = () => {
   const [confirmModal, confirmContextHolder] = Modal.useModal();
   const [surveyModal, surveyContextHolder] = Modal.useModal();
-  
+
   const openSurveyModal = () => {
     const surveyModalInstance = surveyModal.confirm({
       icon: <InfoCircleFilled style={{ color: '#F53F3F' }} />,
-      title: <>Tell us more</>,
+      title: <>Reasons to leave ZeeWorkflow</>,
       maskClosable: false,
       closable: true,
       destroyOnClose: true,
@@ -73,7 +96,9 @@ export const useTerminateModal = () => {
       footer: null,
       content: <SurveyPanel
         onOk={() => surveyModalInstance.destroy()}
-        onCancel={() => surveyModalInstance.destroy()} />
+        onCancel={() => surveyModalInstance.destroy()}
+        onSetLoading={loading => surveyModalInstance.update({ closable: !loading })}
+      />
     });
   }
 
