@@ -393,19 +393,6 @@ export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
 
   assert(!user, 404, 'User already registered');
 
-  // if (user) {
-  //   sendEmail({
-  //     to: user.email,
-  //     template: EmailTemplateType.RegisterExistingAccount,
-  //     vars: {
-  //       toWhom: getEmailRecipientName(user),
-  //     },
-  //     shouldBcc: false
-  //   });
-  //   res.json();
-  //   return;
-  // }
-
   // Only create org admin users
   let { user: newUser, profile } = createUserAndProfileEntity({
     email,
