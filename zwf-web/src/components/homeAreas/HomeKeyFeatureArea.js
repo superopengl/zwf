@@ -77,7 +77,7 @@ export const HomeKeyFeatureArea = () => {
         <Title style={{ textAlign: 'center' }}>Key Features</Title>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>
           <Col {...span}>
-            <Title level={2}><span style={{ color: '#0FBFC4' }}>Task</span> Template</Title>
+            <Title level={2}><span style={{ color: '#0FBFC4' }}>Form</span> Template</Title>
             <Paragraph>Task management description. Task management description. Task management description. Task management description. </Paragraph>
           </Col>
           <Col {...span} >
