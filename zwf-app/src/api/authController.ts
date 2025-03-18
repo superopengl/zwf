@@ -412,7 +412,7 @@ export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
 
   user = await getActiveUserInformation(email);
 
-  sendEmail({
+  await sendEmail({
     to: user.email,
     template: EmailTemplateType.WelcomeOrgSso,
     vars: {
