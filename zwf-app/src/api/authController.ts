@@ -39,7 +39,7 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
   let currentUserInfo;
   if (user) {
     const { email } = user;
-    currentUserInfo = await getActiveUserInformation(email);
+    currentUserInfo = await getActiveUserInformation(db.manager, email);
     if (currentUserInfo.suspended) {
       clearJwtCookie(res);
       currentUserInfo = null;
@@ -54,25 +54,29 @@ export const getAuthUser = handlerWrapper(async (req, res) => {
 export const login = handlerWrapper(async (req, res) => {
   const { name: email, password } = req.body;
 
-  const userInfo = await getActiveUserInformation(email);
-  assert(userInfo, 400, 'User or password is not valid');
+  let userInfo: UserInformation;
+  await db.transaction(async m => {
 
-  const user = await db.getRepository(User).findOneBy({ id: userInfo.id });
+    userInfo = await getActiveUserInformation(m, email);
+    assert(userInfo, 400, 'User or password is not valid');
 
-  // Validate passpord
-  const hash = computeUserSecret(password, user.salt);
-  assert(hash === user.secret, 400, 'User or password is not valid');
+    const user = await m.getRepository(User).findOneBy({ id: userInfo.id });
 
-  user.lastLoggedInAt = getUtcNow();
-  user.resetPasswordToken = null;
-  user.status = UserStatus.Enabled;
-  user.role = user.role === Role.Guest ? Role.Client : user.role;
+    // Validate passpord
+    const hash = computeUserSecret(password, user.salt);
+    assert(hash === user.secret, 400, 'User or password is not valid');
 
-  await db.getRepository(User).save(user);
+    user.lastLoggedInAt = getUtcNow();
+    user.resetPasswordToken = null;
+    user.status = UserStatus.Enabled;
+    user.role = user.role === Role.Guest ? Role.Client : user.role;
+
+    await m.getRepository(User).save(user);
+  })
 
   attachJwtCookie(res, userInfo);
 
-  emitUserAuditLog(user.id, 'login', { type: 'local' });
+  emitUserAuditLog(userInfo.id, 'login', { type: 'local' });
 
   res.json(sanitizeUserForResponse(userInfo));
 });
@@ -174,7 +178,7 @@ async function setUserToResetPasswordStatus(userId: string, returnUrl: string) {
 
 export const forgotPassword = handlerWrapper(async (req, res) => {
   const { email, returnUrl } = req.body;
-  const user = await getActiveUserInformation(email);
+  const user = await getActiveUserInformation(db.manager, email);
   if (!user) {
     res.json();
     return;
@@ -271,18 +275,18 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
 
   for (const email of emails) {
-    const existingUser = await getActiveUserInformation(email);
-    if (!existingUser) {
-      const { user, profile } = createUserAndProfileEntity({
-        email,
-        orgId,
-        role: Role.Agent
-      });
+    await db.transaction(async m => {
+      const existingUser = await getActiveUserInformation(m, email);
+      if (!existingUser) {
+        const { user, profile } = createUserAndProfileEntity({
+          email,
+          orgId,
+          role: Role.Agent
+        });
 
-      await db.transaction(async m => {
         await inviteOrgMemberWithSendingEmail(m, user, profile);
-      });
-    }
+      }
+    });
   }
 
   res.json();
@@ -295,7 +299,7 @@ export const reinviteOrgMember = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
 
   await db.transaction(async m => {
-    const existingUser = await getActiveUserInformation(email);
+    const existingUser = await getActiveUserInformation(m, email);
     assert(role === Role.System || existingUser?.orgId === orgId, 400, `User doesn't exist`);
     const resetPasswordToken = uuidv4();
     await m.update(User, { id: existingUser.id }, { resetPasswordToken });
@@ -355,74 +359,82 @@ async function decodeEmailFromGoogleToken(token) {
   return { email, givenName, surname };
 }
 
+const handleSsoGoogleLogin = async (user: UserInformation, newGivenName: string, newSurname: string, res) => {
+  let updatedUser: UserInformation;
+  await db.transaction(async m => {
+    await m.getRepository(User).update({ id: user.id }, {
+      loginType: UserLoginType.Google,
+      lastLoggedInAt: getUtcNow(),
+      resetPasswordToken: null,
+      status: UserStatus.Enabled,
+      role: user.role === Role.Guest ? Role.Client : user.role
+    });
+
+    await m.getRepository(UserProfile).update({ id: user.profileId }, {
+      givenName: newGivenName,
+      surname: newSurname,
+    });
+
+    updatedUser = await getActiveUserInformation(m, user.email);
+  })
+
+  attachJwtCookie(res, updatedUser);
+
+  emitUserAuditLog(updatedUser.id, 'login', { type: UserLoginType.Google });
+
+  res.json(sanitizeUserForResponse(updatedUser));
+}
+
 export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
   const { token, referralCode } = req.body;
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
-
-  let user = await getActiveUserInformation(email);
-
+  const user = await getActiveUserInformation(db.manager, email);
   assert(user, 404, 'User not found');
 
-  await db.getRepository(User).update({ id: user.id }, {
-    loginType: UserLoginType.Google,
-    lastLoggedInAt: getUtcNow(),
-    resetPasswordToken: null,
-    status: UserStatus.Enabled,
-    role: user.role === Role.Guest ? Role.Client : user.role
-  });
-
-  await db.getRepository(UserProfile).update({ id: user.profileId }, {
-    givenName,
-    surname,
-  });
-
-  user = await getActiveUserInformation(email);
-
-  attachJwtCookie(res, user);
-
-  emitUserAuditLog(user.id, 'login', { type: UserLoginType.Google });
-
-  res.json(sanitizeUserForResponse(user));
+  await handleSsoGoogleLogin(user, givenName, surname, res);
 });
 
 export const ssoGoogleRegisterOrg = handlerWrapper(async (req, res) => {
   const { token, referralCode } = req.body;
   const { email, givenName, surname } = await decodeEmailFromGoogleToken(token);
 
-  let user = await getActiveUserInformation(email);
+  let user = await getActiveUserInformation(db.manager, email);
 
-  assert(!user, 404, 'User already registered');
+  if (user) {
+    // Login flow
+    await handleSsoGoogleLogin(user, givenName, surname, res);
+  } else {
+    // Only create org admin users
+    let { user: newUser, profile } = createUserAndProfileEntity({
+      email,
+      role: Role.Admin,
+      orgOwner: true,
+    });
 
-  // Only create org admin users
-  let { user: newUser, profile } = createUserAndProfileEntity({
-    email,
-    role: Role.Admin,
-    orgOwner: true,
-  });
+    newUser = Object.assign(newUser, {
+      loginType: 'google',
+      lastLoggedInAt: getUtcNow(),
+    });
+    newUser.profile = profile;
+    profile.givenName = givenName;
+    profile.surname = surname;
 
-  newUser = Object.assign(newUser, {
-    loginType: 'google',
-    lastLoggedInAt: getUtcNow(),
-  });
-  newUser.profile = profile;
-  profile.givenName = givenName;
-  profile.surname = surname;
+    await db.manager.save([newUser, profile]);
 
-  await db.manager.save([newUser, profile]);
+    user = await getActiveUserInformation(db.manager, email);
 
-  user = await getActiveUserInformation(email);
+    await sendEmail({
+      to: user.email,
+      template: EmailTemplateType.WelcomeOrgSso,
+      vars: {
+        toWhom: getEmailRecipientName(user),
+      },
+      shouldBcc: false
+    });
 
-  await sendEmail({
-    to: user.email,
-    template: EmailTemplateType.WelcomeOrgSso,
-    vars: {
-      toWhom: getEmailRecipientName(user),
-    },
-    shouldBcc: false
-  });
+    attachJwtCookie(res, user);
 
-  attachJwtCookie(res, user);
-
-  emitUserAuditLog(user.id, 'signup', { type: 'google' });
-  res.json(sanitizeUserForResponse(user));
+    emitUserAuditLog(user.id, 'signup', { type: 'google' });
+    res.json(sanitizeUserForResponse(user));
+  }
 });
