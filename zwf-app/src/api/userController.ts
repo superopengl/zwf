@@ -24,7 +24,7 @@ import { searchOrgClients } from '../utils/searchOrgClients';
 import { getActiveUserInformation } from '../utils/getActiveUserInformation';
 
 export const changePassword = handlerWrapper(async (req, res) => {
-  assertRole(req, ['admin', 'agent', 'member', 'client']);
+  assertRole(req, [Role.System, Role.Admin, Role.Agent, Role.Client]);
   const { password, newPassword } = req.body;
   validatePasswordStrength(newPassword);
 
