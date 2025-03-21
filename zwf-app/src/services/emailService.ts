@@ -1,6 +1,6 @@
 import { getUtcNow } from './../utils/getUtcNow';
 import { db } from './../db';
-import { SYSTEM_EMAIL_SENDER, SYSTEM_EMAIL_BCC } from './../utils/constant';
+import { SYSTEM_EMAIL_NOREPLY, SYSTEM_EMAIL_INFO } from './../utils/constant';
 import * as aws from 'aws-sdk';
 import { awsConfig } from '../utils/awsConfig';
 import { assert } from '../utils/assert';
@@ -40,9 +40,9 @@ async function composeEmailOption(req: EmailRequest) {
   const { subject, text, html } = await compileEmailBody(req);
 
   return {
-    from: req.from || SYSTEM_EMAIL_SENDER,
+    from: req.from || SYSTEM_EMAIL_NOREPLY,
     to: req.to,
-    bcc: req.shouldBcc ? SYSTEM_EMAIL_BCC : undefined,
+    bcc: req.shouldBcc ? SYSTEM_EMAIL_INFO : undefined,
     subject: subject,
     text: text,
     html: html,
@@ -105,7 +105,7 @@ export async function sendEmail(req: EmailRequest) {
   assert(template, 400, 'Email template is not specified');
 
   const task = new EmailSentOutTask();
-  task.from = req.from || SYSTEM_EMAIL_SENDER;
+  task.from = req.from || SYSTEM_EMAIL_NOREPLY;
   task.to = req.to;
   task.template = req.template;
   task.vars = req.vars;
@@ -147,7 +147,7 @@ export async function sendEmailForUserId(userId: string, template: EmailTemplate
 }
 
 export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailRequest[]) {
-  const defaultFrom = SYSTEM_EMAIL_SENDER;
+  const defaultFrom = SYSTEM_EMAIL_NOREPLY;
   const entities: EmailSentOutTask[] = [];
   for (const req of emailRequests) {
     const { to, template } = req;
