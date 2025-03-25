@@ -63,7 +63,7 @@ padding-top: 3rem;
 }
 
 label {
-  color: #ffffff;
+  color: #ffffff !important;
 }
 `;
 
