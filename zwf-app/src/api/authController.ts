@@ -325,7 +325,13 @@ export const inviteClientToOrg = handlerWrapper(async (req, res) => {
       orgClient.orgId = orgId;
       orgClient.userId = user.id;
 
-      await m.save(OrgClient, orgClient);
+      await m.createQueryBuilder()
+        .insert()
+        .into(OrgClient)
+        .values(orgClient)
+        .orIgnore()
+        .execute();
+
       const org = await m.findOneBy(Org, { id: orgId });
 
       if (!newlyCreated && user.role === Role.Client) {
