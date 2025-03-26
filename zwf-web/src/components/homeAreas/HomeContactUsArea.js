@@ -62,8 +62,8 @@ padding-top: 3rem;
   }
 }
 
-label {
-  color: #ffffff !important;
+label, .ant-input-data-count {
+  color: #ffffffcc !important;
 }
 `;
 
@@ -122,16 +122,16 @@ export const HomeContactUsArea = props => {
                   form={form}
                 >
                   <Form.Item name="name" label="Name" required rules={[{ required: true, max: 100 }]}>
-                    <Input placeholder="Your name" autoComplete="name" disabled={loading} allowClear/>
+                    <Input placeholder="Your name" autoComplete="name" disabled={loading} allowClear />
                   </Form.Item>
                   <Form.Item name="email" label="Email" required rules={[{ required: true, max: 120, type: 'email' }]}>
-                    <Input placeholder="Email address" autoComplete="email" disabled={loading} allowClear/>
+                    <Input placeholder="Your email address" autoComplete="email" disabled={loading} allowClear />
                   </Form.Item>
-                  <Form.Item name="body" label="Name" required rules={[{ required: true, max: 1000 }]}>
-                    <Input.TextArea autoSize={{ minRows: 4, maxRows: 15 }} showCount maxLength={1000} placeholder="Your question" disabled={loading} allowClear/>
+                  <Form.Item name="body" label="Question" required rules={[{ required: true, max: 1000 }]}>
+                    <Input.TextArea autoSize={{ minRows: 4, maxRows: 15 }} showCount maxLength={1000} placeholder="Your question" disabled={loading} allowClear />
                   </Form.Item>
-                  <Form.Item style={{textAlign: 'right'}}>
-                    <Button type="primary" size="large" htmlType="submit" loading={loading}>Submit</Button>
+                  <Form.Item style={{ textAlign: 'right', paddingTop: '1rem' }}>
+                    <Button type="primary" ghost size="large" htmlType="submit" loading={loading}>Submit</Button>
                   </Form.Item>
                 </Form>
               </Col>

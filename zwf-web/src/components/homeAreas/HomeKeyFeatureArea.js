@@ -123,8 +123,7 @@ export const HomeKeyFeatureArea = () => {
             <Image src="/images/feature-client-portal.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>
         </Row>
-        <div justify='center' style={{ width: '100%', height: 'clamp(3rem, 7vw, 8rem)', backgroundImage: 'linear-gradient(to top left, #F6F7F9, #F6F7F9 50%, #ffffff 50%, #ffffff 100%)' }}>
-        </div>
+        <div justify='center' style={{ width: '100%', height: 'clamp(3rem, 7vw, 8rem)', backgroundImage: 'linear-gradient(to top left, #F6F7F9, #F6F7F9 50%, #ffffff 50%, #ffffff 100%)' }} />
         <Row gutter={[24, 24]} justify='center' style={{ width: '100%', backgroundColor: '#F6F7F9' }}>
           <Col span={24}>
             <Title level={2}>Task management</Title>

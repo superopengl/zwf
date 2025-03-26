@@ -59,7 +59,6 @@ export const PortalPage = () => {
 
   const isGuest = role === 'guest';
   const beingSuspended = user?.suspended;
-  const isWideScreen = screens.xxl || screens.xl || screens.lg;
 
   const handleMenuChange = (path) => {
     navigate(path);
@@ -71,9 +70,6 @@ export const PortalPage = () => {
     setModalMenuVisible(false);
   }
 
-  const handleHideRegisterModal = () => {
-    setModalMenuVisible(false);
-  }
 
   return <StyledLayoutPage>
     <Layout.Header>
