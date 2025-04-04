@@ -1,3 +1,4 @@
 export const notes=`
-update release notes
-node 18`
+update pp and tu
+update terms of use
+homepage wording`
