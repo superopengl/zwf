@@ -98,8 +98,8 @@ export const HomePricingArea = props => {
                   <small>Incl GST</small>
                 </Col>
               </Row>
-              <Paragraph style={{ fontSize: 16, marginTop: '1rem' }}>
-                Description description description description description description description description description description description description description description
+              <Paragraph style={{ fontSize: 14, opacity: 0.8, marginTop: '1rem' }}>
+              You have access to all past and future functions ZeeWorkflow provides - we believe in providing complete access to everything we offer. We understand the frustration of complicated pricing plans, which is why we offer a simple pricing structure with only one option available.
               </Paragraph>
               <Paragraph>
                 <CheckCircleOutlined style={{ color: '#009A29', marginRight: '1rem' }} /> 14 days free trial
