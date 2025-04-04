@@ -19,13 +19,13 @@ export const GlobalNotificationBar = () => {
   const { suspended, currentPlanType, currentPeriodTo } = user;
   const periodTo = moment(currentPeriodTo);
 
-  const shouldPromptBeforeDays = (beforeDays = 3) => {
-    return moment(periodTo).add(-beforeDays, 'days').isBefore();
+  const shouldPrompt = (beforeDays = 3) => {
+    return currentPlanType !== 'trial' || moment(periodTo).add(-beforeDays, 'days').isBefore();
   }
 
   const source$ = of(null).pipe(
     filter(() => role === 'admin'),
-    filter(() => shouldPromptBeforeDays()),
+    filter(() => shouldPrompt()),
     delay(5000),
   )
 
