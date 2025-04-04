@@ -1,16 +1,17 @@
 import { TaskDoc } from './TaskDoc';
 import { OrgClientInformation } from './views/OrgClientInformation';
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany, JoinColumn, OneToOne } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { Tag } from './Tag';
 import { TaskField } from './TaskField';
 import { File } from './File';
+import { OrgClient } from './OrgClient';
 // import { TaskField } from '../types/TaskField';
 
 @Entity()
-@Index('idex_task_orgId_userId', ['orgId', 'userId'])
+@Index('idex_task_orgId_orgClientId', ['orgId', 'orgClientId'])
 @Index('idex_task_orgId_status', ['orgId', 'status'])
-@Index('idex_task_userId_status', ['userId', 'status'])
+@Index('idex_task_orgClientId_status', ['orgClientId', 'status'])
 export class Task {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -39,7 +40,11 @@ export class Task {
   agentId: string;
 
   @Column('uuid')
-  userId: string;
+  orgClientId: string;
+
+  @OneToOne(() => OrgClient, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
+  @JoinColumn({ name: 'orgClientId', referencedColumnName: 'id' })
+  orgClient: OrgClient;
 
   @OneToMany(() => TaskField, field => field.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   fields: TaskField[];

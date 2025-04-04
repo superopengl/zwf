@@ -9,11 +9,14 @@ export class OrgClient {
 
   @Column('uuid')
   @Index()
-  orgId?: string;
+  orgId: string;
 
-  @Column('uuid')
+  @Column('uuid', { nullable: true })
   @Index()
-  userId?: string;
+  userId: string;
+
+  @Column()
+  clientAlias: string;
 
   @CreateDateColumn()
   createdAt: Date;

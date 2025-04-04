@@ -95,10 +95,17 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
   assert(message, 400, 'Empty message body');
 
   const taskRepo = db.getRepository(Task);
-  const task = await taskRepo.findOne({ where: { id: taskId } });
+  const task = await taskRepo.findOne({
+    where: {
+      id: taskId
+    },
+    relations: {
+      orgClient: true
+    }
+  });
   assert(task, 404);
 
-  const senderId = role === Role.Guest ? task.userId : getUserIdFromReq(req);
+  const senderId = role === Role.Guest ? task.orgClient?.userId : getUserIdFromReq(req);
 
   const m = db.manager;
   await createTaskComment(m, task, senderId, message);

@@ -64,17 +64,26 @@ export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, tas
       id: taskTemplateId
     },
     relations: {
-      docs: true
+      docs: true,
     }
   }) : null;
 
   const { user } = await ensureClientOrGuestUser(m, email, orgId);
 
+  // Add the user to org clients
+  let orgClient = await m.findOneBy(OrgClient, { orgId, userId: user.id });
+  if (!orgClient) {
+    orgClient = new OrgClient();
+    orgClient.orgId = orgId;
+    orgClient.userId = user.id;
+    await m.save(orgClient);
+  }
+
   const task = new Task();
   task.id = id || uuidv4();
   task.deepLinkId = generateDeepLinkId();
   task.name = taskName || generateTaskDefaultName(taskTemplate?.name, user.profile);
-  task.userId = user.id;
+  task.orgClient = orgClient;
   task.orgId = orgId;
   task.status = TaskStatus.TODO;
 
@@ -83,16 +92,7 @@ export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, tas
 
   await m.save([task, ...fields]);
 
-  // Add the user to org clients
-  const orgClient = new OrgClient();
-  orgClient.orgId = task.orgId;
-  orgClient.userId = task.userId;
-  await m.createQueryBuilder()
-    .insert()
-    .into(OrgClient)
-    .values(orgClient)
-    .orIgnore()
-    .execute();
+
 
   // const org = await db.getRepository(Org).findOne({ where: { id: task.orgId } });
 
