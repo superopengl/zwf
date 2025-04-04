@@ -1,4 +1,4 @@
 export const notes=`
-update pp and tu
-update terms of use
-homepage wording`
+fix missing payment method prompt
+log message fix
+fix error duration`
