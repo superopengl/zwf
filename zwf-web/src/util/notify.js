@@ -37,8 +37,8 @@ function request(level, title, content, duration) {
 }
 
 export const notify = {
-  error(title, content = null) {
-    return request('error', title, content, 6);
+  error(title, content = null, duration = 6) {
+    return request('error', title, content, duration);
   },
   success(title, content = null, duration = 4) {
     return request('success', title, content, duration);
