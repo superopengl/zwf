@@ -69,7 +69,7 @@ const TermOfUsePage = () => <Layout>
     <p>You are responsible for paying all external fees and taxes associated with your use of our services, including withholding tax if applicable, unless we already process that withholding tax. We may collect geographical location information to determine your location, which may be used for tax purposes. Your location information must be accurate for tax residency purposes.</p>
     <p>To continue accessing our services, you must make timely payments based on the pricing plan you selected. To avoid delayed or missed payments, please ensure that we have accurate payment information. Failure to make timely payments may result in the suspension of access to your subscription until the payment is made.&nbsp;</p>
     <p>&nbsp;</p>
-    <h1>Termination of subscription.</h1>
+    <h1>Termination of subscription</h1>
     <p>Your subscription will be terminated with a one-month notice period. Once you have canceled your subscription, it cannot be reversed, and all of your personally identifiable information (PII data) will be permanently deleted. However, we may keep certain information such as task and form templates, document templates, messages, and other clients' usage data for tracking purposes.</p>
     <p>&nbsp;</p>
     <h1>Data Use and Privacy</h1>
@@ -101,7 +101,7 @@ const TermOfUsePage = () => <Layout>
     <h1>Additional Terms</h1>
     <p>Professional Advice: Please note that ZeeWorkflow is not a professional services firm and does not provide any professional advice. We may offer information that we believe may be helpful in running an accounting firm, but this information is not a substitute for professional advice. We are not responsible for any use you make of this information.</p>
     <p>Events Beyond Our Control: We make every effort to manage the controllable aspects of our services. However, we are not liable for any failure or delay in performance of our obligations under these terms due to any event or circumstance outside our reasonable control.</p>
-    <p>Notices: If you need to send a notice to ZeeWorkflow, please email info@ZeeWorkflow.com. We will send any notices to you at the email address you have provided during your subscription.</p>
+    <p>Notices: If you need to send a notice to ZeeWorkflow, please email info@zeeworkflow.com. We will send any notices to you at the email address you have provided during your subscription.</p>
     <p>Non-excludable Guarantees: In some places, there may be non-excludable warranties, guarantees or other rights provided by law (non-excludable guarantees). These guarantees still apply, and these terms do not exclude, restrict, or modify them. Except for non-excludable guarantees and other rights that we cannot exclude, we are bound only by the express promises made in these terms. Our liability for a breach of a non-excludable guarantee is limited, at our option, to either replacing or paying for the cost of replacing the relevant service (unless the non-excludable guarantee says otherwise).</p>
     <p>Export Limitations: You must not use our services in violation of any export or trade embargo laws that apply to you.</p>
     <p>Excluded Terms: These terms do not apply to the United Nations Convention on Contracts for the Sale of Goods or the Uniform Computer Information Transactions Act (UCITA).</p>
