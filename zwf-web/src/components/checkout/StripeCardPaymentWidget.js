@@ -98,7 +98,7 @@ const StripeCardPaymentForm = (props) => {
       <Row gutter={[10, 20]} style={{ marginBottom: 24 }}>
         <Col span={24}>
           <Checkbox onClick={e => setAgreed(e.target.checked)}>
-            I confirm that I have read and agreed to the <TextLink href="/terms_and_conditions" target="_blank" onClick={e => e.stopPropagation()}>Terms and Conditions</TextLink>, and have authorized the use of this card as the primary method for future subscription auto-renewal.
+            I confirm that I have read and agreed to the <TextLink href="/terms_of_use" target="_blank" onClick={e => e.stopPropagation()}>Terms of Use</TextLink>, and have authorized the use of this card as the primary method for future subscription auto-renewal.
           </Checkbox>
         </Col>
         <Col {...{ xs: 24, sm: 16, md: 14, lg: 14, xl: 14, xxl: 14 }}>

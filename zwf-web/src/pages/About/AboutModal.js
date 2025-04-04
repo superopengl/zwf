@@ -29,7 +29,7 @@ const AboutModal = (props) => {
       <Paragraph style={{textAlign: 'center'}}>©{new Date().getFullYear()} Easy Value Check PTY LTD. All right reserved.</Paragraph>
       <Paragraph style={{textAlign: 'center'}}>Version {gitVersion}</Paragraph>
       <Paragraph style={{textAlign: 'center'}}>
-        <a href="/terms_and_conditions" target="_blank">
+        <a href="/terms_of_use" target="_blank">
           <FormattedMessage id="menu.tc" />
         </a> | <a href="/privacy_policy" target="_blank">
           <FormattedMessage id="menu.pp" />

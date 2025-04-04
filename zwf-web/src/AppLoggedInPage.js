@@ -235,7 +235,7 @@ export const AppLoggedInPage = React.memo(() => {
       menuFooterRender={props => {
         if (props?.collapsed) return undefined;
         return <Space direction="vertical" style={{ width: '100%' }}>
-          <FooterMenuItem href="/terms_and_conditions">Terms and Conditions</FooterMenuItem>
+          <FooterMenuItem href="/terms_of_use">Terms of Use</FooterMenuItem>
           <FooterMenuItem href="/privacy_policy">Privacy Policy</FooterMenuItem>
         </Space>
       }}

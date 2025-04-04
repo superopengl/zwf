@@ -45,7 +45,7 @@ const Content = props => {
         strong={!hasRead}
       />
       <Checkbox checked={agreed} onClick={e => setAgreed(e.target.checked)} >
-        I have read and agree on the <TextLink target="_blank" href="/terms_and_conditions">terms and conditions</TextLink>
+        I have read and agree on the <TextLink target="_blank" href="/terms_of_use">terms of use</TextLink>
       </Checkbox>
       <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 20 }}>
         <Button type="text" onClick={onCancel} autoFocus>Cancel</Button>

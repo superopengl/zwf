@@ -107,10 +107,10 @@ export const TaskDocToSignPanel = React.memo((props) => {
           checked={agreed}
           onClick={e => setAgreed(e.target.checked)}
           disabled={loading || !docsToSign.length}>
-          I have read and agree on the <Link underline target="_blank" href="/terms_and_conditions">terms and conditions</Link></Checkbox>
+          I have read and agree on the <Link underline target="_blank" href="/terms_of_use">terms of use</Link></Checkbox>
       </Col>
       <Col>
-        <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms and conditions before signing'} >
+        <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms of use before signing'} >
           <Button type="primary"
             loading={loading}
             icon={<Icon component={FaSignature} />}

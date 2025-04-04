@@ -112,9 +112,9 @@ export const SupportAffix = () => {
         filter={z => z.type === 'support'}
       >
         <FloatButton
-          tooltip="Terms and Conditions"
+          tooltip="Terms of Use"
           icon={<QuestionCircleOutlined />}
-          href="/terms_and_conditions"
+          href="/terms_of_use"
           target="_blank"
         />
         <FloatButton
