@@ -1,6 +1,6 @@
 import { TaskDoc } from './TaskDoc';
 import { OrgClientInformation } from './views/OrgClientInformation';
-import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany, JoinColumn, OneToOne } from 'typeorm';
+import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, JoinTable, ManyToMany, OneToMany, JoinColumn, OneToOne, ManyToOne } from 'typeorm';
 import { TaskStatus } from '../types/TaskStatus';
 import { Tag } from './Tag';
 import { TaskField } from './TaskField';
@@ -42,7 +42,7 @@ export class Task {
   @Column('uuid')
   orgClientId: string;
 
-  @OneToOne(() => OrgClient, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
+  @ManyToOne(() => OrgClient, orgClient => orgClient.tasks, { orphanedRowAction: 'delete', onDelete: 'SET NULL' })
   @JoinColumn({ name: 'orgClientId', referencedColumnName: 'id' })
   orgClient: OrgClient;
 

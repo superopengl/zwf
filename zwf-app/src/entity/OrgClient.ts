@@ -1,4 +1,5 @@
-import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column, DeleteDateColumn, Index, Unique } from 'typeorm';
+import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column, DeleteDateColumn, Index, Unique, OneToMany } from 'typeorm';
+import { Task } from './Task';
 
 
 @Entity()
@@ -23,4 +24,7 @@ export class OrgClient {
 
   @DeleteDateColumn()
   deletedAt: Date;
+
+  @OneToMany(() => Task, task => task.orgClient, { onDelete: 'SET NULL', eager: false, orphanedRowAction: 'delete' })
+  tasks: Task[];
 }
