@@ -48,8 +48,12 @@ export function reinviteMember$(email) {
   return httpPost$(`auth/reinvite/member`, { email });
 }
 
-export function inviteClient$(emails) {
-  return httpPost$(`auth/invite/client`, { emails });
+// export function inviteClient$(emails) {
+//   return httpPost$(`auth/invite/client`, { emails });
+// }
+
+export function addClient$(alias, email) {
+  return httpPost$(`/auth/invite/client`, { alias, email });
 }
 
 export function ssoGoogleRegisterOrg$(token) {

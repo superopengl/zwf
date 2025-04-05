@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Space, Avatar, Button, Form, Input, Typography } from 'antd';
 import { TagsOutlined, UserAddOutlined } from '@ant-design/icons';
-import { inviteClient$ } from 'services/authService';
+import { addClient$ } from 'services/authService';
 import { finalize } from 'rxjs';
 import { Loading } from 'components/Loading';
 const { Text, Paragraph } = Typography;
@@ -11,6 +11,7 @@ export const InviteClientModal = props => {
   const hasInvited = React.useRef(false);
   const ref = React.useRef();
   const [loading, setLoading] = React.useState(false);
+  const [canSubmit, setCanSubmit] = React.useState(false);
 
   React.useEffect(() => {
     hasInvited.current = false;
@@ -21,14 +22,16 @@ export const InviteClientModal = props => {
   }
 
   const handleFormSubmit = (values) => {
-    const { emails } = values;
+    const { alias, email } = values;
     setLoading(true)
-    inviteClient$(emails).pipe(
+    addClient$(alias, email).pipe(
       finalize(() => setLoading(false)),
-    ).subscribe(() => {
-      hasInvited.current = true;
-      // Close the modal
-      onOk();
+    ).subscribe({
+      next: () => {
+        hasInvited.current = true;
+        onOk();
+      },
+      error: e => { }
     })
   }
 
@@ -40,29 +43,46 @@ export const InviteClientModal = props => {
     }
   }
 
+  const handleValueChange = (changed, values) => {
+    const { alias } = values;
+    setCanSubmit(!!alias?.trim())
+  }
+
   return <Modal
     open={open}
     onCancel={handleCancel}
     onOk={onOk}
     // title={<Space><Avatar icon={<UserAddOutlined />} style={{ backgroundColor: '#0FBFC4' }} />Invite Client</Space>}
-    title="Invite Client"
+    title="Add New Client"
     closable
     destroyOnClose={true}
     maskClosable={false}
     footer={<Space style={{ width: '100%', justifyContent: 'end' }}>
       {/* <Button type="text" onClick={handleCancel} disabled={loading}>Cancel</Button> */}
-      <Button type="primary" onClick={handleInvite} disabled={loading}>Invite</Button>
+      <Button type="primary" onClick={handleInvite} disabled={!canSubmit || loading}>Add</Button>
     </Space>}
   >
     <Loading loading={loading} >
       <Paragraph>
-        By inputting your client's email addresses, you can invite them to join your organization, regardless of whether they already have ZeeWorkflow accounts. If your client does have an existing ZeeWorkflow account, you can immediately start serving and communicating with them. 
-      <Paragraph>
-        
-      </Paragraph>
-        For clients without ZeeWorkflow accounts, the system will automatically send them an invitation and guide them through the registration process. Once they have completed registration, you can then serve and communicate with them using ZeeWorkflow.
+        If the input email address is not an exisitng ZeeWorkflow client account, the system will automatically send them an invitation and guide them through the registration process. Once they have completed registration, you can then serve and communicate with them using ZeeWorkflow.
       </Paragraph>
       <Form
+        ref={ref}
+        layout="vertical"
+        onFinish={handleFormSubmit}
+        onValuesChange={handleValueChange}
+      >
+        <Form.Item name="alias" label="Client name" rules={[{ required: true, max: 50 }]}
+        >
+          <Input placeholder="Company ABC LTD. or Tom Jerry" autoFocus allowClear />
+        </Form.Item>
+        <Form.Item name="email" label="Email" rules={[{ required: false, type: 'email', max: 100 }]}
+          extra="You can set email for this client later"
+        >
+          <Input placeholder="andy@zeeworkflow.com" allowClear />
+        </Form.Item>
+      </Form>
+      {/* <Form
         ref={ref}
         layout="vertical"
         onFinish={handleFormSubmit}
@@ -79,7 +99,7 @@ export const InviteClientModal = props => {
             autoFocus={true}
             disabled={loading} />
         </Form.Item>
-      </Form>
+      </Form> */}
     </Loading>
   </Modal>
 };

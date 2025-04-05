@@ -196,7 +196,7 @@ paths:
           description: OK          
   /auth/invite/client:
     post:
-      operationId: inviteClientToOrg
+      operationId: addClientToOrg
       # security:
       #   - authAnyRole: []
       responses:

@@ -25,7 +25,7 @@ export async function searchOrgClients(orgId: string, queryInfo: StockUserParams
     .where('"orgId" = :orgId', { orgId });
 
   if (text) {
-    query = query.andWhere('(email ILIKE :text OR "givenName" ILIKE :text OR "surname" ILIKE :text)', { text: `%${text}%` });
+    query = query.andWhere('("clientAlias" ILIKE :text OR email ILIKE :text OR "givenName" ILIKE :text OR "surname" ILIKE :text)', { text: `%${text}%` });
   }
 
   if (tags?.length) {

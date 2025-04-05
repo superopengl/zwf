@@ -48,7 +48,7 @@ export const LogInPanel = props => {
     <>
       <Form layout="vertical" onFinish={handleSubmit} style={{ textAlign: 'left' }} initialValues={email ? { name: email } : null}>
         <Form.Item label="Email" name="name"
-          rules={[{ required: true, validator: validateName, whitespace: true, max: 100, message: 'Please input valid email address' }]}
+          rules={[{ required: true, validator: validateName, type:'email', whitespace: true, max: 100, message: 'Please input valid email address' }]}
         >
           <Input placeholder="abc@xyz.com" type="email" autoComplete="email" allowClear={true} maxLength="100" disabled={loading || !!email} autoFocus={true} />
         </Form.Item>

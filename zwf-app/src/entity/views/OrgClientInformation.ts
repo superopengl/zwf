@@ -10,12 +10,14 @@ import { UserStatus } from '../../types/UserStatus';
     .createQueryBuilder()
     .from(Org, 'o')
     .innerJoin(OrgClient, 'c', `o.id = c."orgId"`)
-    .innerJoin(UserInformation, 'u', 'u.id = c."userId"')
+    .leftJoin(UserInformation, 'u', 'u.id = c."userId"')
     .select([
-      'u.id as "id"',
+      'c.id as "id"',
       'o.id as "orgId"',
       'c."createdAt" as "invitedAt"',
       'o.name as "orgName"',
+      'c."clientAlias" as "clientAlias"',
+      'u.id as "userId"',
       'u.email as "email"',
       'u."givenName" as "givenName"',
       'u."surname" as "surname"',
@@ -37,6 +39,12 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   orgName: string;
+
+  @ViewColumn()
+  clientAlias: string;
+
+  @ViewColumn()
+  userId: string;
 
   @ViewColumn()
   email: string;

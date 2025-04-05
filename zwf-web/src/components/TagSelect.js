@@ -119,6 +119,7 @@ export const TagSelect = React.memo((props) => {
     options={tags.map(t => ({ value: t.id, label: <Tag color={t.colorHex}>{t.name}</Tag> }))}
     value={value}
     onChange={handleChange}
+    notFoundContent={"No tag defined"}
     dropdownRender={(menu) => (
       <>
         {menu}
