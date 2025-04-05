@@ -42,7 +42,7 @@ export async function searchUsers(orgId: string, queryInfo: StockUserParams) {
     query = query.andWhere('(p.email ILIKE :text OR p."givenName" ILIKE :text OR p."surname" ILIKE :text)', { text: `%${text}%` });
   }
   query = query.leftJoin(q => q
-    .from('user_tags_tag', 'tg')
+    .from('org_client_tags_tag', 'tg')
     .groupBy('tg."userId"')
     .select([
       'tg."userId" as "userId"',

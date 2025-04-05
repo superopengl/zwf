@@ -11,6 +11,14 @@ import { UserStatus } from '../../types/UserStatus';
     .from(Org, 'o')
     .innerJoin(OrgClient, 'c', `o.id = c."orgId"`)
     .leftJoin(UserInformation, 'u', 'u.id = c."userId"')
+    .leftJoin(q => q
+      .from('org_client_tags_tag', 'tg')
+      .groupBy('tg."orgClientId"')
+      .select([
+        'tg."orgClientId" as "orgClientId"',
+        'array_agg(tg."tagId") as tags'
+      ]),
+      'tg', 'tg."orgClientId" = c.id')
     .select([
       'c.id as "id"',
       'o.id as "orgId"',
@@ -23,7 +31,7 @@ import { UserStatus } from '../../types/UserStatus';
       'u."surname" as "surname"',
       'u.role as role',
       'u.status as status',
-      'u.tags as tags',
+      'tg.tags as tags',
     ]),
   dependsOn: [Org, OrgClient, UserInformation]
 }) export class OrgClientInformation {

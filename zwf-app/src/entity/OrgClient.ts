@@ -1,5 +1,6 @@
-import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column, DeleteDateColumn, Index, Unique, OneToMany } from 'typeorm';
+import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column, DeleteDateColumn, Index, Unique, OneToMany, JoinTable, ManyToMany } from 'typeorm';
 import { Task } from './Task';
+import { Tag } from './Tag';
 
 
 @Entity()
@@ -27,4 +28,8 @@ export class OrgClient {
 
   @OneToMany(() => Task, task => task.orgClient, { onDelete: 'SET NULL', eager: false, orphanedRowAction: 'delete' })
   tasks: Task[];
+
+  @ManyToMany(type => Tag, { onDelete: 'CASCADE' })
+  @JoinTable()
+  tags: Tag[];
 }

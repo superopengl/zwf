@@ -304,18 +304,6 @@ paths:
       responses:
         200:
           description: OK
-  /user/:id/tags:
-    post:
-      operationId: setUserTags
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
   /user/:id/role:
     post:
       operationId: setUserRole
@@ -361,6 +349,18 @@ paths:
       responses:
         200:
           description: OK
+  /org/client/:id/tags:
+    post:
+      operationId: setOrgClientTags
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK          
   /org/list:
     get:
       operationId: listOrg
