@@ -11,7 +11,7 @@ import { UserDisplayName } from './UserDisplayName';
 const { Text } = Typography;
 
 export const UserNameCard = React.memo((props) => {
-  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type } = props;
+  const { userId, searchText, size, fontSize, showTooltip, showName, showEmail, showAvatar, type, alias } = props;
 
   const [data, setData] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -48,25 +48,26 @@ export const UserNameCard = React.memo((props) => {
   if (loading || !data) {
     return <Space size="small">
       {showAvatar && <Skeleton.Avatar active={loading} size={size} shape="circle" />}
-      {showName && loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>}
+      {alias || (showName && loading ? <Skeleton.Input style={{ width: 180 }} active={true} size={size} /> : <Text type="secondary">No user</Text>)}
     </Space>
   }
 
-  const contentComponent = <Row size="small" wrap={false} gutter={8} align="top" onClick={props.onClick}>
-    {showAvatar && <Col>
+  const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
+    {showAvatar && 
       <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={icon} />
-    </Col>}
-    {(showName || showEmail) && <Col flex="auto"><UserDisplayName
-      surname={data.surname}
-      givenName={data.givenName}
-      email={data.email}
-      searchText={searchText}
-      showEmail={showEmail}
-      size={fontSize}
-      type={type}
-    />
-    </Col>}
-  </Row>
+    }
+    {alias ? alias :
+      (showName || showEmail) ? <UserDisplayName
+        surname={data.surname}
+        givenName={data.givenName}
+        email={data.email}
+        searchText={searchText}
+        showEmail={showEmail}
+        size={fontSize}
+        type={type}
+      />
+       : null}
+  </Space>
 
 
   return showTooltip ?
@@ -76,6 +77,7 @@ export const UserNameCard = React.memo((props) => {
 
 UserNameCard.propTypes = {
   userId: PropTypes.string,
+  alias: PropTypes.string,
   searchText: PropTypes.string,
   type: PropTypes.oneOf(['link']),
   size: PropTypes.number,

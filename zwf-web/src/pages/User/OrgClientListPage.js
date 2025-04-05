@@ -137,8 +137,7 @@ const OrgClientListPage = () => {
       // width: 400,
       fixed: 'left',
       render: (text, item) =><Space>
-        {item.clientAlias}
-        {item.userId && <UserNameCard userId={item.userId} />}
+        <UserNameCard userId={item.userId} alias={item.clientAlias} />
       </Space>
     },
     {
