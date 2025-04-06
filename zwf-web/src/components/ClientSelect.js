@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { searchOrgClientUsers$ } from 'services/userService';
+import { searchOrgClientUsers$ } from 'services/clientService';
 import { UserSelect } from './UserSelect';
 import { useDebounce } from "rooks";
 import { Avatar, Space } from 'antd';

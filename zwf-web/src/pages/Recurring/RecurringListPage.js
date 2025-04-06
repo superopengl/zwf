@@ -14,6 +14,7 @@ import { notify } from 'util/notify';
 import { UserNameCard } from 'components/UserNameCard';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { ClientNameCard } from 'components/ClientNameCard';
 
 const { Link: TextLink, Paragraph } = Typography;
 
@@ -38,9 +39,9 @@ const RecurringListPage = () => {
     },
     {
       title: 'Client',
-      dataIndex: 'userId',
+      dataIndex: 'orgClientId',
       onFilter: (value, record) => record.agentId === value,
-      render: (value) => <UserNameCard userId={value} />
+      render: (value) => <ClientNameCard id={value} />
     },
     {
       title: 'Form Template',

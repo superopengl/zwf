@@ -22,6 +22,7 @@ import { Payment } from '../entity/Payment';
 import { Role } from '../types/Role';
 import { searchOrgClients } from '../utils/searchOrgClients';
 import { getActiveUserInformation } from '../utils/getActiveUserInformation';
+import { OrgClientInformation } from '../entity/views/OrgClientInformation';
 
 export const changePassword = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.System, Role.Admin, Role.Agent, Role.Client]);
@@ -58,6 +59,29 @@ export const getBulkUserBrief = handlerWrapper(async (req, res) => {
       'surname',
       'email'
     ]
+  });
+
+  res.json(data);
+});
+
+export const getBulkClientBrief = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const { ids } = req.body;
+  const orgId = getOrgIdFromReq(req);
+
+  assert(ids.length, 400, 'ids cannot be empty');
+
+  const data = await db.getRepository(OrgClientInformation).find({
+    where: { id: In(ids), orgId },
+    select: {
+      id: true,
+      clientAlias: true,
+      avatarFileId: true,
+      avatarColorHex: true,
+      givenName: true,
+      surname: true,
+      email: true,
+    }
   });
 
   res.json(data);
