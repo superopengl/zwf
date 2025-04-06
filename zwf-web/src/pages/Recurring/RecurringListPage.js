@@ -11,7 +11,6 @@ import { TimeAgo } from 'components/TimeAgo';
 import { listRecurring$, deleteRecurring, runRecurring } from 'services/recurringService';
 import RecurringEditModal from './RecurringEditModal';
 import { notify } from 'util/notify';
-import { UserNameCard } from 'components/UserNameCard';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { ClientNameCard } from 'components/ClientNameCard';
@@ -27,7 +26,7 @@ const RecurringListPage = () => {
   const [modal, contextHolder] = Modal.useModal();
   const navigate = useNavigate();
 
-  const isRecurringDeprecated = item => !item.userId || !item.taskTemplateId;
+  const isRecurringDeprecated = item => !item.orgClientId || !item.taskTemplateId;
 
   const columnDef = [
     {
@@ -150,13 +149,13 @@ const RecurringListPage = () => {
 
   const handleDelete = async (e, item) => {
     e.stopPropagation();
-    const { id, taskTemplateName, portfolioName, recurringName, userId } = item;
+    const { id, taskTemplateName, portfolioName, recurringName, orgClientId } = item;
     modal.confirm({
       title: <>Delete scheduler</>,
-      content: <>
-        Delete scheduler job <Text code>{recurringName}</Text> for below user?
-        <UserNameCard userId={userId} />
-      </>,
+      content: <Space direction="vertical">
+        <Text>Delete scheduler job <Text code>{recurringName}</Text> for below user?</Text>
+        <ClientNameCard id={orgClientId} />
+      </Space>,
       onOk: async () => {
         setLoading(true);
         await deleteRecurring(id);

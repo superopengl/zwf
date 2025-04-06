@@ -2,14 +2,12 @@ import { Select, Typography, Button, Space } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import styled from 'styled-components';
-import isEmail from 'validator/lib/isEmail';
-import { UserAvatar } from './UserAvatar';
-import { UserNameCard } from './UserNameCard';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { searchOrgClientUsers$ } from 'services/clientService';
+import { searchOrgClients$ } from 'services/clientService';
 import { addClient$ } from 'services/authService';
 import { finalize } from 'rxjs';
+import { ClientNameCard } from './ClientNameCard';
 
 const { Text } = Typography;
 
@@ -48,7 +46,7 @@ export const OrgClientSelect = (props) => {
 
   const load$ = (text) => {
     setLoading(true)
-    return searchOrgClientUsers$({ text })
+    return searchOrgClients$({ text })
       .pipe(
         finalize(() => setLoading(false))
       )
@@ -123,7 +121,7 @@ export const OrgClientSelect = (props) => {
       {...others}
     >
       {clientList.map(c => (<Select.Option key={c.id} value={c.id} item={c}>
-        <UserNameCard userId={c.userId} alias={c.clientAlias} />
+        <ClientNameCard id={c.id} alias={c.clientAlias} />
       </Select.Option>))}
     </StyledSelect>
   </>

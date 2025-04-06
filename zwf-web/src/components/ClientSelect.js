@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { searchOrgClientUsers$ } from 'services/clientService';
+import { searchOrgClients$ } from 'services/clientService';
 import { UserSelect } from './UserSelect';
 import { useDebounce } from "rooks";
 import { Avatar, Space } from 'antd';
@@ -16,7 +16,7 @@ export const ClientSelect = (props) => {
   }, [])
 
   const load$ = (text) => {
-    return searchOrgClientUsers$({ text }).subscribe(resp => {
+    return searchOrgClients$({ text }).subscribe(resp => {
       setDataSource(resp.data)
     })
   }
