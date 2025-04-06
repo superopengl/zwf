@@ -1,6 +1,6 @@
 import { db } from './../db';
 import { UserInformation } from './../entity/views/UserInformation';
-import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
+import { createTaskByTaskTemplateForClient } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { Recurring } from '../entity/Recurring';
 import { assert } from '../utils/assert';
 import { TaskStatus } from '../types/TaskStatus';
@@ -25,20 +25,11 @@ export async function testRunRecurring(recurringId: string, orgId: string, execu
 }
 
 export async function executeRecurring(m: EntityManager, recurring: Recurring, executorId: string, resetNextRunAt: boolean) {
-  const { taskTemplateId, userId, name, orgId } = recurring;
+  const { taskTemplateId, orgClientId, name, orgId } = recurring;
 
   const taskName = `${name} ${moment().format('DD MMM YYYY')}`;
-  const client = await m.getRepository(UserInformation).findOneOrFail({
-    where: {
-      id: userId
-    },
-    select: {
-      email: true
-    }
-  });
-  const clientEmail = client.email;
 
-  const task = await createTaskByTaskTemplateAndUserEmail(m, taskTemplateId, taskName, clientEmail, executorId, null, orgId);
+  const task = await createTaskByTaskTemplateForClient(m, taskTemplateId, taskName, orgClientId, executorId, null, orgId);
   task.status = TaskStatus.TODO;
   
   console.log('[Recurring]'.bgYellow, 'task created', `${taskName}`.yellow);

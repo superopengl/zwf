@@ -15,7 +15,7 @@ import { sendEmailForUserId } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskByTaskTemplateAndUserEmail } from '../utils/createTaskByTaskTemplateAndUserEmail';
+import { createTaskByTaskTemplateForClient } from '../utils/createTaskByTaskTemplateAndUserEmail';
 import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
@@ -32,11 +32,11 @@ import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'client']);
-  const { id, taskTemplateId, clientEmail, taskName } = req.body;
+  const { id, taskTemplateId, clientId, taskName } = req.body;
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateAndUserEmail(db.manager, taskTemplateId, taskName, clientEmail, creatorId, id, orgId);
+  const task = await createTaskByTaskTemplateForClient(db.manager, taskTemplateId, taskName, clientId, creatorId, id, orgId);
 
   res.json(task);
 });

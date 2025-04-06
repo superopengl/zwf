@@ -5,6 +5,11 @@ import styled from 'styled-components';
 import isEmail from 'validator/lib/isEmail';
 import { UserAvatar } from './UserAvatar';
 import { UserNameCard } from './UserNameCard';
+import { Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import { searchOrgClientUsers$ } from 'services/userService';
+import { addClient$ } from 'services/authService';
+import { finalize } from 'rxjs';
 
 const { Text } = Typography;
 
@@ -28,20 +33,31 @@ width: 100%;
   }
 `;
 
-export const UserSelect = (props) => {
-  const { value, valueProp, placeholder, onChange, onTextChange, allowInput, dataSource, bordered, ...others } = props;
+export const OrgClientSelect = (props) => {
+  const { value, placeholder, onChange, onTextChange, allowInput, bordered, ...others } = props;
 
-  const [userList, setUserList] = React.useState(dataSource);
+  const [clientList, setClientList] = React.useState([]);
   const [searchText, setSearchText] = React.useState();
-  const [isValidEmail, setIsValidEmail] = React.useState(false);
+  const [loading, setLoading] = React.useState(true);
   const ref = React.useRef();
 
   React.useEffect(() => {
-    setUserList(dataSource);
-  }, [dataSource])
+    const sub$ = load$();
+    return () => sub$.unsubscribe();
+  }, [])
+
+  const load$ = (text) => {
+    setLoading(true)
+    return searchOrgClientUsers$({ text })
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(resp => {
+        setClientList(resp.data)
+      })
+  }
 
   React.useEffect(() => {
-    setIsValidEmail(searchText && isEmail(searchText));
     onTextChange(searchText);
   }, [searchText])
 
@@ -50,70 +66,81 @@ export const UserSelect = (props) => {
   }
 
   const handleSelect = (value) => {
-    const item = userList.find(x => x[valueProp] === value);
+    const item = clientList.find(x => x.id === value);
     onChange(item);
   }
-
 
   const handleClear = () => {
     handleSelect(null);
   }
 
-  const handleKeyDown = e => {
-    if (e.code === 'Enter') {
-      onChange({
-        email: searchText,
-      });
-    }
+  // const handleKeyDown = e => {
+  //   if (e.code === 'Enter') {
+  //     onChange({
+  //       email: searchText,
+  //     });
+  //   }
+  // }
+
+  const handleAddNewClient = () => {
+    addClient$(searchText).pipe(
+      finalize(() => setLoading(false)),
+    ).subscribe({
+      next: (newOrgClient) => {
+        load$().add(() => {
+          onChange(newOrgClient);
+        })
+      },
+      error: e => { }
+    })
   }
 
   return (<>
     <StyledSelect
+      loading={loading}
       ref={ref}
       bordered={bordered}
       showSearch={allowInput}
       allowClear
-      placeholder={placeholder}
+      placeholder={<><Avatar size={28} icon={<UserOutlined />} /> {allowInput ? 'Search a client by name or email or input a new email address' : 'Select a client by name or email'}</>}
       // optionFilterProp="searchText"
       value={value}
       onChange={handleChange}
       onSelect={handleSelect}
       onSearch={allowInput ? val => setSearchText(val) : null}
-      onInputKeyDown={handleKeyDown}
+      // onInputKeyDown={handleKeyDown}
       onClear={handleClear}
       filterOption={(input, option) => {
-        const { givanName, surname, email } = option.item;
-        return email?.includes(input) || givanName?.includes(input) || surname?.includes(input);
+        const { clientAlias } = option.item;
+        return clientAlias?.includes(input);
       }}
       notFoundContent={
         // isValidEmail
         //   ? `Seems like this email isn't a client in your organization. Click to invite this email.`
         //   : `User not found. Typing in a valid email address can invite a user client.`
-          <Button block type="primary" onClick={null}>Invite client with this email</Button>
+        <Button block type="primary" onClick={handleAddNewClient}>Add New Client</Button>
       }
       {...others}
     >
-      {userList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
-        <UserNameCard userId={c.userId} alias={c.clientAlias}/>
+      {clientList.map(c => (<Select.Option key={c.id} value={c.id} item={c}>
+        <UserNameCard userId={c.userId} alias={c.clientAlias} />
       </Select.Option>))}
     </StyledSelect>
   </>
   )
 };
 
-UserSelect.propTypes = {
+OrgClientSelect.propTypes = {
   value: PropTypes.string,
   placeholder: PropTypes.object,
   onChange: PropTypes.func,
   onTextChange: PropTypes.func,
-  valueProp: PropTypes.oneOf(['id', 'email']),
   allowInput: PropTypes.bool,
   bordered: PropTypes.bool,
   dataSource: PropTypes.arrayOf(PropTypes.object).isRequired,
 };
 
-UserSelect.defaultProps = {
-  valueProp: 'id',
+OrgClientSelect.defaultProps = {
   loading: false,
   allowInput: true,
   bordered: true,

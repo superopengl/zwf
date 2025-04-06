@@ -15,13 +15,14 @@ import Icon from '@ant-design/icons';
 import { MdOpenInNew } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { getUserDisplayName } from 'util/getUserDisplayName';
+import { OrgClientSelect } from 'components/OrgClientSelect';
 
 const { Text, Link: TextLink } = Typography;
 
 const StyledDescription = props => <div style={{ marginTop: '0.5rem' }}><Text type="secondary">{props.value}</Text></div>
 
 export const TaskGenerator = React.memo(props => {
-  const {client, postCreateMode} = props;
+  const { client, postCreateMode } = props;
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
   const [taskName, setTaskName] = React.useState();
@@ -46,8 +47,7 @@ export const TaskGenerator = React.memo(props => {
 
   React.useEffect(() => {
     if (clientInfo && taskTemplate) {
-      const userName = getUserDisplayName(clientInfo.email, clientInfo.givenName, clientInfo.surname);
-      const name = `${taskTemplate.name} - ${userName}`;
+      const name = `${taskTemplate.name} - ${clientInfo.clientAlias}`;
       setTaskName(name);
     }
   }, [clientInfo, taskTemplate])
@@ -56,7 +56,7 @@ export const TaskGenerator = React.memo(props => {
     setTaskTemplateId(taskTemplateIdValue);
   }
 
-  const handleClientChange = (clientEmmail, client) => {
+  const handleClientChange = (client) => {
     setClientInfo(client);
   }
 
@@ -65,27 +65,11 @@ export const TaskGenerator = React.memo(props => {
     setTaskName(name);
   }
 
-  const handleCreateEmptyTask = () => {
-    createTaskWithVarBag$().subscribe(task => {
-      const notifyHandler = notify.success('Task created', <>
-        Successfully created task <TextLink
-          onClick={() => {
-            notifyHandler.close()
-            navigate(`/task/${task.id}`)
-          }}>
-          <Icon component={MdOpenInNew } /> {task.name}
-        </TextLink>
-      </>);
-      props.onCreated(task)
-    });
-  }
-
-
   const createTaskWithVarBag$ = () => {
     const id = uuidv4();
     const payload = {
       id,
-      clientEmail: clientInfo.email,
+      clientId: clientInfo.id,
       taskTemplateId,
       taskName,
     };
@@ -99,7 +83,7 @@ export const TaskGenerator = React.memo(props => {
   const handleCreateAndEdit = () => {
     createTaskWithVarBag$().subscribe(task => {
       props.onCreated(task)
-      if(postCreateMode === 'notify') {
+      if (postCreateMode === 'notify') {
         const notice = notify.success(
           'Successfully created task',
           <Text>Task <TextLink strong onClick={() => {
@@ -108,7 +92,7 @@ export const TaskGenerator = React.memo(props => {
           }}>{task.name}</TextLink> was created</Text>,
           15
         );
-      } else if(postCreateMode === 'navigate') {
+      } else if (postCreateMode === 'navigate') {
         navigate(`/task/${task.id}`)
       }
     });
@@ -119,19 +103,18 @@ export const TaskGenerator = React.memo(props => {
       <Space direction='vertical' style={{ width: '100%', marginTop: 20 }} size="large">
         <Space size="middle" direction="vertical" style={{ width: '100%' }}>
           <StyledDescription value="Choose existing client or type in a new client's email address." />
-          <ClientSelect style={{ width: '100%' }}
-            valueProp="email"
+          <OrgClientSelect style={{ width: '100%' }}
             onChange={handleClientChange}
             onLoadingChange={setLoading}
-            value={clientInfo?.email} />
+            value={clientInfo?.id} />
           <StyledDescription value="Choose a task template to begin with." />
           <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-          {/* <StyledDescription value="Input a meaningful task name. This name will appear in the emails to the client." />
+          <StyledDescription value="Task name" />
           <Input style={{ height: 50 }}
-            placeholder="Task name"
+            placeholder={taskName}
             onPressEnter={handleNameEnter}
-            value={taskName}
-            onChange={e => setTaskName(e.target.value)} /> */}
+            // value={taskName}
+            onChange={e => setTaskName(e.target.value)} />
         </Space>
         {/* <Divider style={{ margin: '10px 0' }} /> */}
         {/* <Button block icon={<LeftOutlined />} disabled={current === 0} onClick={() => setCurrent(x => x - 1)}></Button> */}
@@ -142,7 +125,7 @@ export const TaskGenerator = React.memo(props => {
             {/* <Button type="primary"
               disabled={!clientInfo || !taskTemplate || !taskName}
               onClick={handleCreateEmptyTask}>Create Empty Task</Button> */}
-            <Button type="primary" 
+            <Button type="primary"
               disabled={!clientInfo}
               onClick={handleCreateAndEdit}
             >Create Task</Button>

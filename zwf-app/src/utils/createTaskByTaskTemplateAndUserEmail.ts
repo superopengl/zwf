@@ -27,11 +27,8 @@ function prefillTaskTemplateFields(taskTemplateFields, varBag: { [key: string]: 
   return fields;
 }
 
-function generateTaskDefaultName(taskTemplateName, profile: UserProfile) {
-  assert(profile, 500, 'User profile is not specified');
-  const clientName = `${profile.givenName ?? ''} ${profile.surname ?? ''}`;
-  const displayName = clientName.trim() ? clientName : profile.email;
-  return `${taskTemplateName || 'New ticket'} - ${displayName}`;
+function generateTaskDefaultName(taskTemplateName, clientAlias: string) {
+  return `${taskTemplateName || 'New task'} for ${clientAlias}`;
 }
 
 function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
@@ -56,8 +53,8 @@ export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: numb
   return field;
 };
 
-export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, taskTemplateId, taskName, email, creatorId: string, id, orgId) => {
-  assert(email, 400, 'email is not specified');
+export const createTaskByTaskTemplateForClient = async (m: EntityManager, taskTemplateId, taskName, clientId, creatorId: string, id, orgId) => {
+  assert(clientId, 400, 'clientId is not specified');
 
   const taskTemplate = taskTemplateId ? await m.findOne(TaskTemplate, {
     where: {
@@ -68,21 +65,14 @@ export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, tas
     }
   }) : null;
 
-  const { user } = await ensureClientOrGuestUser(m, email, orgId);
+  const orgClient = await m.findOneByOrFail(OrgClient, {id: clientId, orgId});
 
-  // Add the user to org clients
-  let orgClient = await m.findOneBy(OrgClient, { orgId, userId: user.id });
-  if (!orgClient) {
-    orgClient = new OrgClient();
-    orgClient.orgId = orgId;
-    orgClient.userId = user.id;
-    await m.save(orgClient);
-  }
+  // const { user } = await ensureClientOrGuestUser(m, clientId, orgId);
 
   const task = new Task();
   task.id = id || uuidv4();
   task.deepLinkId = generateDeepLinkId();
-  task.name = taskName || generateTaskDefaultName(taskTemplate?.name, user.profile);
+  task.name = taskName || generateTaskDefaultName(taskTemplate?.name, orgClient.clientAlias);
   task.orgClient = orgClient;
   task.orgId = orgId;
   task.status = TaskStatus.TODO;
@@ -91,21 +81,6 @@ export const createTaskByTaskTemplateAndUserEmail = async (m: EntityManager, tas
   const fields = taskTemplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
 
   await m.save([task, ...fields]);
-
-
-
-  // const org = await db.getRepository(Org).findOne({ where: { id: task.orgId } });
-
-  // enqueueEmail({
-  //   template: EmailTemplateType.TaskCreated,
-  //   to: email,
-  //   vars: {
-  //     toWhom: getEmailRecipientName(user),
-  //     orgName: org.name,
-  //     taskName: task.name,
-  //     directUrl: `${process.env.ZWF_API_DOMAIN_NAME}/t/${task.deepLinkId}`
-  //   },
-  // });
 
   return task;
 };
