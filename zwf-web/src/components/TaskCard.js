@@ -11,6 +11,7 @@ import { UserNameCard } from './UserNameCard';
 import { TimeAgo } from './TimeAgo';
 import { ProCard } from '@ant-design/pro-components';
 import { useAuthUser } from 'hooks/useAuthUser';
+import { ClientNameCard } from './ClientNameCard';
 
 const {Text, Link: TextLink } = Typography;
 
@@ -75,7 +76,7 @@ export const TaskCard = (props) => {
       </Row>
       <Row gutter={[10, 10]} justify="space-between">
         <Col>
-          <UserNameCard userId={task.userId} size={40} showTooltip={true} showName={true} showEmail={true} />
+          <ClientNameCard id={task.orgClientId} />
         </Col>
         <Col>
           <TimeAgo key="updatedAt" value={task.updatedAt} />

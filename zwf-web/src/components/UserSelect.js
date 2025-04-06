@@ -94,7 +94,7 @@ export const UserSelect = (props) => {
       {...others}
     >
       {userList.map(c => (<Select.Option key={c[valueProp]} value={c[valueProp]} item={c}>
-        <UserNameCard userId={c.userId} alias={c.clientAlias}/>
+        <UserNameCard userId={c.userId}/>
       </Select.Option>))}
     </StyledSelect>
   </>

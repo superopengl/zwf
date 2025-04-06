@@ -23,6 +23,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { TaskDocListPanel } from 'components/TaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
+import { ClientNameCard } from 'components/ClientNameCard';
 
 
 const ContainerStyled = styled(Layout.Content)`
@@ -209,7 +210,7 @@ const OrgTaskPage = React.memo((props) => {
                 <ProCard>
                   <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'procedure', 'actions', 'history']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
                     <Collapse.Panel key="client" header="Client">
-                      <UserNameCard userId={task?.userId} />
+                      <ClientNameCard id={task?.orgClientId} />
                     </Collapse.Panel>
                     <Collapse.Panel key="assignee" header="Assignee">
                       <MemberSelect value={assigneeId} onChange={handleChangeAssignee} />
