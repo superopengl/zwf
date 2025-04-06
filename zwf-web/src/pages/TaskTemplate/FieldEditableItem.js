@@ -123,7 +123,9 @@ export const FieldEditableItem = (props) => {
 
   const dragging = isDragging || isControlDragging;
   const style = dragging ? {
-    border: '1px dashed #0FBFC4',
+    borderStyle: 'dashed',
+    borderWidth: '1px',
+    borderColor: '#0FBFC4',
     background: 'transparent',
     cursor: 'grabbing',
   } : null;
