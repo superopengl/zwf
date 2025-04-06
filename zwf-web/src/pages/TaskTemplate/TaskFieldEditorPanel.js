@@ -8,6 +8,7 @@ import { HTML5Backend } from 'react-dnd-html5-backend'
 import { FieldListEditable } from './FieldListEditable';
 import { ProCard } from '@ant-design/pro-components';
 import PropTypes from 'prop-types';
+import { EditFieldsContext } from 'contexts/EditFieldsContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const Container = styled.div`
@@ -28,17 +29,7 @@ const { Paragraph } = Typography;
 
 
 export const TaskFieldEditorPanel = (props) => {
-  const { fields: propFields, onChange } = props;
-
-  const [fields, setFields] = React.useState(propFields ?? []);
-
-  React.useEffect(() => {
-    setFields(propFields ?? []);
-  }, [propFields]);
-
-  React.useEffect(() => {
-    onChange(fields);
-  }, [fields]);
+  const { fields, onChange: setFields } = props;
 
   const handleAddControl = (controlType, newFieldId) => {
     setFields(preFields => {
@@ -46,7 +37,7 @@ export const TaskFieldEditorPanel = (props) => {
       const newField = createFieldItemSchema(controlType, name);
       newField.id = newFieldId;
 
-      console.log('just added', newField);
+      // console.log('just added', newField);
       return [...preFields, newField];
     })
   }
@@ -65,37 +56,39 @@ export const TaskFieldEditorPanel = (props) => {
     return name;
   }
 
-  const handleFieldsChange = (fields) => {
-    setFields(fields);
-  }
-
   return (<Container>
-    <DndProvider backend={HTML5Backend}>
-      <ProCard gutter={[20, 20]} ghost className="field-control-column">
-        <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
-          {TaskTemplateFieldControlDef.map(c => <FieldControlItem
-            key={c.type}
-            icon={c.icon}
-            label={c.label}
-            type={c.type}
-            onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
-            onClick={(newFieldId) => handleAddControl(c.type, newFieldId)}
-            // onDropDone={() => handleAddControl(c.type)}
-            index={fields.length}
-          />)}
-          <Col span={24}>
-            <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>
-              Drag control to right panel to add new field.
-            </Paragraph>
-          </Col>
+    <EditFieldsContext.Provider value={{
+      fields,
+      setFields
+    }}>
+      <DndProvider backend={HTML5Backend}>
+        <ProCard gutter={[20, 20]} ghost className="field-control-column">
+          <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
+            {TaskTemplateFieldControlDef.map(c => <FieldControlItem
+              key={c.type}
+              icon={c.icon}
+              label={c.label}
+              type={c.type}
+              // onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
+              onClick={(newFieldId) => handleAddControl(c.type, newFieldId)}
+              // onDropDone={() => handleAddControl(c.type)}
+              index={fields.length}
+            />)}
+            <Col span={24}>
+              <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>
+                Click controls to add fields to the form.
+              </Paragraph>
+            </Col>
+          </ProCard>
+          <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
+            {/* <FieldListEditable fields={fields} onChange={handleFieldsChange} /> */}
+            <FieldListEditable />
+          </ProCard>
+          <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
+          </ProCard>
         </ProCard>
-        <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
-          <FieldListEditable fields={fields} onChange={handleFieldsChange} />
-        </ProCard>
-        <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
-        </ProCard>
-      </ProCard>
-    </DndProvider>
+      </DndProvider>
+    </EditFieldsContext.Provider>
   </Container>
   );
 };

@@ -28,22 +28,6 @@ const FieldEditor = (props) => {
     setFields(value);
   }, [value]);
 
-  // React.useEffect(() => {
-  //   if (value === fields) return;
-  //   const newValue = fields.map(f => {
-  //     const varName = labelNameToVarName(f.name);
-  //     const builtInField = getBuiltInFieldByVarName(varName);
-  //     const type = builtInField?.inputType || f.type;
-  //     return {
-  //       ...f,
-  //       name: varName,
-  //       type
-  //     };
-  //   });
-
-  //   onChange(newValue);
-  // }, [fields]); 
-
   const handleSave = () => {
     const newValue = fields.map(f => {
       const varName = labelNameToVarName(f.name);

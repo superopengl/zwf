@@ -10,9 +10,10 @@ import { ProCard } from '@ant-design/pro-components';
 const StyledCard = styled(ProCard)`
 margin-bottom: 8px;
 background-color: white;
-cursor: grab;
+// cursor: grab;
 
 &:hover {
+  color: #0FBFC4;
   border-color: #0FBFC4;
 }
 `;
