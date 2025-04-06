@@ -1,6 +1,6 @@
 import React from 'react';
 // import 'antd/dist/antd.less';
-import { BrowserRouter, createBrowserRouter, createRoutesFromElements, Routes, Route, RouterProvider } from 'react-router-dom';
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from 'react-router-dom';
 import { GlobalContext } from './contexts/GlobalContext';
 import { getAuthUser$ } from 'services/authService';
 import { finalize, Subject } from 'rxjs';
@@ -16,16 +16,11 @@ import { reactLocalStorage } from 'reactjs-localstorage';
 import { AppLoggedInPage } from 'AppLoggedInPage';
 import { PortalPage } from 'pages/PortalPage';
 import { Loading } from 'components/Loading';
-import CookieConsent from "react-cookie-consent";
 import { HomePage } from 'pages/HomePage';
 import { Navigate } from 'react-router-dom';
 import { Error404 } from 'pages/Error404';
 import { LandingPage } from 'pages/LandingPage';
-import { UnimpersonatedFloatButton } from 'components/UnimpersonatedFloatButton';
-import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
-import dayjs from 'dayjs';
 import 'dayjs/locale/en-au';
-import locale from 'antd/locale/en_US';
 
 const OrgListPage = loadable(() => import('pages/Org/OrgListPage'));
 const LogInPage = loadable(() => import('pages/LogInPage'));
@@ -77,9 +72,8 @@ const DEFAULT_LOCALE = getDefaultLocale();
 export const App = React.memo(() => {
   const [loading, setLoading] = React.useState(true);
   const [locale, setLocale] = React.useState(DEFAULT_LOCALE);
-  const zeventBus$ = useEstablishZeventStream();
   const contextValueRef = React.useRef({
-    zeventBus$,
+    zeventBus$: new Subject(),
     user: null,
     setLoading,
     setLocale: locale => {
