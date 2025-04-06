@@ -8,15 +8,15 @@ const StyledInput = styled(Input)`
 border-radius: 4px;
 width: 100%;
 
-&:hover {
-  border: 1px solid #0FBFC4AA;
-  background-color: white;
-}
+// &:hover {
+//   border: 1px solid #0FBFC4AA;
+//   background-color: white;
+// }
 
-&:focus, &:focus-within, &:active {
-  border: 1px solid #0FBFC4;
-  background-color: white;
-}
+// &:focus, &:focus-within, &:active {
+//   border: 1px solid #0FBFC4;
+//   background-color: white;
+// }
 
 &.error {
   border: 1px solid #cf222e;
@@ -50,6 +50,10 @@ export const ClickToEditInput = React.memo((props) => {
     }
   }
 
+  const handlePressEnter = e => {
+    e.target.blur();
+  }
+
   return <>
     <StyledInput
       allowClear={focused}
@@ -57,10 +61,10 @@ export const ClickToEditInput = React.memo((props) => {
       className={className}
       value={value}
       onChange={e => setValue(e.target.value)}
-      onFocus={() => setFocused(true)}
-      bordered={false}
+      onClick={() => setFocused(true)}
+      bordered={focused}
       onBlur={handleSave}
-      onPressEnter={handleSave}
+      onPressEnter={handlePressEnter}
       style={{ fontSize: size -1  }}
     // onPressEnter={handleSave}
     />
