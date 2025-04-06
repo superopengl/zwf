@@ -168,31 +168,6 @@ export const TaskTemplatePage = () => {
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}
     >
-      {/* <DndProvider backend={HTML5Backend}>
-        <ProCard gutter={[20, 20]} ghost className="field-control-column">
-          <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
-            {TaskTemplateFieldControlDef.map(c => <FieldControlItem
-              key={c.type}
-              icon={c.icon}
-              label={c.label}
-              type={c.type}
-              onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
-              // onDropDone={() => handleAddControl(c.type)}
-              index={taskTemplate?.fields.length}
-            />)}
-            <Col span={24}>
-              <Paragraph type="secondary" style={{ textAlign: 'center', margin: '1rem auto' }}>
-                Drag control to right panel to add new field.
-              </Paragraph>
-            </Col>
-          </ProCard>
-          <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
-            <FieldListEditable fields={taskTemplate?.fields} onChange={handleFieldListChange} />
-          </ProCard>
-          <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
-          </ProCard>
-        </ProCard>
-      </DndProvider> */}
       <TaskFieldEditorPanel fields={taskTemplate?.fields ?? []} onChange={handleFieldListChange} />
       <TaskFieldsPreviewDrawer
         open={openPreview}
