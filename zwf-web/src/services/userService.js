@@ -10,6 +10,10 @@ export function searchOrgClientUsers$(payload) {
   return httpPost$(`/org/client`, { page: 1, size: 50, ...payload });
 }
 
+export function saveClientAlias$(orgClientId, alias) {
+  return httpPost$(`/org/client/${orgClientId}/alias`, { alias });
+}
+
 export function deleteUser$(id) {
   return httpDelete$(`user/${id}`);
 }

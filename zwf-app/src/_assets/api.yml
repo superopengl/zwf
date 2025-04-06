@@ -349,6 +349,18 @@ paths:
       responses:
         200:
           description: OK
+  /org/client/:id/alias:
+    post:
+      operationId: setOrgClientAlias
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK              
   /org/client/:id/tags:
     post:
       operationId: setOrgClientTags

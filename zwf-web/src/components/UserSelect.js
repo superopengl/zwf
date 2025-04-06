@@ -45,7 +45,7 @@ export const UserSelect = (props) => {
     onTextChange(searchText);
   }, [searchText])
 
-  const handleChange = value => {
+  const handleChange = () => {
     // onTextChange(value);
   }
 
@@ -54,12 +54,6 @@ export const UserSelect = (props) => {
     onChange(item);
   }
 
-  const handleNewEmailInput = () => {
-    onChange({
-      email: searchText,
-    });
-    ref?.current?.blur();
-  }
 
   const handleClear = () => {
     handleSelect(null);
@@ -122,6 +116,6 @@ UserSelect.defaultProps = {
   loading: false,
   allowInput: true,
   bordered: true,
-  onTextChange: (text) => { }
+  onTextChange: () => { }
 };
 
