@@ -8,6 +8,7 @@ import { ClientSelect } from 'components/ClientSelect';
 import PropTypes from 'prop-types';
 import { TagSelect } from 'components/TagSelect';
 import { MemberSelect } from 'components/MemberSelect';
+import { OrgClientSelect } from 'components/OrgClientSelect';
 
 const { Text, Paragraph } = Typography;
 
@@ -108,12 +109,11 @@ export const TaskSearchPanel = props => {
           />
         </ItemCol>
         <ItemCol title="Client">
-          <ClientSelect
-            valueProp="id"
+          <OrgClientSelect
             style={{ width: '100%' }}
+            placeholder="Search a client"
             value={queryInfo.clientId}
             onChange={handleClientIdChange}
-            allowInput={false}
             bordered={true}
           />
         </ItemCol>
