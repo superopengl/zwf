@@ -32,14 +32,12 @@ export const TaskFieldEditorPanel = (props) => {
   const { fields, onChange: setFields } = props;
 
   const handleAddControl = (controlType, newFieldId) => {
-    setFields(preFields => {
-      const name = getUniqueNewFieldName(preFields, controlType);
-      const newField = createFieldItemSchema(controlType, name);
-      newField.id = newFieldId;
+    const name = getUniqueNewFieldName(fields, controlType);
+    const newField = createFieldItemSchema(controlType, name);
+    newField.id = newFieldId;
 
-      // console.log('just added', newField);
-      return [...preFields, newField];
-    })
+    // console.log('just added', newField);
+    setFields([...fields, newField]);
   }
 
   const getUniqueNewFieldName = (allFields, newControlType) => {
@@ -81,7 +79,6 @@ export const TaskFieldEditorPanel = (props) => {
             </Col>
           </ProCard>
           <ProCard colSpan={"auto"} ghost style={{}} bodyStyle={{ padding: 0 }} layout="center">
-            {/* <FieldListEditable fields={fields} onChange={handleFieldsChange} /> */}
             <FieldListEditable />
           </ProCard>
           <ProCard colSpan={"300px"} ghost layout="center" direction='column'>
