@@ -65,7 +65,7 @@ export const ClickToEditInput = React.memo((props) => {
       bordered={focused}
       onBlur={handleSave}
       onPressEnter={handlePressEnter}
-      style={{ fontSize: size -1  }}
+      style={{ fontSize: size -1, width: '100%'  }}
     // onPressEnter={handleSave}
     />
   </>

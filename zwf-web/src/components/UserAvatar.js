@@ -87,6 +87,7 @@ export const UserAvatar = React.memo((props) => {
       alt="avatar"
       preview={false}
       src={getPublicFileUrl(avatarFileId)}
+      // icon={<UserOutlined />}
       fallback="/images/avatar-fallback.png"
     />} />
   } else {

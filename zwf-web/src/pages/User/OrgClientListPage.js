@@ -27,6 +27,7 @@ import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { FaUserPlus } from 'react-icons/fa';
 import { ClientNameCard } from 'components/ClientNameCard';
+import { BsFillPersonVcardFill } from 'react-icons/bs';
 
 
 const { Text, Link: TextLink } = Typography;
@@ -123,7 +124,7 @@ const OrgClientListPage = () => {
 
   const handleAliasChange = (item, newAlias) => {
     const formattedAlias = newAlias.trim();
-    if(item.clientAlias !== formattedAlias) {
+    if (item.clientAlias !== formattedAlias) {
       saveClientAlias$(item.id, formattedAlias).subscribe();
     }
   }
@@ -142,8 +143,8 @@ const OrgClientListPage = () => {
       />,
       // width: 400,
       fixed: 'left',
-      render: (text, item) =><Space>
-        <ClientNameCard id={item.id} onAliasChange={(newAlias) => handleAliasChange(item, newAlias)}/>
+      render: (text, item) => <Space>
+        <ClientNameCard id={item.id} onAliasChange={(newAlias) => handleAliasChange(item, newAlias)} />
       </Space>
     },
     {
@@ -194,11 +195,12 @@ const OrgClientListPage = () => {
       render: (value) => value
     },
     {
-      width: 70,
+      width: 140,
       align: 'right',
       fixed: 'right',
       render: (text, user) => {
-        return (
+        return <div>
+          <Button icon={<Icon component={BsFillPersonVcardFill} />} type="text"></Button>
           <DropdownMenu
             config={[
               {
@@ -222,8 +224,8 @@ const OrgClientListPage = () => {
               // },
             ]}
           />
-        )
-      },
+        </div>
+      }
     },
   ].filter(x => !!x);
 
@@ -254,7 +256,7 @@ const OrgClientListPage = () => {
           rowKey="id"
           style={{ marginTop: 20 }}
           locale={{
-            emptyText:<div style={{display: 'flex', flexDirection: 'column', margin: '2rem auto'}}>
+            emptyText: <div style={{ display: 'flex', flexDirection: 'column', margin: '2rem auto' }}>
               No clients.
               <Button type="link" onClick={() => setInviteUserModalVisible(true)}>Add new client</Button>
             </div>

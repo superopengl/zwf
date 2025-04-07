@@ -7,6 +7,10 @@ import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserAvatar } from './UserAvatar';
 import { getClientNameCardInfo$ } from 'services/clientService';
 import { ClickToEditInput } from './ClickToEditInput';
+import { Avatar } from 'antd';
+import Icon, { ProfileOutlined } from '@ant-design/icons';
+import { ImProfile } from 'react-icons/im';
+import { BsFillPersonVcardFill } from 'react-icons/bs';
 
 const { Text } = Typography;
 
@@ -39,15 +43,15 @@ export const ClientNameCard = React.memo((props) => {
   }
 
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
-    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} />
+    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={data.email ? null : <Icon component={BsFillPersonVcardFill} />} />
     {onAliasChange ?
-      <div style={{ position: 'relative', left: -4 }}><ClickToEditInput value={data.clientAlias} onChange={onAliasChange} allowClear={false} /></div>
+      <div style={{ position: 'relative', left: -4, width: '100%' }}><ClickToEditInput value={data.clientAlias} onChange={onAliasChange} allowClear={false} /></div>
       : data.clientAlias}
   </Space>
 
 
   return showTooltip ?
-    <Tooltip title={data.email ? getUserDisplayName(data.email, data.givenName, data.surname) : 'Email not set'} placement='bottomLeft'>{contentComponent}</Tooltip> :
+    <Tooltip title={data.email ? `User: ${getUserDisplayName(data.email, data.givenName, data.surname)}` : 'Client profile'} placement='bottomLeft'>{contentComponent}</Tooltip> :
     contentComponent;
 });
 
@@ -61,5 +65,5 @@ ClientNameCard.propTypes = {
 ClientNameCard.defaultProps = {
   searchText: '',
   size: 36,
-  showTooltip: true,
+  showTooltip: false,
 };
