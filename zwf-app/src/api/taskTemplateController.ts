@@ -14,6 +14,7 @@ import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Role } from '../types/Role';
 import { isRole } from '../utils/isRole';
 import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
+import { validateFormFields } from '../utils/validateFormFields';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'agent', 'admin']);
@@ -22,7 +23,7 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   const { id, name, description, docTemplateIds, fields } = req.body;
   assert(name, 400, 'name is empty');
   assert(fields?.length || docTemplateIds?.length, 400, 'Neither fields nor doc templates is specified.');
-
+  validateFormFields(fields);
 
   await db.manager.transaction(async m => {
     const taskTemplate = new TaskTemplate();
@@ -135,3 +136,5 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
 
   res.json(taskTemplate);
 });
+
+
