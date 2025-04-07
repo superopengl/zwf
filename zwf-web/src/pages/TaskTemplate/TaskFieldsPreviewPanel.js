@@ -3,7 +3,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { TaskSchemaRenderer } from 'components/TaskSchemaRenderer';
+import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
 import { TaskIcon } from 'components/entityIcon';
 
 const { Title, Paragraph } = Typography;
@@ -16,6 +16,7 @@ const Container = styled.div`
   // padding: 2rem;
   // height: calc(100vh - 64px);
   // height: 100%;
+  padding: 1rem 0;
 `;
 
 
@@ -25,8 +26,11 @@ export const TaskFieldsPreviewPanel = props => {
 
   return (
     <Container style={style}>
-      <Title level={3}><TaskIcon/> {name}</Title>
-      <TaskSchemaRenderer
+      <Title level={3}>
+        {mode !== 'profile' && <TaskIcon/>}
+        {name}
+        </Title>
+      <FormSchemaRenderer
         fields={fields}
         mode={mode}
       />
@@ -37,7 +41,7 @@ export const TaskFieldsPreviewPanel = props => {
 TaskFieldsPreviewPanel.propTypes = {
   name: PropTypes.string,
   fields: PropTypes.array,
-  mode: PropTypes.oneOf(['client', 'agent']).isRequired,
+  mode: PropTypes.oneOf(['client', 'agent', 'profile']).isRequired,
 };
 
 TaskFieldsPreviewPanel.defaultProps = {

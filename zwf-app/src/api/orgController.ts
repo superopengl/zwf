@@ -48,40 +48,7 @@ export const getMyOrgProfile = handlerWrapper(async (req, res) => {
   res.json(org);
 });
 
-export const setOrgClientAlias = handlerWrapper(async (req, res) => {
-  assertRole(req, [Role.Admin, Role.Agent]);
-  const { id } = req.params;
-  const orgId = getOrgIdFromReq(req);
-  const { alias } = req.body;
 
-  const formattedAlias = alias?.trim();
-  assert(formattedAlias, 400, 'alias not provided');
-
-  await db.manager.update(OrgClient, {id, orgId}, {clientAlias: formattedAlias})
-
-  res.json();
-});
-
-export const setOrgClientTags = handlerWrapper(async (req, res) => {
-  assertRole(req, [Role.Admin, Role.Agent]);
-  const { id } = req.params;
-  const orgId = getOrgIdFromReq(req);
-
-  const { tags: tagIds } = req.body;
-  const repo = db.getRepository(OrgClient);
-  const orgClient = await repo.findOneBy({ id, orgId  });
-  if (tagIds?.length) {
-    orgClient.tags = await db.getRepository(Tag).find({
-      where: {
-        id: In(tagIds)
-      }
-    });
-  } else {
-    orgClient.tags = [];
-  }
-  await repo.save(orgClient);
-  res.json();
-});
 
 export const listOrg = handlerWrapper(async (req, res) => {
   assertRole(req, ['system']);

@@ -29,6 +29,7 @@ import { UserStatus } from '../../types/UserStatus';
       'u.email as "email"',
       'u."givenName" as "givenName"',
       'u."surname" as "surname"',
+      'u."phone" as "phone"',
       'u.role as role',
       'u.status as status',
       'u."avatarFileId" as "avatarFileId"',
@@ -64,6 +65,9 @@ import { UserStatus } from '../../types/UserStatus';
 
   @ViewColumn()
   surname: string;
+
+  @ViewColumn()
+  phone: string;
 
   @ViewColumn()
   role: Role;

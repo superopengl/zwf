@@ -5,7 +5,7 @@ import React from 'react';
 import { finalize } from 'rxjs';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 import { UserAvatar } from './UserAvatar';
-import { getClientNameCardInfo$ } from 'services/clientService';
+import { getClientNameCardInfo$, refreshClientNameCardCache, saveClientAlias$ } from 'services/clientService';
 import { ClickToEditInput } from './ClickToEditInput';
 import { Avatar } from 'antd';
 import Icon, { ProfileOutlined } from '@ant-design/icons';
@@ -15,7 +15,7 @@ import { BsFillPersonVcardFill } from 'react-icons/bs';
 const { Text } = Typography;
 
 export const ClientNameCard = React.memo((props) => {
-  const { id, size, showTooltip, onAliasChange } = props;
+  const { id, size, showTooltip, allowChangeAlias } = props;
 
   const [data, setData] = React.useState();
   const [loading, setLoading] = React.useState(true);
@@ -35,6 +35,17 @@ export const ClientNameCard = React.memo((props) => {
     }
   }, [id]);
 
+  const handleAliasChange = (newAlias) => {
+    const formattedAlias = newAlias.trim();
+    if (data.clientAlias !== formattedAlias) {
+      saveClientAlias$(id, formattedAlias).subscribe({
+        next: () => {
+          refreshClientNameCardCache(id);
+        }
+      });
+    }
+  }
+
   if (loading || !data) {
     return <Space size="small">
       <Skeleton.Avatar active={loading} size={size} shape="circle" />
@@ -44,8 +55,10 @@ export const ClientNameCard = React.memo((props) => {
 
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
     <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={data.email ? null : <Icon component={BsFillPersonVcardFill} />} />
-    {onAliasChange ?
-      <div style={{ position: 'relative', left: -4, width: '100%' }}><ClickToEditInput value={data.clientAlias} onChange={onAliasChange} allowClear={false} /></div>
+    {allowChangeAlias ?
+      <div style={{ position: 'relative', left: -4, width: '100%' }}>
+        <ClickToEditInput value={data.clientAlias} onChange={handleAliasChange} allowClear={false} />
+      </div>
       : data.clientAlias}
   </Space>
 
@@ -60,10 +73,12 @@ ClientNameCard.propTypes = {
   searchText: PropTypes.string,
   size: PropTypes.number,
   showTooltip: PropTypes.bool,
+  allowChangeAlias: PropTypes.bool,
 };
 
 ClientNameCard.defaultProps = {
   searchText: '',
   size: 36,
   showTooltip: false,
+  allowChangeAlias: false,
 };

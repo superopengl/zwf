@@ -26,6 +26,7 @@ import { OrgBasicInformation } from './OrgBasicInformation';
       'o.id as "orgId"',
       'u."orgOwner" as "orgOwner"',
       'p.id as "profileId"',
+      'p.phone as "phone"',
       'u.status as status',
       'u."emailHash" as "emailHash"',
       'u."loginType" as "loginType"',
@@ -60,6 +61,9 @@ export class UserInformation {
 
   @ViewColumn()
   email: string;
+
+  @ViewColumn()
+  phone: string;
 
   @ViewColumn()
   orgName: string;

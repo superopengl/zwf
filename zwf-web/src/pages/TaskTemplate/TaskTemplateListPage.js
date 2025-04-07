@@ -270,7 +270,7 @@ export const TaskTemplateListPage = () => {
         destroyOnClose
         maskClosable
         title={<Segmented
-          options={['agent', 'client']}
+          options={['agent', 'client', 'profile']}
           onChange={setPreviewMode} />}
         footer={null}
       >

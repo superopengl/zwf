@@ -373,6 +373,40 @@ paths:
       responses:
         200:
           description: OK        
+  /org/client/:id/databag:
+    get:
+      operationId: getOrgClientDataBag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK    
+    put:
+      operationId: createOrgClientDataBagField
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK     
+    post:
+      operationId: saveOrgClientDataBag
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                               
   /org/client/brief:
     post:
       operationId: getBulkClientBrief

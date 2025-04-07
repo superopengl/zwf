@@ -22,3 +22,4 @@ export * from './recurringController';
 export * from './contactController';
 export * from './notificationController';
 export * from './zeventController';
+export * from './clientController';
