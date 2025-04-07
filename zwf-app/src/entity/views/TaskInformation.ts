@@ -19,7 +19,7 @@ import { OrgClient } from '../OrgClient';
       .groupBy('x."taskId"')
       .select([
         'x."taskId" as "taskId"',
-        `array_agg(json_build_object('id', t.id, 'name', t.name)) as tags`,
+        `array_agg(jsonb_build_object('id', t.id, 'name', t.name)) as tags`,
       ]), 'tag', 'tag."taskId" = t.id')
     .innerJoin(Org, 'o', 't."orgId" = o.id')
     .innerJoin(OrgClient, 'c', `c.id = t."orgClientId"`)
@@ -43,7 +43,7 @@ import { OrgClient } from '../OrgClient';
       't."agentId" as "assigneeId"',
       't."createdAt" as "createdAt"',
       't."updatedAt" as "updatedAt"',
-      `coalesce(tag.tags, '{}'::json[]) as tags`,
+      `coalesce(tag.tags, '{}'::jsonb[]) as tags`,
     ]),
   dependsOn: [Task, TaskTagsTag, Tag, Org, TaskTemplate, User, UserProfile]
 }) export class TaskInformation {
