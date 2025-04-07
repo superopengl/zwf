@@ -15,21 +15,31 @@ import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { Loading } from 'components/Loading';
 import { ArrowDownOutlined, CaretDownOutlined } from '@ant-design/icons';
+import { saveOrgClientProfile$ } from 'services/clientService';
 
 const { Paragraph } = Typography;
 
+const convertFieldsToKvpObject = fields => {
+  return fields.reduce((obj, field) => {
+    obj[field.name] = field.value;
+    return obj;
+  }, {});
+}
 
 export const ClientProfileDrawer = (props) => {
   useAssertRole(['admin', 'agent']);
   const { value: orgClient, onSave, open, onClose } = props;
   const [loading, setLoading] = React.useState(false);
   const [formTemplateId, setFormTemplateId] = React.useState();
-  const [fields, setFields] = React.useState();
+  const [fields, setFields] = React.useState([]);
+  const [fieldValues, setFieldValues] = React.useState({});
+  const ref = React.useRef();
 
   React.useEffect(() => {
     if (!formTemplateId) {
       return;
     }
+    setLoading(true)
     const sub$ = getTaskTemplate$(formTemplateId)
       .pipe(
         finalize(() => setLoading(false))
@@ -41,13 +51,38 @@ export const ClientProfileDrawer = (props) => {
     return () => sub$.unsubscribe()
   }, [formTemplateId])
 
-  const handleSave = () => {
-    onClose();
+  const handleSave = async () => {
+    const emailForm = ref.current;
+    let email;
+    if (emailForm) {
+      await emailForm.validateFields();
+      email = emailForm.getFieldValue('email');
+    }
+
+    setLoading(true)
+    saveOrgClientProfile$(orgClient.id, email, fields)
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe({
+        next: () => onClose()
+      });
   }
 
   const handleFormTemplateChange = (formTemplateId) => {
-    setLoading(true)
     setFormTemplateId(formTemplateId);
+  }
+
+  const handleDataBagChange = (changedFields) => {
+    setFields(preFields => {
+      preFields.forEach(field => {
+        if (field.id in changedFields) {
+          field.value = changedFields[field.id];
+        }
+      })
+
+      return [...preFields];
+    });
   }
 
   const isZwfAccount = !!orgClient?.email;
@@ -57,7 +92,7 @@ export const ClientProfileDrawer = (props) => {
       open={open}
       closable={false}
       onClose={onClose}
-      title={<ClientNameCard id={orgClient?.id} allowChangeAlias={true}/>}
+      title={<ClientNameCard id={orgClient?.id} allowChangeAlias={true} />}
       destroyOnClose
       placement='right'
       footer={<Button type="primary" onClick={handleSave}>Save</Button>}
@@ -77,7 +112,7 @@ export const ClientProfileDrawer = (props) => {
               </Descriptions>
             </> : <>
               <Paragraph type="secondary">The client does not have a ZeeWorkflow account. Setting an email address will invite the client to join ZeeWorkflow.</Paragraph>
-              <Form>
+              <Form ref={ref}>
                 <Form.Item name="email" rules={[{ required: true, type: 'email', max: 100 }]}>
                   <Input allowClear placeholder="Email address" />
                 </Form.Item>
@@ -96,7 +131,7 @@ export const ClientProfileDrawer = (props) => {
 
             <Paragraph type="secondary" style={{ marginTop: 24, fontSize: 20, textAlign: 'center' }}><ArrowDownOutlined /></Paragraph>
             <Paragraph type="secondary">The values stored in this databag can be used as default prefilled values in forms associated with this client</Paragraph>
-            {fields && <FormSchemaRenderer fields={fields} mode="profile" />}
+            {fields && <FormSchemaRenderer fields={fields} mode="profile" onChange={handleDataBagChange} />}
           </ProCard>
         </ProCard>
       </Loading>

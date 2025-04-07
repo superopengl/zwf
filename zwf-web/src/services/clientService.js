@@ -22,6 +22,10 @@ export function getOrgClientDataBag$(orgClientId) {
   return httpGet$(`/org/client/${orgClientId}/databag`);
 }
 
+export function saveOrgClientProfile$(orgClientId, email, fields) {
+  return httpPost$(`/org/client/${orgClientId}/profile`, { email, fields });
+}
+
 const clientNameCardInfoCache = new Map();
 const API_PATH = `/org/client/brief`;
 
