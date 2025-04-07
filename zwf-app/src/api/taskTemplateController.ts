@@ -13,16 +13,14 @@ import { TaskTemplate } from '../entity/TaskTemplate';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Role } from '../types/Role';
 import { isRole } from '../utils/isRole';
-import { TaskTemplateDocTemplate } from '../entity/TaskTemplateDocTemplate';
 import { validateFormFields } from '../utils/validateFormFields';
 
 export const saveTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'agent', 'admin']);
   const orgId = getOrgIdFromReq(req);
 
-  const { id, name, description, docTemplateIds, fields } = req.body;
+  const { id, name, description, fields } = req.body;
   assert(name, 400, 'name is empty');
-  assert(fields?.length || docTemplateIds?.length, 400, 'Neither fields nor doc templates is specified.');
   validateFormFields(fields);
 
   await db.manager.transaction(async m => {
@@ -32,9 +30,6 @@ export const saveTaskTemplate = handlerWrapper(async (req, res) => {
     taskTemplate.name = name;
     taskTemplate.description = description;
     taskTemplate.fields = fields;
-    if (docTemplateIds?.length) {
-      taskTemplate.docs = await m.find(DocTemplate, { where: { id: In(docTemplateIds) } });
-    }
 
     await m.save(taskTemplate);
   });
@@ -66,10 +61,7 @@ export const listTaskTemplates = handlerWrapper(async (req, res) => {
       },
       order: {
         name: 'ASC'
-      },
-      relations: [
-        'docs'
-      ]
+      }
     });
 
   res.json(list);
@@ -79,7 +71,7 @@ export const getTaskTemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
-  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: query, relations: { docs: true } });
+  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: query });
   assert(taskTemplate, 404);
 
   res.json(taskTemplate);
@@ -114,24 +106,16 @@ export const cloneTaskTemplate = handlerWrapper(async (req, res) => {
   const orgId = getOrgIdFromReq(req);
   let taskTemplate: TaskTemplate;
   await db.transaction(async m => {
-    taskTemplate = await m.findOne(TaskTemplate, { where: { id, orgId }, relations: { docs: true } });
+    taskTemplate = await m.findOne(TaskTemplate, { where: { id, orgId } });
     assert(taskTemplate, 404);
 
-    const sourceTaskTemplateId = taskTemplate.id;
     const newTaskTemplateId = uuidv4();
     taskTemplate.id = newTaskTemplateId;
     taskTemplate.createdAt = getUtcNow();
     taskTemplate.updatedAt = getUtcNow();
     taskTemplate.name = await getUniqueCopyName(m, taskTemplate);
 
-    const taskTemplateDocTemplateList = await m.find(TaskTemplateDocTemplate, { where: { taskTemplateId: sourceTaskTemplateId }});
-    taskTemplateDocTemplateList.forEach(x => {
-      x.taskTemplateId = newTaskTemplateId;
-    });
-
-    const entities = [taskTemplate, ...taskTemplateDocTemplateList];
-
-    await m.save(entities);
+    await m.save(taskTemplate);
   });
 
   res.json(taskTemplate);

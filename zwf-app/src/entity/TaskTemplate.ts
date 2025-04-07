@@ -30,10 +30,6 @@ export class TaskTemplate {
   @Column('jsonb', { default: '[]' })
   fields: TaskTemplateField[];
 
-  @ManyToMany(type => DocTemplate, { onDelete: 'CASCADE' })
-  @JoinTable()
-  docs: DocTemplate[];
-
   @Column({ default: true })
   allowAttachments: boolean;
 }

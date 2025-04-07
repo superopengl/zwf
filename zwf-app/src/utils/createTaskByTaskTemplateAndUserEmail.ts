@@ -60,9 +60,6 @@ export const createTaskByTaskTemplateForClient = async (m: EntityManager, taskTe
     where: {
       id: taskTemplateId
     },
-    relations: {
-      docs: true,
-    }
   }) : null;
 
   const orgClient = await m.findOneByOrFail(OrgClient, {id: clientId, orgId});

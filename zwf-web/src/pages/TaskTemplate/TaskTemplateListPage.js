@@ -48,26 +48,22 @@ export const TaskTemplateListPage = () => {
 
   const navigate = useNavigate();
 
-  const loadList = async () => {
-    setLoading(true);
-    const list = await listTaskTemplate$();
-    setList(list);
-    setLoading(false);
-  }
-
-  React.useEffect(() => {
-    setLoading(true);
-
-    const sub$ = listTaskTemplate$().pipe(
+  const loadList$ = () => {
+    setLoading(true)
+    return listTaskTemplate$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(list => {
       setList(list);
     });
+  }
 
+  React.useEffect(() => {
+    const sub$ = loadList$();
     return () => sub$.unsubscribe();
   }, [])
 
   React.useEffect(() => {
+    debugger;
     setFilteredList(list.filter(x => !searchText || x.name.toLowerCase().includes(searchText.toLowerCase())))
   }, [list, searchText])
 
@@ -112,7 +108,7 @@ export const TaskTemplateListPage = () => {
       .subscribe(cloned => {
         // console.log(task);
         notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/task_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
-        loadList();
+        loadList$();
       })
   }
 
