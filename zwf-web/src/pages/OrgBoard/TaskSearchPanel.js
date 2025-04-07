@@ -10,9 +10,8 @@ import { TagSelect } from 'components/TagSelect';
 import { MemberSelect } from 'components/MemberSelect';
 import { OrgClientSelect } from 'components/OrgClientSelect';
 
-const { Text, Paragraph } = Typography;
+const { Paragraph } = Typography;
 
-const span = { xs: 24, sm: 24, md: 12, lg: 8, xl: 6, xxl: 4 };
 
 const ItemCol = props => {
   return <Col span={24}>
@@ -37,9 +36,6 @@ export const TaskSearchPanel = props => {
     onChange({ ...queryInfo, assigneeId });
   }
 
-  const handleTaskTemplateIdChange = (taskTemplateId) => {
-    onChange({ ...queryInfo, taskTemplateId, });
-  }
 
   const handleClientIdChange = (client) => {
     onChange({ ...queryInfo, clientId: client?.id });
@@ -49,9 +45,6 @@ export const TaskSearchPanel = props => {
     onChange({ ...queryInfo, tags: tags ?? [], });
   }
 
-  const handleExecuteSearch = () => {
-    onChange(queryInfo);
-  }
 
   const StatusSelectOptions = [
     { label: 'To Do', value: 'todo' },
