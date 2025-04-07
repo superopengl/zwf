@@ -86,7 +86,7 @@ export const TaskCard = (props) => {
 
     {(tagIds.length > 0 || task.assigneeId) &&
       <ProCard>
-        <Row gutter={[10, 10]} justify="space-between">
+        <Row gutter={[10, 10]} justify="space-between" wrap={false}>
           <Col>
             <TagSelect readonly={true} value={tagIds} />
           </Col>
