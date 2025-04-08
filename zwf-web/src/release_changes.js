@@ -1,6 +1,14 @@
 export const notes=`
-bugfix form field editor
-code clean up
-fix React warning
-fix incorrect zevent initiation
-no logout confirm`
+refine profile fields
+save client profile
+client profile
+index fix
+decouple taskTemplate and docTemplate
+more bugfix around dnd
+validate field name duplicate
+bugfix
+refine
+tag select readonly bugfix
+refine task search
+improve task filter
+bugfix`
