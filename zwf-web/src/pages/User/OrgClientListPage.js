@@ -191,7 +191,7 @@ const OrgClientListPage = () => {
               },
               {
                 icon: <Icon component={BsFillPersonVcardFill} />,
-                menu: `Set Profile`,
+                menu: `Profile`,
                 onClick: () => setCurrentClient(item)
               },
               // {
@@ -258,7 +258,7 @@ const OrgClientListPage = () => {
           }}
         />
       </PageHeaderContainer>
-      <ClientProfileDrawer value={currentClient} open={!!currentClient} onClose={() => setCurrentClient(null)} />
+      <ClientProfileDrawer id={currentClient?.id} open={!!currentClient} onClose={() => setCurrentClient(null)} />
       <InviteClientModal open={inviteUserModalVisible}
         onOk={() => {
           setInviteUserModalVisible(false);

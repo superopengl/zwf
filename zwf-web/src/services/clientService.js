@@ -22,6 +22,10 @@ export function getOrgClientDataBag$(orgClientId) {
   return httpGet$(`/org/client/${orgClientId}/databag`);
 }
 
+export function getOrgClientProfile$(orgClientId) {
+  return httpGet$(`/org/client/${orgClientId}/profile`);
+}
+
 export function saveOrgClientProfile$(orgClientId, email, fields) {
   return httpPost$(`/org/client/${orgClientId}/profile`, { email, fields });
 }

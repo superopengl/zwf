@@ -130,6 +130,25 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
+
+export const getOrgClientProfile = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const orgId = getOrgIdFromReq(req);
+  const { id } = req.params;
+
+  const orgClient = await db.manager.findOneOrFail(OrgClient, {
+    where: {
+      id,
+      orgId
+    },
+    relations: {
+      fields: true,
+    }
+  });
+
+  res.json(orgClient);
+});
+
 export const saveOrgClientProfile = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const orgId = getOrgIdFromReq(req);
@@ -151,6 +170,8 @@ export const saveOrgClientProfile = handlerWrapper(async (req, res) => {
     const fieldEntities = fields.map((f, i) => {
       const entity = new OrgClientField();
       entity.orgClientId = id;
+      entity.options = f.options;
+      entity.type = f.type;
       entity.name = f.name;
       entity.ordinal = i + 1;
       entity.value = f.value;

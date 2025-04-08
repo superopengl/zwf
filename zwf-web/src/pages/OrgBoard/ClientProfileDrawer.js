@@ -15,25 +15,56 @@ import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { Loading } from 'components/Loading';
 import { ArrowDownOutlined, CaretDownOutlined } from '@ant-design/icons';
-import { saveOrgClientProfile$ } from 'services/clientService';
+import { getOrgClientDataBag$, getOrgClientProfile$, saveOrgClientProfile$ } from 'services/clientService';
 
 const { Paragraph } = Typography;
 
-const convertFieldsToKvpObject = fields => {
-  return fields.reduce((obj, field) => {
-    obj[field.name] = field.value;
-    return obj;
-  }, {});
+const applyFormTemplateFields = (profileFields, formFields) => {
+  if (!formFields) {
+    return profileFields;
+  }
+
+  const profileSet = new Map(profileFields.map(f => [f.name, f]));
+
+  const ret = [];
+  for (const f of formFields) {
+    const profileItem = profileSet.get(f.name);
+    if (profileItem) {
+      f.value = profileItem.value;
+    }
+
+    ret.push(f);
+  }
+
+  return ret;
 }
 
 export const ClientProfileDrawer = (props) => {
   useAssertRole(['admin', 'agent']);
-  const { value: orgClient, onSave, open, onClose } = props;
-  const [loading, setLoading] = React.useState(false);
+  const { id, open, onClose } = props;
+  const [loading, setLoading] = React.useState(true);
+  const [orgClient, setOrgClient] = React.useState();
   const [formTemplateId, setFormTemplateId] = React.useState();
   const [fields, setFields] = React.useState([]);
-  const [fieldValues, setFieldValues] = React.useState({});
   const ref = React.useRef();
+
+  React.useEffect(() => {
+    if (!id) {
+      setOrgClient(false);
+      return;
+    }
+    const sub$ = getOrgClientProfile$(id)
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(setOrgClient);
+
+    return () => sub$.unsubscribe()
+  }, [id])
+
+  React.useEffect(() => {
+    setFields(orgClient?.fields ?? []);
+  }, [orgClient])
 
   React.useEffect(() => {
     if (!formTemplateId) {
@@ -45,7 +76,7 @@ export const ClientProfileDrawer = (props) => {
         finalize(() => setLoading(false))
       )
       .subscribe(taskTemplate => {
-        setFields(taskTemplate?.fields)
+        setFields(applyFormTemplateFields(orgClient.fields, taskTemplate?.fields));
       });
 
     return () => sub$.unsubscribe()
@@ -113,7 +144,7 @@ export const ClientProfileDrawer = (props) => {
             </> : <>
               <Paragraph type="secondary">The client does not have a ZeeWorkflow account. Setting an email address will invite the client to join ZeeWorkflow.</Paragraph>
               <Form ref={ref}>
-                <Form.Item name="email" rules={[{ required: true, type: 'email', max: 100 }]}>
+                <Form.Item name="email" rules={[{ required: false, type: 'email', whitespace: false, max: 100 }]}>
                   <Input allowClear placeholder="Email address" />
                 </Form.Item>
               </Form>
@@ -140,9 +171,8 @@ export const ClientProfileDrawer = (props) => {
 }
 
 ClientProfileDrawer.propTypes = {
-  value: PropTypes.object,
+  id: PropTypes.string,
 };
 
 ClientProfileDrawer.defaultProps = {
-  value: {}
 };
