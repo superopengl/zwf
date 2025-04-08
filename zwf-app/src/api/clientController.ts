@@ -73,34 +73,37 @@ export const getBulkClientBrief = handlerWrapper(async (req, res) => {
   res.json(data);
 });
 
-export const getOrgClientDataBag = handlerWrapper(async (req, res) => {
+export const getOrgClientInfo = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
 
-  const client = await db.getRepository(OrgClient).findOne({
+  const client = await db.getRepository(OrgClientInformation).findOne({
     where: {
       id,
       orgId,
     },
-    relations: {
-      fields: true
-    }
-  })
-
-  const allFieldNamesResult = await db.getRepository(OrgAllClientFieldsInformation).find({
-    where: {
-      orgId,
-    },
     select: {
-      name: true,
+      id: true,
+      clientAlias: true,
+      userId: true,
+      email: true,
+      givenName: true,
+      surname: true,
+      phone: true,
     }
   })
 
-  res.json({
-    fields: client.fields,
-    allNames: allFieldNamesResult.map(x => x.name),
-  });
+  // const allFieldNamesResult = await db.getRepository(OrgAllClientFieldsInformation).find({
+  //   where: {
+  //     orgId,
+  //   },
+  //   select: {
+  //     name: true,
+  //   }
+  // })
+
+  res.json(client);
 });
 
 
@@ -131,7 +134,7 @@ export const searchOrgClientUserList = handlerWrapper(async (req, res) => {
 });
 
 
-export const getOrgClientProfile = handlerWrapper(async (req, res) => {
+export const getOrgClientDatabag = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
@@ -149,11 +152,13 @@ export const getOrgClientProfile = handlerWrapper(async (req, res) => {
   res.json(orgClient);
 });
 
-export const saveOrgClientProfile = handlerWrapper(async (req, res) => {
+export const saveOrgClientEmail = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);
   const orgId = getOrgIdFromReq(req);
   const { id } = req.params;
-  const { email, fields } = req.body;
+  const { email } = req.body;
+
+  assert(email, 400, 'Invalid email address')
 
   await db.transaction(async m => {
     const orgClient = await m.findOneOrFail(OrgClient, {
@@ -164,6 +169,23 @@ export const saveOrgClientProfile = handlerWrapper(async (req, res) => {
       const { user } = await ensureClientOrGuestUser(m, email, orgId);
       orgClient.userId = user.id;
     }
+
+    await m.save(orgClient);
+  });
+
+  res.json();
+});
+
+export const saveOrgClientDatabag = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const orgId = getOrgIdFromReq(req);
+  const { id } = req.params;
+  const { fields } = req.body;
+
+  await db.transaction(async m => {
+    const orgClient = await m.findOneOrFail(OrgClient, {
+      where: { id, orgId }
+    });
 
     await m.delete(OrgClientField, { orgClientId: id });
 

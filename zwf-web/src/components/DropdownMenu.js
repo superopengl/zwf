@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Dropdown, Menu, Button, Divider } from 'antd';
 import styled from 'styled-components';
 import Icon, { CaretDownOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
-import {IoEllipsisHorizontal} from 'react-icons/io5';
+import {IoEllipsisHorizontal, IoEllipsisVertical} from 'react-icons/io5';
 
 const StyledDropdown = styled(Dropdown)`
 .ant-dropdown-menu-item:hover {
@@ -42,7 +42,7 @@ const DropdownMenu = (props) => {
       placement="bottomRight"
       trigger="click"
     >
-      <Button type="text" icon={<Icon component={IoEllipsisHorizontal} />} >
+      <Button type="text" icon={<Icon component={IoEllipsisVertical} />} >
         {/* <CaretDownOutlined /> */}
         {/* <EllipsisOutlined/> */}
       </Button>
