@@ -168,7 +168,7 @@ export const TaskTemplateFieldControlDef = Object.freeze([
     icon: <BsCalendarRangeFill />,
     fieldProps: {
       picker: 'quarter',
-      format: 'YYYY-\\QQ'
+      format: `YYYY-[Q]Q`
     },
     control: ProFormDateTimePicker,
   },

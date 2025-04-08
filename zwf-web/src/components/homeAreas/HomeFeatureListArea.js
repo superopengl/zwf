@@ -70,7 +70,7 @@ padding: 3rem 1rem 1rem;
 const orgFeatures = [
   { name: 'Status based task management', release: 'v1' },
   { name: 'Task assignment', release: 'v1' },
-  { name: 'Scheduler to periodically create tasks', release: 'v1' },
+  { name: 'Recurring to periodically create tasks', release: 'v1' },
   { name: 'Task template', release: 'v1' },
   { name: 'Doc template', release: 'v1' },
   { name: 'Realtime client communication', release: 'v1' },

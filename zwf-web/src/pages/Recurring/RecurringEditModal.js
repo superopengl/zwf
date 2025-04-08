@@ -71,7 +71,7 @@ const RecurringEditModal = (props) => {
   };
 
   return <Modal
-    title={isNew ? 'New Scheduler' : 'Edit Scheduler'}
+    title={isNew ? 'New Recurring' : 'Edit Recurring'}
     open={visible}
     closable={true}
     maskClosable={false}
