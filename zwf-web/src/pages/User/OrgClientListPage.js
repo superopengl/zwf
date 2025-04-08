@@ -4,7 +4,8 @@ import { Typography, Button, Table, Input } from 'antd';
 import Icon, {
   SyncOutlined,
   SearchOutlined,
-  ContactsFilled} from '@ant-design/icons';
+  ContactsFilled
+} from '@ant-design/icons';
 
 import { Space } from 'antd';
 import { setOrgClientTags$, searchOrgClients$ } from 'services/clientService';
@@ -141,7 +142,14 @@ const OrgClientListPage = () => {
     {
       title: <span style={{ fontWeight: 400 }}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
       dataIndex: 'tags',
-      render: (value, item) => <TagSelect value={value} onChange={tags => handleTagChange(item, tags)} bordered={false} inPlaceEdit={true} placeholder="Click to select tags" />
+      render: (value, item) => <>
+      <TagSelect value={value}
+        onChange={tags => handleTagChange(item, tags)}
+        bordered={false}
+        inPlaceEdit={true}
+        placeholder="Click to select tags"
+      />
+      </>
     },
     {
       title: "Invited",
