@@ -115,6 +115,9 @@ const OrgClientListPage = () => {
     searchByQueryInfo$({ ...queryInfo, page, size: pageSize });
   }
 
+  const handleGoToTasks = (item, status) => {
+
+  }
 
 
   const columnDef = [
@@ -152,38 +155,38 @@ const OrgClientListPage = () => {
       dataIndex: 'countToDo',
       width: 40,
       align: 'right',
-      render: (value) => value
+      render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'todo')}>{value}</TextLink> : null,
     },
     {
       title: <TaskStatusTag status="in_progress" />,
       dataIndex: 'countInProgress',
       width: 40,
       align: 'right',
-      render: (value) => value
+      render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'in_progress')}>{value}</TextLink> : null,
     },
     {
       title: <TaskStatusTag status="action_required" />,
       dataIndex: 'countActionRequired',
       width: 40,
       align: 'right',
-      render: (value) => value
+      render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'action_required')}>{value}</TextLink> : null,
     },
     {
       title: <TaskStatusTag status="done" />,
       dataIndex: 'countDone',
       width: 40,
       align: 'right',
-      render: (value) => value
+      render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'done')}>{value}</TextLink> : null,
     },
+    // {
+    //   title: <TaskStatusTag status="archived" />,
+    //   dataIndex: 'countArchived',
+    //   width: 40,
+    //   align: 'right',
+    //   render: (value, item) => +value ? <TextLink onClick={() => handleGoToTasks(item, 'archived')}>{value}</TextLink> : null,
+    // },
     {
-      title: <TaskStatusTag status="archived" />,
-      dataIndex: 'countArchived',
       width: 40,
-      align: 'right',
-      render: (value) => value
-    },
-    {
-      width: 140,
       align: 'right',
       fixed: 'right',
       render: (text, item) => {
