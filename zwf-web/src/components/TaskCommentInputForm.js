@@ -41,12 +41,14 @@ export const TaskCommentInputForm = React.memo((props) => {
 
   return <Form onFinish={handleSendMessage}
     form={form}>
-    <Form.Item name="message">
+    <Form.Item name="message" 
+      extra="Type here and press enter to send"
+    >
       <Input.TextArea
         showCount
         autoSize={{ minRows: 3, maxRows: 20 }}
         maxLength={1000}
-        placeholder="Type here and press enter to send"
+        placeholder="Comment"
         allowClear
         autoFocus={true}
         disabled={loading}
@@ -55,12 +57,9 @@ export const TaskCommentInputForm = React.memo((props) => {
       />
     </Form.Item>
     <Form.Item>
-      <Row justify="start" gutter={8} style={{position: 'relative', top: -16}}>
+      <Row justify="end" gutter={8} style={{position: 'relative', top: -16}}>
         <Col>
-          <Button type="primary" htmlType="submit" disabled={loading}>Save</Button>
-        </Col>
-        <Col>
-          <Button htmlType="reset" disabled={loading}>Cancel</Button>
+          <Button type="primary" htmlType="submit" disabled={loading}>Send</Button>
         </Col>
       </Row>
     </Form.Item>
