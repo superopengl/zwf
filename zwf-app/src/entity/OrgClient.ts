@@ -21,6 +21,9 @@ export class OrgClient {
   @Column()
   clientAlias: string;
 
+  @Column({nullable: true})
+  remark: string;
+
   @Column('uuid', {nullable: true})
   formTemplateId: string;
 

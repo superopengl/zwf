@@ -10,6 +10,10 @@ export function saveClientAlias$(orgClientId, alias) {
   return httpPost$(`/org/client/${orgClientId}/alias`, { alias });
 }
 
+export function saveClientRemark$(orgClientId, remark) {
+  return httpPost$(`/org/client/${orgClientId}/remark`, { remark });
+}
+
 export function setOrgClientTags$(orgClientId, tagIds) {
   return httpPost$(`/org/client/${orgClientId}/tags`, { tags: tagIds });
 }

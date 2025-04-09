@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Typography, Button, Table, Input } from 'antd';
+import { Typography, Button, Table, Input, Form } from 'antd';
 import Icon, {
   SyncOutlined,
   SearchOutlined,
@@ -8,7 +8,7 @@ import Icon, {
 } from '@ant-design/icons';
 
 import { Space } from 'antd';
-import { setOrgClientTags$, searchOrgClients$ } from 'services/clientService';
+import { setOrgClientTags$, searchOrgClients$, saveClientRemark$ } from 'services/clientService';
 import { TagSelect } from 'components/TagSelect';
 import DropdownMenu from 'components/DropdownMenu';
 import { TaskStatusTag } from 'components/TaskStatusTag';
@@ -26,12 +26,20 @@ import { BsDatabaseFill, BsFillPersonVcardFill, BsFillSendFill } from 'react-ico
 import { ClientDatabagDrawer } from 'pages/OrgBoard/ClientDatabagDrawer';
 import { ClientInfoDrawer } from 'pages/OrgBoard/ClientInfoDrawer';
 import { HiDatabase, HiVariable } from 'react-icons/hi';
+import { ClickToEditInput } from 'components/ClickToEditInput';
 
 
-const { Text, Link: TextLink } = Typography;
+const { Paragraph, Text, Link: TextLink } = Typography;
 
 const ContainerStyled = styled.div`
+
 `;
+
+const StyledTable = styled(Table)`
+.ant-table-cell {
+  vertical-align: top;
+}
+`
 
 const DEFAULT_QUERY_INFO = {
   text: '',
@@ -55,7 +63,9 @@ const OrgClientListPage = () => {
   const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
   const [openInfo, setOpenInfo] = React.useState(false);
   const [openDatabag, setOpenDatabag] = React.useState(false);
+  const [editingKey, setEditingKey] = React.useState('');
 
+  const isEditing = (record) => record.id === editingKey;
 
   const handleTagChange = (orgClient, tags) => {
     setOrgClientTags$(orgClient.id, tags).subscribe()
@@ -120,6 +130,14 @@ const OrgClientListPage = () => {
 
   }
 
+  const handleRemarkChange = (item, remark) => {
+    saveClientRemark$(item.id, remark)
+      .subscribe(() => {
+        item.remark = remark;
+        setEditingKey(null);
+      })
+  }
+
 
   const columnDef = [
     {
@@ -136,20 +154,46 @@ const OrgClientListPage = () => {
       // width: 400,
       fixed: 'left',
       render: (text, item) => <Space>
-        <ClientNameCard id={item.id} allowChangeAlias={true} />
+        <ClientNameCard id={item.id} allowChangeAlias={false && isEditing(item)} />
       </Space>
+    },
+    {
+      title: "Notes",
+      dataIndex: 'remark',
+      width: 200,
+      render: (value, item) => isEditing(item) ? <Form
+        onFinish={values => handleRemarkChange(item, values.remark)}
+      >
+        <Form.Item
+          name="remark"
+          extra="Enter to save"
+          style={{ marginBottom: 4 }}
+        >
+          <Input.TextArea
+            bordered={true}
+            defaultValue={value}
+            autoSize={{minRows: 2}}
+          />
+        </Form.Item>
+        <Form.Item
+          style={{ marginBottom: 0, display: 'flex', justifyContent: 'end' }}
+        >
+          <Button htmlType='submit' type="primary">Save</Button>
+        </Form.Item>
+      </Form>
+        : <Paragraph>{value}</Paragraph>,
     },
     {
       title: <span style={{ fontWeight: 400 }}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
       dataIndex: 'tags',
-      render: (value, item) => <>
-      <TagSelect value={value}
-        onChange={tags => handleTagChange(item, tags)}
-        bordered={false}
-        inPlaceEdit={true}
-        placeholder="Click to select tags"
-      />
-      </>
+      render: (value, item) =>
+        <TagSelect value={value}
+          onChange={tags => handleTagChange(item, tags)}
+          bordered={false}
+          inPlaceEdit={true}
+          readonly={!isEditing(item)}
+          placeholder="Click to select tags"
+        />
     },
     {
       title: "Invited",
@@ -198,7 +242,10 @@ const OrgClientListPage = () => {
       align: 'right',
       fixed: 'right',
       render: (text, item) => {
-        return <div>
+        return isEditing(item) ? <Button type="link" onClick={(e) => {
+          e.stopPropagation();
+          setEditingKey('')
+        }}>Done</Button> :
           <DropdownMenu
             config={[
               {
@@ -240,13 +287,13 @@ const OrgClientListPage = () => {
               // },
             ]}
           />
-        </div>
       }
     },
   ].filter(x => !!x);
 
   return (
     <ContainerStyled>
+      {editingKey}
       <PageHeaderContainer
         breadcrumb={[
           {
@@ -263,7 +310,8 @@ const OrgClientListPage = () => {
           <Button key="invite" ghost icon={<Icon component={FaUserPlus} />} type="primary" onClick={() => setInviteUserModalVisible(true)}>Add New Client</Button>
         ]}
       >
-        <Table columns={columnDef}
+        <StyledTable columns={columnDef}
+          align="top"
           dataSource={list}
           size="small"
           scroll={{
@@ -276,6 +324,21 @@ const OrgClientListPage = () => {
               No clients.
               <Button type="link" onClick={() => setInviteUserModalVisible(true)}>Add new client</Button>
             </div>
+          }}
+          onRow={(record, rowIndex) => {
+            return {
+              onClick: (event) => {
+                setEditingKey(record.id);
+
+              }, // click row
+              onDoubleClick: (event) => { }, // double click row
+              onContextMenu: (event) => { }, // right button click row
+              onMouseEnter: (event) => {
+              }, // mouse enter row
+              onBlur: (event) => {
+                // setEditingKey(null);
+              }, // mouse leave row
+            };
           }}
           pagination={{
             current: queryInfo.current,

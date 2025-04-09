@@ -62,6 +62,7 @@ export const getBulkClientBrief = handlerWrapper(async (req, res) => {
     select: {
       id: true,
       clientAlias: true,
+      remark: true,
       avatarFileId: true,
       avatarColorHex: true,
       givenName: true,
@@ -93,15 +94,6 @@ export const getOrgClientInfo = handlerWrapper(async (req, res) => {
       phone: true,
     }
   })
-
-  // const allFieldNamesResult = await db.getRepository(OrgAllClientFieldsInformation).find({
-  //   where: {
-  //     orgId,
-  //   },
-  //   select: {
-  //     name: true,
-  //   }
-  // })
 
   res.json(client);
 });
@@ -150,6 +142,25 @@ export const getOrgClientDatabag = handlerWrapper(async (req, res) => {
   });
 
   res.json(orgClient);
+});
+
+export const saveOrgClientRemark = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const orgId = getOrgIdFromReq(req);
+  const { id } = req.params;
+  const { remark } = req.body;
+
+  await db.transaction(async m => {
+    const orgClient = await m.findOneOrFail(OrgClient, {
+      where: { id, orgId }
+    });
+
+    orgClient.remark = remark;
+
+    await m.save(orgClient);
+  });
+
+  res.json();
 });
 
 export const saveOrgClientEmail = handlerWrapper(async (req, res) => {
