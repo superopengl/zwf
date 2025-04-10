@@ -30,6 +30,7 @@ export const FieldItem = React.memo((props) => {
   const { field } = props;
 
   const fieldSchema = createFormItemSchema(field, 'agent');
+  fieldSchema.fieldProps.disabled = true;
 
   return <Container>
     <BetaSchemaForm
