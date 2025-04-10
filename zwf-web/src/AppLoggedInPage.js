@@ -28,6 +28,7 @@ import { NotificationButton } from 'components/NotificationButton';
 import { HelpDropdownMenu } from 'components/HelpDropdownMenu';
 import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
+import { TbRepeat } from 'react-icons/tb';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -66,7 +67,7 @@ const ROUTES = [
       {
         path: '/recurring',
         name: <FormattedMessage id="menu.scheduler" />,
-        icon: <Icon component={AiFillCalendar} />,
+        icon: <Icon component={TbRepeat} />,
         roles: ['admin', 'agent'],
       },
       {
