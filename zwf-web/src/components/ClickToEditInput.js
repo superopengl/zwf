@@ -39,7 +39,6 @@ export const ClickToEditInput = React.memo((props) => {
     setFocused(false)
     const text = e.target.value?.trim();
  
-    debugger;
     if (!text && !allowEmpty) {
       // setClassName('error');
       setValue(propValue);

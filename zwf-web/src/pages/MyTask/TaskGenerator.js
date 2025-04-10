@@ -15,6 +15,17 @@ import { MdOpenInNew } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 import { OrgClientSelect } from 'components/OrgClientSelect';
+import {
+  ProCard,
+  ProForm,
+  ProFormCheckbox,
+  ProFormDatePicker,
+  ProFormDateRangePicker,
+  ProFormSelect,
+  ProFormText,
+  ProFormTextArea,
+  StepsForm,
+} from '@ant-design/pro-components';
 
 const { Text, Link: TextLink } = Typography;
 
@@ -28,6 +39,7 @@ export const TaskGenerator = React.memo(props => {
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
+  const formRef = React.useRef();
 
   React.useEffect(() => {
     if (taskTemplateId) {
@@ -131,6 +143,31 @@ export const TaskGenerator = React.memo(props => {
           </Space>
         </Row>
       </Space>
+{/* 
+      <StepsForm
+        formRef={formRef}
+      >
+        <StepsForm.StepForm name="client" title="Client"
+        >
+          <OrgClientSelect style={{ width: '100%' }}
+            onChange={handleClientChange}
+            onLoadingChange={setLoading}
+            value={clientInfo?.id} />
+        </StepsForm.StepForm>
+        <StepsForm.StepForm name="formTemplate" title="Form Template">
+          <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
+        </StepsForm.StepForm>
+        <StepsForm.StepForm name="recurring" title="Recurring">
+
+        </StepsForm.StepForm>
+        <StepsForm.StepForm name="name" title="Task Name">
+          <Input style={{ height: 50 }}
+            placeholder={taskName}
+            onPressEnter={handleNameEnter}
+            // value={taskName}
+            onChange={e => setTaskName(e.target.value)} />
+        </StepsForm.StepForm>
+      </StepsForm> */}
     </Loading>
   );
 });
