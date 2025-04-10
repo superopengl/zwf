@@ -19,7 +19,6 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
-import { TaskLogAndCommentDrawer } from 'components/TaskLogAndCommentDrawer';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { TaskDocToSignPanel } from 'components/TaskDocToSignPanel';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
