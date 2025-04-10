@@ -21,7 +21,7 @@ export const TaskListPanel = (props) => {
 
   const navigate = useNavigate();
   const postArchieveMessage = () => {
-    notify.info('Task was archieved', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
+    notify.info('Task was archived', <>You can find all the archived tasks by fitler status <Tag>Archived</Tag></>)
   }
 
   const handleTaskStatusChange = (taskId, newStatus) => {

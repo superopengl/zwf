@@ -13,7 +13,7 @@ import { MdMessage, MdOutlinePages } from 'react-icons/md';
 import { Outlet } from 'react-router-dom';
 import { AiFillCalendar } from 'react-icons/ai';
 import { MdDashboard, MdSpaceDashboard } from 'react-icons/md';
-import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill } from 'react-icons/bs';
+import { BsFileEarmarkTextFill, BsFillPersonFill, BsFillPeopleFill, BsFillTrash3Fill } from 'react-icons/bs';
 import { useNavigate } from 'react-router-dom';
 import { ProLayout } from '@ant-design/pro-components';
 import { GlobalNotificationBar } from 'components/GlobalNotificationBar';
@@ -64,9 +64,15 @@ const ROUTES = [
       //   roles: ['client'],
       // },
       {
-        path: '/scheduler',
+        path: '/recurring',
         name: <FormattedMessage id="menu.scheduler" />,
         icon: <Icon component={AiFillCalendar} />,
+        roles: ['admin', 'agent'],
+      },
+      {
+        path: '/trash',
+        name: "Archived Tasks",
+        icon: <Icon component={BsFillTrash3Fill} />,
         roles: ['admin', 'agent'],
       },
     ],
