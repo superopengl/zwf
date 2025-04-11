@@ -65,6 +65,10 @@ border-radius:4px;
 }
 `;
 
+const disabledPastDate = (current) => {
+  // Can not select days before today and today
+  return current && current.endOf('day').isBefore();
+};
 
 const OrgTaskPage = React.memo(() => {
   useAssertRole(['admin', 'agent'])
@@ -244,7 +248,12 @@ const OrgTaskPage = React.memo(() => {
                       <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
                     </Collapse.Panel>
                     <Collapse.Panel key="dueAt" header="Due date">
-                      <DatePicker allowClear style={{ width: 180 }} value={task.dueAt ? dayjs(task.dueAt) : null} onChange={handleDueDateChange} format="DD MMM YYYY" />
+                      <DatePicker allowClear 
+                      style={{ width: 180 }} 
+                      disabledDate={disabledPastDate}
+                      value={task.dueAt ? dayjs(task.dueAt) : null} 
+                      onChange={handleDueDateChange} 
+                      format="D MMM YYYY" />
                     </Collapse.Panel>
                     <Collapse.Panel key="est" header="Estimated time">
                       <EstInput allowClear min={0} max={99.9} precision={1}

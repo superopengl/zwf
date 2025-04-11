@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { Space, Typography, Button, Steps, Tabs, Divider, Row, Input } from 'antd';
+import { Space, Typography, Button, Steps, Tabs, Progress, Row, Input } from 'antd';
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
-import { RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { createNewTask$ } from 'services/taskService';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
@@ -38,6 +38,7 @@ export const TaskGenerator = React.memo(props => {
   const [taskName, setTaskName] = React.useState();
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
+  const [current, setCurrent] = React.useState(0);
   const navigate = useNavigate();
   const formRef = React.useRef();
 
@@ -65,15 +66,18 @@ export const TaskGenerator = React.memo(props => {
 
   const handleTaskTemplateChange = taskTemplateIdValue => {
     setTaskTemplateId(taskTemplateIdValue);
+    next();
   }
 
   const handleClientChange = (client) => {
     setClientInfo(client);
+    next();
   }
 
   const handleNameEnter = (e) => {
     const name = e.target.value?.trim();
     setTaskName(name);
+    next();
   }
 
   const createTaskWithVarBag$ = () => {
@@ -109,65 +113,78 @@ export const TaskGenerator = React.memo(props => {
     });
   }
 
+  const steps = [
+    {
+      title: 'Client',
+      content: <>
+        <StyledDescription value="Choose existing client or type in a new client's email address." />
+        <OrgClientSelect style={{ width: '100%' }}
+          onChange={handleClientChange}
+          onLoadingChange={setLoading}
+          value={clientInfo?.id} />
+      </>,
+    },
+    {
+      title: 'From template',
+      content: <>
+        <StyledDescription value="Choose a task template to begin with." />
+        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
+      </>,
+    },
+    {
+      title: 'Recurring',
+      content: <>
+        <StyledDescription value="Choose a task template to begin with." />
+        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
+      </>,
+    },
+    {
+      title: 'Task name',
+      content: <>
+        <StyledDescription value="Task name" />
+        <Input style={{ height: 50 }}
+          placeholder={taskName}
+          onPressEnter={handleNameEnter}
+          // value={taskName}
+          onChange={e => setTaskName(e.target.value)} />
+      </>,
+    },
+  ];
+
+  const next = () => {
+    setCurrent(current + 1);
+  };
+
+  const prev = () => {
+    setCurrent(current - 1);
+  };
+
   return (
     <Loading loading={loading}>
-      <Space direction='vertical' style={{ width: '100%', marginTop: 20 }} size="large">
-        <Space size="middle" direction="vertical" style={{ width: '100%' }}>
-          <StyledDescription value="Choose existing client or type in a new client's email address." />
-          <OrgClientSelect style={{ width: '100%' }}
-            onChange={handleClientChange}
-            onLoadingChange={setLoading}
-            value={clientInfo?.id} />
-          <StyledDescription value="Choose a task template to begin with." />
-          <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-          <StyledDescription value="Task name" />
-          <Input style={{ height: 50 }}
-            placeholder={taskName}
-            onPressEnter={handleNameEnter}
-            // value={taskName}
-            onChange={e => setTaskName(e.target.value)} />
-        </Space>
-        {/* <Divider style={{ margin: '10px 0' }} /> */}
-        {/* <Button block icon={<LeftOutlined />} disabled={current === 0} onClick={() => setCurrent(x => x - 1)}></Button> */}
-        {/* <Button block icon={<RightOutlined />} disable={current === steps.length - 1} onClick={() => setCurrent(x => x + 1)}></Button> */}
-        <Row justify='space-between'>
-          <Button type="text" onClick={props.onCancel}>Cancel</Button>
-          <Space>
-            {/* <Button type="primary"
-              disabled={!clientInfo || !taskTemplate || !taskName}
-              onClick={handleCreateEmptyTask}>Create Empty Task</Button> */}
+
+        {/* <Steps current={current} items={items} size="small" progressDot /> */}
+        <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" />
+        <Row>{steps[current].content}</Row>
+
+        <Row justify={current ? "space-between" : 'end'} style={{marginTop: 20}}>
+          {current > 0 && (
+            <Button icon={<LeftOutlined />} type="primary" ghost onClick={() => prev()}>
+              Previous
+            </Button>
+          )}
+          {current < steps.length - 1 && (
+            <Button type="primary" ghost onClick={() => next()}>
+              Next <RightOutlined />
+            </Button>
+          )}
+          {current === steps.length - 1 && (
             <Button type="primary"
               disabled={!clientInfo}
               onClick={handleCreateAndEdit}
             >Create Task</Button>
-          </Space>
-        </Row>
-      </Space>
-{/* 
-      <StepsForm
-        formRef={formRef}
-      >
-        <StepsForm.StepForm name="client" title="Client"
-        >
-          <OrgClientSelect style={{ width: '100%' }}
-            onChange={handleClientChange}
-            onLoadingChange={setLoading}
-            value={clientInfo?.id} />
-        </StepsForm.StepForm>
-        <StepsForm.StepForm name="formTemplate" title="Form Template">
-          <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-        </StepsForm.StepForm>
-        <StepsForm.StepForm name="recurring" title="Recurring">
+          )}
 
-        </StepsForm.StepForm>
-        <StepsForm.StepForm name="name" title="Task Name">
-          <Input style={{ height: 50 }}
-            placeholder={taskName}
-            onPressEnter={handleNameEnter}
-            // value={taskName}
-            onChange={e => setTaskName(e.target.value)} />
-        </StepsForm.StepForm>
-      </StepsForm> */}
+        </Row>
     </Loading>
   );
 });

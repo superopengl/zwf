@@ -43,7 +43,7 @@ export const TimeAgo = React.memo(props => {
       {prefix}
       {showAgo && <ReactTimeAgo date={m.toDate()} />}
       {showTime && <Text style={{fontSize: showAgo ? 'smaller' : undefined}} type={showAgo ? 'secondary' : undefined}>
-        {m.format(accurate ? 'DD MMM YYYY HH:mm' : 'DD MMM YYYY')}
+        {m.format(accurate ? 'D MMM YYYY HH:mm' : 'D MMM YYYY')}
         </Text>}
     </ColumnSpace>
     {extra}
