@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Typography, Layout, Button, Drawer, Table, Tooltip, Modal, Row } from 'antd';
 import Text from 'antd/lib/typography/Text';
 import {
-  CloseOutlined, EditOutlined, CaretRightFilled, PlusOutlined
+  CloseOutlined, EditOutlined, CaretRightFilled, PlusOutlined, ClockCircleOutlined
 } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { Space } from 'antd';
@@ -207,7 +207,7 @@ const RecurringListPage = () => {
       loading={loading}
       title="Recurring"
       extra={[
-        <Button key="new" type="primary" ghost icon={<PlusOutlined />} onClick={handleCreateNew}>New Recurring</Button>
+        <Button key="new" type="primary" ghost icon={<ClockCircleOutlined />} onClick={handleCreateNew}>New Recurring</Button>
       ]}
     >
       <Table columns={columnDef}
