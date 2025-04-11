@@ -148,7 +148,7 @@ const OrgTaskPage = React.memo(() => {
       dueAt: dueDate?.toDate()
     }).subscribe(() => {
       // task.dueAt = dueDate?.toDate();
-      setTask({...task, dueAt: dueDate})
+      setTask({ ...task, dueAt: dueDate })
     });
   }
 
@@ -230,16 +230,18 @@ const OrgTaskPage = React.memo(() => {
           <Col span={10}>
             <Row gutter={[30, 30]} >
               <Col span={24}>
-                <ProCard>
+                <ProCard ghost>
                   <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'dueAt', 'est']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
                     <Collapse.Panel key="client" header="Client">
-                      <ClientNameCard id={task?.orgClientId} />
+                      <div style={{ paddingLeft: 12 }}>
+                        <ClientNameCard id={task?.orgClientId} />
+                      </div>
                     </Collapse.Panel>
                     <Collapse.Panel key="assignee" header="Assignee">
-                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={false} />
+                      <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
                     </Collapse.Panel>
                     <Collapse.Panel key="tags" header="Tags">
-                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={false} placeholder="Select tags" />
+                      <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
                     </Collapse.Panel>
                     <Collapse.Panel key="dueAt" header="Due date">
                       <DatePicker allowClear style={{ width: 180 }} value={task.dueAt ? dayjs(task.dueAt) : null} onChange={handleDueDateChange} format="DD MMM YYYY" />
