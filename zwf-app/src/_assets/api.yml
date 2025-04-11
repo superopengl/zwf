@@ -348,19 +348,7 @@ paths:
       operationId: searchOrgClientUserList
       responses:
         200:
-          description: OK
-  /org/client/:id:
-    get:
-      operationId: getOrgClient
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK              
+          description: OK                
   /org/client/:id/alias:
     post:
       operationId: setOrgClientAlias
@@ -451,7 +439,30 @@ paths:
       #   - authClient: []
       responses:
         200:
-          description: OK            
+          description: OK        
+  /org/client/:id:
+    get:
+      operationId: getOrgClient
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK      
+    post:
+      operationId: updateOrgClient
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK                 
   /org/list:
     get:
       operationId: listOrg

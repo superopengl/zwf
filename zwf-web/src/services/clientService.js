@@ -46,6 +46,10 @@ export function saveOrgClientDatabag$(orgClientId, fields) {
   return httpPost$(`/org/client/${orgClientId}/databag`, { fields });
 }
 
+export function updateOrgClient$(orgClientId, payload) {
+  return httpPost$(`/org/client/${orgClientId}`, payload);
+}
+
 const clientNameCardInfoCache = new Map();
 const API_PATH = `/org/client/brief`;
 

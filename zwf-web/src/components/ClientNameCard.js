@@ -53,11 +53,13 @@ export const ClientNameCard = React.memo((props) => {
     </Space>
   }
 
+  const fontSize = size * 14/ 36;
+
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
-    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={data.email ? null : <Icon component={BsFillPersonVcardFill} />} />
+    <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size} fallbackIcon={data.email ? null : <Icon style={{fontSize: fontSize }} component={BsFillPersonVcardFill} />} />
     {allowChangeAlias ?
       <div style={{ position: 'relative', left: -4, width: '100%' }}>
-        <ClickToEditInput value={data.clientAlias} onChange={handleAliasChange} allowClear={false} />
+        <ClickToEditInput value={data.clientAlias} onChange={handleAliasChange} allowClear={false} size={fontSize} />
       </div>
       : data.clientAlias}
   </Space>
