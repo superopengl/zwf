@@ -74,7 +74,9 @@ export const getOrgClient = handlerWrapper(async (req, res) => {
       user: {
         profile: true,
       },
-      tasks: true,
+      tasks: {
+        tags: true,
+      },
       tags: true,
       fields: true,
     }

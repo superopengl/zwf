@@ -109,9 +109,9 @@ export const TaskListPanel = (props) => {
     {
       title: 'Assignee',
       dataIndex: 'assigneeId',
-      // filteredValue: filteredInfo.agentId || null,
+      // filteredValue: filteredInfo.assigneeId || null,
       // filters: agentList.map(a => ({ text: `${a.givenName} ${a.surname}`, value: a.id })),
-      // onFilter: (value, record) => record.agentId === value,
+      // onFilter: (value, record) => record.assigneeId === value,
       sorter: () => 0,
       // render: (text, record) => <Select
       //   size="small"
@@ -124,7 +124,7 @@ export const TaskListPanel = (props) => {
       //   {agentList.map((a, i) => <Select.Option key={i} value={a.id}>{myUserId === a.id ? 'Me' : `${a.givenName || 'Unset'} ${a.surname || 'Unset'}`}</Select.Option>)}
       // </Select>,
       render: (value, record) => <MemberSelect
-        onChange={agentId => assignTaskToAgent(record, agentId)}
+        onChange={assigneeId => assignTaskToAgent(record, assigneeId)}
         value={value}
         bordered={false}
       />
@@ -170,8 +170,8 @@ export const TaskListPanel = (props) => {
 
   ];
 
-  const assignTaskToAgent = (task, agentId) => {
-    assignTask$(task.id, agentId).subscribe(() => {
+  const assignTaskToAgent = (task, assigneeId) => {
+    assignTask$(task.id, assigneeId).subscribe(() => {
       onChange();
     });
   }

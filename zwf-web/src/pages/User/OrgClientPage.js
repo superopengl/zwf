@@ -32,8 +32,8 @@ import { MdDashboardCustomize } from 'react-icons/md';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
 import { Tooltip } from 'antd';
 import { ClientInfoPanel } from 'pages/OrgBoard/ClientInfoPanel';
-import { useInviteClientModal } from 'hooks/useInviteClientModal';
 import { InviteClientInput } from 'components/InviteClientInput';
+import { TaskBoardPanel } from 'pages/OrgBoard/TaskBoardPanel';
 
 const { Link: TextLink, Text, Paragraph } = Typography;
 
@@ -87,7 +87,6 @@ const OrgClientPage = React.memo(() => {
   const [client, setClient] = React.useState();
   const navigate = useNavigate();
   const [openTaskCreator, taskCreatorContextHolder] = useCreateTaskModal();
-  const [openInvite, inviteContextHolder] = useInviteClientModal();
 
   React.useEffect(() => {
     const sub$ = load$();
@@ -122,10 +121,6 @@ const OrgClientPage = React.memo(() => {
   const createTaskForClient = () => {
     openTaskCreator({ client });
   }
-
-  const handleInvite = () => {
-    openInvite({orgClientId: client.id})
-  };
 
   const handlePostInvite = () => {
     refreshClientNameCardCache(client.id);
@@ -166,9 +161,6 @@ const OrgClientPage = React.memo(() => {
           //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
           // >
           // <Button icon={<Icon component={MdDashboardCustomize} />} onClick={createTaskForClient} type="primary" ghost >New Task</Button>,
-          client.userId ? null : <Tooltip title="This client has not been invited to ZeeWorkflow. Click to invite">
-            <Button icon={<Icon component={BsFillSendFill} />} onClick={createTaskForClient} type="primary" ghost>Invite to ZeeWorkflow</Button>
-          </Tooltip>,
           // </ZeventNoticeableBadge>,
           // <TaskStatusButton key="status" value={client.status} onChange={handleStatusChange} />
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
@@ -177,8 +169,8 @@ const OrgClientPage = React.memo(() => {
 
         <Row gutter={[20, 20]} style={{ marginBottom: 20 }}>
           <Col span={12}>
-            <div style={{marginBottom: 20}}>
-            <ClientNameCard id={id} allowChangeAlias={true} size={60} />
+            <div style={{ marginBottom: 20 }}>
+              <ClientNameCard id={id} allowChangeAlias={true} size={60} />
 
             </div>
             {client.userId ?
@@ -187,8 +179,9 @@ const OrgClientPage = React.memo(() => {
                 type="warning"
                 style={{ marginTop: 20 }}
               >
-                This client has no ZeeWorkflow account. <TextLink underline type="link" onClick={handleInvite}>Click to invite</TextLink>. After invitation, you can communicate with this client via ZeeWorkflow.</Paragraph>
-                <InviteClientInput orgClientId={client.id} onFinish={handlePostInvite}/>
+                The client doesn't have a ZeeWorkflow account yet. Once they're invited, you can communicate with them through ZeeWorkflow.
+                </Paragraph>
+                <InviteClientInput orgClientId={client.id} onFinish={handlePostInvite} />
               </>}
           </Col>
 
@@ -219,7 +212,6 @@ const OrgClientPage = React.memo(() => {
 
             </Row>
           </Col>
-          {inviteContextHolder}
         </Row>
 
         <ProCard
@@ -236,8 +228,15 @@ const OrgClientPage = React.memo(() => {
 
           </ProCard.TabPane>
           <ProCard.TabPane key="tasks" tab="Tasks"
-            extra={<Button icon={<Icon component={MdDashboardCustomize} />} onClick={createTaskForClient} type="primary" ghost >New Task</Button>}
           >
+            <ProCard ghost
+              extra={<Button icon={<Icon component={MdDashboardCustomize} />} 
+              type="primary"
+              ghost
+              onClick={createTaskForClient}>New Task</Button>}
+            >
+              <TaskBoardPanel tasks={client.tasks ?? []} showClient={false} showTags={false}/>
+            </ProCard>
           </ProCard.TabPane>
         </ProCard>
       </PageHeaderContainer>}

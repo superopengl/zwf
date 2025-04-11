@@ -7,12 +7,13 @@ import { TaskDraggableCard } from '../../components/TaskDraggableCard';
 import PropTypes from 'prop-types';
 import { DndProvider, useDrop } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
+import { TaskBoardContext } from 'contexts/TaskBoardContext';
 
 const { Title } = Typography;
 
 const StyledRow = styled(Row)`
   height: 100%;
-  min-height: calc(100vh - 180px);
+  min-height: 300px;
 `;
 
 const StyledColumn = styled(Space)`
@@ -51,18 +52,20 @@ const COLUMN_DEFS = [
 ]
 
 export const TaskBoardPanel = props => {
-  const { tasks, onChange, searchText } = props;
+  const { tasks, onChange, searchText, showClient, showTags } = props;
 
   return <DndProvider backend={HTML5Backend}>
-    <StyledRow gutter={10}>
-      {COLUMN_DEFS.map((s, i) => <TaskBoardColumn
-        status={s.status}
-        key={i}
-        searchText={searchText}
-        onChange={onChange}
-        tasks={tasks.filter(t => s.status === t.status)}
-      />)}
-    </StyledRow>
+    <TaskBoardContext.Provider value={{showClient, showTags}}>
+      <StyledRow gutter={10}>
+        {COLUMN_DEFS.map((s, i) => <TaskBoardColumn
+          status={s.status}
+          key={i}
+          searchText={searchText}
+          onChange={onChange}
+          tasks={tasks.filter(t => s.status === t.status)}
+        />)}
+      </StyledRow>
+    </TaskBoardContext.Provider>
   </DndProvider>
 }
 
@@ -79,8 +82,8 @@ const TaskBoardColumn = props => {
   }))
 
   const changeTaskStatus = item => {
-    const {id: taskId, status: oldStatus} = item;
-    if(oldStatus !== status) {
+    const { id: taskId, status: oldStatus } = item;
+    if (oldStatus !== status) {
       changeTaskStatus$(taskId, status).subscribe(() => {
         onChange();
       });
@@ -89,7 +92,7 @@ const TaskBoardColumn = props => {
 
   return <Col span={6} ref={drop}>
     <StyledColumn direction="vertical" style={{
-      backgroundColor:isOver ? `${style.hoverColor}11` : style.bgColor,
+      backgroundColor: isOver ? `${style.hoverColor}11` : style.bgColor,
       borderWidth: 2,
       borderStyle: isOver ? 'dashed' : 'solid',
       borderColor: isOver ? style.hoverColor : style.bgColor
@@ -98,7 +101,7 @@ const TaskBoardColumn = props => {
         <Text strong style={{ textAlign: 'center', margin: '0 auto' }}>{style.label}</Text>
         <Text strong>{tasks.length}</Text>
       </Space>
-      {tasks.map(task  => <TaskDraggableCard key={task.id} task={task} searchText={searchText} />)}
+      {tasks.map(task => <TaskDraggableCard key={task.id} task={task} searchText={searchText} />)}
     </StyledColumn>
   </Col>
 }
@@ -107,6 +110,9 @@ TaskBoardPanel.propTypes = {
   tasks: PropTypes.arrayOf(PropTypes.object),
   onChange: PropTypes.func,
   searchText: PropTypes.string,
+  showClient: PropTypes.bool,
 };
 
-TaskBoardPanel.defaultProps = {};
+TaskBoardPanel.defaultProps = {
+  showClient: true,
+};

@@ -89,10 +89,10 @@ const OrgTaskPage = React.memo(() => {
     ).subscribe((taskInfo) => {
       const { email, role, orgId, orgName, ...task } = taskInfo;
       setTask(task);
-      setAssigneeId(task.agentId);
+      setAssigneeId(task.assigneeId);
       // if (taskInfo.fields.length) {
       //   setTask(task);
-      //   setAssigneeId(task.agentId);
+      //   setAssigneeId(task.assigneeId);
       // } else {
       //   navigate(`/task/${id}/edit`)
       // }
@@ -117,9 +117,9 @@ const OrgTaskPage = React.memo(() => {
     updateTaskTags$(task.id, tagIds).subscribe()
   }
 
-  const handleChangeAssignee = agentId => {
-    assignTask$(task.id, agentId).subscribe(() => {
-      setAssigneeId(agentId);
+  const handleChangeAssignee = assigneeId => {
+    assignTask$(task.id, assigneeId).subscribe(() => {
+      setAssigneeId(assigneeId);
     });
   }
 

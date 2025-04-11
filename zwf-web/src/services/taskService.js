@@ -101,8 +101,8 @@ export function renameTask$(id, name) {
   return httpPost$(`/task/${id}/rename`, { name });
 }
 
-export function assignTask$(taskId, agentId) {
-  return httpPost$(`/task/${taskId}/assign`, { agentId });
+export function assignTask$(taskId, assigneeId) {
+  return httpPost$(`/task/${taskId}/assign`, { assigneeId });
 }
 
 export function getTaskLog$(taskId) {

@@ -46,7 +46,7 @@ export class Task {
   status: TaskStatus;
 
   @Column('uuid', { nullable: true })
-  agentId: string;
+  assigneeId: string;
 
   @Column('uuid')
   orgClientId: string;
