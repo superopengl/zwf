@@ -1,7 +1,8 @@
-import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column, DeleteDateColumn, Index, Unique, OneToMany, JoinTable, ManyToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, CreateDateColumn, PrimaryColumn, PrimaryGeneratedColumn, Column, DeleteDateColumn, Index, Unique, OneToMany, JoinTable, ManyToMany, OneToOne, JoinColumn, ManyToOne } from 'typeorm';
 import { Task } from './Task';
 import { Tag } from './Tag';
 import { OrgClientField } from './OrgClientField';
+import { User } from './User';
 
 
 @Entity()
@@ -17,6 +18,9 @@ export class OrgClient {
   @Column('uuid', { nullable: true })
   @Index()
   userId: string;
+
+  @ManyToOne(() => User, user => user.orgClients, { onDelete: 'SET NULL', eager: false })
+  user: User;
 
   @Column()
   clientAlias: string;

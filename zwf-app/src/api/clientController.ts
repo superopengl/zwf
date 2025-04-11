@@ -14,6 +14,23 @@ import { OrgClientField } from '../entity/OrgClientField';
 import { searchOrgClients } from '../utils/searchOrgClients';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
 
+export const getOrgClient = handlerWrapper(async (req, res) => {
+  assertRole(req, [Role.Admin, Role.Agent]);
+  const { id } = req.params;
+  const orgId = getOrgIdFromReq(req);
+
+  const client = await db.manager.findOneOrFail(OrgClient, {
+    where: { id, orgId },
+    relations: {
+      user: true,
+      tasks: true,
+      tags: true,
+      fields: true,
+    }
+  });
+
+  res.json(client);
+});
 
 export const setOrgClientAlias = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Admin, Role.Agent]);

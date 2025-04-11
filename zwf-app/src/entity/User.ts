@@ -1,10 +1,11 @@
 import { UserLoginType } from './../types/UserLoginType';
 import { Tag } from './Tag';
-import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, JoinColumn, DeleteDateColumn, JoinTable, ManyToMany, OneToOne, Unique, OneToMany } from 'typeorm';
 import { Role } from '../types/Role';
 import { UserStatus } from '../types/UserStatus';
 import { Org } from './Org';
 import { UserProfile } from './UserProfile';
+import { OrgClient } from './OrgClient';
 
 @Entity()
 export class User {
@@ -64,4 +65,7 @@ export class User {
 
   @Column({ default: false })
   suspended: boolean;
+
+  @OneToMany(() => OrgClient, orgClient => orgClient.user, { onDelete: 'SET NULL', eager: false, orphanedRowAction: 'delete' })
+  orgClients: OrgClient[];
 }
