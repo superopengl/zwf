@@ -12,8 +12,9 @@ import { TimeAgo } from './TimeAgo';
 import { ProCard } from '@ant-design/pro-components';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { ClientNameCard } from './ClientNameCard';
+import dayjs from 'dayjs';
 
-const {Text, Link: TextLink } = Typography;
+const { Text, Link: TextLink } = Typography;
 
 const StyledCard = styled(ProCard)`
 position: relative;
@@ -75,11 +76,34 @@ export const TaskCard = (props) => {
         </Col>
       </Row>
       <Row gutter={[10, 10]} justify="space-between">
-        <Col>
+        <Col span={12}>
           <ClientNameCard id={task.orgClientId} />
         </Col>
-        <Col>
-          <TimeAgo key="updatedAt" value={task.updatedAt} />
+        <Col span={12}>
+          <Row gutter={[10, 10]}>
+            <Col span={8}>
+              <small>Updated</small>
+            </Col>
+            <Col span={16}>
+              <TimeAgo value={task.updatedAt} />
+            </Col>
+            {task.dueAt && <>
+              <Col span={8}>
+                <small>Due by</small>
+              </Col>
+              <Col span={16}>
+                <TimeAgo value={task.dueAt} />
+              </Col>
+            </>}
+            {(task.estNumber && task.estUnit) && <>
+              <Col span={8}>
+                <small>Estimated time</small>
+              </Col>
+              <Col span={16}>
+                {task.estNumber} {task.estUnit}
+              </Col>
+            </>}
+          </Row>
         </Col>
       </Row>
     </ProCard>

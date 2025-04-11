@@ -105,14 +105,12 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
     f.ordinal = index + 1;
   });
 
-  const originalFieldIds = task.fields.map(x => x.id);
-  const currentFieldIds = fields.map(x => x.id);
-  const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
+  // const originalFieldIds = task.fields.map(x => x.id);
+  // const currentFieldIds = fields.map(x => x.id);
+  // const deletedFieldIds = _.difference(originalFieldIds, currentFieldIds);
 
   await db.transaction(async m => {
-    if (deletedFieldIds?.length) {
-      await m.getRepository(TaskField).delete(deletedFieldIds);
-    }
+    await m.getRepository(TaskField).delete({ taskId: id });
     await m.getRepository(TaskField).save(fields);
 
     const taskActivity = new TaskActivity();
@@ -530,6 +528,25 @@ export const assignTask = handlerWrapper(async (req, res) => {
     const task = await m.findOneByOrFail(Task, { id, orgId });
     await m.update(Task, { id, orgId }, { agentId });
   });
+
+  res.json();
+});
+
+export const updateTask = handlerWrapper(async (req, res) => {
+  assertRole(req, ['admin', 'agent']);
+  const { id, status } = req.params;
+  const orgId = getOrgIdFromReq(req);
+  const payload = req.body || {};
+
+  let task: Task;
+  await db.transaction(async m => {
+    task = await m.findOneOrFail(Task, { where: { id, orgId } });
+    Object.assign(task, payload);
+
+    await m.save(task);
+  });
+
+  publishTaskChangeZevent(task, getUserIdFromReq(req));
 
   res.json();
 });
