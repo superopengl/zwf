@@ -15,6 +15,7 @@ import { MdOpenInNew } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 import { getUserDisplayName } from 'util/getUserDisplayName';
 import { OrgClientSelect } from 'components/OrgClientSelect';
+import dayjs from 'dayjs';
 import {
   ProCard,
   ProForm,
@@ -38,8 +39,9 @@ export const TaskGenerator = React.memo(props => {
   const { client, postCreateMode } = props;
   const [taskTemplateId, setTaskTemplateId] = React.useState(props.taskTemplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
-  const [startMode, setStartMode] = React.useState('now');
-  const [recurringMode, setRecurringMode] = React.useState('once');
+  const [startMode, setStartMode] = React.useState();
+  const [recurringMode, setRecurringMode] = React.useState();
+  const [startAt, setStartAt] = React.useState();
   const [taskName, setTaskName] = React.useState();
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
@@ -127,6 +129,21 @@ export const TaskGenerator = React.memo(props => {
     });
   }
 
+  const handleStartModeChange = e => {
+    const newMode = e.target.value;
+    setStartMode(newMode);
+    if (newMode === 'now') {
+      setStartAt(null);
+      next();
+    } else {
+    }
+  }
+
+  const handleStartAtChange = value => {
+    setStartAt(value?.toDate())
+    next();
+  }
+
   const steps = [
     {
       title: 'Client',
@@ -145,12 +162,13 @@ export const TaskGenerator = React.memo(props => {
         <StyledDescription value="Choose a task template to begin with." />
         <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
       </>,
+      canNext: () => !!client,
     },
     {
       title: 'Start',
       content: <>
         <StyledDescription value="When to create this task" />
-        <Radio.Group onChange={e => setStartMode(e.target.value)} value={startMode}
+        <Radio.Group onChange={handleStartModeChange} value={startMode}
           // optionType="button"
           buttonStyle="solid"
         >
@@ -159,12 +177,15 @@ export const TaskGenerator = React.memo(props => {
             <Radio value={'later'}>
               <Space>
                 Scheduled in future date
-                <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" disabled={startMode !== 'later'} />
+                <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" disabled={startMode !== 'later'}
+                  onChange={handleStartAtChange}
+                />
               </Space>
             </Radio>
           </Space>
         </Radio.Group>
       </>,
+      canNext: () => !!client && (startMode === 'now' || (startMode === 'later' && dayjs(startAt).isAfter())),
     },
     {
       title: 'Recurring',
@@ -179,7 +200,7 @@ export const TaskGenerator = React.memo(props => {
             <Radio value={'recurring'}>
               <Space>
                 Recurring every
-                <RecurringPeriodInput style={{ width: 180 }} disabled={recurringMode!=='recurring'}/>
+                <RecurringPeriodInput style={{ width: 180 }} disabled={recurringMode !== 'recurring'} />
               </Space>
             </Radio>
           </Space>
@@ -211,9 +232,10 @@ export const TaskGenerator = React.memo(props => {
 
   const currentStepDef = steps[current];
   const canNext = currentStepDef.canNext?.();
+  console.log(current, canNext);
   return (
     <Loading loading={loading}>
-
+      {canNext.toString()}
       {/* <Steps current={current} items={items} size="small" progressDot /> */}
       <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" />
       <Space direction="vertical" style={{ width: '100%' }}>{currentStepDef.content}</Space>

@@ -25,7 +25,7 @@ width: 100%;
 `;
 
 export const ClickToEditInput = React.memo((props) => {
-  const { value: propValue, size, onChange, allowEmpty, ...others } = props;
+  const { value: propValue, size, onChange, allowEmpty, bordered, ...others } = props;
 
   const [value, setValue] = React.useState(propValue);
   const [focused, setFocused] = React.useState(false);
@@ -63,7 +63,7 @@ export const ClickToEditInput = React.memo((props) => {
       value={value}
       onChange={e => setValue(e.target.value)}
       onClick={() => setFocused(true)}
-      bordered={focused}
+      bordered={bordered || focused}
       onBlur={handleSave}
       onPressEnter={handlePressEnter}
       style={{ fontSize: size, width: '100%'  }}
@@ -77,6 +77,7 @@ ClickToEditInput.propTypes = {
   size: PropTypes.number,
   required: PropTypes.bool.isRequired,
   allowEmpty: PropTypes.bool,
+  bordered: PropTypes.bool,
 };
 
 ClickToEditInput.defaultProps = {
@@ -84,4 +85,5 @@ ClickToEditInput.defaultProps = {
   size: 14,
   required: true,
   allowEmpty: false,
+  bordered: false,
 };
