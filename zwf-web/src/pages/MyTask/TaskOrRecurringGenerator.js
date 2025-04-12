@@ -47,7 +47,7 @@ h5 {
 
 
 export const TaskOrRecurringGenerator = React.memo(props => {
-  const { value, postCreateMode, onCreated, onTaskCreated, onRecurringCreated } = props;
+  const { postCreateMode, onCreated, onTaskCreated, onRecurringCreated, orgClientId, formTemplateId } = props;
   const [mode, setMode] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const navigate = useNavigate();
@@ -62,7 +62,6 @@ export const TaskOrRecurringGenerator = React.memo(props => {
 
   const handlePostCreateAction = (entity) => {
     const isTask = mode === 'task';
-    debugger;
     if (postCreateMode === 'navigate') {
       if (isTask) {
         navigate(`/task/${entity.id}`)
@@ -82,10 +81,8 @@ export const TaskOrRecurringGenerator = React.memo(props => {
   }
 
   const handleSubmit = (values) => {
-    const { orgClientId: orgClient, formTemplateId: formTemplate, name, firstRunOn, repeating } = values;
+    const { orgClientId, formTemplateId, name, firstRunOn, repeating } = values;
 
-    const orgClientId = orgClient?.id;
-    const formTemplateId = formTemplate?.id;
     let source$;
     let entity;
     if (mode === 'task') {
@@ -130,69 +127,73 @@ export const TaskOrRecurringGenerator = React.memo(props => {
   return (
     <Loading loading={loading}>
       <Container>
-      {!mode && <Space direction='vertical' style={{ width: '100%', margin: '20px auto' }} size="large">
-        {/* <Paragraph>Choose task type. </Paragraph> */}
-        <Card
-          hoverable
-          onClick={() => setMode('task')}
-        >
-          <Title level={5}><Icon component={MdDashboard} /> Task</Title>
-          <Paragraph type="secondary">The task will be created right away and you can see it from task board and task list immediately.</Paragraph>
-        </Card>
-        <Card
-          hoverable
-          onClick={() => setMode('recurring')}
-        >
-          <Title level={5}><ClockCircleOutlined /> Recurring</Title>
-          <Paragraph type="secondary">The task will be created upon the specified recurring pattern.</Paragraph>
-        </Card>
-      </Space>
-      }
-      {mode && <><Form
-        layout='vertical'
-        ref={formRef}
-        initialValues={value}
-        onFinish={handleSubmit}
-      >
-        <Form.Item name="name" label="Name"
-          rules={[{ required: true }]}
-        >
-          <Input placeholder='Name' autoFocus allowClear />
-        </Form.Item>
-        <Form.Item name="orgClientId" label="Client"
-          rules={[{ required: true }]}
-          valuePropName="id"
-        >
-          <OrgClientSelect style={{ width: '100%' }}
-            onLoadingChange={setLoading}
-          />
-        </Form.Item>
-        <Form.Item name="formTemplateId" label="Task template"
-          rules={[{ required: mode === 'recurring' }]}
-          valuePropName="id"
-        >
-          <TaskTemplateSelect style={{ width: '100%' }}
-            showIcon={true} />
-        </Form.Item>
-        {mode === 'recurring' && <>
-          <Form.Item name="firstRunOn"
-            label="Start On (First Run)"
-            rules={[{ required: true }]}
-            extra="If you select either 29, 30, or 31, the system will determine the nearest date in the upcoming month or year. For instance, if the starting date is January 31 and the recurrence is monthly, the subsequent occurrence will be on February 28."
+        {!mode && <Space direction='vertical' style={{ width: '100%', margin: '20px auto' }} size="large">
+          {/* <Paragraph>Choose task type. </Paragraph> */}
+          <Card
+            hoverable
+            onClick={() => setMode('task')}
           >
-            <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" />
-          </Form.Item>
-          <Form.Item name="repeating" label="Recurring"
+            <Title level={5}><Icon component={MdDashboard} /> Task</Title>
+            <Paragraph type="secondary">The task will be created right away and you can see it from task board and task list immediately.</Paragraph>
+          </Card>
+          <Card
+            hoverable
+            onClick={() => setMode('recurring')}
+          >
+            <Title level={5}><ClockCircleOutlined /> Recurring</Title>
+            <Paragraph type="secondary">The task will be created upon the specified recurring pattern.</Paragraph>
+          </Card>
+        </Space>
+        }
+        {mode && <><Form
+          layout='vertical'
+          ref={formRef}
+          initialValues={{
+            orgClientId,
+            formTemplateId,
+          }}
+          onFieldsChange={(_, values) => console.log(values)}
+          onFinish={handleSubmit}
+        >
+          <Form.Item name="name" label="Name"
             rules={[{ required: true }]}
           >
-            <RecurringPeriodInput style={{ width: 180 }} />
+            <Input placeholder='Name' autoFocus allowClear />
           </Form.Item>
+          <Form.Item name="orgClientId" label="Client"
+            rules={[{ required: true }]}
+          >
+            <OrgClientSelect style={{ width: '100%' }}
+              disabled={orgClientId}
+              onLoadingChange={setLoading}
+            />
+          </Form.Item>
+          <Form.Item name="formTemplateId" label="Task template"
+            rules={[{ required: mode === 'recurring' }]}
+          >
+            <TaskTemplateSelect style={{ width: '100%' }}
+              disabled={formTemplateId}
+              showIcon={true} />
+          </Form.Item>
+          {mode === 'recurring' && <>
+            <Form.Item name="firstRunOn"
+              label="Start On (First Run)"
+              rules={[{ required: true }]}
+              extra="If you select either 29, 30, or 31, the system will determine the nearest date in the upcoming month or year. For instance, if the starting date is January 31 and the recurrence is monthly, the subsequent occurrence will be on February 28."
+            >
+              <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" />
+            </Form.Item>
+            <Form.Item name="repeating" label="Recurring"
+              rules={[{ required: true }]}
+            >
+              <RecurringPeriodInput style={{ width: 180 }} />
+            </Form.Item>
+          </>}
+        </Form>
+          <Row justify="end">
+            <Button type="primary" onClick={handleCreate}>Create</Button>
+          </Row>
         </>}
-      </Form>
-        <Row justify="end">
-          <Button type="primary" onClick={handleCreate}>Create</Button>
-        </Row>
-      </>}
       </Container>
     </Loading>
   );
@@ -200,8 +201,8 @@ export const TaskOrRecurringGenerator = React.memo(props => {
 
 
 TaskOrRecurringGenerator.propTypes = {
-  value: PropTypes.object,
   onCancel: PropTypes.func,
+  orgClientId: PropTypes.string,
   postCreateMode: PropTypes.oneOf(['notify', 'navigate']).isRequired,
   onCreated: PropTypes.func,
   onTaskCreated: PropTypes.func,

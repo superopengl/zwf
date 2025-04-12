@@ -30,7 +30,6 @@ export const useRecurringEditModal = () => {
     const isNew = !id;
 
     const handleSaveRecurring = (values) => {
-      debugger;
       const { client, ...others } = values;
       const recurring = {
         id,
@@ -43,7 +42,6 @@ export const useRecurringEditModal = () => {
     }
 
     const handleOk = () => {
-      debugger;
       formRef.current.submit();
       return true;
     }
