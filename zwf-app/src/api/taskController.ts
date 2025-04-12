@@ -34,11 +34,11 @@ import { existsQuery } from '../utils/existsQuery';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { id, formTemplateId, orgClientId, taskName, startAt, every, period } = req.body;
+  const { id, formTemplateId, orgClientId, name, startAt, every, period } = req.body;
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateForClient(db.manager, formTemplateId, taskName, orgClientId, creatorId, id, orgId);
+  const task = await createTaskByTaskTemplateForClient(db.manager, formTemplateId, name, orgClientId, creatorId, id, orgId);
 
   res.json(task);
 });

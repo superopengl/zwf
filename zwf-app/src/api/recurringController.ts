@@ -16,19 +16,19 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { id, clientId, name, taskTemplateId, firstRunOn, every, period } = req.body;
+  const { id, orgClientId, name, formTemplateId, firstRunOn, every, period } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: { id: taskTemplateId } });
+  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: { id: formTemplateId } });
   assert(taskTemplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
   recurring.id = id || uuidv4();
   recurring.name = name;
   recurring.orgId = orgId;
-  recurring.taskTemplateId = taskTemplateId;
-  recurring.orgClientId = clientId;
-  recurring.firstRunOn = firstRunOn ? moment.tz(`${firstRunOn} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
+  recurring.taskTemplateId = formTemplateId;
+  recurring.orgClientId = orgClientId;
+  recurring.firstRunOn = firstRunOn ? moment.tz(`${moment(firstRunOn).format('YYYY-MM-DD')} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;
   recurring.period = period;
   recurring.nextRunAt = calculateRecurringNextRunAt(recurring);

@@ -3,6 +3,7 @@ import { Modal } from 'antd';
 import { TaskIcon } from 'components/entityIcon';
 import { TaskGenerator } from 'pages/MyTask/TaskGenerator';
 import { BsFillNutFill } from 'react-icons/bs';
+import { TaskOrRecurringGenerator } from 'pages/MyTask/TaskOrRecurringGenerator';
 
 export const useCreateTaskModal = () => {
   const [modal, contextHolder] = Modal.useModal();
@@ -22,9 +23,24 @@ export const useCreateTaskModal = () => {
           display: 'none',
         }
       },
-      content: <TaskGenerator
-        taskTemplateId={taskTemplateId}
-        client={client}
+      // content: <TaskGenerator
+      //   taskTemplateId={taskTemplateId}
+      //   client={client}
+      //   onCancel={() => {
+      //     onCancel?.();
+      //     instance.destroy();
+      //   }}
+      //   onCreated={(task) => {
+      //     onOk?.(task);
+      //     instance.destroy();
+      //   }}
+      //   postCreateMode={postCreateMode || 'notify'}
+      // />
+      content: <TaskOrRecurringGenerator
+        value={{
+          orgClientId: client?.id,
+          formTemplateId: taskTemplateId,
+        }}
         onCancel={() => {
           onCancel?.();
           instance.destroy();

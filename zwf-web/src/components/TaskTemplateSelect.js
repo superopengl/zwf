@@ -45,16 +45,22 @@ const TaskTemplateSelect = (props) => {
     return taskTemplateList.map(x => ({
       label: <>{showIcon && <TaskTemplateIcon />}{x.name}</>,
       value: x.id,
-      key: x.id
+      key: x.id,
+      data: x,
     }))
+  }
+
+  const handleChange = (id) => {
+    const selected = options.find(x => x.value === id).data;
+    onChange(selected);
   }
 
   return (<StyledSelect
     options={options}
-    placeholder={<>{showIcon && <TaskTemplateIcon />}Select form template</>}
+    placeholder={<>{showIcon && <TaskTemplateIcon />}Select template</>}
     allowClear
     value={value}
-    onChange={onChange}
+    onChange={handleChange}
     {...other} />
   )
 };

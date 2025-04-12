@@ -8,6 +8,7 @@ import TaskTemplateSelect from 'components/TaskTemplateSelect';
 import { Input } from 'antd';
 import dayjs from 'dayjs';
 import { OrgClientSelect } from 'components/OrgClientSelect';
+import { RecurringPeriodInput } from 'components/RecurringPeriodInput';
 
 const { Paragraph } = Typography;
 
@@ -58,24 +59,21 @@ export const RecurringForm = React.forwardRef((props, ref) => {
     >
       <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" />
     </Form.Item>
-    <Form.Item label="Repeat Every" >
-      <Form.Item name="every" rules={[{ required: true, message: ' ' }]} style={{ display: 'inline-block', marginRight: 12 }}
-      // help={`Preview: ${cornPreview}`}
-      >
-        {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
-        <InputNumber min={1} max={52} />
-      </Form.Item>
-      <Form.Item name="period" rules={[{ required: true, message: ' ' }]} style={{ display: 'inline-block', width: 100 }}
-      // help={`Preview: ${cornPreview}`}
-      >
-        {/* <Input autoSize={{ minRows: 3, maxRows: 20 }} maxLength={20} placeholder="Type here ..." allowClear disabled={loading} /> */}
-        <Select>
-          <Select.Option value="year">Year</Select.Option>
-          <Select.Option value="month">Month</Select.Option>
-          <Select.Option value="week">Week</Select.Option>
-          <Select.Option value="day">Day</Select.Option>
-        </Select>
-      </Form.Item>
+    <Form.Item
+      label="Repeating"
+      name="repeating"
+      rules={[{
+        required: true,
+        type: 'array',
+        message: ' ',
+        validator: async (rule, value) => {
+          if (!(value[0] && value[1])) {
+            throw new Error('Invalid repeating');
+          }
+        }
+      }]}
+    >
+      <RecurringPeriodInput />
     </Form.Item>
   </Form>
 });
