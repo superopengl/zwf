@@ -22,7 +22,7 @@ export const saveTag = handlerWrapper(async (req, res) => {
     .insert()
     .into(Tag)
     .values(tag)
-    .orIgnore()
+    .orUpdate(['name', 'colorHex'], ['id'])
     .execute()
     
   res.json();
