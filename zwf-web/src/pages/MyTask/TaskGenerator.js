@@ -30,6 +30,8 @@ import {
 import { RecurringForm } from 'pages/Recurring/RecurringForm';
 import { DatePicker } from 'antd';
 import { RecurringPeriodInput } from 'components/RecurringPeriodInput';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { RiNumbersFill } from 'react-icons/ri';
 
 const { Text, Link: TextLink, Paragraph } = Typography;
 
@@ -46,6 +48,7 @@ export const TaskGenerator = React.memo(props => {
   const [taskTemplate, setTaskTemplate] = React.useState();
   const [loading, setLoading] = React.useState(false);
   const [current, setCurrent] = React.useState(0);
+  const [newTaskInfo, setNewTaskInfo] = React.useState({});
   const navigate = useNavigate();
   const formRef = React.useRef();
 
@@ -71,20 +74,18 @@ export const TaskGenerator = React.memo(props => {
     }
   }, [clientInfo, taskTemplate])
 
-  const handleTaskTemplateChange = taskTemplateIdValue => {
-    setTaskTemplateId(taskTemplateIdValue);
+  const handleTaskTemplateChange = formTemplateid => {
+    setNewTaskInfo({ ...newTaskInfo, formTemplateid })
     next();
   }
 
   const handleClientChange = (client) => {
-    setClientInfo(client);
+    setNewTaskInfo({ ...newTaskInfo, orgClientId: client.id })
     next();
   }
 
   const handleNameEnter = (e) => {
-    const name = e.target.value?.trim();
-    setTaskName(name);
-    next();
+    handleCreateAndEdit();
   }
 
   const disabledPastDate = (current) => {
@@ -92,27 +93,17 @@ export const TaskGenerator = React.memo(props => {
     return current && current.endOf('day').isBefore();
   };
 
-  const createTaskWithVarBag$ = () => {
-    const id = uuidv4();
-    const payload = {
-      id,
-      clientId: clientInfo.id,
-      taskTemplateId,
-      taskName,
-    };
-
+  const sourceCreateTask$ = () => {
     setLoading(true);
-    return createNewTask$(payload).pipe(
+    return createNewTask$(newTaskInfo).pipe(
       finalize(() => setLoading(false)),
     )
   }
 
-  const handleRecurringChange = (recurring) => {
-
-  }
-
   const handleCreateAndEdit = () => {
-    createTaskWithVarBag$().subscribe(task => {
+    const isValid = newTaskInfo.orgClientId && newTaskInfo.taskName;
+    if (!isValid) return;
+    sourceCreateTask$().subscribe(task => {
       props.onCreated(task)
       if (postCreateMode === 'notify') {
         const notice = notify.success(
@@ -133,41 +124,54 @@ export const TaskGenerator = React.memo(props => {
     const newMode = e.target.value;
     setStartMode(newMode);
     if (newMode === 'now') {
-      setStartAt(null);
+      setNewTaskInfo({ ...newTaskInfo, startAt: null })
       next();
     } else {
     }
   }
 
   const handleStartAtChange = value => {
-    setStartAt(value?.toDate())
-    next();
+    setNewTaskInfo({ ...newTaskInfo, startAt: value?.toDate() })
   }
+
+  const handleRecurringModeChange = e => {
+    const recurringMode = e.target.value;
+    setRecurringMode(recurringMode);
+    if (recurringMode === 'once') {
+      setNewTaskInfo({ ...newTaskInfo, every: null, period: null })
+      next();
+    }
+  }
+
+  const handleRecurringPeriodChange = values => {
+    const every = values?.[0];
+    const period = values?.[1];
+    setNewTaskInfo({ ...newTaskInfo, every, period })
+  }
+
+  const handleTaskNameChange = e => {
+    const taskName = e.target.value?.trim();
+    setNewTaskInfo({ ...newTaskInfo, taskName })
+  }
+
+  const isRecurring = newTaskInfo.startAt || newTaskInfo.every || newTaskInfo.period;
 
   const steps = [
     {
       title: 'Client',
+      description: 'Choose a client.',
       content: <>
-        <StyledDescription value="Choose existing client or type in a new client's email address." />
         <OrgClientSelect style={{ width: '100%' }}
           onChange={handleClientChange}
           onLoadingChange={setLoading}
-          value={clientInfo?.id} />
+          value={newTaskInfo.orgClientId} />
       </>,
-      canNext: () => !!client,
-    },
-    {
-      title: 'From template',
-      content: <>
-        <StyledDescription value="Choose a task template to begin with." />
-        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange} showIcon={true} value={taskTemplateId} />
-      </>,
-      canNext: () => !!client,
+      canNext: () => newTaskInfo.orgClientId,
     },
     {
       title: 'Start',
+      description: 'Shall the task be created right now or in a later time as an recurring.',
       content: <>
-        <StyledDescription value="When to create this task" />
         <Radio.Group onChange={handleStartModeChange} value={startMode}
           // optionType="button"
           buttonStyle="solid"
@@ -176,8 +180,9 @@ export const TaskGenerator = React.memo(props => {
             <Radio value={'now'}>Create now</Radio>
             <Radio value={'later'}>
               <Space>
-                Scheduled in future date
+                Scheduled in future time
                 <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" disabled={startMode !== 'later'}
+                  value={newTaskInfo.startAt ? dayjs(newTaskInfo.startAt) : null}
                   onChange={handleStartAtChange}
                 />
               </Space>
@@ -185,13 +190,15 @@ export const TaskGenerator = React.memo(props => {
           </Space>
         </Radio.Group>
       </>,
-      canNext: () => !!client && (startMode === 'now' || (startMode === 'later' && dayjs(startAt).isAfter())),
+      canNext: () => {
+        return newTaskInfo.orgClientId && (startMode === 'now' || (startMode === 'later' && dayjs(newTaskInfo.startAt).isAfter()))
+      },
     },
     {
       title: 'Recurring',
+      description: 'How often the task will be recuringly created.',
       content: <>
-        <StyledDescription value="Choose a task template to begin with." />
-        <Radio.Group onChange={e => setRecurringMode(e.target.value)} value={recurringMode}
+        <Radio.Group onChange={handleRecurringModeChange} value={recurringMode}
           // optionType="button"
           buttonStyle="solid"
         >
@@ -200,60 +207,77 @@ export const TaskGenerator = React.memo(props => {
             <Radio value={'recurring'}>
               <Space>
                 Recurring every
-                <RecurringPeriodInput style={{ width: 180 }} disabled={recurringMode !== 'recurring'} />
+                <RecurringPeriodInput style={{ width: 180 }}
+                  disabled={recurringMode !== 'recurring'}
+                  value={[newTaskInfo.every, newTaskInfo.period]}
+                  onChange={handleRecurringPeriodChange} />
               </Space>
             </Radio>
           </Space>
         </Radio.Group>
       </>,
+      canNext: () => {
+        return newTaskInfo.orgClientId && (recurringMode === 'once' || (recurringMode === 'recurring' && newTaskInfo.period && newTaskInfo.every))
+      },
+    },
+    {
+      title: 'From template',
+      description: isRecurring ? 'Choose a task template for the recurring' : 'Optionally choose a task template to begin with',
+      content: <>
+        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange}
+          showIcon={true} value={newTaskInfo.formTemplateid} />
+      </>,
+      canNext: () => newTaskInfo.orgClientId && (!isRecurring || newTaskInfo.formTemplateid)
     },
     {
       title: 'Task name',
+      description: isRecurring ? 'Name of new recurring' : 'Name of new task',
       content: <>
-        <StyledDescription value="Task name" />
-        <Input style={{ height: 50 }}
+        <Input 
           placeholder={taskName}
           onPressEnter={handleNameEnter}
           autoFocus
           allowClear
           // value={taskName}
-          onChange={e => setTaskName(e.target.value)} />
+          onChange={handleTaskNameChange} />
       </>,
     },
   ];
 
   const next = () => {
-    setCurrent(current + 1);
+    setCurrent(pre => pre + 1);
   };
 
   const prev = () => {
-    setCurrent(current - 1);
+    setCurrent(pre => pre - 1);
   };
 
   const currentStepDef = steps[current];
   const canNext = currentStepDef.canNext?.();
-  console.log(current, canNext);
+
   return (
     <Loading loading={loading}>
-      {canNext.toString()}
       {/* <Steps current={current} items={items} size="small" progressDot /> */}
-      <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" />
-      <Space direction="vertical" style={{ width: '100%' }}>{currentStepDef.content}</Space>
+        <Progress percent={100 * (current + 1) / steps.length} showInfo={false} size="small" status="active"/>
+      <Space direction="vertical" style={{ width: '100%', margin: '30px 0' }} align='middle' size="default">
+        <Paragraph>{currentStepDef.description}</Paragraph>
+        {currentStepDef.content}
+      </Space>
 
       <Row justify={current ? "space-between" : 'end'} style={{ marginTop: 20 }}>
         {current > 0 && (
-          <Button icon={<LeftOutlined />} type="primary" ghost onClick={() => prev()}>
+          <Button icon={<LeftOutlined />} type="primary" ghost onClick={prev}>
             Previous
           </Button>
         )}
         {current < steps.length - 1 && (
-          <Button type="primary" ghost onClick={() => next()} disabled={!canNext}>
+          <Button type="primary" ghost onClick={next} disabled={!canNext}>
             Next <RightOutlined />
           </Button>
         )}
         {current === steps.length - 1 && (
           <Button type="primary"
-            disabled={!clientInfo}
+            disabled={!(newTaskInfo.orgClientId && newTaskInfo.taskName)}
             onClick={handleCreateAndEdit}
           >Create Task</Button>
         )}

@@ -119,7 +119,12 @@ const OrgClientPage = React.memo(() => {
   }
 
   const createTaskForClient = () => {
-    openTaskCreator({ client });
+    openTaskCreator({
+      client,
+      onOk: () => {
+        load$();
+      }
+    });
   }
 
   const handlePostInvite = () => {
@@ -179,7 +184,7 @@ const OrgClientPage = React.memo(() => {
                 style={{ marginTop: 20 }}
               >
                 The client doesn't have a ZeeWorkflow account yet. Once they're invited, you can communicate with them through ZeeWorkflow.
-                </Paragraph>
+              </Paragraph>
                 <InviteClientInput orgClientId={client.id} onFinish={handlePostInvite} />
               </>}
           </Col>
@@ -229,12 +234,12 @@ const OrgClientPage = React.memo(() => {
           <ProCard.TabPane key="tasks" tab="Tasks"
           >
             <ProCard ghost
-              extra={<Button icon={<Icon component={MdDashboardCustomize} />} 
-              type="primary"
-              ghost
-              onClick={createTaskForClient}>New Task</Button>}
+              extra={<Button icon={<Icon component={MdDashboardCustomize} />}
+                type="primary"
+                ghost
+                onClick={createTaskForClient}>New Task</Button>}
             >
-              <TaskBoardPanel tasks={client.tasks ?? []} showClient={false} showTags={false}/>
+              <TaskBoardPanel tasks={client.tasks ?? []} showClient={false} showTags={false} />
             </ProCard>
           </ProCard.TabPane>
         </ProCard>
