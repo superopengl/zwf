@@ -300,33 +300,35 @@ export const getTask = handlerWrapper(async (req, res) => {
     fields: true,
     tags: true,
     docs: true,
+    orgClient: false,
   };
 
-  switch (role) {
-    case Role.Admin:
-    case Role.Agent:
-      query = { id, orgId: getOrgIdFromReq(req) };
-      relations = {
-        ...relations,
-        tags: true
-      };
-      break;
-    case Role.Client:
-      query = { id, userId: getUserIdFromReq(req) };
-      // relations = ['fields', 'fields.docs', 'fields.docs.file'];
-      relations = {
-        ...relations,
-        tags: false
-      };
-      break;
-    default:
-      assert(false, 404);
-      break;
-  }
-
   let task: Task;
-
   await db.transaction(async m => {
+    switch (role) {
+      case Role.Admin:
+      case Role.Agent:
+        query = { id, orgId: getOrgIdFromReq(req) };
+        relations = {
+          ...relations,
+          tags: true
+        };
+        break;
+      case Role.Client:
+        query = { id };
+        // relations = ['fields', 'fields.docs', 'fields.docs.file'];
+        relations = {
+          ...relations,
+          tags: false,
+          orgClient: true,
+        };
+        break;
+      default:
+        assert(false, 404);
+        break;
+    }
+
+
     task = await m.getRepository(Task).findOne({
       where: query,
       relations,
@@ -340,6 +342,9 @@ export const getTask = handlerWrapper(async (req, res) => {
       }
     });
     assert(task, 404);
+    if (role === Role.Client) {
+      assert(task.orgClient.userId === userId, 404);
+    }
 
     await m.createQueryBuilder()
       .insert()
