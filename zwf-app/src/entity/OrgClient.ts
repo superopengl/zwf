@@ -29,7 +29,7 @@ export class OrgClient {
   remark: string;
 
   @Column('uuid', {nullable: true})
-  formTemplateId: string;
+  femplateId: string;
 
   @CreateDateColumn()
   createdAt: Date;

@@ -16,17 +16,17 @@ import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const saveRecurring = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { id, orgClientId, name, formTemplateId, firstRunOn, every, period } = req.body;
+  const { id, orgClientId, name, femplateId, firstRunOn, every, period } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  const taskTemplate = await db.getRepository(TaskTemplate).findOne({ where: { id: formTemplateId } });
-  assert(taskTemplate, 404, 'TaskTemplate is not found');
+  const femplate = await db.getRepository(TaskTemplate).findOne({ where: { id: femplateId } });
+  assert(femplate, 404, 'TaskTemplate is not found');
 
   const recurring = new Recurring();
   recurring.id = id || uuidv4();
   recurring.name = name;
   recurring.orgId = orgId;
-  recurring.taskTemplateId = formTemplateId;
+  recurring.femplateId = femplateId;
   recurring.orgClientId = orgClientId;
   recurring.firstRunOn = firstRunOn ? moment.tz(`${moment(firstRunOn).format('YYYY-MM-DD')} ${CRON_EXECUTE_TIME}`, 'YYYY-MM-DD HH:mm', CLIENT_TZ).toDate() : null;
   recurring.every = every;

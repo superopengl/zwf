@@ -113,7 +113,7 @@ export const TaskTemplateListPage = () => {
 
   const handleCreateTask = (item) => {
     openCreator({
-      taskTemplateId: item.id
+      femplateId: item.id
     })
   }
 

@@ -27,7 +27,7 @@ const RecurringListPage = () => {
   const [openCreator, creatorContextHolder] = useRecurringEditModal();
   const navigate = useNavigate();
 
-  const isRecurringDeprecated = item => !item.orgClientId || !item.taskTemplateId;
+  const isRecurringDeprecated = item => !item.orgClientId || !item.femplateId;
 
   const columnDef = [
     {
@@ -46,7 +46,7 @@ const RecurringListPage = () => {
     {
       title: 'Form Template',
       dataIndex: 'taskTemplateName',
-      render: (text, record) => record.taskTemplateName ? <Link to={`/femplate/${record.taskTemplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
+      render: (text, record) => record.taskTemplateName ? <Link to={`/femplate/${record.femplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
       ellipsis: false
     },
     {

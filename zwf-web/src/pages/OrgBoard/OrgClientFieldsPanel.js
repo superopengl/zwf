@@ -40,28 +40,28 @@ export const OrgClientFieldsPanel = (props) => {
   const { fields: propFields, onChange } = props;
   const [loading, setLoading] = React.useState(false);
   const [orgClient, setOrgClient] = React.useState();
-  const [formTemplateId, setFormTemplateId] = React.useState(props.formTemplateId);
+  const [femplateId, setFormTemplateId] = React.useState(props.femplateId);
   const [fields, setFields] = React.useState(propFields);
 
   React.useEffect(() => {
-    if (!formTemplateId) {
+    if (!femplateId) {
       return;
     }
     setLoading(true)
-    const sub$ = getTaskTemplate$(formTemplateId)
+    const sub$ = getTaskTemplate$(femplateId)
       .pipe(
         finalize(() => setLoading(false))
       )
-      .subscribe(taskTemplate => {
-        setFields(applyFormTemplateFields(propFields, taskTemplate?.fields));
+      .subscribe(femplate => {
+        setFields(applyFormTemplateFields(propFields, femplate?.fields));
       });
 
     return () => sub$.unsubscribe()
-  }, [formTemplateId])
+  }, [femplateId])
 
-  const handleFormTemplateChange = (formTemplateId) => {
-    setFormTemplateId(formTemplateId);
-    onChange(formTemplateId, fields);
+  const handleFormTemplateChange = (femplateId) => {
+    setFormTemplateId(femplateId);
+    onChange(femplateId, fields);
   }
 
   const handleFieldsChange = (changedFields) => {
@@ -73,7 +73,7 @@ export const OrgClientFieldsPanel = (props) => {
       })
 
       const upadtedFields = [...preFields];
-      onChange(formTemplateId, upadtedFields);
+      onChange(femplateId, upadtedFields);
 
       return upadtedFields;
     });
@@ -85,7 +85,7 @@ export const OrgClientFieldsPanel = (props) => {
       <Paragraph type="secondary">Choose a form template to setup profile</Paragraph>
       <FormTemplateSelect
         style={{ width: '100%' }}
-        value={formTemplateId}
+        value={femplateId}
         onChange={handleFormTemplateChange}
         allowAdd={true}
       />

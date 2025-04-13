@@ -38,18 +38,18 @@ const getPendingVarBag = (html, seedVarBag) => {
 }
 
 export const DocTemplatePreviewPanel = props => {
-  const { value: docTemplate, varBag: propVarBag, allowTest } = props;
+  const { value: demplate, varBag: propVarBag, allowTest } = props;
 
-  const [varBag, setVarBag] = React.useState(getPendingVarBag(docTemplate?.html, propVarBag));
-  const [html, setHtml] = React.useState(docTemplate?.html);
+  const [varBag, setVarBag] = React.useState(getPendingVarBag(demplate?.html, propVarBag));
+  const [html, setHtml] = React.useState(demplate?.html);
   const [renderedHtml, setRenderedHtml] = React.useState();
   const [showTestFields, setShowTestFields] = React.useState(false);
   const form = React.createRef();
 
   React.useEffect(() => {
-    setHtml(docTemplate?.html);
-    setVarBag(getPendingVarBag(docTemplate?.html, propVarBag));
-  }, [docTemplate, propVarBag])
+    setHtml(demplate?.html);
+    setVarBag(getPendingVarBag(demplate?.html, propVarBag));
+  }, [demplate, propVarBag])
 
   React.useEffect(() => {
     const newVarBag = getPendingVarBag(html, varBag);

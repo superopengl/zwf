@@ -34,11 +34,11 @@ import { existsQuery } from '../utils/existsQuery';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
-  const { id, formTemplateId, orgClientId, name, startAt, every, period } = req.body;
+  const { id, femplateId, orgClientId, name, startAt, every, period } = req.body;
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskByTaskTemplateForClient(db.manager, formTemplateId, name, orgClientId, creatorId, id, orgId);
+  const task = await createTaskByTaskTemplateForClient(db.manager, femplateId, name, orgClientId, creatorId, id, orgId);
 
   res.json(task);
 });
@@ -183,7 +183,7 @@ interface ISearchTaskQuery {
   size?: number;
   status?: TaskStatus[];
   assigneeId?: string;
-  taskTemplateId?: string;
+  femplateId?: string;
   tags?: string[];
   clientId?: string;
   dueDateRange?: [string, string];
@@ -204,7 +204,7 @@ export const searchTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const option: ISearchTaskQuery = { ...defaultSearch, ...req.body };
 
-  const { text, status, page, assigneeId, orderDirection, orderField, taskTemplateId, tags, clientId } = option;
+  const { text, status, page, assigneeId, orderDirection, orderField, femplateId, tags, clientId } = option;
   const size = option.size;
   const skip = (page - 1) * size;
   const { role, id } = (req as any).user;
@@ -226,8 +226,8 @@ export const searchTask = handlerWrapper(async (req, res) => {
   if (assigneeId) {
     query = query.andWhere('x."assigneeId" = :assigneeId', { assigneeId });
   }
-  if (taskTemplateId) {
-    query = query.andWhere(`x."taskTemplateId" = :taskTemplateId`, { taskTemplateId });
+  if (femplateId) {
+    query = query.andWhere(`x."femplateId" = :femplateId`, { femplateId });
   }
   if (tags?.length) {
     query = query.andWhere(
@@ -420,7 +420,7 @@ export const addDocTemplateToTask = handlerWrapper(async (req, res) => {
         taskDoc.taskId = taskId;
         taskDoc.uploadedBy = userId;
         taskDoc.type = 'autogen';
-        taskDoc.docTemplateId = t.id;
+        taskDoc.demplateId = t.id;
         taskDoc.name = `${t.name}.pdf`;
         taskDoc.fieldBag = t.refFieldNames.reduce((pre, curr) => {
           pre[curr] = null;

@@ -60,7 +60,7 @@ export const FieldEditFloatPanel = (props) => {
           </Form.Item> */}
             {field.type === 'autodoc' && <Form.Item
               label="Doc Template"
-              name={['value', 'docTemplateId']}
+              name={['value', 'demplateId']}
               rules={[{ required: true, message: ' ' }]}
             >
               <DocTemplateSelect showVariables={true} isMultiple={false} />

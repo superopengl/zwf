@@ -91,7 +91,7 @@ export const TaskSearchPanel = props => {
         {/* <ItemCol title="Task template">
           <TaskTemplateSelect
             style={{ width: '100%' }}
-            value={queryInfo.taskTemplateId} onChange={handleTaskTemplateIdChange} />
+            value={queryInfo.femplateId} onChange={handleTaskTemplateIdChange} />
         </ItemCol> */}
         <ItemCol title="Assignee" span={span}>
           <MemberSelect
@@ -119,7 +119,7 @@ TaskSearchPanel.propTypes = {
     text: PropTypes.string,
     status: PropTypes.arrayOf(PropTypes.string),
     tags: PropTypes.arrayOf(PropTypes.string),
-    taskTemplateId: PropTypes.string,
+    femplateId: PropTypes.string,
     clientId: PropTypes.string,
     assigneeId: PropTypes.string,
   }),

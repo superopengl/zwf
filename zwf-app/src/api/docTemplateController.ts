@@ -31,15 +31,15 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   assert(name, 400, 'name is empty');
   const orgId = getOrgIdFromReq(req);
 
-  const docTemplate = new DocTemplate();
-  docTemplate.id = id || uuidv4();
-  docTemplate.orgId = orgId;
-  docTemplate.name = name;
-  docTemplate.description = description;
-  docTemplate.html = html;
-  docTemplate.refFieldNames = extractVariables(html);
+  const demplate = new DocTemplate();
+  demplate.id = id || uuidv4();
+  demplate.orgId = orgId;
+  demplate.name = name;
+  demplate.description = description;
+  demplate.html = html;
+  demplate.refFieldNames = extractVariables(html);
 
-  await db.getRepository(DocTemplate).save(docTemplate);
+  await db.getRepository(DocTemplate).save(demplate);
 
   res.json();
 });
@@ -72,10 +72,10 @@ export const getDocTemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
-  const docTemplate = await db.getRepository(DocTemplate).findOne({ where: query });
-  assert(docTemplate, 404);
+  const demplate = await db.getRepository(DocTemplate).findOne({ where: query });
+  assert(demplate, 404);
 
-  res.json(docTemplate);
+  res.json(demplate);
 });
 
 export const deleteDocTemplate = handlerWrapper(async (req, res) => {
@@ -118,19 +118,19 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
   const preferredName = name?.trim();
   assert(preferredName, 400, 'No name provided');
   const orgId = getOrgIdFromReq(req);
-  let docTemplate: DocTemplate;
+  let demplate: DocTemplate;
   await db.transaction(async m => {
-    docTemplate = await m.findOne(DocTemplate, { where: { id, orgId } });
-    assert(docTemplate, 404);
+    demplate = await m.findOne(DocTemplate, { where: { id, orgId } });
+    assert(demplate, 404);
 
     const newTaskTemplateId = uuidv4();
-    docTemplate.id = newTaskTemplateId;
-    docTemplate.createdAt = getUtcNow();
-    docTemplate.updatedAt = getUtcNow();
-    docTemplate.name = await getUniqueCopyName(m, orgId, preferredName);
+    demplate.id = newTaskTemplateId;
+    demplate.createdAt = getUtcNow();
+    demplate.updatedAt = getUtcNow();
+    demplate.name = await getUniqueCopyName(m, orgId, preferredName);
 
-    await m.save(docTemplate);
+    await m.save(demplate);
   });
 
-  res.json(docTemplate);
+  res.json(demplate);
 });

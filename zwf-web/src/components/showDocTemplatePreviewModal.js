@@ -10,10 +10,10 @@ import { getDocTemplate$ } from 'services/docTemplateService';
 export function useDocTemplatePreviewModal() {
   const [modal, contextHolder] = Modal.useModal()
 
-  const open = (docTemplateId, name) => {
+  const open = (demplateId, name) => {
 
-    if (!docTemplateId) {
-      throw new Error('docTemplateId is null');
+    if (!demplateId) {
+      throw new Error('demplateId is null');
     }
 
     const modalInstance = modal.info({
@@ -34,12 +34,12 @@ export function useDocTemplatePreviewModal() {
       zIndex: 4000,
     });
 
-    getDocTemplate$(docTemplateId)
-      .subscribe((docTemplate) => {
+    getDocTemplate$(demplateId)
+      .subscribe((demplate) => {
         modalInstance.update({
           content: <DocTemplatePreviewPanel
             style={{ marginTop: 20 }}
-            value={docTemplate}
+            value={demplate}
             debug={false}
             allowTest={false}
             varBag={{}}

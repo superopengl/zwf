@@ -4,8 +4,8 @@ export function getDocTemplate$(id) {
   return httpGet$(`/demplate/${id}`);
 }
 
-export function saveDocTemplate$(docTemplate) {
-  return httpPost$('/demplate', docTemplate);
+export function saveDocTemplate$(demplate) {
+  return httpPost$('/demplate', demplate);
 }
 
 export function cloneDocTemplate$(sourceTemplateId, name) {

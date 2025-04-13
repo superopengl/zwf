@@ -8,7 +8,7 @@ import { TaskOrRecurringGenerator } from 'pages/MyTask/TaskOrRecurringGenerator'
 export const useCreateTaskModal = () => {
   const [modal, contextHolder] = Modal.useModal();
 
-  const open = ({ taskTemplateId, client, onOk, onCancel, postCreateMode } = {}) => {
+  const open = ({ femplateId, client, onOk, onCancel, postCreateMode } = {}) => {
     const instance = modal.info({
       icon: null,
       title: <><TaskIcon /> Create New Task</>,
@@ -24,7 +24,7 @@ export const useCreateTaskModal = () => {
         }
       },
       // content: <TaskGenerator
-      //   taskTemplateId={taskTemplateId}
+      //   femplateId={femplateId}
       //   client={client}
       //   onCancel={() => {
       //     onCancel?.();
@@ -38,7 +38,7 @@ export const useCreateTaskModal = () => {
       // />
       content: <TaskOrRecurringGenerator
         orgClientId={client?.id}
-        formTemplateId={taskTemplateId}
+        femplateId={femplateId}
         onCancel={() => {
           onCancel?.();
           instance.destroy();

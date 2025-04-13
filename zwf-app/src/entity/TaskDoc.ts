@@ -43,7 +43,7 @@ export class TaskDoc {
   uploadedBy: string;// For 'upload' type only
 
   @Column('uuid', { nullable: true })
-  docTemplateId: string;// For 'autogen' type only
+  demplateId: string;// For 'autogen' type only
 
   @Column({ nullable: true, select: false })
   generatedAt: Date; // For 'autogen' type only

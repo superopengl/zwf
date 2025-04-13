@@ -4,8 +4,8 @@ export function getTaskTemplate$(id) {
   return httpGet$(`/femplate/${id}`);
 }
 
-export function saveTaskTemplate$(taskTemplate) {
-  return httpPost$('/femplate', taskTemplate);
+export function saveTaskTemplate$(femplate) {
+  return httpPost$('/femplate', femplate);
 }
 
 export function cloneTaskTemplate$(sourceTemplateId) {

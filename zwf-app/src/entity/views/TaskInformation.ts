@@ -93,7 +93,7 @@ import { OrgClient } from '../OrgClient';
   surname: string;
 
   @ViewColumn()
-  taskTemplateId: string;
+  femplateId: string;
 
   @ViewColumn()
   taskTemplateName: string;

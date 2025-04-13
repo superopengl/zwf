@@ -91,10 +91,10 @@ export const DocTemplateListPage = () => {
     navigate('/demplate/new');
   }
 
-  const handleClone = docTemplate => {
+  const handleClone = demplate => {
     cloneAction({
-      targetId: docTemplate.id,
-      name: `Clone - ${docTemplate.name}`,
+      targetId: demplate.id,
+      name: `Clone - ${demplate.name}`,
       onOk: () => {
         setLoading(true);
         listDocTemplate$().pipe(
