@@ -13,7 +13,7 @@ export function smartSearchTaskTemplate$(searchText) {
 
 export function smartSearchDocTemplate$(searchText) {
   const text = searchText?.trim();
-  return text ? httpPost$(`smart_search/doc_template`, { text }) : EMPTY;
+  return text ? httpPost$(`smart_search/demplate`, { text }) : EMPTY;
 }
 
 

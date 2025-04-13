@@ -40,7 +40,7 @@ export const DocTemplateListPage = () => {
   }, [list, searchText])
 
   const handleEditOne = (id) => {
-    navigate(`/doc_template/${id}`);
+    navigate(`/demplate/${id}`);
   }
 
   const handleEdit = (item) => {
@@ -88,7 +88,7 @@ export const DocTemplateListPage = () => {
 
 
   const handleCreateNew = () => {
-    navigate('/doc_template/new');
+    navigate('/demplate/new');
   }
 
   const handleClone = docTemplate => {
@@ -158,7 +158,7 @@ export const DocTemplateListPage = () => {
             <Paragraph type="secondary">
               There is no doc template. Let's start creating one!
             </Paragraph>
-            <Link to="/doc_template/new">Create new doc template</Link>
+            <Link to="/demplate/new">Create new doc template</Link>
           </div>
         }}
         onItem={(row) => {

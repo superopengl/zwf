@@ -19,7 +19,7 @@ export const CreateNewButton = React.memo(props => {
         navigate('/femplate/new')
         break;
       case 'doc_template':
-        navigate('/doc_template/new')
+        navigate('/demplate/new')
         break;
       default:
         throw new Error(`Unknonw command '${e.key}'`)

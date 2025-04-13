@@ -22,7 +22,7 @@ export function addDocTemplateToTask$(taskid, docTemplateIds) {
   if (!docTemplateIds?.length) {
     throw new Error(`docTemplateIds cannot be empty`);
   }
-  return httpPost$(`task/${taskid}/doc_template/`, { docTemplateIds });
+  return httpPost$(`task/${taskid}/demplate/`, { docTemplateIds });
 }
 
 export function deleteTaskDoc$(docId) {
