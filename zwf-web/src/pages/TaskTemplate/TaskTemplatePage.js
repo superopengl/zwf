@@ -16,6 +16,7 @@ import { TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef
 import { useAssertRole } from 'hooks/useAssertRole';
 import TaskFieldEditorPanel from './TaskFieldEditorPanel';
 import { TaskFieldsPreviewDrawer } from './TaskFieldsPreviewDrawer';
+import { EditFieldsContext } from 'contexts/EditFieldsContext';
 
 const Container = styled.div`
 min-width: 800px;
@@ -67,6 +68,9 @@ export const TaskTemplatePage = () => {
   const [taskTemplateName, setTaskTemplateName] = React.useState('New Form Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [taskTemplate, setTaskTemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
+  const [fields, setFields] = React.useState([]);
+  const [dragging, setDragging] = React.useState(false);
+
   const navigate = useNavigate();
 
   React.useEffect(() => {
@@ -78,6 +82,7 @@ export const TaskTemplatePage = () => {
       .subscribe(taskTemplate => {
         setTaskTemplate(taskTemplate)
         setTaskTemplateName(taskTemplate.name)
+        setFields(taskTemplate.fields ?? [])
       });
 
     return () => {
@@ -91,6 +96,9 @@ export const TaskTemplatePage = () => {
     }
   }, [taskTemplateName])
 
+  React.useEffect(() => {
+    setTaskTemplate(pre => ({ ...pre, fields }));
+  }, [fields])
 
   const handleSave = () => {
     if (!taskTemplate.fields?.length) {
@@ -113,7 +121,6 @@ export const TaskTemplatePage = () => {
       });
   }
 
-  const debugMode = false;
 
   const handleRename = (newName) => {
     if (newName !== taskTemplateName) {
@@ -123,25 +130,6 @@ export const TaskTemplatePage = () => {
         renameTaskTemplate$(taskTemplate.id, newName).subscribe();
       }
     }
-  }
-
-
-  const getUniqueNewFieldName = (allFields, newControlType) => {
-    const existingNames = new Set(allFields.map(f => f.name));
-    const controlDef = TaskTemplateFieldControlDefMap.get(newControlType);
-    const fieldBaseName = controlDef.label;
-
-    let number = allFields?.length || 0;
-    let name = null;
-    do {
-      name = `${fieldBaseName} ${number}`;
-      number++;
-    } while (existingNames.has(name));
-    return name;
-  }
-
-  const handleFieldListChange = (fields) => {
-    setTaskTemplate(pre => ({ ...pre, fields }));
   }
 
   return (<Container>
@@ -172,7 +160,14 @@ export const TaskTemplatePage = () => {
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
       ]}
     >
-      <TaskFieldEditorPanel fields={taskTemplate?.fields ?? []} onChange={handleFieldListChange} />
+      <EditFieldsContext.Provider value={{
+        fields,
+        setFields,
+        dragging,
+        setDragging,
+      }}>
+        <TaskFieldEditorPanel />
+      </EditFieldsContext.Provider>
       <TaskFieldsPreviewDrawer
         open={openPreview}
         onClose={() => setOpenPreview(false)}

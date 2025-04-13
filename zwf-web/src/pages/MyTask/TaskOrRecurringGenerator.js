@@ -63,7 +63,6 @@ export const TaskOrRecurringGenerator = React.memo(props => {
   const handlePostCreateAction = (entity) => {
     const isTask = mode === 'task';
     if (postCreateMode === 'navigate') {
-      debugger;
       if (isTask) {
         navigate(`/task/${entity.id}`)
       } else {
