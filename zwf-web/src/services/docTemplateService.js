@@ -1,11 +1,11 @@
 import { httpGet$, httpPut$, httpPost$, httpPost, httpDelete$ } from './http';
 
 export function getDocTemplate$(id) {
-  return httpGet$(`doc_template/${id}`);
+  return httpGet$(`/demplate/${id}`);
 }
 
 export function saveDocTemplate$(docTemplate) {
-  return httpPost$('doc_template', docTemplate);
+  return httpPost$('/demplate', docTemplate);
 }
 
 export function cloneDocTemplate$(sourceTemplateId, name) {
@@ -17,7 +17,7 @@ export function deleteDocTemplate$(id) {
 }
 
 export function listDocTemplate$() {
-  return httpGet$('doc_template');
+  return httpGet$('/demplate');
 }
 
 export function renameDocTemplate$(id, name) {

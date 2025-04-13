@@ -122,7 +122,7 @@ export const TaskDocListPanel = React.memo((props) => {
     key: 'upload',
     label: <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} />
   }, {
-    key: 'doc_template',
+    key: 'demplate',
     label: <Button
       icon={<Icon component={BsFileEarmarkTextFill} />}
       type="text"

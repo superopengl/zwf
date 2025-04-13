@@ -21,7 +21,7 @@ const DOMAIN_CONFIG = {
     </>,
     noFoundContent: <><TaskIcon /> No task is found.</>
   },
-  'task_template': {
+  'femplate': {
     searchHandler: smartSearchTaskTemplate$,
     pathHandler: id => `/femplate/${id}`,
     renderHandler: (item, searchText) => <>
@@ -30,7 +30,7 @@ const DOMAIN_CONFIG = {
     </>,
     noFoundContent: <><TaskTemplateIcon /> No task template is found.</>
   },
-  'doc_template': {
+  'demplate': {
     searchHandler: smartSearchDocTemplate$,
     pathHandler: id => `/demplate/${id}`,
     renderHandler: (item, searchText) => <>
@@ -65,12 +65,12 @@ export const SmartSearch = React.memo((props) => {
         icon: <TaskIcon />
       },
       {
-        key: 'task_template',
+        key: 'femplate',
         label: 'task templates',
         icon: <TaskTemplateIcon />
       },
       {
-        key: 'doc_template',
+        key: 'demplate',
         label: 'doc templates',
         icon: <DocTemplateIcon />
       },
