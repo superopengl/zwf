@@ -1,9 +1,11 @@
-import { AutoComplete, Select } from 'antd';
+import { Divider, Button, Select, Row } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import { listTaskTemplate$ } from 'services/taskTemplateService';
 import { TaskTemplateIcon } from './entityIcon';
 import styled from 'styled-components';
+import { PlusOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
 
 const StyledSelect = styled(Select)`
   .ant-select-selector {
@@ -28,6 +30,7 @@ export const FormTemplateSelect = (props) => {
   const { value, onChange, onLoadingChange, showIcon, allowAdd, ...other } = props;
 
   const [options, setOptions] = React.useState([]);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     onLoadingChange(true);
@@ -60,6 +63,27 @@ export const FormTemplateSelect = (props) => {
     allowClear
     value={value}
     onChange={handleChange}
+    dropdownRender={menu => <>
+      {menu}
+      {allowAdd && <>
+        <Divider
+          style={{
+            margin: '8px 0',
+          }}
+        />
+        <Row
+          style={{
+            padding: '0 10px 4px',
+            width: '100%',
+          }}
+        >
+          <Button block type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => navigate("/task_template/new")}
+            ghost>Create new template</Button>
+        </Row>
+      </>}
+    </>}
     {...other} />
   )
 };

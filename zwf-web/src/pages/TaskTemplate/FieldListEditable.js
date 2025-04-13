@@ -79,7 +79,6 @@ export const FieldListEditable = () => {
     <div
       // ref={drop} 
       style={{ ...style, backgroundColor, height: '100%' }}>
-        {activeIndex}
       <Row gutter={[8, 8]} justify="center">
         {/* <DebugJsonPanel value={fields} /> */}
         {isEmpty ?

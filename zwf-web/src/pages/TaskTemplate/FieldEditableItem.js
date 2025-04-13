@@ -152,7 +152,6 @@ export const FieldEditableItem = (props) => {
     // onOpenChange={handleEditPanelOpenChange}
   >
     {/* <DebugJsonPanel value={field} /> */}
-    {thisBeingDragged.toString()}
     <StyledCard
       ref={ref}
       data-handler-id={handlerId}
