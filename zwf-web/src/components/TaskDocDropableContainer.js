@@ -21,7 +21,7 @@ const Container = styled.div`
 
 const CoverUploadDragger = styled(Upload.Dragger)`
 .ant-upload {
-  .ant-upload-drag {
+  &.ant-upload-drag {
       border: none;
     }
   }
