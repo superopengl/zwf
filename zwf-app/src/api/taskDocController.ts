@@ -69,12 +69,15 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   const { taskId } = req.params;
 
-  const query = role === Role.Client ? { userId } : { orgId };
+  const query = role === Role.Client ? { orgClient: { userId } } : { orgId };
 
   const task = await db.getRepository(Task).findOne({
     where: {
       id: taskId,
       ...query,
+    },
+    relations: {
+      orgClient: true
     }
   });
 
