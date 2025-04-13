@@ -15,7 +15,7 @@ const style = {
 }
 export const FieldListEditable = () => {
 
-  const {fields, setFields} = React.useContext(EditFieldsContext);
+  const {fields, setFields, setDragging} = React.useContext(EditFieldsContext);
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   // const [{ canDrop, isOver }, drop] = useDrop(() => ({
@@ -46,15 +46,16 @@ export const FieldListEditable = () => {
       ],
     });
 
-    debugger;
     const nextList = arrangeOridinals(updatedList);
 
     setFields(nextList);
     setActiveIndex(hoverIndex);
+    setDragging(true);
   }, [fields]);
 
   const handleDrop = () => {
     setFields([...fields]);
+    setDragging(false);
   };
 
   const handleFieldChange = (index, newValues) => {
@@ -78,6 +79,7 @@ export const FieldListEditable = () => {
     <div
       // ref={drop} 
       style={{ ...style, backgroundColor, height: '100%' }}>
+        {activeIndex}
       <Row gutter={[8, 8]} justify="center">
         {/* <DebugJsonPanel value={fields} /> */}
         {isEmpty ?
