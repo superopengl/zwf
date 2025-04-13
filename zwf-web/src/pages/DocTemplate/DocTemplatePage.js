@@ -214,7 +214,7 @@ export const DocTemplatePage = (props) => {
         showIcon
         message="How to insert fields?"
         description={<Paragraph>
-          The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client name}}'}</Text> will be replaced by the value of the field "Client name" on the form. The field replacement is <Text strong>case sensitive</Text>. So please make sure the field specified in this doc template content are aligned with the field names when design a <Link to="/task_template">form template</Link>.
+          The variables embraced by double curly braces <Text code>{'{{'}</Text> and <Text code>{'}}'}</Text> will be replaced by corresponding field values. For example, text <Text code>{'{{Client name}}'}</Text> will be replaced by the value of the field "Client name" on the form. The field replacement is <Text strong>case sensitive</Text>. So please make sure the field specified in this doc template content are aligned with the field names when design a <Link to="/femplate">form template</Link>.
         </Paragraph>}
         closable onClose={() => setShowingHelp(false)} />}
       {!loading && <Row gutter={20} wrap={false}>

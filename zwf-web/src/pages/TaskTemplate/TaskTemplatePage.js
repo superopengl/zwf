@@ -115,7 +115,7 @@ export const TaskTemplatePage = () => {
       .subscribe({
         next: () => {
           notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
-          navigate('/task_template')
+          navigate('/femplate')
         },
         error: () => { }
       });
@@ -139,7 +139,7 @@ export const TaskTemplatePage = () => {
           name: 'Templates'
         },
         {
-          path: '/task_template',
+          path: '/femplate',
           name: 'Form Template',
           // menu: [
           //   'hi',

@@ -132,9 +132,9 @@ export const App = React.memo(() => {
           <Route path="/doc_template" element={<DocTemplateListPage />} />
           <Route path="/doc_template/new" element={<DocTemplatePage />} />
           <Route path="/doc_template/:id" element={<DocTemplatePage />} />
-          <Route path="/task_template" element={<TaskTemplateListPage />} />
-          <Route path="/task_template/new" element={<TaskTemplatePage />} />
-          <Route path="/task_template/:id" element={<TaskTemplatePage />} />
+          <Route path="/femplate" element={<TaskTemplateListPage />} />
+          <Route path="/femplate/new" element={<TaskTemplatePage />} />
+          <Route path="/femplate/:id" element={<TaskTemplatePage />} />
           <Route path="/recurring" element={<RecurringListPage />} />
           <Route path="/trash" element={<OrgArchivedTasksPage />} />
           <Route path="/client" element={<OrgClientListPage />} />

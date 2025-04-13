@@ -66,7 +66,7 @@ export const TaskTemplateListPage = () => {
   }, [list, searchText])
 
   const handleEditOne = (id) => {
-    navigate(`/task_template/${id}`);
+    navigate(`/femplate/${id}`);
   }
 
   const handleEdit = (item) => {
@@ -98,14 +98,14 @@ export const TaskTemplateListPage = () => {
   }
 
   const handleCreateNew = () => {
-    navigate('/task_template/new');
+    navigate('/femplate/new');
   }
 
   const handleClone = item => {
     cloneTaskTemplate$(item.id)
       .subscribe(cloned => {
         // console.log(task);
-        notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/task_template/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
+        notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/femplate/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
         loadList$();
       })
   }
@@ -190,7 +190,7 @@ export const TaskTemplateListPage = () => {
             <Paragraph type="secondary">
               There is no form template. Let's start creating one!
             </Paragraph>
-            <Link to="/task_template/new">Create new form template</Link>
+            <Link to="/femplate/new">Create new form template</Link>
           </div>
         }}
         ghost={viewMode === 'grid'}
