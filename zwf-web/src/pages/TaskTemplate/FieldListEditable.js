@@ -46,6 +46,7 @@ export const FieldListEditable = () => {
       ],
     });
 
+    debugger;
     const nextList = arrangeOridinals(updatedList);
 
     setFields(nextList);

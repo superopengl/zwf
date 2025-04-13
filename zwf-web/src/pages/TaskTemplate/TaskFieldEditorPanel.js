@@ -37,7 +37,7 @@ export const TaskFieldEditorPanel = (props) => {
     newField.id = newFieldId;
 
     // console.log('just added', newField);
-    setFields([...fields, newField]);
+    setFields(pre => [...pre, newField]);
   }
 
   const getUniqueNewFieldName = (allFields, newControlType) => {
@@ -67,7 +67,7 @@ export const TaskFieldEditorPanel = (props) => {
               icon={c.icon}
               label={c.label}
               type={c.type}
-              // onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
+              onDropStart={(newFieldId) => handleAddControl(c.type, newFieldId)}
               onClick={(newFieldId) => handleAddControl(c.type, newFieldId)}
               // onDropDone={() => handleAddControl(c.type)}
               index={fields.length}
