@@ -24,8 +24,8 @@ const StyledSelect = styled(Select)`
   }
 `;
 
-const TaskTemplateSelect = (props) => {
-  const { value, onChange, onLoadingChange, showIcon, ...other } = props;
+export const FormTemplateSelect = (props) => {
+  const { value, onChange, onLoadingChange, showIcon, allowAdd, ...other } = props;
 
   const [options, setOptions] = React.useState([]);
 
@@ -64,16 +64,17 @@ const TaskTemplateSelect = (props) => {
   )
 };
 
-TaskTemplateSelect.propTypes = {
+FormTemplateSelect.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
   onLoadingChange: PropTypes.func,
   showIcon: PropTypes.bool,
+  allowAdd: PropTypes.bool,
 };
 
-TaskTemplateSelect.defaultProps = {
+FormTemplateSelect.defaultProps = {
   onLoadingChange: () => { },
   showIcon: true,
+  allowAdd: false,
 };
 
-export default TaskTemplateSelect;

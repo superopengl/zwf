@@ -3,7 +3,7 @@ import React from 'react';
 import { Space, Typography, Button, Form, Radio, Progress, Row, Input, InputNumber, Select } from 'antd';
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
-import TaskTemplateSelect from 'components/TaskTemplateSelect';
+import {FormTemplateSelect} from 'components/FormTemplateSelect';
 import { getTaskTemplate$ } from 'services/taskTemplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
@@ -224,7 +224,7 @@ export const TaskGenerator = React.memo(props => {
       title: 'From template',
       description: isRecurring ? 'Choose a task template for the recurring' : 'Optionally choose a task template to begin with',
       content: <>
-        <TaskTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange}
+        <FormTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange}
           showIcon={true} value={newTaskInfo.formTemplateid} />
       </>,
       canNext: () => newTaskInfo.orgClientId && (!isRecurring || newTaskInfo.formTemplateid)
