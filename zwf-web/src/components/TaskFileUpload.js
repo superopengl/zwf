@@ -9,7 +9,6 @@ import { UploadOutlined } from '@ant-design/icons';
 export const TaskFileUpload = React.memo((props) => {
   const { taskId, onLoading, disabled, onDone } = props;
 
-
   const handleChange = (info) => {
     const { file } = info;
 
