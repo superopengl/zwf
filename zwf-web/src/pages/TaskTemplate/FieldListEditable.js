@@ -16,6 +16,7 @@ const style = {
 export const FieldListEditable = () => {
 
   const {fields, setFields} = React.useContext(EditFieldsContext);
+  const [activeIndex, setActiveIndex] = React.useState(0);
 
   // const [{ canDrop, isOver }, drop] = useDrop(() => ({
   //   accept: 'field',
@@ -48,6 +49,7 @@ export const FieldListEditable = () => {
     const nextList = arrangeOridinals(updatedList);
 
     setFields(nextList);
+    setActiveIndex(hoverIndex);
   }, [fields]);
 
   const handleDrop = () => {
@@ -82,7 +84,8 @@ export const FieldListEditable = () => {
           : fields.map((field, i) => !field ? <>NULL</> : <Col key={field.id} span={24}>
             <FieldEditableItem field={field}
               index={i}
-              open={i === 0}
+              onClick={() => setActiveIndex(i)}
+              editing={i === activeIndex}
               onDragging={handleDragging}
               onDrop={handleDrop}
               onChange={changedField => handleFieldChange(i, changedField)}
