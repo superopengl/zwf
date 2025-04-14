@@ -34,6 +34,7 @@ import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { RiNumbersFill } from 'react-icons/ri';
 import { saveRecurring$ } from 'services/recurringService';
 import styled from 'styled-components';
+import { RecurringIcon, TaskIcon } from 'components/entityIcon';
 
 const { Text, Link: TextLink, Paragraph, Title } = Typography;
 
@@ -131,20 +132,20 @@ export const TaskOrRecurringGenerator = React.memo(props => {
   return (
     <Loading loading={loading}>
       <Container>
-        {!mode && <Space direction='vertical' style={{ width: '100%', margin: '20px auto' }} size="large">
+        {!mode && <Space direction='vertical' style={{ width: '100%', margin: '0 auto 20px' }} size="large">
           {/* <Paragraph>Choose task type. </Paragraph> */}
           <Card
             hoverable
             onClick={() => setMode('task')}
           >
-            <Title level={5}><Icon component={MdDashboard} /> Task</Title>
+            <Title level={5}><TaskIcon />Task</Title>
             <Paragraph type="secondary">The task will be created right away and you can see it from task board and task list immediately.</Paragraph>
           </Card>
           <Card
             hoverable
             onClick={() => setMode('recurring')}
           >
-            <Title level={5}><ClockCircleOutlined /> Recurring</Title>
+            <Title level={5}><RecurringIcon />Recurring</Title>
             <Paragraph type="secondary">The task will be created upon the specified recurring pattern.</Paragraph>
           </Card>
         </Space>

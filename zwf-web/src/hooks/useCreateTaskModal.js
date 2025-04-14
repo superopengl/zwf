@@ -11,7 +11,7 @@ export const useCreateTaskModal = () => {
   const open = ({ femplateId, client, onOk, onCancel, postCreateMode } = {}) => {
     const instance = modal.info({
       icon: null,
-      title: <><TaskIcon /> Create New Task</>,
+      title: <>Create New Task</>,
       maskClosable: false,
       closable: true,
       destroyOnClose: true,

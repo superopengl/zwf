@@ -216,7 +216,7 @@ export const TaskTemplateListPage = () => {
           content: {},
           actions: {
             render: (text, row) => [
-              <Tooltip title="Create task with this" key="new">
+              <Tooltip title="Create task with this template" key="new">
                 <Button icon={<Icon component={MdDashboardCustomize} />} type="text"
                   onClick={(e) => {
                     e.stopPropagation();
