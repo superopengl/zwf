@@ -119,5 +119,5 @@ export function listTaskComment$(taskId) {
 }
 
 export function getTaskDeepLinkUrl(taskDeepLinkId) {
-  return `${API_DOMAIN_NAME}/t/${taskDeepLinkId}/`;
+  return `${API_DOMAIN_NAME || window.location.origin}/t/${taskDeepLinkId}/`;
 }
