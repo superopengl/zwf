@@ -10,7 +10,7 @@ import { TaskIcon } from 'components/entityIcon';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import Icon, { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
 import { MemberSelect } from 'components/MemberSelect';
-import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
+import { showShareTaskDeepLinkModal, useShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
 import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
 import { UserNameCard } from 'components/UserNameCard';
 import { SavingAffix } from 'components/SavingAffix';
@@ -78,6 +78,7 @@ const OrgTaskPage = React.memo(() => {
   const [saving, setSaving] = React.useState(null);
   const [assigneeId, setAssigneeId] = React.useState();
   const navigate = useNavigate();
+  const [openDeepLink, deepLinkContextHolder] = useShareTaskDeepLinkModal();
 
   React.useEffect(() => {
     const sub$ = load$();
@@ -225,7 +226,7 @@ const OrgTaskPage = React.memo(() => {
                     <Descriptions.Item label="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                         {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
-                        <Button type="link" icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share link</Button>
+                        <Button type="link" icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
                         {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                         {task.status !== 'archived' && <Button type="link" danger icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
                       </Space>
@@ -246,6 +247,7 @@ const OrgTaskPage = React.memo(() => {
       </PageHeaderContainer>}
       {task && <TaskLogDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
       {saving && <SavingAffix />}
+      {deepLinkContextHolder}
     </ContainerStyled>
   </>
   );
