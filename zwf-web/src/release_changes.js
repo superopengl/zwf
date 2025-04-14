@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 demplate change
 more fix
 more taskTemplate => femplate

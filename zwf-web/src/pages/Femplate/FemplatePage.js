@@ -115,7 +115,7 @@ export const FemplatePage = () => {
       .subscribe({
         next: () => {
           notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
-          navigate('/femplate')
+          navigate(-1)
         },
         error: () => { }
       });
