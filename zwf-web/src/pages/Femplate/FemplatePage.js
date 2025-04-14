@@ -27,7 +27,7 @@ margin: 0 auto;
 
 const { Paragraph } = Typography;
 
-const EMPTY_TASK_TEMPLATE = {
+const EMPTY_FEMPLATE = {
   name: 'New form template',
   fields: [
     {
@@ -67,14 +67,14 @@ export const FemplatePage = () => {
   const [openPreview, setOpenPreview] = React.useState(false);
   const [femplateName, setFemplateName] = React.useState('New Form Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
-  const [femplate, setFemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
+  const [femplate, setFemplate] = React.useState(isNew ? EMPTY_FEMPLATE : null);
   const [fields, setFields] = React.useState([]);
   const [dragging, setDragging] = React.useState(false);
 
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const obs$ = isNew ? of({ ...EMPTY_TASK_TEMPLATE, id: uuidv4() }) : getFemplate$(initFemplateId);
+    const obs$ = isNew ? of({ ...EMPTY_FEMPLATE, id: uuidv4() }) : getFemplate$(initFemplateId);
     const subscription$ = obs$
       .pipe(
         finalize(() => setLoading(false))
