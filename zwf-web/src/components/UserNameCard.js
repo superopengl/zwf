@@ -36,6 +36,7 @@ export const UserNameCard = React.memo((props) => {
   const icon = React.useMemo(() => {
     let ret = '';
     if (data) {
+      debugger;
       if (data.givenName) {
         ret += data.givenName[0].toUpperCase();
         if (data.surname) {
@@ -59,7 +60,7 @@ export const UserNameCard = React.memo((props) => {
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
     {showAvatar &&
       <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size}
-        fallbackIcon={icon ?  <Icon style={{ fontSize: iconfontSize }} component={icon} /> : null}
+        fallbackIcon={icon}
       />
     }
     {(showName || showEmail) ? <UserDisplayName
