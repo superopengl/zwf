@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { Typography, Select, Row, Space } from 'antd';
 import { Loading } from './Loading';
 import * as _ from 'lodash';
-import { listDocTemplate$ } from 'services/docTemplateService';
-import { DocTemplateIcon } from 'components/entityIcon';
+import { listDemplate$ } from 'services/demplateService';
+import { DemplateIcon } from 'components/entityIcon';
 import styled from 'styled-components';
 import { VarTag } from './VarTag';
 import { finalize } from 'rxjs/operators';
@@ -31,25 +31,25 @@ const StyledSelect = styled(Select)`
   }
 `;
 
-const DocTemplateSelect = props => {
+export const DemplateSelect = props => {
   const { value, onChange, onVariableChange, placeholder, showVariables, isMultiple } = props;
   const [loading, setLoading] = React.useState(true);
-  const [docTemplateOptions, setDocTemplateOptions] = React.useState([]);
+  const [demplateOptions, setDemplateOptions] = React.useState([]);
   const [allRefFields, setAllRefFields] = React.useState([]);
 
   React.useEffect(() => {
     setLoading(true);
-    const $sub = listDocTemplate$().pipe(
+    const $sub = listDemplate$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(allDocTemps => {
-      setDocTemplateOptions(_.sortBy(allDocTemps, ['name']));
+      setDemplateOptions(_.sortBy(allDocTemps, ['name']));
     });
 
     return () => $sub.unsubscribe();
   }, []);
 
   React.useEffect(() => {
-    const allRefFields = _.chain(docTemplateOptions)
+    const allRefFields = _.chain(demplateOptions)
       .filter(x => Array.isArray(value) ? value.includes(x.id) : value === x.id)
       .map(x => x.refFieldNames || [])
       .flatten()
@@ -58,7 +58,7 @@ const DocTemplateSelect = props => {
 
     setAllRefFields(allRefFields);
     onVariableChange(allRefFields);
-  }, [value, docTemplateOptions]);
+  }, [value, demplateOptions]);
 
   const handleChange = (selectedValue, options) => {
     onChange(selectedValue);
@@ -72,7 +72,7 @@ const DocTemplateSelect = props => {
       placeholder={placeholder}
       value={value}
       onChange={handleChange}
-      options={docTemplateOptions.map(x => ({ label: <Space><DocTemplateIcon />{x.name}</Space>, value: x.id }))}
+      options={demplateOptions.map(x => ({ label: <Space><DemplateIcon />{x.name}</Space>, value: x.id }))}
     />
     {showVariables && allRefFields.length > 0 && <Paragraph type="secondary" style={{ marginTop: 8 }}>
       This doc template references fields {allRefFields.map(v => <VarTag key={v}>{v}</VarTag>)}.
@@ -80,7 +80,7 @@ const DocTemplateSelect = props => {
   </Loading>
 }
 
-DocTemplateSelect.propTypes = {
+DemplateSelect.propTypes = {
   value: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]).isRequired,
   onChange: PropTypes.func.isRequired,
   onVariableChange: PropTypes.func,
@@ -89,7 +89,7 @@ DocTemplateSelect.propTypes = {
   isMultiple: PropTypes.bool,
 };
 
-DocTemplateSelect.defaultProps = {
+DemplateSelect.defaultProps = {
   value: [],
   onChange: () => { },
   onVariableChange: () => { },
@@ -98,4 +98,3 @@ DocTemplateSelect.defaultProps = {
   isMultiple: true,
 };
 
-export default DocTemplateSelect

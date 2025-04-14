@@ -9,7 +9,7 @@ import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import * as _ from 'lodash';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
-import { DocTemplate } from '../entity/DocTemplate';
+import { Demplate } from '../entity/Demplate';
 import { db } from '../db';
 
 export const smartSearchTask = handlerWrapper(async (req, res) => {
@@ -64,14 +64,14 @@ export const smartSearchFemplate = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const smartSearchDocTemplate = handlerWrapper(async (req, res) => {
+export const smartSearchDemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
   const { text } = req.body;
   assert(text, 400);
   const orgId = getOrgIdFromReq(req);
   const size = 20;
 
-  const list = await db.getRepository(DocTemplate).find({
+  const list = await db.getRepository(Demplate).find({
     where: {
       orgId,
       name: ILike(`%${text}%`)

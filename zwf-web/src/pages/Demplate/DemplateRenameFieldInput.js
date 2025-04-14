@@ -4,7 +4,7 @@ import { CloseOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 const { Text } = Typography
 
-export const DocTemplateRenameFieldInput = (props) => {
+export const DemplateRenameFieldInput = (props) => {
   const { value: propValue, onChange, onDelete } = props;
 
   const [deleteVisible, setDeleteVisible] = React.useState(true);
@@ -57,12 +57,12 @@ export const DocTemplateRenameFieldInput = (props) => {
 
 };
 
-DocTemplateRenameFieldInput.propTypes = {
+DemplateRenameFieldInput.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
-DocTemplateRenameFieldInput.defaultProps = {};
+DemplateRenameFieldInput.defaultProps = {};
 
-export default DocTemplateRenameFieldInput;
+export default DemplateRenameFieldInput;

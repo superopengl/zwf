@@ -4,7 +4,7 @@ import { ProCard } from '@ant-design/pro-components';
 import React from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 import { OptionsBuilder } from './formBuilder/OptionsBuilder';
-import DocTemplateSelect from 'components/DocTemplateSelect';
+import {DemplateSelect} from 'components/DemplateSelect';
 
 const { Text, Title, Paragraph } = Typography;
 
@@ -63,7 +63,7 @@ export const FieldEditFloatPanel = (props) => {
               name={['value', 'demplateId']}
               rules={[{ required: true, message: ' ' }]}
             >
-              <DocTemplateSelect showVariables={true} isMultiple={false} />
+              <DemplateSelect showVariables={true} isMultiple={false} />
             </Form.Item>}
             <Form.Item name="name" label="Field name" required>
               <Input />

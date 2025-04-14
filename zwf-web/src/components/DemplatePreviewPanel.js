@@ -3,8 +3,8 @@ import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
-import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
-import { renderDocTemplateBodyWithVarBag } from 'util/renderDocTemplateBodyWithVarBag';
+import { extractVarsFromDemplateBody } from 'util/extractVarsFromDemplateBody';
+import { renderDemplateBodyWithVarBag } from 'util/renderDemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
 import { CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 
@@ -28,7 +28,7 @@ box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 
 
 const getPendingVarBag = (html, seedVarBag) => {
-  const { vars } = extractVarsFromDocTemplateBody(html);
+  const { vars } = extractVarsFromDemplateBody(html);
   const varBag = vars.reduce((bag, varName) => {
     bag[varName] = seedVarBag?.[varName] ?? '';
     return bag;
@@ -37,7 +37,7 @@ const getPendingVarBag = (html, seedVarBag) => {
   return varBag;
 }
 
-export const DocTemplatePreviewPanel = props => {
+export const DemplatePreviewPanel = props => {
   const { value: demplate, varBag: propVarBag, allowTest } = props;
 
   const [varBag, setVarBag] = React.useState(getPendingVarBag(demplate?.html, propVarBag));
@@ -53,7 +53,7 @@ export const DocTemplatePreviewPanel = props => {
 
   React.useEffect(() => {
     const newVarBag = getPendingVarBag(html, varBag);
-    const renderedHtml = renderDocTemplateBodyWithVarBag(html, newVarBag);
+    const renderedHtml = renderDemplateBodyWithVarBag(html, newVarBag);
 
     setRenderedHtml(renderedHtml);
   }, [html, varBag]);
@@ -110,7 +110,7 @@ export const DocTemplatePreviewPanel = props => {
   );
 };
 
-DocTemplatePreviewPanel.propTypes = {
+DemplatePreviewPanel.propTypes = {
   value: PropTypes.shape({
     html: PropTypes.string.isRequired,
     refFieldNames: PropTypes.arrayOf(PropTypes.string),
@@ -119,7 +119,7 @@ DocTemplatePreviewPanel.propTypes = {
   allowTest: PropTypes.bool,
 };
 
-DocTemplatePreviewPanel.defaultProps = {
+DemplatePreviewPanel.defaultProps = {
   varBag: {},
   allowTest: false,
 };

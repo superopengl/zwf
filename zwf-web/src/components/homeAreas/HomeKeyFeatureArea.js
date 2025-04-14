@@ -91,10 +91,10 @@ export const HomeKeyFeatureArea = () => {
               Doc Template allows you to create text by leaving placeholders for variables, which can be replaced later with each client's specific information.</Paragraph>
           </Col>
           {isWide && <Col span={24} style={{ display: 'flex', justifyContent: 'center', maxWidth: 1000 }}>
-            <Image src="/images/feature-doc-template.svg" preview={false} />
+            <Image src="/images/feature-demplate.svg" preview={false} />
           </Col>}
           {!isWide && <Col span={24} style={{ display: 'flex', justifyContent: 'center' }}>
-            <Image src="/images/feature-doc-template-narrow.svg" preview={false} style={{ padding: '0 1rem' }} />
+            <Image src="/images/feature-demplate-narrow.svg" preview={false} style={{ padding: '0 1rem' }} />
           </Col>}
         </Row>
         <Row gutter={[48, 24]} justify='center' style={{ maxWidth: 800 }}>

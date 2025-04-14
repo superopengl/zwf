@@ -1,5 +1,5 @@
-import { db } from './../db';
-import { getUtcNow } from './../utils/getUtcNow';
+import { db } from '../db';
+import { getUtcNow } from '../utils/getUtcNow';
 
 import { EntityManager } from 'typeorm';
 import { assert } from '../utils/assert';
@@ -8,7 +8,7 @@ import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getNow } from '../utils/getNow';
-import { DocTemplate } from '../entity/DocTemplate';
+import { Demplate } from '../entity/Demplate';
 import * as moment from 'moment';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
@@ -24,14 +24,14 @@ function extractVariables(html: string) {
   return Array.from(set);
 }
 
-export const saveDocTemplate = handlerWrapper(async (req, res) => {
+export const saveDemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
 
   const { id, name, description, html } = req.body;
   assert(name, 400, 'name is empty');
   const orgId = getOrgIdFromReq(req);
 
-  const demplate = new DocTemplate();
+  const demplate = new Demplate();
   demplate.id = id || uuidv4();
   demplate.orgId = orgId;
   demplate.name = name;
@@ -39,16 +39,16 @@ export const saveDocTemplate = handlerWrapper(async (req, res) => {
   demplate.html = html;
   demplate.refFieldNames = extractVariables(html);
 
-  await db.getRepository(DocTemplate).save(demplate);
+  await db.getRepository(Demplate).save(demplate);
 
   res.json();
 });
 
-export const listDocTemplates = handlerWrapper(async (req, res) => {
+export const listDemplates = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
 
-  const list = await db.getRepository(DocTemplate).find({
+  const list = await db.getRepository(Demplate).find({
     where: {
       orgId
     },
@@ -68,33 +68,33 @@ export const listDocTemplates = handlerWrapper(async (req, res) => {
   res.json(list);
 });
 
-export const getDocTemplate = handlerWrapper(async (req, res) => {
+export const getDemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
-  const demplate = await db.getRepository(DocTemplate).findOne({ where: query });
+  const demplate = await db.getRepository(Demplate).findOne({ where: query });
   assert(demplate, 404);
 
   res.json(demplate);
 });
 
-export const deleteDocTemplate = handlerWrapper(async (req, res) => {
+export const deleteDemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
-  await db.getRepository(DocTemplate).delete({ id, orgId });
+  await db.getRepository(Demplate).delete({ id, orgId });
 
   res.json();
 });
 
-export const renameDocTemplate = handlerWrapper(async (req, res) => {
+export const renameDemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
   const { name } = req.body;
   assert(name, 400, 'name is empty');
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
 
-  await db.getRepository(DocTemplate).update({ id, orgId }, { name });
+  await db.getRepository(Demplate).update({ id, orgId }, { name });
 
   res.json();
 });
@@ -103,7 +103,7 @@ async function getUniqueCopyName(m: EntityManager, orgId: string, preferredName:
   let round = 1;
   while (true) {
     const tryName = round === 1 ? preferredName : `${preferredName} (${round})`;
-    const existing = await m.findOne(DocTemplate, { where: { name: tryName, orgId }, select: ['id'] });
+    const existing = await m.findOne(Demplate, { where: { name: tryName, orgId }, select: ['id'] });
     if (!existing) {
       return tryName;
     }
@@ -111,16 +111,16 @@ async function getUniqueCopyName(m: EntityManager, orgId: string, preferredName:
   }
 }
 
-export const cloneDocTemplate = handlerWrapper(async (req, res) => {
+export const cloneDemplate = handlerWrapper(async (req, res) => {
   assertRole(req,[ 'admin', 'agent']);
   const { id } = req.params;
   const { name } = req.body;
   const preferredName = name?.trim();
   assert(preferredName, 400, 'No name provided');
   const orgId = getOrgIdFromReq(req);
-  let demplate: DocTemplate;
+  let demplate: Demplate;
   await db.transaction(async m => {
-    demplate = await m.findOne(DocTemplate, { where: { id, orgId } });
+    demplate = await m.findOne(Demplate, { where: { id, orgId } });
     assert(demplate, 404);
 
     const newFemplateId = uuidv4();

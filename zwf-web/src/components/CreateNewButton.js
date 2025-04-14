@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Menu, Dropdown, Typography } from 'antd';
 import Icon, { CaretDownOutlined } from '@ant-design/icons';
-import { FemplateIcon, DocTemplateIcon } from './entityIcon';
+import { FemplateIcon, DemplateIcon } from './entityIcon';
 import { useNavigate } from 'react-router-dom';
 import { useKeys } from "rooks";
 import { MdDashboardCustomize } from 'react-icons/md';
@@ -41,7 +41,7 @@ export const CreateNewButton = React.memo(props => {
       label: <><FemplateIcon />New Form Template</>
     },{
       key: 'demplate',
-      label: <><DocTemplateIcon />New Doc Template</>
+      label: <><DemplateIcon />New Doc Template</>
     }],
     onClick: handleMenuSelected,
     size,

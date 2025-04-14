@@ -4,13 +4,13 @@ import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography } from 'antd
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
-import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDocTemplateToTask$, } from 'services/taskService';
+import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDemplateToTask$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
 import { FaSignature } from 'react-icons/fa';
 import Icon, { CloseOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
-import { useAddDocTemplateToTaskModal } from 'hooks/useAddDocTemplateToTaskModal';
+import { useAddDemplateToTaskModal } from 'hooks/useAddDemplateToTaskModal';
 import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
@@ -29,7 +29,7 @@ export const TaskDocListPanel = React.memo((props) => {
   const [loading, setLoading] = React.useState(true);
   const [deleteModal, deleteModalContextHolder] = Modal.useModal();
   const [docs, setDocs] = React.useState(task?.docs ?? []);
-  const [openAddDocTemplate, docTemplateContextHolder] = useAddDocTemplateToTaskModal();
+  const [openAddDemplate, demplateContextHolder] = useAddDemplateToTaskModal();
 
   const taskId = task.id;
   // const isPreviewMode = !taskId;
@@ -104,9 +104,9 @@ export const TaskDocListPanel = React.memo((props) => {
     },
   ];
 
-  const handleAddDocTemplates = (docTemplateIds) => {
+  const handleAddDemplates = (demplateIds) => {
     setLoading(true);
-    addDocTemplateToTask$(task.id, docTemplateIds)
+    addDemplateToTask$(task.id, demplateIds)
       .pipe(
         finalize(() => setLoading(false)),
       )
@@ -127,7 +127,7 @@ export const TaskDocListPanel = React.memo((props) => {
       icon={<Icon component={BsFileEarmarkTextFill} />}
       type="text"
       block
-      onClick={() => openAddDocTemplate({ onChange: handleAddDocTemplates })}
+      onClick={() => openAddDemplate({ onChange: handleAddDemplates })}
     >Add Doc Template</Button>
   }]
 
@@ -154,7 +154,7 @@ export const TaskDocListPanel = React.memo((props) => {
         <div>
           {deleteModalContextHolder}
         </div>
-        {docTemplateContextHolder}
+        {demplateContextHolder}
       </ProCard>
     </TaskDocDropableContainer>
   </Container>

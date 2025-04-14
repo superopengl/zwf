@@ -1,7 +1,7 @@
 import { Column, PrimaryColumn, Entity, Index, CreateDateColumn, UpdateDateColumn, Unique, DeleteDateColumn, OneToMany } from 'typeorm';
 @Entity()
-@Unique('idx_doc_template_org_name_unique', ['orgId', 'name'])
-export class DocTemplate {
+@Unique('idx_demplate_org_name_unique', ['orgId', 'name'])
+export class Demplate {
   @PrimaryColumn('uuid')
   id: string;
 

@@ -18,11 +18,11 @@ export function changeTaskStatus$(id, status) {
   return httpPost$(`task/${id}/status/${status}`);
 }
 
-export function addDocTemplateToTask$(taskid, docTemplateIds) {
-  if (!docTemplateIds?.length) {
-    throw new Error(`docTemplateIds cannot be empty`);
+export function addDemplateToTask$(taskid, demplateIds) {
+  if (!demplateIds?.length) {
+    throw new Error(`demplateIds cannot be empty`);
   }
-  return httpPost$(`task/${taskid}/demplate/`, { docTemplateIds });
+  return httpPost$(`task/${taskid}/demplate/`, { demplateIds });
 }
 
 export function deleteTaskDoc$(docId) {

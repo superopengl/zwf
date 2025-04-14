@@ -2,7 +2,7 @@ export * from './fileController';
 export * from './authController';
 export * from './userController';
 export * from './femplateController';
-export * from './docTemplateController';
+export * from './demplateController';
 export * from './taskController';
 export * from './taskCommentController';
 export * from './recurringController';

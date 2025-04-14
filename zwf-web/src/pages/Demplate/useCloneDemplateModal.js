@@ -1,11 +1,11 @@
 import { Typography, Modal, Form, Input } from 'antd';
 import React from 'react';
 import { notify } from 'util/notify';
-import { cloneDocTemplate$ } from 'services/docTemplateService';
+import { cloneDemplate$ } from 'services/demplateService';
 
 const { Link: TextLink } = Typography
 
-export const useCloneDocTemplateModal = () => {
+export const useCloneDemplateModal = () => {
   const [modal, contextHolder] = Modal.useModal();
   const [form] = Form.useForm();
 
@@ -13,7 +13,7 @@ export const useCloneDocTemplateModal = () => {
 
     const handleClone = (formValues) => {
       const { name } = formValues;
-      cloneDocTemplate$(targetId, name)
+      cloneDemplate$(targetId, name)
         .pipe()
         .subscribe(cloned => {
           modalInstance.destroy();

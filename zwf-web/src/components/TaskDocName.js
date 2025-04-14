@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Space, Typography } from 'antd';
 import { FileIcon } from './FileIcon';
-import { useDocTemplatePreviewModal } from './showDocTemplatePreviewModal';
+import { useDemplatePreviewModal } from './useDemplatePreviewModal';
 import { openTaskDoc } from 'services/fileService';
 import { Loading } from './Loading';
 
@@ -16,7 +16,7 @@ export const TaskDocName = props => {
   const [iconType, setIconType] = React.useState('default');
   const [loading, setLoading] = React.useState(false);
   const [hasFile, setHasFile] = React.useState(!!fileId);
-  const [openPreview, previewContextHolder] = useDocTemplatePreviewModal();
+  const [openPreview, previewContextHolder] = useDemplatePreviewModal();
 
   React.useEffect(() => {
     if (showOverlay) {

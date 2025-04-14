@@ -11,7 +11,7 @@ export function smartSearchFemplate$(searchText) {
   return text ? httpPost$(`smart_search/femplate`, { text }) : EMPTY;
 }
 
-export function smartSearchDocTemplate$(searchText) {
+export function smartSearchDemplate$(searchText) {
   const text = searchText?.trim();
   return text ? httpPost$(`smart_search/demplate`, { text }) : EMPTY;
 }

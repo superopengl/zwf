@@ -1,5 +1,5 @@
 
-export function renderDocTemplateBodyWithVarBag(html, varBag) {
+export function renderDemplateBodyWithVarBag(html, varBag) {
   let rendered = html;
   for (const [key, value] of Object.entries(varBag)) {
     if(value?.trim()) {

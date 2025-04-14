@@ -1,25 +1,25 @@
 import { httpGet$, httpPut$, httpPost$, httpPost, httpDelete$ } from './http';
 
-export function getDocTemplate$(id) {
+export function getDemplate$(id) {
   return httpGet$(`/demplate/${id}`);
 }
 
-export function saveDocTemplate$(demplate) {
+export function saveDemplate$(demplate) {
   return httpPost$('/demplate', demplate);
 }
 
-export function cloneDocTemplate$(sourceTemplateId, name) {
+export function cloneDemplate$(sourceTemplateId, name) {
   return httpPut$(`/demplate/${sourceTemplateId}/duplicate`, {name});
 }
 
-export function deleteDocTemplate$(id) {
+export function deleteDemplate$(id) {
   return httpDelete$(`/demplate/${id}`);
 }
 
-export function listDocTemplate$() {
+export function listDemplate$() {
   return httpGet$('/demplate');
 }
 
-export function renameDocTemplate$(id, name) {
+export function renameDemplate$(id, name) {
   return httpPost$(`/demplate/${id}/rename`, { name });
 }

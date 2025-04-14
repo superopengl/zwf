@@ -1,27 +1,27 @@
 import { List, Button, Layout, Row, Col, Drawer, Typography, Modal, Card, Tooltip, Alert } from 'antd';
 import React from 'react';
-import { renameDocTemplate$ } from 'services/docTemplateService';
+import { renameDemplate$ } from 'services/demplateService';
 import styled from 'styled-components';
-import { DocTemplatePreviewPanel } from 'components/DocTemplatePreviewPanel';
+import { DemplatePreviewPanel } from 'components/DemplatePreviewPanel';
 import { CopyOutlined, EyeOutlined, LeftOutlined, QuestionCircleOutlined, SaveFilled } from '@ant-design/icons';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
-import { saveDocTemplate$, getDocTemplate$ } from 'services/docTemplateService';
+import { saveDemplate$, getDemplate$ } from 'services/demplateService';
 import { of } from 'rxjs';
 import { delay, finalize, tap } from 'rxjs/operators';
-import { DocTemplateIcon } from 'components/entityIcon';
+import { DemplateIcon } from 'components/entityIcon';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
-import { extractVarsFromDocTemplateBody } from 'util/extractVarsFromDocTemplateBody';
-import { renameFieldInDocTemplateBody } from 'util/renameFieldInDocTemplateBody';
-import DocTemplateRenameFieldInput from './DocTemplateRenameFieldInput';
+import { extractVarsFromDemplateBody } from 'util/extractVarsFromDemplateBody';
+import { renameFieldInDemplateBody } from 'util/renameFieldInDemplateBody';
+import DemplateRenameFieldInput from './DemplateRenameFieldInput';
 import { RichTextInput } from 'components/RichTextInput';
-import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
+import { useCloneDemplateModal } from './useCloneDemplateModal';
 import ReactRouterPrompt from "react-router-prompt";
-import { DOC_TEMPLATE_DEFAULT_HTML_BODY } from './DocTemplateDefaultBody';
-import { normalizeVarsInDocTemplateHtml } from 'util/normalizeVarsInDocTemplateHtml';
+import { DOC_TEMPLATE_DEFAULT_HTML_BODY } from './DemplateDefaultBody';
+import { normalizeVarsInDemplateHtml } from 'util/normalizeVarsInDemplateHtml';
 import { useAssertRole } from 'hooks/useAssertRole';
 
 const { Paragraph, Text } = Typography
@@ -57,35 +57,35 @@ const EMPTY_DOC_TEMPLATE = {
 };
 
 
-export const DocTemplatePage = (props) => {
+export const DemplatePage = (props) => {
   useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id: routeParamId } = params;
-  const initDocTemplateId = routeParamId;
+  const initDemplateId = routeParamId;
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(true);
   const [showingHelp, setShowingHelp] = React.useState(false);
   const [demplate, setDemplate] = React.useState({ ...EMPTY_DOC_TEMPLATE });
   const [previewSider, setPreviewSider] = React.useState(false);
-  const [docTemplateName, setDocTemplateName] = React.useState('New Doc Template');
+  const [demplateName, setDemplateName] = React.useState('New Doc Template');
   const [html, setHtml] = React.useState(demplate.html);
   const [dirty, setDirty] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
-  const [cloneAction, cloneContextHolder] = useCloneDocTemplateModal();
+  const [cloneAction, cloneContextHolder] = useCloneDemplateModal();
 
   const navigate = useNavigate();
   const debugMode = false;
 
   React.useEffect(() => {
-    const obs$ = isNew ? of({ ...EMPTY_DOC_TEMPLATE, id: uuidv4() }) : getDocTemplate$(initDocTemplateId);
+    const obs$ = isNew ? of({ ...EMPTY_DOC_TEMPLATE, id: uuidv4() }) : getDemplate$(initDemplateId);
     const subscription$ = obs$
       .pipe(
         finalize(() => setLoading(false))
       )
       .subscribe(d => {
         setDemplate(d);
-        setDocTemplateName(d.name);
+        setDemplateName(d.name);
         setHtml(d.html);
       });
     return () => subscription$.unsubscribe();
@@ -98,10 +98,10 @@ export const DocTemplatePage = (props) => {
   const handleSave = () => {
     const entity = {
       ...demplate,
-      name: docTemplateName,
+      name: demplateName,
     };
 
-    saveDocTemplate$(entity).pipe(
+    saveDemplate$(entity).pipe(
       tap(() => setDirty(false)),
       tap(() => {
         notify.success(<>Successfully saved doc template <strong>{entity.name}</strong></>)
@@ -112,40 +112,40 @@ export const DocTemplatePage = (props) => {
   }
 
   const handlePopPreview = () => {
-    // showDocTemplatePreviewModal(demplate, { allowTest: true });
+    // showDemplatePreviewModal(demplate, { allowTest: true });
     setPreviewSider(true)
   }
 
   const handleRename = (newName) => {
-    if (newName !== docTemplateName) {
-      setDocTemplateName(newName);
+    if (newName !== demplateName) {
+      setDemplateName(newName);
 
       if (!isNew) {
-        renameDocTemplate$(demplate.id, newName).subscribe();
+        renameDemplate$(demplate.id, newName).subscribe();
       }
     }
   }
 
   const handleChangeHtml = (html) => {
     setDirty(true);
-    setHtml(normalizeVarsInDocTemplateHtml(html));
+    setHtml(normalizeVarsInDemplateHtml(html));
   }
 
   const fieldNames = React.useMemo(() => {
     demplate.html = html
-    const { vars } = extractVarsFromDocTemplateBody(html);
+    const { vars } = extractVarsFromDemplateBody(html);
     return vars;
   }, [html]);
 
   const handleRenameField = (oldName, newName) => {
     if (oldName.trim() !== newName.trim()) {
-      const newHtml = renameFieldInDocTemplateBody(html, oldName, newName);
+      const newHtml = renameFieldInDemplateBody(html, oldName, newName);
       setHtml(newHtml);
     }
   }
 
   const handleDeleteField = (fieldName) => {
-    const newHtml = renameFieldInDocTemplateBody(html, fieldName, '');
+    const newHtml = renameFieldInDemplateBody(html, fieldName, '');
     setHtml(newHtml);
   }
 
@@ -192,14 +192,14 @@ export const DocTemplatePage = (props) => {
           name: 'Doc Template',
         },
         {
-          name: docTemplateName
+          name: demplateName
         }
       ]}
       maxWidth={1200}
       loading={loading}
-      icon={<DocTemplateIcon />}
+      icon={<DemplateIcon />}
       onBack={goBack}
-      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={docTemplateName} size={24} onChange={handleRename} maxLength={100} />}
+      title={<ClickToEditInput placeholder={isNew ? 'New Doc Template' : "Edit doc template name"} value={demplateName} size={24} onChange={handleRename} maxLength={100} />}
       extra={[
         <Tooltip key="help" title="Help"><Button icon={<QuestionCircleOutlined />} onClick={() => setShowingHelp(true)} /></Tooltip>,
         // <Tooltip key="clone" title="Duplicate"><Button icon={<CopyOutlined />} onClick={() => handleClone()} /></Tooltip>,
@@ -231,7 +231,7 @@ export const DocTemplatePage = (props) => {
               size="small"
               locale={{ emptyText: 'No fields created' }}
               renderItem={fieldName => <List.Item>
-                <DocTemplateRenameFieldInput value={fieldName}
+                <DemplateRenameFieldInput value={fieldName}
                   onChange={newName => handleRenameField(fieldName, newName)}
                   onDelete={() => handleDeleteField(fieldName)}
                 />
@@ -251,7 +251,7 @@ export const DocTemplatePage = (props) => {
       onClose={() => setPreviewSider(false)}
       width={700}
     >
-      <DocTemplatePreviewPanel
+      <DemplatePreviewPanel
         value={demplate}
         debug={debugMode}
         type="agent"
@@ -262,8 +262,8 @@ export const DocTemplatePage = (props) => {
   </Container >
 };
 
-DocTemplatePage.propTypes = {};
+DemplatePage.propTypes = {};
 
-DocTemplatePage.defaultProps = {};
+DemplatePage.defaultProps = {};
 
-export default DocTemplatePage;
+export default DemplatePage;
