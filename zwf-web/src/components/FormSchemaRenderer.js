@@ -39,8 +39,6 @@ export const FormSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
     onChange(changedValues, allValues);
   }
 
-  // console.log(fieldSchema)
-
   return <Container>
     <BetaSchemaForm
       layoutType='Form'
