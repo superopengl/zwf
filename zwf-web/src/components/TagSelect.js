@@ -93,9 +93,9 @@ export const TagSelect = React.memo((props) => {
   };
 
   if (readonly) {
-    return <>
+    return <Row gutter={[2,2]}>
       {tags.filter(t => value?.includes(t.id)).map(t => <Tag key={t.id} color={t.colorHex}>{t.name}</Tag>)}
-    </>
+    </Row>
   }
 
   return <>
