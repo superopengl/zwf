@@ -226,9 +226,7 @@ const OrgClientPage = React.memo(() => {
           ghost
         >
           <ProCard.TabPane key="profile" tab="Profile">
-            <ProCard style={{ maxWidth: 500 }} ghost>
               <OrgClientFieldsPanel femplateId={client.femplateId} fields={client.fields} onChange={handleFieldsChange} />
-            </ProCard>
 
           </ProCard.TabPane>
           <ProCard.TabPane key="tasks" tab="Tasks"
