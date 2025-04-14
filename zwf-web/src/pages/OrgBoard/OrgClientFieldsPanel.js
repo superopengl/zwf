@@ -4,7 +4,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { Drawer, Form, Typography, Space, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { FormTemplateSelect } from 'components/FormTemplateSelect';
+import { FemplateSelect } from 'components/FemplateSelect';
 import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
 import { getFemplate$ } from 'services/femplateService';
 import { finalize } from 'rxjs';
@@ -88,7 +88,7 @@ export const OrgClientFieldsPanel = (props) => {
         <Col flex="50%">
           <Row align="top" gutter={[30, 30]}>
             <Col flex="auto">
-              <FormTemplateSelect
+              <FemplateSelect
                 style={{ width: '100%' }}
                 value={femplateId}
                 onChange={handleFormTemplateChange}

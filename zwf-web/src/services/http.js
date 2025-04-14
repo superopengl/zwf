@@ -3,7 +3,8 @@ import * as _ from 'lodash';
 import { notify } from 'util/notify';
 import * as FormData from 'form-data';
 import { ajax } from 'rxjs/ajax';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Subject, of } from 'rxjs';
+import { catchError, map, takeUntil, tap } from 'rxjs/operators';
 import { Modal } from 'antd';
 import { v4 as uuidv4 } from 'uuid';
 import { reactLocalStorage } from 'reactjs-localstorage';
@@ -114,6 +115,7 @@ function handleSessionTimeout() {
 
 export function request$(method, path, queryParams, body, responseType = 'json') {
   const qs = queryString.stringify(queryParams);
+  const stopOnError$ = new Subject();
   return ajax({
     method,
     url: `${API_BASE_URL}/${trimSlash(path)}${qs ? `?${qs}` : ''}`,
@@ -135,8 +137,12 @@ export function request$(method, path, queryParams, body, responseType = 'json')
         : errorMessage;
       notify.error('Error', displayErrorMessage);
       console.error(e.response);
-      throw e;
-    })
+
+      // stopOnError$.next();
+      // throw e;
+      return of(null);
+    }),
+    // takeUntil(stopOnError$)
   );
 }
 

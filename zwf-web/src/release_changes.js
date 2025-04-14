@@ -1,9 +1,6 @@
 export const notes=`
-ui refine
-recurring icon
-client profile ui refine
-ui refine
-ui refine
-icon refine
-ui refine
-var name refactoring`
+demplate change
+more fix
+more taskTemplate => femplate
+console log clean up
+error styling fix`

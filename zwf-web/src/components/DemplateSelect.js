@@ -72,6 +72,7 @@ export const DemplateSelect = props => {
       placeholder={placeholder}
       value={value}
       onChange={handleChange}
+      notFoundContent={"No template"}
       options={demplateOptions.map(x => ({ label: <Space><DemplateIcon />{x.name}</Space>, value: x.id }))}
     />
     {showVariables && allRefFields.length > 0 && <Paragraph type="secondary" style={{ marginTop: 8 }}>
