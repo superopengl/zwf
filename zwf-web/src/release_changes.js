@@ -1,2 +1,3 @@
 export const notes=`
-z-index tweak`
+fix user avatar initial icon
+user avatar icon fix`
