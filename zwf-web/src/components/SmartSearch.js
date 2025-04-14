@@ -28,7 +28,7 @@ const DOMAIN_CONFIG = {
       <FemplateIcon />
       <HighlightingText value={item.name} search={searchText} />
     </>,
-    noFoundContent: <><FemplateIcon /> No task template is found.</>
+    noFoundContent: <><FemplateIcon /> No template is found.</>
   },
   'demplate': {
     searchHandler: smartSearchDemplate$,
@@ -66,7 +66,7 @@ export const SmartSearch = React.memo((props) => {
       },
       {
         key: 'femplate',
-        label: 'task templates',
+        label: 'form templates',
         icon: <FemplateIcon />
       },
       {

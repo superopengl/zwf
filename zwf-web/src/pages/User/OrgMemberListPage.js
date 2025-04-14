@@ -333,15 +333,6 @@ const OrgMemberListPage = () => {
                 autoFocus={true}
                 disabled={loading} />
             </Form.Item>
-            {/* <Form.Item label="Role" name="role" help="Admin can define task template, doc template, and see subscription, payment and agent metrics information.">
-            <Radio.Group defaultValue="agent" disabled={loading} optionType="button" buttonStyle="solid">act
-              <Radio.Button value="admin">Admin</Radio.Button>
-              <Radio.Button value="agent">Agent</Radio.Button>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="Tags" name="tags">
-            <TagSelect tags={tags} onSave={saveUserTag} />
-          </Form.Item> */}
             <Form.Item>
               <Row justify="end">
                 <Button type="primary" htmlType="submit" disabled={loading}>Invite</Button>
