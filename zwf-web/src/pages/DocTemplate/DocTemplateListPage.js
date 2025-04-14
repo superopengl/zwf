@@ -1,4 +1,4 @@
-import {
+import Icon, {
   CloseOutlined, EditOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
 import { Button, Modal, Typography } from 'antd';
@@ -15,6 +15,7 @@ import { ProList } from '@ant-design/pro-components';
 import { Descriptions } from 'antd';
 import { useCloneDocTemplateModal } from './useCloneDocTemplateModal';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { IoDuplicateOutline } from 'react-icons/io5';
 
 const { Text, Paragraph } = Typography;
 
@@ -94,7 +95,7 @@ export const DocTemplateListPage = () => {
   const handleClone = demplate => {
     cloneAction({
       targetId: demplate.id,
-      name: `Clone - ${demplate.name}`,
+      name: `Copy - ${demplate.name}`,
       onOk: () => {
         setLoading(true);
         listDocTemplate$().pipe(
@@ -187,8 +188,8 @@ export const DocTemplateListPage = () => {
                     onClick: () => handleEdit(row.data)
                   },
                   {
-                    icon: <CopyOutlined />,
-                    menu: 'Clone',
+                    icon: <Icon component={IoDuplicateOutline} />,
+                    menu: 'Duplicate',
                     onClick: () => handleClone(row.data)
                   },
                   {
