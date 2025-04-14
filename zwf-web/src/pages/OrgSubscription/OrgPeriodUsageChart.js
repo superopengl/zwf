@@ -67,7 +67,7 @@ export const OrgPeriodUsageChart = React.memo((props) => {
         formatter: (text, item, index) => {
           const time = moment(rangeFrom).add(+text, 'day');
           if (index === 0 || index === periodDays - 1) {
-            return time.format('MMM D YYYY')
+            return time.format('D MMM YYYY')
           } else {
             return time.format('MMM D')
           }

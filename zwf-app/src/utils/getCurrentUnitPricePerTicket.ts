@@ -1,4 +1,4 @@
 
 export function getCurrentUnitPricePerTicket() {
-  return 39;
+  return 49;
 }

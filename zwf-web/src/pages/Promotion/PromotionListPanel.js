@@ -139,7 +139,7 @@ const PromotionListPanel = (props) => {
           labelCol={{ span: 8 }}
           wrapperCol={{ span: 16 }}
           requiredMark={false}
-          initialValues={{ code: newCode, promotionPlanPrice: 39 }}>
+          initialValues={{ code: newCode, promotionPlanPrice: 49 }}>
           <Form.Item label="Code" name="code" rules={[{ required: true, whitespace: true }]}>
             <Input readOnly={true} />
           </Form.Item>
