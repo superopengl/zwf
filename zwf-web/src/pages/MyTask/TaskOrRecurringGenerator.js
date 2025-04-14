@@ -190,7 +190,7 @@ export const TaskOrRecurringGenerator = React.memo(props => {
             >
               <DatePicker disabledDate={disabledPastDate} format="D MMM YYYY" />
             </Form.Item>
-            <Form.Item name="repeating" label="Recurring"
+            <Form.Item name="repeating" label="Repeating"
               rules={[{ required: true }]}
             >
               <RecurringPeriodInput style={{ width: 180 }} />
