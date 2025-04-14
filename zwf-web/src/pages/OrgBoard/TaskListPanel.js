@@ -14,8 +14,35 @@ import { MemberSelect } from 'components/MemberSelect';
 import { UserNameCard } from 'components/UserNameCard';
 import { TaskIcon } from 'components/entityIcon';
 import { ClientNameCard } from 'components/ClientNameCard';
+import styled from 'styled-components';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
+
+const StyledTable = styled(Table)`
+
+.ant-table-cell {
+  &:has(.task-status-action_required) {
+    background-color: #F53F3F44;
+  }
+  &:has(.task-status-todo) {
+    // background-color: #97A3B788;
+  }
+  &:has(.task-status-in_progress) {
+    background-color: #0051D944;
+  }
+  &:has(.task-status-done) {
+    background-color: #00B42A44;
+  }
+  &:has(.task-status-archived) {
+    background-color: #1C222B;
+
+    .ant-badge-status-text {
+      color: #CCCCCC !important;
+    }
+  }
+}
+`;
+
 export const TaskListPanel = (props) => {
   const { tasks, onChange, searchText, onChangeFitler } = props;
 
@@ -101,10 +128,8 @@ export const TaskListPanel = (props) => {
       dataIndex: 'status',
       width: 160,
       sorter: () => 0,
-      render: (value, record) => <small>
-        <TaskStatusButton size="small" value={value} bordered={false} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />
-      </small>,
-      ellipsis: false
+      render: (value, record) => <TaskStatusButton className={`task-status-${value}`} size="small" value={value} bordered={false} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />,
+      ellipsis: false,
     },
     {
       title: 'Assignee',
@@ -198,7 +223,7 @@ export const TaskListPanel = (props) => {
   }
 
   return (
-    <Table columns={columnDef}
+    <StyledTable columns={columnDef}
       dataSource={tasks}
       // style={{marginTop: 30}}
       // bordered
