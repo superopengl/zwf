@@ -96,22 +96,6 @@ export const TaskCard = (props) => {
           {showTags && <Col span={24}>
             <TagSelect readonly={true} value={tagIds} />
           </Col>}
-          {task.dueAt && <>
-            <Col>
-              <Space align='top'>
-                Due
-                <TimeAgo value={task.dueAt} accurate={false} />
-              </Space>
-            </Col>
-          </>}
-          {(task.estNumber && task.estUnit) && <>
-            <Col>
-              <Space align='top'>
-                EST.
-                <Text>{task.estNumber} {task.estUnit}</Text>
-              </Space>
-            </Col>
-          </>}
           {task.assigneeId && <Col>
             <UserNameCard userId={task.assigneeId} size={40} showTooltip={true} showName={false} showEmail={false} />
           </Col>}

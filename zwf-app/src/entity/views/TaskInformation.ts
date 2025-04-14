@@ -31,9 +31,6 @@ import { OrgClient } from '../OrgClient';
       't.name as name',
       // 't.fields as fields',
       't.status as status',
-      't."estNumber" as "estNumber"',
-      't."estUnit" as "estUnit"',
-      't."dueAt" as "dueAt"',
       'c.id as "orgClientId"',
       'u.id as "userId"',
       't."orgId" as "orgId"',
@@ -58,15 +55,6 @@ import { OrgClient } from '../OrgClient';
 
   @ViewColumn()
   name: string;
-
-  @ViewColumn()
-  estNumber: number;
-
-  @ViewColumn()
-  estUnit: string;
-
-  @ViewColumn()
-  dueAt: Date;
 
   @ViewColumn()
   status: TaskStatus;

@@ -65,10 +65,6 @@ border-radius:4px;
 }
 `;
 
-const disabledPastDate = (current) => {
-  // Can not select days before today and today
-  return current && current.endOf('day').isBefore();
-};
 
 const OrgTaskPage = React.memo(() => {
   useAssertRole(['admin', 'agent'])
@@ -147,24 +143,6 @@ const OrgTaskPage = React.memo(() => {
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
 
-  const handleDueDateChange = (dueDate) => {
-    updateTask$(task.id, {
-      dueAt: dueDate?.toDate()
-    }).subscribe(() => {
-      // task.dueAt = dueDate?.toDate();
-      setTask({ ...task, dueAt: dueDate })
-    });
-  }
-
-  const handleEstNumberChange = ([estNumber, estUnit]) => {
-    updateTask$(task.id, {
-      estNumber,
-      estUnit
-    }).subscribe(() => {
-      task.estNumber = estNumber;
-      task.estUnit = estUnit;
-    });
-  }
 
   return (<>
     <ContainerStyled>
@@ -235,33 +213,16 @@ const OrgTaskPage = React.memo(() => {
             <Row gutter={[30, 30]} >
               <Col span={24}>
                 <ProCard ghost>
-                  <Collapse defaultActiveKey={['client', 'tags', 'assignee', 'actions', 'dueAt', 'est']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
-                    <Collapse.Panel key="client" header="Client">
-                      <div style={{ paddingLeft: 12 }}>
-                        <ClientNameCard id={task?.orgClientId} />
-                      </div>
-                    </Collapse.Panel>
+                  <Collapse defaultActiveKey={['tags', 'assignee', 'actions']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
+                    <ClientNameCard id={task?.orgClientId} />
+
                     <Collapse.Panel key="assignee" header="Assignee">
                       <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
                     </Collapse.Panel>
                     <Collapse.Panel key="tags" header="Tags">
                       <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
                     </Collapse.Panel>
-                    <Collapse.Panel key="dueAt" header="Due date">
-                      <DatePicker allowClear 
-                      style={{ width: 180 }} 
-                      disabledDate={disabledPastDate}
-                      value={task.dueAt ? dayjs(task.dueAt) : null} 
-                      onChange={handleDueDateChange} 
-                      format="D MMM YYYY" />
-                    </Collapse.Panel>
-                    <Collapse.Panel key="est" header="Estimated time">
-                      <EstInput allowClear min={0} max={99.9} precision={1}
-                        style={{ width: 180 }}
-                        value={[task.estNumber, task.estUnit]}
-                        onChange={handleEstNumberChange}
-                      />
-                    </Collapse.Panel>
+
                     <Collapse.Panel key="actions" header="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                         {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}

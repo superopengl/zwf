@@ -36,7 +36,6 @@ export const UserNameCard = React.memo((props) => {
   const icon = React.useMemo(() => {
     let ret = '';
     if (data) {
-      debugger;
       if (data.givenName) {
         ret += data.givenName[0].toUpperCase();
         if (data.surname) {
