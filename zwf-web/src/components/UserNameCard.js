@@ -59,7 +59,7 @@ export const UserNameCard = React.memo((props) => {
   const contentComponent = <Space size="small" wrap={false} gutter={8} align="center" onClick={props.onClick}>
     {showAvatar &&
       <UserAvatar value={data.avatarFileId} color={data.avatarColorHex} size={size}
-        fallbackIcon={<Icon style={{ fontSize: iconfontSize }} component={icon} />}
+        fallbackIcon={icon ?  <Icon style={{ fontSize: iconfontSize }} component={icon} /> : null}
       />
     }
     {(showName || showEmail) ? <UserDisplayName
