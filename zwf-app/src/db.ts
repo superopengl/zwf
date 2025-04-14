@@ -9,7 +9,7 @@ import { Payment } from './entity/Payment';
 import { EmailLog } from './entity/EmailLog';
 import { Message } from './entity/Message';
 import { DocTemplate } from './entity/DocTemplate';
-import { TaskTemplate } from './entity/TaskTemplate';
+import { Femplate } from './entity/Femplate';
 import { UserProfile } from './entity/UserProfile';
 import { TaskField } from './entity/TaskField';
 import { Task } from './entity/Task';
@@ -190,7 +190,7 @@ export const db = new DataSource({
     TaskField,
     TaskDoc,
     File,
-    TaskTemplate,
+    Femplate,
     DocTemplate,
     EmailLog,
     Message,

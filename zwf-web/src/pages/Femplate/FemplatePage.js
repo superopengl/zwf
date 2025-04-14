@@ -4,15 +4,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { TaskFieldsPreviewPanel } from './TaskFieldsPreviewPanel';
 import { EyeOutlined, SaveFilled } from '@ant-design/icons';
-import { getTaskTemplate$, renameTaskTemplate$, saveTaskTemplate$ } from 'services/taskTemplateService';
+import { getFemplate$, renameFemplate$, saveFemplate$ } from 'services/femplateService';
 import { v4 as uuidv4 } from 'uuid';
 import { notify } from 'util/notify';
 import { finalize } from 'rxjs/operators';
 import { ClickToEditInput } from 'components/ClickToEditInput';
-import { TaskTemplateIcon } from 'components/entityIcon';
+import { FemplateIcon } from 'components/entityIcon';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { of } from 'rxjs';
-import { TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
+import { FemplateFieldControlDefMap } from 'util/FieldControlDef';
 import { useAssertRole } from 'hooks/useAssertRole';
 import TaskFieldEditorPanel from './TaskFieldEditorPanel';
 import { TaskFieldsPreviewDrawer } from './TaskFieldsPreviewDrawer';
@@ -56,16 +56,16 @@ const EMPTY_TASK_TEMPLATE = {
   ]
 };
 
-export const TaskTemplatePage = () => {
+export const FemplatePage = () => {
   useAssertRole(['admin', 'agent'])
   const params = useParams();
   const { id: routeParamId } = params;
-  const initTaskTemplateId = routeParamId;
+  const initFemplateId = routeParamId;
   const isNew = !routeParamId;
 
   const [loading, setLoading] = React.useState(!isNew);
   const [openPreview, setOpenPreview] = React.useState(false);
-  const [taskTemplateName, setTaskTemplateName] = React.useState('New Form Template');
+  const [femplateName, setFemplateName] = React.useState('New Form Template');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [femplate, setFemplate] = React.useState(isNew ? EMPTY_TASK_TEMPLATE : null);
   const [fields, setFields] = React.useState([]);
@@ -74,14 +74,14 @@ export const TaskTemplatePage = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    const obs$ = isNew ? of({ ...EMPTY_TASK_TEMPLATE, id: uuidv4() }) : getTaskTemplate$(initTaskTemplateId);
+    const obs$ = isNew ? of({ ...EMPTY_TASK_TEMPLATE, id: uuidv4() }) : getFemplate$(initFemplateId);
     const subscription$ = obs$
       .pipe(
         finalize(() => setLoading(false))
       )
       .subscribe(femplate => {
         setFemplate(femplate)
-        setTaskTemplateName(femplate.name)
+        setFemplateName(femplate.name)
         setFields(femplate.fields ?? [])
       });
 
@@ -92,9 +92,9 @@ export const TaskTemplatePage = () => {
 
   React.useEffect(() => {
     if (femplate) {
-      setFemplate(x => ({ ...x, name: taskTemplateName }));
+      setFemplate(x => ({ ...x, name: femplateName }));
     }
-  }, [taskTemplateName])
+  }, [femplateName])
 
   React.useEffect(() => {
     setFemplate(pre => ({ ...pre, fields }));
@@ -108,10 +108,10 @@ export const TaskTemplatePage = () => {
 
     const entity = {
       ...femplate,
-      name: taskTemplateName,
+      name: femplateName,
     };
 
-    saveTaskTemplate$(entity)
+    saveFemplate$(entity)
       .subscribe({
         next: () => {
           notify.success(<>Successfully saved task template <strong>{entity.name}</strong></>)
@@ -123,11 +123,11 @@ export const TaskTemplatePage = () => {
 
 
   const handleRename = (newName) => {
-    if (newName !== taskTemplateName) {
-      setTaskTemplateName(newName);
+    if (newName !== femplateName) {
+      setFemplateName(newName);
 
       if (!isNew) {
-        renameTaskTemplate$(femplate.id, newName).subscribe();
+        renameFemplate$(femplate.id, newName).subscribe();
       }
     }
   }
@@ -147,14 +147,14 @@ export const TaskTemplatePage = () => {
           // ]
         },
         {
-          name: taskTemplateName
+          name: femplateName
         }
       ]}
       onBack={() => navigate(-1)}
       loading={loading}
       ghost={true}
-      icon={<TaskTemplateIcon />}
-      title={<ClickToEditInput placeholder={isNew ? 'New Form Template' : "Form template name"} value={taskTemplateName} size={22} onChange={handleRename} maxLength={100} />}
+      icon={<FemplateIcon />}
+      title={<ClickToEditInput placeholder={isNew ? 'New Form Template' : "Form template name"} value={femplateName} size={22} onChange={handleRename} maxLength={100} />}
       extra={[
         <Button key="preview" icon={<EyeOutlined />} onClick={() => setOpenPreview(true)}>Preview</Button>,
         <Button key="save" type="primary" icon={<SaveFilled />} onClick={() => handleSave()}>Save</Button>
@@ -179,8 +179,8 @@ export const TaskTemplatePage = () => {
   );
 };
 
-TaskTemplatePage.propTypes = {};
+FemplatePage.propTypes = {};
 
-TaskTemplatePage.defaultProps = {};
+FemplatePage.defaultProps = {};
 
-export default TaskTemplatePage;
+export default FemplatePage;

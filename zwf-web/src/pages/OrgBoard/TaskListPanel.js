@@ -48,7 +48,7 @@ export const TaskListPanel = (props) => {
       sorter: () => 0,
       // onFilter: (value, record) => record.name.includes(value),
       render: (text, record) => {
-        const { id, name, taskTemplateName, lastUnreadMessageAt } = record;
+        const { id, name, femplateName, lastUnreadMessageAt } = record;
         return <div style={{ display: 'flex', flexDirection: 'column', fontSize: 14 }}>
           <Link to={`/task/${id}?${lastUnreadMessageAt ? 'chat=1' : ''}`}>
             <TaskIcon />
@@ -58,8 +58,8 @@ export const TaskListPanel = (props) => {
 
           {/* <small>
             <Text type="secondary">
-                <TaskTemplateIcon size={9} style={{marginRight: 4}}/>
-                <Highlighter highlightClassName="search-highlighting" searchWords={[searchText]} autoEscape={true} textToHighlight={taskTemplateName || ''} />
+                <FemplateIcon size={9} style={{marginRight: 4}}/>
+                <Highlighter highlightClassName="search-highlighting" searchWords={[searchText]} autoEscape={true} textToHighlight={femplateName || ''} />
             </Text>
           </small> */}
         </div>

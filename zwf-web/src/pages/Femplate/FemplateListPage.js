@@ -9,10 +9,10 @@ import { Button, Card, List, Modal, Space, Typography, Tooltip, Row, Col, Segmen
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { cloneTaskTemplate$, deleteTaskTemplate$, listTaskTemplate$ } from 'services/taskTemplateService';
+import { duplicateFemplate$, deleteFemplate$, listFemplate$ } from 'services/femplateService';
 import styled from 'styled-components';
 import DropdownMenu from 'components/DropdownMenu';
-import { TaskTemplateIcon } from '../../components/entityIcon';
+import { FemplateIcon } from '../../components/entityIcon';
 import { notify } from 'util/notify';
 import {TaskFieldsPreviewPanel} from './TaskFieldsPreviewPanel';
 import { BiGridAlt } from 'react-icons/bi';
@@ -35,13 +35,13 @@ const Container = styled.div`
   }
 `;
 
-export const TaskTemplateListPage = () => {
+export const FemplateListPage = () => {
   useAssertRole(['admin', 'agent']);
   const [list, setList] = React.useState([]);
   const [searchText, setSearchText] = React.useState('');
   const [filteredList, setFilteredList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
-  const [previewTaskTemplate, setPreviewTaskTemplate] = React.useState();
+  const [previewFemplate, setPreviewFemplate] = React.useState();
   const [viewMode, setViewMode] = React.useState('grid');
   const [previewMode, setPreviewMode] = React.useState('agent');
   const [openCreator, creatorContextHolder] = useCreateTaskModal();
@@ -50,7 +50,7 @@ export const TaskTemplateListPage = () => {
 
   const loadList$ = () => {
     setLoading(true)
-    return listTaskTemplate$().pipe(
+    return listFemplate$().pipe(
       finalize(() => setLoading(false))
     ).subscribe(list => {
       setList(list);
@@ -82,9 +82,9 @@ export const TaskTemplateListPage = () => {
       onOk: () => {
         setLoading(true);
 
-        deleteTaskTemplate$(id).pipe(
+        deleteFemplate$(id).pipe(
           finalize(() => setLoading(false)),
-          switchMap(() => listTaskTemplate$()),
+          switchMap(() => listFemplate$()),
           finalize(() => setLoading(false)),
         ).subscribe(list => {
           setList(list);
@@ -103,7 +103,7 @@ export const TaskTemplateListPage = () => {
   }
 
   const handleClone = item => {
-    cloneTaskTemplate$(item.id)
+    duplicateFemplate$(item.id)
       .subscribe(cloned => {
         // console.log(task);
         notify.success('Cloned task', <>Successfully cloned task template. The new task template is  <TextLink target="_blank" href={`/femplate/${cloned.id}`}>{cloned.name}</TextLink></>, 20);
@@ -122,7 +122,7 @@ export const TaskTemplateListPage = () => {
     id: item.id,
     data: item,
     title: item.name,
-    avatar: <TaskTemplateIcon />,
+    avatar: <FemplateIcon />,
     description: <>balah</>,
     content: <>
       <Descriptions size="small">
@@ -240,7 +240,7 @@ export const TaskTemplateListPage = () => {
                     icon: <EyeOutlined />,
                     menu: 'Preview',
                     onClick: () => {
-                      setPreviewTaskTemplate(row.data);
+                      setPreviewFemplate(row.data);
                     }
                   },
                   {
@@ -263,9 +263,9 @@ export const TaskTemplateListPage = () => {
         }}
       />
       <Modal
-        open={!!previewTaskTemplate}
-        onOk={() => setPreviewTaskTemplate(null)}
-        onCancel={() => setPreviewTaskTemplate(null)}
+        open={!!previewFemplate}
+        onOk={() => setPreviewFemplate(null)}
+        onCancel={() => setPreviewFemplate(null)}
         closable
         destroyOnClose
         maskClosable
@@ -275,8 +275,8 @@ export const TaskTemplateListPage = () => {
         footer={null}
       >
         <TaskFieldsPreviewPanel
-          name={previewTaskTemplate?.name}
-          fields={previewTaskTemplate?.fields}
+          name={previewFemplate?.name}
+          fields={previewFemplate?.fields}
           mode={previewMode}
         />
       </Modal>
@@ -285,8 +285,8 @@ export const TaskTemplateListPage = () => {
   </Container>)
 };
 
-TaskTemplateListPage.propTypes = {};
+FemplateListPage.propTypes = {};
 
-TaskTemplateListPage.defaultProps = {};
+FemplateListPage.defaultProps = {};
 
-export default TaskTemplateListPage;
+export default FemplateListPage;

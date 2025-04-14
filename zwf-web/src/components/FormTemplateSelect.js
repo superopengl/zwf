@@ -1,8 +1,8 @@
 import { Divider, Button, Select, Row } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { listTaskTemplate$ } from 'services/taskTemplateService';
-import { TaskTemplateIcon } from './entityIcon';
+import { listFemplate$ } from 'services/femplateService';
+import { FemplateIcon } from './entityIcon';
 import styled from 'styled-components';
 import { PlusOutlined } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -34,7 +34,7 @@ export const FormTemplateSelect = (props) => {
 
   React.useEffect(() => {
     onLoadingChange(true);
-    const subscription$ = listTaskTemplate$().subscribe(list => {
+    const subscription$ = listFemplate$().subscribe(list => {
       setOptions(convertToOptions(list));
       onLoadingChange(false);
     });
@@ -44,9 +44,9 @@ export const FormTemplateSelect = (props) => {
     }
   }, []);
 
-  const convertToOptions = (taskTemplateList) => {
-    return taskTemplateList.map(x => ({
-      label: <>{showIcon && <TaskTemplateIcon />}{x.name}</>,
+  const convertToOptions = (femplateList) => {
+    return femplateList.map(x => ({
+      label: <>{showIcon && <FemplateIcon />}{x.name}</>,
       value: x.id,
       key: x.id,
       data: x,
@@ -59,7 +59,7 @@ export const FormTemplateSelect = (props) => {
 
   return (<StyledSelect
     options={options}
-    placeholder={<>{showIcon && <TaskTemplateIcon />}Select template</>}
+    placeholder={<>{showIcon && <FemplateIcon />}Select template</>}
     allowClear
     value={value}
     onChange={handleChange}

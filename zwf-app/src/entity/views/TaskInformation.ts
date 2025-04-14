@@ -1,7 +1,7 @@
 import { TaskTagsTag } from '../TaskTagsTag';
 import { Role } from './../../types/Role';
 import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
-import { TaskTemplate } from '../TaskTemplate';
+import { Femplate } from '../Femplate';
 import { Task } from '../Task';
 import { TaskStatus } from '../../types/TaskStatus';
 import { Org } from '../Org';
@@ -41,14 +41,14 @@ import { OrgClient } from '../OrgClient';
       'p.email as email',
       'p."givenName" as "givenName"',
       'p.surname as surname',
-      't."name" as "taskTemplateName"',
+      't."name" as "femplateName"',
       'u.role as role',
       't."assigneeId" as "assigneeId"',
       't."createdAt" as "createdAt"',
       't."updatedAt" as "updatedAt"',
       `coalesce(tag.tags, '{}'::jsonb[]) as tags`,
     ]),
-  dependsOn: [Task, TaskTagsTag, Tag, Org, TaskTemplate, User, UserProfile]
+  dependsOn: [Task, TaskTagsTag, Tag, Org, Femplate, User, UserProfile]
 }) export class TaskInformation {
   @ViewColumn()
   id: string;
@@ -96,7 +96,7 @@ import { OrgClient } from '../OrgClient';
   femplateId: string;
 
   @ViewColumn()
-  taskTemplateName: string;
+  femplateName: string;
 
   @ViewColumn()
   role: Role;

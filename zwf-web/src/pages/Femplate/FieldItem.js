@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { Typography } from 'antd';
 import React from 'react';
-import { createFormItemSchema, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
+import { createFormItemSchema, FemplateFieldControlDefMap } from 'util/FieldControlDef';
 import { BetaSchemaForm, ProFormSelect } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import styled from 'styled-components';

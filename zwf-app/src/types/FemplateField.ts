@@ -1,5 +1,5 @@
 
-export class TaskTemplateField {
+export type FemplateField = {
   name: string;
   description: string;
   type: string;

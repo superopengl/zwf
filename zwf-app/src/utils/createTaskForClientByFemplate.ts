@@ -1,23 +1,23 @@
-import { OrgClient } from './../entity/OrgClient';
+import { OrgClient } from '../entity/OrgClient';
 import { TaskField } from '../entity/TaskField';
 import { UserProfile } from '../entity/UserProfile';
 
 import { assert } from './assert';
 import * as _ from 'lodash';
 import { Task } from '../entity/Task';
-import { TaskTemplate } from '../entity/TaskTemplate';
+import { Femplate } from '../entity/Femplate';
 import { TaskStatus } from '../types/TaskStatus';
 import { ensureClientOrGuestUser } from './ensureClientOrGuestUser';
 import { v4 as uuidv4 } from 'uuid';
 import * as path from 'path';
-import { TaskTemplateField } from '../types/TaskTemplateField';
+import { FemplateField } from '../types/FemplateField';
 import { generateDeepLinkId } from './generateDeepLinkId';
 import { EntityManager } from 'typeorm';
 
-function prefillTaskTemplateFields(taskTemplateFields, varBag: { [key: string]: any }) {
-  if (!varBag) return taskTemplateFields;
+function prefillFemplateFields(femplateFields, varBag: { [key: string]: any }) {
+  if (!varBag) return femplateFields;
 
-  const fields = taskTemplateFields.map(f => (
+  const fields = femplateFields.map(f => (
     {
       ...f,
       value: varBag[f.varName]
@@ -27,8 +27,8 @@ function prefillTaskTemplateFields(taskTemplateFields, varBag: { [key: string]: 
   return fields;
 }
 
-function generateTaskDefaultName(taskTemplateName, clientAlias: string) {
-  return `${taskTemplateName || 'New task'} for ${clientAlias}`;
+function generateTaskDefaultName(femplateName, clientAlias: string) {
+  return `${femplateName || 'New task'} for ${clientAlias}`;
 }
 
 function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
@@ -36,27 +36,27 @@ function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
   return n + ext;
 }
 
-export const createTaskFieldByTaskTemplateField = (taskId: string, ordinal: number, taskTemplateField: TaskTemplateField) => {
+const createTaskFieldByFemplateField = (taskId: string, ordinal: number, femplateField: FemplateField) => {
   const field = new TaskField();
   field.id = uuidv4();
   field.taskId = taskId;
   field.ordinal = ordinal;
-  field.name = taskTemplateField.name;
-  field.description = taskTemplateField.description;
-  field.type = taskTemplateField.type;
-  field.required = taskTemplateField.required;
+  field.name = femplateField.name;
+  field.description = femplateField.description;
+  field.type = femplateField.type;
+  field.required = femplateField.required;
   field.value = null;
-  field.options = taskTemplateField.options;
-  field.official = taskTemplateField.official;
-  field.value = taskTemplateField.value;
+  field.options = femplateField.options;
+  field.official = femplateField.official;
+  field.value = femplateField.value;
 
   return field;
 };
 
-export const createTaskByTaskTemplateForClient = async (m: EntityManager, femplateId, taskName, clientId, creatorId: string, id, orgId) => {
+export const createTaskForClientByFemplate = async (m: EntityManager, femplateId, taskName, clientId, creatorId: string, id, orgId) => {
   assert(clientId, 400, 'clientId is not specified');
 
-  const femplate = femplateId ? await m.findOne(TaskTemplate, {
+  const femplate = femplateId ? await m.findOne(Femplate, {
     where: {
       id: femplateId
     },
@@ -75,7 +75,7 @@ export const createTaskByTaskTemplateForClient = async (m: EntityManager, fempla
   task.status = TaskStatus.TODO;
 
   // Provision taskFields based on femplate.fields
-  const fields = femplate?.fields.map((f, i) => createTaskFieldByTaskTemplateField(task.id, i, f)) ?? [];
+  const fields = femplate?.fields.map((f, i) => createTaskFieldByFemplateField(task.id, i, f)) ?? [];
 
   await m.save([task, ...fields]);
 

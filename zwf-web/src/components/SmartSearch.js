@@ -1,10 +1,10 @@
 import { AutoComplete, Typography, Space, Row, Col } from 'antd';
 import React from 'react';
 import { HighlightingText } from './HighlightingText';
-import { ClientIcon, DocTemplateIcon, TaskIcon, TaskTemplateIcon } from './entityIcon';
+import { ClientIcon, DocTemplateIcon, TaskIcon, FemplateIcon } from './entityIcon';
 import { EnterOutlined, SearchOutlined } from '@ant-design/icons';
 import Tag from './Tag';
-import { smartSearchTask$, smartSearchTaskTemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
+import { smartSearchTask$, smartSearchFemplate$, smartSearchDocTemplate$, smartSearchClient$ } from 'services/smartSearchService';
 import { UserNameCard } from './UserNameCard';
 // import { useKey} from 'react-use';
 import { useKeys } from "rooks";
@@ -22,13 +22,13 @@ const DOMAIN_CONFIG = {
     noFoundContent: <><TaskIcon /> No task is found.</>
   },
   'femplate': {
-    searchHandler: smartSearchTaskTemplate$,
+    searchHandler: smartSearchFemplate$,
     pathHandler: id => `/femplate/${id}`,
     renderHandler: (item, searchText) => <>
-      <TaskTemplateIcon />
+      <FemplateIcon />
       <HighlightingText value={item.name} search={searchText} />
     </>,
-    noFoundContent: <><TaskTemplateIcon /> No task template is found.</>
+    noFoundContent: <><FemplateIcon /> No task template is found.</>
   },
   'demplate': {
     searchHandler: smartSearchDocTemplate$,
@@ -67,7 +67,7 @@ export const SmartSearch = React.memo((props) => {
       {
         key: 'femplate',
         label: 'task templates',
-        icon: <TaskTemplateIcon />
+        icon: <FemplateIcon />
       },
       {
         key: 'demplate',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Col, Typography } from 'antd';
 import styled from 'styled-components';
-import { createFieldItemSchema, TaskTemplateFieldControlDef, TaskTemplateFieldControlDefMap } from 'util/TaskTemplateFieldControlDef';
+import { createFieldItemSchema, FieldControlDef, FemplateFieldControlDefMap } from 'util/FieldControlDef';
 import { FieldControlItem } from './FieldControlItem';
 import { DndProvider } from 'react-dnd'
 import { HTML5Backend } from 'react-dnd-html5-backend'
@@ -45,7 +45,7 @@ export const TaskFieldEditorPanel = (props) => {
 
   const getUniqueNewFieldName = (allFields, newControlType) => {
     const existingNames = new Set(allFields.map(f => f.name));
-    const controlDef = TaskTemplateFieldControlDefMap.get(newControlType);
+    const controlDef = FemplateFieldControlDefMap.get(newControlType);
     const fieldBaseName = controlDef.label;
 
     let number = 1;
@@ -61,7 +61,7 @@ export const TaskFieldEditorPanel = (props) => {
       <DndProvider backend={HTML5Backend}>
         <ProCard gutter={[20, 20]} ghost className="field-control-column">
           <ProCard colSpan={"200px"} direction="column" layout="center" ghost >
-            {TaskTemplateFieldControlDef.map(c => <FieldControlItem
+            {FieldControlDef.map(c => <FieldControlItem
               key={c.type}
               icon={c.icon}
               label={c.label}

@@ -628,14 +628,14 @@ paths:
           description: OK
   /femplate:
     post:
-      operationId: saveTaskTemplate
+      operationId: saveFemplate
       # security:
       #   - authAdmin: []
       responses:
         200:
           description: OK
     get:
-      operationId: listTaskTemplates
+      operationId: listFemplates
       # security:
       #   - authLoggedInUser: []
       responses:
@@ -643,7 +643,7 @@ paths:
           description: OK
   /femplate/{id}:
     get:
-      operationId: getTaskTemplate
+      operationId: getFemplate
       # security:
       #   - authLoggedInUser: []
       parameters:
@@ -656,7 +656,7 @@ paths:
         200:
           description: OK
     delete:
-      operationId: deleteTaskTemplate
+      operationId: deleteFemplate
       # security:
       #   - authAdmin: []
       parameters:
@@ -668,9 +668,9 @@ paths:
       responses:
         200:
           description: OK
-  /femplate/{id}/clone:
+  /femplate/{id}/duplicate:
     put:
-      operationId: cloneTaskTemplate
+      operationId: duplicateFemplate
       # security:
       #   - authLoggedInUser: []
       parameters:
@@ -684,7 +684,7 @@ paths:
           description: OK
   /femplate/{id}/rename:
     post:
-      operationId: renameTaskTemplate
+      operationId: renameFemplate
       # security:
       #   - authClient: []
       parameters:
@@ -738,7 +738,7 @@ paths:
       responses:
         200:
           description: OK
-  /demplate/{id}/clone:
+  /demplate/{id}/duplicate:
     put:
       operationId: cloneDocTemplate
       # security:
@@ -1330,7 +1330,7 @@ paths:
           description: OK
   /smart_search/femplate:
     post:
-      operationId: smartSearchTaskTemplate
+      operationId: smartSearchFemplate
       responses:
         200:
           description: OK

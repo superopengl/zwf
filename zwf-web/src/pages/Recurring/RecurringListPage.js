@@ -45,8 +45,8 @@ const RecurringListPage = () => {
     },
     {
       title: 'Form Template',
-      dataIndex: 'taskTemplateName',
-      render: (text, record) => record.taskTemplateName ? <Link to={`/femplate/${record.femplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
+      dataIndex: 'femplateName',
+      render: (text, record) => record.femplateName ? <Link to={`/femplate/${record.femplateId}`}>{text}</Link> : <Text type="danger">deleted task template</Text>,
       ellipsis: false
     },
     {
@@ -148,7 +148,7 @@ const RecurringListPage = () => {
 
   const handleDelete = async (e, item) => {
     e.stopPropagation();
-    const { id, taskTemplateName, portfolioName, recurringName, orgClientId } = item;
+    const { id, femplateName, portfolioName, recurringName, orgClientId } = item;
     modal.confirm({
       title: <>Delete scheduler</>,
       content: <Space direction="vertical">

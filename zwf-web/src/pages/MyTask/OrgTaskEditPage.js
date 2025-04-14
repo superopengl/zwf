@@ -8,10 +8,9 @@ import { TaskIcon } from 'components/entityIcon';
 import { SavingAffix } from 'components/SavingAffix';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
-import TaskFieldEditorPanel from 'pages/TaskTemplate/TaskFieldEditorPanel';
+import TaskFieldEditorPanel from 'pages/Femplate/TaskFieldEditorPanel';
 import { EyeOutlined } from '@ant-design/icons';
-import { TaskFieldsPreviewDrawer } from 'pages/TaskTemplate/TaskFieldsPreviewDrawer';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
+import { TaskFieldsPreviewDrawer } from 'pages/Femplate/TaskFieldsPreviewDrawer';
 import { EditFieldsContext } from 'contexts/EditFieldsContext';
 
 

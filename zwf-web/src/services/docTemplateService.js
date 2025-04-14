@@ -9,7 +9,7 @@ export function saveDocTemplate$(demplate) {
 }
 
 export function cloneDocTemplate$(sourceTemplateId, name) {
-  return httpPut$(`/demplate/${sourceTemplateId}/clone`, {name});
+  return httpPut$(`/demplate/${sourceTemplateId}/duplicate`, {name});
 }
 
 export function deleteDocTemplate$(id) {

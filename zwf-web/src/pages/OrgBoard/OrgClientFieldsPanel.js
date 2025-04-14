@@ -6,7 +6,7 @@ import PropTypes from 'prop-types';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { FormTemplateSelect } from 'components/FormTemplateSelect';
 import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
-import { getTaskTemplate$ } from 'services/taskTemplateService';
+import { getFemplate$ } from 'services/femplateService';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { Loading } from 'components/Loading';
@@ -48,7 +48,7 @@ export const OrgClientFieldsPanel = (props) => {
       return;
     }
     setLoading(true)
-    const sub$ = getTaskTemplate$(femplateId)
+    const sub$ = getFemplate$(femplateId)
       .pipe(
         finalize(() => setLoading(false))
       )

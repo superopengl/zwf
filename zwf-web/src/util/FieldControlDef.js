@@ -26,10 +26,10 @@ import {TbNumbers} from 'react-icons/tb';
 import {RiRadioButtonFill} from'react-icons/ri';
 
 const getControleDefOrDefault = (controlType)  => {
-  let controlDef = TaskTemplateFieldControlDefMap.get(controlType);
+  let controlDef = FemplateFieldControlDefMap.get(controlType);
   if (!controlDef) {
     console.warn(`Unknown control type ${controlType}. Fail back to textarea`);
-    controlDef =  TaskTemplateFieldControlDefMap.get('text');
+    controlDef =  FemplateFieldControlDefMap.get('text');
   }
   return controlDef;;
 }
@@ -74,7 +74,7 @@ export function generateSchemaFromColumns(fields, mode = 'agent' | 'client' | 'p
     .map(f => createFormItemSchema(f, mode));
 }
 
-export const TaskTemplateFieldControlDef = Object.freeze([
+export const FieldControlDef = Object.freeze([
   {
     type: 'text',
     label: 'Text',
@@ -216,4 +216,4 @@ export const TaskTemplateFieldControlDef = Object.freeze([
   },
 ]);
 
-export const TaskTemplateFieldControlDefMap = new Map(TaskTemplateFieldControlDef.map(x => [x.type, x]));
+export const FemplateFieldControlDefMap = new Map(FieldControlDef.map(x => [x.type, x]));

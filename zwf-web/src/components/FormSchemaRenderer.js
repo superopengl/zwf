@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { BetaSchemaForm } from '@ant-design/pro-components';
-import { generateSchemaFromColumns } from 'util/TaskTemplateFieldControlDef';
+import { generateSchemaFromColumns } from 'util/FieldControlDef';
 import styled from 'styled-components';
 
 const Container = styled.div`

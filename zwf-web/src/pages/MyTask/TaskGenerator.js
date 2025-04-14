@@ -4,7 +4,7 @@ import { Space, Typography, Button, Form, Radio, Progress, Row, Input, InputNumb
 import { Loading } from 'components/Loading';
 import PropTypes from 'prop-types';
 import {FormTemplateSelect} from 'components/FormTemplateSelect';
-import { getTaskTemplate$ } from 'services/taskTemplateService';
+import { getFemplate$ } from 'services/femplateService';
 import { catchError, finalize, mapTo, tap, window } from 'rxjs/operators';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { createNewTask$ } from 'services/taskService';
@@ -39,7 +39,7 @@ const StyledDescription = props => <Paragraph type="secondary">{props.value}</Pa
 
 export const TaskGenerator = React.memo(props => {
   const { client, postCreateMode } = props;
-  const [femplateId, setTaskTemplateId] = React.useState(props.femplateId);
+  const [femplateId, setFemplateId] = React.useState(props.femplateId);
   const [clientInfo, setClientInfo] = React.useState(client);
   const [startMode, setStartMode] = React.useState();
   const [recurringMode, setRecurringMode] = React.useState();
@@ -54,7 +54,7 @@ export const TaskGenerator = React.memo(props => {
 
   React.useEffect(() => {
     if (femplateId) {
-      getTaskTemplate$(femplateId)
+      getFemplate$(femplateId)
         .pipe(
           catchError(() => setLoading(false))
         )
@@ -74,7 +74,7 @@ export const TaskGenerator = React.memo(props => {
     }
   }, [clientInfo, femplate])
 
-  const handleTaskTemplateChange = formTemplateid => {
+  const handleFemplateChange = formTemplateid => {
     setNewTaskInfo({ ...newTaskInfo, formTemplateid })
     next();
   }
@@ -224,7 +224,7 @@ export const TaskGenerator = React.memo(props => {
       title: 'From template',
       description: isRecurring ? 'Choose a task template for the recurring' : 'Optionally choose a task template to begin with',
       content: <>
-        <FormTemplateSelect style={{ width: '100%' }} onChange={handleTaskTemplateChange}
+        <FormTemplateSelect style={{ width: '100%' }} onChange={handleFemplateChange}
           showIcon={true} value={newTaskInfo.formTemplateid} />
       </>,
       canNext: () => newTaskInfo.orgClientId && (!isRecurring || newTaskInfo.formTemplateid)

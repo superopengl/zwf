@@ -5,7 +5,7 @@ import { assert } from '../utils/assert';
 import * as _ from 'lodash';
 import { v4 as uuidv4 } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { TaskTemplate } from '../entity/TaskTemplate';
+import { Femplate } from '../entity/Femplate';
 import { Recurring } from '../entity/Recurring';
 import { CLIENT_TZ, CRON_EXECUTE_TIME, testRunRecurring } from '../services/recurringService';
 import * as moment from 'moment-timezone';
@@ -19,8 +19,8 @@ export const saveRecurring = handlerWrapper(async (req, res) => {
   const { id, orgClientId, name, femplateId, firstRunOn, every, period } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  const femplate = await db.getRepository(TaskTemplate).findOne({ where: { id: femplateId } });
-  assert(femplate, 404, 'TaskTemplate is not found');
+  const femplate = await db.getRepository(Femplate).findOne({ where: { id: femplateId } });
+  assert(femplate, 404, 'Femplate is not found');
 
   const recurring = new Recurring();
   recurring.id = id || uuidv4();

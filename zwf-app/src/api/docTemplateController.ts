@@ -123,8 +123,8 @@ export const cloneDocTemplate = handlerWrapper(async (req, res) => {
     demplate = await m.findOne(DocTemplate, { where: { id, orgId } });
     assert(demplate, 404);
 
-    const newTaskTemplateId = uuidv4();
-    demplate.id = newTaskTemplateId;
+    const newFemplateId = uuidv4();
+    demplate.id = newFemplateId;
     demplate.createdAt = getUtcNow();
     demplate.updatedAt = getUtcNow();
     demplate.name = await getUniqueCopyName(m, orgId, preferredName);

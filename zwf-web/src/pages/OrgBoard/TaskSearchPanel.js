@@ -89,9 +89,9 @@ export const TaskSearchPanel = props => {
           />
         </ItemCol>
         {/* <ItemCol title="Task template">
-          <TaskTemplateSelect
+          <FemplateSelect
             style={{ width: '100%' }}
-            value={queryInfo.femplateId} onChange={handleTaskTemplateIdChange} />
+            value={queryInfo.femplateId} onChange={handleFemplateIdChange} />
         </ItemCol> */}
         <ItemCol title="Assignee" span={span}>
           <MemberSelect
