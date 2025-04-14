@@ -30,6 +30,7 @@ import { InputNumber } from 'antd';
 import { EstInput } from 'components/EstInput';
 import moment from 'moment';
 import dayjs from 'dayjs';
+import { Descriptions } from 'antd';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -188,7 +189,7 @@ const OrgTaskPage = React.memo(() => {
       // ]}
       >
         <Row gutter={[30, 30]} >
-          <Col span={14}>
+          <Col flex="2 2 300px">
             <Row gutter={[30, 30]} >
               <Col span={24} >
                 <ProCard
@@ -209,39 +210,36 @@ const OrgTaskPage = React.memo(() => {
               </Col>
             </Row>
           </Col>
-          <Col span={10}>
+          <Col flex="1 1 200px">
             <Row gutter={[30, 30]} >
               <Col span={24}>
                 <ProCard ghost>
-                  <Collapse defaultActiveKey={['tags', 'assignee', 'actions']} expandIconPosition="end" ghost expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
-                    <ClientNameCard id={task?.orgClientId} />
-
-                    <Collapse.Panel key="assignee" header="Assignee">
+                  <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+                  <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
+                    <Descriptions.Item label="Assignee">
                       <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
-                    </Collapse.Panel>
-                    <Collapse.Panel key="tags" header="Tags">
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Tags">
                       <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
-                    </Collapse.Panel>
-
-                    <Collapse.Panel key="actions" header="Actions">
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Actions">
                       <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                         {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
                         <Button type="link" icon={<ShareAltOutlined />} onClick={() => showShareTaskDeepLinkModal(task.deepLinkId)}>Share link</Button>
                         {!hasFinished && <Button type="link" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                         {task.status !== 'archived' && <Button type="link" danger icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
                       </Space>
-                    </Collapse.Panel>
-                  </Collapse>
+                    </Descriptions.Item>
+                    <Descriptions.Item label="Comments">
+                      <ProCard size="small" bodyStyle={{ padding: '12px 0' }} bordered={true}>
+                        <TaskCommentPanel taskId={task.id} />
+                      </ProCard>
+
+                    </Descriptions.Item>
+
+                  </Descriptions>
                 </ProCard>
               </Col>
-              {task && <Col span={24}>
-                <ProCard
-                // title="Comments"
-                // type="inner"
-                >
-                  <TaskCommentPanel taskId={task.id} />
-                </ProCard>
-              </Col>}
             </Row>
           </Col>
         </Row>
