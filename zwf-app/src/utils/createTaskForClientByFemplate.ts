@@ -13,6 +13,7 @@ import * as path from 'path';
 import { FemplateField } from '../types/FemplateField';
 import { generateDeepLinkId } from './generateDeepLinkId';
 import { EntityManager } from 'typeorm';
+import { OrgClientField } from '../entity/OrgClientField';
 
 function prefillFemplateFields(femplateFields, varBag: { [key: string]: any }) {
   if (!varBag) return femplateFields;
@@ -36,7 +37,7 @@ function ensureFileNameExtension(basename: string, ext: string = '.pdf') {
   return n + ext;
 }
 
-const createTaskFieldByFemplateField = (taskId: string, ordinal: number, femplateField: FemplateField) => {
+const createTaskFieldByFemplateField = (taskId: string, ordinal: number, femplateField: FemplateField, defaultValueMap: Map<string, any>) => {
   const field = new TaskField();
   field.id = uuidv4();
   field.taskId = taskId;
@@ -45,16 +46,15 @@ const createTaskFieldByFemplateField = (taskId: string, ordinal: number, femplat
   field.description = femplateField.description;
   field.type = femplateField.type;
   field.required = femplateField.required;
-  field.value = null;
+  field.value = defaultValueMap.get(femplateField.name);
   field.options = femplateField.options;
   field.official = femplateField.official;
-  field.value = femplateField.value;
 
   return field;
 };
 
-export const createTaskForClientByFemplate = async (m: EntityManager, femplateId, taskName, clientId, creatorId: string, id, orgId) => {
-  assert(clientId, 400, 'clientId is not specified');
+export const createTaskForClientByFemplate = async (m: EntityManager, femplateId, taskName, orgClientId, creatorId: string, id, orgId) => {
+  assert(orgClientId, 400, 'orgClientId is not specified');
 
   const femplate = femplateId ? await m.findOne(Femplate, {
     where: {
@@ -62,7 +62,7 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
     },
   }) : null;
 
-  const orgClient = await m.findOneByOrFail(OrgClient, {id: clientId, orgId});
+  const orgClient = await m.findOneByOrFail(OrgClient, { id: orgClientId, orgId });
 
   // const { user } = await ensureClientOrGuestUser(m, clientId, orgId);
 
@@ -74,8 +74,11 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
   task.orgId = orgId;
   task.status = TaskStatus.TODO;
 
+  const clientFields = await m.findBy(OrgClientField, { orgClientId });
+  const defaultValueMap = new Map(clientFields.map(f => [f.name, f.value]));
+
   // Provision taskFields based on femplate.fields
-  const fields = femplate?.fields.map((f, i) => createTaskFieldByFemplateField(task.id, i, f)) ?? [];
+  const fields = femplate?.fields.map((f, i) => createTaskFieldByFemplateField(task.id, i, f, defaultValueMap)) ?? [];
 
   await m.save([task, ...fields]);
 
