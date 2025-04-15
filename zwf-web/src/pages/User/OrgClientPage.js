@@ -71,10 +71,6 @@ border-radius:4px;
 .ant-tabs  {
   padding-left: 0;
 }
-
-.ant-tabs-nav-list {
-  padding-inline-start: 0 !important;
-}
 `;
 
 

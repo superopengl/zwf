@@ -17,9 +17,11 @@ width: 100%;
   flex: 1 1 auto;
 }
 
-.ant-tabs {
-  padding-left: 32px;
-}
+// .page-header {
+//   .ant-tabs {
+//     padding-left: 32px;
+//   }
+// }
 
 .ant-pro-page-container-children-content {
   padding-left: 0;
@@ -56,6 +58,7 @@ export const PageHeaderContainer = React.memo((props) => {
     <PageContainer
       {...others}
       onBack={onBack}
+      className="page-header"
       header={{
         // backIcon: <LeftOutlined />,
         title: <Row align="middle" wrap={false} style={{ height: 46, paddingLeft: onBack ? 0 : 32, width: '100%' }}>

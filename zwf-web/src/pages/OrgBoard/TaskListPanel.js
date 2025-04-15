@@ -20,24 +20,24 @@ const { Text, Paragraph, Link: TextLink } = Typography;
 
 const StyledTable = styled(Table)`
 
-.ant-table-cell {
+.ant-table-cell, .ant-table-cell:hover {
   &:has(.task-status-action_required) {
-    background-color: #F53F3F44;
+    background-color: #F53F3F22 !important;
   }
   &:has(.task-status-todo) {
-    // background-color: #97A3B788;
+    background-color: #FAFAFA !important;
   }
   &:has(.task-status-in_progress) {
-    background-color: #0051D944;
+    background-color: #0FBFC444 !important;
   }
   &:has(.task-status-done) {
-    background-color: #00B42A44;
+    background-color: #00B42A22 !important;
   }
   &:has(.task-status-archived) {
-    background-color: #1C222B;
+    background-color: #1C222B66 !important;
 
     .ant-badge-status-text {
-      color: #CCCCCC !important;
+      // color: #CCCCCC !important;
     }
   }
 }
@@ -128,7 +128,13 @@ export const TaskListPanel = (props) => {
       dataIndex: 'status',
       width: 160,
       sorter: () => 0,
-      render: (value, record) => <TaskStatusButton className={`task-status-${value}`} size="small" value={value} bordered={false} onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />,
+      render: (value, record) => <TaskStatusButton
+        className={`task-status-${value}`}
+        size="small"
+        value={value}
+        bordered={false}
+        style={{ width: '100%' }}
+        onChange={(newStatus) => handleTaskStatusChange(record.id, newStatus)} />,
       ellipsis: false,
     },
     {

@@ -93,11 +93,11 @@ export const TaskCard = (props) => {
     {(tagIds.length > 0 || task.assigneeId) &&
       <ProCard>
         <Row gutter={[10, 10]} justify="space-between">
-          {showTags && <Col span={24}>
+          {showTags && <Col>
             <TagSelect readonly={true} value={tagIds} />
           </Col>}
           {task.assigneeId && <Col>
-            <UserNameCard userId={task.assigneeId} size={40} showTooltip={true} showName={false} showEmail={false} />
+            <UserNameCard userId={task.assigneeId} size={24} showTooltip={true} showName={false} showEmail={false} />
           </Col>}
 
         </Row>
