@@ -109,13 +109,13 @@ const OrgArchivedTasksPage = () => {
       <Card>
         <TaskSearchPanel queryInfo={queryInfo} onChange={handleFilterSearch} showStatusFilter={false} span={6} />
       </Card>
-      
+
 
       <LayoutStyled direction="vertical" size="large">
-        <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} />
+        <TaskListPanel tasks={taskList} onChange={handleReload} searchText={queryInfo.text} archivedMode={true} />
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
           <Pagination size="small" onChange={handlePaginationChange}
-            total={queryInfo.total} showSizeChanger={true} pageSize={queryInfo.size} />
+            total={queryInfo.total}  showTotal={t => `Total ${t}`} showSizeChanger={true} pageSize={queryInfo.size} />
         </Space>
       </LayoutStyled>
     </PageHeaderContainer>
