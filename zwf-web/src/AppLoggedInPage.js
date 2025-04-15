@@ -78,7 +78,7 @@ const ROUTES = [
         roles: ['admin', 'agent'],
       },
       {
-        path: '/trash',
+        path: '/archived',
         name: "Archived Tasks",
         icon: <Icon component={BsFillTrash3Fill} />,
         roles: ['admin', 'agent'],

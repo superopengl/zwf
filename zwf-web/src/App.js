@@ -136,7 +136,7 @@ export const App = React.memo(() => {
           <Route path="/femplate/new" element={<FemplatePage />} />
           <Route path="/femplate/:id" element={<FemplatePage />} />
           <Route path="/recurring" element={<RecurringListPage />} />
-          <Route path="/trash" element={<OrgArchivedTasksPage />} />
+          <Route path="/archived" element={<OrgArchivedTasksPage />} />
           <Route path="/client" element={<OrgClientListPage />} />
           <Route path="/client/:id" element={<OrgClientPage />} />
           <Route path="/tags" element={<OrgTagListPage />} />
