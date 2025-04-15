@@ -39,7 +39,7 @@ export const LogInPanel = props => {
         filter(u => !!u),
         finalize(() => setLoading(false))
       ).subscribe({
-        next: user => setAuthUser(user, '/landing'),
+        next: user => setAuthUser(user, returnUrl || '/landing'),
         error: err => {},
       });
   }
