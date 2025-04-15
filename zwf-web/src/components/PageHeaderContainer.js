@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumb, Row, Col, Typography } from 'antd';
+import { Breadcrumb, Row, Col, Typography, Grid } from 'antd';
 import { PageContainer } from '@ant-design/pro-components';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -46,6 +46,9 @@ padding: 16px 24px;
 export const PageHeaderContainer = React.memo((props) => {
   const { breadcrumb, children, icon, title, extra, style, onBack, maxWidth, footer, loading, ...others } = props;
 
+  const screens = Grid.useBreakpoint();
+
+  console.log(screens)
 
   return <Container style={{ ...style, maxWidth }}>
     <Breadcrumb style={{ padding: '1rem 40px 0' }}
@@ -77,7 +80,11 @@ export const PageHeaderContainer = React.memo((props) => {
       }}
     >
       <Loading loading={loading}>
-        <div style={{ maxWidth, margin: '0 auto', padding: '0 40px' }}>{children}</div>
+        <div style={{
+          maxWidth,
+          margin: '0 auto',
+          padding: `0 ${screens.md ? 40 : 4}px`,
+        }}>{children}</div>
       </Loading>
     </PageContainer>
     {footer && <Footer>
