@@ -33,6 +33,9 @@ export class Task {
   @Column()
   name: string;
 
+  @Column({ nullable: true })
+  statusBefore: TaskStatus;
+
   @Column({ default: TaskStatus.TODO })
   status: TaskStatus;
 
@@ -57,4 +60,19 @@ export class Task {
   tags: Tag[];
 }
 
+/**
+ * statusBefore => status
+ * 
+ * NULL => TODO
+ * 
+ * TODO => DONE
+ * TODO => ARCIVED
+ * TODO => IN_PROGRESS
+ * TODO => ACTION_REQUIRED
+ * 
+ * ANY => ACTION_REQUIRED // Kick the ball to client
+ * 
+ * ACTION_REQUIRED => IN_PROGRESS // Kick the ball to agent
+ * 
+ */
 
