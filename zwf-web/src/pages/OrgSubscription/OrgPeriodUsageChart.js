@@ -9,7 +9,7 @@ import { getUserDisplayName } from 'util/getUserDisplayName';
 import moment from 'moment';
 
 const convertToDate = (m) => {
-  return moment(m).format('DD/MMM');
+  return moment(m).format('D MMM');
 }
 
 export const OrgPeriodUsageChart = React.memo((props) => {
