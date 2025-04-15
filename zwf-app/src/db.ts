@@ -113,11 +113,11 @@ async function dropAllViewsAndMatviews() {
   const list = await db.manager.query(`
 select format('DROP VIEW IF EXISTS "%I"."%I" cascade;', schemaname, viewname) as sql
 from pg_catalog.pg_views
-where schemaname = 'zwf'
+where schemaname in (SELECT * FROM current_schema())
 union
 select format('DROP MATERIALIZED VIEW IF EXISTS "%I"."%I" cascade;', schemaname, matviewname) as sql
 from pg_catalog.pg_matviews
-where schemaname = 'zwf'
+where schemaname in (SELECT * FROM current_schema())
   `);
 
   for (const item of list) {
