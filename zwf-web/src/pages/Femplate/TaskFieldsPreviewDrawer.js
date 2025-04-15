@@ -1,5 +1,5 @@
 import React from 'react';
-import { Drawer, Segmented } from 'antd';
+import { Drawer, Segmented, Radio } from 'antd';
 import { TaskFieldsPreviewPanel } from './TaskFieldsPreviewPanel';
 import PropTypes from 'prop-types';
 
@@ -16,9 +16,21 @@ export const TaskFieldsPreviewDrawer = props => {
     destroyOnClose
     maskClosable
     width={500}
-    extra={<Segmented
-      options={['agent', 'client', 'profile']}
-      onChange={setPreviewMode} />}
+    extra={<Radio.Group
+      buttonStyle="solid"
+      optionType="button"
+      defaultValue="agent"
+      options={[{
+        label: 'Agent',
+        value: 'agent'
+      }, {
+        label: 'Client',
+        value: 'client'
+      }, {
+        label: 'Profile',
+        value: 'profile'
+      }]}
+      onChange={e => setPreviewMode(e.target.value)} />}
   >
     <TaskFieldsPreviewPanel
       name={name}
