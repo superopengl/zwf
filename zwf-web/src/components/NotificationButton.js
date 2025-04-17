@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Avatar, Tooltip, Form, Switch, Input, Button, Drawer, Typography, Space, Dropdown } from 'antd';
+import { Avatar, Tooltip, Form, Switch, Row, Button, Drawer, Typography, Space, Dropdown } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
@@ -25,32 +25,28 @@ import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
 
-const { Text, Title, Paragraph, Link } = Typography;
+const { Text, Title, Paragraph, Link: TextLink } = Typography;
 
-const StyledList = styled(List)`
-.ant-list-item {
-  &:hover {
-    cursor: pointer;
-  }
-}
+const StyledCompactSpace = styled(Space)`
+gap: 0 !important;
 `;
 
 const messageFuncMap = {
-  'client-submit': x => <>Task {x.taskName} was submitted by client</>,
-  'client-sign-doc': x => <>Document {x.info.docName} of task {x.taskName} was signed by client</>,
-  'comment': x => <>Task {x.taskName} has new comments</>,
-  'create-by-recurring': x => <>Task {x.taskName} was created automatically by recurring</>,
-  'start-proceeding': x => <>Task {x.taskName} started being proceeded</>,
-  'assign': x => <>Task {x.taskName} was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
-  'complete': x => <>Task {x.taskName} was completed</>,
-  'archive': x => <>Task {x.taskName} was archieved</>,
-  'request-client-sign': x => <>Documents of task {x.taskName} requires sign</>,
-  'request-client-fields': x => <>Form of task {x.taskName} requires to be filled</>,
+  'client-submit': x => <>Task was submitted by client</>,
+  'client-sign-doc': x => <>Documents were signed by client</>,
+  'comment': x => <>Task has new comments</>,
+  'create-by-recurring': x => <>Task was created automatically by recurring</>,
+  'start-proceeding': x => <>Task started being proceeded</>,
+  'assign': x => <>Task was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
+  'complete': x => <>Task was completed</>,
+  'archive': x => <>Task was archieved</>,
+  'request-client-sign': x => <>Documents of task requires sign</>,
+  'request-client-fields': x => <>Form of task requires to be filled</>,
 };
 
 const getNotificationMessage = notification => {
   const { type } = notification;
-  const func = messageFuncMap[type] ?? (x => <>Task {x.taskName} {type}</>);
+  const func = messageFuncMap[type] ?? (x => <>Task has an event of {type}</>);
   return func(notification);
 }
 
@@ -103,33 +99,39 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
-  const items = list.map((x, i) => ({
-    key: i,
-    // icon: <Icon component={MdDashboard} />,
-    icon: <TaskIcon size={14} />,
-    label: <Space direction='vertical'>
-      <Text>{getNotificationMessage(x)}</Text>
-      <TimeAgo value={x.eventAt} direction="horizontal"/>
-    </Space>,
-    onClick: () => navigate(`/task/${x.taskId}`),
-  }))
+  const items = [];
+  list.forEach((x, i) => {
+    const item = {
+      key: i,
+      // icon: <Icon component={MdDashboard} />,
+      icon: <TaskIcon size={14} />,
+      label: <StyledCompactSpace direction='vertical'>
+        <Text strong >{x.taskName}</Text>
+        <Text>{getNotificationMessage(x)}</Text>
+        <TimeAgo value={x.eventAt} direction="horizontal" />
+      </StyledCompactSpace>,
+      onClick: () => navigate(`/task/${x.taskId}`),
+    };
 
-  if (unreadSupportMsgCount) {
-    if (changedTasks.length > 0) {
-      items.unshift({
-        type: 'divider',
-      })
+    if (i !== 0) {
+      items.push({
+        type: 'divider'
+      });
     }
-    items.unshift({
-      key: 'support',
-      icon: <Text style={{ fontSize: 24, color: '#0FBFC4' }}><CommentOutlined /></Text>,
-      label: <>Unread support message <Badge count={unreadSupportMsgCount} /></>,
-      onClick: () => {
-        onSupportOpen()
-        setUnreadSupportMsgCount(0)
-      },
-    })
-  }
+    items.push(item);
+  })
+
+  // if (unreadSupportMsgCount) {
+  //   items.unshift({
+  //     key: 'support',
+  //     icon: <Text style={{ fontSize: 24, color: '#0FBFC4' }}><CommentOutlined /></Text>,
+  //     label: <>Unread support message <Badge count={unreadSupportMsgCount} /></>,
+  //     onClick: () => {
+  //       onSupportOpen()
+  //       setUnreadSupportMsgCount(0)
+  //     },
+  //   })
+  // }
 
   if (!items.length) {
     items.push({
@@ -137,7 +139,7 @@ export const NotificationButton = (props) => {
     })
   }
 
-  return <Dropdown trigger={['click']} menu={{ items }}>
+  return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown">
     <Badge showZero={false} count={list.length} offset={[-4, 6]}>
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={() => load$()} />
     </Badge>
