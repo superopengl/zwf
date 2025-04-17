@@ -116,4 +116,5 @@ TaskBoardPanel.propTypes = {
 TaskBoardPanel.defaultProps = {
   showClient: true,
   showTags: true,
+  onChange: () => {},
 };
