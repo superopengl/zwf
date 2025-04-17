@@ -6,9 +6,9 @@ import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { NotificationMessage } from "../entity/NotificationMessage";
-import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
+import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
-import { TaskActionType } from '../types/TaskActionType';
+import { TaskEventType } from '../types/TaskEventType';
 
 
 export const getMyNotifications = handlerWrapper(async (req, res) => {
@@ -36,7 +36,7 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
     // Get unread task comment messages
     const changedTasks = await m.createQueryBuilder()
       .from(TaskActivityInformation, 't')
-      .leftJoin(TaskActivityLastSeen, 'a', 't."taskId" = a."taskId" AND t."userId" = a."userId"')
+      .leftJoin(TaskEventLastSeen, 'a', 't."taskId" = a."taskId" AND t."userId" = a."userId"')
       .where(`t.by != :userId`, { userId })
       .andWhere(`t."userId" = :userId`, { userId })
       .andWhere(`(a."lastSeenAt" IS NULL OR a."lastSeenAt" < t."createdAt")`)

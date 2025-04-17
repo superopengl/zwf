@@ -1,6 +1,6 @@
 import { TaskInformation } from './TaskInformation';
-import { TaskActionType } from '../../types/TaskActionType';
-import { TaskActivity } from '../TaskActivity';
+import { TaskEventType } from '../../types/TaskEventType';
+import { TaskEvent } from '../TaskEvent';
 import { ViewEntity, DataSource, ViewColumn } from 'typeorm';
 import { Task } from '../Task';
 
@@ -10,7 +10,7 @@ import { Task } from '../Task';
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
     .from(TaskInformation, 't')
-    .innerJoin(TaskActivity, 'k', 't.id = k."taskId"')
+    .innerJoin(TaskEvent, 'k', 't.id = k."taskId"')
     .select([
       'k.id as id',
       'k."taskId" as "taskId"',
@@ -24,7 +24,7 @@ import { Task } from '../Task';
       'k."type" as "type"',
       'k."info" as "info"',
     ]),
-  dependsOn: [TaskInformation, TaskActivity]
+  dependsOn: [TaskInformation, TaskEvent]
 }) export class TaskActivityInformation {
   @ViewColumn()
   id: string;
@@ -54,7 +54,7 @@ import { Task } from '../Task';
   by: string;
 
   @ViewColumn()
-  type: TaskActionType;
+  type: TaskEventType;
 
   @ViewColumn()
   info: any;

@@ -14,6 +14,8 @@ import { FemplateField } from '../types/FemplateField';
 import { generateDeepLinkId } from './generateDeepLinkId';
 import { EntityManager } from 'typeorm';
 import { OrgClientField } from '../entity/OrgClientField';
+import { emitTaskEvent } from './emitTaskEvent';
+import { TaskEventType } from '../types/TaskEventType';
 
 function prefillFemplateFields(femplateFields, varBag: { [key: string]: any }) {
   if (!varBag) return femplateFields;
@@ -81,6 +83,8 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
   const fields = femplate?.fields.map((f, i) => createTaskFieldByFemplateField(task.id, i, f, defaultValueMap)) ?? [];
 
   await m.save([task, ...fields]);
+
+  await emitTaskEvent(m, TaskEventType.Create, task.id, creatorId);
 
   return task;
 };

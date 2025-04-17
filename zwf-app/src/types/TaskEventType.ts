@@ -1,0 +1,21 @@
+
+export enum TaskEventType {
+    Create = 'create',
+    Assign = 'assign',
+    Rename = 'rename',
+    ClientSignDoc = 'client-sign-doc',
+    OrgProceed = 'start-proceeding',
+    AskClientAction = 'ask-client-action',
+    ClientSubmit = 'client-submit',
+    ClientDownloadDoc = 'client-download-doc',
+    Complete = 'complete',
+    Archive = 'archive',
+    StatusChange = 'status-change',
+    MoveBackToDo = 'move-back-to-do',
+    FieldSchemaChange = 'field-schema-change',
+    FieldValuesChange = 'field-value-change',
+    AddDoc = 'add-doc',
+    DeleteDoc = 'delete-doc',
+    GenDoc = 'gen-doc',
+    Comment = 'comment',
+}

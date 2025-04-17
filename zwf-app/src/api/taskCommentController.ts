@@ -10,8 +10,8 @@ import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { createTaskComment } from '../services/taskCommentService';
 import { assertRole } from '../utils/assertRole';
-import { TaskActionType } from '../types/TaskActionType';
-import { TaskActivityLastSeen } from '../entity/TaskActivityLastSeen';
+import { TaskEventType } from '../types/TaskEventType';
+import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 
 
 export const listTaskComment = handlerWrapper(async (req, res) => {
@@ -26,7 +26,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
     list = await m.find(TaskActivityInformation, {
       where: {
         taskId: id,
-        type: TaskActionType.Comment,
+        type: TaskEventType.Comment,
         ...(role === Role.Client ? { userId } : { orgId: getOrgIdFromReq(req) }),
       },
       order: {
@@ -43,7 +43,7 @@ export const listTaskComment = handlerWrapper(async (req, res) => {
 
     await m.createQueryBuilder()
       .insert()
-      .into(TaskActivityLastSeen)
+      .into(TaskEventLastSeen)
       .values({ taskId: id, userId, lastSeenAt: () => `NOW()` })
       .orUpdate(['lastSeenAt'], ['taskId', 'userId'])
       .execute();

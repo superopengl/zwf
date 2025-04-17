@@ -532,48 +532,6 @@ paths:
       responses:
         200:
           description: OK
-  /recurring:
-    get:
-      operationId: listRecurring
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
-    post:
-      operationId: saveRecurring
-      # security:
-      #   - authClient: []
-      responses:
-        200:
-          description: OK
-  /recurring/:id:
-    get:
-      operationId: getRecurring
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK
-    delete:
-      operationId: deleteRecurring
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK     
   /resource:
     get:
       operationId: listPublishedResourcePages
@@ -823,20 +781,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
-    post:
-      operationId: updateTask
-      # security:
-      #   - authLoggedInUser: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK          
+          description: OK      
   /task/{id}/status/{status}:
     post:
       operationId: changeTaskStatus
@@ -1076,7 +1021,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK          
+          description: OK       
   /recurring:
     get:
       operationId: listRecurring
@@ -1091,13 +1036,7 @@ paths:
       #   - authClient: []
       responses:
         200:
-          description: OK
-  /recurring/healthcheck:
-    get:
-      operationId: healthCheckRecurring
-      responses:
-        200:
-          description: OK
+          description: OK             
   /recurring/:id:
     get:
       operationId: getRecurring

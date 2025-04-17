@@ -14,11 +14,11 @@ class RedisPubService {
     this.publisher = redis.createClient(redisUrl);
   }
 
-  public publish(event: Zevent) {
+  public async publish(event: Zevent) {
     if (!event) return;
     const data = _.isString(event) ? event : JSON.stringify(event);
     // console.log('Event subscriber channel', 'with data:', data, event);
-    this.publisher.publish(this.channelName, data);
+    await this.publisher.publish(this.channelName, data);
   }
 }
 
@@ -48,8 +48,8 @@ const REDIS_CHANNEL_NAME = 'zwf-server-event-subpub';
 const globalPublisher = new RedisPubService(REDIS_CHANNEL_NAME);
 const golbalSubscriber = new RedisSubService(REDIS_CHANNEL_NAME);
 
-export const publishZevent = (event: Zevent) => {
-  globalPublisher.publish(event);
+export const publishZevent = async (event: Zevent) => {
+  await globalPublisher.publish(event);
 };
 
 export const getZeventSource$ = (): Observable<Zevent> => {

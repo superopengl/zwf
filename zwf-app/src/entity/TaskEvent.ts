@@ -1,9 +1,9 @@
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn } from 'typeorm';
-import { TaskActionType } from '../types/TaskActionType';
+import { TaskEventType } from '../types/TaskEventType';
 
 @Entity()
-@Index('idx_task_activity_taskId_createdAt', ['taskId', 'createdAt'])
-export class TaskActivity {
+@Index('idx_task_event_taskId_createdAt', ['taskId', 'createdAt'])
+export class TaskEvent {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
 
@@ -18,7 +18,7 @@ export class TaskActivity {
   by: string;
 
   @Column()
-  type: TaskActionType;
+  type: TaskEventType;
 
   @Column('jsonb', { nullable: true })
   info: any;
