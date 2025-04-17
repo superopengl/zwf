@@ -22,6 +22,7 @@ import { File } from '../entity/File';
 import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { TaskEvent } from '../entity/TaskEvent';
 import { TaskEventType } from '../types/TaskEventType';
+import { emitTaskEvent } from '../utils/emitTaskEvent';
 
 export const generateAutoDoc = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -100,7 +101,9 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
 
     await m.save(fileEntity);
 
+    const docId = uuidv4();
     const taskDoc = new TaskDoc();
+    taskDoc.id = docId;
     taskDoc.taskId = taskId;
     taskDoc.orgId = task.orgId;
     taskDoc.type = 'upload';
@@ -108,16 +111,10 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
     taskDoc.fileId = fileId;
     taskDoc.uploadedBy = userId;
 
-    const taskActivity = new TaskEvent();
-    taskActivity.type = TaskEventType.DocChange;
-    taskActivity.taskId = task.id;
-    taskActivity.by = getUserIdFromReq(req);
-    taskActivity.info = taskDoc;
+    await m.save(taskDoc);
 
-    await m.save([taskDoc, taskActivity]);
+    await emitTaskEvent(m, TaskEventType.AddDoc, task.id, userId, { docId });
   });
-
-  publishTaskChangeZevent(task, userId);
 
   res.json({
     fileId: fileId,
@@ -212,16 +209,11 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
       d.esign = computeTaskFileSignedHash(d.file.md5, userId, now);
     })
 
-    const taskActivity = new TaskEvent();
-    taskActivity.type = TaskEventType.DocSigned;
-    taskActivity.taskId = docs[0].task.id;
-    taskActivity.by = getUserIdFromReq(req);
-    taskActivity.info = docs;
+    const taskId = docs[0].task.id;
+    await m.save([...docs]);
 
-    await m.save([...docs, taskActivity]);
+    await emitTaskEvent(m, TaskEventType.ClientSignDoc, taskId, userId, docs);
   })
-
-  publishTaskChangeZevent(docs[0].task, getUserIdFromReq(req));
 
   res.json(docs);
 });
