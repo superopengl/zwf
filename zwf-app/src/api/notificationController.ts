@@ -17,13 +17,13 @@ import { OrgMemberInformation } from '../entity/views/OrgMemberInformation';
 import { OrgMemberTaskEventAckInformation } from '../entity/views/OrgMemberTaskEventAckInformation';
 
 
-export const getMyTaskNotifications = handlerWrapper(async (req, res) => {
+export const getMyNotifications = handlerWrapper(async (req, res) => {
   assertRole(req, ['client', 'agent', 'admin']);
 
   const page = +req.body.page;
   const size = +req.body.size;
   const pageNo = page || 1;
-  const pageSize = size || 20;
+  const pageSize = size || 100;
   const skip = (pageNo - 1) * pageSize;
   const take = pageSize;
   const role = getRoleFromReq(req);
@@ -31,30 +31,58 @@ export const getMyTaskNotifications = handlerWrapper(async (req, res) => {
 
   let result: any;
 
+  const pipeline = {
+    skip,
+    take,
+    select: {
+      taskId: true,
+      taskName: true,
+      type: true,
+      info: true,
+      eventAt: true,
+      eventBy: true,
+    }
+  }
+
   if (role === Role.Client) {
     result = await db.manager.find(ClientTaskEventAckInformation, {
       where: {
-        userId
+        userId,
+        ackAt: IsNull(),
       },
-      skip,
-      take,
+      ...pipeline,
     });
   } else {
     const orgId = getOrgIdFromReq(req);
     result = await db.manager.find(OrgMemberTaskEventAckInformation, {
       where: {
-        orgId
+        orgId,
+        ackAt: IsNull(),
       },
-      skip,
-      take,
+      ...pipeline,
     });
+
+    // result = await db.createQueryBuilder()
+    //   .from(OrgMemberTaskEventAckInformation, 'x')
+    //   .where(`x."orgId" = :orgId`, { orgId })
+    //   .andWhere(`x."ackAt" IS NULL`)
+    //   .groupBy('x."taskId"')
+    //   .addGroupBy('x."taskName"')
+    //   .select([
+    //     '"taskId"',
+    //     '"taskName"',
+    //     'COUNT(*) as count'
+    //   ])
+    //   .skip(skip)
+    //   .take(take)
+    //   .execute();
   }
 
   res.json(result);
 });
 
 
-export const getMyNotifications = handlerWrapper(async (req, res) => {
+export const getMyNotifications_old = handlerWrapper(async (req, res) => {
   assertRole(req, ['client', 'agent', 'admin', 'system']);
 
   const page = +req.body.page;

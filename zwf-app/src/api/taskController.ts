@@ -716,7 +716,10 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
       taskDoc.signRequestedBy = userId;
       await m.save(taskDoc);
 
-      await emitTaskEvent(m, TaskEventType.RequestClientSign, taskDoc.task.id, userId, { docId });
+      await emitTaskEvent(m, TaskEventType.RequestClientSign, taskDoc.task.id, userId, {
+        docId: taskDoc.id,
+        docName: taskDoc.name
+      });
     }
   })
 
@@ -744,7 +747,10 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.signRequestedBy = null;
 
     await m.save(taskDoc)
-    await emitTaskEvent(m, TaskEventType.RequestClientSign, taskDoc.task.id, userId, { docId });
+    await emitTaskEvent(m, TaskEventType.UnrequestClientSign, taskDoc.task.id, userId, {
+      docId: taskDoc.id,
+      docName: taskDoc.name
+    });
   })
 
   res.json(taskDoc);
