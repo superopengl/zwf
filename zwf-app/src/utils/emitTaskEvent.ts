@@ -16,8 +16,16 @@ const ZEVENTABLE_TASKEENTTYPES = new Set([
 ]);
 
 export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventType, taskId: string, by?: string, info?: any) {
- const taskEvent = new TaskEvent();
+ const task = await m.findOne(Task, {
+  where: {
+   id: taskId,
+  },
+  relations: {
+   orgClient: true,
+  }
+ });
 
+ const taskEvent = new TaskEvent();
  taskEvent.taskId = taskId;
  taskEvent.by = by;
  taskEvent.type = taskEventType;
@@ -26,6 +34,6 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventTy
  await m.save(taskEvent);
 
  if (ZEVENTABLE_TASKEENTTYPES.has(taskEventType)) {
-  await publishTaskChangeZevent(m, taskId, by);
+  await publishTaskChangeZevent(m, task, by);
  }
 }

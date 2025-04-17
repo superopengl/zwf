@@ -32,6 +32,7 @@ import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { TaskTagsTag } from '../entity/TaskTagsTag';
 import { existsQuery } from '../utils/existsQuery';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
+import { TaskWatchlist } from '../entity/TaskWatchlist';
 
 export const createNewTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
@@ -528,7 +529,29 @@ export const assignTask = handlerWrapper(async (req, res) => {
 
   await db.transaction(async m => {
     const task = await m.findOneByOrFail(Task, { id, orgId });
+    if (task.assigneeId === assigneeId) {
+      return;
+    }
+
     await m.update(Task, { id, orgId }, { assigneeId });
+
+    if (assigneeId) {
+      const taskWatchlist = new TaskWatchlist();
+      taskWatchlist.taskId = id;
+      taskWatchlist.userId = assigneeId;
+      taskWatchlist.reason = 'assignee';
+
+      await m.createQueryBuilder()
+        .insert()
+        .into(TaskWatchlist)
+        .values(taskWatchlist)
+        .orIgnore()
+        .execute();
+    } else {
+      // Unassign
+      await m.delete(TaskWatchlist, { taskId: id, userId: assigneeId, reason: 'assignee' });
+    }
+
     await emitTaskEvent(m, TaskEventType.Assign, id, userId, { assigneeId });
   });
 
@@ -536,7 +559,7 @@ export const assignTask = handlerWrapper(async (req, res) => {
 });
 
 const statusMapping = new Map([
-  [`${TaskStatus.TODO}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
+  [`${TaskStatus.TODO}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgStartProceed],
   [`${TaskStatus.TODO}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.TODO}>${TaskStatus.DONE}`, TaskEventType.Complete],
   [`${TaskStatus.TODO}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
@@ -549,11 +572,11 @@ const statusMapping = new Map([
   [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.DONE}`, TaskEventType.Complete],
   [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
   [`${TaskStatus.DONE}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
-  [`${TaskStatus.DONE}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
+  [`${TaskStatus.DONE}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgStartProceed],
   [`${TaskStatus.DONE}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.DONE}>${TaskStatus.ARCHIVED}`, TaskEventType.Archive],
   [`${TaskStatus.ARCHIVED}>${TaskStatus.TODO}`, TaskEventType.MoveBackToDo],
-  [`${TaskStatus.ARCHIVED}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgProceed],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.IN_PROGRESS}`, TaskEventType.OrgStartProceed],
   [`${TaskStatus.ARCHIVED}>${TaskStatus.ACTION_REQUIRED}`, TaskEventType.RequestClientSign],
   [`${TaskStatus.ARCHIVED}>${TaskStatus.DONE}`, TaskEventType.Complete],
 ]);
@@ -577,9 +600,11 @@ export const changeTaskStatus = handlerWrapper(async (req, res) => {
     if (oldStatus === newStatus) {
       return;
     }
-    await m.update(Task, { id, orgId }, { status: newStatus });
+    await m.update(Task, { id, orgId }, { statusBefore: oldStatus, status: newStatus });
 
-    await emitTaskEvent(m, TaskEventType.StatusChange, id, userId, { status: newStatus })
+    const eventType = statusMapping.get(`${oldStatus}>${newStatus}`);
+
+    await emitTaskEvent(m, eventType, id, userId, { statusBefore: oldStatus, statusAfter: newStatus })
   });
 
 
