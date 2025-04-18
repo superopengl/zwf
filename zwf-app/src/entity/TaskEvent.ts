@@ -3,6 +3,7 @@ import { TaskEventType } from '../types/TaskEventType';
 
 @Entity()
 @Index('idx_task_event_taskId_createdAt', ['taskId', 'createdAt'])
+@Index('idx_task_event_taskId_type', ['taskId', 'type'])
 export class TaskEvent {
   @PrimaryGeneratedColumn('uuid')
   id?: string;

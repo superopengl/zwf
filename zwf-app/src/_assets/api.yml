@@ -17,6 +17,11 @@ paths:
       responses:
         200:
           description: OK
+    post:
+      operationId: ackTaskEventNotification
+      responses:
+        200:
+          description: OK          
   /support:
     get:
       operationId: listMySupportMessages

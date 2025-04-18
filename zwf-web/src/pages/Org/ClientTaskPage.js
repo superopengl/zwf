@@ -189,13 +189,13 @@ const ClientTaskPage = (props) => {
       ]}
     >
       {/* <DebugJsonPanel value={screens} /> */}
-      <Alert
+      {alertMeta && <Alert
         type={alertMeta.type}
         icon={alertMeta.icon}
         message={alertMeta.message}
         description={alertMeta.description}
         showIcon
-        style={{ marginBottom: 30 }} />
+        style={{ marginBottom: 30 }} />}
 
       <Row gutter={[40, 40]}>
         <Col>

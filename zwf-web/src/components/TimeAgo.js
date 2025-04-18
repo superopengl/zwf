@@ -50,8 +50,8 @@ export const TimeAgo = React.memo(props => {
   return <StyledSpace size="small" direction={direction} className={direction}>
     {/* <ColumnSpace style={{flexDirection: direction === 'vertical' ? 'column' : 'row'}}> */}
       {prefix}
-      {showAgo && <ReactTimeAgo date={m.toDate()} />}
-      {showTime && <Text style={{fontSize: showAgo ? 'smaller' : undefined}} type={showAgo ? 'secondary' : undefined}>
+      {showAgo && <Text strong={strong}><ReactTimeAgo date={m.toDate()} /></Text>}
+      {showTime && <Text strong={strong} style={{fontSize: showAgo ? 'smaller' : undefined}} type={showAgo ? 'secondary' : undefined}>
         {m.format(accurate ? 'D MMM YYYY HH:mm' : 'D MMM YYYY')}
         </Text>}
     {/* </ColumnSpace> */}
