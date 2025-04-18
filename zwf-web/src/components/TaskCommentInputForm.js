@@ -1,10 +1,12 @@
 import { EnterOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Space, Row, Col } from 'antd';
+import { Button, Form, Input, Typography, Row, Col } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
 import { addTaskComment$ } from 'services/taskCommentService';
 import { finalize } from 'rxjs/operators';
+
+const { Text } = Typography;
 
 export const TaskCommentInputForm = React.memo((props) => {
   const { taskId, loading: propLoading, onDone } = props;
@@ -41,8 +43,8 @@ export const TaskCommentInputForm = React.memo((props) => {
 
   return <Form onFinish={handleSendMessage}
     form={form}>
-    <Form.Item name="message" 
-      extra="Type here and press enter to send"
+    <Form.Item name="message"
+    extra="Enter to send"
     >
       <Input.TextArea
         showCount
@@ -56,11 +58,13 @@ export const TaskCommentInputForm = React.memo((props) => {
         ref={textareaRef}
       />
     </Form.Item>
-      <Row justify="end" gutter={8} style={{position: 'relative', top: -16}}>
+    <Form.Item>
+      <Row justify="end" gutter={8} style={{ position: 'relative' }}>
         <Col>
           <Button type="primary" htmlType="submit" disabled={loading}>Send</Button>
         </Col>
       </Row>
+    </Form.Item>
   </Form>
 
 });

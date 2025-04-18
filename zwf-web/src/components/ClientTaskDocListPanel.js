@@ -85,7 +85,7 @@ export const ClientTaskDocListPanel = React.memo((props) => {
 
       <ProCard
         title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
-        type="inner"
+        // type="inner"
         extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled} />}
         bodyStyle={{ padding: 16 }}
         headStyle={{ paddingRight: 8 }}

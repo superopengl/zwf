@@ -82,6 +82,15 @@ const ALERT_DEF = {
   },
 }
 
+const span = {
+  xs: 24,
+  sm: 24,
+  md: 24,
+  lg: 12,
+  xl: 12,
+  xxl: 12
+}
+
 const ClientTaskPage = (props) => {
   useAssertRole(['client']);
   const params = useParams();
@@ -197,8 +206,39 @@ const ClientTaskPage = (props) => {
         showIcon
         style={{ marginBottom: 30 }} />}
 
+      <Row gutter={[20, 20]}>
+        <Col span={24}>
+          {docsToSign.length > -1 && <ProCard
+            title={`${docsToSign.length} Document Waiting for Your Signature`}
+            bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
+          >
+            <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
+          </ProCard>}
+        </Col>
+
+        <Col span={24}>
+          <Row gutter={[20, 20]}>
+            <Col flex="2 2 300px">
+              <ProCard gutter={[20, 20]} direction="column">
+                <ProCard title="Form">
+                  <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
+                </ProCard>
+
+                <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} disabled={!canEdit} />
+              </ProCard>
+
+            </Col>
+            <Col flex="1 1 240px">
+              <ProCard>
+                <TaskCommentPanel taskId={task.id} />
+              </ProCard>
+            </Col>
+          </Row>
+        </Col>
+
+      </Row>
       <Row gutter={[40, 40]}>
-        <Col>
+        {/* <Col>
           <Steps
             direction={narrowScreen ? 'horizontal' : 'vertical'}
             progressDot={true}
@@ -217,8 +257,8 @@ const ClientTaskPage = (props) => {
               } : null,
             ]}
           />
-        </Col>
-        <Col flex="auto">
+        </Col> */}
+        {/* <Col flex="auto">
           {currentStep === FLOW_STEPS.FILL_IN_FORM && <ProCard title="Information Form" type="inner">
             <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
           </ProCard>}
@@ -230,9 +270,16 @@ const ClientTaskPage = (props) => {
           >
             <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
           </ProCard>}
+        </Col> */}
+        <Col flex={'2 2 300px'}>
+
+        </Col>
+
+        <Col flex={'1 1 200px'}>
+
         </Col>
       </Row>
-      <Row gutter={[20, 20]} justify="space-between" style={{marginTop: 30}}>
+      <Row gutter={[20, 20]} justify="space-between" style={{ marginTop: 30 }}>
         <Col>
         </Col>
         <Col>
