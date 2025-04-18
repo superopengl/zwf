@@ -1,6 +1,6 @@
 import { SupportMessageLastSeen } from './../entity/SupportMessageLastSeen';
 import { SupportMessage } from './../entity/SupportMessage';
-import { IsNull } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { db } from '../db';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -10,13 +10,11 @@ import { TaskEventLastSeen } from '../entity/TaskEventLastSeen';
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { TaskEventType } from '../types/TaskEventType';
 import { Role } from '../types/Role';
-import { ClientTaskEventAckInformation } from '../entity/views/ClientTaskEventAckInformation';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgMemberInformation } from '../entity/views/OrgMemberInformation';
 import { UserTaskEventAckInformation } from '../entity/views/UserTaskEventAckInformation';
-import { OrgMemberTaskEventNotificationInformation } from '../entity/views/OrgMemberTaskEventNotificationInformation';
-import { ClientTaskEventNotificationInformation } from '../entity/views/ClientTaskEventNotificationInformation';
+import { UserTaskEventNotificationInformation } from '../entity/views/UserTaskEventNotificationInformation';
 
 
 export const getMyNotifications = handlerWrapper(async (req, res) => {
@@ -30,61 +28,34 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const take = pageSize;
   const role = getRoleFromReq(req);
   const userId = getUserIdFromReq(req);
+  const eventTypes = role === Role.Client ? [
+    TaskEventType.RequestClientInputFields,
+    TaskEventType.RequestClientSign,
+    TaskEventType.Comment,
+    TaskEventType.Complete,
+    TaskEventType.Archive
+  ] : [
+    TaskEventType.ClientSubmit,
+    TaskEventType.ClientSignDoc,
+    TaskEventType.Comment,
+    TaskEventType.CreateByRecurring,
+    TaskEventType.OrgStartProceed,
+    TaskEventType.Assign,
+    TaskEventType.Complete,
+    TaskEventType.Archive,
+  ];
 
-  let result: any;
+  const result = await db
+    .getRepository(UserTaskEventNotificationInformation)
+    .createQueryBuilder('x')
+    .where({
+      userId,
+      type: In(eventTypes)
+    })
+    .skip(skip)
+    .take(take)
+    .getMany();
 
-  const pipeline = {
-    skip,
-    take,
-    distinct: true,
-    select: {
-      taskId: true,
-      taskName: true,
-      type: true,
-      info: true,
-      eventAt: true,
-      eventBy: true,
-    }
-  }
-
-  if (role === Role.Client) {
-    result = await db
-      .getRepository(ClientTaskEventNotificationInformation)
-      .createQueryBuilder('x')
-      .where({
-        userId,
-      })
-      .skip(skip)
-      .take(take)
-      .getMany();
-  } else {
-    const orgId = getOrgIdFromReq(req);
-    result = await db
-      .getRepository(OrgMemberTaskEventNotificationInformation)
-      .createQueryBuilder('x')
-      .where({
-        orgId,
-      })
-      .skip(skip)
-      .take(take)
-      .getMany();
-
-
-    // result = await db.createQueryBuilder()
-    //   .from(OrgMemberTaskEventAckInformation, 'x')
-    //   .where(`x."orgId" = :orgId`, { orgId })
-    //   .andWhere(`x."ackAt" IS NULL`)
-    //   .groupBy('x."taskId"')
-    //   .addGroupBy('x."taskName"')
-    //   .select([
-    //     '"taskId"',
-    //     '"taskName"',
-    //     'COUNT(*) as count'
-    //   ])
-    //   .skip(skip)
-    //   .take(take)
-    //   .execute();
-  }
 
   res.json(result);
 });
