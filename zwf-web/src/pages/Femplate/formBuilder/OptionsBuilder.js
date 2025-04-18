@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Radio, Button, Tooltip, Input, Col, Row, Form, Typography } from 'antd';
 import { filter, uniq } from 'lodash';
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { CloseOutlined, MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 const { Text } = Typography;
@@ -36,16 +36,16 @@ export const OptionsBuilder = (props) => {
     <Container>
       {options.map((option, index) => {
         return (
-          <Row key={index} justify="start" align="top" style={{ marginBottom: 16 }}>
+          <Row key={index} justify="start" align="top" gutter={4} style={{ marginBottom: 16 }}>
             <Col flex="auto">
                 <Input autoFocus maxLength={100} value={option} onChange={e => handleOptionTextChange(e.target.value, index)}/>
             </Col>
             <Col>
               <Button
-                type="link"
+                type="text"
                 size="small"
-                icon={<CloseOutlined />}
-                danger
+                icon={<MinusCircleOutlined />}
+                // danger
                 style={{ position: 'relative', top: 4 }}
                 onClick={() => {
                   options.splice(index, 1);

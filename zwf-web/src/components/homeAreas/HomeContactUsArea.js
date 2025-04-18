@@ -115,7 +115,7 @@ export const HomeContactUsArea = props => {
               <Col flex="auto">
                 <Form
                   layout="vertical"
-                  requiredMark={false}
+                  requiredMark="optional"
                   style={{ width: '100%' }}
                   disabled={loading}
                   onFinish={handleSubmit}

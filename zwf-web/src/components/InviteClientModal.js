@@ -71,6 +71,7 @@ export const InviteClientModal = props => {
         layout="vertical"
         onFinish={handleFormSubmit}
         onValuesChange={handleValueChange}
+        requiredMark="optional"
       >
         <Form.Item name="alias" label="Client name" rules={[{ required: true, max: 50 }]}
         >
@@ -82,24 +83,6 @@ export const InviteClientModal = props => {
           <Input placeholder="andy@zeeworkflow.com" allowClear />
         </Form.Item>
       </Form>
-      {/* <Form
-        ref={ref}
-        layout="vertical"
-        onFinish={handleFormSubmit}
-        requiredMark={false}
-      >
-        <Form.Item name="emails" label="Client email addresses"
-          extra='Multiple email addresses can be splitted by comma or line-break'
-          rules={[{ required: true, whitespace: true, max: 1000 }]}>
-          <Input.TextArea placeholder={`andy@zeeworkflow.com\nbob@zeeworkflow.com`}
-            autoSize={{ minRows: 5 }}
-            autoComplete="email"
-            allowClear={true}
-            maxLength="1000"
-            autoFocus={true}
-            disabled={loading} />
-        </Form.Item>
-      </Form> */}
     </Loading>
   </Modal>
 };

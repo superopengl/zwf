@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Button, Select, Checkbox, Table, Space, Typography, AutoComplete } from 'antd';
-import { UpOutlined, DownOutlined, CloseOutlined, PlusOutlined } from '@ant-design/icons';
+import { UpOutlined, DownOutlined, CloseOutlined, PlusOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { BuiltInFieldLabelValuePairs, BuiltInFieldType, getBuiltInFieldByLabelName, getBuiltInFieldByVarName } from 'components/FieldDef';
 import { varNameToLabelName } from 'util/varNameToLabelName';
 import { labelNameToVarName } from 'util/labelNameToVarName';
@@ -146,7 +146,7 @@ const FieldEditor = (props) => {
         <Space size="small">
           <Button type="link" icon={<UpOutlined />} onClick={() => moveUp(index)} />
           <Button type="link" icon={<DownOutlined />} onClick={() => moveDown(index)} />
-          {!record.value && <Button type="link" danger icon={<CloseOutlined />} onClick={() => deleteRow(index)} />}
+          {!record.value && <Button type="link" danger icon={<MinusCircleOutlined />} onClick={() => deleteRow(index)} />}
         </Space>
       ),
     },
