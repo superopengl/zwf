@@ -30,7 +30,7 @@ const Container = styled.div`
 
 
 export const ClientTaskDocListPanel = React.memo((props) => {
-  const { task, onChange, disabled } = props;
+  const { task, onChange, disabled, placeholder } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [docs, setDocs] = React.useState(task?.docs ?? []);
@@ -80,15 +80,14 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     onChange();
   }
 
-  return <Container>
-    <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
-
+  return <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
+    <Container>
       <ProCard
         title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
         // type="inner"
         extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled} />}
-        bodyStyle={{ padding: 16 }}
-        headStyle={{ paddingRight: 8 }}
+        // bodyStyle={{ padding: 16 }}
+        // headStyle={{ paddingRight: 8 }}
       >
         <Table
           size="small"
@@ -99,11 +98,11 @@ export const ClientTaskDocListPanel = React.memo((props) => {
           showHeader={false}
           columns={columns}
           dataSource={docs}
-          locale={{ emptyText: <Text type="secondary">Upload or add doc templates</Text> }}
+          locale={{ emptyText: <Text type="secondary">{placeholder || 'Upload or add doc templates'}</Text> }}
         />
       </ProCard>
-    </TaskDocDropableContainer>
-  </Container>
+    </Container>
+  </TaskDocDropableContainer>
 })
 
 ClientTaskDocListPanel.propTypes = {
@@ -114,6 +113,7 @@ ClientTaskDocListPanel.propTypes = {
   disabled: PropTypes.bool,
   showsLastReadAt: PropTypes.bool,
   showsSignedAt: PropTypes.bool,
+  placeholder: PropTypes.string,
 };
 
 ClientTaskDocListPanel.defaultProps = {

@@ -9,7 +9,7 @@ import { Loading } from 'components/Loading';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
 import { TaskCommentPanel } from 'components/TaskCommentPanel';
-import { combineLatest } from 'rxjs';
+import { combineLatest, of } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
 import { TaskIcon } from 'components/entityIcon';
@@ -26,6 +26,7 @@ import { ProCard } from '@ant-design/pro-components';
 import { DefaultFooter } from '@ant-design/pro-components';
 import { getPendingSignTaskDocs } from 'util/getPendingSignTaskDocs';
 import { ClientTaskCommentDrawer } from 'components/ClientTaskCommentDrawer';
+import { highlightGlow } from '../../util/highlightGlow';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -97,14 +98,13 @@ const ClientTaskPage = (props) => {
   const { id } = params;
 
   const [loading, setLoading] = React.useState(true);
-  const [signPanelOpen, setSignPanelOpen] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [currentStep, setCurrentStep] = React.useState(FLOW_STEPS.FILL_IN_FORM);
-  const [commentOpen, setCommentOpen] = React.useState(false);
   const [docsToSign, setDocsToSign] = React.useState([]);
   const [requestChangeModal, requestChangeContextHolder] = Modal.useModal();
   const navigate = useNavigate();
+  const signPanelRef = React.useRef();
 
   React.useEffect(() => {
     const sub$ = load$();
@@ -155,8 +155,7 @@ const ClientTaskPage = (props) => {
     }
   }
 
-  const hasDocToSign = docsToSign.length > 0;
-  const lastStep = hasDocToSign ? FLOW_STEPS.SIGN_DOCS : FLOW_STEPS.ATTACHMENTS;
+  const hasDocToSign = true || docsToSign.length > 0;
   const alertMeta = ALERT_DEF[task?.status];
 
   const handleRequestChange = () => {
@@ -172,11 +171,15 @@ const ClientTaskPage = (props) => {
     })
   }
 
+  const handleHighlightenSignPanel = () => {
+    highlightGlow(signPanelRef)
+  }
+
   return (<Container>
     {!task ? <Skeleton active /> : <PageHeaderContainer
       loading={loading}
       onBack={handleGoBack}
-      fixedHeader={true}
+      fixedHeader={false}
       maxWidth={1000}
       icon={<TaskIcon />}
       title={<>{task.name} <small><Text type="secondary">by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
@@ -188,13 +191,14 @@ const ClientTaskPage = (props) => {
         >
           <Button icon={<SyncOutlined />} onClick={() => load$()} />
         </ZeventNoticeableBadge>,
-        <ZeventNoticeableBadge key="comment"
-          message="This task has unread comment"
-          filter={z => z.type === 'task.comment' && z.taskId === task.id}
-        >
-          <Button icon={<MessageOutlined />} onClick={() => setCommentOpen(true)}>Comment</Button>
-        </ZeventNoticeableBadge>,
-        canRequestChange ? <Button key="request">Request change</Button> : null,
+        // <ZeventNoticeableBadge key="comment"
+        //   message="This task has unread comment"
+        //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
+        // >
+        //   <Button icon={<MessageOutlined />} onClick={() => setCommentOpen(true)}>Comment</Button>
+        // </ZeventNoticeableBadge>,
+        // canRequestChange ? <Button key="request">Request change</Button> : null,
+        // task.status === 'action_required' ? <Button key="submit" type="primary">Submit</Button> : null,
       ]}
     >
       {/* <DebugJsonPanel value={screens} /> */}
@@ -211,6 +215,7 @@ const ClientTaskPage = (props) => {
           {docsToSign.length > -1 && <ProCard
             title={`${docsToSign.length} Document Waiting for Your Signature`}
             bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
+            ref={signPanelRef}
           >
             <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
           </ProCard>}
@@ -219,17 +224,29 @@ const ClientTaskPage = (props) => {
         <Col span={24}>
           <Row gutter={[20, 20]}>
             <Col flex="2 2 300px">
-              <ProCard gutter={[20, 20]} direction="column">
-                <ProCard title="Form">
-                  <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
-                </ProCard>
+              <Row gutter={[20, 20]}>
+                <Col span={24}>
+                  <ProCard title="Form">
+                    <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
+                  </ProCard>
+                </Col>
 
-                <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} disabled={!canEdit} />
-              </ProCard>
+                <Col span={24}>
+                  <ProCard ghost>
+                    <ClientTaskDocListPanel
+                      task={task}
+                      onSavingChange={setSaving}
+                      onChange={handleDocChange}
+                      disabled={!canEdit}
+                      placeholder="Upload attachments"
+                    />
+                  </ProCard>
+                </Col>
+              </Row>
 
             </Col>
             <Col flex="1 1 240px">
-              <ProCard>
+              <ProCard size="small">
                 <TaskCommentPanel taskId={task.id} />
               </ProCard>
             </Col>
@@ -237,75 +254,14 @@ const ClientTaskPage = (props) => {
         </Col>
 
       </Row>
-      <Row gutter={[40, 40]}>
-        {/* <Col>
-          <Steps
-            direction={narrowScreen ? 'horizontal' : 'vertical'}
-            progressDot={true}
-            current={currentStep}
-            onChange={setCurrentStep}
-            size="small"
-            items={[
-              {
-                title: 'Fill in the form',
-              },
-              {
-                title: 'Attachments',
-              },
-              hasDocToSign ? {
-                title: <>Sign documents <Badge count={docsToSign.length} showZero={false} /></>
-              } : null,
-            ]}
-          />
-        </Col> */}
-        {/* <Col flex="auto">
-          {currentStep === FLOW_STEPS.FILL_IN_FORM && <ProCard title="Information Form" type="inner">
-            <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
-          </ProCard>}
-          {currentStep === FLOW_STEPS.ATTACHMENTS && <ClientTaskDocListPanel task={task} onSavingChange={setSaving} onChange={handleDocChange} disabled={!canEdit} />}
-          {currentStep === FLOW_STEPS.SIGN_DOCS && <ProCard
-            title={`${docsToSign.length} Document Waiting for Your Signature`}
-            bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
-            type="inner"
-          >
-            <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
-          </ProCard>}
-        </Col> */}
-        <Col flex={'2 2 300px'}>
-
-        </Col>
-
-        <Col flex={'1 1 200px'}>
-
-        </Col>
-      </Row>
-      <Row gutter={[20, 20]} justify="space-between" style={{ marginTop: 30 }}>
-        <Col>
-        </Col>
-        <Col>
-          <Space style={{ justifyContent: 'end' }} size="large">
-            {currentStep !== 0 && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre - 1)}><LeftOutlined /> Previous</Button>}
-            {currentStep !== lastStep && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre + 1)}>Next <RightOutlined /></Button>}
-            {currentStep === lastStep && <Button type="primary" onClick={() => navigate('/task')}>Done</Button>}
-          </Space>
-        </Col>
-      </Row>
       {saving && <SavingAffix />}
     </PageHeaderContainer>}
-    {task && <ClientTaskCommentDrawer taskId={task.id} open={commentOpen} onClose={() => setCommentOpen(false)} />}
-    {/* <PageFooter>
-      <Row gutter={[20, 20]} justify="space-between">
-        <Col>
-        </Col>
-        <Col>
-          <Space style={{ justifyContent: 'end' }} size="large">
-            {currentStep !== 0 && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre - 1)}><LeftOutlined /> Previous</Button>}
-            {currentStep !== lastStep && <Button type="primary" ghost onClick={() => setCurrentStep(pre => pre + 1)}>Next <RightOutlined /></Button>}
-            {currentStep === lastStep && <Button type="primary" onClick={() => navigate('/task')}>Done</Button>}
-          </Space>
-        </Col>
-      </Row>
-    </PageFooter> */}
+    <FooterToolbar>
+      {hasDocToSign && <Button key="sign" type="primary" danger
+        onClick={handleHighlightenSignPanel}
+      >Sign {docsToSign.length} documents</Button>}
+      {task?.status === 'action_required' && <Button key="submit" type="primary">Submit</Button>}
+    </FooterToolbar>
     {requestChangeContextHolder}
   </Container>
   );
