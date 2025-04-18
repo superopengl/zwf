@@ -51,8 +51,10 @@ import { OrgClientField } from './entity/OrgClientField';
 import { OrgAllClientFieldsInformation } from './entity/views/OrgAllClientFieldsInformation';
 import { TaskEventAck } from './entity/TaskEventAck';
 import { ClientTaskEventAckInformation } from './entity/views/ClientTaskEventAckInformation';
-import { OrgMemberTaskEventAckInformation } from './entity/views/OrgMemberTaskEventAckInformation';
+import { UserTaskEventAckInformation } from './entity/views/UserTaskEventAckInformation';
 import { TaskWatchlist } from './entity/TaskWatchlist';
+import { OrgMemberTaskEventNotificationInformation } from './entity/views/OrgMemberTaskEventNotificationInformation';
+import { ClientTaskEventNotificationInformation } from './entity/views/ClientTaskEventNotificationInformation';
 dotenv.config();
 
 const views = [
@@ -234,7 +236,9 @@ export const db = new DataSource({
     OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,
     ClientTaskEventAckInformation,
-    OrgMemberTaskEventAckInformation,
+    ClientTaskEventNotificationInformation,
+    UserTaskEventAckInformation,
+    OrgMemberTaskEventNotificationInformation,
   ],
 });
 

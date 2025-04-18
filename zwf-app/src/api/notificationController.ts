@@ -14,7 +14,9 @@ import { ClientTaskEventAckInformation } from '../entity/views/ClientTaskEventAc
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgMemberInformation } from '../entity/views/OrgMemberInformation';
-import { OrgMemberTaskEventAckInformation } from '../entity/views/OrgMemberTaskEventAckInformation';
+import { UserTaskEventAckInformation } from '../entity/views/UserTaskEventAckInformation';
+import { OrgMemberTaskEventNotificationInformation } from '../entity/views/OrgMemberTaskEventNotificationInformation';
+import { ClientTaskEventNotificationInformation } from '../entity/views/ClientTaskEventNotificationInformation';
 
 
 export const getMyNotifications = handlerWrapper(async (req, res) => {
@@ -34,6 +36,7 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const pipeline = {
     skip,
     take,
+    distinct: true,
     select: {
       taskId: true,
       taskName: true,
@@ -45,22 +48,27 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   }
 
   if (role === Role.Client) {
-    result = await db.manager.find(ClientTaskEventAckInformation, {
-      where: {
+    result = await db
+      .getRepository(ClientTaskEventNotificationInformation)
+      .createQueryBuilder('x')
+      .where({
         userId,
-        ackAt: IsNull(),
-      },
-      ...pipeline,
-    });
+      })
+      .skip(skip)
+      .take(take)
+      .getMany();
   } else {
     const orgId = getOrgIdFromReq(req);
-    result = await db.manager.find(OrgMemberTaskEventAckInformation, {
-      where: {
+    result = await db
+      .getRepository(OrgMemberTaskEventNotificationInformation)
+      .createQueryBuilder('x')
+      .where({
         orgId,
-        ackAt: IsNull(),
-      },
-      ...pipeline,
-    });
+      })
+      .skip(skip)
+      .take(take)
+      .getMany();
+
 
     // result = await db.createQueryBuilder()
     //   .from(OrgMemberTaskEventAckInformation, 'x')

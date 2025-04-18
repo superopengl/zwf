@@ -13,5 +13,5 @@ export class TaskWatchlist {
   userId: string;
 
   @PrimaryColumn()
-  reason: 'interested' | 'assignee' | 'mentioned' | 'client';
+  reason: 'watch' | 'assignee' | 'mentioned' | 'client';
 }
