@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { Steps, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert, Modal } from 'antd';
 
 import { getTask$, listTaskComment$ } from 'services/taskService';
@@ -96,6 +96,7 @@ const ClientTaskPage = (props) => {
   useAssertRole(['client']);
   const params = useParams();
   const { id } = params;
+  const { state: { type: notificationType } } = useLocation();
 
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
@@ -105,6 +106,24 @@ const ClientTaskPage = (props) => {
   const [requestChangeModal, requestChangeContextHolder] = Modal.useModal();
   const navigate = useNavigate();
   const signPanelRef = React.useRef();
+  const commentPanelRef = React.useRef();
+  const formPanelRef = React.useRef();
+
+  React.useEffect(() => {
+    switch (notificationType) {
+      case 'request-client-fields':
+        highlightGlow(formPanelRef);
+        break;
+      case 'request-client-sign':
+        highlightGlow(signPanelRef);
+        break;
+      case 'comment':
+        highlightGlow(commentPanelRef);
+        break;
+      default:
+        break;
+    }
+  }, [id, notificationType, signPanelRef, commentPanelRef, formPanelRef]);
 
   React.useEffect(() => {
     const sub$ = load$();
@@ -226,7 +245,7 @@ const ClientTaskPage = (props) => {
             <Col flex="2 2 300px">
               <Row gutter={[20, 20]}>
                 <Col span={24}>
-                  <ProCard title="Form">
+                  <ProCard title="Form" ref={formPanelRef}>
                     <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
                   </ProCard>
                 </Col>
@@ -246,7 +265,7 @@ const ClientTaskPage = (props) => {
 
             </Col>
             <Col flex="1 1 240px">
-              <ProCard size="small">
+              <ProCard size="small" ref={commentPanelRef}>
                 <TaskCommentPanel taskId={task.id} />
               </ProCard>
             </Col>
