@@ -119,7 +119,7 @@ export const NotificationButton = (props) => {
       // icon: <Icon component={MdDashboard} />,
       icon: <TaskIcon size={14} />,
       label: <StyledCompactSpace direction='vertical'>
-        <Text strong={!x.ackAt}>{x.taskName}</Text>
+        <Text strong>{x.taskName}</Text>
         <Text strong={!x.ackAt}>{getNotificationMessage(x)}</Text>
         <TimeAgo strong={!x.ackAt} value={x.eventAt} direction="horizontal" />
       </StyledCompactSpace>,
