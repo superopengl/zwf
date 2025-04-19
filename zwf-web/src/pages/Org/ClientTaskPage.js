@@ -236,8 +236,8 @@ const ClientTaskPage = (props) => {
       onBack={handleGoBack}
       fixedHeader={true}
       maxWidth={700}
-      icon={<TaskIcon />}
-      title={<>{task.name} <small><Text type="secondary" strong={false}>by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
+      // icon={<TaskIcon />}
+      title={<>{task.name} </> || <Skeleton paragraph={false} />}
       footer={<Row className='client-task-footer' justify="space-between" wrap={false}>
         <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
           type={activePanel === 'comment' ? 'primary' : 'text'}
@@ -264,6 +264,7 @@ const ClientTaskPage = (props) => {
         </Badge>}
       </Row>}
       extra={[
+        <small><Text type="secondary" strong={false}>by {task.orgName}</Text></small>
         // <ZeventNoticeableBadge key="refresh"
         //   message="This task has changes. Click to refresh"
         //   filter={z => z.type === 'task.change' && z.taskId === task.id}

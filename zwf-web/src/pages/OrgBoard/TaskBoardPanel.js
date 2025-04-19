@@ -28,25 +28,29 @@ const COLUMN_DEFS = [
   {
     status: 'todo',
     label: 'To Do',
-    bgColor: '#F1F2F5',
+    // bgColor: '#F1F2F5',
+    bgColor: '#d9d9d911',
     hoverColor: '#d9d9d9',
   },
   {
     status: 'in_progress',
     label: 'In Progress',
-    bgColor: '#F1F2F5',
+    // bgColor: '#F1F2F5',
+    bgColor: '#0051D911',
     hoverColor: '#0051D9',
   },
   {
     status: 'action_required',
     label: `Await Client's Actions`,
-    bgColor: '#F1F2F5',
+    // bgColor: '#F1F2F5',
+    bgColor: '#F53F3F11',
     hoverColor: '#F53F3F',
   },
   {
     status: 'done',
     label: 'Completed',
-    bgColor: '#F1F2F5',
+    // bgColor: '#F1F2F5',
+    bgColor: '#00B42A11',
     hoverColor: '#00B42A',
   },
 ]
@@ -92,7 +96,7 @@ const TaskBoardColumn = props => {
 
   return <Col span={6} ref={drop}>
     <StyledColumn direction="vertical" style={{
-      backgroundColor: isOver ? `${style.hoverColor}11` : style.bgColor,
+      backgroundColor: isOver ? `${style.hoverColor}20` : style.bgColor,
       borderWidth: 2,
       borderStyle: isOver ? 'dashed' : 'solid',
       borderColor: isOver ? style.hoverColor : style.bgColor
