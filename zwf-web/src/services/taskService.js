@@ -18,6 +18,10 @@ export function changeTaskStatus$(id, status) {
   return httpPost$(`task/${id}/status/${status}`);
 }
 
+export function requestClientAction$(id, payload) {
+  return httpPost$(`task/${id}/request_action`, payload);
+}
+
 export function addDemplateToTask$(taskid, demplateIds) {
   if (!demplateIds?.length) {
     throw new Error(`demplateIds cannot be empty`);

@@ -10,7 +10,7 @@ const { Title } = Typography;
 
 const Container = styled.div`
 margin: 0 auto;
-padding-left: 8px;
+// padding-left: 8px;
 width: 100%;
 
 .ant-page-header-heading-left, .ant-page-header-heading-title {
@@ -31,7 +31,7 @@ width: 100%;
 
 const Footer = styled.div`
 margin: 0 auto;
-padding-left: 8px;
+// padding-left: 8px;
 width: 100%;
 border-top: 1px solid rgba(5, 5, 5, 0.06);
 position: fixed;
@@ -39,7 +39,7 @@ bottom: 0;
 left: 0;
 right: 0;
 left: 0;
-background-color: white;
+background-color: #FFFFFF;
 padding: 16px 24px;
 `
 
@@ -84,11 +84,12 @@ export const PageHeaderContainer = React.memo((props) => {
           maxWidth,
           margin: '0 auto',
           padding: `0 ${screens.md ? 40 : 4}px`,
+          paddingBottom: footer ? 80 : 40,
         }}>{children}</div>
       </Loading>
     </PageContainer>
     {footer && <Footer>
-      <div style={{ maxWidth, margin: '0 auto', width: '100%', display: 'flex', justifyContent: 'end' }}>
+      <div style={{ maxWidth, margin: '0 auto', width: '100%', padding: '0 40px'}}>
         {footer}
       </div>
     </Footer>}

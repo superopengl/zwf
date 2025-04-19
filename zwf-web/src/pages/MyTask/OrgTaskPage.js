@@ -146,6 +146,12 @@ const OrgTaskPage = React.memo(() => {
 
   const hasFinished = ['archived', 'done'].includes(task?.status)
 
+  const handleRequestAction = () => {
+    openRequestActionModal(task.id, () => {
+      load$();
+    })
+  }
+
   return (<>
     <ContainerStyled>
       {task && <PageHeaderContainer
@@ -231,7 +237,7 @@ const OrgTaskPage = React.memo(() => {
                     <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments</Button>
                     <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                     <Divider />
-                    <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={() => openRequestActionModal()}>Notify client</Button>
+                    <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button>
                     <Divider />
                     {!hasFinished && <Button type="text" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                     {task.status !== 'archived' && <Button type="text" danger block icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}

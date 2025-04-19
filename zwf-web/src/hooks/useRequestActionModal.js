@@ -1,7 +1,7 @@
 import React from 'react';
 import { Modal, Typography, Input, Row, Space, Avatar, Button, Form } from 'antd';
 import { TaskIcon } from 'components/entityIcon';
-import { changeTaskStatus$, getTaskDeepLinkUrl, notifyTask$, renameTask$ } from 'services/taskService';
+import { changeTaskStatus$, getTaskDeepLinkUrl, notifyTask$, renameTask$, requestClientAction$ } from 'services/taskService';
 import { ClickToCopyTooltip } from '../components/ClickToCopyTooltip';
 import Icon, { NotificationOutlined, ShareAltOutlined } from '@ant-design/icons';
 import { MdDriveFileRenameOutline } from 'react-icons/md'
@@ -22,11 +22,17 @@ const Content = props => {
   const formRef = React.createRef();
 
   const handleSendNotification = (values) => {
-    const message$ = notifyTask$(id, values.message);
-    const status$ = changeTaskStatus$(id, 'action_required');
-    combineLatest([message$, status$]).subscribe(() => {
-      onOk();
-    })
+    debugger;
+    requestClientAction$(id, values)
+      .subscribe({
+        next: onOk,
+      });
+
+    // const message$ = notifyTask$(id, values.message);
+    // const status$ = changeTaskStatus$(id, 'action_required');
+    // combineLatest([message$, status$]).subscribe(() => {
+    //   onOk();
+    // })
   }
 
   return <Container>
@@ -37,13 +43,13 @@ const Content = props => {
       onFinish={handleSendNotification}
       style={{ marginTop: 20 }}
     >
-      <Form.Item name="requestSign">
+      <Form.Item name="requestSign" valuePropName="checked">
         <Checkbox>Request to sign documents</Checkbox>
       </Form.Item>
-      <Form.Item name="requestForm">
+      <Form.Item name="requestForm" valuePropName="checked">
         <Checkbox>Request to fill the form (for information capture)</Checkbox>
       </Form.Item>
-      <Form.Item name="message" rules={[{ required: false, max: 1000, message: ' ', whitespace: false }]}>
+      <Form.Item name="comment" rules={[{ required: false, max: 1000, message: ' ', whitespace: false }]}>
         <Input.TextArea
           placeholder="Leave additional comments"
           autoSize={{ minRows: 3 }}
@@ -63,13 +69,13 @@ const Content = props => {
 export const useRequestActionModal = () => {
   const [modal, contextHolder] = Modal.useModal();
 
-  const open = (taskID, onOk) => {
+  const open = (taskId, onOk) => {
     const modalRef = modal.info({
       title: <Space>
         <Avatar icon={<NotificationOutlined />} style={{ backgroundColor: '#0FBFC4' }} />
-        Notify client
+        Request client's actions
       </Space>,
-      content: <Content id={taskID} onOk={() => {
+      content: <Content id={taskId} onOk={() => {
         modalRef.destroy();
         onOk?.();
       }} />,

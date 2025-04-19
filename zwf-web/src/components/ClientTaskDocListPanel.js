@@ -11,6 +11,8 @@ import { ProCard } from '@ant-design/pro-components';
 import { TaskFileUpload } from './TaskFileUpload';
 import { finalize } from 'rxjs';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
+import { List } from 'antd';
+import { FileIcon } from './FileIcon';
 
 const { Text } = Typography;
 
@@ -23,6 +25,14 @@ const Container = styled.div`
 .ant-table-content {
   // margin-left: -8px;
   // margin-right: -8px;
+}
+
+.client-doc-card {
+  h4 {
+    font-size: 1rem;
+    font-weight: normal;
+    margin: 0;
+  }
 }
 
 `;
@@ -80,29 +90,40 @@ export const ClientTaskDocListPanel = React.memo((props) => {
     onChange();
   }
 
-  return <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
-    <Container>
-      <ProCard
-        title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
-        // type="inner"
-        extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled} />}
-        // bodyStyle={{ padding: 16 }}
-        // headStyle={{ paddingRight: 8 }}
-      >
-        <Table
-          size="small"
-          loading={loading}
-          pagination={false}
-          bordered={false}
-          rowKey="id"
-          showHeader={false}
-          columns={columns}
-          dataSource={docs}
-          locale={{ emptyText: <Text type="secondary">{placeholder || 'Upload or add doc templates'}</Text> }}
-        />
-      </ProCard>
-    </Container>
-  </TaskDocDropableContainer>
+  //  <TaskDocDropableContainer taskId={taskId} onDone={onChange}>
+  return <Container>
+    <ProCard
+      title={<>{docs.length ?? 0} Attachment{docs.length === 1 ? '' : 's'}</>}
+      // type="inner"
+      extra={disabled ? null : <TaskFileUpload taskId={taskId} onLoading={setLoading} onDone={handleUploadDone} disabled={disabled} />}
+    // bodyStyle={{ padding: 16 }}
+    // headStyle={{ paddingRight: 8 }}
+    >
+      <List
+        size="small"
+        loading={loading}
+        pagination={false}
+        bordered={false}
+        rowKey="id"
+        showHeader={false}
+        // columns={columns}
+        dataSource={docs}
+        locale={{ emptyText: <Text type="secondary">{placeholder || 'Upload or add doc templates'}</Text> }}
+        renderItem={doc => <List.Item>
+          <List.Item.Meta
+            className="client-doc-card"
+            avatar={<FileIcon name={doc.name} />}
+            title={doc.name}
+            description={<TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />}
+          />
+          {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
+          {doc.signedAt && <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />}
+          {doc.signedAt && <Text type="success"><CheckCircleOutlined /> signed</Text>}
+        </List.Item>}
+      />
+    </ProCard>
+  </Container>
+  {/* </TaskDocDropableContainer> */ }
 })
 
 ClientTaskDocListPanel.propTypes = {
