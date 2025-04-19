@@ -50,7 +50,7 @@ export const PageHeaderContainer = React.memo((props) => {
 
   console.log(screens)
 
-  return <Container style={{ ...style, maxWidth }}>
+  return <Container style={{ ...style }}>
     <Breadcrumb style={{ padding: '1rem 40px 0' }}
       items={breadcrumb?.map((item, i) => ({
         title: i === breadcrumb.length - 1 || !item.path ? item.name :
