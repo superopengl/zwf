@@ -1026,21 +1026,7 @@ paths:
           required: true
       responses:
         200:
-          description: OK
-  /task/{id}/notify:
-    post:
-      operationId: notifyTask
-      # security:
-      #   - authClient: []
-      parameters:
-        - name: id
-          in: path
-          type: string
-          format: uuid
-          required: true
-      responses:
-        200:
-          description: OK       
+          description: OK    
   /recurring:
     get:
       operationId: listRecurring

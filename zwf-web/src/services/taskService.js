@@ -109,11 +109,6 @@ export function getTaskLog$(taskId) {
   return httpGet$(`/task/${taskId}/log`);
 }
 
-export function notifyTask$(taskId, msg) {
-  const message = msg?.trim();
-  return httpPost$(`/task/${taskId}/notify`, { message });
-}
-
 export function listTaskComment$(taskId) {
   return httpGet$(`/task/${taskId}/comment`);
 }
