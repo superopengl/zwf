@@ -6,6 +6,7 @@ import en from 'javascript-time-ago/locale/en'
 import ReactTimeAgo from 'react-time-ago'
 import * as moment from 'moment';
 import styled from 'styled-components';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 JavascriptTimeAgo.addLocale(en);
 
@@ -43,15 +44,16 @@ export const TimeAgo = React.memo(props => {
   if (!value) {
     return defaultContent || null;
   }
-  let m = moment.utc(value);
+  let m = moment(value);
   if(toLocalTime) {
     m = m.local();
   }
   return <StyledSpace size="small" direction={direction} className={direction}>
     {/* <ColumnSpace style={{flexDirection: direction === 'vertical' ? 'column' : 'row'}}> */}
       {prefix}
+      {/* <DebugJsonPanel value={m.toDate()}/> */}
       {showAgo && <Text type={type} strong={strong}><ReactTimeAgo date={m.toDate()} /></Text>}
-      {showTime && <Text type={type} strong={strong} style={{fontSize: showAgo ? 'smaller' : undefined}} type={showAgo ? 'secondary' : undefined}>
+      {showTime && <Text type={type} strong={strong} style={{fontSize: showAgo ? 'smaller' : undefined}}>
         {m.format(accurate ? 'D MMM YYYY HH:mm' : 'D MMM YYYY')}
         </Text>}
     {/* </ColumnSpace> */}

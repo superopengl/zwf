@@ -30,6 +30,7 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: TaskEventTy
   const taskEvent = new TaskEvent();
   taskEvent.taskId = taskId;
   taskEvent.by = by;
+  taskEvent.orgId = task.orgId;
   taskEvent.type = taskEventType;
   taskEvent.info = info;
 

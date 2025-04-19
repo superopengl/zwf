@@ -24,14 +24,6 @@ export type Zevent = {
   orgId: string;
   by: string;
 } | {
-  type: 'task.comment';
-  userId: string;
-  taskId: string;
-  taskName: string;
-  orgId: string;
-  by: string;
-  payload: TaskEvent;
-} | {
   type: 'taskEvent',
   userId: string,
   taskEvent: TaskEvent,

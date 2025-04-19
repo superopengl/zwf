@@ -15,6 +15,9 @@ export class TaskEvent {
   @Column('uuid')
   taskId: string;
 
+  @Column('uuid')
+  orgId: string;
+
   @Column('uuid', { nullable: true }) // Author user ID, Null means the system
   by: string;
 

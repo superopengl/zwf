@@ -26,24 +26,24 @@ export async function createTaskComment(m: EntityManager, task: Task | TaskInfor
 
   await emitTaskEvent(m, TaskEventType.Comment, taskId, by, { message });
 
-  const userId = (task as any).orgClient?.userId;
-  if (userId) {
-    await m.createQueryBuilder()
-      .insert()
-      .into(TaskEventLastSeen)
-      .values({ taskId, userId, lastHappenAt: () => `NOW()` })
-      .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
-      .execute();
+  // const userId = (task as any).orgClient?.userId;
+  // if (userId) {
+  //   await m.createQueryBuilder()
+  //     .insert()
+  //     .into(TaskEventLastSeen)
+  //     .values({ taskId, userId, lastHappenAt: () => `NOW()` })
+  //     .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
+  //     .execute();
 
-    publishZevent({
-      type: 'task.comment',
-      userId,
-      taskId,
-      taskName: task.name,
-      orgId,
-      by,
-      payload: comment
-    });
-  }
+  //   publishZevent({
+  //     type: 'task.comment',
+  //     userId,
+  //     taskId,
+  //     taskName: task.name,
+  //     orgId,
+  //     by,
+  //     payload: comment
+  //   });
+  // }
 
 }

@@ -60,7 +60,7 @@ export class Task {
   @JoinTable()
   tags: Tag[];
 
-  @OneToMany(() => TaskWatcher, taskWatcher => taskWatcher.task, { eager: false })
+  @OneToMany(() => TaskWatcher, taskWatcher => taskWatcher.task, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
   watchers: TaskWatcher[];
 }
 
