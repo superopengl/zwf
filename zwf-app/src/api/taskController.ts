@@ -500,21 +500,18 @@ export const updateTaskTags = handlerWrapper(async (req, res) => {
   res.json();
 });
 
-export const updateTaskName = handlerWrapper(async (req, res) => {
+export const renameTask = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent']);
   const { id } = req.params;
   const { name } = req.body;
   const orgId = getOrgIdFromReq(req);
 
-  let task: Task;
   await db.transaction(async m => {
-    task = await m.getRepository(Task).findOneBy({
-      id,
-      orgId,
-    });
-    task.name = name;
+    const result = await m.update(Task, { id, orgId }, { name });
 
-    await emitTaskEvent(m, TaskEventType.Rename, task.id, getUserIdFromReq(req), { name });
+    if(result.affected) {
+      await emitTaskEvent(m, TaskEventType.Rename, id, getUserIdFromReq(req), { name });
+    }
   })
 
   res.json();
@@ -622,7 +619,7 @@ export const requestClientAction = handlerWrapper(async (req, res) => {
   await db.transaction(async m => {
     const task = await m.findOneOrFail(Task, {
       where: {
-        id, 
+        id,
         orgId,
       },
       relations: {
