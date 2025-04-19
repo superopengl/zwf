@@ -20,6 +20,7 @@ const { Text, Link: TextLink } = Typography;
 const StyledCard = styled(ProCard)`
 position: relative;
 box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+background-color: #FFFFFFAA;
 
 border-left: 2px solid transparent;
 
@@ -64,7 +65,7 @@ export const TaskCard = (props) => {
     hoverable
     onClick={() => navigate(`/task/${id}`)}
   >
-    <ProCard>
+    <ProCard ghost>
       <Row gutter={[10, 10]} justify="space-between" align="top" style={{ marginBottom: 16 }} wrap={false}>
         <Col flex="auto">
           <Tooltip title={name} placement="bottom">
@@ -91,7 +92,7 @@ export const TaskCard = (props) => {
     </ProCard>
 
     {(tagIds.length > 0 || task.assigneeId) &&
-      <ProCard>
+      <ProCard ghost>
         <Row gutter={[10, 10]} justify="space-between">
           {showTags && <Col>
             <TagSelect readonly={true} value={tagIds} />

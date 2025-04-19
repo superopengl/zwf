@@ -116,7 +116,10 @@ export const OrgTaskDocListPanel = React.memo((props) => {
       .pipe(
         finalize(() => setLoading(false)),
       )
-      .subscribe(docs => setDocs(docList => [...docList, ...docs]));
+      .subscribe({
+        next: onChange,
+        error: () => {},
+      });
   }
 
   const handleUploadDone = () => {

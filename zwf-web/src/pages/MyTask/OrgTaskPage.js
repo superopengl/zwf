@@ -30,6 +30,7 @@ import { Divider } from 'antd';
 import { FaSignature } from 'react-icons/fa';
 import { useRequestActionModal } from 'hooks/useRequestActionModal';
 import { MdEditNote } from 'react-icons/md';
+import { TbGitCommit } from 'react-icons/tb';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -83,6 +84,7 @@ const OrgTaskPage = React.memo(() => {
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [commentsOpen, setCommentsOpen] = React.useState(false);
+  const [timelineOpen, setTimelineOpen] = React.useState(false);
   const [assigneeId, setAssigneeId] = React.useState();
   const navigate = useNavigate();
   const [openDeepLink, deepLinkContextHolder] = useShareTaskDeepLinkModal();
@@ -236,6 +238,7 @@ const OrgTaskPage = React.memo(() => {
                     {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
                     <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments</Button>
+                    <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
                     <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                     <Divider />
                     <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button>
@@ -249,7 +252,7 @@ const OrgTaskPage = React.memo(() => {
           </Col>
         </Row>
       </PageHeaderContainer>}
-      {task && <TaskLogDrawer taskId={task.id} visible={historyVisible} onClose={() => setHistoryVisible(false)} />}
+      {task && <TaskLogDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />}
       {saving && <SavingAffix />}
       {deepLinkContextHolder}
       <Drawer

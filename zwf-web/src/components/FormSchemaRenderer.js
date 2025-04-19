@@ -42,6 +42,7 @@ export const FormSchemaRenderer = React.memo(React.forwardRef((props, ref) => {
   return <Container>
     <BetaSchemaForm
       layoutType='Form'
+      requiredMark="optional"
       formRef={ref}
       columns={fieldSchema}
       onValuesChange={handleFormValueChange}

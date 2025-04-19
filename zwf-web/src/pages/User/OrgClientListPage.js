@@ -160,7 +160,7 @@ const OrgClientListPage = () => {
     {
       title: "Notes",
       dataIndex: 'remark',
-      // width: 200,
+      width: 200,
       render: (value, item) => isEditing(item) ? <Form
         onFinish={values => handleRemarkChange(item, values.remark)}
       >
@@ -186,7 +186,7 @@ const OrgClientListPage = () => {
     {
       title: <span style={{ fontWeight: 400 }}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
       dataIndex: 'tags',
-      // width: 300,
+      width: 300,
       render: (value, item) =>
         <TagSelect value={value}
           onChange={tags => handleTagChange(item, tags)}
