@@ -18,7 +18,7 @@ import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
-import { TaskDocListPanel } from 'components/TaskDocListPanel';
+import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentPanel } from 'components/TaskCommentPanel';
@@ -171,23 +171,28 @@ const OrgTaskPage = React.memo(() => {
           }
         ]}
         // fixedHeader
-        title={task?.name ? <ClickToEditInput placeholder="Task name" value={task.name} size={22} onChange={handleRename} maxLength={100} /> : <Skeleton paragraph={false} />}
+        title={task?.name ? <ClickToEditInput
+          placeholder="Task name"
+          value={task.name} size={22}
+          onChange={handleRename}
+          maxLength={100} /> : <Skeleton paragraph={false} />}
         icon={<TaskIcon />}
         // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
-          <ZeventNoticeableBadge key="refresh"
-            message="This task has changes. Click to refresh"
-            filter={z => z.type === 'task.change' && z.taskId === task.id}
-          >
-            <Button icon={<SyncOutlined />} onClick={() => load$()} />
-          </ZeventNoticeableBadge>,
+          // <ZeventNoticeableBadge key="refresh"
+          //   message="This task has changes. Click to refresh"
+          //   filter={z => z.type === 'task.change' && z.taskId === task.id}
+          // >
+          //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
+          // </ZeventNoticeableBadge>,
           // <ZeventNoticeableBadge key="comment"
           //   message="This task has unread comment"
           //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
           // >
           //   <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
           // </ZeventNoticeableBadge>,
-          <TaskStatusButton key="status" value={task.status} onChange={handleStatusChange} />
+          // <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+          // ,
           // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
       // footer={[
@@ -199,9 +204,7 @@ const OrgTaskPage = React.memo(() => {
           <Col flex="2 2 400px">
             <Row gutter={[20, 20]}>
               <Col span={24}>
-                <ProCard title={`Documents (${task.docs.length})`}>
-                  <TaskDocListPanel task={task} onChange={() => load$()} />
-                </ProCard>
+                <OrgTaskDocListPanel task={task} onChange={() => load$()} />
               </Col>
               <Col flex="1 1 300px">
                 <Row gutter={[20, 20]}>
@@ -224,6 +227,9 @@ const OrgTaskPage = React.memo(() => {
             <ProCard ghost>
               <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
               <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
+                <Descriptions.Item label="Status">
+                  <TaskStatusButton style={{ width: '100%' }} key="status" value={task.status} onChange={handleStatusChange} />
+                </Descriptions.Item>
                 <Descriptions.Item label="Assignee">
                   <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
                 </Descriptions.Item>

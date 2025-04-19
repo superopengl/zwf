@@ -19,11 +19,12 @@ const { Text } = Typography;
 
 
 const Container = styled.div`
-
-
+.ant-table-cell {
+  border: none !important;
+}
 `;
 
-export const TaskDocListPanel = React.memo((props) => {
+export const OrgTaskDocListPanel = React.memo((props) => {
   const { task, onChange } = props;
 
   const [loading, setLoading] = React.useState(true);
@@ -80,8 +81,8 @@ export const TaskDocListPanel = React.memo((props) => {
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
           <TaskDocName taskDoc={doc} showOverlay={false} />
-          <TimeAgo prefix="Created" direction="horizontal" value={doc.createdAt} />
-          <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />
+          <TimeAgo prefix="Created" value={doc.createdAt} />
+          <TimeAgo prefix="Sign requested" value={doc.signRequestedAt} />
         </Space>
         }>
         <div>
@@ -133,39 +134,40 @@ export const TaskDocListPanel = React.memo((props) => {
     >Add Doc Template</Button>
   }]
 
-  return <Container>
-    <Row justify="end" style={{ marginBottom: 20 }}>
-      <Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
-        <Button icon={<PlusOutlined />}>Add Document</Button>
-      </Dropdown>
-    </Row>
-    {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}
-    <Table
-      size="small"
-      loading={loading}
-      pagination={false}
-      bordered={false}
-      rowKey="id"
-      showHeader={false}
-      columns={columns}
-      dataSource={docs}
-      locale={{ emptyText: 'Upload or add doc templates' }}
-      onClick={e => e.stopPropagation()}
-      onRow={() => {
-        return {
-          onClick: e => e.stopPropagation()
-        }
-      }}
-    />
-    <div>
-      {deleteModalContextHolder}
-    </div>
-    {demplateContextHolder}
-    {/* </TaskDocDropableContainer> */}
-  </Container>
+  return <ProCard title={`Documents (${docs.length})`}
+    extra={<Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
+      <Button icon={<PlusOutlined />}>Add Document</Button>
+    </Dropdown>}
+  >
+    <Container>
+      {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}
+      <Table
+        size="small"
+        loading={loading}
+        pagination={false}
+        bordered={false}
+        rowKey="id"
+        showHeader={false}
+        columns={columns}
+        dataSource={docs}
+        locale={{ emptyText: 'Upload or add doc templates' }}
+        onClick={e => e.stopPropagation()}
+        onRow={() => {
+          return {
+            onClick: e => e.stopPropagation()
+          }
+        }}
+      />
+      <div>
+        {deleteModalContextHolder}
+      </div>
+      {demplateContextHolder}
+      {/* </TaskDocDropableContainer> */}
+    </Container>
+  </ProCard>
 })
 
-TaskDocListPanel.propTypes = {
+OrgTaskDocListPanel.propTypes = {
   task: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   onAdd: PropTypes.func,
@@ -175,7 +177,7 @@ TaskDocListPanel.propTypes = {
   showsSignedAt: PropTypes.bool,
 };
 
-TaskDocListPanel.defaultProps = {
+OrgTaskDocListPanel.defaultProps = {
   disabled: false,
   onChange: () => { },
   onAdd: () => { },
