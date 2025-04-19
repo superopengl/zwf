@@ -147,6 +147,8 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
   const role = getRoleFromReq(req);
   const userId = getUserIdFromReq(req);
 
+  const isClient = role === Role.Client;
+
   let query: any = { id };
   switch (role) {
     case Role.Admin:
@@ -159,7 +161,9 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
     case Role.Client:
       query = {
         ...query,
-        userId,
+        orgClient: {
+          userId,
+        }
       };
       break;
     default:
@@ -168,14 +172,27 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
 
   let task: Task;
   await db.transaction(async m => {
-    task = await m.getRepository(Task).findOneBy(query);
+    task = await m.getRepository(Task).findOne({
+      where: query,
+      relations: {
+        orgClient: isClient,
+        fields: true,
+      }
+    });
     assert(task, 404);
 
-    const fieldEntities = Object.entries(fields).map(([key, value]) => ({ id: key, value: value, }));
+    const fieldToSave: TaskField[] = [];
+    task.fields.forEach(f => {
+      if (f.id in fields) {
+        f.value = fields[f.id];
+        fieldToSave.push(f);
+      }
+    });
 
-    await m.getRepository(TaskField).save(fieldEntities);
-
-    await emitTaskEvent(m, TaskEventType.FieldValuesChange, id, userId, fields);
+    if (fieldToSave.length) {
+      await m.getRepository(TaskField).save(fieldToSave);
+      await emitTaskEvent(m, TaskEventType.FieldValuesChange, id, userId, fields);
+    }
   })
 
   res.json();
@@ -435,10 +452,12 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
       return taskDoc;
     })
 
+    await m.save(taskDocs);
+
     await emitTaskEvent(m, TaskEventType.AddDoc, taskId, userId, taskDocs);
   });
 
-  res.json(taskDocs);
+  res.json();
 });
 
 export const getDeepLinkedTask = handlerWrapper(async (req, res) => {
