@@ -392,49 +392,50 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
       orgId,
     });
 
-    if (demplates.length) {
-      const fieldCounts = await m.getRepository(TaskField).countBy({
-        taskId
-      })
+    if (!demplates.length) {
+      return;
+    }
+    const fieldCount = await m.getRepository(TaskField).countBy({
+      taskId
+    })
 
-      const fieldsNamesToAdd = new Set<string>();
-      demplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
-      const taskFields = Array.from(fieldsNamesToAdd).map((n, index) => {
-        const taskField = new TaskField();
-        taskField.taskId = taskId;
-        taskField.name = n;
-        taskField.type = 'text';
-        taskField.ordinal = fieldCounts + index;
-        taskField.required = true;
-        taskField.official = false;
-        return taskField;
-      });
+    const fieldsNamesToAdd = new Set<string>();
+    demplates.forEach(d => d.refFieldNames.forEach(n => fieldsNamesToAdd.add(n)));
+    const taskFields = Array.from(fieldsNamesToAdd).map((fieldName, index) => {
+      const taskField = new TaskField();
+      taskField.taskId = taskId;
+      taskField.name = fieldName;
+      taskField.type = 'text';
+      taskField.ordinal = fieldCount + 1 + index;
+      taskField.required = true;
+      taskField.official = false;
+      return taskField;
+    });
 
-      await m.createQueryBuilder()
-        .insert()
-        .into(TaskField)
-        .values(taskFields)
-        .orUpdate(['required', 'official'], ['taskId', 'name'])
-        .execute();
+    await m.createQueryBuilder()
+      .insert()
+      .into(TaskField)
+      .values(taskFields)
+      .orUpdate(['required', 'official'], ['taskId', 'name'])
+      .execute();
 
-      taskDocs = demplates.map(t => {
-        const taskDoc = new TaskDoc();
-        taskDoc.id = uuidv4();
-        taskDoc.orgId = orgId;
-        taskDoc.taskId = taskId;
-        taskDoc.uploadedBy = userId;
-        taskDoc.type = 'autogen';
-        taskDoc.demplateId = t.id;
-        taskDoc.name = `${t.name}.pdf`;
-        taskDoc.fieldBag = t.refFieldNames.reduce((pre, curr) => {
-          pre[curr] = null;
-          return pre;
-        }, {});
-        return taskDoc;
-      })
+    taskDocs = demplates.map(t => {
+      const taskDoc = new TaskDoc();
+      taskDoc.id = uuidv4();
+      taskDoc.orgId = orgId;
+      taskDoc.taskId = taskId;
+      taskDoc.uploadedBy = userId;
+      taskDoc.type = 'autogen';
+      taskDoc.demplateId = t.id;
+      taskDoc.name = `${t.name}.pdf`;
+      taskDoc.fieldBag = t.refFieldNames.reduce((pre, curr) => {
+        pre[curr] = null;
+        return pre;
+      }, {});
+      return taskDoc;
+    })
 
-      await emitTaskEvent(m, TaskEventType.AddDoc, taskId, userId, taskDocs);
-    };
+    await emitTaskEvent(m, TaskEventType.AddDoc, taskId, userId, taskDocs);
   });
 
   res.json(taskDocs);
@@ -509,7 +510,7 @@ export const renameTask = handlerWrapper(async (req, res) => {
   await db.transaction(async m => {
     const result = await m.update(Task, { id, orgId }, { name });
 
-    if(result.affected) {
+    if (result.affected) {
       await emitTaskEvent(m, TaskEventType.Rename, id, getUserIdFromReq(req), { name });
     }
   })
