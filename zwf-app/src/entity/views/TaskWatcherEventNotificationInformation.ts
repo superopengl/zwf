@@ -10,12 +10,12 @@ import { UserProfile } from '../UserProfile';
 import { Tag } from '../Tag';
 import { OrgClient } from '../OrgClient';
 import { TaskEvent } from '../TaskEvent';
-import { TaskEventAck } from '../TaskEventAck';
+import { TaskWatcherEventAck } from '../TaskWatcherEventAck';
 import { OrgClientInformation } from './OrgClientInformation';
 import { TaskEventType } from '../../types/TaskEventType';
 import { OrgMemberInformation } from './OrgMemberInformation';
-import { TaskWatchlist } from '../TaskWatchlist';
-import { UserTaskEventAckInformation } from './UserTaskEventAckInformation';
+import { TaskWatcher } from '../TaskWatcher';
+import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation';
 
 const events = [
   TaskEventType.ClientSubmit,
@@ -31,15 +31,15 @@ const events = [
 @ViewEntity({
   expression: (connection: DataSource) => connection
     .createQueryBuilder()
-    .from(UserTaskEventAckInformation, 'x')
+    .from(TaskWatcherEventAckInformation, 'x')
     .where({ ackAt: IsNull() })
     .orWhere(`"ackAt" > now() - interval '30 minutes'`)
     .distinctOn(['x."taskId"', 'x."type"'])
     .orderBy('x."taskId"', 'ASC')
     .addOrderBy('x.type', 'ASC')
     .addOrderBy('x."eventAt"', 'DESC'),
-  dependsOn: [UserTaskEventAckInformation]
-}) export class UserTaskEventNotificationInformation {
+  dependsOn: [TaskWatcherEventAckInformation]
+}) export class TaskWatcherEventNotificationInformation {
   @ViewColumn()
   userId: string;
 

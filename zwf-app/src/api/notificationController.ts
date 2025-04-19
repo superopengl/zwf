@@ -13,10 +13,10 @@ import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { OrgMemberInformation } from '../entity/views/OrgMemberInformation';
-import { UserTaskEventAckInformation } from '../entity/views/UserTaskEventAckInformation';
-import { UserTaskEventNotificationInformation } from '../entity/views/UserTaskEventNotificationInformation';
+import { TaskWatcherEventAckInformation } from '../entity/views/TaskWatcherEventAckInformation';
+import { TaskWatcherEventNotificationInformation } from '../entity/views/TaskWatcherEventNotificationInformation';
 import { TaskEvent } from '../entity/TaskEvent';
-import { TaskEventAck } from '../entity/TaskEventAck';
+import { TaskWatcherEventAck } from '../entity/TaskWatcherEventAck';
 import { assert } from '../utils/assert';
 
 const CLIENT_WATCH_EVENTS = [
@@ -52,7 +52,7 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
 
   const result = await db
-    .getRepository(UserTaskEventNotificationInformation)
+    .getRepository(TaskWatcherEventNotificationInformation)
     .createQueryBuilder('x')
     .where({
       userId,
@@ -74,7 +74,7 @@ export const ackTaskEventNotification = handlerWrapper(async (req, res) => {
   assert(type, 400, 'type is not specified');
 
   await db.transaction(async m => {
-    const taskEvents = await m.find(UserTaskEventAckInformation, {
+    const taskEvents = await m.find(TaskWatcherEventAckInformation, {
       where: {
         userId,
         taskId,
@@ -86,7 +86,7 @@ export const ackTaskEventNotification = handlerWrapper(async (req, res) => {
       }
     })
     const acks = taskEvents.map(x => {
-      const ack = new TaskEventAck();
+      const ack = new TaskWatcherEventAck();
       ack.userId = userId;
       ack.taskEventId = x.eventId;
       return ack;
@@ -95,7 +95,7 @@ export const ackTaskEventNotification = handlerWrapper(async (req, res) => {
     if (acks.length) {
       await m.createQueryBuilder()
         .insert()
-        .into(TaskEventAck)
+        .into(TaskWatcherEventAck)
         .values(acks)
         .orIgnore()
         .execute()
