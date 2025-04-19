@@ -119,7 +119,8 @@ const ClientTaskPage = (props) => {
   useAssertRole(['client']);
   const params = useParams();
   const { id } = params;
-  const { state: { type: notificationType } } = useLocation();
+
+  const notificationType = useLocation()?.state?.type;
 
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
@@ -223,33 +224,33 @@ const ClientTaskPage = (props) => {
     {!task ? <Skeleton active /> : <PageHeaderContainer
       loading={loading}
       onBack={handleGoBack}
-      fixedHeader={false}
+      fixedHeader={true}
       maxWidth={700}
       icon={<TaskIcon />}
       title={<>{task.name} <small><Text type="secondary" strong={false}>by {task.orgName}</Text></small></> || <Skeleton paragraph={false} />}
       footer={<Space className='client-task-footer' size="large" style={{ width: '100%', margin: '0 auto', justifyContent: 'space-evenly' }}>
-        <Button type="text" size="large" icon={<Icon component={AiOutlineForm} />}
+        <Button type="text" size="large" icon={<Icon component={BiCommentDetail} />}
+          onClick={() => setActivePanel('comments')}
+        >Chat</Button>
+        {task.fields.length > 0 && <Button type="text" size="large" icon={<Icon component={AiOutlineForm} />}
           onClick={() => setActivePanel('form')}
-        >Form</Button>
+        >Form</Button>}
         <Button type="text" size="large" icon={<PaperClipOutlined />}
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
-        <Badge showZero={true} count={docsToSign.length}>
+        {docsToSign.length > 0 && <Badge showZero={true} count={docsToSign.length}>
           <Button type="text" size="large" icon={<Icon component={FaSignature} />} onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
             Sign
           </Button>
-        </Badge>
-        <Button type="text" size="large" icon={<Icon component={BiCommentDetail} />}
-          onClick={() => setActivePanel('comments')}
-        >Comments</Button>
+        </Badge>}
       </Space>}
       extra={[
-        <ZeventNoticeableBadge key="refresh"
-          message="This task has changes. Click to refresh"
-          filter={z => z.type === 'task.change' && z.taskId === task.id}
-        >
-          <Button icon={<SyncOutlined />} onClick={() => load$()} />
-        </ZeventNoticeableBadge>,
+        // <ZeventNoticeableBadge key="refresh"
+        //   message="This task has changes. Click to refresh"
+        //   filter={z => z.type === 'task.change' && z.taskId === task.id}
+        // >
+        //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
+        // </ZeventNoticeableBadge>,
         // <ZeventNoticeableBadge key="comment"
         //   message="This task has unread comment"
         //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
