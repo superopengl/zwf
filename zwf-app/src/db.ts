@@ -82,6 +82,7 @@ const mviews = [
 
 export async function connectDatabase(shouldSyncSchema = false) {
   await db.initialize();
+  await db.query(`SET TIME ZONE 'UTC';`);
   if (shouldSyncSchema) {
     await syncDatabaseSchema(db);
     await initializeData();
