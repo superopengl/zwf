@@ -290,7 +290,7 @@ const OrgMemberListPage = () => {
         maskClosable={false}
         onOk={() => setSetPasswordVisible(false)}
         onCancel={() => setSetPasswordVisible(false)}
-        title={<>Activate Account</>}
+        title={<>Set Password</>}
         footer={null}
         width={400}
       >
@@ -298,11 +298,11 @@ const OrgMemberListPage = () => {
           <div style={{ marginBottom: 20 }}>
             {currentUser && <UserNameCard userId={currentUser.id} />}
           </div>
-          <Form.Item label="Password" name="password" rules={[{ required: true, message: ' ' }]}>
-            <Input placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
+          <Form.Item label="New Password" name="password" rules={[{ required: true, message: ' ' }]}>
+            <Input.Password placeholder="New password" autoFocus autoComplete="new-password" disabled={loading} />
           </Form.Item>
           <Form.Item>
-            <Button block type="primary" htmlType="submit" disabled={loading}>Activate Account</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Set Password</Button>
           </Form.Item>
         </Form>
       </Modal>
