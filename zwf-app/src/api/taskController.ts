@@ -39,7 +39,10 @@ export const createNewTask = handlerWrapper(async (req, res) => {
   const creatorId = getUserIdFromReq(req);
   const orgId = getOrgIdFromReq(req);
 
-  const task = await createTaskForClientByFemplate(db.manager, femplateId, name, orgClientId, creatorId, id, orgId);
+  let task: Task = null;
+  await db.transaction(async m => {
+    task = await createTaskForClientByFemplate(m, femplateId, name, orgClientId, creatorId, id, orgId);
+  })
 
   res.json(task);
 });
