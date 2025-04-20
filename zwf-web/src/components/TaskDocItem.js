@@ -7,7 +7,7 @@ import _ from 'lodash';
 import Icon, { CloseOutlined, MinusCircleOutlined } from '@ant-design/icons';
 import { showSignTaskFileModal } from '../hooks/useSignTaskDocModal';
 import { Modal } from 'antd';
-import { FaSignature } from 'react-icons/fa';
+import { RiQuillPenFill } from 'react-icons/ri';
 import { TaskDocName } from './TaskDocName';
 import { useRole } from 'hooks/useRole';
 
@@ -98,14 +98,14 @@ export const TaskDocItem = React.memo(props => {
           <Button
             type="primary"
             danger
-            icon={<Icon component={FaSignature} />}
+            icon={<Icon component={RiQuillPenFill} />}
             onClick={handleSignTaskDoc}
           >Sign</Button>
         </Tooltip>}
         {canRequestSign && <Tooltip title={taskDoc.requiresSign ? 'Click to cancel the signature request' : 'Ask client to sign this doc'}>
           <Button shape="circle"
             type={taskDoc.requiresSign ? 'primary' : 'default'}
-            icon={<Icon component={FaSignature} />}
+            icon={<Icon component={RiQuillPenFill} />}
             onClick={handleToggleRequireSign}
           />
         </Tooltip>}

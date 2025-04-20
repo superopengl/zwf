@@ -6,8 +6,7 @@ import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
 import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDemplateToTask$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
-import { FaSignature } from 'react-icons/fa';
-import Icon, { CloseOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import Icon, { CheckCircleFilled, CloseOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { useAddDemplateToTaskModal } from 'hooks/useAddDemplateToTaskModal';
@@ -15,6 +14,8 @@ import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
 import { TaskDocDropableContainer } from './TaskDocDropableContainer';
 import { TbSignature, TbSignatureOff } from 'react-icons/tb';
+import DropdownMenu from './DropdownMenu';
+import { RiQuillPenLine, RiQuillPenFill } from 'react-icons/ri';
 
 const { Text } = Typography;
 
@@ -81,9 +82,10 @@ export const OrgTaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          <TaskDocName taskDoc={doc} showOverlay={false} />
+          {/* <TaskDocName taskDoc={doc} showOverlay={false} /> */}
           <TimeAgo prefix="Created" value={doc.createdAt} />
           <TimeAgo prefix="Sign requested" value={doc.signRequestedAt} />
+          <TimeAgo prefix="Signed" value={doc.signedAt} />
         </Space>
         }>
         <div>
@@ -92,21 +94,48 @@ export const OrgTaskDocListPanel = React.memo((props) => {
       </Tooltip>
 
     },
+    // {
+    //   align: 'right',
+    //   render: (_, doc) => doc.signedAt ? null : <Button 
+    //     type="text"
+    //     // icon={<Icon component={doc.signRequestedAt ? TbSignatureOff : TbSignature} />} 
+    //     onClick={() => handleRequestSign(doc)} >
+    //       {doc.signRequestedAt ? `Revoke sign request` : `Request sign`}
+    //     </Button>
+    // },
+    // {
+    //   align: 'right',
+    //   render: (_, doc) => doc.signedAt ? <Text type="success"><CheckCircleFilled /> signed</Text> : null
+    // },
     {
       align: 'right',
-      render: (_, doc) => doc.signedAt ? null : <Button 
-        type="text"
-        // icon={<Icon component={doc.signRequestedAt ? TbSignatureOff : TbSignature} />} 
-        onClick={() => handleRequestSign(doc)} >
-          {doc.signRequestedAt ? `Revoke sign request` : `Request sign`}
-        </Button>
-    },
-    {
-      align: 'right',
+      fixed: 'right',
       width: 16,
-      render: (_, doc) => <Tooltip title={`Delete`} placement="topRight">
-        <Button type="text" icon={<MinusCircleOutlined />} onClick={(e) => handleDeleteDoc(doc, e)} />
-      </Tooltip>
+      render: (text, doc) => {
+        return (
+          <DropdownMenu
+            config={[
+              doc.signedAt ? null : {
+                icon: <Icon component={doc.signRequestedAt ?  RiQuillPenLine : RiQuillPenFill} />,
+                menu: doc.signRequestedAt ? `Revoke sign request` : `Request sign`,
+                onClick: () => handleRequestSign(doc)
+              },
+
+              // {
+              //   menu: 'Impersonate',
+              //   onClick: () => handleImpersonante(item)
+              // },
+              {
+                // icon: <MinusCircleOutlined/>,
+                icon: <Text type="danger"><MinusCircleOutlined /></Text>,
+                menu: <Text type="danger">Delete</Text>,
+                // type: "danger",
+                onClick: (e) => handleDeleteDoc(doc, e)
+              },
+            ]}
+          />
+        )
+      },
     },
   ];
 
@@ -118,7 +147,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
       )
       .subscribe({
         next: onChange,
-        error: () => {},
+        error: () => { },
       });
   }
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Modal, Typography, Space, Button, Checkbox, Row, Col, Avatar } from 'antd';
 import Icon from '@ant-design/icons';
-import { FaFileSignature, FaSignature } from 'react-icons/fa';
+import { RiQuillPenFill } from 'react-icons/ri';
 import { FileIcon } from '../components/FileIcon';
 import { getTaskDocDownloadUrl, signTaskDocs$ } from 'services/taskService';
 import { Loading } from '../components/Loading';
@@ -49,7 +49,7 @@ const Content = props => {
       </Checkbox>
       <Space style={{ width: '100%', justifyContent: 'flex-end', marginTop: 20 }}>
         <Button type="text" onClick={onCancel} autoFocus>Cancel</Button>
-        <Button type="primary" onClick={handleSign} disabled={!agreed} icon={<Icon component={FaSignature} />}>Sign</Button>
+        <Button type="primary" onClick={handleSign} disabled={!agreed} icon={<Icon component={RiQuillPenFill} />}>Sign</Button>
       </Space>
     </Space>
   </Loading>
@@ -58,7 +58,7 @@ const Content = props => {
 export const useSignTaskDocModal = () => {
   const [modal, contextHolder] = Modal.useModal();
 
-  const icon = <Avatar src={<Icon component={FaSignature} />} style={{ backgroundColor: 'red', color: 'white' }} />
+  const icon = <Avatar src={<Icon component={RiQuillPenFill} />} style={{ backgroundColor: 'red', color: 'white' }} />
 
   const open = ({ taskDoc, onOk }) => {
     const modalRef = modal.info({
@@ -72,8 +72,8 @@ export const useSignTaskDocModal = () => {
       afterClose: () => {
         // onClose?.();
       },
-      // icon: <Icon component={() => <Avatar src={<Icon component={FaSignature} />} style={{ backgroundColor: 'red', color: 'white' }} />} />,
-      icon: <Icon component={FaSignature} />,
+      // icon: <Icon component={() => <Avatar src={<Icon component={RiQuillPenFill} />} style={{ backgroundColor: 'red', color: 'white' }} />} />,
+      icon: <Icon component={RiQuillPenFill} />,
       closable: true,
       maskClosable: true,
       destroyOnClose: true,

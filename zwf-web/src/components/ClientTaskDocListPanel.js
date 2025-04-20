@@ -5,7 +5,6 @@ import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
 import { TaskDocName } from './TaskDocName';
-import { FaSignature } from 'react-icons/fa';
 import Icon, { CheckCircleOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import { TaskFileUpload } from './TaskFileUpload';

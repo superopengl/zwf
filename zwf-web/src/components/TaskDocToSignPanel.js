@@ -10,7 +10,7 @@ import { TaskLogPanel } from './TaskLogPanel';
 import { delay, finalize, of } from 'rxjs';
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { TaskDocName } from './TaskDocName';
-import { FaSignature } from 'react-icons/fa';
+import { RiQuillPenFill } from 'react-icons/ri';
 import Icon from '@ant-design/icons';
 import { useSignTaskDocModal } from '../hooks/useSignTaskDocModal';
 import { ProCard } from '@ant-design/pro-components';
@@ -113,7 +113,7 @@ export const TaskDocToSignPanel = React.memo((props) => {
         <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms of use before signing'} >
           <Button type="primary"
             loading={loading}
-            icon={<Icon component={FaSignature} />}
+            icon={<Icon component={RiQuillPenFill} />}
             onClick={handleSignSelected}
             disabled={!agreed || !selectedRowKeys.length || loading}>
             Sign {selectedRowKeys.length} selected document{selectedRowKeys.length === 1 ? '' : 's'}

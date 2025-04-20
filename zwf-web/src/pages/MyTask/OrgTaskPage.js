@@ -27,7 +27,6 @@ import { BsFillSendFill, BsFillTrash3Fill, BsInputCursorText } from 'react-icons
 import { Descriptions } from 'antd';
 import { Drawer } from 'antd';
 import { Divider } from 'antd';
-import { FaSignature } from 'react-icons/fa';
 import { useRequestActionModal } from 'hooks/useRequestActionModal';
 import { MdEditNote } from 'react-icons/md';
 import { TbGitCommit } from 'react-icons/tb';

@@ -3,7 +3,8 @@ import Icon, {
   CloseOutlined,
   EditOutlined,
   EyeOutlined,
-  PlusOutlined
+  PlusOutlined,
+  MinusCircleOutlined
 } from '@ant-design/icons';
 import { Button, Card, List, Modal, Space, Typography, Tooltip, Row, Col, Segmented } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
@@ -252,7 +253,7 @@ export const FemplateListPage = () => {
                     menu: '-'
                   },
                   {
-                    icon: <Text type="danger"><CloseOutlined /></Text>,
+                    icon: <Text type="danger"><MinusCircleOutlined /></Text>,
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(row.data)
                   },
