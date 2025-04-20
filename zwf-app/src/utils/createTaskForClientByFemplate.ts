@@ -17,6 +17,7 @@ import { OrgClientField } from '../entity/OrgClientField';
 import { emitTaskEvent } from './emitTaskEvent';
 import { TaskEventType } from '../types/TaskEventType';
 import { TaskWatcher } from '../entity/TaskWatcher';
+import { addTaskWatcher } from './addWTaskWatcher';
 
 function prefillFemplateFields(femplateFields, varBag: { [key: string]: any }) {
   if (!varBag) return femplateFields;
@@ -83,22 +84,12 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
   // Provision taskFields based on femplate.fields
   const fields = femplate?.fields.map((f, i) => createTaskFieldByFemplateField(task.id, i, f, defaultValueMap)) ?? [];
 
-  const entities: any[] = [task, ...fields];
+  await m.save([task, ...fields]);
+
   if (creatorId) {
-    const creatorTaskWatch = new TaskWatcher();
-    creatorTaskWatch.taskId = task.id;
-    creatorTaskWatch.userId = creatorId;
-    creatorTaskWatch.reason = 'watch';
-
-    const clientTaskWatch = new TaskWatcher();
-    clientTaskWatch.taskId = task.id;
-    clientTaskWatch.userId = orgClient.userId;
-    clientTaskWatch.reason = 'client';
-
-    entities.push(creatorTaskWatch, clientTaskWatch);
+    await addTaskWatcher(m, task.id, creatorId, 'watch');
+    await addTaskWatcher(m, task.id, orgClient.userId, 'client');
   }
-
-  await m.save(entities);
 
   const eventType = creatorId ? TaskEventType.CreateByHand : TaskEventType.CreateByRecurring;
   await emitTaskEvent(m, eventType, task.id, creatorId);

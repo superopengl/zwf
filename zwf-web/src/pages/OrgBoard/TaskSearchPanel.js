@@ -1,49 +1,21 @@
 import { SearchOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Card, Select, Space, Row, Col, Drawer, Typography } from 'antd';
+import { Button, Input, Form, Switch, Select, Space, Row, Col, Drawer, Typography } from 'antd';
 
 import React from 'react';
 import styled from 'styled-components';
-import { ClientSelect } from 'components/ClientSelect';
 import PropTypes from 'prop-types';
 import { TagSelect } from 'components/TagSelect';
 import { MemberSelect } from 'components/MemberSelect';
 import { OrgClientSelect } from 'components/OrgClientSelect';
 
-const { Paragraph } = Typography;
-
-
-const ItemCol = props => {
-  return <Col span={props.span || 24}>
-    <Paragraph strong>{props.title}</Paragraph>
-    {props.children}
-  </Col>
-}
 
 export const TaskSearchPanel = props => {
-  const { queryInfo, onChange,showStatusFilter, span } = props;
+  const { queryInfo, onChange, showStatusFilter } = props;
 
-  const handleTextChange = (value) => {
-    const text = value?.trim();
-    onChange({ ...queryInfo, text });
+  const handleValuesChange = (changed, allValues) => {
+    // console.log(changed, allValues);
+    onChange({...queryInfo, ...allValues});
   }
-
-  const handleStatusFilter = (status) => {
-    onChange({ ...queryInfo, status });
-  }
-
-  const handleAssigneeChange = (assigneeId) => {
-    onChange({ ...queryInfo, assigneeId });
-  }
-
-
-  const handleClientIdChange = (client) => {
-    onChange({ ...queryInfo, clientId: client?.id });
-  }
-
-  const handleTagsChange = tags => {
-    onChange({ ...queryInfo, tags: tags ?? [], });
-  }
-
 
   const StatusSelectOptions = [
     { label: 'To Do', value: 'todo' },
@@ -55,62 +27,55 @@ export const TaskSearchPanel = props => {
 
   return (
     <>
-      <Row gutter={[20, 10]}>
-        <ItemCol title="Search text" span={span}>
+      <Form
+        requiredMark={false}
+        layout="vertical"
+        onValuesChange={handleValuesChange}
+        value={queryInfo}
+        preserve={true}
+      >
+        <Form.Item label="Search text" name="text">
           <Input
             style={{ width: '100%' }}
             placeholder="Search task"
-            onPressEnter={e => handleTextChange(e.target.value)}
-            onChange={e => handleTextChange(e.target.value)}
-            value={queryInfo.text}
             allowClear
           />
-        </ItemCol>
-        {showStatusFilter && <ItemCol title="Status" span={span}>
+        </Form.Item>
+        {showStatusFilter && <Form.Item label="Task status" name="status">
           <Select
             mode="multiple"
             allowClear={false}
             style={{ width: '100%' }}
             placeholder="Status filter"
-            value={queryInfo.status || []}
-            onChange={handleStatusFilter}
           >
             {StatusSelectOptions.map((x, i) => <Select.Option key={i} value={x.value}>
               {x.label}
             </Select.Option>)}
           </Select>
-        </ItemCol>}
-        <ItemCol title="Tags" span={span}>
+        </Form.Item>}
+        <Form.Item label="Tags" name="tags">
           <TagSelect
             style={{ width: '100%' }}
             allowCreate={false}
-            value={queryInfo.tags}
             placeholder="Select tags"
-            onChange={handleTagsChange}
           />
-        </ItemCol>
-        {/* <ItemCol title="Task template">
-          <FemplateSelect
-            style={{ width: '100%' }}
-            value={queryInfo.femplateId} onChange={handleFemplateIdChange} />
-        </ItemCol> */}
-        <ItemCol title="Assignee" span={span}>
+        </Form.Item>
+        <Form.Item label="Assignee" name="assigneeId">
           <MemberSelect
             placeholder="Filter assignee"
-            onChange={handleAssigneeChange}
-            value={queryInfo.assigneeId}
           />
-        </ItemCol>
-        <ItemCol title="Client" span={span}>
+        </Form.Item>
+        <Form.Item label="Client" name="clientId">
           <OrgClientSelect
             style={{ width: '100%' }}
             placeholder="Search a client"
-            value={queryInfo.clientId}
-            onChange={handleClientIdChange}
             bordered={true}
           />
-        </ItemCol>
-      </Row>
+        </Form.Item>
+        <Form.Item label="My watched tasks only" name="watchedOnly" valuePropName="checked">
+          <Switch />
+        </Form.Item>
+      </Form>
     </>
   );
 };

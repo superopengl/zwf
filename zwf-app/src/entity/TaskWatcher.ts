@@ -1,4 +1,4 @@
-import { Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Task } from './Task';
 import { OrgClient } from './OrgClient';
 
@@ -10,14 +10,17 @@ export class TaskWatcher {
   @Index()
   taskId: string;
 
-  @ManyToOne(() => Task, task => task.watchers, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
-  @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
-  task: Task;
-
   @PrimaryColumn('uuid')
   @Index()
   userId: string;
-
-  @PrimaryColumn()
+  
+  @CreateDateColumn()
+  createdAt: Date;
+  
+  @Column()
   reason: 'watch' | 'assignee' | 'mentioned' | 'client';
+
+  @ManyToOne(() => Task, task => task.watchers, { onDelete: 'CASCADE', eager: false, orphanedRowAction: 'delete' })
+  @JoinColumn({ name: 'taskId', referencedColumnName: 'id' })
+  task: Task;
 }
