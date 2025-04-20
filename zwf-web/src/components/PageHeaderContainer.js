@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Loading } from './Loading';
+import { DebugJsonPanel } from './DebugJsonPanel';
 
 const { Title } = Typography;
 
@@ -40,7 +41,7 @@ left: 0;
 right: 0;
 left: 0;
 background-color: #FFFFFF;
-padding: 16px 24px;
+padding: 8px 1rem;
 `
 
 export const PageHeaderContainer = React.memo((props) => {
@@ -79,16 +80,18 @@ export const PageHeaderContainer = React.memo((props) => {
           margin: '0 auto',
         }
       }}
+      // footer={footer}
     >
       <Loading loading={loading}>
         <div style={{
           maxWidth,
           margin: '0 auto',
-          padding: `0 ${narrowScreen ? 4 : 40}px`,
+          padding: `0 ${narrowScreen ? 0 : 40}px`,
           paddingBottom: footer ? 80 : 40,
         }}>{children}</div>
       </Loading>
     </PageContainer>
+    {/* <DebugJsonPanel value={narrowScreen} /> */}
     {footer && <Footer>
       <div style={{ maxWidth, margin: '0 auto', width: '100%', padding: `0 ${narrowScreen ? 4 : 40}px`}}>
         {footer}
