@@ -93,7 +93,7 @@ export const TaskGenerator = React.memo(props => {
     return current && current.endOf('day').isBefore();
   };
 
-  const sourceCreateTask$ = () => {
+  const createTask$ = () => {
     setLoading(true);
     return createNewTask$(newTaskInfo).pipe(
       finalize(() => setLoading(false)),
@@ -103,7 +103,7 @@ export const TaskGenerator = React.memo(props => {
   const handleCreateAndEdit = () => {
     const isValid = newTaskInfo.orgClientId && newTaskInfo.taskName;
     if (!isValid) return;
-    sourceCreateTask$().subscribe(task => {
+    createTask$().subscribe(task => {
       props.onCreated(task)
       if (postCreateMode === 'notify') {
         const notice = notify.success(

@@ -57,7 +57,7 @@ const createTaskFieldByFemplateField = (taskId: string, ordinal: number, femplat
   return field;
 };
 
-export const createTaskForClientByFemplate = async (m: EntityManager, femplateId, taskName, orgClientId, creatorId: string, id, orgId) => {
+export const createTaskForClient = async (m: EntityManager, femplateId, taskName, orgClientId, creatorId: string, id, orgId) => {
   assert(orgClientId, 400, 'orgClientId is not specified');
 
   const femplate = femplateId ? await m.findOne(Femplate, {
@@ -87,8 +87,11 @@ export const createTaskForClientByFemplate = async (m: EntityManager, femplateId
   await m.save([task, ...fields]);
 
   if (creatorId) {
-    await addTaskWatcher(m, task.id, creatorId, 'watch');
-    await addTaskWatcher(m, task.id, orgClient.userId, 'client');
+    await addTaskWatcher(m, task.id, creatorId, 'create');
+    if (orgClient.userId) {
+      // The client may not have been invited, so no user exists yet.
+      await addTaskWatcher(m, task.id, orgClient.userId, 'client');
+    }
   }
 
   const eventType = creatorId ? TaskEventType.CreateByHand : TaskEventType.CreateByRecurring;

@@ -15,7 +15,7 @@ import { sendEmailForUserId } from '../services/emailService';
 import { assert } from '../utils/assert';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
-import { createTaskForClientByFemplate } from '../utils/createTaskForClientByFemplate';
+import { createTaskForClient } from '../utils/createTaskForClient';
 import { Role } from '../types/Role';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
@@ -41,7 +41,7 @@ export const createNewTask = handlerWrapper(async (req, res) => {
 
   let task: Task = null;
   await db.transaction(async m => {
-    task = await createTaskForClientByFemplate(m, femplateId, name, orgClientId, creatorId, id, orgId);
+    task = await createTaskForClient(m, femplateId, name, orgClientId, creatorId, id, orgId);
   })
 
   res.json(task);

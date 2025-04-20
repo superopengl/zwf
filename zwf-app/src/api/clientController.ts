@@ -13,6 +13,7 @@ import { OrgAllClientFieldsInformation } from '../entity/views/OrgAllClientField
 import { OrgClientField } from '../entity/OrgClientField';
 import { searchOrgClients } from '../utils/searchOrgClients';
 import { ensureClientOrGuestUser } from '../utils/ensureClientOrGuestUser';
+import { initOrgClientWatchers } from '../utils/initOrgClientWatchers';
 
 
 export const updateOrgClient = handlerWrapper(async (req, res) => {
@@ -253,6 +254,7 @@ export const saveOrgClientEmail = handlerWrapper(async (req, res) => {
     }
 
     await m.save(orgClient);
+    await initOrgClientWatchers(m, orgClient);
   });
 
   res.json();
