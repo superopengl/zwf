@@ -12,6 +12,12 @@ import { OrgClientSelect } from 'components/OrgClientSelect';
 export const TaskSearchPanel = props => {
   const { queryInfo, onChange, showStatusFilter } = props;
 
+  const [formValues, setFormValues] = React.useState(queryInfo);
+
+  React.useEffect(() => {
+    setFormValues(queryInfo)
+  }, [queryInfo])
+
   const handleValuesChange = (changed, allValues) => {
     // console.log(changed, allValues);
     onChange({...queryInfo, ...allValues});
@@ -31,7 +37,7 @@ export const TaskSearchPanel = props => {
         requiredMark={false}
         layout="vertical"
         onValuesChange={handleValuesChange}
-        value={queryInfo}
+        initialValues={queryInfo}
         preserve={true}
       >
         <Form.Item label="Search text" name="text">
