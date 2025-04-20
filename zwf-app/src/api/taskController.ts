@@ -370,22 +370,13 @@ export const getTask = handlerWrapper(async (req, res) => {
     assert(task, 404);
     if (role === Role.Client) {
       assert(task.orgClient.userId === userId, 404);
-    }
-
-    await m.createQueryBuilder()
-      .insert()
-      .into(TaskEventLastSeen)
-      .values({ taskId: task.id, userId, lastHappenAt: () => `NOW()` })
-      .orUpdate(['lastHappenAt'], ['taskId', 'userId'])
-      .execute();
-
-    if (role === Role.Client) {
       const { name: orgName } = await m.getRepository(Org).findOneBy({ id: task.orgId });
       (task as any).orgName = orgName;
+    } else {
+      const watched = await m.getRepository(TaskWatcher).findOneBy({ taskId: task.id, userId });
+      (task as any).watched = !!watched;
     }
   })
-
-
 
   res.json(task);
 });
