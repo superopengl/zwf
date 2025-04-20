@@ -30,6 +30,7 @@ import { highlightGlow } from '../../util/highlightGlow';
 import { AiOutlineForm } from 'react-icons/ai';
 import { RiQuillPenFill } from 'react-icons/ri';
 import { BiComment, BiCommentDetail } from 'react-icons/bi';
+import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -244,20 +245,20 @@ const ClientTaskPage = (props) => {
           onClick={() => setActivePanel('comment')}
         >Chat</Button>
         {task.fields.length > 0 && <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
-        type={activePanel === 'form' ? 'primary' : 'text'}
-        ghost={activePanel === 'form'}
+          type={activePanel === 'form' ? 'primary' : 'text'}
+          ghost={activePanel === 'form'}
           onClick={() => setActivePanel('form')}
         >Form</Button>}
         <Button size={buttonSize} icon={<PaperClipOutlined />}
-        type={activePanel === 'docs' ? 'primary' : 'text'}
-        ghost={activePanel === 'docs'}
+          type={activePanel === 'docs' ? 'primary' : 'text'}
+          ghost={activePanel === 'docs'}
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
         {docsToSign.length > 0 && <Badge showZero={true} count={docsToSign.length}>
-          <Button size={buttonSize} icon={<Icon component={RiQuillPenFill} />} 
-          type={activePanel === 'sign' ? 'primary' : 'text'}
-          ghost={activePanel === 'sign'}
-          onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
+          <Button size={buttonSize} icon={<Icon component={RiQuillPenFill} />}
+            type={activePanel === 'sign' ? 'primary' : 'text'}
+            ghost={activePanel === 'sign'}
+            onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
             Sign
           </Button>
         </Badge>}
@@ -290,7 +291,12 @@ const ClientTaskPage = (props) => {
         style={{ marginBottom: 30 }} />} */}
 
       {activePanel === 'form' && <ProCard title="Form" ref={formPanelRef}>
-        <AutoSaveTaskFormPanel value={task} mode="client" onSavingChange={setSaving} />
+        <AutoSaveTaskFormPanel
+          value={task}
+          mode="client"
+          onLoading={setSaving}
+          autoSave={false}
+        />
       </ProCard>}
       {activePanel === 'docs' && <ProCard ghost>
         <ClientTaskDocListPanel
@@ -308,7 +314,7 @@ const ClientTaskPage = (props) => {
       >
         <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
       </ProCard>}
-      {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{padding: '12px 0'}}>
+      {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
         <TaskCommentPanel taskId={task.id} />
       </ProCard>}
       {saving && <SavingAffix />}

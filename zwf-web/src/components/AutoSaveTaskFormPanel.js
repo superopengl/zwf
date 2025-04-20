@@ -6,10 +6,11 @@ import { FormSchemaRenderer } from './FormSchemaRenderer';
 import { useRole } from 'hooks/useRole';
 import { useZevent } from 'hooks/useZevent';
 import { finalize } from 'rxjs';
+import { Row, Button } from 'antd';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
-  const { value: task, mode, onSavingChange } = props;
+  const { value: task, mode, onLoadingChange, autoSave, requiredMark } = props;
 
   const [fields, setFields] = React.useState(task?.fields);
   const [changedFields, setChangedFields] = React.useState({});
@@ -39,13 +40,28 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   }, [task]);
 
   React.useEffect(() => {
+    if (!autoSave) {
+      return;
+    }
     saveTaskFieldValues$(task.id, aggregatedChangedFields)
       .pipe(
-        finalize(() => onSavingChange(false))
+        finalize(() => onLoadingChange(false))
       ).subscribe(() => {
         setChangedFields({})
       });
   }, [aggregatedChangedFields]);
+
+  const handleManualSubmit = async () => {
+    debugger;
+    await ref.current.validateFields();
+
+    saveTaskFieldValues$(task.id, changedFields)
+    .pipe(
+      finalize(() => onLoadingChange(false))
+    ).subscribe(() => {
+      setChangedFields({})
+    });
+  }
 
   const updateFieldsWithChangedFields = (changedFields) => {
     setFields(fields => {
@@ -61,7 +77,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
 
   const handleTaskFieldsValueChange = React.useCallback(changedFields => {
     updateFieldsWithChangedFields(changedFields);
-    onSavingChange(true);
+    onLoadingChange(true);
     setChangedFields(x => ({ ...x, ...changedFields }))
   }, []);
 
@@ -72,7 +88,12 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       ref={ref}
       onChange={handleTaskFieldsValueChange}
       disabled={disabled}
+      requiredMark={requiredMark}
+      
     />
+    {!autoSave && <Row justify="end" style={{marginTop: 20}}>
+      <Button onClick={handleManualSubmit} type="primary">Submit</Button>
+    </Row>}
   </>
   );
 });
@@ -83,11 +104,13 @@ AutoSaveTaskFormPanel.propTypes = {
   }).isRequired,
   mode: PropTypes.oneOf(['client', 'agent']).isRequired,
   // onChange: PropTypes.func,
-  onSavingChange: PropTypes.func,
+  onLoadingChange: PropTypes.func,
+  autoSave: PropTypes.bool,
 };
 
 AutoSaveTaskFormPanel.defaultProps = {
   mode: 'client',
-  onSavingChange: saving => { },
+  onLoadingChange: saving => { },
+  autoSave: true,
 };
 
