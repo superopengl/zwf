@@ -237,7 +237,11 @@ const OrgTaskPage = React.memo(() => {
                   <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
                 </Descriptions.Item>
                 <Descriptions.Item label="Tags">
-                  <TagSelect value={task.tags.map(t => t.id)} onChange={handleTagsChange} bordered={true} placeholder="Select tags" />
+                  <TagSelect value={task.tags.map(t => t.id)} 
+                  onChange={handleTagsChange} 
+                  bordered={true} 
+                  inPlaceEdit={true}
+                  placeholder="Select tags" />
                 </Descriptions.Item>
                 <Descriptions.Item label="Actions">
                   <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">

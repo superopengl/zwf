@@ -9,18 +9,21 @@ import { MemberSelect } from 'components/MemberSelect';
 import { OrgClientSelect } from 'components/OrgClientSelect';
 
 
-export const TaskSearchPanel = props => {
-  const { queryInfo, onChange, showStatusFilter } = props;
-
-  const [formValues, setFormValues] = React.useState(queryInfo);
+export const TaskSearchPanel = React.forwardRef((props, ref) => {
+  const { queryInfo, onSearch, showStatusFilter, defaultQuery } = props;
+  const [form] = Form.useForm();
 
   React.useEffect(() => {
-    setFormValues(queryInfo)
-  }, [queryInfo])
+    form.setFieldsValue(queryInfo);
+  }, [form, queryInfo])
 
-  const handleValuesChange = (changed, allValues) => {
+  const handleSearch = (allValues) => {
     // console.log(changed, allValues);
-    onChange({...queryInfo, ...allValues});
+    onSearch({...queryInfo, ...allValues});
+  }
+
+  const handleClear = () => {
+    form.setFieldsValue(defaultQuery);
   }
 
   const StatusSelectOptions = [
@@ -34,11 +37,15 @@ export const TaskSearchPanel = props => {
   return (
     <>
       <Form
+        form={form}
+        ref={ref}
         requiredMark={false}
         layout="vertical"
-        onValuesChange={handleValuesChange}
+        // onValuesChange={handleSearch}
+        onFinish={handleSearch}
         initialValues={queryInfo}
-        preserve={true}
+        preserve={false}
+        style={{marginTop: 20}}
       >
         <Form.Item label="Search text" name="text">
           <Input
@@ -81,10 +88,16 @@ export const TaskSearchPanel = props => {
         <Form.Item label="My watched tasks only" name="watchedOnly" valuePropName="checked">
           <Switch />
         </Form.Item>
+        <Form.Item style={{justifyContent: 'end', display: 'flex'}}>
+          <Space>
+            <Button onClick={handleClear} type="text">Clear</Button>
+            <Button htmlType="submit" type="primary">Search</Button>
+          </Space>
+        </Form.Item>
       </Form>
     </>
   );
-};
+});
 
 TaskSearchPanel.propTypes = {
   queryInfo: PropTypes.shape({
@@ -95,7 +108,7 @@ TaskSearchPanel.propTypes = {
     clientId: PropTypes.string,
     assigneeId: PropTypes.string,
   }),
-  onChange: PropTypes.func,
+  onSearch: PropTypes.func,
   showStatusFilter: PropTypes.bool,
   span: PropTypes.number,
 };

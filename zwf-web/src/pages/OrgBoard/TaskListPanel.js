@@ -101,14 +101,14 @@ export const TaskListPanel = (props) => {
     {
       title: 'Created',
       dataIndex: 'createdAt',
-      width: 100,
+      width: 110,
       sorter: () => 0,
       render: (text) => <TimeAgo value={text} accurate={false} />
     },
     {
       title: 'Last Updated',
       dataIndex: 'updatedAt',
-      width: 100,
+      width: 130,
       sorter: () => 0, // Server end sorting. moment(a.createdAt).toDate() - moment(b.createdAt).toDate(),
       render: (text) => {
         return <TimeAgo value={text} accurate={false} />;
