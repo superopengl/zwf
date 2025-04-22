@@ -27,6 +27,10 @@ export type Zevent = {
   type: 'taskEvent',
   userId: string,
   taskEvent: TaskEvent,
-};
+} | {
+  type: 'taskEvent.ack',
+  userId: string,
+  taskEvent: TaskEvent,
+};;
 
 
