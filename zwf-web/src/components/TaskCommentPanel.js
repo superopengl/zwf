@@ -72,7 +72,7 @@ export const TaskCommentPanel = React.memo((props) => {
 
   const handleZevent = z => {
     const event = z.taskEvent;
-    event.eventAt = moment.utc(event.eventAt).local().toDate();
+    event.createdAt = moment.utc(event.createdAt).local().toDate();
     setList(list => [...list, event]);
   };
 

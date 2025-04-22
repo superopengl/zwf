@@ -33,7 +33,7 @@ import { TaskWatcher } from '../TaskWatcher';
       't.name as "taskName"',
       'e."type" as "type"',
       'e."info" as "info"',
-      'e."createdAt" as "eventAt"',
+      'e."createdAt" as "createdAt"',
       'e."by" as "eventBy"',
       'a."ackAt" as "ackAt"',
     ])
@@ -65,7 +65,7 @@ import { TaskWatcher } from '../TaskWatcher';
   info: any;
 
   @ViewColumn()
-  eventAt: Date;
+  createdAt: Date;
 
   @ViewColumn()
   eventBy: string;

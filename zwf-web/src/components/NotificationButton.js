@@ -58,7 +58,7 @@ export const NotificationButton = (props) => {
   const [changedTasks, setChangedTasks] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
-  const { notifications, setNotifications } = React.useContext(GlobalContext);
+  const [ notifications, setNotifications ]= React.useState([]);
 
   const userId = user.id;
 
@@ -67,7 +67,7 @@ export const NotificationButton = (props) => {
   const load$ = () => {
     return getMyNotifications$()
       .pipe()
-      .subscribe(setNotifications);
+      .subscribe(result => setNotifications(result ?? []));
     // .subscribe(result => {
     //   setChangedTasks(result.changedTasks);
     //   setUnreadSupportMsgCount(result.unreadSupportMsgCount);
@@ -85,14 +85,32 @@ export const NotificationButton = (props) => {
     }
   }, [supportOpen]);
 
-  useZevent(z => z.by !== userId, z => {
+  const handleZeventTaskEvent = taskEvent => {
+    setNotifications([...notifications, taskEvent]);
+    const existing = notifications.find(x => x.taskId = taskEvent.taskId && x.type === taskEvent.type);
+    if(existing) {
+      debugger;
+      existing.createdAt = taskEvent.createdAt;
+      setNotifications([...notifications]);
+    } else {
+      debugger;
+      setNotifications(list => [taskEvent, ...list]);
+    }
+  }
+
+  useZevent(z => {
+    if (z.type === 'taskEvent') {
+      return z.taskEvent.by !== userId;
+    } else {
+      return z.by !== userId
+    }
+  }, z => {
     if (z.type === 'support') {
       if (!supportOpen) {
         setUnreadSupportMsgCount(pre => pre + 1)
       }
-    } else if (z.type === 'task') {
-
-
+    } else if (z.type === 'taskEvent') {
+      handleZeventTaskEvent(z.taskEvent);
     } else {
       const exists = changedTasks.some((t => t.taskId === z.taskId));
       if (!exists) {
@@ -125,7 +143,7 @@ export const NotificationButton = (props) => {
       label: <StyledCompactSpace direction='vertical'>
         <Text strong>{x.taskName}</Text>
         <Text strong={!x.ackAt}>{getNotificationMessage(x)}</Text>
-        <TimeAgo strong={!x.ackAt} value={x.eventAt} direction="horizontal" />
+        <TimeAgo strong={!x.ackAt} value={x.createdAt} direction="horizontal" />
       </StyledCompactSpace>,
       onClick: () => handleItemClick(x),
     };
@@ -160,9 +178,12 @@ export const NotificationButton = (props) => {
     load$();
   }
 
+  console.log(items)
+
   return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
     <Badge showZero={false} count={notifications.filter(x => !x.ackAt).length} offset={[-4, 6]}>
       <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={handleClick} />
+      {/* <DebugJsonPanel value={notifications} /> */}
     </Badge>
   </Dropdown>
 };
