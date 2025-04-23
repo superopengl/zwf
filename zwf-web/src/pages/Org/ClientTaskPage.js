@@ -264,7 +264,7 @@ const ClientTaskPage = (props) => {
         </Badge>}
       </Row>}
       extra={[
-        <small><Text type="secondary" strong={false}>by {task.orgName}</Text></small>
+        <small key="orgName"><Text type="secondary" strong={false}>by {task.orgName}</Text></small>
         // <ZeventNoticeableBadge key="refresh"
         //   message="This task has changes. Click to refresh"
         //   filter={z => z.type === 'task.change' && z.taskId === task.id}
