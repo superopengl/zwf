@@ -34,6 +34,7 @@ import { IoNotificationsOffOutline, IoNotificationsOutline } from 'react-icons/i
 import { GlobalContext } from 'contexts/GlobalContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { NotificationContext } from 'contexts/NotificationContext';
+import { UnreadCommentBadge } from 'components/UnreadCommentBadge';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -94,7 +95,7 @@ const OrgTaskPage = () => {
   const [openRequestActionModal, requestActionContextHolder] = useRequestActionModal();
   const context = React.useContext(GlobalContext);
 
-  const {notifications, setNotifications } = React.useContext(NotificationContext);
+  const { zevents, setZevents } = React.useContext(NotificationContext);
 
   React.useEffect(() => {
     const sub$ = load$();
@@ -104,7 +105,7 @@ const OrgTaskPage = () => {
 
   React.useEffect(() => {
     debugger;
-  }, [notifications]);
+  }, [zevents]);
 
   const load$ = () => {
     return getTask$(id).pipe(
@@ -236,7 +237,7 @@ const OrgTaskPage = () => {
                 </ProCard>
               </Col>
             </Row>
-        <DebugJsonPanel value={notifications} />
+            <DebugJsonPanel value={zevents} />
 
           </Col>
           <Col flex="0 0 340px">
@@ -250,23 +251,23 @@ const OrgTaskPage = () => {
                   <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
                 </Descriptions.Item>
                 <Descriptions.Item label="Tags">
-                  <TagSelect value={task.tags.map(t => t.id)} 
-                  onChange={handleTagsChange} 
-                  bordered={true} 
-                  inPlaceEdit={true}
-                  placeholder="Select tags" />
+                  <TagSelect value={task.tags.map(t => t.id)}
+                    onChange={handleTagsChange}
+                    bordered={true}
+                    inPlaceEdit={true}
+                    placeholder="Select tags" />
                 </Descriptions.Item>
                 <Descriptions.Item label="Actions">
                   <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
                     {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
                     {!task.watched && <Tooltip title="By watching this task, you will be notified of the changes made to this task">
                       <Button type="text" block icon={<Icon component={IoNotificationsOutline} />} onClick={() => handleWatch(true)}>Watch</Button>
-                      </Tooltip>}
+                    </Tooltip>}
                     {task.watched && <Tooltip title="Stop being notified of the changes made to this task">
-                    <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
-                      </Tooltip>}
+                      <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
+                    </Tooltip>}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <ZeventNoticeableBadge selfEvent={true} filter={() => true} message="comments"/></Button>
+                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <UnreadCommentBadge taskId={task.id} /></Button>
                     <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
                     <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                     <Divider />

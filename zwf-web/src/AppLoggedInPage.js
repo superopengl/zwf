@@ -181,7 +181,7 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
   const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
-  const [notifications, setNotifications] = React.useState([]);
+  const [zevents, setZevents] = React.useState([]);
 
   useDocumentTitle();
   useEstablishZeventStream();
@@ -205,7 +205,7 @@ export const AppLoggedInPage = React.memo(() => {
   const isSystem = role === 'system';
   const isAdmin = role === 'admin';
 
-  return <NotificationContext.Provider value={{notifications, setNotifications}}>
+  return <NotificationContext.Provider value={{zevents, setZevents}}>
     <StyledContainer>
       <ProLayout
         token={{

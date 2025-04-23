@@ -9,11 +9,11 @@ export function useZevent(filterHandler, eventHandler, deps = []) {
 
   React.useEffect(() => {
     const sub$ = zeventBus$.pipe(
-      filter(zevent => !filterHandler || filterHandler(zevent)),
+      filter(z => !filterHandler || filterHandler(z)),
     ).subscribe(eventHandler);
 
     return () => sub$.unsubscribe();
-  }, [...deps]);
+  }, [filterHandler, eventHandler, ...deps]);
 
   return null;
 }
