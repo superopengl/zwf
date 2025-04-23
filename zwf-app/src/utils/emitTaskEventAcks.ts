@@ -3,14 +3,14 @@ import { publishZevent } from "../services/zeventSubPubService";
 import { TaskWatcherEventAck } from "../entity/TaskWatcherEventAck";
 
 
-export async function emitTaskEventAcks(m: EntityManager, taskEventIds: string[], userId: string) {
-  if (!taskEventIds.length) {
+export async function emitTaskEventAcks(m: EntityManager, eventIds: string[], userId: string) {
+  if (!eventIds.length) {
     return;
   }
-  const acks = taskEventIds.map(x => {
+  const acks = eventIds.map(eventId => {
     const ack = new TaskWatcherEventAck();
     ack.userId = userId;
-    ack.taskEventId = x;
+    ack.eventId = eventId;
     return ack;
   });
 

@@ -22,10 +22,10 @@ import { TaskWatcher } from '../TaskWatcher';
     .from(Task, 't')
     .innerJoin(TaskEvent, 'e', `e."taskId" = t.id`)
     .innerJoin(TaskWatcher, 'w', `w."taskId" = t."id"`)
-    .leftJoin(TaskWatcherEventAck, 'a', 'a."userId" = w."userId" AND a."taskEventId" = e.id')
+    .leftJoin(TaskWatcherEventAck, 'a', 'a."userId" = w."userId" AND a."eventId" = e."eventId"')
     .where(`e.by != w."userId"`)
     .select([
-      'e.id as "id"',
+      'e."eventId" as "eventId"',
       'w."userId" as "userId"',
       't."orgId" as "orgId"',
       't."orgClientId" as "orgClientId"',
@@ -41,7 +41,7 @@ import { TaskWatcher } from '../TaskWatcher';
   dependsOn: [Task, OrgMemberInformation, TaskEvent, TaskWatcherEventAck, TaskWatcher]
 }) export class TaskWatcherEventAckInformation {
   @ViewColumn()
-  id: string;
+  eventId: string;
 
   @ViewColumn()
   userId: string;

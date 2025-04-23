@@ -51,24 +51,40 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
   const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
 
-  const taskEvents = await db
-    .getRepository(TaskWatcherEventAckInformation)
-    .createQueryBuilder('x')
-    .where({
+  // const taskEvents = await db
+  //   .getRepository(TaskWatcherEventAckInformation)
+  //   .createQueryBuilder('x')
+  //   .where({
+  //     userId,
+  //     // type: In(eventTypes),
+  //     ackAt: IsNull(),
+  //   })
+  //   .select([
+  //     '"eventId"',
+  //     '"taskId"',
+  //     '"taskName"',
+  //     'type',
+  //     'info',
+  //     '"createdAt"',
+  //     'by',
+  //   ])
+  //   .getRawMany();
+
+  const taskEvents = await db.manager.find(TaskWatcherEventAckInformation, {
+    where: {
       userId,
-      // type: In(eventTypes),
-      ackAt: IsNull(),
-    })
-    .select([
-      'id',
-      '"taskId"',
-      '"taskName"',
-      'type',
-      'info',
-      '"createdAt"',
-      'by',
-    ])
-    .getRawMany();
+      ackAt: IsNull()
+    },
+    select: {
+      eventId: true,
+      taskId: true,
+      taskName: true,
+      type: true,
+      info: true,
+      createdAt: true,
+      by: true,
+    }
+  });
 
   const result = taskEvents.map(t => ({
     type: 'taskEvent',
@@ -96,11 +112,11 @@ export const ackTaskEventNotification = handlerWrapper(async (req, res) => {
         ackAt: IsNull()
       },
       select: {
-        id: true
+        eventId: true
       }
     });
 
-    emitTaskEventAcks(m, taskEvents.map(x => x.id), userId);
+    emitTaskEventAcks(m, taskEvents.map(x => x.eventId), userId);
   });
 
   res.json();

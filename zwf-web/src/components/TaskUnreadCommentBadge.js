@@ -5,7 +5,7 @@ import { SyncOutlined } from '@ant-design/icons';
 import { Badge, Button, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
 
-export const UnreadCommentBadge = React.memo((props) => {
+export const TaskUnreadCommentBadge = React.memo((props) => {
   const { taskId, tooltip } = props;
   const [user] = useAuthUser();
 
@@ -32,11 +32,11 @@ export const UnreadCommentBadge = React.memo((props) => {
   );
 });
 
-UnreadCommentBadge.propTypes = {
+TaskUnreadCommentBadge.propTypes = {
   taskId: PropTypes.string.isRequired,
   tooltip: PropTypes.string,
 };
 
-UnreadCommentBadge.defaultProps = {
+TaskUnreadCommentBadge.defaultProps = {
 };
 

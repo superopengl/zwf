@@ -34,7 +34,7 @@ import { IoNotificationsOffOutline, IoNotificationsOutline } from 'react-icons/i
 import { GlobalContext } from 'contexts/GlobalContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { NotificationContext } from 'contexts/NotificationContext';
-import { UnreadCommentBadge } from 'components/UnreadCommentBadge';
+import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -267,7 +267,7 @@ const OrgTaskPage = () => {
                       <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
                     </Tooltip>}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <UnreadCommentBadge taskId={task.id} /></Button>
+                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} /></Button>
                     <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
                     <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                     <Divider />

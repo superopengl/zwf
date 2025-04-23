@@ -12,7 +12,7 @@ import { Task } from '../Task';
     .from(TaskInformation, 't')
     .innerJoin(TaskEvent, 'k', 't.id = k."taskId"')
     .select([
-      'k.id as id',
+      'k."eventId" as "eventId"',
       'k."taskId" as "taskId"',
       't."status" as "status"',
       't."name" as "taskName"',
@@ -27,7 +27,7 @@ import { Task } from '../Task';
   dependsOn: [TaskInformation, TaskEvent]
 }) export class TaskActivityInformation {
   @ViewColumn()
-  id: string;
+  eventId: string;
 
   @ViewColumn()
   taskId: string;
