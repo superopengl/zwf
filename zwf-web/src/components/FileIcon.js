@@ -5,6 +5,7 @@ import { FileIcon as ReactFileIcon, defaultStyles } from 'react-file-icon';
 import { Tag, Badge, Tooltip } from 'antd';
 import Icon, { CheckCircleFilled, CheckOutlined, ClockCircleOutlined, ClockCircleFilled, StopFilled } from '@ant-design/icons';
 import { BsFillPenFill } from 'react-icons/bs';
+import { RiQuillPenFill, RiQuillPenLine } from 'react-icons/ri';
 
 const StyledFileIcon = styled.div`
   position: relative;
@@ -27,10 +28,10 @@ export const FileIcon = props => {
     overlayComponent = <StopFilled style={{color: '#aaaaaa'}}/>
     title = "Pending generating doc"
   } else if (type === 'await-sign') {
-    overlayComponent = <ClockCircleFilled style={{ color: '#cf222e' }} />
+    overlayComponent = <Icon component={RiQuillPenLine} style={{ color: '#cf222e' }} />
     title = "Await client's sign"
   } else if (type === 'signed') {
-    overlayComponent = <CheckCircleFilled style={{ color: '#52c41a' }} />
+    overlayComponent = <Icon component={RiQuillPenFill} style={{ color: '#52c41a' }} />
     title = "Signed";
   }
 
