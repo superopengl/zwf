@@ -38,11 +38,13 @@ export const createFieldItemSchema = (controlType, name) => {
   const controlDef = getControleDefOrDefault(controlType);
   const { type } = controlDef;
   const options = ['radio', 'select', 'checkbox'].includes(type) ? ['Option 1', 'Option 2'] : undefined;
+  const required = ['instruction'].includes(type)
 
   return {
     id: uuidv4(),
     type,
     name,
+    required,
     description: '',
     options
   }
@@ -57,7 +59,7 @@ export function createFormItemSchema(field, mode = 'agent' | 'client' | 'profile
     formItemProps: {
       ...field.formItemProps,
       help: field.description,
-      rules: [{ required: mode !== 'profile' && field.required, whitespace: true }]
+      rules: [{ required: mode !== 'profile' && field.required && field.type !== 'instruction', whitespace: true }]
     },
     fieldProps: {
       ...controlDef.fieldProps,
@@ -206,6 +208,7 @@ export const FieldControlDef = Object.freeze([
     label: 'Instruction (help text)',
     icon: <FaHireAHelper />,
     formItemProps: {
+      label: null,
     },
     hideInForm: true,
     fieldProps: {
