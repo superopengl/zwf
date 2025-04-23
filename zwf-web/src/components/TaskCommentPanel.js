@@ -71,15 +71,15 @@ export const TaskCommentPanel = React.memo((props) => {
   // }, [list]);
 
   const handleZevent = z => {
-    const event = z.taskEvent;
+    const event = z.payload;
     event.createdAt = moment.utc(event.createdAt).local().toDate();
     setList(list => [...list, event]);
   };
 
   const filterZevent = z => {
     return z.type === 'taskEvent' &&
-      z.taskEvent.taskId === taskId &&
-      z.taskEvent.type === 'comment';
+      z.payload.taskId === taskId &&
+      z.payload.type === 'comment';
   }
 
   useZevent(filterZevent, handleZevent);

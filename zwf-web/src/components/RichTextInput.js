@@ -29,7 +29,7 @@ export const RichTextInput = React.memo((props) => {
 
   const log = () => {
     if (editorRef.current) {
-      console.log(editorRef.current.getContent());
+      // console.log(editorRef.current.getContent());
     }
   };
 

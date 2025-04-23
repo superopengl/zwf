@@ -9,18 +9,18 @@ export const ZeventNoticeableBadge = React.memo((props) => {
   const { filter, selfEvent, message, children } = props;
   const [user] = useAuthUser();
 
-  const [show, setShow] = React.useState(false);
+  const [hasNew, setHasNew] = React.useState(false);
 
   useZevent(z => {
-    return (selfEvent || z.by !== user.id) && filter(z);
-  }, () => setShow(true));
+    return (selfEvent || z.payload.by !== user.id) && filter?.(z);
+  }, () => setHasNew(true));
 
   const handleClick = () => {
-    setShow(false);
+    setHasNew(false);
   }
 
-  return (<Tooltip title={show ? message : null}>
-    <Badge count={show ? ' ' : 0} size="small">
+  return (<Tooltip title={hasNew ? message : null}>
+    <Badge count={hasNew ? ' ' : 0} size="small">
       <div onClick={handleClick}>
         {children}
       </div>

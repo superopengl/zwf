@@ -122,7 +122,6 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
     type: 'support',
     userId: sm.userId,
     payload: sm,
-    by: userId,
   });
 
   res.json();
