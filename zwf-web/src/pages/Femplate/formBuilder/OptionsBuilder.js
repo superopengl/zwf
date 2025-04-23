@@ -29,6 +29,10 @@ export const OptionsBuilder = (props) => {
 
   const handleOptionTextChange = (value, index) => {
     options[index] = value?.trim();
+    setOptions([...options]);
+  }
+
+  const handleChange = (value, index) => {
     handleOptionsChange(options);
   }
 
@@ -38,14 +42,18 @@ export const OptionsBuilder = (props) => {
         return (
           <Row key={index} justify="start" align="top" gutter={4} style={{ marginBottom: 16 }}>
             <Col flex="auto">
-                <Input autoFocus maxLength={100} value={option} onChange={e => handleOptionTextChange(e.target.value, index)}/>
+              <Input autoFocus maxLength={100} value={option}
+                onChange={e => handleOptionTextChange(e.target.value, index)}
+                onPressEnter={e => handleChange(e.target.value, index)}
+                onBlur={e => handleChange(e.target.value, index)}
+              />
             </Col>
             <Col>
               <Button
                 type="text"
                 size="small"
                 icon={<MinusCircleOutlined />}
-                // danger
+                danger
                 style={{ position: 'relative', top: 4 }}
                 onClick={() => {
                   options.splice(index, 1);
@@ -75,7 +83,7 @@ export const OptionsBuilder = (props) => {
             Add option
           </Button>
         </Col>
-        <Col flex="24px" />
+        {/* <Col flex="28px" /> */}
       </Row>
     </Container>
   );
