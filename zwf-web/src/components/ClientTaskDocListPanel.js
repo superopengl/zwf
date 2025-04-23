@@ -115,8 +115,6 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         bordered={false}
         rowKey="id"
         itemLayout="vertical"
-        showHeader={false}
-        // columns={columns}
         dataSource={docs}
         locale={{ emptyText: <Text type="secondary">{placeholder || 'Upload or add doc templates'}</Text> }}
         renderItem={doc => <List.Item
