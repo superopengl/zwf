@@ -17,7 +17,7 @@ import { useCloneDemplateModal } from './useCloneDemplateModal';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { IoDuplicateOutline } from 'react-icons/io5';
 
-const { Text, Paragraph } = Typography;
+const { Text, Paragraph, Link: TextLink } = Typography;
 
 const Container = styled.div`
   .ant-pro-table-list-toolbar {
@@ -157,9 +157,9 @@ export const DemplateListPage = () => {
         locale={{
           emptyText: <div style={{ margin: '30px auto' }}>
             <Paragraph type="secondary">
-              There is no doc template. Let's start creating one!
+              There is no doc template. Let's <TextLink underline onClick={()=> navigate("/demplate/new")}>create a new doc template</TextLink>!
             </Paragraph>
-            <Link to="/demplate/new">Create new doc template</Link>
+            
           </div>
         }}
         onItem={(row) => {

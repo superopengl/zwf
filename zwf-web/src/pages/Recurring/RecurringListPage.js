@@ -150,9 +150,9 @@ const RecurringListPage = () => {
     e.stopPropagation();
     const { id, femplateName, portfolioName, recurringName, orgClientId } = item;
     modal.confirm({
-      title: <>Delete scheduler</>,
+      title: <>Delete recurring</>,
       content: <Space direction="vertical">
-        <Text>Delete scheduler job <Text code>{recurringName}</Text> for below user?</Text>
+        <Text>Delete recurring <Text code>{recurringName}</Text> for below user?</Text>
         <ClientNameCard id={orgClientId} />
       </Space>,
       onOk: async () => {
@@ -228,9 +228,9 @@ const RecurringListPage = () => {
         locale={{
           emptyText: <div style={{ margin: '30px auto' }}>
             <Paragraph type="secondary">
-              There is no scheduler. Let's start creating one!
+              There is no recurring. Let's <TextLink underline onClick={handleCreateNew}>create a new recurring</TextLink>!
             </Paragraph>
-            <Link onClick={handleCreateNew}>Create new scheduler</Link>
+            
           </div>
         }}
       />

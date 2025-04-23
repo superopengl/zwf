@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Avatar, Tooltip, Form, Col, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
+import { Drawer, Menu, Form, Collapse, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { TaskIcon } from './entityIcon';
 import { HiOutlineChatAlt2 } from 'react-icons/hi';
 import { FaTasks } from 'react-icons/fa';
-import { MdDashboard } from 'react-icons/md';
+import { MdDashboard, MdOpenInNew } from 'react-icons/md';
 import styled from 'styled-components';
 import { useZevent } from 'hooks/useZevent';
 import { useAuthUser } from 'hooks/useAuthUser';
@@ -36,13 +36,19 @@ gap: 0 !important;
 width: '100%;
 `;
 
+const Container = styled.div`
+.ant-menu-item {
+  height: auto !important;
+}
+`
+
 const messageFuncMap = {
   'client-submit': x => <>Submitted by client</>,
   'client-sign-doc': x => <>Documents were signed by client</>,
   'comment': x => <>Has new comments</>,
   'created-recurringly': x => <>Was created automatically by recurring</>,
   'start-proceeding': x => <>Started being proceeded</>,
-  'assign': x => <>Was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
+  'assign': x => <>Was assigned to <UserNameCard userId={x.payload.info.assigneeId} showEmail={false}/></>,
   'complete': x => <>Was completed</>,
   'archive': x => <>Was archieved</>,
   'request-client-sign': x => <>Documents requires sign</>,
@@ -62,6 +68,7 @@ export const NotificationButton = (props) => {
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
   const { zevents, setZevents } = React.useContext(NotificationContext);
+  const [open, setOpen] = React.useState(false)
 
   // const { notifications, setNotifications } = context;
 
@@ -97,7 +104,7 @@ export const NotificationButton = (props) => {
         break;
       case 'taskEvent.ack':
         debugger;
-        setZevents(pre => pre.filter(z => z.payload.eventId !== payload.eventId));
+        // setZevents(pre => pre.filter(z => z.payload.eventId !== payload.eventId));
         break;
       case 'support':
         break;
@@ -123,30 +130,50 @@ export const NotificationButton = (props) => {
     const menuItems = Object.values(taskGropus).map(taskEvents => {
       // const first = orderBy(taskEvents, t => Date.parse(t.payload.createdAt), ['desc'])[0];
       const first = taskEvents[0];
-      return {
-        key: first.payload.taskId,
-        // icon: <Icon component={MdDashboard} />,
-        icon: null,
-        label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+
+      debugger;
+      return <Collapse.Panel
+        key={first.payload.taskId}
+        extra={<Icon component={MdOpenInNew} onClick={() => navigate(`/task/${first.payload.taskId}`)} />}
+        header={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
           <Row style={{ maxWidth: 240 }} wrap={false}>
             <TaskIcon size={14} />
             <Text ellipsis={true}>{first.payload.taskName}</Text>
           </Row>
           <Badge showZero={false} count={taskEvents.filter(z => !z.payload.ackAt).length} />
-        </Space>,
-        children: taskEvents.map(z => ({
-          key: z.payload.id,
-          label: <StyledCompactSpace direction='vertical'>
-            <Text strong={!z.payload.ackAt}>{getNotificationMessage(z)}</Text>
-            <TimeAgo strong={!z.payload.ackAt} value={z.payload.createdAt} direction="horizontal" />
-          </StyledCompactSpace>,
-          onClick: () => handleItemClick(z)
-        }))
-      }
+        </Space>}
+      >
+        {taskEvents.map(z => <div key={z.payload.eventId} onClick={() => handleItemClick(z)}>
+          <Text strong={!z.payload.ackAt}>{getNotificationMessage(z)}</Text>
+          <TimeAgo strong={!z.payload.ackAt} value={z.payload.createdAt} direction="horizontal" />
+        </div>)}
+      </Collapse.Panel>
+
+      // return {
+      //   key: first.payload.taskId,
+      //   // icon: <Icon component={MdDashboard} />,
+      //   icon: null,
+      //   label: <Space style={{ width: '100%', justifyContent: 'space-between' }}>
+      //     <Row style={{ maxWidth: 240 }} wrap={false}>
+      //       <TaskIcon size={14} />
+      //       <Text ellipsis={true}>{first.payload.taskName}</Text>
+      //     </Row>
+      //     <Badge showZero={false} count={taskEvents.filter(z => !z.payload.ackAt).length} />
+      //   </Space>,
+      //   children: taskEvents.map(z => ({
+      //     key: z.payload.id,
+      //     label: <StyledCompactSpace direction='vertical'>
+      //       <Text strong={!z.payload.ackAt}>{getNotificationMessage(z)}</Text>
+      //       <TimeAgo strong={!z.payload.ackAt} value={z.payload.createdAt} direction="horizontal" />
+      //     </StyledCompactSpace>,
+      //     onClick: () => handleItemClick(z)
+      //   }))
+      // }
     })
     return menuItems;
   }, [zevents]);
 
+  debugger;
 
   React.useEffect(() => {
     if (supportOpen) {
@@ -229,15 +256,36 @@ export const NotificationButton = (props) => {
   //   })
   // }
 
-  if (!items.length) {
-    items.push({
-      label: <Text type="secondary">No notifications</Text>
-    })
-  }
+  // if (!items.length) {
+  //   items.push({
+  //     label: <Text type="secondary">No notifications</Text>
+  //   })
+  // }
 
   const handleClick = () => {
     load$();
+    setOpen(true)
   }
+
+  return <Container>
+    <Badge showZero={false} count={zevents.filter(x => !x.payload.ackAt).length} offset={[-4, 6]}>
+      <Button icon={<Icon component={IoNotificationsOutline} />} shape="circle" type="text" size="large" onClick={handleClick} />
+      {/* <DebugJsonPanel value={notifications} /> */}
+    </Badge>
+    <Drawer
+      open={open}
+      onClose={() => setOpen(false)}
+      title="Notifications"
+      rootClassName='zwf-notification'
+      mask={true}
+      bodyStyle={{ padding: 1 }}
+    // headerStyle={{background: 'transparent'}}
+    >
+      <Collapse bordered={false} expandIconPosition="end">
+        {items}
+      </Collapse>
+    </Drawer>
+  </Container>
 
   return <Dropdown trigger={['click']} menu={{
     items,
