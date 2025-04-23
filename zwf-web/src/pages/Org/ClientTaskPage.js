@@ -65,15 +65,6 @@ const Container = styled.div`
 }  
 `;
 
-const PageFooter = styled.div`
-position: fixed;
-bottom: 0;
-left: 0;
-right: 0;
-width: 100vw;
-padding: 16px;
-background-color: white;
-`;
 
 
 const FLOW_STEPS = {
@@ -109,16 +100,8 @@ const ALERT_DEF = {
   },
 }
 
-const span = {
-  xs: 24,
-  sm: 24,
-  md: 24,
-  lg: 12,
-  xl: 12,
-  xxl: 12
-}
 
-const ClientTaskPage = (props) => {
+const ClientTaskPage = () => {
   useAssertRole(['client']);
   const params = useParams();
   const { id } = params;
@@ -128,9 +111,7 @@ const ClientTaskPage = (props) => {
   const [loading, setLoading] = React.useState(true);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
-  const [currentStep, setCurrentStep] = React.useState(FLOW_STEPS.FILL_IN_FORM);
   const [docsToSign, setDocsToSign] = React.useState([]);
-  const [requestChangeModal, requestChangeContextHolder] = Modal.useModal();
   const navigate = useNavigate();
   const signPanelRef = React.useRef();
   const commentPanelRef = React.useRef();
@@ -167,19 +148,13 @@ const ClientTaskPage = (props) => {
     setDocsToSign(getPendingSignTaskDocs(task));
   }, [task])
 
-  React.useEffect(() => {
-    if (docsToSign.length > 0) {
-      setCurrentStep(FLOW_STEPS.SIGN_DOCS);
-    }
-  }, [docsToSign])
-
   const load$ = () => {
     setLoading(true);
-    const sub$ = getTask$(id).pipe(
-      finalize(() => setLoading(false))
-    ).subscribe(task => {
-      setTask(task);
-    })
+    const sub$ = getTask$(id)
+      .pipe(
+        finalize(() => setLoading(false))
+      )
+      .subscribe(setTask)
 
     return sub$;
   }
@@ -192,42 +167,19 @@ const ClientTaskPage = (props) => {
     navigate('/task');
   }
 
-  const isFormView = currentStep === 0;
-  const isDocView = currentStep === 1;
 
-  const span = { xs: 24, sm: 24, md: 12, lg: 12, xl: 12, xxl: 12 };
-  const canRequestChange = false && (task?.status === 'todo' || task?.status === 'in_progress');
   const canEdit = task?.status === 'action_required' || task?.status === 'in_progress';
   const narrowScreen = (screens.xs || screens.sm) && !screens.md;
 
-  const getInitialStep = (task) => {
-    if (canEdit) {
-      return FLOW_STEPS.FILL_IN_FORM;
-    }
-  }
 
   const hasDocToSign = true || docsToSign.length > 0;
-  const alertMeta = ALERT_DEF[task?.status];
 
-  const handleRequestChange = () => {
-    requestChangeModal.confirm({
-      title: 'Request Amendment',
-      content: 'The task is being processed by agent. Do you want to amend by providing updated information?',
-      closable: true,
-      cancelButtonProps: {
-        type: 'text'
-      },
-      autoFocusButton: 'cancel',
-      okText: 'Request Amendment'
-    })
-  }
 
   const handleHighlightenSignPanel = () => {
     // highlightGlow(signPanelRef)
     setActivePanel('sign')
   }
 
-  const isNarrowToChangeBottom = screens.xs;
 
   const buttonSize = narrowScreen ? 'default' : 'large';
 
@@ -332,7 +284,7 @@ const ClientTaskPage = (props) => {
       >Sign {docsToSign.length} documents</Button>}
       {task?.status === 'action_required' && <Button key="submit" type="primary">Submit</Button>}
     </FooterToolbar> */}
-    {requestChangeContextHolder}
+    {/* {requestChangeContextHolder} */}
   </Container>
   );
 };
