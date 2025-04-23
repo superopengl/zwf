@@ -6,7 +6,7 @@ import { listTaskComment$, signTaskDocs$ } from 'services/taskService';
 import { TaskCommentDisplayPanel } from './TaskCommentDisplayPanel';
 import { CloseOutlined, HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
-import { TaskLogPanel } from './TaskLogPanel';
+import { TaskTimelinePanel } from './TaskTimelinePanel';
 import { delay, finalize, of } from 'rxjs';
 import { DebugJsonPanel } from './DebugJsonPanel';
 import { TaskDocName } from './TaskDocName';

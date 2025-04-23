@@ -23,7 +23,7 @@ import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
-import { TaskLogDrawer } from 'components/TaskLogDrawer';
+import { TaskTimelineDrawer } from 'components/TaskTimelineDrawer';
 import { BsFillSendFill, BsFillTrash3Fill } from 'react-icons/bs';
 import PropTypes from 'prop-types';
 import { getOrgClientDataBag$, getOrgClient$, updateOrgClient$, refreshClientNameCardCache } from 'services/clientService';

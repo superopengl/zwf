@@ -6,7 +6,7 @@ import { listTaskComment$ } from 'services/taskService';
 import { TaskCommentDisplayPanel } from './TaskCommentDisplayPanel';
 import { HistoryOutlined, MessageOutlined } from '@ant-design/icons';
 import { UserNameCard } from './UserNameCard';
-import { TaskLogPanel } from './TaskLogPanel';
+import { TaskTimelinePanel } from './TaskTimelinePanel';
 import { TaskCommentInputForm } from './TaskCommentInputForm';
 
 

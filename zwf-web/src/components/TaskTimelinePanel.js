@@ -16,7 +16,7 @@ const Container = styled.div`
 }
 `;
 
-export const TaskLogPanel = React.memo((props) => {
+export const TaskTimelinePanel = React.memo((props) => {
   const { taskId } = props;
 
   const [loading, setLoading] = React.useState(true);
@@ -49,10 +49,10 @@ export const TaskLogPanel = React.memo((props) => {
   </Container>
 });
 
-TaskLogPanel.propTypes = {
+TaskTimelinePanel.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-TaskLogPanel.defaultProps = {
+TaskTimelinePanel.defaultProps = {
 };
 
