@@ -1,4 +1,4 @@
-import { Skeleton, Space, Typography, Timeline } from 'antd';
+import { Skeleton, Space, Typography, Timeline, Tag } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
@@ -8,7 +8,7 @@ import { finalize } from 'rxjs/operators';
 import { TimeAgo } from './TimeAgo';
 import { UserNameCard } from './UserNameCard';
 
-const {Text} = Typography
+const { Text } = Typography
 
 const Container = styled.div`
 .capitalized {
@@ -37,9 +37,12 @@ export const TaskLogPanel = React.memo((props) => {
     <Timeline
       items={list.map(x => ({
         children: <Space direction='vertical'>
-          <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} showTime={false}/>
-          <Text strong className="capitalized">{x.type}</Text>
-          <UserNameCard userId={x.by} />
+          <TimeAgo value={x.createdAt} direction="horizontal" accurate={false} showTime={false} />
+          <Space>
+            <Tag>{x.type}</Tag>
+            by
+            <UserNameCard userId={x.by} showEmail={false} size={24} />
+          </Space>
         </Space>
       }))}
     />

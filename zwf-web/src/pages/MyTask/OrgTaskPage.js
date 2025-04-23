@@ -84,7 +84,6 @@ const OrgTaskPage = () => {
   const { id } = params;
 
   const [loading, setLoading] = React.useState(true);
-  const [historyVisible, setHistoryVisible] = React.useState(false);
   const [task, setTask] = React.useState();
   const [saving, setSaving] = React.useState(null);
   const [commentsOpen, setCommentsOpen] = React.useState(false);
@@ -93,19 +92,12 @@ const OrgTaskPage = () => {
   const navigate = useNavigate();
   const [openDeepLink, deepLinkContextHolder] = useShareTaskDeepLinkModal();
   const [openRequestActionModal, requestActionContextHolder] = useRequestActionModal();
-  const context = React.useContext(GlobalContext);
-
-  const { zevents, setZevents } = React.useContext(NotificationContext);
 
   React.useEffect(() => {
     const sub$ = load$();
     return () => sub$.unsubscribe()
   }, [id]);
 
-
-  React.useEffect(() => {
-    debugger;
-  }, [zevents]);
 
   const load$ = () => {
     return getTask$(id).pipe(
@@ -237,8 +229,6 @@ const OrgTaskPage = () => {
                 </ProCard>
               </Col>
             </Row>
-            <DebugJsonPanel value={zevents} />
-
           </Col>
           <Col flex="0 0 340px">
             <ProCard ghost>
@@ -267,7 +257,7 @@ const OrgTaskPage = () => {
                       <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
                     </Tooltip>}
                     <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} /></Button>
+                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]} /></Button>
                     <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
                     <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
                     <Divider />

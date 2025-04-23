@@ -1,6 +1,6 @@
 import { SupportMessageLastSeen } from './../entity/SupportMessageLastSeen';
 import { SupportMessage } from './../entity/SupportMessage';
-import { In, IsNull } from 'typeorm';
+import { In, IsNull, MoreThan } from 'typeorm';
 import { db } from '../db';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
@@ -51,40 +51,42 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
   const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
 
-  // const taskEvents = await db
-  //   .getRepository(TaskWatcherEventAckInformation)
-  //   .createQueryBuilder('x')
-  //   .where({
-  //     userId,
-  //     // type: In(eventTypes),
-  //     ackAt: IsNull(),
-  //   })
-  //   .select([
-  //     '"eventId"',
-  //     '"taskId"',
-  //     '"taskName"',
-  //     'type',
-  //     'info',
-  //     '"createdAt"',
-  //     'by',
-  //   ])
-  //   .getRawMany();
+  const taskEvents = await db
+    .getRepository(TaskWatcherEventAckInformation)
+    .createQueryBuilder('x')
+    .where(`"userId" = :userId`, { userId })
+    .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
+    .select([
+      '"eventId"',
+      '"taskId"',
+      '"taskName"',
+      'type',
+      'info',
+      '"createdAt"',
+      'by',
+      '"ackAt"',
+    ])
+    .orderBy('"createdAt"', 'DESC')
+    .getRawMany();
 
-  const taskEvents = await db.manager.find(TaskWatcherEventAckInformation, {
-    where: {
-      userId,
-      ackAt: IsNull()
-    },
-    select: {
-      eventId: true,
-      taskId: true,
-      taskName: true,
-      type: true,
-      info: true,
-      createdAt: true,
-      by: true,
-    }
-  });
+  // const taskEvents = await db.manager.find(TaskWatcherEventAckInformation, {
+  //   where: [{
+  //     userId,
+  //     ackAt: IsNull()
+  //   }, {
+  //     userId,
+  //     ackAt: MoreThan(`now() - interval '30 minutes'`)
+  //   }],
+  //   select: {
+  //     eventId: true,
+  //     taskId: true,
+  //     taskName: true,
+  //     type: true,
+  //     info: true,
+  //     createdAt: true,
+  //     by: true,
+  //   }
+  // });
 
   const result = taskEvents.map(t => ({
     type: 'taskEvent',
