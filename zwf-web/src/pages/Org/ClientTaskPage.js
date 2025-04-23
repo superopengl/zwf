@@ -8,7 +8,7 @@ import { getTask$, listTaskComment$ } from 'services/taskService';
 import { Loading } from 'components/Loading';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
-import { TaskCommentPanel } from 'components/TaskCommentPanel';
+import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
 import { combineLatest, of } from 'rxjs';
 import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
@@ -31,6 +31,7 @@ import { AiOutlineForm } from 'react-icons/ai';
 import { RiQuillPenFill } from 'react-icons/ri';
 import { BiComment, BiCommentDetail } from 'react-icons/bi';
 import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
+import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -239,11 +240,13 @@ const ClientTaskPage = (props) => {
       // icon={<TaskIcon />}
       title={<>{task.name} </> || <Skeleton paragraph={false} />}
       footer={<Row className='client-task-footer' justify="space-around" wrap={false}>
-        <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
-          type={activePanel === 'comment' ? 'primary' : 'text'}
-          ghost={activePanel === 'comment'}
-          onClick={() => setActivePanel('comment')}
-        >Chat</Button>
+        <TaskUnreadCommentBadge taskId={task.id} offset={[0, 10]}>
+          <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
+            type={activePanel === 'comment' ? 'primary' : 'text'}
+            ghost={activePanel === 'comment'}
+            onClick={() => setActivePanel('comment')}
+          >Chat</Button>
+        </TaskUnreadCommentBadge>
         {task.fields.length > 0 && <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
           type={activePanel === 'form' ? 'primary' : 'text'}
           ghost={activePanel === 'form'}
@@ -315,7 +318,11 @@ const ClientTaskPage = (props) => {
         <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
       </ProCard>}
       {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
-        <TaskCommentPanel taskId={task.id} />
+        <TaskCommentDisplayPanel taskId={task.id} />
+        <div style={{ padding: 12 }}>
+          <TaskCommentInputForm taskId={task.id} />
+
+        </div>
       </ProCard>}
       {saving && <SavingAffix />}
     </PageHeaderContainer>}

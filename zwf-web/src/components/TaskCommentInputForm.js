@@ -45,6 +45,7 @@ export const TaskCommentInputForm = React.memo((props) => {
     form={form}>
     <Form.Item name="message"
     extra="Enter to send"
+    style={{marginBottom: 0}}
     >
       <Input.TextArea
         showCount
@@ -58,7 +59,7 @@ export const TaskCommentInputForm = React.memo((props) => {
         ref={textareaRef}
       />
     </Form.Item>
-    <Form.Item>
+    <Form.Item style={{marginBottom: 0}}>
       <Row justify="end" gutter={8} style={{ position: 'relative' }}>
         <Col>
           <Button type="primary" htmlType="submit" disabled={loading}>Send</Button>

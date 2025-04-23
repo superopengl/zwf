@@ -31,7 +31,7 @@ const ORG_MEMBER_WATCH_EVENTS = [
   TaskEventType.ClientSubmit,
   TaskEventType.ClientSignDoc,
   TaskEventType.Comment,
-  TaskEventType.CreateByRecurring,
+  TaskEventType.CreatedByRecurring,
   TaskEventType.OrgStartProceed,
   TaskEventType.Assign,
   TaskEventType.Complete,
@@ -55,7 +55,8 @@ export const getMyNotifications = handlerWrapper(async (req, res) => {
     .getRepository(TaskWatcherEventAckInformation)
     .createQueryBuilder('x')
     .where(`"userId" = :userId`, { userId })
-    .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
+    // .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
+    .andWhere(`"ackAt" IS NULL`)
     .select([
       '"eventId"',
       '"taskId"',

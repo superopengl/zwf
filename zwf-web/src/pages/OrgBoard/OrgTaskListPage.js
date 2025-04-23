@@ -144,6 +144,7 @@ const OrgTaskListPage = () => {
           </Tooltip>
         </Radio.Group>,
         <TaskSearchFilterButton
+          key="search"
           storeKey='tasks.filter'
           onChange={handleFilterSearch}
           defaultQuery={DEFAULT_QUERY} />,

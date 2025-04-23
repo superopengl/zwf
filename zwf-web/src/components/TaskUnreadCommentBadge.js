@@ -7,7 +7,7 @@ import { useAuthUser } from 'hooks/useAuthUser';
 import { NotificationContext } from 'contexts/NotificationContext';
 
 export const TaskUnreadCommentBadge = React.memo((props) => {
-  const { taskId, tooltip, offset } = props;
+  const { taskId, tooltip, offset, children } = props;
   const [user] = useAuthUser();
   const [count, setCount] = React.useState(0);
   const { zevents } = React.useContext(NotificationContext);
@@ -15,12 +15,14 @@ export const TaskUnreadCommentBadge = React.memo((props) => {
   React.useEffect(() => {
     const num = zevents.filter(z => z.payload.taskId === taskId
       && z.payload.type === 'comment'
-      && z.payload.by !== user.id).length;
+      && z.payload.by !== user.id
+      && !z.payload.ackAt).length;
     setCount(num);
   }, [zevents])
 
   return (<Tooltip title={count ? tooltip : null}>
     <Badge count={count} showZero={false} offset={offset}>
+      {children}
     </Badge>
   </Tooltip>
   );

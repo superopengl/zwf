@@ -1,7 +1,7 @@
 
 export enum TaskEventType {
-    CreateByHand = 'create-by-hand',
-    CreateByRecurring = 'create-by-recurring',
+    Created = 'created',
+    CreatedByRecurring = 'created-recurringly',
     Assign = 'assign',
     Rename = 'rename',
     ClientSignDoc = 'client-sign-doc',

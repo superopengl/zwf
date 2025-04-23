@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Avatar, Tooltip, Form, Switch, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
+import { Avatar, Tooltip, Form, Col, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
@@ -10,7 +10,7 @@ import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from '../pages/Femplate/formBuilder/OptionsBuilder';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { ackTaskEventNotification$, getMyNotifications$, } from 'services/notificationService';
+import { ackTaskEventType$, getMyNotifications$, } from 'services/notificationService';
 import { Badge } from 'antd';
 import { List } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -27,6 +27,7 @@ import { TimeAgo } from 'components/TimeAgo';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { NotificationContext } from 'contexts/NotificationContext';
 import { groupBy, orderBy, sortBy } from 'lodash';
+import { IoNotificationsOutline } from 'react-icons/io5';
 
 const { Text, Title, Paragraph, Link: TextLink } = Typography;
 
@@ -39,7 +40,7 @@ const messageFuncMap = {
   'client-submit': x => <>Submitted by client</>,
   'client-sign-doc': x => <>Documents were signed by client</>,
   'comment': x => <>Has new comments</>,
-  'create-by-recurring': x => <>Was created automatically by recurring</>,
+  'created-recurringly': x => <>Was created automatically by recurring</>,
   'start-proceeding': x => <>Started being proceeded</>,
   'assign': x => <>Was assigned to <UserNameCard userId={x.info.assigneeId} /></>,
   'complete': x => <>Was completed</>,
@@ -75,9 +76,7 @@ export const NotificationButton = (props) => {
   const load$ = () => {
     return getMyNotifications$()
       .pipe()
-      .subscribe(result => {
-        setZevents(result ?? [])
-      });
+      .subscribe(setZevents);
   }
 
   React.useEffect(() => {
@@ -109,13 +108,51 @@ export const NotificationButton = (props) => {
 
   useZevent(filterZevent, handleZevent, [user]);
 
-  React.useEffect(() => {
-    const taskGropus = groupBy(zevents, z => `${z.payload.taskId}.${z.payload.type}`);
-    const newList = Object.values(taskGropus).map(taskEvents => {
-      const first = orderBy(taskEvents, t => Date.parse(t.payload.createdAt), ['desc'])[0];
-      return first;
+  const getItem = (label, key, icon, children, type) => {
+    return {
+      key,
+      icon,
+      children,
+      label,
+      type,
+    };
+  }
+
+  const items = React.useMemo(() => {
+    const taskGropus = groupBy(zevents, z => `${z.payload.taskId}`);
+    const menuItems = Object.values(taskGropus).map(taskEvents => {
+      // const first = orderBy(taskEvents, t => Date.parse(t.payload.createdAt), ['desc'])[0];
+      const first = taskEvents[0];
+      return {
+        key: first.payload.taskId,
+        // icon: <Icon component={MdDashboard} />,
+        icon: null,
+        label: <Row justify="space-between" wrap={false} gutter={10} style={{ maxWidth: 300, paddingRight: 40 }}>
+          <Col flex="auto" style={{paddingRight: 40}}>
+            <Row wrap={false}>
+              <Col>
+                <TaskIcon size={14} />
+              </Col>
+              <Col>
+                <Text ellipsis={true}>{first.payload.taskName}</Text>
+              </Col>
+            </Row>
+          </Col>
+          <Col flex="20px">
+            <Badge showZero={false} count={taskEvents.filter(z => !z.payload.ackAt).length} />
+          </Col>
+        </Row>,
+        children: taskEvents.map(z => ({
+          key: z.payload.id,
+          label: <StyledCompactSpace direction='vertical'>
+            <Text strong={!z.payload.ackAt}>{getNotificationMessage(z)}</Text>
+            <TimeAgo strong={!z.payload.ackAt} value={z.payload.createdAt} direction="horizontal" />
+          </StyledCompactSpace>,
+          onClick: () => handleItemClick(z)
+        }))
+      }
     })
-    setList(newList);
+    return menuItems;
   }, [zevents]);
 
 
@@ -160,33 +197,33 @@ export const NotificationButton = (props) => {
   const handleItemClick = (item) => {
     const { payload: { taskId, type } } = item;
     navigate(`/task/${taskId}`, { state: { type } });
-    ackTaskEventNotification$(taskId, type).subscribe({
+    ackTaskEventType$(taskId, type).subscribe({
       // next: () => load$(),
       error: () => { /** Swallow error */ },
     });
   }
 
-  const items = [];
-  list.forEach((x, i) => {
-    const item = {
-      key: i,
-      // icon: <Icon component={MdDashboard} />,
-      icon: <TaskIcon size={14} />,
-      label: <StyledCompactSpace direction='vertical'>
-        <Text strong>{x.payload.taskName}</Text>
-        <Text strong={!x.payload.ackAt}>{getNotificationMessage(x)}</Text>
-        <TimeAgo strong={!x.payload.ackAt} value={x.payload.createdAt} direction="horizontal" />
-      </StyledCompactSpace>,
-      onClick: () => handleItemClick(x),
-    };
+  // const items = [];
+  // list.forEach((x, i) => {
+  //   const item = {
+  //     key: i,
+  //     // icon: <Icon component={MdDashboard} />,
+  //     icon: <TaskIcon size={14} />,
+  //     label: <StyledCompactSpace direction='vertical'>
+  //       <Text strong>{x.payload.taskName}</Text>
+  //       <Text strong={!x.payload.ackAt}>{getNotificationMessage(x)}</Text>
+  //       <TimeAgo strong={!x.payload.ackAt} value={x.payload.createdAt} direction="horizontal" />
+  //     </StyledCompactSpace>,
+  //     onClick: () => handleItemClick(x),
+  //   };
 
-    if (i !== 0) {
-      items.push({
-        type: 'divider'
-      });
-    }
-    items.push(item);
-  })
+  //   if (i !== 0) {
+  //     items.push({
+  //       type: 'divider'
+  //     });
+  //   }
+  //   items.push(item);
+  // })
 
   // if (unreadSupportMsgCount) {
   //   items.unshift({
@@ -210,9 +247,14 @@ export const NotificationButton = (props) => {
     load$();
   }
 
-  return <Dropdown trigger={['click']} menu={{ items }} overlayClassName="notification-dropdown" arrow={true}>
-    <Badge showZero={false} count={list.filter(x => !x.ackAt).length} offset={[-4, 6]}>
-      <Button icon={<BellOutlined />} shape="circle" type="text" size="large" onClick={handleClick} />
+  return <Dropdown trigger={['click']} menu={{
+    items,
+    mode: "vertical",
+    inlineCollapsed: false,
+  }}
+    overlayClassName="notification-dropdown" arrow={true}>
+    <Badge showZero={false} count={zevents.filter(x => !x.payload.ackAt).length} offset={[-4, 6]}>
+      <Button icon={<Icon component={IoNotificationsOutline} />} shape="circle" type="text" size="large" onClick={handleClick} />
       {/* <DebugJsonPanel value={notifications} /> */}
     </Badge>
   </Dropdown>

@@ -12,6 +12,8 @@ import styled from 'styled-components';
 import { TaskCommentInputForm } from './TaskCommentInputForm';
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
+import { ackTaskEventType$ } from 'services/notificationService';
+import { finalize, switchMap, tap } from 'rxjs';
 
 const StyledList = styled(ProList)`
 .ant-pro-card-body {
@@ -56,7 +58,7 @@ const IconText = ({ icon, text }) => (
   </span>
 );
 
-export const TaskCommentPanel = React.memo((props) => {
+export const TaskCommentDisplayPanel = React.memo((props) => {
   const { taskId } = props;
 
   const [list, setList] = React.useState([]);
@@ -85,13 +87,15 @@ export const TaskCommentPanel = React.memo((props) => {
   useZevent(filterZevent, handleZevent);
 
   React.useEffect(() => {
-    const sub$ = listTaskComment$(taskId).subscribe(allData => {
-      // allData.forEach(x => {
-      //   x.createdAt = moment.utc(x.createdAt).local().toDate()
-      // });
-      setList(allData);
-      setLoading(false);
-    });
+    const sub$ = listTaskComment$(taskId)
+      .pipe(
+        tap(setList),
+        switchMap(() => ackTaskEventType$(taskId, 'comment')),
+        finalize(() => setLoading(false)),
+      )
+      .subscribe();
+
+
 
     return () => sub$.unsubscribe();
   }, []);
@@ -100,15 +104,16 @@ export const TaskCommentPanel = React.memo((props) => {
     <StyledList
       split={false}
       rowKey="id"
+      loading={loading}
       itemLayout="vertical"
-      footer={<Row gutter={16} style={{padding: '0 24px'}}>
-        <Col>
-          <UserNameCard size={32} userId={myUserId} showName={false} showEmail={false} showTooltip={true} />
-        </Col>
-        <Col flex="auto" >
-          <TaskCommentInputForm taskId={taskId} />
-        </Col>
-      </Row>}
+      // footer={<Row gutter={16} style={{padding: '0 24px'}}>
+      //   <Col>
+      //     <UserNameCard size={32} userId={myUserId} showName={false} showEmail={false} showTooltip={true} />
+      //   </Col>
+      //   <Col flex="auto" >
+      //     <TaskCommentInputForm taskId={taskId} />
+      //   </Col>
+      // </Row>}
       dataSource={list.map(item => ({
         avatar: <UserNameCard size={32} userId={item.by} showName={false} showEmail={false} showTooltip={true} />,
         title: isMe(item.by) ? "Me" : <UserNameCard userId={item.by} showName={true} showAvatar={false} showEmail={false} showTooltip={true} />,
@@ -126,10 +131,10 @@ export const TaskCommentPanel = React.memo((props) => {
   </ScrollToBottom >
 });
 
-TaskCommentPanel.propTypes = {
+TaskCommentDisplayPanel.propTypes = {
   taskId: PropTypes.string.isRequired,
 };
 
-TaskCommentPanel.defaultProps = {
+TaskCommentDisplayPanel.defaultProps = {
 };
 

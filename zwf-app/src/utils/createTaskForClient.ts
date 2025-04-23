@@ -94,7 +94,7 @@ export const createTaskForClient = async (m: EntityManager, femplateId, taskName
     }
   }
 
-  const eventType = creatorId ? TaskEventType.CreateByHand : TaskEventType.CreateByRecurring;
+  const eventType = creatorId ? TaskEventType.Created : TaskEventType.CreatedByRecurring;
   await emitTaskEvent(m, eventType, task.id, creatorId);
 
   return task;

@@ -22,7 +22,7 @@ import { useAssertRole } from 'hooks/useAssertRole';
 import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
 import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { TaskCommentPanel } from 'components/TaskCommentPanel';
+import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
 import { TaskLogDrawer } from 'components/TaskLogDrawer';
 import { BsFillSendFill, BsFillTrash3Fill } from 'react-icons/bs';
 import PropTypes from 'prop-types';
