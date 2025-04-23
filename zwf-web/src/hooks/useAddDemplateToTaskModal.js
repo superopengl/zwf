@@ -37,7 +37,7 @@ export const useAddDemplateToTaskModal = () => {
 
     const modalInstance = modal.confirm({
       icon: null,
-      title: 'Add Doc Templates',
+      title: 'Add Document from Doc Template',
       content: <>
         <Form
           style={{ width: '100%' }}
@@ -60,7 +60,7 @@ export const useAddDemplateToTaskModal = () => {
       closable: false,
       maskClosable: false,
       destroyOnClose: true,
-      okText: 'Add',
+      okText: 'Apply',
       cancelButtonProps: {
         type: 'text'
       },

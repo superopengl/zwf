@@ -166,7 +166,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
       type="text"
       block
       onClick={() => openAddDemplate({ onChange: handleAddDemplates })}
-    >Add Doc Template</Button>
+    >Doc Template</Button>
   }]
 
   return <ProCard title={`Documents (${docs.length})`}

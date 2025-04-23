@@ -40,6 +40,10 @@ const Container = styled.div`
   }
 }
 
+.ant-list-item-meta-description {
+  padding-left: 38px;
+}
+
 `;
 
 
@@ -118,14 +122,14 @@ export const ClientTaskDocListPanel = React.memo((props) => {
         dataSource={docs}
         locale={{ emptyText: <Text type="secondary">{placeholder || 'Upload or add doc templates'}</Text> }}
         renderItem={doc => <List.Item
-          extra={doc.signedAt ? <Text type="success"><CheckCircleOutlined /> signed</Text> : null}
+          // extra={doc.signedAt ? <Text type="success"><CheckCircleOutlined /> signed</Text> : null}
           onClick={() => handleTaskDocOpen(doc)}
         >
           <List.Item.Meta
             className="client-doc-card"
-            avatar={<FileIcon name={doc.name} />}
-            title={doc.name}
-            description={doc.signedAt ? <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} /> : null}
+            // avatar={<FileIcon name={doc.name} />}
+            title={<TaskDocName taskDoc={doc}/>}
+            description={doc.signedAt ? <TimeAgo prefix="Signed" direction="horizontal" value={doc.signedAt} />: null}
           />
           {/* <Space direction='vertical'>
             {doc.signRequestedAt && <TimeAgo prefix="Sign requested" direction="horizontal" value={doc.signRequestedAt} />}
