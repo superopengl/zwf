@@ -36,6 +36,7 @@ import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { NotificationContext } from 'contexts/NotificationContext';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
+import { TaskContext } from 'contexts/TaskContext';
 
 const { Link: TextLink, Text } = Typography;
 
@@ -167,132 +168,135 @@ const OrgTaskPage = () => {
 
   return (<>
     <ContainerStyled>
-      {task && <PageHeaderContainer
-        loading={loading}
-        onBack={handleGoBack}
-        ghost={true}
-        breadcrumb={[
-          {
-            name: 'Tasks'
-          },
-          {
-            path: '/task',
-            name: 'Tasks',
-          },
-          {
-            name: task?.name
-          }
-        ]}
-        // fixedHeader
-        title={task?.name ? <ClickToEditInput
-          placeholder="Task name"
-          value={task.name} size={22}
-          onChange={handleRename}
-          maxLength={100} /> : <Skeleton paragraph={false} />}
-        icon={<TaskIcon />}
-        // content={<Paragraph type="secondary">{value.description}</Paragraph>}
-        extra={[
-          // <ZeventNoticeableBadge key="refresh"
-          //   message="This task has changes. Click to refresh"
-          //   filter={z => z.type === 'task.change' && z.taskId === task.id}
-          // >
-          //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
-          // </ZeventNoticeableBadge>,
-          // <ZeventNoticeableBadge key="comment"
-          //   message="This task has unread comment"
-          //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
-          // >
-          //   <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
-          // </ZeventNoticeableBadge>,
-          // <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
-          // ,
-          // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
-        ]}
-      // footer={[
-      //   <Button key="reset" onClick={handleReset}>Reset</Button>,
-      //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
-      // ]}
-      >
-        <Row gutter={[50, 40]} wrap={false} style={{ paddingTop: 30 }}>
-          <Col flex="2 2 400px">
-            <Row gutter={[40, 40]}>
-              <Col span={24}>
-                <OrgTaskDocListPanel task={task} onChange={() => load$()} />
-              </Col>
-              <Col span={24}>
-                <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
-                  {task?.fields.length > 0 ?
-                    <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} autoSave={false} submitText="Save" /> :
-                    <Row justify="center">
-                      <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
-                    </Row>
-                  }
-                </ProCard>
-              </Col>
-            </Row>
-          </Col>
-          <Col flex="0 0 340px">
-            <ProCard ghost>
-              <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
-              <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
-                <Descriptions.Item label="Status">
-                  <TaskStatusButton style={{ width: '100%' }} key="status" value={task.status} onChange={handleStatusChange} />
-                </Descriptions.Item>
-                <Descriptions.Item label="Assignee">
-                  <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
-                </Descriptions.Item>
-                <Descriptions.Item label="Tags">
-                  <TagSelect value={task.tags.map(t => t.id)}
-                    onChange={handleTagsChange}
-                    bordered={true}
-                    inPlaceEdit={true}
-                    placeholder="Select tags" />
-                </Descriptions.Item>
-                <Descriptions.Item label="Actions">
-                  <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
-                    {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
-                    {!task.watched && <Tooltip title="By watching this task, you will be notified of the changes made to this task">
-                      <Button type="text" block icon={<Icon component={IoNotificationsOutline} />} onClick={() => handleWatch(true)}>Watch</Button>
-                    </Tooltip>}
-                    {task.watched && <Tooltip title="Stop being notified of the changes made to this task">
-                      <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
-                    </Tooltip>}
-                    <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
-                    <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]} /></Button>
-                    <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
-                    <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
-                    <Divider />
-                    <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button>
-                    <Divider />
-                    {!hasFinished && <Button type="text" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
-                    {task.status !== 'archived' && <Button type="text" danger block icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
-                  </Space>
-                </Descriptions.Item>
-              </Descriptions>
-            </ProCard>
-          </Col>
-        </Row>
-      </PageHeaderContainer>}
-      {task && <TaskTimelineDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />}
-      {saving && <SavingAffix />}
-      {deepLinkContextHolder}
-      {task && <Drawer
-        title="Comments"
-        open={commentsOpen}
-        onClose={() => setCommentsOpen(false)}
-        // mask={false}
-        destroyOnClose={true}
-        placement='right'
-        // height="90vh"
-        bodyStyle={{ padding: 0 }}
-        footer={<TaskCommentInputForm taskId={task.id} />}
-      >
-        <TaskCommentDisplayPanel taskId={task.id} />
-      </Drawer>}
-      <div>
-        {requestActionContextHolder}
-      </div>
-    </ContainerStyled>
+      {task && <TaskContext.Provider value={{ task }} >
+        <PageHeaderContainer
+          loading={loading}
+          onBack={handleGoBack}
+          ghost={true}
+          breadcrumb={[
+            {
+              name: 'Tasks'
+            },
+            {
+              path: '/task',
+              name: 'Tasks',
+            },
+            {
+              name: task?.name
+            }
+          ]}
+          // fixedHeader
+          title={task?.name ? <ClickToEditInput
+            placeholder="Task name"
+            value={task.name} size={22}
+            onChange={handleRename}
+            maxLength={100} /> : <Skeleton paragraph={false} />}
+          icon={<TaskIcon />}
+          // content={<Paragraph type="secondary">{value.description}</Paragraph>}
+          extra={[
+            // <ZeventNoticeableBadge key="refresh"
+            //   message="This task has changes. Click to refresh"
+            //   filter={z => z.type === 'task.change' && z.taskId === task.id}
+            // >
+            //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
+            // </ZeventNoticeableBadge>,
+            // <ZeventNoticeableBadge key="comment"
+            //   message="This task has unread comment"
+            //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
+            // >
+            //   <Button icon={<MessageOutlined />} onClick={() => setHistoryVisible(true)} />
+            // </ZeventNoticeableBadge>,
+            // <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+            // ,
+            // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
+          ]}
+        // footer={[
+        //   <Button key="reset" onClick={handleReset}>Reset</Button>,
+        //   <Button key="submit" type="primary" onClick={handleSubmit}>Submit</Button>
+        // ]}
+        >
+          <Row gutter={[50, 40]} wrap={false} style={{ paddingTop: 30 }}>
+            <Col flex="2 2 400px">
+              <Row gutter={[40, 40]}>
+                <Col span={24}>
+                  <OrgTaskDocListPanel task={task} onChange={() => load$()} />
+                </Col>
+                <Col span={24}>
+                  <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
+                    {task?.fields.length > 0 ?
+                      <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} autoSave={false} submitText="Save" /> :
+                      <Row justify="center">
+                        <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
+                      </Row>
+                    }
+                  </ProCard>
+                </Col>
+              </Row>
+            </Col>
+            <Col flex="0 0 340px">
+              <ProCard ghost>
+                <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+                <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }}>
+                  <Descriptions.Item label="Status">
+                    <TaskStatusButton style={{ width: '100%' }} key="status" value={task.status} onChange={handleStatusChange} />
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Assignee">
+                    <MemberSelect value={assigneeId} onChange={handleChangeAssignee} bordered={true} />
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Tags">
+                    <TagSelect value={task.tags.map(t => t.id)}
+                      onChange={handleTagsChange}
+                      bordered={true}
+                      inPlaceEdit={true}
+                      placeholder="Select tags" />
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Actions">
+                    <Space style={{ width: '100%' }} direction="vertical" className="action-buttons" siza="small">
+                      {/* {!hasFinished && <Button type="link" icon={<FileAddOutlined />} block onClick={() => showRequireActionModal(task.id)}>Request client for more information</Button>} */}
+                      {!task.watched && <Tooltip title="By watching this task, you will be notified of the changes made to this task">
+                        <Button type="text" block icon={<Icon component={IoNotificationsOutline} />} onClick={() => handleWatch(true)}>Watch</Button>
+                      </Tooltip>}
+                      {task.watched && <Tooltip title="Stop being notified of the changes made to this task">
+                        <Button type="text" block icon={<Icon component={IoNotificationsOffOutline} />} onClick={() => handleWatch(false)}>Unwatch</Button>
+                      </Tooltip>}
+                      <Button type="text" block icon={<ShareAltOutlined />} onClick={() => openDeepLink(task.deepLinkId)}>Share link</Button>
+                      <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]} /></Button>
+                      <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
+                      <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
+                      <Divider />
+                      <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button>
+                      <Divider />
+                      {!hasFinished && <Button type="text" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
+                      {task.status !== 'archived' && <Button type="text" danger block icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
+                    </Space>
+                  </Descriptions.Item>
+                </Descriptions>
+              </ProCard>
+            </Col>
+          </Row>
+        </PageHeaderContainer>
+        <TaskTimelineDrawer taskId={task.id} open={timelineOpen} onClose={() => setTimelineOpen(false)} />
+        {saving && <SavingAffix />}
+        <Drawer
+          title="Comments"
+          open={commentsOpen}
+          onClose={() => setCommentsOpen(false)}
+          // mask={false}
+          destroyOnClose={true}
+          placement='right'
+          // height="90vh"
+          bodyStyle={{ padding: 0 }}
+          footer={<TaskCommentInputForm taskId={task.id} />}
+        >
+          <TaskCommentDisplayPanel taskId={task.id} />
+        </Drawer>
+        {deepLinkContextHolder}
+        <div>
+          {requestActionContextHolder}
+        </div>
+      </TaskContext.Provider>
+      }
+    </ContainerStyled >
   </>
   );
 };

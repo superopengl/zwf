@@ -6,6 +6,7 @@ import { FileIcon } from './FileIcon';
 import { useDemplatePreviewModal } from './useDemplatePreviewModal';
 import { openTaskDoc } from 'services/fileService';
 import { Loading } from './Loading';
+import { TaskContext } from 'contexts/TaskContext';
 
 const { Link, Text } = Typography
 
@@ -18,6 +19,7 @@ export const TaskDocName = props => {
   const [loading, setLoading] = React.useState(false);
   const [hasFile, setHasFile] = React.useState(!!fileId);
   const [openPreview, previewContextHolder] = useDemplatePreviewModal();
+  const {task} = React.useContext(TaskContext);
 
   React.useEffect(() => {
     if (showOverlay) {
@@ -28,10 +30,26 @@ export const TaskDocName = props => {
         setIconType('await-sign');
         setDescription('awaiting client to sign')
       } else if (!hasFile) {
+        
+        const filledFields = []
+        const missingFields = [];
+
+        Object.keys(taskDoc.fieldBag).forEach(fieldName => {
+          const fieldValue = task?.fields.find(x => x.name === fieldName)?.value;
+          if(fieldValue) {
+            filledFields.push(fieldName);
+          } else {
+            missingFields.push(fieldName);
+          }
+        });
+
+        if(missingFields.length) {
+          setDescription(`The doc is pending generation because not all dependency fields are filled (${missingFields.join(',')})`)
+        } else {
+          setDescription('Ready to generate doc');
+        }
+
         setIconType('pending');
-        const x = taskDoc;
-        debugger;
-        setDescription('The doc is pending generation because not all dependency fields are filled')
       } else {
         setIconType('default')
         setDescription(null)
@@ -65,8 +83,8 @@ export const TaskDocName = props => {
       <Space>
         <FileIcon name={name} type={iconType} />
         <Space.Compact direction="vertical" size="small">
-        <Text>{name}</Text>
-        {description && <Text type="secondary"><small>{description}</small></Text>}
+          <Text>{name}</Text>
+          {description && <Text type="secondary"><small>{description}</small></Text>}
         </Space.Compact>
         <Loading loading={loading} size={14} />
       </Space>
