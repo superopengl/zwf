@@ -5,7 +5,7 @@ import { Drawer, Card, Form, Collapse, Row, Button, Tag, Typography, Space, Drop
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
-import Icon, { BellOutlined, CommentOutlined, RightOutlined } from '@ant-design/icons';
+import Icon, { BellOutlined, CloseCircleFilled, CommentOutlined, RightOutlined } from '@ant-design/icons';
 import { CloseOutlined, EditOutlined, HolderOutlined } from '@ant-design/icons';
 import { Divider } from 'antd';
 import { OptionsBuilder } from '../pages/Femplate/formBuilder/OptionsBuilder';
@@ -92,7 +92,6 @@ export const NotificationButton = (props) => {
         setZevents(pre => [...pre, z])
         break;
       case 'taskEvent.ack':
-        debugger;
         // setZevents(pre => pre.filter(z => z.payload.eventId !== payload.eventId));
         break;
       case 'support':
@@ -193,7 +192,7 @@ export const NotificationButton = (props) => {
     const { payload: { taskId, type } } = z;
     navigate(`/task/${taskId}`, { state: { type } });
     ackTaskEventType$(taskId, type).subscribe({
-      next: () => setOpen(false),
+      // next: () => setOpen(false),
       error: () => { /** Swallow error */ },
     });
   }
@@ -204,13 +203,17 @@ export const NotificationButton = (props) => {
     <Drawer
       open={open}
       onClose={() => setOpen(false)}
-      title="Notifications"
+      title={null}
+      closeIcon={<CloseCircleFilled />}
       rootClassName='zwf-notification'
       maskClosable={true}
       destroyOnClose={true}
       // maskStyle={{ background: 'rgba(0, 0, 0, 0)' }}
+      bodyStyle={{padding: '0 8px'}}
+      onClick={() => setOpen(false)}
     >
       <List
+        onClick={() => setOpen(false)}
         dataSource={zevents}
         grid={{ gutter: 0, column: 1 }}
         size="small"
@@ -219,7 +222,7 @@ export const NotificationButton = (props) => {
             title={<><TaskIcon /> {z.payload.taskName}</>}
             size="small"
             hoverable
-            onClick={() => handleNotificationClick(z)}
+            onClick={(e) => handleNotificationClick(e, z)}
             extra={<Text type="secondary"><RightOutlined /></Text>}
           >
             {getNotificationMessage(z)}
