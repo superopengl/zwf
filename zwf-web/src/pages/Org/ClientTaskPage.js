@@ -197,7 +197,7 @@ const ClientTaskPage = () => {
             type={activePanel === 'comment' ? 'primary' : 'text'}
             ghost={activePanel === 'comment'}
             onClick={() => setActivePanel('comment')}
-          >Chat</Button>
+          >Comments</Button>
         </TaskUnreadCommentBadge>
         {task.fields.length > 0 && <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
           type={activePanel === 'form' ? 'primary' : 'text'}
@@ -209,14 +209,15 @@ const ClientTaskPage = () => {
           ghost={activePanel === 'docs'}
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
-        {docsToSign.length > 0 && <Badge showZero={true} count={docsToSign.length}>
+        <Badge showZero={false} count={docsToSign.length}>
           <Button size={buttonSize} icon={<Icon component={RiQuillPenFill} />}
             type={activePanel === 'sign' ? 'primary' : 'text'}
             ghost={activePanel === 'sign'}
-            onClick={handleHighlightenSignPanel} disabled={!hasDocToSign}>
+            disabled={!docsToSign.length }
+            onClick={handleHighlightenSignPanel}>
             Sign
           </Button>
-        </Badge>}
+        </Badge>
       </Row>}
       extra={[
         <Tag key="org">{task.orgName}</Tag>
