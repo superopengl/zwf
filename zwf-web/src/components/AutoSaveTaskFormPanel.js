@@ -10,7 +10,7 @@ import { Row, Button } from 'antd';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
-  const { value: task, mode, onLoadingChange, autoSave, requiredMark } = props;
+  const { value: task, mode, onLoadingChange, autoSave, requiredMark, submitText } = props;
 
   const [fields, setFields] = React.useState(task?.fields);
   const [changedFields, setChangedFields] = React.useState({});
@@ -91,7 +91,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       
     />
     {!autoSave && <Row justify="end" style={{marginTop: 20}}>
-      <Button onClick={handleManualSubmit} type="primary">Submit</Button>
+      <Button onClick={handleManualSubmit} type="primary">{submitText}</Button>
     </Row>}
   </>
   );
@@ -105,11 +105,13 @@ AutoSaveTaskFormPanel.propTypes = {
   // onChange: PropTypes.func,
   onLoadingChange: PropTypes.func,
   autoSave: PropTypes.bool,
+  submitText: PropTypes.string,
 };
 
 AutoSaveTaskFormPanel.defaultProps = {
   mode: 'client',
   onLoadingChange: saving => { },
   autoSave: true,
+  submitText: 'Submit'
 };
 

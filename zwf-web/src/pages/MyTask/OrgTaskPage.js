@@ -222,7 +222,7 @@ const OrgTaskPage = () => {
               <Col span={24}>
                 <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
                   {task?.fields.length > 0 ?
-                    <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} /> :
+                    <AutoSaveTaskFormPanel value={task} mode="agent" onSavingChange={setSaving} autoSave={false} submitText="Save" /> :
                     <Row justify="center">
                       <Text type="secondary">No fields defined. <TextLink onClick={handleEditFields}>Click to add</TextLink></Text>
                     </Row>
@@ -284,7 +284,7 @@ const OrgTaskPage = () => {
         destroyOnClose={true}
         placement='right'
         // height="90vh"
-        bodyStyle={{ padding: 0}}
+        bodyStyle={{ padding: 0 }}
         footer={<TaskCommentInputForm taskId={task.id} />}
       >
         <TaskCommentDisplayPanel taskId={task.id} />
