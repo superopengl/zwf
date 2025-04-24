@@ -62,7 +62,13 @@ const Container = styled.div`
       height: 1.5rem;
     }
   }
-}  
+} 
+
+.ant-btn-primary {
+  .anticon {
+    color: #0FBFC4;
+  }
+}
 `;
 
 
