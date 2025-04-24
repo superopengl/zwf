@@ -342,9 +342,9 @@ export const getTask = handlerWrapper(async (req, res) => {
           orgClient: {
             userId
           },
-          docs: {
-            fileId: Not(IsNull()),
-          }
+          // docs: {
+          //   fileId: Not(IsNull()),
+          // }
         };
         // relations = ['fields', 'fields.docs', 'fields.docs.file'];
         relations = {
@@ -376,6 +376,8 @@ export const getTask = handlerWrapper(async (req, res) => {
       assert(task.orgClient.userId === userId, 404);
       const { name: orgName } = await m.getRepository(Org).findOneBy({ id: task.orgId });
       (task as any).orgName = orgName;
+
+      task.docs = task.docs.filter(d => d.fileId);
     } else {
       const watched = await m.getRepository(TaskWatcher).findOneBy({ taskId: task.id, userId });
       (task as any).watched = !!watched;
