@@ -222,7 +222,7 @@ export const NotificationButton = (props) => {
             title={<><TaskIcon /> {z.payload.taskName}</>}
             size="small"
             hoverable
-            onClick={(e) => handleNotificationClick(e, z)}
+            onClick={() => handleNotificationClick(z)}
             extra={<Text type="secondary"><RightOutlined /></Text>}
           >
             {getNotificationMessage(z)}
