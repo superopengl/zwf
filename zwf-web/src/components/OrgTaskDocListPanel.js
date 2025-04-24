@@ -83,13 +83,13 @@ export const OrgTaskDocListPanel = React.memo((props) => {
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
           {/* <TaskDocName taskDoc={doc} showOverlay={false} /> */}
-          <TimeAgo prefix="Created" value={doc.createdAt} />
+          <TimeAgo prefix="Added" value={doc.createdAt} />
           <TimeAgo prefix="Sign requested" value={doc.signRequestedAt} />
           <TimeAgo prefix="Signed" value={doc.signedAt} />
         </Space>
         }>
         <div>
-          <TaskDocName taskDoc={doc} />
+          <TaskDocName taskDoc={doc} showDescription={true}/>
         </div>
       </Tooltip>
 

@@ -6,6 +6,7 @@ import { Tag, Badge, Tooltip } from 'antd';
 import Icon, { CheckCircleFilled, CheckOutlined, ClockCircleOutlined, ClockCircleFilled, StopFilled } from '@ant-design/icons';
 import { BsFillPenFill } from 'react-icons/bs';
 import { RiQuillPenFill, RiQuillPenLine } from 'react-icons/ri';
+import { MdPending } from 'react-icons/md';
 
 const StyledFileIcon = styled.div`
   position: relative;
@@ -25,8 +26,8 @@ export const FileIcon = props => {
   let dot = false;
   let title = null;
   if (type === 'pending') {
-    overlayComponent = <StopFilled style={{color: '#aaaaaa'}}/>
-    title = "Pending generating doc"
+    overlayComponent = <Icon component={MdPending} style={{color: '#aaaaaa'}}/>
+    title = "The doc is pending generation because not all dependency fields are filled."
   } else if (type === 'await-sign') {
     overlayComponent = <Icon component={RiQuillPenLine} style={{ color: '#cf222e' }} />
     title = "Await client's sign"

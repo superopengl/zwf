@@ -52,7 +52,7 @@ export const useAddDemplateToTaskModal = () => {
           <Form.Item label="" name="demplateIds" rules={[{ required: true, whitespace: true, max: 1000, type: 'array' }]}
             extra={`The system will create a duplicate of the document template with the specified name. In case a document with the same name already exists, the system will append a number suffix (such as "(2)") to the name.`}
           >
-            <DemplateSelect isMultiple={true} />
+            <DemplateSelect isMultiple={true} allowAdd={true} />
           </Form.Item>
         </Form>
         {/* <DebugJsonPanel value={formValues} /> */}
