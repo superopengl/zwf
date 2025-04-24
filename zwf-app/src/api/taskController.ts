@@ -7,7 +7,7 @@ import { db } from './../db';
 import { TaskField } from './../entity/TaskField';
 import { TaskInformation } from './../entity/views/TaskInformation';
 import * as _ from 'lodash';
-import { In, Not } from 'typeorm';
+import { In, IsNull, Not } from 'typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Task } from '../entity/Task';
 import { TaskStatus } from '../types/TaskStatus';
@@ -343,6 +343,9 @@ export const getTask = handlerWrapper(async (req, res) => {
           id,
           orgClient: {
             userId
+          },
+          docs: {
+            fileId: Not(IsNull()),
           }
         };
         // relations = ['fields', 'fields.docs', 'fields.docs.file'];
