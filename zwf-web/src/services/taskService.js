@@ -109,8 +109,8 @@ export function assignTask$(taskId, assigneeId) {
   return httpPost$(`/task/${taskId}/assign`, { assigneeId });
 }
 
-export function getTaskLog$(taskId) {
-  return httpGet$(`/task/${taskId}/log`);
+export function getTaskTimeline$(taskId) {
+  return httpGet$(`/task/${taskId}/timeline`);
 }
 
 export function listTaskComment$(taskId) {

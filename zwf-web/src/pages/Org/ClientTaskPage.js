@@ -192,13 +192,13 @@ const ClientTaskPage = () => {
       // icon={<TaskIcon />}
       title={task.name || <Skeleton paragraph={false} />}
       footer={<Row className='client-task-footer' justify="space-around" wrap={false}>
-        <TaskUnreadCommentBadge taskId={task.id} offset={[0, 10]}>
-          <Button size={buttonSize} icon={<Icon component={BiCommentDetail} />}
-            type={activePanel === 'comment' ? 'primary' : 'text'}
-            ghost={activePanel === 'comment'}
-            onClick={() => setActivePanel('comment')}
-          >Comments</Button>
-        </TaskUnreadCommentBadge>
+        <Button size={buttonSize} icon={<TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]}>
+          <Icon component={BiCommentDetail} />
+        </TaskUnreadCommentBadge>}
+          type={activePanel === 'comment' ? 'primary' : 'text'}
+          ghost={activePanel === 'comment'}
+          onClick={() => setActivePanel('comment')}
+        >Comments</Button>
         {task.fields.length > 0 && <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
           type={activePanel === 'form' ? 'primary' : 'text'}
           ghost={activePanel === 'form'}
@@ -209,15 +209,16 @@ const ClientTaskPage = () => {
           ghost={activePanel === 'docs'}
           onClick={() => setActivePanel('docs')}
         >Docs</Button>
-        {docsToSign.length > 0 && <Badge showZero={false} count={docsToSign.length} offset={[0, 10]}>
-          <Button size={buttonSize} icon={<Icon component={RiQuillPenFill} />}
+        {docsToSign.length > 0 &&
+          <Button size={buttonSize} icon={<Badge showZero={false} count={docsToSign.length} offset={[10, 0]}>
+            <Icon component={RiQuillPenFill} /></Badge>}
             type={activePanel === 'sign' ? 'primary' : 'text'}
             ghost={activePanel === 'sign'}
-            disabled={!docsToSign.length }
+            disabled={!docsToSign.length}
             onClick={handleHighlightenSignPanel}>
             Sign
           </Button>
-        </Badge>}
+        }
       </Row>}
       extra={[
         // <Tag key="org">{task.orgName}</Tag>

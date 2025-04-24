@@ -16,6 +16,7 @@ export const TaskTimelineDrawer = React.memo((props) => {
     autoFocus
     maskClosable
     width={width}
+    placement='left'
   // bodyStyle={{ padding: 0 }}
   // footer={<TaskMessageForm taskId={taskId} onDone={handleMessageSent} />}
   >
