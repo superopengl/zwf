@@ -16,6 +16,7 @@ import { TaskDocDropableContainer } from './TaskDocDropableContainer';
 import { TbFileImport, TbSignature, TbSignatureOff } from 'react-icons/tb';
 import DropdownMenu from './DropdownMenu';
 import { RiQuillPenLine, RiQuillPenFill } from 'react-icons/ri';
+import { TaskDocDescription } from './TaskDocDescription';
 
 const { Text } = Typography;
 
@@ -86,15 +87,15 @@ export const OrgTaskDocListPanel = React.memo((props) => {
         placement='leftTop'
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
-          {/* <TaskDocName taskDoc={doc} showOverlay={false} /> */}
           <TimeAgo prefix="Added" value={doc.createdAt} />
           <TimeAgo prefix="Sign requested" value={doc.signRequestedAt} />
           <TimeAgo prefix="Signed" value={doc.signedAt} />
         </Space>
         }>
-        <div>
-          <TaskDocName taskDoc={doc} showDescription={true}/>
-        </div>
+        <Space.Compact direction='vertical'>
+          <TaskDocName taskDoc={doc}/>
+          <TaskDocDescription taskDoc={doc} />
+        </Space.Compact>
       </Tooltip>
     },
     // {
