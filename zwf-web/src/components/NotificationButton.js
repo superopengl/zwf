@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useDrag, useDrop } from 'react-dnd'
 import PropTypes from 'prop-types';
-import { Drawer, Menu, Form, Collapse, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
+import { Drawer, Card, Form, Collapse, Row, Button, Tag, Typography, Space, Dropdown } from 'antd';
 import { ProCard } from '@ant-design/pro-components';
 import Field from '@ant-design/pro-field';
 import React from 'react';
@@ -48,7 +48,7 @@ const messageFuncMap = {
   'comment': x => <>Has new comments</>,
   'created-recurringly': x => <>Was created automatically by recurring</>,
   'start-proceeding': x => <>Started being proceeded</>,
-  'assign': x => <>Was assigned to <UserNameCard userId={x.payload.info.assigneeId} showEmail={false}/></>,
+  'assign': x => <>Was assigned to <UserNameCard userId={x.payload.info.assigneeId} showEmail={false} /></>,
   'complete': x => <>Was completed</>,
   'archive': x => <>Was archieved</>,
   'request-client-sign': x => <>Documents requires sign</>,
@@ -135,7 +135,7 @@ export const NotificationButton = (props) => {
       return <Collapse.Panel
         key={first.payload.taskId}
         extra={<Icon component={MdOpenInNew} onClick={() => navigate(`/task/${first.payload.taskId}`)} />}
-        header={<Space style={{ width: '100%', justifyContent: 'space-between' }}>
+        header={<Space style={{ width: '100%', justifyContent: 'space-between', paddingRight: 10 }}>
           <Row style={{ maxWidth: 240 }} wrap={false}>
             <TaskIcon size={14} />
             <Text ellipsis={true}>{first.payload.taskName}</Text>
@@ -143,10 +143,30 @@ export const NotificationButton = (props) => {
           <Badge showZero={false} count={taskEvents.filter(z => !z.payload.ackAt).length} />
         </Space>}
       >
-        {taskEvents.map(z => <div key={z.payload.eventId} onClick={() => handleItemClick(z)}>
+        {/* {taskEvents.map(z => <div key={z.payload.eventId} onClick={() => handleItemClick(z)}>
           <Text strong={!z.payload.ackAt}>{getNotificationMessage(z)}</Text>
           <TimeAgo strong={!z.payload.ackAt} value={z.payload.createdAt} direction="horizontal" />
-        </div>)}
+        </div>)} */}
+        {/* {taskEvents.map(z => <ProCard key={z.payload.eventId} onClick={() => handleItemClick(z)} size="small"
+          style={{marginLeft: 20}}
+          bordered={true}
+          // title={getNotificationMessage(z)}
+          // subTitle={<TimeAgo value={z.payload.createdAt} direction="horizontal" showTime={false} />}
+        >
+          <Text strong={!z.payload.ackAt}>{getNotificationMessage(z)}</Text>
+          <TimeAgo value={z.payload.createdAt} direction="horizontal" showTime={false} />
+        </ProCard>)} */}
+        <List
+          dataSource={taskEvents}
+          style={{ marginLeft: 20 }}
+          size="small"
+          renderItem={z => <List.Item>
+            <List.Item.Meta
+              title={getNotificationMessage(z)}
+              description={<TimeAgo value={z.payload.createdAt} direction="horizontal" showTime={false} />}
+            />
+          </List.Item>}
+        />
       </Collapse.Panel>
 
       // return {
@@ -267,6 +287,15 @@ export const NotificationButton = (props) => {
     setOpen(true)
   }
 
+  const handleNotificationClick = (z) => {
+    const { payload: { taskId, type } } = z;
+    navigate(`/task/${taskId}`, { state: { type } });
+    ackTaskEventType$(taskId, type).subscribe({
+      next: () => setOpen(false),
+      error: () => { /** Swallow error */ },
+    });
+  }
+
   return <Container>
     <Badge showZero={false} count={zevents.filter(x => !x.payload.ackAt).length} offset={[-4, 6]}>
       <Button icon={<Icon component={IoNotificationsOutline} />} shape="circle" type="text" size="large" onClick={handleClick} />
@@ -278,12 +307,32 @@ export const NotificationButton = (props) => {
       title="Notifications"
       rootClassName='zwf-notification'
       mask={true}
-      bodyStyle={{ padding: 1 }}
+      header={false}
+      maskStyle={{ background: 'rgba(0, 0, 0, 0)' }}
+    // bodyStyle={{ padding: 0 }}
     // headerStyle={{background: 'transparent'}}
     >
-      <Collapse bordered={false} expandIconPosition="end">
+      {/* <Collapse bordered={false} expandIconPosition="end">
         {items}
-      </Collapse>
+      </Collapse> */}
+      <List
+        dataSource={zevents}
+        grid={{ gutter: 0, column: 1 }}
+        size="small"
+        renderItem={z => <List.Item style={{ padding: 0 }}>
+          <Card
+            title={<><TaskIcon /> {z.payload.taskName}</>}
+            size="small"
+            hoverable
+            onClick={() => handleNotificationClick(z)}
+            extra={<Text type="secondary"><RightOutlined /></Text>}
+          >
+            {getNotificationMessage(z)}
+            <br />
+            <TimeAgo value={z.payload.createdAt} direction="horizontal" showTime={true} />
+          </Card>
+        </List.Item>}
+      />
     </Drawer>
   </Container>
 

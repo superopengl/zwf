@@ -38,6 +38,9 @@ const StyledList = styled(ProList)`
   }
 }
 
+max-width: 700px;
+width: 100%;
+
 .ant-list-empty-text {
   display: none;
 }
