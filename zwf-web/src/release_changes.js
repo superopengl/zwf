@@ -1,26 +1,20 @@
 export const notes=`
-fix notification
-fix drop view
-add tooltip
-task filter button
-hide termination
-bugfix for create task when no user associated orgClient
-terminate on error
-fix transaction
-watch/unwatch task
-remove TaskEventLastSeen
-return watched from task
-refine task search
-watchedOnly
-misc
-clients manually submit form
-ui refine
-save field bugfix
-timeline
-add demplate bugfix
-no glowing
+notification style
+client refine
+fix instruction control optional display
+instruction fix
+option editor fix
+wording
+rename
+more fix
+bugfix
 clean up
-set timezone to UTC
-refactoring
-refactoring
-clean up`
+icon refine
+bugfix
+fix
+misc fix
+clean up
+React key
+notification upon zevent
+unify notification and zevent
+zevent refine`
