@@ -24,6 +24,10 @@ width: 100%;
 //   }
 // }
 
+.ant-page-header-heading-left:not(:has(>.ant-page-header-back)) {
+  padding-left: 32px;
+}
+
 .ant-pro-page-container-children-content {
   padding-left: 0;
   padding-right: 0;
