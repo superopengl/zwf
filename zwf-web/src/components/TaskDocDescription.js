@@ -1,24 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Typography, Tag, Space, Alert } from 'antd';
+import { Typography, Tag, Space, Alert, Button } from 'antd';
 import { TaskContext } from 'contexts/TaskContext';
-import { ArrowLeftOutlined, ArrowRightOutlined, LeftOutlined } from '@ant-design/icons';
+import { ArrowLeftOutlined, ArrowRightOutlined, ExclamationCircleFilled, LeftOutlined } from '@ant-design/icons';
 import { isEmpty } from 'lodash';
 
 const { Text, Paragraph } = Typography;
 
-const ContainerText = styled(Text)`
+const Container = styled.div`
 margin-left: 36px;
 positon: relative:
 top: -10px;
 
-&, .ant-typography, .ant-tag, .ant-alert-message {
+&, .ant-typography, .ant-tag, .ant-alert-message, .ant-alert-description {
   font-size: 0.8rem;
 }
 
 .ant-alert {
   padding: 8px;
+
+  .anticon {
+    font-size: 16px;
+  }
 }
 `;
 
@@ -67,8 +71,9 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
     if (!isEmpty(valueChangedVars)) {
       return <Alert type="warning"
         showIcon
-        size="small"
+        icon={<ExclamationCircleFilled />}
         message="Some dependency field values have changed after previous generation. Regenerate with the latest field values?"
+        action={<Button size="small">Re-generate</Button>}
         description={<>
           {Object.entries(valueChangedVars).map(([varName, diff]) => (<Space size="small" key={varName}>
             <Text>{varName}</Text>
@@ -80,11 +85,23 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
   } else {
     // Not gen doc yet
     if (readyToGen) {
-      return <>All dependency fields are filled. Ready to generate doc.</>
+      return <><Alert type="success"
+        showIcon
+        message="All dependency fields are filled. Ready to generate doc."
+        // description={'All dependency fields are filled. Ready to generate doc.'}
+        action={<Button size="small">Generate doc</Button>}
+      />
+      </>
     } else {
       return <>
-        <Text type="warning">Below dependency field are blank. Fill them in before so as to generate the doc.</Text>
-        {blankVars.map(varName => <Tag key={varName}>{varName}</Tag>)}
+        <Alert type="warning"
+          showIcon
+          icon={<ExclamationCircleFilled />}
+          message="Below dependency field are blank. Fill them in before so as to generate the doc."
+          description={<>
+            {blankVars.map(varName => <Text code key={varName}>{varName}</Text>)}
+          </>}
+        />
       </>
     }
   }
@@ -101,9 +118,9 @@ export const TaskDocDescription = props => {
   const hasFile = !!fileId;
   const descriptionComponent = React.useMemo(() => {
     if (signedAt) {
-      return 'client has signed'
+      return <Text type="secondary">Client has signed</Text>
     } else if (signRequestedAt) {
-      return 'awaiting client to sign'
+      return <Text type="secondary">Awaiting client to sign</Text>
     } else if (!hasFile) {
       return getTaskDocDescriptionComponent(taskDoc, task?.fields);
     } else {
@@ -111,9 +128,9 @@ export const TaskDocDescription = props => {
     }
   }, [taskDoc, task]);
 
-  return <ContainerText type="secondary">
+  return <Container>
     {descriptionComponent}
-  </ContainerText>
+  </Container>
 }
 
 TaskDocDescription.propTypes = {
