@@ -7,12 +7,14 @@ import { useRole } from 'hooks/useRole';
 import { useZevent } from 'hooks/useZevent';
 import { finalize } from 'rxjs';
 import { Row, Button } from 'antd';
+import { TaskContext } from 'contexts/TaskContext';
 
 export const AutoSaveTaskFormPanel = React.memo((props) => {
 
-  const { value: task, mode, onLoadingChange, autoSave, requiredMark, submitText } = props;
+  const { mode, onLoadingChange, autoSave, requiredMark, submitText } = props;
 
-  const [fields, setFields] = React.useState(task?.fields);
+  const { task, setTask } = React.useContext(TaskContext);
+  // const [fields, setFields] = React.useState(task?.fields);
   const [changedFields, setChangedFields] = React.useState({});
   const [aggregatedChangedFields] = useDebouncedValue(changedFields, 1000);
   const [disabled, setDisabled] = React.useState(false);
@@ -20,6 +22,8 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   const ref = React.useRef();
 
   const isClient = role === 'client';
+
+  const fields = task.fields;
 
   const handleZevent = z => {
     const { fields: changedFields } = z.payload;
@@ -32,7 +36,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
   useZevent(z => z.type === 'task.fields' && z.taskId === task.id, handleZevent);
 
   React.useEffect(() => {
-    setFields(task?.fields);
+    // setFields(task?.fields);
     setDisabled(
       ['done', 'archived'].includes(task.status)
       || (isClient && ['todo'].includes(task.status))
@@ -55,23 +59,21 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     await ref.current.validateFields();
 
     saveTaskFieldValues$(task.id, changedFields)
-    .pipe(
-      finalize(() => onLoadingChange(false))
-    ).subscribe(() => {
-      setChangedFields({})
-    });
+      .pipe(
+        finalize(() => onLoadingChange(false))
+      ).subscribe(() => {
+        setChangedFields({})
+      });
   }
 
   const updateFieldsWithChangedFields = (changedFields) => {
-    setFields(fields => {
-      fields.forEach(field => {
-        if (field.id in changedFields) {
-          field.value = changedFields[field.id];
-        }
-      })
-
-      return [...fields];
+    fields.forEach(field => {
+      if (field.id in changedFields) {
+        field.value = changedFields[field.id];
+      }
     });
+
+    setTask({...task, fields})
   }
 
   const handleTaskFieldsValueChange = React.useCallback(changedFields => {
@@ -88,9 +90,9 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
       onChange={handleTaskFieldsValueChange}
       disabled={disabled}
       requiredMark={requiredMark}
-      
+
     />
-    {!autoSave && <Row justify="end" style={{marginTop: 20}}>
+    {!autoSave && <Row justify="end" style={{ marginTop: 20 }}>
       <Button onClick={handleManualSubmit} type="primary">{submitText}</Button>
     </Row>}
   </>
