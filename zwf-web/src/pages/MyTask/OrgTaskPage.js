@@ -223,7 +223,8 @@ const OrgTaskPage = () => {
                 </Col>
                 <Col span={24}>
                   <ProCard title="Form" extra={<Space>
-                    <Button onClick={handleEditFields}>Edit fields</Button>
+                    <Button onClick={handleRequestAction} icon={<Icon component={BsFillSendFill} />}>Request client to fill</Button>
+                    <Button onClick={handleEditFields} icon={<Icon component={MdEditNote} />}>Edit fields</Button>
                   </Space>}>
                     {task?.fields.length > 0 ?
                       <AutoSaveTaskFormPanel mode="agent" onSavingChange={setSaving} autoSave={true} submitText="Save" /> :
@@ -265,8 +266,8 @@ const OrgTaskPage = () => {
                       <Button type="text" block icon={<CommentOutlined />} onClick={() => setCommentsOpen(true)}>Comments <TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]} /></Button>
                       <Button type="text" block icon={<Icon component={TbGitCommit} />} onClick={() => setTimelineOpen(true)}>Timeline</Button>
                       <Button type="text" block icon={<Icon component={MdEditNote} />} onClick={handleEditFields}>Edit fields</Button>
-                      <Divider />
-                      <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button>
+                      {/* <Divider />
+                      <Button type="text" block icon={<Icon component={BsFillSendFill} />} onClick={handleRequestAction}>Request client's actions</Button> */}
                       <Divider />
                       {!hasFinished && <Button type="text" icon={<CheckOutlined />} block onClick={() => showCompleteTaskModal(task.id)}>Complete this task</Button>}
                       {task.status !== 'archived' && <Button type="text" danger block icon={<Icon component={BsFillTrash3Fill} />} onClick={() => showArchiveTaskModal(task.id, load$)}>Archive</Button>}
