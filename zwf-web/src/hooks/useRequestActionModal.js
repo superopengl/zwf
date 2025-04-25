@@ -81,7 +81,7 @@ export const useRequestActionModal = () => {
       className: 'modal-hide-footer',
       // icon: null,
       width: 500,
-      closable: false,
+      closable: true,
       maskClosable: true,
       destroyOnClose: true,
       focusTriggerAfterClose: true,

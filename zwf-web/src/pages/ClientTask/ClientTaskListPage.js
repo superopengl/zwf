@@ -240,7 +240,7 @@ export const ClientTaskListPage = () => {
               extra={[
                 <Tag key="org">{item.orgName}</Tag>,
                 <Badge key="count" showZero={false} 
-                count={zevents.filter(z => z.payload.taskId === item.id && !z.payload.ackAt).length} 
+                count={zevents.filter(z => z.payload.taskId === item.id && !z.payload.ackAt).length ? ' ' : 0} 
                 offset={[34, -36]}
                 />
               ]}
