@@ -1028,11 +1028,11 @@ paths:
       responses:
         200:
           description: OK              
-  /task/field/{fieldId}/autodoc:
+  /task/doc/{docId}/gendoc:
     post:
-      operationId: generateAutoDoc
+      operationId: generateDemplateDoc
       parameters:
-        - name: fieldId
+        - name: docId
           in: path
           type: string
           format: uuid

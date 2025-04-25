@@ -54,9 +54,9 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     setSavingStatus('saving ...')
     saveTaskFieldValues$(task.id, aggregatedChangedFields)
       .pipe(
-        finalize(() => setSavingStatus('saved'))
       ).subscribe(() => {
         setChangedFields({})
+        setSavingStatus('saved')
       });
   }, [aggregatedChangedFields]);
 

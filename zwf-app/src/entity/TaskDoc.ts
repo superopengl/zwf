@@ -45,7 +45,7 @@ export class TaskDoc {
   @Column('uuid', { nullable: true })
   demplateId: string;// For 'autogen' type only
 
-  @Column({ nullable: true, select: false })
+  @Column({ nullable: true })
   generatedAt: Date; // For 'autogen' type only
 
   @Column('uuid', { nullable: true, select: false })

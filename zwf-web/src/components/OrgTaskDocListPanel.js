@@ -4,7 +4,7 @@ import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography, Row } from 
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
-import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDemplateToTask$, } from 'services/taskService';
+import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDemplateToTask$, generateDemplateDoc$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
 import Icon, { CheckCircleFilled, CloseOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
@@ -84,7 +84,11 @@ export const OrgTaskDocListPanel = React.memo((props) => {
   }
 
   const handleGenerateDoc = doc => {
-
+    generateDemplateDoc$(doc.id).subscribe({
+      next: () => {
+        onChange();
+      }
+    });
   }
 
   const columns = [
@@ -96,12 +100,13 @@ export const OrgTaskDocListPanel = React.memo((props) => {
         overlayInnerStyle={{ color: '#4B5B76', padding: 20 }}
         title={<Space direction='vertical'>
           <TimeAgo prefix="Added" value={doc.createdAt} />
+          <TimeAgo prefix="Generated" value={doc.generatedAt} />
           <TimeAgo prefix="Sign requested" value={doc.signRequestedAt} />
           <TimeAgo prefix="Signed" value={doc.signedAt} />
         </Space>
         }>
-          <TaskDocName taskDoc={doc}/>
-          <TaskDocDescription taskDoc={doc} />
+        <TaskDocName taskDoc={doc} />
+        <TaskDocDescription taskDoc={doc} onGenDoc={() => handleGenerateDoc(doc)} />
       </Tooltip>
     },
     // {
@@ -129,7 +134,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
           <DropdownMenu
             config={[
               doc.signedAt || !hasFile ? null : {
-                icon: <Icon component={doc.signRequestedAt ?  RiQuillPenLine : RiQuillPenFill} />,
+                icon: <Icon component={doc.signRequestedAt ? RiQuillPenLine : RiQuillPenFill} />,
                 menu: doc.signRequestedAt ? `Revoke sign request` : `Request sign`,
                 onClick: () => handleRequestSign(doc)
               },
@@ -190,7 +195,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
     extra={<Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
       <Button icon={<PlusOutlined />}>Add Document</Button>
     </Dropdown>}
-    bodyStyle={{paddingRight: 8}}
+    bodyStyle={{ paddingRight: 8 }}
   >
     <Container>
       {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}

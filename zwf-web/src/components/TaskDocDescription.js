@@ -27,6 +27,18 @@ top: -10px;
 }
 `;
 
+const OnceButton = props => {
+  const {onClick, children, ...others} = props;
+  const [loading, setLoading] = React.useState(false);
+
+  const handleClick = (e) => {
+    setLoading(true);
+    onClick(e);
+  }
+
+  return <Button {...others} onClick={handleClick} loading={loading}>{children}</Button>
+}
+
 function analyzeTaskDocAndFields(taskDoc, taskFields) {
   const { fieldBag } = taskDoc;
   // No var to fill in this demplate.
@@ -64,7 +76,7 @@ function analyzeTaskDocAndFields(taskDoc, taskFields) {
   }
 }
 
-function getTaskDocDescriptionComponent(taskDoc, fields) {
+function getTaskDocDescriptionComponent(taskDoc, fields, onGenDoc) {
   const { blankVars, valueChangedVars } = analyzeTaskDocAndFields(taskDoc, fields);
   const readyToGen = blankVars.length === 0;
   if (taskDoc.fileId) {
@@ -74,7 +86,7 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
         showIcon
         icon={<ExclamationCircleFilled />}
         message="There have been changes in the values of certain dependency fields since the last generation. Regenerate the document with the latest field values?"
-        action={<Button size="small">Re-generate doc</Button>}
+        action={<OnceButton size="small" onClick={onGenDoc}>Re-generate doc</OnceButton>}
         description={<>
           {Object.entries(valueChangedVars).map(([varName, diff]) => (<div key={varName}>
             <Space size="small" >
@@ -93,7 +105,7 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
       return <><Alert type="success"
         showIcon
         description={'All mandatory fields have been completed. Document generation can now proceed.'}
-        action={<Button size="small">Generate doc</Button>}
+        action={<OnceButton size="small" onClick={onGenDoc}>Generate doc</OnceButton>}
       />
       </>
     } else {
@@ -116,7 +128,7 @@ function getTaskDocDescriptionComponent(taskDoc, fields) {
 }
 
 export const TaskDocDescription = props => {
-  const { taskDoc } = props;
+  const { taskDoc, onGenDoc } = props;
 
   const { fileId, signedAt, signRequestedAt } = taskDoc
   const { task } = React.useContext(TaskContext);
@@ -128,11 +140,11 @@ export const TaskDocDescription = props => {
     } else if (signRequestedAt) {
       return <Text type="secondary">Awaiting client to sign</Text>
     } else if (!hasFile) {
-      return getTaskDocDescriptionComponent(taskDoc, task?.fields);
+      return getTaskDocDescriptionComponent(taskDoc, task?.fields, onGenDoc);
     } else {
-      return getTaskDocDescriptionComponent(taskDoc, task?.fields);
+      return getTaskDocDescriptionComponent(taskDoc, task?.fields, onGenDoc);
     }
-  }, [taskDoc, task]);
+  }, [taskDoc, task, onGenDoc]);
 
   return <Container>
     {descriptionComponent}
