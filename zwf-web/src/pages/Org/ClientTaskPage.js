@@ -32,6 +32,7 @@ import { RiQuillPenFill } from 'react-icons/ri';
 import { BiComment, BiCommentDetail } from 'react-icons/bi';
 import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
+import { TaskContext } from 'contexts/TaskContext';
 
 const { Text } = Typography;
 const { useBreakpoint } = Grid;
@@ -190,7 +191,8 @@ const ClientTaskPage = () => {
   const buttonSize = narrowScreen ? 'default' : 'large';
 
   return (<Container>
-    {!task ? <Skeleton active /> : <PageHeaderContainer
+    {!task ? <Skeleton active /> : <TaskContext.Provider value={{task, setTask}} >
+      <PageHeaderContainer
       loading={loading}
       onBack={handleGoBack}
       fixedHeader={true}
@@ -285,7 +287,8 @@ const ClientTaskPage = () => {
         </div>
       </ProCard>}
       {saving && <SavingAffix />}
-    </PageHeaderContainer>}
+    </PageHeaderContainer>
+    </TaskContext.Provider>}
     {/* <FooterToolbar>
       {hasDocToSign && <Button key="sign" type="primary" danger
         onClick={handleHighlightenSignPanel}
