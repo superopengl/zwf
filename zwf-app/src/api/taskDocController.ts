@@ -19,7 +19,6 @@ import { Task } from '../entity/Task';
 import { v4 as uuidv4 } from 'uuid';
 import { uploadToS3 } from '../utils/uploadToS3';
 import { File } from '../entity/File';
-import { publishTaskChangeZevent } from '../utils/publishTaskChangeZevent';
 import { TaskEvent } from '../entity/TaskEvent';
 import { ZeventType } from '../types/ZeventTypeDef';
 import { emitTaskEvent } from '../utils/emitTaskEvent';

@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 zevent refactoring
 regenerate doc
 ui refine
