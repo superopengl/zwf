@@ -222,7 +222,9 @@ const OrgTaskPage = () => {
                   <OrgTaskDocListPanel task={task} onChange={() => load$()} />
                 </Col>
                 <Col span={24}>
-                  <ProCard title="Form" extra={<Button onClick={handleEditFields}>Edit fields</Button>}>
+                  <ProCard title="Form" extra={<Space>
+                    <Button onClick={handleEditFields}>Edit fields</Button>
+                  </Space>}>
                     {task?.fields.length > 0 ?
                       <AutoSaveTaskFormPanel mode="agent" onSavingChange={setSaving} autoSave={true} submitText="Save" /> :
                       <Row justify="center">
