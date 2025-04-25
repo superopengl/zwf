@@ -26,6 +26,10 @@ const Container = styled.div`
   border: none !important;
 }
 
+.ant-table-cell:first-child {
+  padding-left: 0 !important;
+}
+
 .dropdown-menu {
   vertical-align: top;
 }
@@ -186,6 +190,7 @@ export const OrgTaskDocListPanel = React.memo((props) => {
     extra={<Dropdown menu={{ items, onClick: ({ domEvent }) => domEvent.stopPropagation() }} overlayClassName="task-add-doc-menu" disabled={loading}>
       <Button icon={<PlusOutlined />}>Add Document</Button>
     </Dropdown>}
+    bodyStyle={{paddingRight: 8}}
   >
     <Container>
       {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}
