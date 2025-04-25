@@ -283,7 +283,7 @@ const ClientTaskPage = () => {
         >
           <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
         </ProCard>}
-        {activePanel === 'chat' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
+        {activePanel === 'chat' && <ProCard size="small" ghost ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
           <TaskCommentDisplayPanel taskId={task.id} />
           <div style={{ padding: 12 }}>
             <TaskCommentInputForm taskId={task.id} />
