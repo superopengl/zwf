@@ -1,5 +1,5 @@
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, Unique } from 'typeorm';
-import { TaskEventType } from '../types/TaskEventType';
+import { ZeventType } from '../types/ZeventTypeDef';
 
 @Entity()
 @Index('idx_task_event_taskId_createdAt', ['taskId', 'createdAt'])
@@ -15,6 +15,9 @@ export class TaskEvent {
   @Column('uuid')
   taskId: string;
 
+  @Column({ nullable: true })
+  taskName: string;
+
   @Column('uuid')
   orgId: string;
 
@@ -22,7 +25,7 @@ export class TaskEvent {
   by: string;
 
   @Column()
-  type: TaskEventType;
+  type: ZeventType;
 
   @Column('jsonb', { nullable: true })
   info: any;

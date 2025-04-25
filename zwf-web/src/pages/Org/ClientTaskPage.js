@@ -66,11 +66,11 @@ const Container = styled.div`
   }
 } 
 
-.ant-btn-primary {
-  .anticon {
-    color: #0FBFC4;
-  }
-}
+// .ant-btn-primary {
+//   .anticon {
+//     color: #0FBFC4;
+//   }
+// }
 `;
 
 
@@ -124,13 +124,13 @@ const ClientTaskPage = () => {
   const signPanelRef = React.useRef();
   const commentPanelRef = React.useRef();
   const formPanelRef = React.useRef();
-  const [activePanel, setActivePanel] = React.useState('comment');
+  const [activePanel, setActivePanel] = React.useState('chat');
   const screens = useBreakpoint();
 
 
   React.useEffect(() => {
     switch (notificationType) {
-      case 'request-client-fields':
+      case 'request-client-fill-form':
         setActivePanel('form')
         // highlightGlow(formPanelRef);
         break;
@@ -138,8 +138,8 @@ const ClientTaskPage = () => {
         setActivePanel('sign')
         // highlightGlow(signPanelRef);
         break;
-      case 'comment':
-        setActivePanel('comment')
+      case 'chat':
+        setActivePanel('chat')
         // highlightGlow(commentPanelRef);
         break;
       default:
@@ -201,56 +201,57 @@ const ClientTaskPage = () => {
         // icon={<TaskIcon />}
         title={task.name || <Skeleton paragraph={false} />}
         footer={<Row className='client-task-footer' justify="space-around" wrap={false}>
-          <Button size={buttonSize} icon={<TaskUnreadCommentBadge taskId={task.id} offset={[10, 0]}>
-            <CommentOutlined />
-          </TaskUnreadCommentBadge>}
-            type={activePanel === 'comment' ? 'primary' : 'text'}
-            ghost={activePanel === 'comment'}
-            onClick={() => setActivePanel('comment')}
-          >Chat</Button>
-          {task.fields.length > 0 && <Button size={buttonSize} icon={<TaskRequestFillFormBadge taskId={task.id} offset={[10, 0]}>
-          <Icon component={AiOutlineForm} />
-          </TaskRequestFillFormBadge>}
-        type={activePanel === 'form' ? 'primary' : 'text'}
-        ghost={activePanel === 'form'}
-        onClick={() => setActivePanel('form')}
-      >Form</Button>}
-      <Button size={buttonSize} icon={<PaperClipOutlined />}
-        type={activePanel === 'docs' ? 'primary' : 'text'}
-        ghost={activePanel === 'docs'}
-        onClick={() => setActivePanel('docs')}
-      >Docs</Button>
-      {docsToSign.length > 0 &&
-        <Button size={buttonSize} icon={<Badge showZero={false} count={docsToSign.length} offset={[10, 0]}>
-          <Icon component={RiQuillPenFill} /></Badge>}
-          type={activePanel === 'sign' ? 'primary' : 'text'}
-          ghost={activePanel === 'sign'}
-          disabled={!docsToSign.length}
-          onClick={handleHighlightenSignPanel}>
-          Sign
-        </Button>
-      }
-    </Row>}
-    extra={[
-      // <Tag key="org">{task.orgName}</Tag>
-      // <ZeventNoticeableBadge key="refresh"
-      //   message="This task has changes. Click to refresh"
-      //   filter={z => z.type === 'task.change' && z.taskId === task.id}
-      // >
-      //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
-      // </ZeventNoticeableBadge>,
-      // <ZeventNoticeableBadge key="comment"
-      //   message="This task has unread comment"
-      //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
-      // >
-      //   <Button icon={<MessageOutlined />} onClick={() => setCommentOpen(true)}>Comment</Button>
-      // </ZeventNoticeableBadge>,
-      // canRequestChange ? <Button key="request">Request change</Button> : null,
-      // task.status === 'action_required' ? <Button key="submit" type="primary">Submit</Button> : null,
-    ]}
-    >
-    {/* <DebugJsonPanel value={screens} /> */}
-    {/* {alertMeta && <Alert
+          <TaskUnreadCommentBadge taskId={task.id} offset={[-8, 10]}>
+            <Button size={buttonSize} icon={<CommentOutlined />}
+              type={activePanel === 'chat' ? 'primary' : 'text'}
+              ghost={activePanel === 'chat'}
+              onClick={() => setActivePanel('chat')}
+            >Chat</Button>
+          </TaskUnreadCommentBadge>
+          <TaskRequestFillFormBadge taskId={task.id} offset={[-8, 10]}>
+            <Button size={buttonSize} icon={<Icon component={AiOutlineForm} />}
+              type={activePanel === 'form' ? 'primary' : 'text'}
+              ghost={activePanel === 'form'}
+              disabled={!task.fields.length}
+              onClick={() => setActivePanel('form')}
+            >Form</Button>
+          </TaskRequestFillFormBadge>
+          <Button size={buttonSize} icon={<PaperClipOutlined />}
+            type={activePanel === 'docs' ? 'primary' : 'text'}
+            ghost={activePanel === 'docs'}
+            onClick={() => setActivePanel('docs')}
+          >Docs</Button>
+          <Badge showZero={false} count={docsToSign.length} offset={[-8, 10]}>
+            <Button size={buttonSize} icon={
+              <Icon component={RiQuillPenFill} />}
+              type={activePanel === 'sign' ? 'primary' : 'text'}
+              ghost={activePanel === 'sign'}
+              disabled={!docsToSign.length}
+              onClick={handleHighlightenSignPanel}>
+              Sign
+            </Button>
+          </Badge>
+        </Row>}
+        extra={[
+          // <Tag key="org">{task.orgName}</Tag>
+          // <ZeventNoticeableBadge key="refresh"
+          //   message="This task has changes. Click to refresh"
+          //   filter={z => z.type === 'task.change' && z.taskId === task.id}
+          // >
+          //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
+          // </ZeventNoticeableBadge>,
+          // <ZeventNoticeableBadge key="comment"
+          //   message="This task has unread comment"
+          //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
+          // >
+          //   <Button icon={<MessageOutlined />} onClick={() => setCommentOpen(true)}>Comment</Button>
+          // </ZeventNoticeableBadge>,
+          // canRequestChange ? <Button key="request">Request change</Button> : null,
+          // task.status === 'action_required' ? <Button key="submit" type="primary">Submit</Button> : null,
+        ]}
+      >
+        {/* <DebugJsonPanel value={screens} /> */}
+        {/* {alertMeta && <Alert
         type={alertMeta.type}
         icon={alertMeta.icon}
         message={alertMeta.message}
@@ -258,47 +259,46 @@ const ClientTaskPage = () => {
         showIcon
         style={{ marginBottom: 30 }} />} */}
 
-    {activePanel === 'form' && <ProCard title="Form" ref={formPanelRef}>
-      <AutoSaveTaskFormPanel
-        value={task}
-        mode="client"
-        onLoading={setSaving}
-        autoSave={false}
-      />
-    </ProCard>}
-    {activePanel === 'docs' && <ProCard ghost>
-      <ClientTaskDocListPanel
-        task={task}
-        onSavingChange={setSaving}
-        onChange={handleDocChange}
-        disabled={!canEdit}
-        placeholder="Upload attachments"
-      />
-    </ProCard>}
-    {activePanel === 'sign' && <ProCard
-      title={`${docsToSign.length} Document Waiting for Your Signature`}
-      bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
-      ref={signPanelRef}
-    >
-      <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
-    </ProCard>}
-    {activePanel === 'comment' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
-      <TaskCommentDisplayPanel taskId={task.id} />
-      <div style={{ padding: 12 }}>
-        <TaskCommentInputForm taskId={task.id} />
-
-      </div>
-    </ProCard>}
-    {saving && <SavingAffix />}
-  </PageHeaderContainer>
+        {activePanel === 'form' && <ProCard title="Form" ref={formPanelRef}>
+          <AutoSaveTaskFormPanel
+            value={task}
+            mode="client"
+            onLoading={setSaving}
+            autoSave={false}
+          />
+        </ProCard>}
+        {activePanel === 'docs' && <ProCard ghost>
+          <ClientTaskDocListPanel
+            task={task}
+            onSavingChange={setSaving}
+            onChange={handleDocChange}
+            disabled={!canEdit}
+            placeholder="Upload attachments"
+          />
+        </ProCard>}
+        {activePanel === 'sign' && <ProCard
+          title={`${docsToSign.length} Document Waiting for Your Signature`}
+          bodyStyle={{ paddingLeft: 16, paddingRight: 16 }}
+          ref={signPanelRef}
+        >
+          <TaskDocToSignPanel docs={task?.docs} onSavingChange={setSaving} onChange={handleDocChange} />
+        </ProCard>}
+        {activePanel === 'chat' && <ProCard size="small" ref={commentPanelRef} bodyStyle={{ padding: '12px 0' }}>
+          <TaskCommentDisplayPanel taskId={task.id} />
+          <div style={{ padding: 12 }}>
+            <TaskCommentInputForm taskId={task.id} />
+          </div>
+        </ProCard>}
+        {saving && <SavingAffix />}
+      </PageHeaderContainer>
     </TaskContext.Provider >}
-{/* <FooterToolbar>
+    {/* <FooterToolbar>
       {hasDocToSign && <Button key="sign" type="primary" danger
         onClick={handleHighlightenSignPanel}
       >Sign {docsToSign.length} documents</Button>}
       {task?.status === 'action_required' && <Button key="submit" type="primary">Submit</Button>}
     </FooterToolbar> */}
-{/* {requestChangeContextHolder} */ }
+    {/* {requestChangeContextHolder} */}
   </Container >
   );
 };

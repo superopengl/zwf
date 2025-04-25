@@ -51,7 +51,7 @@ export const TaskCommentInputForm = React.memo((props) => {
         showCount
         autoSize={{ minRows: 3, maxRows: 20 }}
         maxLength={1000}
-        placeholder="Comment"
+        placeholder="Message"
         allowClear
         autoFocus={true}
         disabled={loading}

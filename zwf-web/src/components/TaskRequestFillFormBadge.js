@@ -14,7 +14,7 @@ export const TaskRequestFillFormBadge = React.memo((props) => {
 
   React.useEffect(() => {
     const num = zevents.filter(z => z.payload.taskId === taskId
-      && z.payload.type === 'request-client-fields'
+      && z.payload.type === 'request-client-fill-form'
       && z.payload.by !== user.id
       && !z.payload.ackAt).length;
     setCount(num);

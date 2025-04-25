@@ -12,20 +12,20 @@ import { OrgClient } from '../OrgClient';
 import { TaskEvent } from '../TaskEvent';
 import { TaskWatcherEventAck } from '../TaskWatcherEventAck';
 import { OrgClientInformation } from './OrgClientInformation';
-import { TaskEventType } from '../../types/TaskEventType';
+import { ZeventType } from '../../types/ZeventTypeDef';
 import { OrgMemberInformation } from './OrgMemberInformation';
 import { TaskWatcher } from '../TaskWatcher';
 import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation';
 
 const events = [
-  TaskEventType.ClientSubmit,
-  TaskEventType.ClientSignDoc,
-  TaskEventType.Comment,
-  TaskEventType.CreatedByRecurring,
-  TaskEventType.OrgStartProceed,
-  TaskEventType.Assign,
-  TaskEventType.Complete,
-  TaskEventType.Archive,
+  ZeventType.ClientSubmitForm,
+  ZeventType.ClientSignDoc,
+  ZeventType.Comment,
+  ZeventType.CreatedByRecurring,
+  ZeventType.OrgStartProceed,
+  ZeventType.Assign,
+  ZeventType.Complete,
+  ZeventType.Archive,
 ].map(x => `'${x}'`).join(',');
 
 @ViewEntity({
@@ -56,7 +56,7 @@ const events = [
   taskName: string;
 
   @ViewColumn()
-  type: TaskEventType;
+  type: ZeventType;
 
   @ViewColumn()
   info: any;
