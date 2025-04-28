@@ -20,6 +20,7 @@ font-size: 0.8rem;
 color: #aaaaaa;
 background-color: #13161B !important;
 padding: 1em 1rem 4rem;
+overflow-x: hidden;
 // position: absolute;
 // bottom: 0;
 // left: 0;
