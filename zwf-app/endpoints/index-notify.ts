@@ -12,11 +12,11 @@ import { sleep } from '../src/utils/sleep';
 const JOB_NAME = 'index-notify';
 
 export async function handleEmailTasks() {
-  const takeSize = EMAIL_RATE_LIMIT_PER_SEC * EMAIL_POLLING_INTERVAL_SEC;
-  const sleepTimeMs = 1000 / EMAIL_RATE_LIMIT_PER_SEC;
-  console.log('Starting email daemon');
+  // const takeSize = EMAIL_RATE_LIMIT_PER_SEC * EMAIL_POLLING_INTERVAL_SEC;
+  // const sleepTimeMs = 1000 / EMAIL_RATE_LIMIT_PER_SEC;
+  console.log('Starting index-notify');
 
-  
+
 
   const emailTasks = await db.getRepository(EmailSentOutTask).find({
     where: {
@@ -26,7 +26,7 @@ export async function handleEmailTasks() {
     order: {
       id: 'ASC'
     },
-    take: takeSize
+    // take: takeSize
   });
 
   console.log(`Email sender ${emailTasks.length} emails to send out`);
@@ -49,7 +49,7 @@ export async function handleEmailTasks() {
       task.sentAt = getUtcNow();
       await db.getRepository(EmailSentOutTask).save(task);
       okCounter++;
-      await sleep(sleepTimeMs);
+      // await sleep(sleepTimeMs);
     } catch (err) {
       console.log(`Failed to send out email ${task.id}`, errorToJson(err));
       await db.getRepository(EmailSentOutTask).increment({ id: task.id }, 'failedCount', 1);
