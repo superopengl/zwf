@@ -51,7 +51,8 @@ import { OrgAllClientFieldsInformation } from './entity/views/OrgAllClientFields
 import { TaskWatcherEventAck } from './entity/TaskWatcherEventAck';
 import { TaskWatcherEventAckInformation } from './entity/views/TaskWatcherEventAckInformation';
 import { TaskWatcher } from './entity/TaskWatcher';
-import { TaskWatcherEventNotificationInformation } from './entity/views/TaskWatcherEventNotificationInformation';
+import { TaskWatcherEmailNotificationInformation } from './entity/views/TaskWatcherEmailNotificationInformation';
+import { TaskWatcherUiNotificationInformation } from "./entity/views/TaskWatcherUiNotificationInformation";
 import { ZeventDef } from './entity/ZeventDef';
 import { initializeZeventDef } from './utils/initializeZeventDef';
 dotenv.config();
@@ -238,7 +239,8 @@ export const db = new DataSource({
     OrgSubscriptionPeriodHistoryInformation,
     LicenseTicketUsageInformation,
     TaskWatcherEventAckInformation,
-    TaskWatcherEventNotificationInformation,
+    TaskWatcherEmailNotificationInformation,
+    TaskWatcherUiNotificationInformation,
   ],
 });
 
