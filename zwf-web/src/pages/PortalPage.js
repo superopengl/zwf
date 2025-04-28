@@ -87,7 +87,7 @@ export const PortalPage = () => {
           <StyledLogoImage src="/images/logo-full-primary.svg" height={narrowScreen? 30 : 40} preview={false} />
         </Link>
 
-        <Row gutter={narrowScreen ? 8 : 30} wrap={false}>
+        <Row gutter={narrowScreen ? 8 : 30} wrap={false} style={{alignItems: 'center'}}>
           {(screens.xxl || screens.xl || screens.lg) && <Col>
             <Tabs
               defaultActiveKey="/"
