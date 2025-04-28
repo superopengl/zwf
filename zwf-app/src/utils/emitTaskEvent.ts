@@ -5,14 +5,14 @@ import { Task } from "../entity/Task";
 import { publishZevent } from "../services/zeventSubPubService";
 
 const ZEVENTABLE_TASKEENTTYPES = new Set([
-  ZeventType.ClientSignDoc,
-  ZeventType.RequestClientSign,
-  ZeventType.ClientSubmitForm,
-  ZeventType.FieldSchemaChange,
-  ZeventType.FieldValuesChange,
-  ZeventType.Complete,
-  ZeventType.Archive,
-  ZeventType.Comment,
+  ZeventType.ClientSignedDoc,
+  ZeventType.RequestClientSignDoc,
+  ZeventType.ClientSubmittedForm,
+  ZeventType.TaskFormSchemaChanged,
+  ZeventType.TaskFieldValueChanged,
+  ZeventType.TaskStatusCompleted,
+  ZeventType.TaskStatusArchived,
+  ZeventType.TaskComment,
 ]);
 
 export async function emitTaskEvent(m: EntityManager, taskEventType: ZeventType, taskId: string, by?: string, info?: any) {
@@ -38,7 +38,7 @@ export async function emitTaskEvent(m: EntityManager, taskEventType: ZeventType,
 
   if (ZEVENTABLE_TASKEENTTYPES.has(taskEventType)) {
     const watcherUserIds = task.watchers.map(x => x.userId);
-    if (taskEventType === ZeventType.Comment && !watcherUserIds.includes(by)) {
+    if (taskEventType === ZeventType.TaskComment && !watcherUserIds.includes(by)) {
       // If comment, always publish to self, regardless if watching or not.
       watcherUserIds.push(by);
     }

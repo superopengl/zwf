@@ -82,7 +82,7 @@ export const downloadTaskFile = handlerWrapper(async (req, res) => {
   assert(file, 404);
 
   if (isClient) {
-    await emitTaskEvent(db.manager, ZeventType.ClientDownloadDoc, userId);
+    await emitTaskEvent(db.manager, ZeventType.ClientDownloadedDoc, userId);
   }
 
   streamFileToResponse(file, res);
@@ -133,7 +133,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
     await m.getRepository(TaskField).delete({ taskId: id });
     await m.getRepository(TaskField).save(fields);
 
-    await emitTaskEvent(m, ZeventType.FieldSchemaChange, id, userId, fields);
+    await emitTaskEvent(m, ZeventType.TaskFormSchemaChanged, id, userId, fields);
   });
 
   res.json();
@@ -238,9 +238,9 @@ export const saveTaskFieldValue = handlerWrapper(async (req, res) => {
 
     if (fieldToSave.length) {
       await m.getRepository(TaskField).save(fieldToSave);
-      await emitTaskEvent(m, ZeventType.FieldValuesChange, id, userId, fields);
+      await emitTaskEvent(m, ZeventType.TaskFieldValueChanged, id, userId, fields);
       if (isClient) {
-        await emitTaskEvent(m, ZeventType.ClientSubmitForm, id, userId, fields);
+        await emitTaskEvent(m, ZeventType.ClientSubmittedForm, id, userId, fields);
       }
     }
   })
@@ -453,7 +453,7 @@ export const addDemplateToTask = handlerWrapper(async (req, res) => {
 
     await m.save(taskDocs);
 
-    await emitTaskEvent(m, ZeventType.AddDoc, taskId, userId, taskDocs);
+    await emitTaskEvent(m, ZeventType.TaskAddedDoc, taskId, userId, taskDocs);
   });
 
   res.json();
@@ -529,7 +529,7 @@ export const renameTask = handlerWrapper(async (req, res) => {
     const result = await m.update(Task, { id, orgId }, { name });
 
     if (result.affected) {
-      await emitTaskEvent(m, ZeventType.Rename, id, getUserIdFromReq(req), { name });
+      await emitTaskEvent(m, ZeventType.TaskRenamed, id, getUserIdFromReq(req), { name });
     }
   })
 
@@ -558,33 +558,33 @@ export const assignTask = handlerWrapper(async (req, res) => {
       await m.delete(TaskWatcher, { taskId: id, userId: assigneeId, reason: 'assignee' });
     }
 
-    await emitTaskEvent(m, ZeventType.Assign, id, userId, { assigneeId });
+    await emitTaskEvent(m, ZeventType.TaskAssigned, id, userId, { assigneeId });
   });
 
   res.json();
 });
 
 const statusMapping = new Map([
-  [`${TaskStatus.TODO}>${TaskStatus.IN_PROGRESS}`, ZeventType.OrgStartProceed],
-  [`${TaskStatus.TODO}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.RequestClientSign],
-  [`${TaskStatus.TODO}>${TaskStatus.DONE}`, ZeventType.Complete],
-  [`${TaskStatus.TODO}>${TaskStatus.ARCHIVED}`, ZeventType.Archive],
-  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.TODO}`, ZeventType.MoveBackToDo],
-  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.RequestClientSign],
-  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.DONE}`, ZeventType.Complete],
-  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ARCHIVED}`, ZeventType.Archive],
-  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.TODO}`, ZeventType.MoveBackToDo],
-  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.IN_PROGRESS}`, ZeventType.ClientSubmitForm],
-  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.DONE}`, ZeventType.Complete],
-  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.ARCHIVED}`, ZeventType.Archive],
-  [`${TaskStatus.DONE}>${TaskStatus.TODO}`, ZeventType.MoveBackToDo],
-  [`${TaskStatus.DONE}>${TaskStatus.IN_PROGRESS}`, ZeventType.OrgStartProceed],
-  [`${TaskStatus.DONE}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.RequestClientSign],
-  [`${TaskStatus.DONE}>${TaskStatus.ARCHIVED}`, ZeventType.Archive],
-  [`${TaskStatus.ARCHIVED}>${TaskStatus.TODO}`, ZeventType.MoveBackToDo],
-  [`${TaskStatus.ARCHIVED}>${TaskStatus.IN_PROGRESS}`, ZeventType.OrgStartProceed],
-  [`${TaskStatus.ARCHIVED}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.RequestClientSign],
-  [`${TaskStatus.ARCHIVED}>${TaskStatus.DONE}`, ZeventType.Complete],
+  [`${TaskStatus.TODO}>${TaskStatus.IN_PROGRESS}`, ZeventType.TaskStatusToInProgress],
+  [`${TaskStatus.TODO}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.TaskStatusAwaitClient],
+  [`${TaskStatus.TODO}>${TaskStatus.DONE}`, ZeventType.TaskStatusCompleted],
+  [`${TaskStatus.TODO}>${TaskStatus.ARCHIVED}`, ZeventType.TaskStatusArchived],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.TODO}`, ZeventType.TaskStatusMovedBackToDo],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.TaskStatusAwaitClient],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.DONE}`, ZeventType.TaskStatusCompleted],
+  [`${TaskStatus.IN_PROGRESS}>${TaskStatus.ARCHIVED}`, ZeventType.TaskStatusArchived],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.TODO}`, ZeventType.TaskStatusMovedBackToDo],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.IN_PROGRESS}`, ZeventType.ClientSubmittedForm],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.DONE}`, ZeventType.TaskStatusCompleted],
+  [`${TaskStatus.ACTION_REQUIRED}>${TaskStatus.ARCHIVED}`, ZeventType.TaskStatusArchived],
+  [`${TaskStatus.DONE}>${TaskStatus.TODO}`, ZeventType.TaskStatusMovedBackToDo],
+  [`${TaskStatus.DONE}>${TaskStatus.IN_PROGRESS}`, ZeventType.TaskStatusToInProgress],
+  [`${TaskStatus.DONE}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.TaskStatusAwaitClient],
+  [`${TaskStatus.DONE}>${TaskStatus.ARCHIVED}`, ZeventType.TaskStatusArchived],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.TODO}`, ZeventType.TaskStatusMovedBackToDo],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.IN_PROGRESS}`, ZeventType.TaskStatusToInProgress],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.ACTION_REQUIRED}`, ZeventType.TaskStatusAwaitClient],
+  [`${TaskStatus.ARCHIVED}>${TaskStatus.DONE}`, ZeventType.TaskStatusCompleted],
 ]);
 
 
@@ -633,10 +633,10 @@ export const requestClientAction = handlerWrapper(async (req, res) => {
       }
     });
 
-    await emitTaskEvent(m, ZeventType.RequestClientInputForm, id, userId);
+    await emitTaskEvent(m, ZeventType.RequestClientFillForm, id, userId);
     const message = comment?.trim();
     if (message) {
-      await emitTaskEvent(m, ZeventType.Comment, id, userId, { message });
+      await emitTaskEvent(m, ZeventType.TaskComment, id, userId, { message });
     }
 
     task.status = TaskStatus.ACTION_REQUIRED;
@@ -651,7 +651,7 @@ export const requestClientAction = handlerWrapper(async (req, res) => {
 export const getTaskTimeline = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
   const { id } = req.params;
-  let query: any = { taskId: id, type: Not(ZeventType.Comment) };
+  let query: any = { taskId: id, type: Not(ZeventType.TaskComment) };
   const role = getRoleFromReq(req);
   switch (role) {
     case Role.Admin:
@@ -694,7 +694,7 @@ export const deleteTaskDoc = handlerWrapper(async (req, res) => {
 
     await m.softDelete(TaskDoc, { id: docId });
 
-    await emitTaskEvent(m, ZeventType.DeleteDoc, taskDoc.task.id, userId, { docId });
+    await emitTaskEvent(m, ZeventType.TaskDeletedDoc, taskDoc.task.id, userId, { docId });
   });
 
   res.json();
@@ -722,7 +722,7 @@ export const requestSignTaskDoc = handlerWrapper(async (req, res) => {
       taskDoc.signRequestedBy = userId;
       await m.save(taskDoc);
 
-      await emitTaskEvent(m, ZeventType.RequestClientSign, taskDoc.task.id, userId, {
+      await emitTaskEvent(m, ZeventType.RequestClientSignDoc, taskDoc.task.id, userId, {
         docId: taskDoc.id,
         docName: taskDoc.name
       });
@@ -753,7 +753,7 @@ export const unrequestSignTaskDoc = handlerWrapper(async (req, res) => {
     taskDoc.signRequestedBy = null;
 
     await m.save(taskDoc)
-    await emitTaskEvent(m, ZeventType.UnrequestClientSign, taskDoc.task.id, userId, {
+    await emitTaskEvent(m, ZeventType.UnrequestClientSignDoc, taskDoc.task.id, userId, {
       docId: taskDoc.id,
       docName: taskDoc.name
     });

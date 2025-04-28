@@ -112,7 +112,7 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
 
     await m.save(taskDoc);
 
-    await emitTaskEvent(m, ZeventType.AddDoc, task.id, userId, { docId });
+    await emitTaskEvent(m, ZeventType.TaskAddedDoc, task.id, userId, { docId });
   });
 
   res.json({
@@ -162,7 +162,7 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
 
   const emitClientDownloadEvent = async () => {
     if(isClient) {
-      await emitTaskEvent(db.manager, ZeventType.ClientDownloadDoc, doc.taskId, userId, {docId: doc.id});
+      await emitTaskEvent(db.manager, ZeventType.ClientDownloadedDoc, doc.taskId, userId, {docId: doc.id});
     }
   }
 
@@ -221,7 +221,7 @@ export const signTaskDocs = handlerWrapper(async (req, res) => {
     const taskId = docs[0].task.id;
     await m.save([...docs]);
 
-    await emitTaskEvent(m, ZeventType.ClientSignDoc, taskId, userId, docs.map(d => ({
+    await emitTaskEvent(m, ZeventType.ClientSignedDoc, taskId, userId, docs.map(d => ({
       docId: d.id,
       docName: d.name,
       esign: d.esign,
