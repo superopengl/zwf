@@ -2,35 +2,23 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Tag, Space, Typography, Row, Col, Badge, Skeleton, Button, Grid, Tooltip, Drawer, Alert, Modal } from 'antd';
+import { Typography, Row, Badge, Skeleton, Button, Grid } from 'antd';
 
-import { getTask$, listTaskComment$ } from 'services/taskService';
-import { Loading } from 'components/Loading';
+import { getTask$ } from 'services/taskService';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
 import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
 import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
-import { combineLatest, of } from 'rxjs';
-import { FooterToolbar, PageContainer } from '@ant-design/pro-components';
 import { finalize } from 'rxjs/operators';
-import { TaskIcon } from 'components/entityIcon';
-import Icon, { CommentOutlined, ExclamationCircleFilled, LeftOutlined, MessageOutlined, PaperClipOutlined, SyncOutlined } from '@ant-design/icons';
+import Icon, { CommentOutlined, ExclamationCircleFilled, PaperClipOutlined } from '@ant-design/icons';
 import { SavingAffix } from 'components/SavingAffix';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
-import ClientTaskListPage from 'pages/ClientTask/ClientTaskListPage';
 import { ClientTaskDocListPanel } from 'components/ClientTaskDocListPanel';
-import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { TaskDocToSignPanel } from 'components/TaskDocToSignPanel';
-import { DebugJsonPanel } from 'components/DebugJsonPanel';
 import { ProCard } from '@ant-design/pro-components';
-import { DefaultFooter } from '@ant-design/pro-components';
 import { getPendingSignTaskDocs } from 'util/getPendingSignTaskDocs';
-import { ClientTaskCommentDrawer } from 'components/ClientTaskCommentDrawer';
-import { highlightGlow } from '../../util/highlightGlow';
 import { AiOutlineForm } from 'react-icons/ai';
 import { RiQuillPenFill } from 'react-icons/ri';
-import { BiComment, BiCommentDetail } from 'react-icons/bi';
-import { FormSchemaRenderer } from 'components/FormSchemaRenderer';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 import { TaskContext } from 'contexts/TaskContext';
 import { TaskRequestFillFormBadge } from 'components/TaskRequestFillFormBadge';
@@ -233,32 +221,8 @@ const ClientTaskPage = () => {
           </Badge>
         </Row>}
         extra={[
-          // <Tag key="org">{task.orgName}</Tag>
-          // <ZeventNoticeableBadge key="refresh"
-          //   message="This task has changes. Click to refresh"
-          //   filter={z => z.type === 'task.change' && z.taskId === task.id}
-          // >
-          //   <Button icon={<SyncOutlined />} onClick={() => load$()} />
-          // </ZeventNoticeableBadge>,
-          // <ZeventNoticeableBadge key="comment"
-          //   message="This task has unread comment"
-          //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
-          // >
-          //   <Button icon={<MessageOutlined />} onClick={() => setCommentOpen(true)}>Comment</Button>
-          // </ZeventNoticeableBadge>,
-          // canRequestChange ? <Button key="request">Request change</Button> : null,
-          // task.status === 'action_required' ? <Button key="submit" type="primary">Submit</Button> : null,
         ]}
       >
-        {/* <DebugJsonPanel value={screens} /> */}
-        {/* {alertMeta && <Alert
-        type={alertMeta.type}
-        icon={alertMeta.icon}
-        message={alertMeta.message}
-        description={alertMeta.description}
-        showIcon
-        style={{ marginBottom: 30 }} />} */}
-
         {activePanel === 'form' && <ProCard title="Form" ref={formPanelRef}>
           <AutoSaveTaskFormPanel
             value={task}

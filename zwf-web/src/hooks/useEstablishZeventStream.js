@@ -1,8 +1,5 @@
 import React from 'react';
-import { filter } from 'rxjs';
 import { establishZeventStream } from 'services/zeventService';
-import { useAuthUser } from './useAuthUser';
-import { finalize, Subject } from 'rxjs';
 import { GlobalContext } from 'contexts/GlobalContext';
 
 export function useEstablishZeventStream() {

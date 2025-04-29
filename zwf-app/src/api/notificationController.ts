@@ -7,7 +7,6 @@ import { handlerWrapper } from '../utils/asyncHandler';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 import { NotificationMessage } from "../entity/NotificationMessage";
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
-import { ZEVENT_DEF_ENTITIES, ZeventTypeDefMap } from '../types/ZeventTypeDef';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
 import { TaskWatcherEventAckInformation } from '../entity/views/TaskWatcherEventAckInformation';

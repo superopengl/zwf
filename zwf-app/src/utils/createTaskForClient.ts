@@ -15,7 +15,7 @@ import { generateDeepLinkId } from './generateDeepLinkId';
 import { EntityManager } from 'typeorm';
 import { OrgClientField } from '../entity/OrgClientField';
 import { emitTaskEvent } from './emitTaskEvent';
-import { ZeventType } from '../types/ZeventTypeDef';
+import { ZeventName } from '../types/ZeventName';
 import { TaskWatcher } from '../entity/TaskWatcher';
 import { addTaskWatcher } from './addWTaskWatcher';
 
@@ -94,7 +94,7 @@ export const createTaskForClient = async (m: EntityManager, femplateId, taskName
     }
   }
 
-  const eventType = creatorId ? ZeventType.TaskCreated : ZeventType.TaskCreatedByRecurringly;
+  const eventType = creatorId ? ZeventName.TaskCreated : ZeventName.TaskCreatedByRecurringly;
   await emitTaskEvent(m, eventType, task.id, creatorId);
 
   return task;

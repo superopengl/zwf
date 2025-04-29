@@ -1,5 +1,5 @@
 import { Column, PrimaryGeneratedColumn, Entity, Index, CreateDateColumn, Unique, PrimaryColumn, DeleteDateColumn, UpdateDateColumn } from 'typeorm';
-import { ZeventType } from '../types/ZeventTypeDef';
+import { ZeventName } from '../types/ZeventName';
 import { Role } from '../types/Role';
 
 @Entity()
@@ -17,7 +17,10 @@ export class ZeventDef {
   deletedAt?: Date;
 
   @Column('text', {default: [], array: true})
-  notifyCenterRoles?: Role[];
+  sseRoles?: Role[];
+
+  @Column('text', {default: [], array: true})
+  uiNotifyRoles?: Role[];
 
   @Column('text', {default: [], array: true})
   emailNotifyRoles?: Role[];

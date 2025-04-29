@@ -2,6 +2,7 @@ import { ViewEntity, DataSource, ViewColumn, IsNull } from 'typeorm';
 import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation';
 import { UserInformation } from './UserInformation';
 import { ZeventDef } from '../ZeventDef';
+import { ZeventName } from '../../types/ZeventName';
 
 
 
@@ -10,7 +11,7 @@ import { ZeventDef } from '../ZeventDef';
     .createQueryBuilder()
     .from(TaskWatcherEventAckInformation, 'x')
     .innerJoin(UserInformation, 'u', `u.id = x."userId"`)
-    .innerJoin(ZeventDef, 'z', 'u.role = ANY(z."notifyCenterRoles") AND x.type = z.name')
+    .innerJoin(ZeventDef, 'z', 'u.role = ANY(z."uiNotifyRoles") AND x.type = z.name')
     .where({ ackAt: IsNull() })
     .orderBy('x."taskId"')
     .addOrderBy('x."taskName"')
@@ -36,7 +37,7 @@ import { ZeventDef } from '../ZeventDef';
   userId: string;
 
   @ViewColumn()
-  type: string;
+  type: ZeventName;
 
   @ViewColumn()
   createdAt: Date;

@@ -1,36 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Layout, Input, Row, Col, Collapse, Button, Typography, Alert, Space, Drawer } from 'antd';
-import { addDemplateToTask$, assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$ } from 'services/taskService';
-import { catchError, finalize } from 'rxjs/operators';
-import { TaskStatusButton } from 'components/TaskStatusButton';
+import { Layout, Input, Row, Col, Button, Typography } from 'antd';
+import { finalize } from 'rxjs/operators';
 import { TagSelect } from 'components/TagSelect';
-import { TaskIcon } from 'components/entityIcon';
-import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
-import Icon, { CaretRightOutlined, CheckOutlined, CloseOutlined, EditOutlined, FileAddOutlined, MessageOutlined, PlusOutlined, SaveFilled, SaveOutlined, ShareAltOutlined, SyncOutlined } from '@ant-design/icons';
-import { MemberSelect } from 'components/MemberSelect';
-import { showShareTaskDeepLinkModal } from 'components/showShareTaskDeepLinkModal';
-import { showArchiveTaskModal } from 'components/showArchiveTaskModal';
-import { UserNameCard } from 'components/UserNameCard';
-import { SavingAffix } from 'components/SavingAffix';
-import { showCompleteTaskModal } from 'components/showCompleteTaskModal';
+import Icon, { SyncOutlined } from '@ant-design/icons';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
-import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
-import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
-import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
-import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
-import { TaskTimelineDrawer } from 'components/TaskTimelineDrawer';
-import { BsFillSendFill, BsFillTrash3Fill } from 'react-icons/bs';
 import PropTypes from 'prop-types';
-import { getOrgClientDataBag$, getOrgClient$, updateOrgClient$, refreshClientNameCardCache } from 'services/clientService';
+import { getOrgClient$, updateOrgClient$, refreshClientNameCardCache } from 'services/clientService';
 import { OrgClientFieldsPanel } from 'pages/OrgBoard/OrgClientFieldsPanel';
 import { MdDashboardCustomize } from 'react-icons/md';
 import { useCreateTaskModal } from 'hooks/useCreateTaskModal';
-import { Tooltip } from 'antd';
 import { ClientInfoPanel } from 'pages/OrgBoard/ClientInfoPanel';
 import { InviteClientInput } from 'components/InviteClientInput';
 import { TaskBoardPanel } from 'pages/OrgBoard/TaskBoardPanel';
@@ -146,25 +129,9 @@ const OrgClientPage = React.memo(() => {
             name: client?.clientAlias
           }
         ]}
-        // fixedHeader
         title={"Client"}
-        // icon={<TaskIcon />}
-        // content={<Paragraph type="secondary">{value.description}</Paragraph>}
         extra={[
-          // <ZeventNoticeableBadge key="refresh"
-          //   message="This task has changes. Click to refresh"
-          //   filter={z => z.type === 'task.change' && z.taskId === client.id}
-          // >
           <Button icon={<SyncOutlined />} onClick={() => load$()} />,
-          // </ZeventNoticeableBadge>,
-          // <ZeventNoticeableBadge key="comment"
-          //   message="This task has unread comment"
-          //   filter={z => z.type === 'task.comment' && z.taskId === task.id}
-          // >
-          // <Button icon={<Icon component={MdDashboardCustomize} />} onClick={createTaskForClient} type="primary" ghost >New Task</Button>,
-          // </ZeventNoticeableBadge>,
-          // <TaskStatusButton key="status" value={client.status} onChange={handleStatusChange} />
-          // <Button key="save" icon={<SaveOutlined />} onClick={handleSaveForm}>Save <Form></Form></Button>,
         ]}
       >
 

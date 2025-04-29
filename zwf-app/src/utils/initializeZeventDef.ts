@@ -13,8 +13,8 @@ export async function initializeZeventDef() {
     .into(ZeventDef)
     .values(ZEVENT_DEF_ENTITIES)
     .orUpdate([
+      'uiNotifyRoles',
       'emailNotifyRoles',
-      'notifyCenterRoles',
     ], ['name'])
     .execute();
 }
