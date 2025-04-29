@@ -366,6 +366,18 @@ paths:
       responses:
         200:
           description: OK      
+  /org/client/:id/activate:
+    post:
+      operationId: toggleOrgClientActive
+      parameters:
+        - name: id
+          in: path
+          type: string
+          format: uuid
+          required: true
+      responses:
+        200:
+          description: OK             
   /org/client/:id/remark:
     post:
       operationId: saveOrgClientRemark

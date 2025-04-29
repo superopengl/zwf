@@ -5,7 +5,7 @@ import Icon from '@ant-design/icons';
 import { BsCheckCircleFill, BsCircle } from 'react-icons/bs';
 
 
-const CheckboxButton = (props) => {
+export const CheckboxButton = (props) => {
 
   const { value, onChange, children, ...other } = props;
   const [checked, setChecked] = React.useState(value);
@@ -17,7 +17,7 @@ const CheckboxButton = (props) => {
   }
 
   return (
-    <Button type="primary" ghost={!checked} {...other} onClick={handleToggle} icon={<Icon component={checked ? BsCheckCircleFill : BsCircle} />}>
+    <Button type="primary"  {...other} ghost={!checked} onClick={handleToggle} icon={<Icon component={checked ? BsCheckCircleFill : BsCircle} />}>
       {children}
     </Button>
   );
@@ -29,7 +29,7 @@ CheckboxButton.propTypes = {
 };
 
 CheckboxButton.defaultProps = {
+  onChange: () => { },
   value: false
 };
 
-export default CheckboxButton;

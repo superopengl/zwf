@@ -14,6 +14,10 @@ export function saveClientAlias$(orgClientId, alias) {
   return httpPost$(`/org/client/${orgClientId}/alias`, { alias });
 }
 
+export function toggleOrgClientActive$(orgClientId, active) {
+  return httpPost$(`/org/client/${orgClientId}/activate`, { active });
+}
+
 export function saveClientRemark$(orgClientId, remark) {
   return httpPost$(`/org/client/${orgClientId}/remark`, { remark });
 }

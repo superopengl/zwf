@@ -257,7 +257,7 @@ export const FemplateListPage = () => {
                     menu: <Text type="danger">Delete</Text>,
                     onClick: () => handleDelete(row.data)
                   },
-                ].filter(x => !!x)}
+                ]}
               />
             ],
           },
