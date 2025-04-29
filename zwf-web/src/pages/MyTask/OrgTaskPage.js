@@ -186,7 +186,7 @@ const OrgTaskPage = () => {
             }
           ]}
           // fixedHeader
-          title={task?.name ? <ClickToEditInput
+          title={task.name ? <ClickToEditInput
             placeholder="Task name"
             value={task.name} size={22}
             onChange={handleRename}
