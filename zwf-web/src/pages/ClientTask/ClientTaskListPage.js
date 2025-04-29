@@ -34,7 +34,7 @@ const Container = styled.div`
 `;
 
 const StyledList = styled(List)`
-margin-top: 20px;
+// margin-top: 20px;
 
 .ant-list-item {
   padding: 0;
@@ -153,7 +153,7 @@ export const ClientTaskListPage = () => {
     <Container>
       <PageHeaderContainer
         loading={loading}
-        title='All My Cases'
+        // title='All My Cases'
         extra={[
           // <Button key="refresh" icon={<SyncOutlined />} onClick={() => load$()} >Refresh</Button>
         ]}
