@@ -101,26 +101,30 @@ export const TaskDocToSignPanel = React.memo((props) => {
       locale={{ emptyText: 'No documents to sign currently' }}
     />
 
-    {docsToSign.length > 0 && <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
-      <Col>
-        <Checkbox style={{ marginLeft: 8 }}
-          checked={agreed}
-          onClick={e => setAgreed(e.target.checked)}
-          disabled={loading || !docsToSign.length}>
-          I have read and agree on the <Link underline target="_blank" href="/terms_of_use">terms of use</Link></Checkbox>
-      </Col>
-      <Col>
-        <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms of use before signing'} >
-          <Button type="primary"
-            loading={loading}
-            icon={<Icon component={RiQuillPenFill} />}
-            onClick={handleSignSelected}
-            disabled={!agreed || !selectedRowKeys.length || loading}>
-            Sign {selectedRowKeys.length} selected document{selectedRowKeys.length === 1 ? '' : 's'}
-          </Button>
-        </Tooltip>
-      </Col>
-    </Row>}
+    {docsToSign.length > 0 && <>
+      <Row align="middle" justify="space-between" style={{ marginTop: 20 }}>
+        <Col>
+          <Checkbox style={{ marginLeft: 8 }}
+            checked={agreed}
+            onClick={e => setAgreed(e.target.checked)}
+            disabled={loading || !docsToSign.length}>
+            I have read and agree on the <Link underline target="_blank" href="/terms_of_use">terms of use</Link></Checkbox>
+        </Col>
+      </Row>
+      <Row align="middle" justify="end" style={{ marginTop: 20 }}>
+        <Col>
+          <Tooltip title={agreed ? null : 'Please tick the checkbox to indicate your agreement to the terms of use before signing'} >
+            <Button type="primary"
+              loading={loading}
+              icon={<Icon component={RiQuillPenFill} />}
+              onClick={handleSignSelected}
+              disabled={!agreed || !selectedRowKeys.length || loading}>
+              Sign {selectedRowKeys.length} selected document{selectedRowKeys.length === 1 ? '' : 's'}
+            </Button>
+          </Tooltip>
+        </Col>
+      </Row>
+    </>}
     {signModalContextHolder}
   </Container>
 });

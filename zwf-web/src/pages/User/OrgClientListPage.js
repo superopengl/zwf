@@ -210,7 +210,11 @@ const OrgClientListPage = () => {
         : <Paragraph>{value}</Paragraph>,
     },
     {
-      title: <span style={{ fontWeight: 400 }}><TagSelect value={queryInfo.tags} onChange={handleTagFilterChange} allowClear={true} /></span>,
+      title: <span style={{ fontWeight: 400 }}><TagSelect 
+      value={queryInfo.tags} onChange={handleTagFilterChange} 
+      allowClear={true} 
+      placeholder="Filter by tags"
+      /></span>,
       dataIndex: 'tags',
       width: 300,
       render: (value, item) =>
@@ -223,7 +227,7 @@ const OrgClientListPage = () => {
         />
     },
     {
-      title: "Invited",
+      title: "Started from",
       dataIndex: 'invitedAt',
       align: 'center',
       width: 110,
