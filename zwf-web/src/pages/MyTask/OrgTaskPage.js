@@ -108,12 +108,6 @@ const OrgTaskPage = () => {
       const { email, role, orgId, orgName, ...task } = taskInfo;
       setTask(task);
       setAssigneeId(task.assigneeId);
-      // if (taskInfo.fields.length) {
-      //   setTask(task);
-      //   setAssigneeId(task.assigneeId);
-      // } else {
-      //   navigate(`/task/${id}/edit`)
-      // }
     });
   }
 
@@ -200,7 +194,7 @@ const OrgTaskPage = () => {
             <Col flex="2 2 400px">
               <Row gutter={[40, 40]}>
                 <Col span={24}>
-                  <OrgTaskDocListPanel task={task} onChange={() => load$()} />
+                  <OrgTaskDocListPanel onChange={() => load$()} />
                 </Col>
                 <Col span={24}>
                   <ProCard title="Form" extra={<Space>

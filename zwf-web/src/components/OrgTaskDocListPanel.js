@@ -1,22 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography, Row } from 'antd';
+import { Space, Button, Tooltip, Table, Modal, Dropdown, Typography } from 'antd';
 import * as _ from 'lodash';
 import styled from 'styled-components';
 import { TimeAgo } from './TimeAgo';
 import { deleteTaskDoc$, requestSignTaskDoc$, unrequestSignTaskDoc$, addDemplateToTask$, generateDemplateDoc$, } from 'services/taskService';
 import { TaskDocName } from './TaskDocName';
-import Icon, { CheckCircleFilled, CloseOutlined, MinusCircleOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import Icon, { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { finalize } from 'rxjs';
 import { ProCard } from '@ant-design/pro-components';
 import { useAddDemplateToTaskModal } from 'hooks/useAddDemplateToTaskModal';
 import { BsFileEarmarkTextFill } from 'react-icons/bs';
 import { TaskFileUpload } from './TaskFileUpload';
-import { TaskDocDropableContainer } from './TaskDocDropableContainer';
-import { TbFileImport, TbSignature, TbSignatureOff } from 'react-icons/tb';
 import DropdownMenu from './DropdownMenu';
 import { RiQuillPenLine, RiQuillPenFill } from 'react-icons/ri';
 import { TaskDocDescription } from './TaskDocDescription';
+import { TaskContext } from 'contexts/TaskContext';
 
 const { Text } = Typography;
 
@@ -36,10 +35,11 @@ const Container = styled.div`
 `;
 
 export const OrgTaskDocListPanel = React.memo((props) => {
-  const { task, onChange } = props;
+  const { onChange } = props;
 
   const [loading, setLoading] = React.useState(true);
   const [deleteModal, deleteModalContextHolder] = Modal.useModal();
+  const { task } = React.useContext(TaskContext);
   const [docs, setDocs] = React.useState(task?.docs ?? []);
   const [openAddDemplate, demplateContextHolder] = useAddDemplateToTaskModal();
 
@@ -109,19 +109,6 @@ export const OrgTaskDocListPanel = React.memo((props) => {
         <TaskDocDescription taskDoc={doc} onGenDoc={() => handleGenerateDoc(doc)} />
       </Tooltip>
     },
-    // {
-    //   align: 'right',
-    //   render: (_, doc) => doc.signedAt ? null : <Button 
-    //     type="text"
-    //     // icon={<Icon component={doc.signRequestedAt ? TbSignatureOff : TbSignature} />} 
-    //     onClick={() => handleRequestSign(doc)} >
-    //       {doc.signRequestedAt ? `Revoke sign request` : `Request sign`}
-    //     </Button>
-    // },
-    // {
-    //   align: 'right',
-    //   render: (_, doc) => doc.signedAt ? <Text type="success"><CheckCircleFilled /> signed</Text> : null
-    // },
     {
       align: 'right',
       fixed: 'right',
@@ -198,7 +185,6 @@ export const OrgTaskDocListPanel = React.memo((props) => {
     bodyStyle={{ paddingRight: 8 }}
   >
     <Container>
-      {/* <TaskDocDropableContainer taskId={taskId} onDone={onChange}> */}
       <Table
         size="small"
         loading={loading}
@@ -220,13 +206,11 @@ export const OrgTaskDocListPanel = React.memo((props) => {
         {deleteModalContextHolder}
       </div>
       {demplateContextHolder}
-      {/* </TaskDocDropableContainer> */}
     </Container>
   </ProCard>
 })
 
 OrgTaskDocListPanel.propTypes = {
-  task: PropTypes.object.isRequired,
   onChange: PropTypes.func,
   onAdd: PropTypes.func,
   size: PropTypes.number,
