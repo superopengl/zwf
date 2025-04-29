@@ -1,21 +1,23 @@
 import React from 'react';
-import { establishZeventStream } from 'services/zeventService';
+import { establishZeventRawStream } from 'services/zeventService';
 import { GlobalContext } from 'contexts/GlobalContext';
 
-export function useEstablishZeventStream() {
-  const { zeventBus$ } = React.useContext(GlobalContext);
+export function useEstablishZeventStream(handler) {
+  const zeventHanlder = React.useCallback((event) => {
+    handler?.(event)
+  }, [handler]);
 
   React.useEffect(() => {
-    const es = establishZeventStream();
+    const es = establishZeventRawStream();
 
     es.onmessage = (e) => {
       const event = JSON.parse(e.data);
-      zeventBus$.next(event);
+      zeventHanlder(event);
     }
 
     return () => {
       es?.close()
     }
-  }, []);
+  }, [zeventHanlder]);
 }
 

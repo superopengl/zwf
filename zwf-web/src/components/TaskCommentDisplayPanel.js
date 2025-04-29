@@ -7,8 +7,9 @@ import { css } from '@emotion/css'
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
 import { ackTaskEventType$ } from 'services/zeventService';
-import { finalize, switchMap, tap } from 'rxjs';
+import { filter, finalize, switchMap, tap } from 'rxjs';
 import { TaskCommentList } from './TaskCommentList';
+import { ZeventContext } from 'contexts/ZeventContext';
 
 
 const containerCss = css({
@@ -24,24 +25,17 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
 
   const [list, setList] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
+  const { getZevent$ } = React.useContext(ZeventContext);
 
   // React.useEffect(() => {
   //   scrollToBottom();
   // }, [list]);
 
-  const handleZevent = z => {
+  const handleNewZevent = z => {
     const event = z.payload;
     event.createdAt = moment.utc(event.createdAt).local().toDate();
     setList(list => [...list, event]);
   };
-
-  const filterZevent = z => {
-    return z.type === 'taskEvent' &&
-      z.payload.taskId === taskId &&
-      z.payload.type === 'task-comment';
-  }
-
-  useZevent(filterZevent, handleZevent);
 
   React.useEffect(() => {
     const sub$ = listTaskComment$(taskId)
@@ -51,6 +45,16 @@ export const TaskCommentDisplayPanel = React.memo((props) => {
         finalize(() => setLoading(false)),
       )
       .subscribe();
+    return () => sub$.unsubscribe();
+  }, []);
+  
+  React.useEffect(() => {
+    const sub$ = getZevent$().pipe(
+      filter(z => z.type === 'taskEvent'),
+      filter(z => z.payload.taskId === taskId),
+      filter(z => z.payload.type === 'task-comment'),
+      tap(z => handleNewZevent(z)),
+    ).subscribe();
 
     return () => sub$.unsubscribe();
   }, []);
