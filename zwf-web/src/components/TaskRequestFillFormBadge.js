@@ -4,13 +4,13 @@ import { useZevent } from 'hooks/useZevent';
 import { SyncOutlined } from '@ant-design/icons';
 import { Badge, Button, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { NotificationContext } from 'contexts/NotificationContext';
+import { ZeventContext } from 'contexts/ZeventContext';
 
 export const TaskRequestFillFormBadge = React.memo((props) => {
   const { taskId, tooltip, offset, children } = props;
   const [user] = useAuthUser();
   const [count, setCount] = React.useState(0);
-  const { zevents } = React.useContext(NotificationContext);
+  const { zevents } = React.useContext(ZeventContext);
 
   React.useEffect(() => {
     const num = zevents.filter(z => z.payload.taskId === taskId

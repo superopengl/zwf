@@ -33,7 +33,7 @@ import { TbGitCommit } from 'react-icons/tb';
 import { IoNotificationsOffOutline, IoNotificationsOutline } from 'react-icons/io5';
 import { GlobalContext } from 'contexts/GlobalContext';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { NotificationContext } from 'contexts/NotificationContext';
+import { ZeventContext } from 'contexts/ZeventContext';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 import { TaskCommentInputForm } from 'components/TaskCommentInputForm';
 import { TaskContext } from 'contexts/TaskContext';
