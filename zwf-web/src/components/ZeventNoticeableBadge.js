@@ -6,38 +6,34 @@ import { Badge, Button, Tooltip } from 'antd';
 import { useAuthUser } from 'hooks/useAuthUser';
 
 export const ZeventNoticeableBadge = React.memo((props) => {
-  const { filter, selfEvent, message, children } = props;
+  const { filter, selfEvent, tooltip, showNumber, children } = props;
   const [user] = useAuthUser();
+  const [count, setCount] = React.useState(0);
 
-  const [hasNew, setHasNew] = React.useState(false);
 
   useZevent(z => {
     return (selfEvent || z.payload.by !== user.id) && filter?.(z);
-  }, () => setHasNew(true));
+  }, () => setCount(pre => pre + 1));
 
-  const handleClick = () => {
-    setHasNew(false);
-  }
-
-  return (<Tooltip title={hasNew ? message : null}>
-    <Badge count={hasNew ? ' ' : 0} size="small">
-      <div onClick={handleClick}>
-        {children}
-      </div>
+  return (<Tooltip title={count ? tooltip : null}>
+    <Badge count={showNumber ? count : count ? ' ' : 0}>
+      {children}
     </Badge>
   </Tooltip>
   );
 });
 
 ZeventNoticeableBadge.propTypes = {
-  message: PropTypes.string,
+  tooltip: PropTypes.string,
   filter: PropTypes.func,
   selfEvent: PropTypes.bool,
+  showNumber: PropTypes.bool,
 };
 
 ZeventNoticeableBadge.defaultProps = {
-  message: 'Event fired',
+  tooltip: 'Event fired',
   filter: (z) => false,
   selfEvent: false,
+  showNumber: true,
 };
 

@@ -1,5 +1,8 @@
 export const notes=`
-update release notes
-fix home page overflow
-refactor views
-refactor zevent def`
+deactivate clients
+fix autosave frequently update context task issue
+use taskContext
+task doc name dep fix
+client chat bg color
+clean up
+clean up`
