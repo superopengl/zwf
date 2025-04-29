@@ -216,6 +216,7 @@ export const AppLoggedInPage = React.memo(() => {
             colorTextMenu: '#1C222B'
           }
         }}
+        fixedHeader={true}
         logo={<Image src="/images/logo-full-primary.png" className="header-logo-image" preview={false} width={150} onClick={() => navigate('/task')} />}
         title={""}
         actionsRender={() => [
