@@ -13,7 +13,6 @@ import { UserNameCard } from 'components/UserNameCard';
 import { TimeAgo } from 'components/TimeAgo';
 import { ZeventContext } from 'contexts/ZeventContext';
 import { IoNotificationsOutline } from 'react-icons/io5';
-import { useEstablishZeventStream } from 'hooks/useEstablishZeventStream';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Text } = Typography;

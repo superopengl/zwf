@@ -32,6 +32,7 @@ export const ZeventContainer = (props) => {
 
 
   React.useEffect(() => {
+    debugger;
     const es = establishZeventRawStream();
 
     es.onmessage = (e) => {
@@ -44,9 +45,6 @@ export const ZeventContainer = (props) => {
     }
   }, [handleNewEvent, user]);
 
-  useEstablishZeventStream((event) => {
-    setZevents(pre => [...pre, event]);
-  });
 
   /**
    * Initial load
