@@ -30,6 +30,8 @@ const Container = styled.div`
   margin: 0 auto 0 auto;
   height: 100vh;
   width: 100%;
+  overflow-y: auto;
+  padding-bottom: 60px;
   // max-width: 1200px;
 
 .client-task-footer {
