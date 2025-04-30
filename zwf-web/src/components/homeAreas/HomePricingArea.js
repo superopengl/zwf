@@ -92,7 +92,7 @@ export const HomePricingArea = props => {
             <div className='price-card'>
               <Row justify="space-between" align="middle">
                 <Col span={12}><Text style={{ color: '#0FBFC4', fontSize: 28, lineHeight: 1.2, fontWeight: 800 }}>ALL IN ONE PLAN</Text></Col>
-                <Col><Text style={{ color: '#ffffff', fontSize: 40, lineHeight: 1.4, fontWeight: 800 }}>$49.0</Text></Col>
+                <Col><Text style={{ color: '#ffffff', fontSize: 40, lineHeight: 1.4, fontWeight: 800 }}>$49.00</Text></Col>
                 <Col>
                   <small>/Month</small><br />
                   <small>Incl GST</small>
