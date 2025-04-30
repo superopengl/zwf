@@ -229,7 +229,7 @@ export const AppLoggedInPage = React.memo(() => {
             <CreateNewButton />
           </Space> : null,
           isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
-          isSystem ? null : <NotificationButton key="notification" onSupportOpen={openSupport} supportOpen={supportOpen} />,
+          (isSystem || isClient) ? null : <NotificationButton key="notification" onSupportOpen={openSupport} supportOpen={supportOpen} />,
           <AvatarDropdownMenu key="avatar" />
         ].filter(x => !!x)}
         headerTitleRender={() => {
