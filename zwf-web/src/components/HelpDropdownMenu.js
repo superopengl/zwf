@@ -28,6 +28,8 @@ const { Link } = Typography;
 export const HelpDropdownMenu = React.memo((props) => {
 
   const { onSupportOpen } = props;
+  const role = useRole();
+  const isClient = role === 'client';
 
 
   const handleMenuItemClick = e => {
@@ -54,10 +56,10 @@ export const HelpDropdownMenu = React.memo((props) => {
         // icon: <MdOutlinePrivacyTip />,
         label: <Link href="/privacy_policy" target="_blank">Privacy Policy</Link>,
       },
-      {
+      isClient ? null : {
         type: 'divider',
       },
-      {
+      isClient ? null : {
         key: 'support',
         // icon: <CommentOutlined />,
         label: 'Chat with Support'
