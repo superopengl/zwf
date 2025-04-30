@@ -79,8 +79,9 @@ export const PageHeaderContainer = React.memo((props) => {
         title: title,
         extra: extra?.filter(x => !!x),
         style: {
-          paddingTop: 0,
+          paddingTop: 8,
           paddingLeft: 10,
+          paddingBottom: 4,
           maxWidth,
           margin: '0 auto',
         }
