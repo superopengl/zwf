@@ -1,3 +1,4 @@
+import { tap } from 'rxjs';
 import { API_BASE_URL, httpGet, httpGet$, httpPost, request } from './http';
 
 export async function getFileStream(id) {
@@ -12,26 +13,27 @@ export function getFileMeta$(id) {
   return httpGet$(`file/${id}`);
 }
 
-export async function getFileMetaList(ids) {
-  return ids?.length ? httpPost('file/meta', { ids }) : [];
-}
-
-export async function downloadTaskDoc(taskDocId) {
+function getTaskDocFileInfo$(taskDocId) {
   if (!taskDocId) throw new Error('Missing taskDocId');
-  return request('GET', `/task/doc/${taskDocId}`, null, null, 'blob');
+  return httpGet$(`/task/doc/${taskDocId}`);
 }
 
-export async function openTaskDoc(docId, docName) {
-  try {
-    const data = await downloadTaskDoc(docId);
-    var link = document.createElement("a"); // Or maybe get it from the current document
-    link.href = URL.createObjectURL(data);
-    link.download = docName;
-    link.click();
-    return true;
-  } catch (e) {
-    return false;
-  }
+export function openTaskDoc$(docId) {
+  return getTaskDocFileInfo$(docId)
+    .pipe(
+      tap(data => {
+        const { name, fileUrl } = data;
+        if (fileUrl) {
+          const link = document.createElement("a"); // Or maybe get it from the current document
+          link.href =`${process.env.REACT_APP_ZWF_API_DOMAIN_NAME}${process.env.REACT_APP_ZWF_API_ENDPOINT}${fileUrl}`;
+          link.download = name;
+          // link.target = "_blank"; // Don't set target. iPhone doesn't download if set target.
+          // document.body.appendChild(link);
+          link.click();
+          // document.body.removeChild(link);
+        }
+      })
+    );
 }
 
 export function getPublicFileUrl(fileId) {

@@ -121,7 +121,7 @@ export const uploadTaskFile = handlerWrapper(async (req, res) => {
 });
 
 
-export const downloadTaskDoc = handlerWrapper(async (req, res) => {
+export const getTaskDocFileInfo = handlerWrapper(async (req, res) => {
   assert(getUserIdFromReq(req), 404);
 
   assertRole(req, ['system', 'admin', 'client', 'agent']);
@@ -161,29 +161,36 @@ export const downloadTaskDoc = handlerWrapper(async (req, res) => {
   const { file, demplateId } = doc;
 
   const emitClientDownloadEvent = async () => {
-    if(isClient) {
-      await emitTaskEvent(db.manager, ZeventName.ClientDownloadedDoc, doc.taskId, userId, {docId: doc.id});
+    if (isClient) {
+      await emitTaskEvent(db.manager, ZeventName.ClientDownloadedDoc, doc.taskId, userId, { docId: doc.id });
     }
   }
 
+  const name = doc.name;
+  let fileUrl = null;
+  let genDocResult = null;
+
   if (file) {
     await emitClientDownloadEvent();
-    streamFileToResponse(file, res);
+    fileUrl = `/task/file/${file.id}`;
   } else if (demplateId) {
     // Hand over to frontend.
     const result = await generatePdfTaskDocFile(db.manager, doc.id, userId);
     if (result.succeeded) {
       await emitClientDownloadEvent();
-      streamFileToResponse(result.file, res);
+      fileUrl = `/task/file/${result.file.id}`;
     } else {
-      res.status(425).json(result).end();
-      return;
+      genDocResult = result;
     }
   } else {
     assert(doc, 500, 'Invalid doc file condition');
   }
 
-
+  res.json({
+    name,
+    fileUrl,
+    genDocResult,
+  })
 });
 
 export const signTaskDocs = handlerWrapper(async (req, res) => {
