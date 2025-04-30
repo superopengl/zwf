@@ -19,7 +19,7 @@ import { ClickToEditInput } from 'components/ClickToEditInput';
 import { ProCard } from '@ant-design/pro-components';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { OrgTaskDocListPanel } from 'components/OrgTaskDocListPanel';
-import { ZeventNoticeableBadge } from 'components/ZeventNoticeableBadge';
+import { ZeventBadge } from 'components/ZeventBadge';
 import { ClientNameCard } from 'components/ClientNameCard';
 import { TaskCommentDisplayPanel } from 'components/TaskCommentDisplayPanel';
 import { TaskTimelineDrawer } from 'components/TaskTimelineDrawer';

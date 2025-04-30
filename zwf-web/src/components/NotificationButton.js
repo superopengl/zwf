@@ -41,17 +41,12 @@ export const NotificationButton = (props) => {
   const { supportOpen } = props;
   const [list, setList] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
-  const [user] = useAuthUser();
   const { zevents, reloadZevents$ } = React.useContext(ZeventContext);
   const [open, setOpen] = React.useState(false)
 
   // const { notifications, setNotifications } = context;
 
   const navigate = useNavigate();
-
-  /**
-   * Initial load
-   */
 
   React.useEffect(() => {
     if (supportOpen) {
