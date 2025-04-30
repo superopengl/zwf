@@ -32,7 +32,6 @@ export const ZeventContainer = (props) => {
 
 
   React.useEffect(() => {
-    debugger;
     const es = establishZeventRawStream();
 
     es.onmessage = (e) => {
@@ -101,6 +100,7 @@ export const ZeventContainer = (props) => {
     zevents,
     getZevent$,
     ackEvent,
+    reloadZevents$: load$,
   }}>
     {children}
   </ZeventContext.Provider>

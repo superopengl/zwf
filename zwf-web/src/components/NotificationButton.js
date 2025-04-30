@@ -42,7 +42,7 @@ export const NotificationButton = (props) => {
   const [list, setList] = React.useState([]);
   const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const [user] = useAuthUser();
-  const { zevents, setZevents } = React.useContext(ZeventContext);
+  const { zevents, reloadZevents$ } = React.useContext(ZeventContext);
   const [open, setOpen] = React.useState(false)
 
   // const { notifications, setNotifications } = context;
@@ -53,12 +53,6 @@ export const NotificationButton = (props) => {
    * Initial load
    */
 
-  const load$ = () => {
-    return loadMyUnackZevents$()
-      .pipe()
-      .subscribe(setZevents);
-  }
-
   React.useEffect(() => {
     if (supportOpen) {
       setUnreadSupportMsgCount(0);
@@ -66,8 +60,7 @@ export const NotificationButton = (props) => {
   }, [supportOpen]);
 
   const handleClick = () => {
-    load$();
-    setOpen(true)
+    reloadZevents$().add(() => setOpen(true));
   }
 
   const handleNotificationClick = (z) => {
