@@ -89,7 +89,6 @@ export const TaskCommentInputForm = React.memo((props) => {
           autoSize={{ minRows: 3, maxRows: 20 }}
           maxLength={1000}
           placeholder="Enter to send."
-          autoFocus={true}
           disabled={loading}
           onPressEnter={e => handleSendMessage({ message: e.target.value })}
           ref={textareaRef}
@@ -98,7 +97,6 @@ export const TaskCommentInputForm = React.memo((props) => {
           maxLength={1000}
           placeholder="Enter to send. '@' to mention team member"
           options={options}
-          autoFocus={true}
           disabled={loading}
           onPressEnter={e => handleSendMessage({ message: e.target.value })}
           ref={textareaRef}
