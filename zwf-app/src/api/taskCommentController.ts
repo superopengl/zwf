@@ -99,8 +99,10 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
       }
     });
   
-    for(const userId of mentionedUserIds) {
-      await addTaskWatcher(m, taskId, userId, 'mentioned');
+    if(mentionedUserIds?.length) {
+      for(const userId of mentionedUserIds) {
+        await addTaskWatcher(m, taskId, userId, 'mentioned');
+      }
     }
     
     const senderId = role === Role.Guest ? task.orgClient?.userId : getUserIdFromReq(req);

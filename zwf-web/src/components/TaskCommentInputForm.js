@@ -1,4 +1,4 @@
-import { Button, Form, Typography, Row, Col, Mentions } from 'antd';
+import { Button, Form, Typography, Row, Col, Mentions, Input } from 'antd';
 import PropTypes from 'prop-types';
 import React from 'react';
 import 'react-chat-elements/dist/main.css';
@@ -6,6 +6,7 @@ import { addTaskComment$ } from 'services/taskCommentService';
 import { finalize } from 'rxjs/operators';
 import { subscribeMembers } from 'services/memberService';
 import { UserNameCard } from './UserNameCard';
+import { useRole } from 'hooks/useRole';
 
 const { Text } = Typography;
 
@@ -14,11 +15,12 @@ export const TaskCommentInputForm = React.memo((props) => {
   const { taskId, loading: propLoading, onDone } = props;
 
   const [loading, setLoading] = React.useState(propLoading);
-  const [list, setList] = React.useState([]);
   const [members, setMembers] = React.useState([]);
   const [form] = Form.useForm();
   const textareaRef = React.useRef(null);
-  const [value, setValue] = React.useState('')
+  const role = useRole();
+
+  const isClient = role === 'client';
 
   React.useEffect(() => {
     if (!loading) {
@@ -31,8 +33,10 @@ export const TaskCommentInputForm = React.memo((props) => {
   }, [propLoading]);
 
   React.useEffect(() => {
-    const sub$ = subscribeMembers(setMembers);
-    return () => sub$.unsubscribe();
+    if (!isClient) {
+      const sub$ = subscribeMembers(setMembers);
+      return () => sub$.unsubscribe();
+    }
   }, [])
 
   const options = React.useMemo(() => {
@@ -44,10 +48,13 @@ export const TaskCommentInputForm = React.memo((props) => {
   }, [members]);
 
   const extractMentions = (text) => {
+    if (isClient) {
+      return [];
+    }
     const memberIds = new Set();
     members.forEach(m => {
       const display = `@${m.email.split('@')[0]}`;
-      if(text.indexOf(display) > -1) {
+      if (text.indexOf(display) > -1) {
         memberIds.add(m.id);
       }
     });
@@ -76,10 +83,18 @@ export const TaskCommentInputForm = React.memo((props) => {
     <Form onFinish={handleSendMessage}
       form={form}>
       <Form.Item name="message"
-        // extra="Enter to send. '@' to mention team member"
         style={{ marginBottom: 0 }}
       >
-        <Mentions
+        {isClient ? <Input.Textarea
+          showCount
+          autoSize={{ minRows: 3, maxRows: 20 }}
+          maxLength={1000}
+          placeholder="Enter to send."
+          autoFocus={true}
+          disabled={loading}
+          onPressEnter={e => handleSendMessage({ message: e.target.value })}
+          ref={textareaRef}
+        /> : <Mentions
           autoSize={{ minRows: 3, maxRows: 20 }}
           maxLength={1000}
           placeholder="Enter to send. '@' to mention team member"
@@ -88,8 +103,7 @@ export const TaskCommentInputForm = React.memo((props) => {
           disabled={loading}
           onPressEnter={e => handleSendMessage({ message: e.target.value })}
           ref={textareaRef}
-        />
-
+        />}
       </Form.Item>
       <Form.Item style={{ marginTop: 10, marginBottom: 0 }}>
         <Row justify="end" gutter={8} style={{ position: 'relative' }}>
