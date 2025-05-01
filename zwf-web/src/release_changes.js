@@ -1,2 +1,3 @@
 export const notes=`
-bugfix`
+bugfix
+link to resource page`
