@@ -15,7 +15,7 @@ import { emitTaskEventAcks } from '../utils/emitTaskEventAcks';
 import { ZeventDef } from '../entity/ZeventDef';
 
 export const loadMyUnackZevents = handlerWrapper(async (req, res) => {
-  assertRole(req, ['client', 'agent', 'admin']);
+  assertRole(req, [Role.Client, Role.Agent, Role.Admin, Role.System]);
 
   const page = +req.body.page;
   const size = +req.body.size;
@@ -27,51 +27,58 @@ export const loadMyUnackZevents = handlerWrapper(async (req, res) => {
   const userId = getUserIdFromReq(req);
   // const eventTypes = role === Role.Client ? CLIENT_WATCH_EVENTS : ORG_MEMBER_WATCH_EVENTS;
 
-  const taskEvents = await db
-    .getRepository(TaskWatcherEventAckInformation)
-    .createQueryBuilder('x')
-    .innerJoin(ZeventDef, 'z', `'${role}' = ANY(z."uiNotifyRoles") AND x.type = z.name`)
-    .where(`"userId" = :userId`, { userId })
-    // .andWhere(`type IN (:...eventTypes)`, { eventTypes })
-    // .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
-    .andWhere(`"ackAt" IS NULL`)
-    .select([
-      '"eventId"',
-      '"taskId"',
-      '"taskName"',
-      'type',
-      'info',
-      'x."createdAt"',
-      'by',
-      '"ackAt"',
-    ])
-    .orderBy('x."createdAt"', 'DESC')
-    .getRawMany();
+  let result: any[];
+  if (role === Role.System) {
+    result = [];
+  } else {
 
-  // const taskEvents = await db.manager.find(TaskWatcherEventAckInformation, {
-  //   where: [{
-  //     userId,
-  //     ackAt: IsNull()
-  //   }, {
-  //     userId,
-  //     ackAt: MoreThan(`now() - interval '30 minutes'`)
-  //   }],
-  //   select: {
-  //     eventId: true,
-  //     taskId: true,
-  //     taskName: true,
-  //     type: true,
-  //     info: true,
-  //     createdAt: true,
-  //     by: true,
-  //   }
-  // });
 
-  const result = taskEvents.map(t => ({
-    type: 'taskEvent',
-    userId,
-    payload: t
-  }))
+    const taskEvents = await db
+      .getRepository(TaskWatcherEventAckInformation)
+      .createQueryBuilder('x')
+      .innerJoin(ZeventDef, 'z', `'${role}' = ANY(z."uiNotifyRoles") AND x.type = z.name`)
+      .where(`"userId" = :userId`, { userId })
+      // .andWhere(`type IN (:...eventTypes)`, { eventTypes })
+      // .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
+      .andWhere(`"ackAt" IS NULL`)
+      .select([
+        '"eventId"',
+        '"taskId"',
+        '"taskName"',
+        'type',
+        'info',
+        'x."createdAt"',
+        'by',
+        '"ackAt"',
+      ])
+      .orderBy('x."createdAt"', 'DESC')
+      .getRawMany();
+
+    // const taskEvents = await db.manager.find(TaskWatcherEventAckInformation, {
+    //   where: [{
+    //     userId,
+    //     ackAt: IsNull()
+    //   }, {
+    //     userId,
+    //     ackAt: MoreThan(`now() - interval '30 minutes'`)
+    //   }],
+    //   select: {
+    //     eventId: true,
+    //     taskId: true,
+    //     taskName: true,
+    //     type: true,
+    //     info: true,
+    //     createdAt: true,
+    //     by: true,
+    //   }
+    // });
+
+    result = taskEvents.map(t => ({
+      type: 'taskEvent',
+      userId,
+      payload: t
+    }))
+  }
 
   res.json(result);
 });
