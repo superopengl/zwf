@@ -1,3 +1,2 @@
 export const notes=`
-bugfix
-link to resource page`
+fix permission issue`
