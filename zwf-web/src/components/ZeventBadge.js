@@ -37,7 +37,7 @@ ZeventBadge.propTypes = {
 };
 
 ZeventBadge.defaultProps = {
-  tooltip: 'Event fired',
+  tooltip: null,
   filter: (z) => false,
   selfEvent: false,
   showNumber: true,
