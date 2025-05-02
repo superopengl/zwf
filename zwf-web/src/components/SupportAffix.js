@@ -3,7 +3,7 @@ import { Affix, Space, Button, Card, Typography, FloatButton } from 'antd';
 import { MdOutlinePrivacyTip } from 'react-icons/md';
 import styled from 'styled-components';
 import { listMySupportMessages$, nudgeMyLastReadSupportMessage$ } from 'services/supportService';
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize, catchError, filter, tap } from 'rxjs/operators';
 import { SupportMessageList } from './SupportMessageList';
 import { SupportMessageInput } from './SupportMessageInput';
 import { sendSupportMessage$ } from 'services/supportService';
@@ -11,6 +11,8 @@ import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircle
 import { useAuthUser } from 'hooks/useAuthUser';
 import { useZevent } from 'hooks/useZevent';
 import { ZeventBadge } from './ZeventBadge';
+import { ZeventContext } from 'contexts/ZeventContext';
+import { DebugJsonPanel } from './DebugJsonPanel';
 
 
 const { Paragraph, Title } = Typography;
@@ -50,6 +52,7 @@ export const SupportAffix = () => {
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [user] = useAuthUser();
+  const { getZevent$ } = React.useContext(ZeventContext);
 
   const cheerName = user?.givenName?.trim() || 'Hi There';
 
@@ -65,6 +68,20 @@ export const SupportAffix = () => {
       finalize(() => setLoading(false))
     ).subscribe(list => {
       setList(list);
+    });
+
+    return () => sub$.unsubscribe()
+  }, []);
+
+  React.useEffect(() => {
+    const sub$ = getZevent$().pipe(
+      tap(z => {
+        const zz =z;
+        debugger;
+      }),
+      filter(z => z.type === 'support')
+    ).subscribe(z => {
+      setList(pre => [...pre, z]);
     });
 
     return () => sub$.unsubscribe()
@@ -150,6 +167,7 @@ export const SupportAffix = () => {
               <SupportMessageList dataSource={list} loading={loading} />
             </div>
             <hr />
+            {/* <DebugJsonPanel value={list } /> */}
             <SupportMessageInput loading={loading} onSubmit={handleSubmitMessage} />
           </StyledCard>
           {/* <Badge count={unreadCount} showZero={false}>

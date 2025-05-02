@@ -38,9 +38,6 @@ const getNotificationMessage = x => {
 
 
 export const NotificationButton = (props) => {
-  const { supportOpen } = props;
-  const [list, setList] = React.useState([]);
-  const [unreadSupportMsgCount, setUnreadSupportMsgCount] = React.useState(0);
   const { zevents, reloadZevents$ } = React.useContext(ZeventContext);
   const [open, setOpen] = React.useState(false)
 
@@ -48,11 +45,6 @@ export const NotificationButton = (props) => {
 
   const navigate = useNavigate();
 
-  React.useEffect(() => {
-    if (supportOpen) {
-      setUnreadSupportMsgCount(0);
-    }
-  }, [supportOpen]);
 
   const handleClick = () => {
     reloadZevents$().add(() => setOpen(true));
@@ -109,10 +101,8 @@ export const NotificationButton = (props) => {
 
 
 NotificationButton.propTypes = {
-  onSupportOpen: PropTypes.func,
   supportOpen: PropTypes.bool,
 };
 
 NotificationButton.defaultProps = {
-  onSupportOpen: () => { },
 };

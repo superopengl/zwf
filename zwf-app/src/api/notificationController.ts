@@ -1,4 +1,3 @@
-import { SupportMessageLastSeen } from './../entity/SupportMessageLastSeen';
 import { SupportMessage } from './../entity/SupportMessage';
 import { IsNull } from 'typeorm';
 import { db } from '../db';
@@ -31,8 +30,6 @@ export const loadMyUnackZevents = handlerWrapper(async (req, res) => {
   if (role === Role.System) {
     result = [];
   } else {
-
-
     const taskEvents = await db
       .getRepository(TaskWatcherEventAckInformation)
       .createQueryBuilder('x')
@@ -125,13 +122,13 @@ export const getMyNotifications_old = handlerWrapper(async (req, res) => {
 
   await db.transaction(async m => {
     // Get unread support messages
-    const unreadSupportMsgCount = await m.createQueryBuilder()
-      .from(SupportMessage, 's')
-      .leftJoin(SupportMessageLastSeen, 'a', 's."userId" = a."userId"')
-      .where(`s."userId" = :userId`, { userId })
-      .andWhere(`s."by" != :userId`, { userId })
-      .andWhere(`(a."lastSeenAt" IS NULL OR a."lastSeenAt" < s."createdAt")`)
-      .getCount()
+    // const unreadSupportMsgCount = await m.createQueryBuilder()
+    //   .from(SupportMessage, 's')
+    //   .leftJoin(SupportMessageLastSeen, 'a', 's."userId" = a."userId"')
+    //   .where(`s."userId" = :userId`, { userId })
+    //   .andWhere(`s."by" != :userId`, { userId })
+    //   .andWhere(`(a."lastSeenAt" IS NULL OR a."lastSeenAt" < s."createdAt")`)
+    //   .getCount()
 
     // Get unread task comment messages
     const changedTasks = await m.createQueryBuilder()
@@ -151,7 +148,6 @@ export const getMyNotifications_old = handlerWrapper(async (req, res) => {
 
     result = {
       changedTasks,
-      unreadSupportMsgCount,
     }
   })
 

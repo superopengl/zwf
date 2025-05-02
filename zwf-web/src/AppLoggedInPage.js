@@ -30,6 +30,7 @@ import { useSupportChatWidget } from 'hooks/useSupportChatWidget';
 import { TbClock, TbClockPlay, TbRepeat } from 'react-icons/tb';
 import { BiRepeat } from 'react-icons/bi';
 import { ZeventContainer } from 'components/ZeventContainer';
+import { SupportAffix } from 'components/SupportAffix';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -185,7 +186,7 @@ export const AppLoggedInPage = React.memo(() => {
   useAssertRole(['client', 'agent', 'admin', 'system'])
   useAssertUser(user => user?.suspended !== true)
   useAssertOrgHasOnBoard();
-  const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
+  // const [openSupport, supportContextHolder, supportOpen] = useSupportChatWidget();
 
   useDocumentTitle();
 
@@ -228,8 +229,8 @@ export const AppLoggedInPage = React.memo(() => {
             {/* <SmartSearch /> */}
             <CreateNewButton />
           </Space> : null,
-          isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
-          (isSystem || isClient) ? null : <NotificationButton key="notification" onSupportOpen={openSupport} supportOpen={supportOpen} />,
+          // isSystem ? null : <HelpDropdownMenu key="help" onSupportOpen={openSupport} />,
+          (isSystem || isClient) ? null : <NotificationButton key="notification" />,
           <AvatarDropdownMenu key="avatar" />
         ].filter(x => !!x)}
         headerTitleRender={() => {
@@ -268,7 +269,7 @@ export const AppLoggedInPage = React.memo(() => {
       </ProLayout>
       {isAdmin && <GlobalNotificationBar />}
       {!isSystem && <UnimpersonatedFloatButton />}
-      {supportContextHolder}
+      <SupportAffix />
     </StyledContainer >
   </ZeventContainer>
 })

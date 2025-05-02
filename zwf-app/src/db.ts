@@ -44,7 +44,6 @@ import { Contact } from './entity/Contact';
 import { LicenseTicketUsageInformation } from './entity/views/LicenseTicketUsageInformation';
 import { OrgSubscriptionPeriod } from './entity/OrgSubscriptionPeriod';
 import { NotificationMessage } from './entity/NotificationMessage';
-import { SupportMessageLastSeen } from './entity/SupportMessageLastSeen';
 import { OrgTermination } from './entity/OrgTermination';
 import { OrgClientField } from './entity/OrgClientField';
 import { OrgAllClientFieldsInformation } from './entity/views/OrgAllClientFieldsInformation';
@@ -214,7 +213,6 @@ export const db = new DataSource({
     TaskTagsTag,
     Recurring,
     SupportUserLastAccess,
-    SupportMessageLastSeen,
     EmailSentOutTask,
     OrgTermination,
     SystemConfig,
