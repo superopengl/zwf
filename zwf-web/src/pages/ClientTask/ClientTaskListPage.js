@@ -237,11 +237,13 @@ export const ClientTaskListPage = () => {
           renderItem={item => <List.Item>
             <Card
               title={<><HighlightingText value={item.name} search={query.text} /></>}
+              // headStyle={{paddingRight: 8}}
               extra={[
                 <Tag key="org">{item.orgName}</Tag>,
                 <Badge key="count" showZero={false} 
-                count={zevents.filter(z => z.payload.taskId === item.id && !z.payload.ackAt).length ? ' ' : 0} 
-                offset={[34, -36]}
+                count={zevents.find(z => z.payload.taskId === item.id && !z.payload.ackAt) ? '!' : 0} 
+                style={{position: 'absolute'}}
+                offset={[30, -32]}
                 />
               ]}
               onClick={() => navigate(`/task/${item.id}`)}
