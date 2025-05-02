@@ -55,6 +55,9 @@ export const GlobalNotificationBar = () => {
             <Paragraph>
               To ensure the success of your business, please <Link strong onClick={handleAddPaymentMethod}>add a payment method</Link> as soon as possible, as none has been specified.
             </Paragraph>
+            <Paragraph>
+              If you haven't set up a valid payment method, your organization account may face suspension starting from <Text underline>{periodTo.add(30, 'days').add(-1, 'day').format('D MMM YYYY')}</Text>.
+            </Paragraph>
           </>,
           0,
         );
