@@ -17,6 +17,7 @@ import { Role } from '../../types/Role';
       'u."orgOwner" as "orgOwner"',
       'u."createdAt" as "createdAt"',
       'u."orgId" as "orgId"',
+      'u."suspended" as "suspended"',
       'COALESCE(r.count, 0) as "unreadCount"',
     ]),
   dependsOn: [UserInformation, SupportPendingReplyInformation]
@@ -50,6 +51,9 @@ export class SupportInformation {
   @ViewColumn()
   orgOwner: boolean;
 
+  @ViewColumn()
+  suspended: boolean;
+  
   @ViewColumn()
   unreadCount: number;
 }
