@@ -36,7 +36,7 @@ export const listMySupportMessages = handlerWrapper(async (req, res) => {
 });
 
 export const searchSupportList = handlerWrapper(async (req, res) => {
-  assertRole(req, ['system']);
+  assertRole(req, [Role.System]);
   const userId = getUserIdFromReq(req);
   const { text, page, size, orderField, orderDirection, tags } = req.body;
 
@@ -55,6 +55,7 @@ export const searchSupportList = handlerWrapper(async (req, res) => {
   const count = await query.getCount();
 
   const data = await query // .orderBy(`"${orderField}"`, orderDirection)
+    .orderBy('"unreadCount"', 'DESC')
     .offset((pageNo - 1) * pageSize)
     .limit(pageSize)
     .getMany();
