@@ -125,8 +125,6 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
 
 export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => {
   assertRole(req, ['admin', 'agent', 'client']);
-  const { messageId } = req.body;
-  assert(messageId, 400, `messageId is not specified.`);
   const userId = getUserIdFromReq(req);
 
   const lastReadEntity = new SupportUserLastAccess();
@@ -136,7 +134,7 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
     .insert()
     .into(SupportUserLastAccess)
     .values({ ...lastReadEntity, lastAccessAt: () => `NOW()` })
-    .orUpdate(['lastAccessAt'])
+    .orUpdate(['lastAccessAt'], ['userId'])
     .execute();
 
   res.json();

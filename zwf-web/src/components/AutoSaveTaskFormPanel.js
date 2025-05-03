@@ -4,7 +4,6 @@ import { updateTaskFields$, saveTaskFieldValues$ } from 'services/taskService';
 import { useDebounce, useDebouncedValue } from "rooks";
 import { FormSchemaRenderer } from './FormSchemaRenderer';
 import { useRole } from 'hooks/useRole';
-import { useZevent } from 'hooks/useZevent';
 import { finalize } from 'rxjs';
 import { Row, Button, Typography } from 'antd';
 import { TaskContext } from 'contexts/TaskContext';
@@ -36,7 +35,7 @@ export const AutoSaveTaskFormPanel = React.memo((props) => {
     }
   };
 
-  useZevent(z => z.type === 'task.fields' && z.taskId === task.id, handleZevent);
+  // useZevent(z => z.type === 'task.fields' && z.taskId === task.id, handleZevent);
 
   React.useEffect(() => {
     // setFields(task?.fields);

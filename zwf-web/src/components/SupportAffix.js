@@ -9,10 +9,8 @@ import { SupportMessageInput } from './SupportMessageInput';
 import { sendSupportMessage$ } from 'services/supportService';
 import { CloseOutlined, CommentOutlined, CustomerServiceOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { useAuthUser } from 'hooks/useAuthUser';
-import { useZevent } from 'hooks/useZevent';
 import { ZeventBadge } from './ZeventBadge';
 import { ZeventContext } from 'contexts/ZeventContext';
-import { DebugJsonPanel } from './DebugJsonPanel';
 
 
 const { Paragraph, Title } = Typography;
@@ -45,61 +43,47 @@ width: 400px;
 `;
 
 export const SupportAffix = () => {
-  const [visible, setVisible] = React.useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [menuOpen, setMenuOpen] = React.useState(false);
   const [chatOpen, setChatOpen] = React.useState(false);
-  const visibleRef = React.useRef(visible);
   const [loading, setLoading] = React.useState(true);
   const [list, setList] = React.useState([]);
   const [user] = useAuthUser();
-  const { getZevent$ } = React.useContext(ZeventContext);
+  const { onNewZevent$ } = React.useContext(ZeventContext);
 
   const cheerName = user?.givenName?.trim() || 'Hi There';
 
-  useZevent(z => z.type === 'support', z => {
-    setList(list => {
-      return [...list, z.payload]
-    })
-  });
-
   // Initial data load
   React.useEffect(() => {
-    const sub$ = listMySupportMessages$().pipe(
-      finalize(() => setLoading(false))
-    ).subscribe(list => {
-      setList(list);
-    });
+    if (chatOpen) {
+      const sub$ = listMySupportMessages$().pipe(
+        finalize(() => setLoading(false))
+      ).subscribe(list => {
+        setList(list);
+      });
 
-    return () => sub$.unsubscribe()
-  }, []);
+      return () => sub$.unsubscribe()
+    }
+  }, [chatOpen]);
 
   React.useEffect(() => {
-    const sub$ = getZevent$().pipe(
-      tap(z => {
-        const zz =z;
-        debugger;
-      }),
+    const sub$ = onNewZevent$().pipe(
       filter(z => z.type === 'support')
     ).subscribe(z => {
-      setList(pre => [...pre, z]);
+      setList(pre => [...pre, z.payload]);
     });
 
     return () => sub$.unsubscribe()
   }, []);
 
   React.useEffect(() => {
-    if (visible && list?.length) {
-      const lastMessage = list[list.length - 1];
-      const { id } = lastMessage;
-      nudgeMyLastReadSupportMessage$(id).pipe(
-        catchError()
-      ).subscribe();
+    if (chatOpen && list?.length) {
+      nudgeMyLastReadSupportMessage$()
+        .subscribe({
+          error: () => { }
+        });
     }
-  }, [list, visible]);
+  }, [list, chatOpen]);
 
-  React.useEffect(() => {
-    visibleRef.current = visible;
-  }, [visible])
 
   const handleSubmitMessage = (message) => {
     const capturedUrl = window.location.href;
@@ -108,11 +92,11 @@ export const SupportAffix = () => {
 
   const handleShowChat = () => {
     setChatOpen(true)
-    setOpen(false);
+    setMenuOpen(false);
   }
 
   const handleFloatButtonOpenChange = open => {
-    setOpen(open);
+    setMenuOpen(open);
   }
 
   return <>
@@ -121,7 +105,7 @@ export const SupportAffix = () => {
       type="primary"
       style={{ right: 30, bottom: 30 }}
       icon={<CustomerServiceOutlined />}
-      open={open}
+      open={menuOpen}
       onOpenChange={handleFloatButtonOpenChange}
     >
       <ZeventBadge
@@ -150,6 +134,7 @@ export const SupportAffix = () => {
 
     {
       chatOpen && <Affix style={{ position: 'fixed', bottom: 30, right: 30, zIndex: 900 }}>
+        {/* <DebugJsonPanel value={list} /> */}
         <Space direction="vertical" style={{ alignItems: 'flex-end' }} size="large" >
           <StyledCard
             // title="Contact support"
