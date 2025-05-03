@@ -1,2 +1,9 @@
 export const notes=`
-able to assign client profile to a guest account`
+icon fix
+refine support message
+fix support zevent notification
+refine support zevent
+clean up
+wording
+ui refine
+misc`

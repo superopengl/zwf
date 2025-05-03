@@ -131,7 +131,7 @@ export const SupportAffix = () => {
         </Space>
       </Affix> :
         <FloatButton
-          type="primary"
+          // type="primary"
           style={{ right: 30, bottom: 30 }}
           icon={<CustomerServiceOutlined />}
           tooltip="Chat with ZeeWorkflow support"
