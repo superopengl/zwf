@@ -71,7 +71,7 @@ export const OptionsBuilder = (props) => {
             block
             type="primary"
             ghost
-            // icon={<PlusOutlined/>}
+            icon={<PlusOutlined/>}
             onClick={() => {
               const newOptions = [
                 ...options,
