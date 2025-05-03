@@ -16,6 +16,9 @@ import { useNavigate } from 'react-router-dom';
 import { SavingAffix } from 'components/SavingAffix';
 import { PageHeaderContainer } from 'components/PageHeaderContainer';
 import { useAssertRole } from 'hooks/useAssertRole';
+import { SaveOutlined } from '@ant-design/icons';
+import { CheckboxButton } from 'components/CheckboxButton';
+import { DebugJsonPanel } from 'components/DebugJsonPanel';
 
 const { Text } = Typography;
 
@@ -55,7 +58,6 @@ export const ResourceEditPage = React.memo((props) => {
   const [loading, setLoading] = React.useState(!isNew);
   const [saving, setSaving] = React.useState(false);
   const [page, setPage] = React.useState(isNew ? createEmptyPage() : null);
-  const [debouncedPage, setPageImmidiately] = useDebouncedValue(page, 500);
   const navigate = useNavigate();
   const debugMode = false;
 
@@ -73,15 +75,12 @@ export const ResourceEditPage = React.memo((props) => {
     return () => sub$.unsubscribe();
   }, []);
 
-  // Auto save every 0.5 seconds if needed
-  React.useEffect(() => {
-    if (debouncedPage) {
-      setSaving(true)
-      saveResourcePage$(debouncedPage).pipe(
-        finalize(() => setSaving(false))
-      ).subscribe();
-    }
-  }, [debouncedPage]);
+  const handleSave = () => {
+    setSaving(true)
+    saveResourcePage$(page).pipe(
+      finalize(() => setSaving(false))
+    ).subscribe();
+  }
 
   const handleRename = (title) => {
     if (title !== page.title) {
@@ -94,10 +93,13 @@ export const ResourceEditPage = React.memo((props) => {
   };
 
   const handleTogglePublish = () => {
-    setPageImmidiately(p => {
-      const publishedAt = p.publishedAt ? null : new Date();
-      return { ...p, publishedAt };
-    })
+    const publishedAt = page.publishedAt ? null : new Date();
+    const newPage = { ...page, publishedAt }
+    setPage(newPage);
+    setSaving(true)
+    saveResourcePage$(newPage).pipe(
+      finalize(() => setSaving(false))
+    ).subscribe();
   }
 
   const canPublish = page?.html?.trim().length > 0;
@@ -111,15 +113,17 @@ export const ResourceEditPage = React.memo((props) => {
       maxWidth={1000}
       style={{ maxWidth: 900, margin: '0 auto' }}
       extra={[
-        debouncedPage
-          ? <Button
-            type="primary"
-            ghost={!!debouncedPage.publishedAt}
-            onClick={handleTogglePublish}
-            disabled={!canPublish}>
-            {debouncedPage.publishedAt ? 'Unpublish' : 'Publish'}
-          </Button>
-          : <Skeleton.Button />
+        <CheckboxButton
+          key="publish"
+          value={!!page?.publishedAt}
+          onChange={handleTogglePublish}
+          disabled={!canPublish}
+        >{page?.publishedAt ? 'Unpublish' : 'Publish'}</CheckboxButton>,
+        <Button
+          key="save"
+          icon={<SaveOutlined />}
+          onClick={handleSave}
+        >Save</Button>
       ]}
     >
       <div style={{ position: 'relative' }}>
