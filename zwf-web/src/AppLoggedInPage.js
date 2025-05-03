@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon, {
-  SettingOutlined, BankOutlined, TagFilled, CreditCardFilled, ClockCircleOutlined
+  SettingOutlined, BankOutlined, TagFilled, CreditCardFilled, ClockCircleOutlined, CustomerServiceOutlined
 } from '@ant-design/icons';
 import { Space, Typography, Button, Image } from 'antd';
 import styled from 'styled-components';
@@ -117,7 +117,7 @@ const ROUTES = [
       {
         path: '/support',
         name: 'User Support',
-        icon: <Icon component={MdMessage} />,
+        icon: <CustomerServiceOutlined />,
         roles: ['system'],
       },
       {
