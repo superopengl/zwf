@@ -1,5 +1,4 @@
 import { db } from './../db';
-import { SupportUserLastAccess } from '../entity/SupportUserLastAccess';
 import { SupportInformation } from '../entity/views/SupportInformation';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -14,6 +13,7 @@ import { SupportMessage } from '../entity/SupportMessage';
 import { assertRole } from '../utils/assertRole';
 import { emitTaskEvent } from '../utils/emitTaskEvent';
 import { ZeventName } from '../types/ZeventName';
+import { IsNull } from 'typeorm';
 
 export const listMySupportMessages = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Client, Role.Agent, Role.Admin], true);
@@ -127,15 +127,12 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
   assertRole(req, ['admin', 'agent', 'client']);
   const userId = getUserIdFromReq(req);
 
-  const lastReadEntity = new SupportUserLastAccess();
-  lastReadEntity.userId = userId;
-
-  await db.createQueryBuilder()
-    .insert()
-    .into(SupportUserLastAccess)
-    .values({ ...lastReadEntity, lastAccessAt: () => `NOW()` })
-    .orUpdate(['lastAccessAt'], ['userId'])
-    .execute();
+  await db.manager.update(SupportMessage, {
+    userId,
+    userLastSeenAt: IsNull()
+  }, {
+    userLastSeenAt: () => `NOW()`,
+  })
 
   res.json();
 });

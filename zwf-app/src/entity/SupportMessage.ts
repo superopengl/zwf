@@ -20,5 +20,8 @@ export class SupportMessage {
 
   @Column()
   message: string;
+
+  @Column({nullable: true})
+  userLastSeenAt: Date;
 }
 
