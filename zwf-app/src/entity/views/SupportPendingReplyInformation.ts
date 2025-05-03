@@ -4,7 +4,7 @@ import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
 @ViewEntity({
   expression: (connection: DataSource) => connection.createQueryBuilder()
     .from(SupportMessage, 'x')
-    .innerJoin(q => q.from(SupportMessage, 'm')
+    .leftJoin(q => q.from(SupportMessage, 'm')
       .where(`m.by != m."userId"`)
       .distinctOn(['m."userId"'])
       .orderBy('"userId"')
@@ -14,7 +14,7 @@ import { ViewEntity, DataSource, ViewColumn, PrimaryColumn } from 'typeorm';
         `m."createdAt" as "lastReplyAt"`
       ]),
       'u', 'x."userId" = u."userId"')
-    .where(`x."createdAt" > u."lastReplyAt"`)
+    .where(`(x."createdAt" > u."lastReplyAt" OR u."lastReplyAt" IS NULL)`)
     .andWhere(`x.by = x."userId"`)
     .groupBy('x."userId"')
     .select([
