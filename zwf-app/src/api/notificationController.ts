@@ -4,7 +4,6 @@ import { db } from '../db';
 import { assertRole } from '../utils/assertRole';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
-import { NotificationMessage } from "../entity/NotificationMessage";
 import { TaskActivityInformation } from '../entity/views/TaskActivityInformation';
 import { Role } from '../types/Role';
 import { getRoleFromReq } from '../utils/getRoleFromReq';
@@ -152,20 +151,4 @@ export const getMyNotifications_old = handlerWrapper(async (req, res) => {
   })
 
   res.json(result);
-});
-
-export const reactOnNotificationMessage = handlerWrapper(async (req, res) => {
-  assertRole(req, ['client', 'agent', 'admin', 'system']);
-  const { id } = req.params;
-  const userId = getUserIdFromReq(req);
-
-  await db.manager.update(NotificationMessage, {
-    id,
-    notifiee: userId,
-    reactedAt: IsNull(),
-  }, {
-    reactedAt: () => `NOW()`
-  })
-
-  res.json();
 });
