@@ -14,19 +14,14 @@ import { Role } from '../../types/Role';
     .innerJoin(UserInformation, 'u', `u.id = x."userId"`)
     .innerJoin(ZeventDef, 'z', 'u.role = ANY(z."uiNotifyRoles") AND x.type = z.name')
     .where({ ackAt: IsNull() })
-    .orderBy('x."taskId"')
-    .addOrderBy('x."taskName"')
-    .addOrderBy('x."userId"')
-    .addOrderBy('x."createdAt"', 'DESC')
+    .orderBy('x."createdAt"', 'DESC')
     .select([
       `x."eventId" as "eventId"`,
       `x."taskId" as "taskId"`,
       `x."taskName" as "taskName"`,
       `x."userId" as "userId"`,
-      `u.role as role`,
       `x."type" as "type"`,
-      `x."createdAt" as "lastEventAt"`,
-      `extract(day from NOW() - x."createdAt") AS "unackDays"`
+      `x."createdAt" as "createdAt"`
     ]),
   dependsOn: [TaskWatcherEventAckInformation]
 }) export class TaskWatcherUiNotificationInformation {
@@ -43,14 +38,8 @@ import { Role } from '../../types/Role';
   userId: string;
 
   @ViewColumn()
-  role: Role;
-
-  @ViewColumn()
   type: ZeventName;
 
   @ViewColumn()
   createdAt: Date;
-
-  @ViewColumn()
-  unackDays: number;
 }

@@ -11,6 +11,7 @@ import { TaskWatcherEventAckInformation } from '../entity/views/TaskWatcherEvent
 import { assert } from '../utils/assert';
 import { emitTaskEventAcks } from '../utils/emitTaskEventAcks';
 import { ZeventDef } from '../entity/ZeventDef';
+import { TaskWatcherUiNotificationInformation } from '../entity/views/TaskWatcherUiNotificationInformation';
 
 export const loadMyUnackZevents = handlerWrapper(async (req, res) => {
   assertRole(req, [Role.Client, Role.Agent, Role.Admin, Role.System]);
@@ -29,26 +30,10 @@ export const loadMyUnackZevents = handlerWrapper(async (req, res) => {
   if (role === Role.System) {
     result = [];
   } else {
-    const taskEvents = await db
-      .getRepository(TaskWatcherEventAckInformation)
-      .createQueryBuilder('x')
-      .innerJoin(ZeventDef, 'z', `'${role}' = ANY(z."uiNotifyRoles") AND x.type = z.name`)
-      .where(`"userId" = :userId`, { userId })
-      // .andWhere(`type IN (:...eventTypes)`, { eventTypes })
-      // .andWhere(`"ackAt" IS NULL OR "ackAt" > now() - interval '30 minutes'`)
-      .andWhere(`"ackAt" IS NULL`)
-      .select([
-        '"eventId"',
-        '"taskId"',
-        '"taskName"',
-        'type',
-        'info',
-        'x."createdAt"',
-        'by',
-        '"ackAt"',
-      ])
-      .orderBy('x."createdAt"', 'DESC')
-      .getRawMany();
+    const taskEvents = await db.getRepository(TaskWatcherUiNotificationInformation)
+      .findBy({
+        userId
+      })
 
     // const taskEvents = await db.manager.find(TaskWatcherEventAckInformation, {
     //   where: [{
