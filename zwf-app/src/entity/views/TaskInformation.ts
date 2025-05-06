@@ -32,6 +32,7 @@ import { OrgClient } from '../OrgClient';
       // 't.fields as fields',
       't.status as status',
       'c.id as "orgClientId"',
+      'c."clientAlias" as "clientAlias"',
       'u.id as "userId"',
       't."orgId" as "orgId"',
       'o."name" as "orgName"',
@@ -61,6 +62,9 @@ import { OrgClient } from '../OrgClient';
 
   @ViewColumn()
   orgClientId: string;
+
+  @ViewColumn()
+  clientAlias: string;
 
   @ViewColumn()
   userId: string;

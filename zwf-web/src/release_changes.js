@@ -1,3 +1,5 @@
 export const notes=`
-icon fix
-show suspended user on support list`
+compile vars in email subject
+index-notify
+view refine
+clean up table`
