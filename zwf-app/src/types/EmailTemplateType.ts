@@ -11,7 +11,7 @@ export enum EmailTemplateType {
 
   // Task
   TaskCompleted = 'task_completed',
-  TaskRequireAction = 'task_require_action',
+  TaskLongUnackEvents = 'task_long_unack_events',
 
   // Subscription and payment
   SubscriptionSuspended = 'subscription_suspended',

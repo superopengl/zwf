@@ -3,6 +3,7 @@ import { UserInformation } from './UserInformation';
 import { TaskWatcherUiNotificationInformation } from './TaskWatcherUiNotificationInformation';
 import { ZeventDef } from '../ZeventDef';
 import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation';
+import { Role } from '../../types/Role';
 
 @ViewEntity({
   expression: (connection: DataSource) => connection
@@ -12,53 +13,60 @@ import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation
       .innerJoin(UserInformation, 'u', `u.id = x."userId"`)
       .innerJoin(ZeventDef, 'z', 'u.role = ANY(z."emailNotifyRoles") AND x.type = z.name')
       .where({ ackAt: IsNull() })
-      .orderBy('x."createdAt"', 'ASC')
       .select([
         `x."taskId" as "taskId"`,
+        `x."deepLinkId" as "deepLinkId"`,
         `x."taskName" as "taskName"`,
+        `x."orgName" as "orgName"`,
         `x."userId" as "userId"`,
+        `u."role" as "role"`,
         `x."createdAt" as "createdAt"`,
         `x."type" as "type"`,
         `u.email as email`,
         `u."givenName" as "givenName"`,
         `u."surname" as "surname"`,
       ]), 'm')
-    .distinctOn([
-      '"taskId"',
-      '"taskName"',
-      '"userId"',
-      '"email"',
-      '"givenName"',
-      '"surname"',
-    ])
+    .groupBy('"taskId"')
+    .addGroupBy('"deepLinkId"')
+    .addGroupBy('"taskName"')
+    .addGroupBy('"orgName"')
+    .addGroupBy('"userId"')
+    .addGroupBy('"role"')
+    .addGroupBy('"email"')
+    .addGroupBy('"givenName"')
+    .addGroupBy('"surname"')
     .select([
       '"taskId"',
+      '"deepLinkId"',
       '"taskName"',
+      '"orgName"',
       '"userId"',
+      '"role"',
       '"email"',
       '"givenName"',
       '"surname"',
-      `extract(day from NOW() - "createdAt") AS "unackDays"`,
-    ])
-    .orderBy('"taskId"')
-    .addOrderBy('"taskName"')
-    .addOrderBy('"userId"')
-    .addOrderBy('"email"')
-    .addOrderBy('"givenName"')
-    .addOrderBy('"surname"')
-    .addOrderBy('"createdAt"', 'ASC')
-  ,
-
+      `array_agg(jsonb_build_object('type', "type", 'createdAt', "createdAt") ORDER BY "createdAt") as events`,
+      `extract(day from NOW() - MAX("createdAt")) AS "unackDays"`,
+    ]),
   dependsOn: [TaskWatcherEventAckInformation]
 }) export class TaskWatcherEmailNotificationInformation {
   @ViewColumn()
   taskId: string;
 
   @ViewColumn()
+  deepLinkId: string;
+
+  @ViewColumn()
   taskName: string;
 
   @ViewColumn()
+  orgName: string;
+
+  @ViewColumn()
   userId: string;
+
+  @ViewColumn()
+  role: Role;
 
   @ViewColumn()
   email: string;
@@ -68,6 +76,9 @@ import { TaskWatcherEventAckInformation } from './TaskWatcherEventAckInformation
 
   @ViewColumn()
   surname: string;
+
+  @ViewColumn()
+  events: { name: string, createdAt: Date }[];
 
   @ViewColumn()
   unackDays: number;

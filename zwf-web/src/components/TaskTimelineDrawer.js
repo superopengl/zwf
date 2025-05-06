@@ -32,7 +32,7 @@ TaskTimelineDrawer.propTypes = {
 };
 
 TaskTimelineDrawer.defaultProps = {
-  width: 500,
+  // width: 500,
   open: false,
   onClose: () => { },
 };

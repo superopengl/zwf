@@ -3,11 +3,15 @@ import { db } from '../src/db';
 import errorToJson from 'error-to-json';
 import 'colors';
 import { start } from './jobStarter';
-import { IsNull, LessThan } from 'typeorm';
+import { In, IsNull, LessThan } from 'typeorm';
 import { EmailSentOutTask } from '../src/entity/EmailSentOutTask';
-import { sendEmail } from '../src/services/emailService';
+import { enqueueEmailInBulk } from '../src/services/emailService';
 import { getUtcNow } from '../src/utils/getUtcNow';
 import { sleep } from '../src/utils/sleep';
+import { TaskWatcherEmailNotificationInformation } from '../src/entity/views/TaskWatcherEmailNotificationInformation';
+import { EmailRequest } from '../src/types/EmailRequest';
+import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
+import { getEmailRecipientNameByNames } from '../src/utils/getEmailRecipientName';
 
 const JOB_NAME = 'index-notify';
 
@@ -16,46 +20,33 @@ export async function handleEmailTasks() {
   // const sleepTimeMs = 1000 / EMAIL_RATE_LIMIT_PER_SEC;
   console.log('Starting index-notify');
 
-
-
-  const emailTasks = await db.getRepository(EmailSentOutTask).find({
-    where: {
-      sentAt: IsNull(),
-      failedCount: LessThan(5)
-    },
-    order: {
-      id: 'ASC'
-    },
-    // take: takeSize
+  const jobs = await db.getRepository(TaskWatcherEmailNotificationInformation).findBy({
+    unackDays: In([1, 3, 7, 10, 30]),
   });
 
-  console.log(`Email sender ${emailTasks.length} emails to send out`);
+  console.log(`Email task notification ${jobs.length} jobs to handle`);
 
-  if (!emailTasks.length) {
+  if (!jobs.length) {
     return;
   }
 
-  let okCounter = 0;
-  for (const task of emailTasks) {
-    try {
-      await sendEmail({
-        to: task.to,
-        from: task.from,
-        template: task.template as EmailTemplateType,
-        vars: task.vars,
-        attachments: task.attachments as { filename: string; path: string }[],
-        shouldBcc: task.shouldBcc,
-      });
-      task.sentAt = getUtcNow();
-      await db.getRepository(EmailSentOutTask).save(task);
-      okCounter++;
-      // await sleep(sleepTimeMs);
-    } catch (err) {
-      console.log(`Failed to send out email ${task.id}`, errorToJson(err));
-      await db.getRepository(EmailSentOutTask).increment({ id: task.id }, 'failedCount', 1);
+  const emailRequests = jobs.map(j => {
+    const request = new EmailRequest();
+    request.to = j.email;
+    request.template = EmailTemplateType.TaskLongUnackEvents;
+    request.vars = {
+      toWhom: getEmailRecipientNameByNames(j.givenName, j.surname),
+      taskName: j.taskName,
+      url: `${process.env.ZWF_WEB_DOMAIN_NAME}/task/direct/${j.deepLinkId}`,
+      org: j.orgName,
     }
-  }
-  console.log(`Email sender ${emailTasks.length} emails to send out, ${okCounter} succeeded.`);
+
+    return request;
+  });
+
+  await enqueueEmailInBulk(db.manager, emailRequests);
+
+  console.log(`Email task notification ${jobs.length} emails enqueued.`);
 }
 
 start(JOB_NAME, async () => {
