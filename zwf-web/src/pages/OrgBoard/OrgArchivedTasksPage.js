@@ -27,6 +27,7 @@ const DEFAULT_QUERY = {
   page: 1,
   size: 200,
   total: 0,
+  status: ['archived'],
   orderField: 'updatedAt',
   orderDirection: 'DESC'
 };
@@ -94,12 +95,11 @@ const OrgArchivedTasksPage = () => {
       extra={[
         <TaskSearchFilterButton
         key="search"
-        storeKey='tasks.filter.archived'
+        showArchived={true}
+        showStatusFilter={false}
         onChange={handleFilterSearch}
+        value={queryInfo}
         defaultQuery={DEFAULT_QUERY} />,
-        <Tooltip key="refresh" title="Refresh">
-          <Button icon={<SyncOutlined />} onClick={handleReload} />
-        </Tooltip>,
       ]}
     >
 

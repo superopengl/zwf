@@ -13,9 +13,13 @@ export const LandingPage = () => {
       case 'admin':
         if (!user.orgId) {
           navigate('/onboard');
-          break;
+        } else {
+          navigate('/task/board');
         }
+        break;
       case 'agent':
+        navigate('/task/board');
+        break;
       case 'client':
         navigate('/task');
         break;

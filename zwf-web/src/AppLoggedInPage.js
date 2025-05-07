@@ -31,6 +31,7 @@ import { TbClock, TbClockPlay, TbRepeat } from 'react-icons/tb';
 import { BiRepeat } from 'react-icons/bi';
 import { ZeventContainer } from 'components/ZeventContainer';
 import { SupportAffix } from 'components/SupportAffix';
+import { HiViewBoards, HiViewList } from 'react-icons/hi';
 const { Link: LinkText } = Typography;
 
 const StyledContainer = styled.div`
@@ -67,9 +68,15 @@ const ROUTES = [
     name: 'Tasks',
     routes: [
       {
-        path: '/task',
-        name: <FormattedMessage id="menu.tasks" />,
-        icon: <Icon component={MdDashboard} />,
+        path: '/task/board',
+        name: 'Board',
+        icon: <Icon component={HiViewBoards} />,
+        roles: ['admin', 'agent'],
+      },
+      {
+        path: '/task/list',
+        name: 'List',
+        icon: <Icon component={HiViewList} />,
         roles: ['admin', 'agent'],
       },
       // {

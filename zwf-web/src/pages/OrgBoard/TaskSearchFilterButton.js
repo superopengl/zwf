@@ -3,25 +3,22 @@ import { useLocalstorageState } from 'rooks';
 import { TaskSearchPanel } from './TaskSearchPanel';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { DebugJsonPanel } from 'components/DebugJsonPanel';
-import { Badge, Button, Modal } from 'antd';
+import { Space, Badge, Button, Modal } from 'antd';
 import PropTypes from 'prop-types';
 import isEqual from 'lodash/isEqual';
-import { FilterFilled, FilterOutlined } from '@ant-design/icons';
+import pick from 'lodash/pick';
+import { CloseOutlined, FilterFilled, FilterOutlined } from '@ant-design/icons';
 
 
 export const TaskSearchFilterButton = (props) => {
   useAssertRole(['admin', 'agent']);
-  const { onChange, storeKey, defaultQuery } = props;
+  const { value, onChange, defaultQuery, showArchived, showStatusFilter } = props;
   const [modal, contextHolder] = Modal.useModal();
-  const [stored, setStored] = useLocalstorageState(storeKey, defaultQuery);
-  const [queryInfo, setQueryInfo] = React.useState(stored);
   const formRef = React.useRef();
 
-  
+
   const handleOpenFilter = () => {
     const handleSearch = (newQueryInfo) => {
-      setStored(newQueryInfo);
-      setQueryInfo(newQueryInfo);
       onChange(newQueryInfo);
       instance.destroy();
     }
@@ -31,8 +28,9 @@ export const TaskSearchFilterButton = (props) => {
       title: 'Search filter',
       content: <TaskSearchPanel
         ref={formRef}
-        queryInfo={queryInfo}
-        defaultQuery={defaultQuery}
+        queryInfo={value}
+        showStatusFilter={showStatusFilter}
+        showArchived={showArchived}
         onSearch={handleSearch} />,
       okText: 'Search',
       destroyOnClose: true,
@@ -42,22 +40,44 @@ export const TaskSearchFilterButton = (props) => {
     });
   }
 
-  return <Badge showZero={false} count={isEqual(queryInfo, defaultQuery) ? 0 : ' '} size="small">
+
+  const handleResetFilter = () => {
+    onChange(defaultQuery);
+  }
+
+  const hasChange = () => {
+    const props = ['status', 'text', 'tags', 'assigneeId', 'clientId', 'watchedOnly'];
+    const v = pick(value, props);
+    const d = pick(defaultQuery, props);
+    return !isEqual(v, d);
+  }
+
+
+  return <Space>
     {/* <DebugJsonPanel value={queryInfo} /> */}
     {/* <DebugJsonPanel value={defaultQuery} /> */}
-    <Button icon={<FilterFilled />} onClick={handleOpenFilter}>Filter</Button>
-    {contextHolder}
-  </Badge>
+    <Button key="clear"
+      // type="text"
+      icon={<CloseOutlined/>}
+      onClick={handleResetFilter}>Reset</Button>
+    <Badge showZero={false} count={hasChange() ? ' ' : 0} size="small">
+      <Button icon={<FilterFilled />} onClick={handleOpenFilter}>Filter</Button>
+      {contextHolder}
+    </Badge>
+  </Space>
 }
 
 TaskSearchFilterButton.propTypes = {
   storeKey: PropTypes.string,
   defaultQuery: PropTypes.object,
+  value: PropTypes.object,
   onChange: PropTypes.func,
+  showArchived: PropTypes.bool,
 };
 
 TaskSearchFilterButton.defaultProps = {
   storeKey: 'tasks.filter',
   defaultQuery: {},
   onChange: () => { },
+  showArchived: false,
 };
