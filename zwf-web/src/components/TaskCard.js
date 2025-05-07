@@ -65,7 +65,7 @@ export const TaskCard = (props) => {
     hoverable
     onClick={() => navigate(`/task/${id}`)}
   >
-    <ProCard ghost>
+    <ProCard ghost bodyStyle={{ overflow: 'hidden'}}>
       <Row gutter={[10, 10]} justify="space-between" align="top" style={{ marginBottom: 16 }} wrap={false}>
         <Col flex="auto">
           <Tooltip title={name} placement="bottom">
