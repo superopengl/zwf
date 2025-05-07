@@ -76,7 +76,7 @@ const OrgOnBoardPage = (props) => {
       </InnerContainer>
     </Layout.Content>
     <HomeFooter />
-    <SupportAffix />
+    {/* <SupportAffix /> */}
   </Container>
 }
 
