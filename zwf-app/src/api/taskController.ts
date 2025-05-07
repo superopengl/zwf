@@ -99,7 +99,7 @@ export const updateTaskFields = handlerWrapper(async (req, res) => {
   const { id } = req.params;
   const userId = getUserIdFromReq(req);
 
-  assert(fields.length, 400, 'No fields to update');
+  // assert(fields.length, 400, 'No fields to update');
 
   const query: any = { id, orgId: getOrgIdFromReq(req) };
   const task = await db.getRepository(Task).findOne({
