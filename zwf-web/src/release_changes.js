@@ -1,6 +1,4 @@
 export const notes=`
-update release notes
-compile vars in email subject
-index-notify
-view refine
-clean up table`
+bugfix onboarding
+allow task having no fields
+refine email templates`
