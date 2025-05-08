@@ -70,7 +70,11 @@ const OrgResurgingPage = () => {
   }, []);
 
   const handleCheckout = (stripePaymentMethodId) => {
+    setLoading(true)
     resurgeOrg$(code, { stripePaymentMethodId })
+      .pipe(
+        finalize(() => setLoading(false))
+      )
       .subscribe(() => {
         modal.success({
           title: '🎉 Successfully unlocked!',
@@ -82,8 +86,8 @@ const OrgResurgingPage = () => {
               The due amount has been received, and your organization is now unlocked. Please log in again to resume using ZeeWorkflow.
             </Paragraph>
           </>,
-          maskClosable: true,
-          closable: true,
+          maskClosable: false,
+          closable: false,
           destroyOnClose: true,
           onOk: () => navigate('/login'),
           onCancel: () => navigate('/'),
