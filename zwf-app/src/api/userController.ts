@@ -163,7 +163,8 @@ export const deleteUser = handlerWrapper(async (req, res) => {
         await m.getRepository(LicenseTicket).createQueryBuilder()
           .update()
           .set({
-            ticketTo: () => `now()`
+            ticketTo: () => `now()`,
+            email: user.profile.email,
           })
           .where(`"userId" = :id`, { id })
           .andWhere(`"orgId" = :orgId`, { orgId })

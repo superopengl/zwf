@@ -26,4 +26,7 @@ export class LicenseTicket {
   @Column('uuid')
   @Index()
   userId: string;
+
+  @Column({nullable: true})
+  email: string;
 }
