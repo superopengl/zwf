@@ -111,7 +111,7 @@ const PromotionListPanel = (props) => {
     <ContainerStyled>
       <Space direction="vertical" style={{ width: '100%' }}>
         <Space style={{ width: '100%', justifyContent: 'flex-end' }}>
-          <Button type="primary" onClick={() => handleNewPromotionCode()} icon={<PlusOutlined />}>New Promotion Code</Button>
+          <Button type="primary" onClick={() => handleNewPromotionCode()} icon={<PlusOutlined />}>Set Price</Button>
         </Space>
         <Table columns={columnDef}
           dataSource={list}
@@ -130,7 +130,7 @@ const PromotionListPanel = (props) => {
         destroyOnClose={true}
         maskClosable={true}
         onClose={() => setModalVisible(false)}
-        title={<>New Promotion Code</>}
+        title={<>Negotiated Price</>}
         footer={null}
         width={400}
       >
@@ -161,7 +161,7 @@ const PromotionListPanel = (props) => {
             <Switch />
           </Form.Item>
           <Form.Item wrapperCol={{ span: 24 }}>
-            <Button block type="primary" htmlType="submit" disabled={loading}>Create</Button>
+            <Button block type="primary" htmlType="submit" disabled={loading}>Save</Button>
           </Form.Item>
         </Form>
       </Drawer>
