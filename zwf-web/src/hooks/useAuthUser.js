@@ -31,7 +31,8 @@ export const useAuthUser = () => {
             destroyOnClose: true,
             okButtonProps: {
               type: 'default',
-            }
+            },
+            autoFocusButton: "ok",
           })
         });
         return;
