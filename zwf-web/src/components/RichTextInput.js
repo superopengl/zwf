@@ -57,9 +57,9 @@ export const RichTextInput = React.memo((props) => {
         init={{
           // height: 'calc(100vh - 240px)',
           height: 800,
-          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars link template table charmap nonbreaking anchor advlist lists autoresize',
+          plugins: 'importcss searchreplace autolink directionality visualblocks visualchars link template table charmap nonbreaking anchor advlist lists autoresize img64upload',
           menubar: false, //'file edit view insert format tools table tc help',
-          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | table',
+          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | img64upload table',
           toolbar_sticky: false,
           // extended_valid_elements: 'img[src|alt|width|height]',
           content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
