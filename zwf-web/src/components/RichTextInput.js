@@ -37,6 +37,19 @@ export const RichTextInput = React.memo((props) => {
     setReady(true)
   };
 
+  const imagesUploadHandler = (blobInfo, progress) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = function () {
+        const base64Data = reader.result.split(',')[1]; // Extract the base64 data from the FileReader result
+        // window.tinymce.activeEditor.insertContent('<img src="' + `data:${blobInfo.blob().type};base64, ${base64Data}` + '">');
+        // resolve();
+        resolve(`data:${blobInfo.blob().type};base64,${base64Data}`); // Pass the base64 image URL to TinyMCE
+      };
+      reader.readAsDataURL(blobInfo.blob());
+    })
+  }
+
   return (
     <>
       {!ready && <Skeleton active ></Skeleton>}
@@ -52,8 +65,9 @@ export const RichTextInput = React.memo((props) => {
           height: 800,
           plugins: 'importcss searchreplace autolink directionality visualblocks visualchars image link template table charmap nonbreaking anchor advlist lists quickbars autoresize',
           menubar: false, //'file edit view insert format tools table tc help',
-          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | table',
+          toolbar: 'blocks fontfamily fontsize  | bold italic underline strikethrough removeformat | blockquote superscript subscript | alignleft aligncenter alignright alignjustify | outdent indent numlist bullist checklist forecolor backcolor | image table',
           toolbar_sticky: false,
+          // extended_valid_elements: 'img[src|alt|width|height]',
           content_style: `body { font-family:Helvetica,Arial,sans-serif; font-size:16px } .editor-variable {
             cursor: default;
             background-color: #0FBFC433;
@@ -68,6 +82,7 @@ export const RichTextInput = React.memo((props) => {
             font-family: monospace;
           }`,
           toolbar_mode: 'wrap',
+          automatic_uploads: false,
           branding: false,
           elementpath: false,
           statusbar: false,
@@ -79,9 +94,11 @@ export const RichTextInput = React.memo((props) => {
           image_title: false,
           file_picker_types: 'image',
           images_reuse_filename: true,
-          automatic_uploads: true,
+          // automatic_uploads: true,
           // autoresize_bottom_margin: 100,
           onpageload: handleEditorLoad,
+          images_upload_handler: imagesUploadHandler,
+          image_description: false,
           // images_upload_handler2: (blobInfo, success, failure, progress) => {
           //   const imageSize = blobInfo.blob().size;
           //   const maxSize = 1 * 1000 * 1000;
