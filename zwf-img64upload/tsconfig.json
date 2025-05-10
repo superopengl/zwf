@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "umd",
+    // "module": "none",
+    "importHelpers": true,
+    "lib": ["es2015", "dom", "es5", "es6"],
+    "declaration": false,
+    "noUnusedLocals": true,
+    "sourceMap": false,
+    "outDir": "build",
+    "baseUrl": ".",
+    "types": ["mocha"],
+    "allowJs": true,
+    "removeComments": true,
+    "noEmitOnError": true
+  },
+  "include": [
+    "src"
+  ]
+}

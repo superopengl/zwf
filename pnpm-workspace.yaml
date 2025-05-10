@@ -1,3 +1,4 @@
 packages:
   - zwf-app
   - zwf-web
+  - zwf-img64upload

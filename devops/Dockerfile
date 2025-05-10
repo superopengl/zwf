@@ -74,6 +74,8 @@ RUN pnpm fetch
 # # ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 COPY . .
+
+WORKDIR /usr/portal
 RUN pnpm install -r --offline
 
 # Build app
@@ -85,6 +87,10 @@ ENV REACT_APP_ZWF_API_DOMAIN_NAME=
 ENV REACT_APP_ZWF_GOOGLE_SSO_CLIENT_ID=494191602561-v5djkofskkipefvj6mgqpbqs60e8hok9.apps.googleusercontent.com
 ENV REACT_APP_ZWF_STRIPE_PUBLISHABLE_KEY=pk_live_51KdBy9GTxuce44Dho25dWDow3a0zMM7cSJeSvyBSh6YM0zv208nGcAwluNEsI3u4wbipNZDUvQatMw5Fs0krvDYF00jRuqfFSE
 ENV PUBLIC_URL=https://zeeworkflow.com
+
+# Build tinymce zwf-img64upload
+WORKDIR /usr/portal/zwf-img64upload
+RUN pnpm build
 
 # Build web
 WORKDIR /usr/portal/zwf-web
