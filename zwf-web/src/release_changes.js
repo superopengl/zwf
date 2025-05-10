@@ -1,2 +1,2 @@
 export const notes=`
-fix resource page link`
+hook zwf-img64upload plugin`
