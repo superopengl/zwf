@@ -13,7 +13,7 @@
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          The task <strong>{{taskName}}</strong>, being proceeded for client <strong>{{clientAlias}}</strong>, has been updated recently. You can click below button to view the task and find out what further information you need to provide.
+          The task <strong>{{taskName}}</strong>, being proceeded for client <strong>{{clientAlias}}</strong>, has been updated recently. You can click below button to view the task.
         </mj-text>
       </mj-column>
       <mj-column width="100%">

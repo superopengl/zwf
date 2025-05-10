@@ -1,19 +1,19 @@
 <mjml>
   <mj-head>
-    <mj-title>Case Update Notification - [{{taskName}}]</mj-title>
+    <mj-title>Update Notification - [{{taskName}}]</mj-title>
     <mj-include path="./emailTemplateHeader.mjml" />
   </mj-head>
   <mj-body css-class="content">
     <mj-include path="./emailTemplateTitle.mjml" />
     <mj-section>
       <mj-column width="100%">
-        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, case <strong>{{taskName}}</strong> has recent updates</mj-text>
+        <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">Hi {{toWhom}}, <strong>{{taskName}}</strong> has recent updates</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          Your case <strong>{{taskName}}</strong>, being proceeded by <strong>{{org}}</strong>, has been updated recently. You can click below button to view the case and find out what further information you need to provide.
+          Your case <strong>{{taskName}}</strong>, being proceeded by <strong>{{org}}</strong>, was updated recently. You can click below button to view the case.
         </mj-text>
       </mj-column>
       <mj-column width="100%">
@@ -28,7 +28,7 @@
       </mj-column>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-          Should you have any questions about this case, you can contact with <strong>{{org}}</strong> on the case page in ZeeWorkflow.
+          Should you have any questions about this case, you can contact with <strong>{{org}}</strong> on the page.
         </mj-text>
       </mj-column>
     </mj-section>

@@ -22,7 +22,7 @@ export async function handleEmailTasks() {
   console.log('Starting index-notify');
 
   const jobs = await db.getRepository(TaskWatcherEmailNotificationInformation).findBy({
-    // unackDays: In([1, 3, 7, 10, 30]),
+    unackDays: In([1, 3, 7, 14, 30]),
   });
 
   console.log(`Email task notification ${jobs.length} jobs to handle`);
