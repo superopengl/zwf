@@ -460,9 +460,7 @@
   "scope": "https://zeeworkflow.com",
   "lang": "en",
   "orientation": "portrait-primary",
-  "display_override": [
-    "fullscreen"
-  ],
+  "display_override": ["fullscreen", "window-controls-overlay"],
   "categories": [
     "business",
     "finance",
