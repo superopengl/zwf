@@ -1,4 +1,4 @@
 export const notes=`
-update release notes
-update release notes
-bugfix`
+refine manifest
+refine manifest file
+wording`
