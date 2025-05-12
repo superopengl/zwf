@@ -43,8 +43,14 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": ".",
+  "start_url": "https://zeeworkflow.com",
+  "scope": "https://zeeworkflow.com",
   "display": "standalone",
+  "orientation": "portrait",
+  "categories": ["business", "utilities"],
+  "description": "ZeeWorkflow is an all-in-one system for file, doc, task, e-sign, CRM, and workflow management",
+  "dir": "ltr",
+  "lang": "en",
   "theme_color": "#0FBFC4",
   "background_color": "#ffffff"
 }
