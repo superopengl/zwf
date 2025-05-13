@@ -31,24 +31,24 @@ serviceWorkerRegistration.register();
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 // reportWebVitals(console.log);
 
-Notification.requestPermission().then((result) => {
-  if (result === 'granted') {
-    console.log('Notification and Push are granted');
-  }
-});
+// Notification.requestPermission().then((result) => {
+//   if (result === 'granted') {
+//     console.log('Notification and Push are granted');
+//   }
+// });
 
-function randomNotification() {
-  const notifTitle = 'ZeeWorkflow';
-  const notifBody = `Welcome to ZeeWorkflow`;
-  const notifImg = `/images/logo-tile.png`;
-  const options = {
-    body: notifBody,
-    icon: notifImg,
-    requireInteraction: true,
-  };
+// function randomNotification() {
+//   const notifTitle = 'ZeeWorkflow';
+//   const notifBody = `Welcome to ZeeWorkflow`;
+//   const notifImg = `/images/logo-tile.png`;
+//   const options = {
+//     body: notifBody,
+//     icon: notifImg,
+//     requireInteraction: true,
+//   };
 
-  setTimeout(() => {
-    new Notification(notifTitle, options);
-  }, 2000);
-}
-randomNotification();
+//   setTimeout(() => {
+//     new Notification(notifTitle, options);
+//   }, 2000);
+// }
+// randomNotification();
