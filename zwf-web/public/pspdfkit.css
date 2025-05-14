@@ -1,0 +1,69 @@
+:root {
+  --color-white: #fff;
+  --color-black: #000;
+  --color-blue900: #0a0167;
+  --color-blue800: #0FBFC4;
+  --color-blue700: #0FBFC4;
+  --color-blue600: #0FBFC4;
+  --color-blue400: #0FBFC4;
+  --color-blue300: #0FBFC4;
+  --color-blue200: #0FBFC4;
+  --color-blue100: #0FBFC4;
+  --color-blue70: #0FBFC4;
+  --color-blue50: #0FBFC4;
+  --color-blue25: #eff4fb;
+  --color-violet800: #0FBFC4;
+  --color-violet600: #0FBFC4;
+  --color-violet400: #0FBFC4;
+  --color-violet100: #d1baff;
+  --color-red900: #4a0013;
+  --color-red800: #74002a;
+  --color-red600: #ab1d41;
+  --color-red300: #ed7d99;
+  --color-red400: #d63960;
+  --color-red100: #f7ced8;
+  --color-red50: #fceaf1;
+  --color-orange800: #7e3b00;
+  --color-orange600: #d46703;
+  --color-orange400: #ff900d;
+  --color-orange100: #ffc78f;
+  --color-yellow800: #805700;
+  --color-yellow600: #e8b500;
+  --color-yellow400: #fad40c;
+  --color-yellow100: #ffee95;
+  --color-yellow25: #fffae1;
+  --color-green800: #385300;
+  --color-green600: #628d06;
+  --color-green400: #89bd1c;
+  --color-green100: #d9efa9;
+  --color-green25: #f5fee3;
+  --color-coolGrey1000: #090c12;
+  --color-coolGrey900: #21242c;
+  --color-coolGrey900_alpha05: #21242c80;
+  --color-coolGrey900_alpha02: #21242c33;
+  --color-coolGrey850: #2b2e36;
+  --color-coolGrey850_alpha01: #2b2e361a;
+  --color-coolGrey800: #3d424e;
+  --color-coolGrey800_alpha02: #3d424e33;
+  --color-coolGrey800_alpha05: #3d424e80;
+  --color-coolGrey700: #4d525d;
+  --color-coolGrey600: #606671;
+  --color-coolGrey500: #717885;
+  --color-coolGrey400: #848c9a;
+  --color-coolGrey400_alpha05: #848c9a80;
+  --color-coolGrey200: #bec9d9;
+  --color-coolGrey100: #d8dfeb;
+  --color-coolGrey100_alpha05: #d8dfeb80;
+  --color-coolGrey100_alpha25: #d8dfeb40;
+  --color-coolGrey50: #f5f5f5;
+  --color-coolGrey37: #f6f8fa;
+  --color-coolGrey25: #fcfdfe;
+}
+
+.PSPDFKit-APStream > img {
+  display: none;
+}
+
+.PSPDFKit-APStream {
+  background-color: #0FBFC455;
+}

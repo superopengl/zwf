@@ -24,7 +24,40 @@ export const PdfViewerComponent = (props) => {
         // Use the public directory URL as a base URL. PSPDFKit will download its library assets from here.
         baseUrl,
         // baseUrl: `${process.env.PUBLIC_URL}`
+        toolbarItems: [
+          ...PSPDFKit.defaultToolbarItems,
+          { type: "content-editor" },
+        ],
+        // annotationToolbarColorPresets: ({
+        //   defaultAnnotationToolbarColorPresets
+        // }) => {
+        //   debugger;
+        //   const customColorPresets = defaultAnnotationToolbarColorPresets.pop();
+        //   return { presets: customColorPresets };
+        // },
+        styleSheets: [
+          './pspdfkit.css'
+        ]
       });
+
+      const widget = new PSPDFKit.Annotations.WidgetAnnotation({
+        pageIndex: 0,
+        boundingBox: new PSPDFKit.Geometry.Rect({
+          left: 200,
+          top: 300,
+          width: 250,
+          height: 150
+        }),
+        formFieldName: "My signature form field",
+        id: PSPDFKit.generateInstantId()
+      });
+      const formField = new PSPDFKit.FormFields.SignatureFormField({
+        name: "My signature form field",
+        annotationIds: PSPDFKit.Immutable.List([widget.id])
+      });
+      instance.create([widget, formField]);
+      // PSPDFKit.I18n.messages.en.sign = "initials";
+      // const items = instance.toolbarItems;
     })();
 
     return () => PSPDFKit && PSPDFKit.unload(container);
