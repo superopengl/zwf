@@ -9,3 +9,4 @@ zwf-app/src/_assets/keys/localhost.key
 .pnpm-debug.log
 zwf-app/package-lock.json
 .DS_Store
+zwf-web/public/pspdfkit-lib
