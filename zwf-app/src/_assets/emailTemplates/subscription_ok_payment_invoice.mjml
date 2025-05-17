@@ -13,9 +13,11 @@
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
-           Your payment has been received for the billing cycle from {{periodFrom}} to {{periodTo}}, which covers a total of {{periodDays}} days. Thank you for your payment!
+          Your payment has been received for the billing cycle from {{periodFrom}} to {{periodTo}}, which covers a total of {{periodDays}} days. Thank you for your payment!
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           If you have any queries, please don't hesitate to get in touch with us.

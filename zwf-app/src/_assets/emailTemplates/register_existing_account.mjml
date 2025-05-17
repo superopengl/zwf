@@ -9,18 +9,22 @@
       <mj-column width="100%">
         <mj-text align="left" font-size="32px" font-weight="800" line-height="130%">It looks like you have already registered for ZeeWorkflow.</mj-text>
       </mj-column>
-    </mj-section>    
+    </mj-section>
     <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           Thank you for trying to register for ZeeWorkflow! Unfortunately, an active account with this email address has already been registered for ZeeWorkflow. You should be able to log in using your existing account. If you have forgotten your password, please follow the instructions on the login page to proceed.
         </mj-text>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-button align="left" background-color="#14C9C9" color="#FFFFFF" padding="20px 0" inner-padding="16px 36px" border-radius="4px" font-size="18px" href="{{url}}">
           Login
         </mj-button>
       </mj-column>
+    </mj-section>
+    <mj-section>
       <mj-column width="100%">
         <mj-text align="left" font-size="18px" font-weight="400">
           Or, paste this link into your browser: <a href="{{url}}" target="_blank" class="verify-url">{{url}}</a>
