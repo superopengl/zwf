@@ -1,4 +1,4 @@
-import { Form, Input, Card, Space, Row, Button, Drawer } from 'antd';
+import { Form, Input, Card, Space, Row, Button, Drawer, Col } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -7,6 +7,9 @@ import { extractVarsFromDemplateBody } from 'util/extractVarsFromDemplateBody';
 import { renderDemplateBodyWithVarBag } from 'util/renderDemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
 import { CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { PdfViewerComponent } from './PdfViewerComponent';
+import { htmlToPdfBuffer$ } from 'util/htmlToPdfBuffer';
+import { deprecationHandler } from 'moment';
 
 const Container = styled(Space)`
   margin: 0;
@@ -18,12 +21,20 @@ const Container = styled(Space)`
 `;
 
 
-const PreviewDocContainer = styled(Card)`
+const PreviewDocContainer = styled.div`
 // background-color: rgba(0,0,0,0.05);
 // padding: 0;
 // margin-top: 20px;
 box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 // border-color: #0FBFC4;
+`;
+
+const PdfPage = styled(Card)`
+// padding: 40px;
+color: #000000 !important;
+border: none;
+border-radius: 0;
+// width: 2480px;
 `;
 
 
@@ -43,6 +54,7 @@ export const DemplatePreviewPanel = props => {
   const [varBag, setVarBag] = React.useState(getPendingVarBag(demplate?.html, propVarBag));
   const [html, setHtml] = React.useState(demplate?.html);
   const [renderedHtml, setRenderedHtml] = React.useState();
+  const [pdfBuffer, setPdfButter] = React.useState(null);
   const [showTestFields, setShowTestFields] = React.useState(false);
   const form = React.createRef();
 
@@ -58,6 +70,11 @@ export const DemplatePreviewPanel = props => {
     setRenderedHtml(renderedHtml);
   }, [html, varBag]);
 
+  React.useEffect(() => {
+    const sub$ = htmlToPdfBuffer$(document.getElementById('pdf-html-source'), demplate.name).subscribe(setPdfButter);
+    return () => sub$.unsubscribe();
+  }, [demplate.name, renderedHtml])
+
   const handleVarValueChange = (changedValue, allValues) => {
     setVarBag({ ...allValues });
   }
@@ -69,26 +86,39 @@ export const DemplatePreviewPanel = props => {
       {/* <Paragraph type="warning" style={{textAlign: 'center'}}>Preview</Paragraph> */}
       {shouldShowTestPanel && <Row justify="end">
         <Button
-      type="primary"
-      onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>
+          type="primary"
+          onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>
       </Row>}
 
-      <PreviewDocContainer bordered>
-        <RawHtmlDisplay value={renderedHtml} />
-      </PreviewDocContainer>
+      <Row gutter={30}>
+        <Col span={12}>
+          <PreviewDocContainer bordered>
+            <PdfPage id="pdf-html-source">
+              <RawHtmlDisplay value={renderedHtml} />
+            </PdfPage>
+          </PreviewDocContainer>
+
+        </Col>
+        <Col span={12}>
+          <div style={{ width: '100%' }}>
+            {pdfBuffer && <PdfViewerComponent document={pdfBuffer} />}
+          </div>
+        </Col>
+      </Row>
+
 
       {shouldShowTestPanel && <Drawer
         title="Input field valus"
         open={showTestFields}
         onClose={() => setShowTestFields(false)}
-        closeIcon={<LeftOutlined/>}
+        closeIcon={<LeftOutlined />}
         destroyOnClose={false}
         // mask={false}
-        maskStyle={{backgroundColor: 'transparent'}}
+        maskStyle={{ backgroundColor: 'transparent' }}
         push={380}
         width={400}
-        // extra={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
-        // footer={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
+      // extra={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
+      // footer={<Button onClick={() => setShowTestFields(false)} type="primary">Apply</Button>}
       >
         <Form
           style={{ marginTop: 20 }}

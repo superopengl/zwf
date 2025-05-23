@@ -24,6 +24,7 @@ export const RawHtmlDisplay = (props) => {
   return (
     <ContainerStyled
     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(props.value) }} 
+    id={props.id}
     />
   );
 };

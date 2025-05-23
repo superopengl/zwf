@@ -30,9 +30,11 @@
     "file-saver": "^2.0.2",
     "form-data": "^3.0.0",
     "fs-extra": "^10.1.0",
+    "html2pdf": "^0.0.11",
     "i18next": "^20.3.2",
     "immutability-helper": "^3.1.1",
     "javascript-time-ago": "^2.3.10",
+    "jspdf": "^2.5.1",
     "lodash": "^4.17.21",
     "mgr-pdf-viewer-react": "^1.0.3",
     "mime": "^3.0.0",
@@ -147,5 +149,8 @@
       ],
       "extensions": "js,jsx"
     }
+  },
+  "browser": {
+    "child_process": false
   }
 }
