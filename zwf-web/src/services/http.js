@@ -47,7 +47,7 @@ const webappVersion = process.env.REACT_APP_GIT_HASH;
 
 function getHeaders(responseType) {
   const headers = {
-    'Content-Type': responseType === 'json' ? 'application/json; charset=utf-8' : 'text/plain; charset=utf-8',
+    'Content-Type': (responseType === 'json' || true) ? 'application/json; charset=utf-8' : 'text/plain; charset=utf-8',
     'zwf-webapp-version': webappVersion,
     'zwf-device-id': getDeviceId(),
   };
@@ -123,9 +123,12 @@ export function request$(method, path, queryParams, body, responseType = 'json')
     body,
     crossDomain: true,
     withCredentials: true,
+    responseType,
   }).pipe(
     tap(handleVersionMatch),
-    map(r => r.response),
+    map(r => {
+      return r.response
+    }),
     catchError(e => {
       const code = e.status;
       if (code === 401) {

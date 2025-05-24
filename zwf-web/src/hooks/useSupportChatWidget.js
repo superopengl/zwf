@@ -46,7 +46,6 @@ export const useSupportChatWidget = () => {
   const [list, setList] = React.useState([]);
 
   useZevent(z => z.type === 'support', z => {
-    debugger;
     setList(list => [...list, z.payload])
   });
 

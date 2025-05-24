@@ -1,14 +1,14 @@
-import { jsPDF } from "jspdf";
 import { Subject } from "rxjs";
 // import html2pdf from 'html2pdf';
+import domToPdf  from 'dom-to-pdf';
 
-export const htmlToPdfBuffer$ = (dom, filename) => {
-  const pdfDoc = new jsPDF({
-    orientation: 'portrait',
-    unit: 'pt',
-    format: 'a4',
-  });
-  pdfDoc.setFontSize(8);
+export const htmlToPdfBuffer$ = (htmlString, filename) => {
+  // const pdfDoc = new jsPDF({
+  //   orientation: 'portrait',
+  //   unit: 'pt',
+  //   format: 'a4',
+  // });
+  // pdfDoc.setFontSize(10.5);
   const source$ = new Subject();
 
   // pdfDoc.html(html, {
@@ -29,11 +29,28 @@ export const htmlToPdfBuffer$ = (dom, filename) => {
     filename: 'myfile.pdf',
     image: { type: 'png', quality: 0.98 },
     // html2canvas:  { scale: 2 },
-    jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+    pagebreak: {
+      mode: 'avoid-all'
+    },
+    jsPDF: { 
+      unit: 'in', 
+      format: 'a4', 
+      orientation: 'portrait' 
+    }
   };
+  // const htmlString = dom.getContent();
   // eslint-disable-next-line no-undef
-  html2pdf().set(opt).from(dom).toPdf().get('pdf').then(doc => {
-    const buffer = doc.output('arraybuffer');
+  // html2pdf().set(opt).from(htmlString).toPdf().get('pdf').then(doc => {
+  //   const buffer = doc.output('arraybuffer');
+  //   debugger;
+  //   source$.next(buffer);
+  // }).catch(err => {
+  //   const ok = err;
+  //   debugger;
+  // })
+
+  domToPdf(htmlString, opt, pdf => {
+    const buffer = pdf.output('arraybuffer');
     source$.next(buffer);
   })
 

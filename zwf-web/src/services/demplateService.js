@@ -1,4 +1,4 @@
-import { httpGet$, httpPut$, httpPost$, httpPost, httpDelete$ } from './http';
+import { httpGet$, httpPut$, httpPost$, request$, httpDelete$ } from './http';
 
 export function getDemplate$(id) {
   return httpGet$(`/demplate/${id}`);
@@ -9,7 +9,7 @@ export function saveDemplate$(demplate) {
 }
 
 export function cloneDemplate$(sourceTemplateId, name) {
-  return httpPut$(`/demplate/${sourceTemplateId}/duplicate`, {name});
+  return httpPut$(`/demplate/${sourceTemplateId}/duplicate`, { name });
 }
 
 export function deleteDemplate$(id) {
@@ -22,4 +22,8 @@ export function listDemplate$() {
 
 export function renameDemplate$(id, name) {
   return httpPost$(`/demplate/${id}/rename`, { name });
+}
+
+export function previewDemplatePdf$(html) {
+  return request$('POST', `/demplate/preview`, null, { html }, 'blob');
 }

@@ -1,15 +1,13 @@
-import { Form, Input, Card, Space, Row, Button, Drawer, Col } from 'antd';
+import { Form, Input, Card, Space, Row, Button, Drawer } from 'antd';
 import React from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
-import { RawHtmlDisplay } from 'components/RawHtmlDisplay';
 import { extractVarsFromDemplateBody } from 'util/extractVarsFromDemplateBody';
 import { renderDemplateBodyWithVarBag } from 'util/renderDemplateBodyWithVarBag';
 import { isEmpty } from 'lodash';
-import { CaretRightOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { PdfViewerComponent } from './PdfViewerComponent';
-import { htmlToPdfBuffer$ } from 'util/htmlToPdfBuffer';
-import { deprecationHandler } from 'moment';
+import { previewDemplatePdf$ } from 'services/demplateService';
 
 const Container = styled(Space)`
   margin: 0;
@@ -49,7 +47,7 @@ const getPendingVarBag = (html, seedVarBag) => {
 }
 
 export const DemplatePreviewPanel = props => {
-  const { value: demplate, varBag: propVarBag, allowTest } = props;
+  const { value: demplate, varBag: propVarBag, allowTest, editorElement } = props;
 
   const [varBag, setVarBag] = React.useState(getPendingVarBag(demplate?.html, propVarBag));
   const [html, setHtml] = React.useState(demplate?.html);
@@ -66,13 +64,19 @@ export const DemplatePreviewPanel = props => {
   React.useEffect(() => {
     const newVarBag = getPendingVarBag(html, varBag);
     const renderedHtml = renderDemplateBodyWithVarBag(html, newVarBag);
+    const sub$ = previewDemplatePdf$(renderedHtml).subscribe(async r => {
+      const buffer = await r.arrayBuffer();
+      setPdfButter(buffer);
+    });
 
     setRenderedHtml(renderedHtml);
+    return () => sub$.unsubscribe();
   }, [html, varBag]);
 
   React.useEffect(() => {
-    const sub$ = htmlToPdfBuffer$(document.getElementById('pdf-html-source'), demplate.name).subscribe(setPdfButter);
-    return () => sub$.unsubscribe();
+    // const sub$ = htmlToPdfBuffer$(document.getElementById('pdf-html-source'), demplate.name).subscribe(setPdfButter);
+    // return () => sub$.unsubscribe();
+
   }, [demplate.name, renderedHtml])
 
   const handleVarValueChange = (changedValue, allValues) => {
@@ -90,21 +94,21 @@ export const DemplatePreviewPanel = props => {
           onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>
       </Row>}
 
-      <Row gutter={30}>
+      {/* <PreviewDocContainer bordered>
+        <PdfPage id="pdf-html-source">
+          <RawHtmlDisplay value={renderedHtml} />
+        </PdfPage>
+      </PreviewDocContainer> */}
+      {/* <Row gutter={30}>
         <Col span={12}>
-          <PreviewDocContainer bordered>
-            <PdfPage id="pdf-html-source">
-              <RawHtmlDisplay value={renderedHtml} />
-            </PdfPage>
-          </PreviewDocContainer>
 
         </Col>
         <Col span={12}>
-          <div style={{ width: '100%' }}>
-            {pdfBuffer && <PdfViewerComponent document={pdfBuffer} />}
-          </div>
         </Col>
-      </Row>
+      </Row> */}
+      <div style={{ width: '100%' }}>
+        {pdfBuffer && <PdfViewerComponent document={pdfBuffer} />}
+      </div>
 
 
       {shouldShowTestPanel && <Drawer
