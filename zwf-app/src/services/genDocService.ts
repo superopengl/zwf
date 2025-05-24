@@ -44,13 +44,13 @@ function formatHtmlForRendering(html) {
   return `<body style="font-size: 14px;font-family:'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;">${html}</body>`;
 }
 
-async function renderDemplateBodyWithVarBag(demplate: Demplate, fields: TaskField[]) {
-  let renderedHtml = formatHtmlForRendering(demplate.html);
+export async function renderHtmlWithFields(html: string, refFieldNames: string[], fields: TaskField[]) {
+  let renderedHtml = formatHtmlForRendering(html);
   const fieldMap = new Map(fields.map(f => [f.name, f]));
   const usedFieldBag = {};
   const missingFields = [];
 
-  for (const fieldName of demplate.refFieldNames) {
+  for (const fieldName of refFieldNames) {
     const field = fieldMap.get(fieldName);
     const value = field?.value;
     if (value || value === 0) {
@@ -66,7 +66,7 @@ async function renderDemplateBodyWithVarBag(demplate: Demplate, fields: TaskFiel
 }
 
 async function generatePdfDataFromDemplate(demplate: Demplate, fields: TaskField[]) {
-  const { renderedHtml, usedFieldBag, missingFields } = await renderDemplateBodyWithVarBag(demplate, fields);
+  const { renderedHtml, usedFieldBag, missingFields } = await renderHtmlWithFields(demplate.html, demplate.refFieldNames, fields);
 
   const pdfData = missingFields.length === 0 ? await generatePdfBufferFromHtml(renderedHtml) : null;
   const fileName = `${demplate.name}.pdf`;
@@ -78,7 +78,7 @@ export function computeObjectHash(variables) {
   return hash(variables, { unorderedObjects: true });
 }
 
-export async function generatePdfTaskDocFile(m: EntityManager, docId: string, generatorId: string) {
+export async function generatePdfTaskDocFile(m: EntityManager, docId: string, generatedBy: string) {
   const doc = await m.findOne(TaskDoc, {
     where: { id: docId },
     relations: {
@@ -112,7 +112,7 @@ export async function generatePdfTaskDocFile(m: EntityManager, docId: string, ge
 
     doc.file = file;
     doc.generatedAt = getUtcNow();
-    doc.generatedBy = generatorId;
+    doc.generatedBy = generatedBy;
     doc.fieldBag = usedFieldBag;
 
 

@@ -671,6 +671,14 @@ paths:
       responses:
         200:
           description: OK
+  /demplate/preview:
+    post:
+      operationId: previewDemplatePdf
+      # security:
+      #   - authAdmin: []
+      responses:
+        200:
+          description: OK          
   /demplate:
     post:
       operationId: saveDemplate
