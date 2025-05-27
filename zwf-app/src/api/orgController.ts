@@ -4,7 +4,7 @@ import { assertRole } from '../utils/assertRole';
 import { getOrgIdFromReq } from '../utils/getOrgIdFromReq';
 import { Org } from '../entity/Org';
 import { User } from '../entity/User';
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4, validate as uuidValidate } from 'uuid';
 import { handlerWrapper } from '../utils/asyncHandler';
 import { OrgBasicInformation } from '../entity/views/OrgBasicInformation';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
@@ -191,7 +191,7 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
 
 async function createBuiltInTemplate(m: EntityManager, orgId: any) {
   const builtinFemplateConfig = await m.findOneBy(SystemConfig, { key: 'onboarding.femplate.builtin' });
-  const femplateIds = builtinFemplateConfig?.value as [];
+  const femplateIds = builtinFemplateConfig?.value?.split(',').map(x => x.trim()).filter(uuidValidate);
   const now = getUtcNow();
   if (femplateIds?.length) {
     const builtinFemplates = await m.findBy(Femplate, { id: In(femplateIds) });
@@ -206,7 +206,7 @@ async function createBuiltInTemplate(m: EntityManager, orgId: any) {
   }
 
   const builtinDemplateConfig = await m.findOneBy(SystemConfig, { key: 'onboarding.demplate.builtin' });
-  const demplateIds = builtinDemplateConfig?.value as [];
+  const demplateIds = builtinDemplateConfig?.value?.split(',').map(x => x.trim()).filter(uuidValidate);
   if (demplateIds?.length) {
     const builtinDemplates = await m.findBy(Demplate, { id: In(demplateIds) });
     if (builtinDemplates.length) {
