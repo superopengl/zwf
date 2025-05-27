@@ -22,7 +22,7 @@ import { OrgPaymentMethod } from "../entity/OrgPaymentMethod";
 import { OrgPromotionCode } from "../entity/OrgPromotionCode";
 import { UserInformation } from "../entity/views/UserInformation";
 import { UserProfile } from "../entity/UserProfile";
-import { In } from "typeorm";
+import { EntityManager, In } from "typeorm";
 import { checkoutSubscriptionPeriod } from "../utils/checkoutSubscriptionPeriod";
 import { getOrgAdminUsers } from "../../endpoints/helpers/getOrgAdminUsers";
 import { enqueueEmailInBulk } from "../services/emailService";
@@ -30,6 +30,9 @@ import { EmailRequest } from "../types/EmailRequest";
 import { EmailTemplateType } from "../types/EmailTemplateType";
 import { getEmailRecipientName } from "../utils/getEmailRecipientName";
 import { Tag } from "../entity/Tag";
+import { SystemConfig } from "../entity/SystemConfig";
+import { Femplate } from "../entity/Femplate";
+import { Demplate } from "../entity/Demplate";
 
 const TRIAL_PERIOD_DAYS = 14;
 
@@ -113,6 +116,8 @@ export const createMyOrg = handlerWrapper(async (req, res) => {
     userEnitty.orgOwner = true;
 
     await m.save([userEnitty, period, ticket]);
+
+    await createBuiltInTemplate(m, orgId);
   });
 
   res.json();
@@ -183,3 +188,34 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
 
   res.json();
 });
+
+async function createBuiltInTemplate(m: EntityManager, orgId: any) {
+  const builtinFemplateConfig = await m.findOneBy(SystemConfig, { key: 'onboarding.femplate.builtin' });
+  const femplateIds = builtinFemplateConfig?.value as [];
+  const now = getUtcNow();
+  if (femplateIds?.length) {
+    const builtinFemplates = await m.findBy(Femplate, { id: In(femplateIds) });
+    if (builtinFemplates.length) {
+      builtinFemplates.forEach(x => {
+        x.id = uuidv4();
+        x.createdAt = now;
+        x.orgId = orgId;
+      });
+      await m.save(builtinFemplates);
+    }
+  }
+
+  const builtinDemplateConfig = await m.findOneBy(SystemConfig, { key: 'onboarding.demplate.builtin' });
+  const demplateIds = builtinDemplateConfig?.value as [];
+  if (demplateIds?.length) {
+    const builtinDemplates = await m.findBy(Demplate, { id: In(demplateIds) });
+    if (builtinDemplates.length) {
+      builtinDemplates.forEach(x => {
+        x.id = uuidv4();
+        x.createdAt = now;
+        x.orgId = orgId;
+      });
+      await m.save(builtinDemplates);
+    }
+  }
+}
