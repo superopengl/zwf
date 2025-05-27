@@ -245,7 +245,7 @@ export const DemplatePage = () => {
       destroyOnClose
       open={previewSider}
       onClose={() => setPreviewSider(false)}
-      width={'90vw'}
+      width={700}
     >
       <DemplatePreviewPanel
         value={demplate}

@@ -8,6 +8,7 @@ import { isEmpty } from 'lodash';
 import { LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { PdfViewerComponent } from './PdfViewerComponent';
 import { previewDemplatePdf$ } from 'services/demplateService';
+import { RawHtmlDisplay } from './RawHtmlDisplay';
 
 const Container = styled(Space)`
   margin: 0;
@@ -94,11 +95,11 @@ export const DemplatePreviewPanel = props => {
           onClick={() => setShowTestFields(true)}>Test fields <RightOutlined /></Button>
       </Row>}
 
-      {/* <PreviewDocContainer bordered>
+      <PreviewDocContainer bordered>
         <PdfPage id="pdf-html-source">
           <RawHtmlDisplay value={renderedHtml} />
         </PdfPage>
-      </PreviewDocContainer> */}
+      </PreviewDocContainer>
       {/* <Row gutter={30}>
         <Col span={12}>
 
@@ -106,9 +107,9 @@ export const DemplatePreviewPanel = props => {
         <Col span={12}>
         </Col>
       </Row> */}
-      <div style={{ width: '100%' }}>
+      {/* <div style={{ width: '100%' }}>
         {pdfBuffer && <PdfViewerComponent document={pdfBuffer} />}
-      </div>
+      </div> */}
 
 
       {shouldShowTestPanel && <Drawer
