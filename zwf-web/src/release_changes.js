@@ -1,2 +1,2 @@
 export const notes=`
-ui refine`
+view port loading for demplate thumbnail`
