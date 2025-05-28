@@ -1,2 +1,2 @@
 export const notes=`
-pdf preview`
+refine pdf preview UI`
