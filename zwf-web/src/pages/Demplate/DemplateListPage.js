@@ -17,6 +17,7 @@ import { useCloneDemplateModal } from './useCloneDemplateModal';
 import { useAssertRole } from 'hooks/useAssertRole';
 import { IoDuplicateOutline } from 'react-icons/io5';
 import { PdfPreview } from 'components/PdfPreview';
+import { DemplateThumbnail } from 'components/DemplateThumbnail';
 
 const { Text, Paragraph, Link: TextLink } = Typography;
 
@@ -122,7 +123,7 @@ export const DemplateListPage = () => {
     content: <>
       <Descriptions size="small">
       <Descriptions.Item span={24}>
-          <PdfPreview file={item.pdfBuffer} thumbnail={true} />
+          <DemplateThumbnail id={item.id} />
         </Descriptions.Item>
         <Descriptions.Item span={12}>
           <TimeAgo prefix="Created" value={item.createdAt} showTime={false} direction="horizontal" />
