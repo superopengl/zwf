@@ -40,6 +40,7 @@ export const saveDemplate = handlerWrapper(async (req, res) => {
   demplate.description = description;
   demplate.html = html;
   demplate.refFieldNames = extractVariables(html);
+  demplate.pdfBuffer = await generatePdfBufferFromHtml(html);
 
   await db.getRepository(Demplate).save(demplate);
 
@@ -64,6 +65,7 @@ export const listDemplates = handlerWrapper(async (req, res) => {
       refFieldNames: true,
       createdAt: true,
       updatedAt: true,
+      pdfBuffer: true,
     }
   });
 
