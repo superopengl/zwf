@@ -251,6 +251,7 @@ export const DemplatePage = () => {
       width={800}
       bodyStyle={{
         backgroundColor: '#888888',
+        boxShadow: 'inset 0 0 16px #13161B',
       }}
     >
       <DemplatePreviewPanel

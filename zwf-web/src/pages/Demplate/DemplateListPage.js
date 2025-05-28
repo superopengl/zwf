@@ -1,7 +1,7 @@
 import Icon, {
   CloseOutlined, EditOutlined, PlusOutlined, CopyOutlined
 } from '@ant-design/icons';
-import { Button, Modal, Typography, Row, Col } from 'antd';
+import { Button, Modal, Typography, Row, Col, Tooltip } from 'antd';
 import { TimeAgo } from 'components/TimeAgo';
 import React from 'react';
 import { deleteDemplate$, listDemplate$ } from 'services/demplateService';
@@ -23,6 +23,12 @@ const { Text, Paragraph, Link: TextLink } = Typography;
 const Container = styled.div`
   .ant-pro-table-list-toolbar {
     display: none;
+  }
+
+  .ant-pro-card-title {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 `;
 
@@ -111,7 +117,7 @@ export const DemplateListPage = () => {
   const dataSource = filteredList.map(item => ({
     id: item.id,
     data: item,
-    title: item.name,
+    title: <Tooltip title={item.name} placement="topLeft">{item.name}</Tooltip>,
     avatar: <DemplateIcon />,
     content: <>
       <Descriptions size="small">
@@ -138,7 +144,7 @@ export const DemplateListPage = () => {
           name: 'Doc Template',
         },
       ]}
-      loading={loading}
+      // loading={loading}
       title='Doc Templates'
       extra={[
         <Button type="primary" key="new" ghost icon={<PlusOutlined />} onClick={() => handleCreateNew()}>New Doc Template</Button>
