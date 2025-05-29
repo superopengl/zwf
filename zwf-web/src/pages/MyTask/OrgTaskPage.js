@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Link } from 'react-router-dom';
 import { Layout, Skeleton, Row, Col, Button, Typography, Space, Tooltip } from 'antd';
 import { assignTask$, changeTaskStatus$, getTask$, renameTask$, updateTaskTags$, watchTask$ } from 'services/taskService';
 import { finalize } from 'rxjs/operators';
@@ -209,7 +209,9 @@ const OrgTaskPage = () => {
             </Col>
             <Col flex="0 0 340px">
               <ProCard ghost>
-                <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+                <Link to={`/client/${task?.orgClientId}`} style={{color: 'inherit'}}>
+                  <ClientNameCard id={task?.orgClientId} size={54} showTooltip={true} />
+                </Link>
                 <Descriptions layout="vertical" column={1} style={{ marginTop: 20 }} colon={false}>
                   <Descriptions.Item label="Status">
                     <TaskStatusButton style={{ width: '100%' }} key="status" value={task.status} onChange={handleStatusChange} />
