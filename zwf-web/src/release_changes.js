@@ -1,2 +1,2 @@
 export const notes=`
-view port loading for demplate thumbnail`
+add client link`
