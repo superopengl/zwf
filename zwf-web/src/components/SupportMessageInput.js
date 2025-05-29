@@ -41,11 +41,11 @@ export const SupportMessageInput = React.memo(props => {
   }
 
   return <Form form={form} onFinish={handleSubmit} style={{ padding: '10px 16px 0' }}>
-    <Form.Item name="message" rules={[{ required: true, message: ' '}]} extra="Enter to submit. Shift + Enter for link breaks">
+    <Form.Item name="message" rules={[{ required: true, message: ' '}]} extra="Enter to submit. Shift+Enter for line breaks">
       <Input.TextArea
         autoSize={{ minRows: 3 }}
         allowClear={true}
-        showCount
+        // showCount
         ref={inputRef}
         autoFocus
         maxLength={1000}
