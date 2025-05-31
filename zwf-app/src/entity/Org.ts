@@ -41,6 +41,12 @@ export class Org {
 
   @Column({ default: false })
   testing: boolean;
+
+  @Column({ nullable: true })
+  logoFileId: string;
+
+  @Column({ nullable: true })
+  websiteUrl: string;
 }
 
 

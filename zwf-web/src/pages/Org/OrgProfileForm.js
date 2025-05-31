@@ -9,6 +9,7 @@ import { CountrySelector } from 'components/CountrySelector';
 import { BetaSchemaForm, ProFormSelect, FooterToolbar, ProFormInstance } from '@ant-design/pro-components';
 import { catchError, finalize } from 'rxjs';
 import { useNavigate } from 'react-router-dom';
+import { OrgLogoUpload } from 'components/OrgLogoUpload';
 
 const { Step } = Steps;
 const { Text } = Typography;
@@ -100,6 +101,33 @@ const OrgProfileForm = (props) => {
         allowClear: true,
         placeholder: 'Your org legal business name',
         autoComplete: 'organization'
+      }
+    },
+    {
+      title: 'Logo',
+      dataIndex: 'logoFileId',
+      formItemProps: {
+        help: <>Your organisation logo image. File size must be smaller than 5MB.</>,
+        rules: [{ required: false }]
+      },
+      fieldProps: {
+        allowClear: true,
+        placeholder: 'https://',
+        autoComplete: 'url'
+      },
+      renderFormItem: () => <OrgLogoUpload />,
+    },
+    {
+      title: 'Website',
+      dataIndex: 'websiteUrl',
+      formItemProps: {
+        help: <>Your organisation Website URL</>,
+        rules: [{ required: false, type: 'url' }]
+      },
+      fieldProps: {
+        allowClear: true,
+        placeholder: 'https://',
+        autoComplete: 'url'
       }
     },
     {
