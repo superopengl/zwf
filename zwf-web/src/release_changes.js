@@ -1,2 +1,2 @@
 export const notes=`
-make resurgingCode consistent`
+able to set org log and website`

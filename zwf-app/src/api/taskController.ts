@@ -309,7 +309,9 @@ export const listMyCases = handlerWrapper(async (req, res) => {
       'status',
       'orgName',
       'createdAt',
-      'updatedAt'
+      'updatedAt',
+      'orgLogoFileId',
+      'orgWebsiteUrl',
     ]
   });
 
@@ -380,8 +382,10 @@ export const getTask = handlerWrapper(async (req, res) => {
     assert(task, 404);
     if (role === Role.Client) {
       assert(task.orgClient.userId === userId, 404);
-      const { name: orgName } = await m.getRepository(Org).findOneBy({ id: task.orgId });
+      const { name: orgName, websiteUrl, logoFileId } = await m.getRepository(Org).findOneBy({ id: task.orgId });
       (task as any).orgName = orgName;
+      (task as any).orgWebsiteUrl = websiteUrl;
+      (task as any).orgLogoFileId = logoFileId;
 
       task.docs = task.docs.filter(d => d.fileId);
     } else {

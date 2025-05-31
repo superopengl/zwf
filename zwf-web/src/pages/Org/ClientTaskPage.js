@@ -2,7 +2,7 @@ import React from 'react';
 
 import styled from 'styled-components';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
-import { Typography, Row, Badge, Skeleton, Button, Grid } from 'antd';
+import { Typography, Row, Badge, Skeleton, Button, Grid, Image, Tooltip } from 'antd';
 
 import { getTask$ } from 'services/taskService';
 import { AutoSaveTaskFormPanel } from 'components/AutoSaveTaskFormPanel';
@@ -22,8 +22,9 @@ import { RiQuillPenFill } from 'react-icons/ri';
 import { TaskUnreadCommentBadge } from 'components/TaskUnreadCommentBadge';
 import { TaskContext } from 'contexts/TaskContext';
 import { TaskRequestFillFormBadge } from 'components/TaskRequestFillFormBadge';
+import { getPublicFileUrl } from 'services/fileService';
 
-const { Text } = Typography;
+const { Text, Link: TextLink } = Typography;
 const { useBreakpoint } = Grid;
 
 const Container = styled.div`
@@ -180,7 +181,7 @@ const ClientTaskPage = () => {
 
   const buttonSize = narrowScreen ? 'default' : 'large';
 
-  return (<Container style={{backgroundColor: activePanel === 'chat' ? 'white' : 'transparent'}}>
+  return (<Container style={{ backgroundColor: activePanel === 'chat' ? 'white' : 'transparent' }}>
     {!task ? <Skeleton active /> : <TaskContext.Provider value={{ task, setTask }} >
       <PageHeaderContainer
         loading={loading}
@@ -206,7 +207,7 @@ const ClientTaskPage = () => {
               onClick={() => setActivePanel('form')}
             >Form</Button>
           </TaskRequestFillFormBadge>
-          
+
           <Button size={buttonSize} icon={<PaperClipOutlined />}
             type={activePanel === 'docs' ? 'primary' : 'text'}
             ghost={activePanel === 'docs'}
@@ -224,6 +225,14 @@ const ClientTaskPage = () => {
           </Badge>
         </Row>}
         extra={[
+          <Tooltip title={`Service provided by ${task.orgName}`} key="org">
+            <TextLink href={task.orgWebsiteUrl} target="_blank"
+              onClick={e => e.stopPropagation()}
+            >{task.orgLogoFileId ?
+              <Image src={getPublicFileUrl(task.orgLogoFileId)} height={36} preview={false} alt={task.orgName} /> :
+              <Text type="secondary">{task.orgName}</Text>}
+            </TextLink>
+          </Tooltip>
         ]}
       >
         {activePanel === 'form' && <ProCard title="Form" ref={formPanelRef}>
