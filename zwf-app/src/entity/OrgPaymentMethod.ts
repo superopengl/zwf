@@ -4,7 +4,7 @@ import { Entity, Column, PrimaryGeneratedColumn, Index, CreateDateColumn, Delete
 
 @Entity()
 @Index('idx_paymentMethod_org_primary', ['orgId'], { where: '"primary" IS TRUE', unique: true })
-@Index('idx_paymentMethod_org_card_unique', ['orgId', 'cardHash'], { unique: true, where: `"deletedAt" IS NULL` })
+@Index('idx_paymentMethod_org_card_unique', ['orgId', 'cardHash'], { unique: true })
 export class OrgPaymentMethod {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
@@ -12,11 +12,7 @@ export class OrgPaymentMethod {
   @CreateDateColumn()
   createdAt: Date;
 
-  @DeleteDateColumn()
-  deletedAt: Date;
-
   @Column('uuid')
-  @Index()
   orgId: string;
 
   @Column({ default: false })

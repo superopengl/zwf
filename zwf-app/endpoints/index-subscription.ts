@@ -1,4 +1,3 @@
-import { EmailTemplateType } from './../src/types/EmailTemplateType';
 import { db } from '../src/db';
 import { EntityManager } from 'typeorm';
 import { start } from './jobStarter';
@@ -10,10 +9,7 @@ import { User } from '../src/entity/User';
 import { Org } from '../src/entity/Org';
 import { grantNewSubscriptionPeriod } from '../src/utils/grantNewSubscriptionPeriod';
 import { v4 as uuidv4 } from 'uuid';
-import { getOrgAdminUsers } from './helpers/getOrgAdminUsers';
-import { EmailRequest } from '../src/types/EmailRequest';
-import { getEmailRecipientName } from '../src/utils/getEmailRecipientName';
-import { enqueueEmailInBulk } from '../src/services/emailService';
+import { sendReactivatingEmailForOrg } from '../src/utils/sendReactivatingEmailForOrg';
 
 const JOB_NAME = 'daily-subscription-check';
 
@@ -71,23 +67,7 @@ async function suspendOrg(m: EntityManager, period: OrgSubscriptionPeriod) {
   const daysPassed = moment().diff(moment(periodTo), 'days');
 
   if ([0, 1, 3, 7, 15, 30].includes(daysPassed)) {
-    const adminUsers = await getOrgAdminUsers(m, orgId);
-    const { resurgingCode } = await m.findOneBy(Org, { id: orgId });
-
-    const emailRequests = adminUsers.map(user => {
-      const ret: EmailRequest = {
-        to: user.email,
-        template: EmailTemplateType.SubscriptionSuspended,
-        shouldBcc: true,
-        vars: {
-          toWhom: getEmailRecipientName(user),
-          url: `${process.env.ZWF_WEB_DOMAIN_NAME}/resurge/${resurgingCode}`
-        }
-      };
-      return ret;
-    });
-
-    await enqueueEmailInBulk(m, emailRequests);
+    await sendReactivatingEmailForOrg(m, orgId);
   }
 }
 
@@ -97,5 +77,3 @@ start(JOB_NAME, async () => {
   console.log('Finished charging for the last subscription'.yellow);
 
 }, { daemon: false, syncSchema: false });
-
-
