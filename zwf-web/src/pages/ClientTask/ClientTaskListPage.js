@@ -19,6 +19,8 @@ import { TaskStatusTag } from 'components/TaskStatusTag';
 import { ZeventContext } from 'contexts/ZeventContext';
 import { Image } from 'antd';
 import { getPublicFileUrl } from 'services/fileService';
+import { Avatar } from 'antd';
+import { OrgAvatar } from 'components/OrgAvatar';
 
 const { Paragraph, Text, Link: TextLink } = Typography;
 
@@ -39,9 +41,16 @@ const StyledList = styled(List)`
 // margin-top: 20px;
 
 .ant-list-item {
-  padding: 0;
+  // padding: 0;
+}
+
+h4 {
+  margin-block-start: 0;
+  font-weight: 400;
 }
 `;
+
+
 
 
 const CLIENT_TASK_FILTER_KEY = 'client.task.filter';
@@ -216,17 +225,18 @@ export const ClientTaskListPage = () => {
           </Col>
         </Row>
         <StyledList
-          grid={{
-            gutter: [20, 10],
-            xs: 1,
-            sm: 1,
-            md: 1,
-            lg: 2,
-            xl: 2,
-            xxl: 2
-          }}
+          // grid={{
+          //   gutter: [20, 10],
+          //   xs: 1,
+          //   sm: 1,
+          //   md: 1,
+          //   lg: 1,
+          //   xl: 1,
+          //   xxl: 1
+          // }}
           dataSource={filteredList}
           loading={loading}
+          size="small"
           itemLayout="horizontal"
           locale={{
             emptyText: <div style={{ margin: '30px auto' }}>
@@ -236,11 +246,30 @@ export const ClientTaskListPage = () => {
             </div>
           }}
           rowKey="id"
-          renderItem={item => <List.Item>
-            <Card
-              title={<HighlightingText value={item.name} search={query.text} />}
+          renderItem={item => <List.Item
+            onClick={() => navigate(`/task/${item.id}`)}
+            extra={[
+              // <TimeAgo prefix="created" value={item.createdAt} showTime={true} direction="horizontal" />,
+              <TimeAgo value={item.updatedAt} showTime={true} direction="vertical" />,
 
-              // headStyle={{paddingRight: 8}}
+
+            ]}
+          >
+            <List.Item.Meta
+              avatar={<Badge key="count" 
+                showZero={false}
+                dot={true}
+                count={zevents.find(z => z.payload.taskId === item.id && !z.payload.ackAt) ? ' ' : 0}
+                style={{ position: 'absolute' }}
+                // offset={[20, 0]}
+              >
+                <OrgAvatar orgName={item.orgName} orgLogoFileId={item.orgLogoFileId} />
+              </Badge>}
+              title={<HighlightingText value={item.name} search={query.text} />}
+              description={'blah'}
+            />
+            {/* <Card
+              title={<HighlightingText value={item.name} search={query.text} />}
               extra={[
                 <TextLink href={item.orgWebsiteUrl} target="_blank"
                   key="org"
@@ -267,7 +296,7 @@ export const ClientTaskListPage = () => {
                   <TimeAgo prefix="updated" value={item.updatedAt} showTime={false} direction="horizontal" />
                 </Col>
               </Row>
-            </Card>
+            </Card> */}
           </List.Item>}
         />
       </PageHeaderContainer>
