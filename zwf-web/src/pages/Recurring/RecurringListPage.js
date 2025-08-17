@@ -44,7 +44,7 @@ const RecurringListPage = () => {
       render: (value) => <ClientNameCard id={value} />
     },
     {
-      title: 'Form Template',
+      title: 'Form Builder',
       dataIndex: 'femplateName',
       render: (text, record) => record.femplateName ? <Link to={`/femplate/${record.femplateId}`}>{text}</Link> : <Text type="danger">deleted template</Text>,
       ellipsis: false

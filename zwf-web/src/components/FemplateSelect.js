@@ -81,7 +81,7 @@ export const FemplateSelect = (props) => {
           <Button block type="primary"
             icon={<PlusOutlined />}
             onClick={() => navigate("/femplate/new")}
-            ghost>Create new template</Button>
+            ghost>Create new form</Button>
         </Row>
       </>}
     </>}

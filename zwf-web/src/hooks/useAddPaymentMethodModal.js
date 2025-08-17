@@ -10,7 +10,7 @@ export const useAddPaymentMethodModal = () => {
   const [loading, setLoading] = React.useState(false);
   const [modal, contextHolder] = Modal.useModal();
 
-  const open = (onOk) => {
+  const open = (onOk, options) => {
 
     const handleSavePayment = (stripePaymentMethodId) => {
       saveOrgPaymentMethod$(stripePaymentMethodId)
@@ -31,7 +31,7 @@ export const useAddPaymentMethodModal = () => {
       icon: null,
       title: 'Add Payment Method',
       maskClosable: false,
-      closable: !loading,
+      closable: !loading && (options?.closable ?? true),
       destroyOnClose: true,
       width: 460,
       zIndex: 1050,
