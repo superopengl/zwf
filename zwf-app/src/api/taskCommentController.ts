@@ -98,17 +98,17 @@ export const addTaskComment = handlerWrapper(async (req, res) => {
         orgClient: true
       }
     });
-  
-    if(mentionedUserIds?.length) {
-      for(const userId of mentionedUserIds) {
+
+    if (mentionedUserIds?.length) {
+      for (const userId of mentionedUserIds) {
         await addTaskWatcher(m, taskId, userId, 'mentioned');
       }
     }
-    
+
     const senderId = role === Role.Guest ? task.orgClient?.userId : getUserIdFromReq(req);
-  
+
     await createTaskComment(m, task, senderId, message);
-  })
+  });
 
 
   res.json();

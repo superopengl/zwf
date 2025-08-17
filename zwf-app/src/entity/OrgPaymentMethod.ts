@@ -31,6 +31,6 @@ export class OrgPaymentMethod {
   @Column()
   cardLast4: string;
 
-  @Column({ generatedType: "STORED", asExpression: `md5("cardLast4" || "cardExpiry")` })
+  @Column({ generatedType: 'STORED', asExpression: `md5("cardLast4" || "cardExpiry")` })
   cardHash: string;
 }

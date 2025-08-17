@@ -1,6 +1,6 @@
-import { ZeventDef } from "../entity/ZeventDef";
-import { Role } from "./Role";
-import { ZeventName } from "./ZeventName";
+import { ZeventDef } from '../entity/ZeventDef';
+import { Role } from './Role';
+import { ZeventName } from './ZeventName';
 
 export const ZEVENT_DEF_ENTITIES: ZeventDef[] = [
     {
@@ -101,4 +101,4 @@ export const ZEVENT_DEF_ENTITIES: ZeventDef[] = [
 export const ZEVENT_DEF_MAP = ZEVENT_DEF_ENTITIES.reduce((pre, cur) => {
     pre[cur.name] = cur;
     return pre;
-}, {}) as Record<string, ZeventDef>
+}, {}) as Record<string, ZeventDef>;

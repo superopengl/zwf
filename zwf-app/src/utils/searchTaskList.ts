@@ -14,7 +14,7 @@ export async function searchTaskList(userId: string, role: string, orgId: string
 
   let query = db.manager
     .createQueryBuilder()
-    .from(TaskInformation, 'x')
+    .from(TaskInformation, 'x');
 
   query = query.where(`1 = 1`, { tags, userId });
   if (watchedOnly) {
@@ -65,7 +65,7 @@ export async function searchTaskList(userId: string, role: string, orgId: string
     }
   }
 
-  query = query.select('x.*')
+  query = query.select('x.*');
 
   const total = await query.getCount();
   const list = await query

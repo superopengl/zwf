@@ -18,7 +18,7 @@ export const saveOrgPaymentMethod = handlerWrapper(async (req, res) => {
   
   await db.transaction(async m => {
     await saveNewPaymentMethod(m, orgId, stripePaymentMethodId, false);
-  })
+  });
 
   res.json();
 });

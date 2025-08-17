@@ -1,7 +1,7 @@
 import { Column, CreateDateColumn, Entity, Index, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Task } from './Task';
 import { OrgClient } from './OrgClient';
-import { TaskWatcherReason } from "../types/TaskWatcherReason";
+import { TaskWatcherReason } from '../types/TaskWatcherReason';
 
 
 
@@ -14,10 +14,10 @@ export class TaskWatcher {
   @PrimaryColumn('uuid')
   @Index()
   userId: string;
-  
+
   @CreateDateColumn()
   createdAt: Date;
-  
+
   @Column()
   reason: TaskWatcherReason;
 

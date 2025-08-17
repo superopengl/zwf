@@ -30,7 +30,7 @@ export const listMySupportMessages = handlerWrapper(async (req, res) => {
         createdAt: 'ASC'
       }
     });
-  })
+  });
 
   res.json(list);
 });
@@ -119,7 +119,7 @@ export const createSupportMessage = handlerWrapper(async (req, res) => {
       userId: sm.userId,
       payload: sm,
     });
-  })
+  });
 
   res.json();
 });
@@ -133,7 +133,7 @@ export const nudgeMyLastReadSupportMessage = handlerWrapper(async (req, res) => 
     userLastSeenAt: IsNull()
   }, {
     userLastSeenAt: () => `NOW()`,
-  })
+  });
 
   res.json();
 });

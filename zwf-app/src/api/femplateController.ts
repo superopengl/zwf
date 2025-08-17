@@ -16,7 +16,7 @@ import { isRole } from '../utils/isRole';
 import { validateFormFields } from '../utils/validateFormFields';
 
 export const saveFemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'agent', 'admin']);
+  assertRole(req, [ 'agent', 'admin']);
   const orgId = getOrgIdFromReq(req);
 
   const { id, name, description, fields } = req.body;
@@ -39,7 +39,7 @@ export const saveFemplate = handlerWrapper(async (req, res) => {
 
 
 export const renameFemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, [ 'admin', 'agent']);
   const { name } = req.body;
   assert(name, 400, 'name is empty');
   const { id } = req.params;
@@ -52,7 +52,7 @@ export const renameFemplate = handlerWrapper(async (req, res) => {
 
 
 export const listFemplates = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'agent']);
+  assertRole(req, [ 'admin', 'agent']);
   const orgId = getOrgIdFromReq(req);
   const list = await db.getRepository(Femplate)
     .find({
@@ -68,7 +68,7 @@ export const listFemplates = handlerWrapper(async (req, res) => {
 });
 
 export const getFemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin', 'client', 'agent']);
+  assertRole(req, [ 'admin', 'client', 'agent']);
   const { id } = req.params;
   const query = isRole(req, Role.Client) ? { id } : { id, orgId: getOrgIdFromReq(req) };
   const femplate = await db.getRepository(Femplate).findOne({ where: query });
@@ -78,7 +78,7 @@ export const getFemplate = handlerWrapper(async (req, res) => {
 });
 
 export const deleteFemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin']);
+  assertRole(req, [ 'admin']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   const repo = db.getRepository(Femplate);
@@ -101,7 +101,7 @@ async function getUniqueCopyName(m: EntityManager, sourceFemplate: Femplate) {
 }
 
 export const duplicateFemplate = handlerWrapper(async (req, res) => {
-  assertRole(req,[ 'admin']);
+  assertRole(req, [ 'admin']);
   const { id } = req.params;
   const orgId = getOrgIdFromReq(req);
   let femplate: Femplate;

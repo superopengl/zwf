@@ -127,7 +127,7 @@ export async function generatePdfTaskDocFile(m: EntityManager, docId: string, ge
       succeeded: false,
       usedFieldBag,
       missingFields
-    }
+    };
   }
 }
 

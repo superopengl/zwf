@@ -22,7 +22,7 @@ import { v4 as uuidv4 } from 'uuid';
 import * as moment from 'moment';
 import { EntityManager, IsNull, LessThan } from 'typeorm';
 import { filter, from, of, defer } from 'rxjs';
-import { concatAll, concatMap, delay, switchMap, tap } from 'rxjs/operators'
+import { concatAll, concatMap, delay, switchMap, tap } from 'rxjs/operators';
 
 let emailTransporter = null;
 
@@ -156,7 +156,7 @@ export async function enqueueEmailInBulk(m: EntityManager, emailRequests: EmailR
     assert(template, 400, 'Email template is not specified');
 
     const emailTask = new EmailSentOutTask();
-    emailTask.from = req.from || defaultFrom
+    emailTask.from = req.from || defaultFrom;
     emailTask.to = req.to;
     emailTask.template = req.template;
     emailTask.vars = req.vars;

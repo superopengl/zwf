@@ -33,7 +33,7 @@ import { isEmail } from 'validator';
 import { getUserIdFromReq } from '../utils/getUserIdFromReq';
 
 export const getAuthUser = handlerWrapper(async (req, res) => {
-  let { user } = (req as any);
+  const { user } = (req as any);
   clearJwtCookie(res);
 
   let currentUserInfo;
@@ -72,7 +72,7 @@ export const login = handlerWrapper(async (req, res) => {
     user.role = user.role === Role.Guest ? Role.Client : user.role;
 
     await m.getRepository(User).save(user);
-  })
+  });
 
   attachJwtCookie(res, userInfo);
 
@@ -102,7 +102,7 @@ async function createNewLocalOrgAdmin(payload): Promise<{ user: User; profile: U
     if (!exists) {
       await m.save([profile, user]);
     }
-  })
+  });
 
   return { user, profile, exists };
 }
@@ -269,7 +269,7 @@ export const inviteOrgMember = handlerWrapper(async (req, res) => {
   const { emails: emailStrings } = req.body;
   const emails = emailStrings?.split(/[,\n]/).map(x => x.trim()).filter(x => !!x);
 
-  assert(emails?.length, 400, 'No email address found');;
+  assert(emails?.length, 400, 'No email address found');
   assert(emails.every(e => isEmail(e)), 400, 'Invalid email address detected');
 
   const orgId = getOrgIdFromReq(req);
@@ -322,10 +322,10 @@ export const addClientToOrg = handlerWrapper(async (req, res) => {
   await db.manager.transaction(async m => {
     let user = null;
     let newlyCreated = false;
-    if(email) {
+    if (email) {
       const result = await ensureClientOrGuestUser(m, email, orgId);
       user = result.user;
-      assert(user.role === Role.Client || user.role === Role.Guest, 400, 'Cannot proceed because the account is not a client account')
+      assert(user.role === Role.Client || user.role === Role.Guest, 400, 'Cannot proceed because the account is not a client account');
       newlyCreated = result.newlyCreated;
     }
 
@@ -367,14 +367,14 @@ const handleSsoGoogleLogin = async (user: UserInformation, newGivenName: string,
     });
 
     updatedUser = await getActiveUserInformation(m, user.email);
-  })
+  });
 
   attachJwtCookie(res, updatedUser);
 
   emitUserAuditLog(updatedUser.id, 'login', { type: UserLoginType.Google });
 
   res.json(sanitizeUserForResponse(updatedUser));
-}
+};
 
 export const ssoGoogleLogin = handlerWrapper(async (req, res) => {
   const { token, referralCode } = req.body;

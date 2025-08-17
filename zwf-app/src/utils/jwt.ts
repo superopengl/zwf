@@ -19,7 +19,7 @@ export const COOKIE_OPTIONS = {
 
 export function attachJwtCookie(res, user: UserInformation) {
   assert(user.id, 500, 'User has no id');
-  const payload = sanitizeUserForCookie(user)
+  const payload = sanitizeUserForCookie(user);
   payload.expires = moment(getUtcNow()).add(30, 'minutes').toDate();
 
 

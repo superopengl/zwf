@@ -38,7 +38,8 @@ RUN apt-get install libfontconfig1 libfontconfig1-dev
 # # Run everything after as non-privileged user.
 # USER pptruser
 
-RUN npm install -g pnpm@8
+RUN npm install -g pnpm@7
+
 #RUN apk update && apk add curl
 
 # RUN curl -sL https://unpkg.com/@pnpm/self-installer | node
@@ -51,7 +52,6 @@ EXPOSE 80
 WORKDIR /usr/portal
 COPY ./pnpm-lock.yaml .
 RUN pnpm fetch
-
 # WORKDIR /usr/portal/web
 # RUN pnpm install
 
