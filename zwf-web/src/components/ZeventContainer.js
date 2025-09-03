@@ -34,12 +34,7 @@ export const ZeventContainer = (props) => {
 
 
   React.useEffect(() => {
-    const es = establishZeventRawStream();
-
-    es.onmessage = (e) => {
-      const event = JSON.parse(e.data);
-      handleNewEvent(event);
-    }
+    const es = establishZeventRawStream(handleNewEvent);
 
     return () => {
       es?.close()
