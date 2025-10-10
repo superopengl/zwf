@@ -1,4 +1,5 @@
 export const notes=`
+update release notes
 refactor
 null fix
 clean up
