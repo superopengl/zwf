@@ -202,7 +202,7 @@ export const OrgLicenseUsagePanel = () => {
             </Tooltip>}>
               <OrgPeriodUsageChart period={period} />
             </ProCard>
-            {isOwner && <TerminationCard title="Termination" extra={
+            {false && isOwner && <TerminationCard title="Termination" extra={
               <Button
                 // type="primary"
                 danger
