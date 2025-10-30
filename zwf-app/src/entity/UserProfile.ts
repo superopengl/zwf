@@ -1,9 +1,12 @@
-import { Entity, Column, PrimaryGeneratedColumn, Unique, Index } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, DeleteDateColumn, Index } from 'typeorm';
 
 @Entity()
 export class UserProfile {
   @PrimaryGeneratedColumn('uuid')
   id?: string;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
 
   @Column()
   @Index()

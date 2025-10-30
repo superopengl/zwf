@@ -159,8 +159,8 @@ export const terminateOrg = handlerWrapper(async (req, res) => {
       }
     });
     const profileIds = userInfos.map(u => u.profileId);
-
-    await m.delete(UserProfile, { id: In(profileIds) });
+    
+    await m.softDelete(UserProfile, { id: In(profileIds) });
     await m.softDelete(OrgClient, { orgId });
     await m.softDelete(OrgPaymentMethod, { orgId });
     await m.softDelete(OrgPromotionCode, { orgId });
